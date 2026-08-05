@@ -93,8 +93,8 @@ export function Callout({
       data-slot='callout-transition'
     >
       <div
-        className={styles.transitionInner}
-        data-slot='callout-transition-inner'
+        className={styles.transitionBody}
+        data-slot='callout-transition-body'
       >
         <div
           className={callout({ type, variant, highContrast, className })}

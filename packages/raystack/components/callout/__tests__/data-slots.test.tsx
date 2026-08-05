@@ -12,7 +12,7 @@ describe('Callout data-slot contract', () => {
     );
     expectSlots(container, [
       'callout-transition',
-      'callout-transition-inner',
+      'callout-transition-body',
       'callout',
       'callout-container',
       'callout-message-container',

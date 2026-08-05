@@ -20,7 +20,7 @@ describe('Accordion data-slot contract', () => {
       'accordion-trigger',
       'accordion-trigger-icon',
       'accordion-content',
-      'accordion-content-inner'
+      'accordion-content-body'
     ]);
   });
 });

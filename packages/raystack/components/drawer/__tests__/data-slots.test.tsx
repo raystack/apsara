@@ -24,7 +24,7 @@ describe('Drawer data-slot contract', () => {
       'drawer-backdrop',
       'drawer-viewport',
       'drawer-content',
-      'drawer-content-inner',
+      'drawer-content-body',
       'drawer-close',
       'drawer-header',
       'drawer-title',

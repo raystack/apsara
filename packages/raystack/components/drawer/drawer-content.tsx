@@ -62,7 +62,7 @@ export function DrawerContent({
         >
           <DrawerPrimitive.Content
             className={styles.content}
-            data-slot='drawer-content-inner'
+            data-slot='drawer-content-body'
           >
             {children}
             {showCloseButton && (

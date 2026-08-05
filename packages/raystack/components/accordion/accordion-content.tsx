@@ -15,8 +15,8 @@ export const AccordionContent = ({
     {...props}
   >
     <div
-      className={cx(styles['accordion-content-inner'], className)}
-      data-slot='accordion-content-inner'
+      className={cx(styles['accordion-content-body'], className)}
+      data-slot='accordion-content-body'
     >
       {children}
     </div>

@@ -87,7 +87,7 @@ export function ToastRoot({
           align='start'
           gap={3}
           style={{ width: '100%' }}
-          data-slot='toast-inner'
+          data-slot='toast-body'
         >
           {leadingIcon && (
             <span
@@ -101,15 +101,15 @@ export function ToastRoot({
           <Flex
             direction='column'
             gap={3}
-            className={styles.contentColumn}
-            data-slot='toast-column'
+            className={styles.main}
+            data-slot='toast-main'
           >
             <Flex
               align='center'
               justify='between'
               gap={5}
-              className={styles.topRow}
-              data-slot='toast-top-row'
+              className={styles.header}
+              data-slot='toast-header'
             >
               {title && (
                 <ToastPrimitive.Title
