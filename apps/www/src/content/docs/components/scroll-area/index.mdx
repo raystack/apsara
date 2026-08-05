@@ -31,6 +31,19 @@ The Scroll Area component extends standard HTML div attributes, so you can use p
 
 <auto-type-table path="./props.ts" name="ScrollAreaProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `scroll-area` | The root `<div>` element |
+| `scroll-area-viewport` | The clipping viewport that holds the scrollable content |
+| `scroll-area-content` | Wrapper around the content you render |
+| `scroll-area-scrollbar` | A scrollbar track (one per axis) |
+| `scroll-area-thumb` | The draggable thumb inside a scrollbar |
+| `scroll-area-corner` | The corner between scrollbars (when both axes overflow) |
+
 ## Examples
 
 ### Vertical Scrolling

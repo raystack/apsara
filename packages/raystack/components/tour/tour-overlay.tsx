@@ -203,6 +203,7 @@ export function TourOverlay({
           />
           {!(spotlightClicks && holeOpen) && (
             <div
+              data-slot='tour-overlay-hit'
               className={styles.overlayHit}
               style={{
                 top: hole.y,

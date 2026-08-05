@@ -31,6 +31,23 @@ Renders a highlighted message block for tips, warnings, or information.
 
 <auto-type-table path="./props.ts" name="CalloutProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `callout-transition` | The outer transition shell `<div>` that plays the enter and exit animation |
+| `callout-transition-inner` | Inner wrapper `<div>` for the transition |
+| `callout` | The main callout `<div>` (role `status`, or `alert` for the alert type) |
+| `callout-container` | Wrapper `<div>` holding the message and actions |
+| `callout-message-container` | Wrapper `<div>` around the icon and message |
+| `callout-icon` | Wrapper around the icon (when an icon is set) |
+| `callout-message` | Wrapper around the message content |
+| `callout-actions` | Wrapper `<div>` for the action and dismiss button |
+| `callout-action` | Wrapper around the action (when an action is provided) |
+| `callout-dismiss` | The dismiss (close) button (when `dismissible`) |
+
 ## Examples
 
 ### Type
