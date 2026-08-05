@@ -21,18 +21,28 @@ export function ScrollArea({
 }: ScrollAreaProps) {
   const hasLabel = !!(ariaLabel || ariaLabelledBy);
   return (
-    <ScrollAreaPrimitive.Root className={cx(styles.root, className)} {...props}>
+    <ScrollAreaPrimitive.Root
+      className={cx(styles.root, className)}
+      data-slot='scroll-area'
+      {...props}
+    >
       <ScrollAreaPrimitive.Viewport
         className={styles.viewport}
         role={hasLabel ? 'region' : undefined}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
+        data-slot='scroll-area-viewport'
       >
-        <ScrollAreaPrimitive.Content>{children}</ScrollAreaPrimitive.Content>
+        <ScrollAreaPrimitive.Content data-slot='scroll-area-content'>
+          {children}
+        </ScrollAreaPrimitive.Content>
       </ScrollAreaPrimitive.Viewport>
       <ScrollAreaScrollbar orientation='vertical' type={type} />
       <ScrollAreaScrollbar orientation='horizontal' type={type} />
-      <ScrollAreaPrimitive.Corner className={styles.corner} />
+      <ScrollAreaPrimitive.Corner
+        className={styles.corner}
+        data-slot='scroll-area-corner'
+      />
     </ScrollAreaPrimitive.Root>
   );
 }

@@ -45,23 +45,32 @@ export function DrawerContent({
   return (
     <DrawerPrimitive.Portal>
       <DrawerPrimitive.Backdrop
+        data-slot='drawer-backdrop'
         {...overlayProps}
         className={cx(styles.backdrop, overlayProps?.className)}
       />
-      <DrawerPrimitive.Viewport className={styles.viewport}>
+      <DrawerPrimitive.Viewport
+        className={styles.viewport}
+        data-slot='drawer-viewport'
+      >
         <DrawerPrimitive.Popup
           className={drawerPopup({ side, className })}
           aria-label={resolvedAriaLabel}
           aria-labelledby={ariaLabelledBy}
+          data-slot='drawer-content'
           {...props}
         >
-          <DrawerPrimitive.Content className={styles.content}>
+          <DrawerPrimitive.Content
+            className={styles.content}
+            data-slot='drawer-content-body'
+          >
             {children}
             {showCloseButton && (
               <DrawerPrimitive.Close
                 className={styles.close}
                 aria-label={closeLabel}
                 render={<IconButton size={3} />}
+                data-slot='drawer-close'
               >
                 <Cross1Icon aria-hidden='true' />
               </DrawerPrimitive.Close>

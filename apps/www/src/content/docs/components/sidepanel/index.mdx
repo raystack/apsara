@@ -36,6 +36,21 @@ Renders the panel header section.
 
 <auto-type-table path="./props.ts" name="SidePanelHeaderProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `side-panel` | The root `<aside>` |
+| `side-panel-header` | `SidePanel.Header` container |
+| `side-panel-header-content` | Header row wrapping title and actions |
+| `side-panel-title-group` | Icon + title group |
+| `side-panel-title` | Header title text |
+| `side-panel-actions` | Header actions group |
+| `side-panel-description` | Header description text (when `description` is set) |
+| `side-panel-section` | `SidePanel.Section` container |
+
 ## Examples
 
 ### Basic Usage

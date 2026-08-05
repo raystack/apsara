@@ -109,6 +109,12 @@ export interface DataViewListColumn<TData, TValue = unknown> {
   header?: ColumnDef<TData, TValue>['header'];
   /** CSS grid track width. `1fr`, `auto`, `'200px'`, `'minmax(80px, 1fr)'`, or a number (pixels). Defaults to `1fr`. */
   width?: string | number;
+  /**
+   * @deprecated Every cell and header cell carries `data-column={accessorKey}`
+   * alongside its `data-slot`. Target this column with
+   * `[data-slot="data-view-list-cell"][data-column="..."]` (and the
+   * `-header-cell` variant) instead.
+   */
   classNames?: { cell?: string; header?: string };
   styles?: { cell?: React.CSSProperties; header?: React.CSSProperties };
 }
@@ -172,12 +178,19 @@ export interface DataViewProps<TData> {
   groupByResolvers?: Record<string, GroupByResolver<TData>>;
 }
 
+/** @deprecated Every key here has an equivalent `[data-slot]` selector — see the List slot table in the DataView docs. Prefer styling by `data-slot` over threading class names through props. */
 export type DataViewListClassNames = {
+  /** @deprecated Use `[data-slot="data-view-list"]` instead. */
   root?: string;
+  /** @deprecated Use `[data-slot="data-view-list-header"]` instead. */
   header?: string;
+  /** @deprecated Use `[data-slot="data-view-list-header-cell"]` instead. */
   headerCell?: string;
+  /** @deprecated Use `[data-slot="data-view-list-row"]` instead. */
   row?: string;
+  /** @deprecated Use `[data-slot="data-view-list-cell"]` instead. */
   cell?: string;
+  /** @deprecated Use `[data-slot="data-view-list-group-header"]` instead. */
   groupHeader?: string;
 };
 
@@ -209,6 +222,7 @@ export interface DataViewListProps<TData, TValue = unknown> {
   showGroupHeaders?: boolean;
   /** When true, group headers stick under the table header while scrolling. Default false. */
   stickyGroupHeader?: boolean;
+  /** @deprecated Style rendered parts by `[data-slot]` instead — see `DataViewListClassNames`. */
   classNames?: DataViewListClassNames;
 }
 
@@ -276,17 +290,30 @@ export interface TimelineActions {
   getVisibleRange: () => [Date, Date] | null;
 }
 
+/** @deprecated Every key here has an equivalent `[data-slot]` selector — see the Timeline slot table in the DataView docs. Prefer styling by `data-slot` over threading class names through props. */
 export type DataViewTimelineClassNames = {
+  /** @deprecated Use `[data-slot="data-view-timeline"]` instead. */
   root?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-axis"]` instead. */
   axis?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-axis-band"]` instead. */
   band?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-axis-tick"]` instead. */
   tick?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-marker"]` instead. */
   marker?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-gridline"]` instead. */
   gridline?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-cursor"]` instead. */
   cursor?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-canvas"]` instead. */
   canvas?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-card"]` instead. */
   card?: string;
-  /** Group section header band (same name/role as `DataViewListClassNames.groupHeader`). */
+  /**
+   * Group section header band (same name/role as `DataViewListClassNames.groupHeader`).
+   * @deprecated Use `[data-slot="data-view-timeline-group-header"]` instead.
+   */
   groupHeader?: string;
 };
 
@@ -407,6 +434,7 @@ export interface DataViewTimelineProps<TData> {
    * bands only — rows stay grouped into their sections. Default true.
    */
   showGroupHeaders?: boolean;
+  /** @deprecated Style rendered parts by `[data-slot]` instead — see `DataViewTimelineClassNames`. */
   classNames?: DataViewTimelineClassNames;
 }
 

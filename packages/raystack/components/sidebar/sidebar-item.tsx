@@ -23,9 +23,13 @@ export interface SidebarItemProps extends ComponentProps<'a'> {
   active?: boolean;
   disabled?: boolean;
   render?: ReactElement;
+  /** @deprecated Every key here has an equivalent `[data-slot]` — see the Slots table in the Sidebar docs. */
   classNames?: {
+    /** @deprecated Use `[data-slot="sidebar-item"]` instead. */
     root?: string;
+    /** @deprecated Use `[data-slot="sidebar-leading-icon"]` instead. */
     leadingIcon?: string;
+    /** @deprecated Use `[data-slot="sidebar-item-text"]` instead. */
     text?: string;
   };
 }
@@ -80,6 +84,7 @@ export function SidebarItem({
             : styles['nav-text'],
           classNames?.text
         )}
+        data-slot='sidebar-item-text'
       >
         {children}
       </span>
@@ -95,6 +100,7 @@ export function SidebarItem({
           insideSidebarMore ? styles['more-menu-item'] : styles['nav-item'],
           classNames?.root
         ),
+        'data-slot': 'sidebar-item',
         'data-active': active ? 'true' : undefined,
         'data-disabled': disabled ? 'true' : undefined,
         'aria-current': active ? 'page' : undefined,

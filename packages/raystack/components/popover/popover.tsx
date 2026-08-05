@@ -27,6 +27,7 @@ function PopoverContent({
         sideOffset={4}
         collisionPadding={3}
         className={styles.popoverPositioner}
+        data-slot='popover-positioner'
         {...positionerProps}
       >
         <PopoverPrimitive.Popup
@@ -36,6 +37,7 @@ function PopoverContent({
           initialFocus={initialFocus}
           finalFocus={finalFocus}
           style={style}
+          data-slot='popover-content'
         >
           {children}
         </PopoverPrimitive.Popup>

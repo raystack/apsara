@@ -27,11 +27,21 @@ export function DisplayProperties<TData>({
   };
 
   return (
-    <Flex direction='column' gap={5}>
-      <Text size='small' weight='medium' variant='secondary'>
+    <Flex direction='column' gap={5} data-slot='data-view-display-properties'>
+      <Text
+        size='small'
+        weight='medium'
+        variant='secondary'
+        data-slot='data-view-display-properties-label'
+      >
         Display Properties
       </Text>
-      <Flex gap={3} wrap='wrap' align='center'>
+      <Flex
+        gap={3}
+        wrap='wrap'
+        align='center'
+        data-slot='data-view-display-properties-list'
+      >
         {hidableFields.map(field => {
           const isVisible = columnVisibility[field.accessorKey] ?? true;
           return (
@@ -41,6 +51,7 @@ export function DisplayProperties<TData>({
               size='small'
               color={isVisible ? 'accent' : 'neutral'}
               onClick={() => toggleVisibility(field.accessorKey)}
+              data-slot='data-view-display-properties-chip'
             >
               {field.label}
             </Chip>

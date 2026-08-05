@@ -102,6 +102,7 @@ function ReasoningRoot({
           userToggledRef.current = true;
           setOpen(next);
         }}
+        data-slot='reasoning'
         {...props}
       >
         {children}
@@ -118,7 +119,12 @@ export interface ReasoningTriggerProps
 function defaultTriggerLabel(streaming: boolean, duration?: number): ReactNode {
   if (streaming) {
     return (
-      <span className={styles['reasoning-label-streaming']}>Thinking…</span>
+      <span
+        className={styles['reasoning-label-streaming']}
+        data-slot='reasoning-label-streaming'
+      >
+        Thinking…
+      </span>
     );
   }
   if (duration != null) {
@@ -136,12 +142,14 @@ export function ReasoningTrigger({
   return (
     <Collapsible.Trigger
       className={cx(styles['reasoning-trigger'], className)}
+      data-slot='reasoning-trigger'
       {...props}
     >
       {children ?? defaultTriggerLabel(streaming, duration)}
       <ChevronRightIcon
         className={styles['reasoning-chevron']}
         aria-hidden='true'
+        data-slot='reasoning-chevron'
       />
     </Collapsible.Trigger>
   );
@@ -160,9 +168,12 @@ export function ReasoningContent({
   return (
     <Collapsible.Panel
       className={cx(styles['reasoning-panel'], className)}
+      data-slot='reasoning-panel'
       {...props}
     >
-      <div className={styles['reasoning-body']}>{children}</div>
+      <div className={styles['reasoning-body']} data-slot='reasoning-body'>
+        {children}
+      </div>
     </Collapsible.Panel>
   );
 }
@@ -181,10 +192,26 @@ export function ReasoningStep({
   ...props
 }: ReasoningStepProps) {
   return (
-    <div className={cx(styles['reasoning-step'], className)} {...props}>
-      {label && <div className={styles['reasoning-step-label']}>{label}</div>}
+    <div
+      className={cx(styles['reasoning-step'], className)}
+      data-slot='reasoning-step'
+      {...props}
+    >
+      {label && (
+        <div
+          className={styles['reasoning-step-label']}
+          data-slot='reasoning-step-label'
+        >
+          {label}
+        </div>
+      )}
       {children && (
-        <div className={styles['reasoning-step-body']}>{children}</div>
+        <div
+          className={styles['reasoning-step-body']}
+          data-slot='reasoning-step-body'
+        >
+          {children}
+        </div>
       )}
     </div>
   );

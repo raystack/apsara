@@ -24,6 +24,17 @@ Renders a small status dot or label.
 
 <auto-type-table path="./props.ts" name="IndicatorProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `indicator` | The root wrapper element |
+| `indicator-badge` | The `role="status"` indicator itself |
+| `indicator-label` | The label text (when `label` is set) |
+| `indicator-dot` | The dot (when no `label` is set) |
+
 ## Examples
 
 ### Variant

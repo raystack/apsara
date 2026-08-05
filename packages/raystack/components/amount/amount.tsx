@@ -269,14 +269,22 @@ export const Amount = ({
         );
 
     return (
-      <span {...props} className={cx(styles.amount, className)}>
+      <span
+        data-slot='amount'
+        {...props}
+        className={cx(styles.amount, className)}
+      >
         {formattedValue}
       </span>
     );
   } catch (error) {
     console.error('Error formatting amount:', error);
     return (
-      <span {...props} className={cx(styles.amount, className)}>
+      <span
+        data-slot='amount'
+        {...props}
+        className={cx(styles.amount, className)}
+      >
         {String(value)}
       </span>
     );

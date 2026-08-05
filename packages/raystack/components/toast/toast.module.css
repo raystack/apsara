@@ -223,13 +223,13 @@
 }
 
 /* ===== Content column (claims remaining space next to the icon) ===== */
-.contentColumn {
+.main {
   flex: 1;
   min-width: 0;
 }
 
 /* ===== Top row (headline + actions) ===== */
-.topRow {
+.header {
   min-height: var(--rs-space-7);
 }
 

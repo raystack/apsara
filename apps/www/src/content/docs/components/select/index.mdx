@@ -82,6 +82,30 @@ Visual divider between Select items or groups.
 
 <auto-type-table path="./props.ts" name="SelectSeparatorProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `select-trigger` | The trigger button that opens the menu |
+| `select-trigger-content` | Flex wrapper around the trigger's children |
+| `select-trigger-icon` | The chevron dropdown icon in the trigger |
+| `select-value` | The `<span>` (or wrapper) showing the selected value or placeholder |
+| `select-value-content` | Inner wrapper around a single selected value |
+| `select-value-icon` | Leading icon of the selected value (when set) |
+| `select-value-overflow` | The "+N" overflow count for multiple values (when they don't all fit) |
+| `select-positioner` | The floating positioner for the popup |
+| `select-content` | The popup container |
+| `select-search` | The search input (when autocomplete is enabled) |
+| `select-list` | The scrollable list of items |
+| `select-group` | A group of items |
+| `select-label` | The label of a group |
+| `select-separator` | A divider between items or groups |
+| `select-item` | An individual option row |
+| `select-item-icon` | Leading icon on an item (when set) |
+| `select-item-text` | The text label of an item |
+
 ## Examples
 
 ### Basic Select

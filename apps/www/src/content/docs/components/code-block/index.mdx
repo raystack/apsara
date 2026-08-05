@@ -95,6 +95,27 @@ Renders a button to expand or collapse long code blocks.
 
 <auto-type-table path="./props.ts" name="CodeBlockCollapseTriggerProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `code-block` | The root `<div>` container |
+| `code-block-header` | The header row above the code |
+| `code-block-label` | The label text in the header |
+| `code-block-copy-button` | The copy-to-clipboard button |
+| `code-block-content` | Wrapper `<div>` around the code |
+| `code-block-code` | Wrapper `<div>` around the highlighted code |
+| `code-block-pre` | The `<pre>` element holding the lines |
+| `code-block-line` | Each code line `<div>` |
+| `code-block-line-number` | The line-number `<span>` (when line numbers are shown) |
+| `code-block-line-content` | The `<span>` holding a line's tokens |
+| `code-block-token` | Each syntax token `<span>` |
+| `code-block-collapse-trigger` | The show/hide button (when `maxLines` is exceeded) |
+| `code-block-language-select-trigger` | The language select trigger button |
+| `code-block-language-select-value` | The selected language value inside the trigger |
+
 ## Examples
 
 ### Basic Usage

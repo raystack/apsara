@@ -24,6 +24,15 @@ Renders a button designed for icon-only content.
 
 <auto-type-table path="./props.ts" name="IconButtonProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `icon-button` | The root `<button>` element |
+| `icon-button-icon` | Wrapper around the icon content |
+
 ## Examples
 
 ### Size

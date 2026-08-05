@@ -32,6 +32,7 @@ function PreviewCardContent({
         sideOffset={showArrow ? 10 : 4}
         collisionPadding={3}
         className={styles.positioner}
+        data-slot='preview-card-positioner'
         {...positionerProps}
       >
         <PreviewCardPrimitive.Popup
@@ -39,10 +40,14 @@ function PreviewCardContent({
           className={cx(styles.popup, className)}
           style={style}
           render={render}
+          data-slot='preview-card-content'
         >
           {children}
           {showArrow && (
-            <PreviewCardPrimitive.Arrow className={styles.arrow}>
+            <PreviewCardPrimitive.Arrow
+              className={styles.arrow}
+              data-slot='preview-card-arrow'
+            >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 width='6'
@@ -71,6 +76,7 @@ function PreviewCardViewport({
   return (
     <PreviewCardPrimitive.Viewport
       className={cx(styles.viewport, className)}
+      data-slot='preview-card-viewport'
       {...props}
     />
   );

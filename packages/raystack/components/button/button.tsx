@@ -160,25 +160,42 @@ export const Button = ({
       nativeButton={!render}
       focusableWhenDisabled={loading}
       aria-busy={loading || undefined}
+      data-slot='button'
       {...props}
     >
       {loading ? (
         <>
-          <Spinner size={1} color='default' aria-hidden='true' />
+          <Spinner
+            size={1}
+            color='default'
+            aria-hidden='true'
+            data-slot='button-loader'
+          />
           {loaderText && (
-            <span className={styles['loader-text']}>{loaderText}</span>
+            <span
+              className={styles['loader-text']}
+              data-slot='button-loader-text'
+            >
+              {loaderText}
+            </span>
           )}
         </>
       ) : (
         <>
           {leadingIcon && (
-            <span className={cx(styles['icon'], styles['icon-leading'])}>
+            <span
+              className={cx(styles['icon'], styles['icon-leading'])}
+              data-slot='button-leading-icon'
+            >
               {leadingIcon}
             </span>
           )}
           {children}
           {trailingIcon && (
-            <span className={cx(styles['icon'], styles['icon-trailing'])}>
+            <span
+              className={cx(styles['icon'], styles['icon-trailing'])}
+              data-slot='button-trailing-icon'
+            >
               {trailingIcon}
             </span>
           )}

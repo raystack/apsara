@@ -15,7 +15,7 @@
   flex-direction: column;
 }
 
-.root[data-orientation="vertical"] button {
+.root[data-orientation="vertical"] [data-slot="toolbar-button"] {
   width: 100%;
 }
 .root > *,

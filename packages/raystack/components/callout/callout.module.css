@@ -262,7 +262,7 @@
   grid-template-rows: 1fr;
 }
 
-.transitionInner {
+.transitionBody {
   min-height: 0;
 }
 
@@ -273,7 +273,7 @@
 
 /* Clip only while collapsing; when open, let content (focus rings, popovers)
    overflow the box freely. */
-.transitionShell[data-state="closing"] .transitionInner {
+.transitionShell[data-state="closing"] .transitionBody {
   overflow: hidden;
 }
 

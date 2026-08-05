@@ -77,6 +77,7 @@ Key rules:
 - `displayName` set for React DevTools (e.g., `'Component.Trigger'`)
 - `cx()` from `class-variance-authority` to merge CSS module class with user's `className`
 - Spread `...props` last so consumers can override defaults
+- **`data-slot` on every rendered element** — a stable, kebab-case, component-prefixed identifier (`data-slot='component-trigger'`, `data-slot='component-panel-label'`). Subparts extend the prefix; a repeated part reuses one name. Slot names are public API covered by semver — renaming one is a breaking change. Put the attribute before the `...props` spread so consumers can override. Skip `Popover.Content`/`Menu.Content` call sites (extra props land on the positioner, not the popup).
 
 ### Object.assign Composition
 
@@ -270,6 +271,7 @@ import styles from '../<name>.module.css';
 4. **Keyboard navigation** — Tab, Enter, Space, Arrow keys as applicable
 5. **Disabled state** — `aria-disabled`, no toggle on click
 6. **Sub-components** — className, ref forwarding for each sub-component
+7. **data-slot contract** — a `__tests__/data-slots.test.tsx` asserting every slot renders, using `expectSlots` from `~/test-utils/data-slots` (pass `document.body` for portaled parts; also assert conditional slots disappear when their part is absent)
 
 ### Testing Tips
 
@@ -497,6 +499,7 @@ Checklist:
 - [ ] All tests pass
 - [ ] Docs site builds and new page is generated
 - [ ] `displayName` set on all sub-components
+- [ ] Every rendered element has a `data-slot`, with a `data-slots.test.tsx` covering them
 - [ ] CSS uses `--rs-*` tokens only
 - [ ] Export in `packages/raystack/index.tsx` in alphabetical order
 - [ ] Playground example added and registered

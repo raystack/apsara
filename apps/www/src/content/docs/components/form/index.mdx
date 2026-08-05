@@ -38,6 +38,14 @@ import { Form, Field, Input, Button } from "@raystack/apsara";
 
 <auto-type-table path="./props.ts" name="FormProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `form` | The root `<form>` element |
+
 ## Error Handling
 
 Form supports two approaches to displaying errors, depending on how you build your form.

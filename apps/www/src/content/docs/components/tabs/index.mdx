@@ -56,6 +56,19 @@ Renders the content panel for a tab.
 
 <auto-type-table path="./props.ts" name="TabsContentProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `tabs` | The root element |
+| `tabs-list` | `Tabs.List` container |
+| `tabs-indicator` | The animated active-tab indicator |
+| `tabs-tab` | `Tabs.Tab` button |
+| `tabs-tab-icon` | A tab's leading icon (when `leadingIcon` is set) |
+| `tabs-content` | `Tabs.Content` panel |
+
 ## Examples
 
 ### Basic Usage

@@ -24,6 +24,14 @@ Renders a heading element with configurable size and weight. Use the `render` pr
 
 <auto-type-table path="./props.ts" name="HeadlineProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `headline` | The heading element (`<h2>` by default, or the element supplied via `render`) |
+
 ## Examples
 
 ### Alignment

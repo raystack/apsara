@@ -82,6 +82,80 @@ Apsara components built on [Base UI](https://base-ui.com/) expose data attribute
 
 Common data attributes include `data-open`, `data-closed`, `data-active`, `data-disabled`, `data-state`, `data-starting-style`, and `data-ending-style`.
 
+### With data-slot
+
+Every part a component renders carries a `data-slot` attribute — a stable, public identifier for that element. Use it to style inner parts that have no `className` prop of their own, without depending on Apsara's internal (hashed) class names:
+
+```css
+/* Tint the remove button inside every filter chip */
+[data-slot="filter-chip-remove"] {
+  color: var(--rs-color-foreground-danger-primary);
+}
+
+/* Make DataView loading rows taller */
+[data-slot="data-view-list-loader-row"] {
+  min-height: 56px;
+}
+
+/* Hide the magnifier icon inside Search */
+[data-slot="search"] [data-slot="search-input"] {
+  padding-left: var(--rs-space-3);
+}
+```
+
+Slot names follow one convention:
+
+- **kebab-case**, prefixed with the component name: `filter-chip-label`, `data-view-list-row`.
+- Subparts extend the prefix: `data-view-filter-summary-clear`.
+- The same part keeps the same name everywhere it appears (loader cells in `DataView.List` reuse `data-view-list-cell`).
+
+Slot names are covered by semver — renaming or removing one is a breaking change, so selectors written against them are safe to keep. This is different from state attributes like `data-open` above: state attributes tell you *how* an element currently is, `data-slot` tells you *what* it is.
+
+Combine them freely:
+
+```css
+/* Only style rows of a clickable list while it is loading */
+[data-slot="data-view-list-loader-row"][aria-busy="true"] {
+  opacity: 0.6;
+}
+```
+
+Slots also make reliable selectors for tests (`querySelector('[data-slot="search-clear-button"]')`) instead of reaching for hashed CSS-module classes.
+
+#### Styling based on what a component contains
+
+Because every part carries its own slot, a parent can change its own styling based on which children are present — no prop needed to signal it. CSS's `:has()` reaches into descendants:
+
+```css
+/* A filter bar that's tighter when it has no chips yet */
+[data-slot="data-view-filters"]:has([data-slot="filter-chip"]) {
+  gap: var(--rs-space-4);
+}
+
+/* Style a submit button differently only inside a form's footer */
+[data-slot="dialog-footer"] [data-slot="button"] {
+  width: 100%;
+}
+```
+
+With Tailwind's arbitrary variants, the same thing reads as a utility class instead of a stylesheet rule:
+
+```tsx
+<Flex className="has-[[data-slot=filter-chip]]:gap-4">
+  <DataView.Filters />
+</Flex>
+```
+
+```tsx
+<Dialog.Footer className="[&_[data-slot=button]]:w-full">
+  <Button>Save</Button>
+</Dialog.Footer>
+```
+
+This is the same technique as the state-based selectors above (`data-[state=open]:...`) — `data-slot` just gives you a target that's stable across releases instead of one tied to internal markup.
+
+Coverage: every Apsara component exposes `data-slot` on every element it renders (`data-table` is the one exception — it's being phased out in favor of `DataView`). Each component's docs page lists its slot names.
+
 ## Theming with Data Attributes
 
 The `Theme` component sets data attributes on the root `<html>` element. Use these to conditionally style elements based on the active theme:

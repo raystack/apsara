@@ -28,8 +28,14 @@ export interface ToggleProps
 
 function ToggleRoot({ className, children, size, ...props }: ToggleProps) {
   return (
-    <TogglePrimitive className={toggleVariants({ size, className })} {...props}>
-      <span className={styles.toggleContent}>{children}</span>
+    <TogglePrimitive
+      className={toggleVariants({ size, className })}
+      data-slot='toggle'
+      {...props}
+    >
+      <span className={styles.toggleContent} data-slot='toggle-content'>
+        {children}
+      </span>
     </TogglePrimitive>
   );
 }
@@ -38,7 +44,11 @@ ToggleRoot.displayName = 'Toggle';
 
 function ToggleGroup({ className, ...props }: ToggleGroupPrimitive.Props) {
   return (
-    <ToggleGroupPrimitive className={cx(styles.group, className)} {...props} />
+    <ToggleGroupPrimitive
+      className={cx(styles.group, className)}
+      data-slot='toggle-group'
+      {...props}
+    />
   );
 }
 

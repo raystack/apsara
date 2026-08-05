@@ -15,6 +15,7 @@ export function SidebarFooter({
       direction='column'
       role='list'
       aria-label='Footer navigation'
+      data-slot='sidebar-footer'
       {...props}
     />
   );

@@ -34,6 +34,7 @@ export function MenuItem({
   if (autocomplete) {
     return (
       <AutocompletePrimitive.Item
+        data-slot='menu-item'
         value={value}
         render={<MenuPrimitive.Item render={cell} />}
         {...props}
@@ -45,6 +46,7 @@ export function MenuItem({
 
   return (
     <MenuPrimitive.Item
+      data-slot='menu-item'
       render={cell}
       {...props}
       onFocus={e => {

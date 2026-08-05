@@ -25,7 +25,12 @@ export function DataViewZeroState({
   if (!isZeroState) return null;
   if (forView && activeView !== forView) return null;
   return (
-    <div className={cx(styles.dataStateContainer, className)}>{children}</div>
+    <div
+      className={cx(styles.dataStateContainer, className)}
+      data-slot='data-view-zero-state'
+    >
+      {children}
+    </div>
   );
 }
 

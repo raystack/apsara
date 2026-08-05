@@ -103,6 +103,26 @@ The content container for a submenu. Shares the same API as `Menu.Content` with 
 
 <auto-type-table path="./props.ts" name="MenuSubContentProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `menu-trigger` | The `Menu.Trigger` element |
+| `menu-positioner` | Positioning wrapper around the content popup |
+| `menu-content` | The `Menu.Content` / `Menu.SubmenuContent` popup |
+| `menu-search-input` | The autocomplete search input (when `autocomplete`) |
+| `menu-search-list` | Wrapper around items in autocomplete mode (when `autocomplete`) |
+| `menu-item` | Each `Menu.Item` |
+| `menu-cell-leading-icon` | Leading icon inside an item or submenu trigger (when provided) |
+| `menu-cell-trailing-icon` | Trailing icon inside an item or submenu trigger (when provided) |
+| `menu-group` | `Menu.Group` wrapper |
+| `menu-label` | `Menu.Label` |
+| `menu-separator` | `Menu.Separator` |
+| `menu-empty-state` | `Menu.EmptyState` |
+| `menu-subtrigger` | `Menu.SubmenuTrigger` |
+
 ## Examples
 
 ### Basic Usage

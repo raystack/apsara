@@ -105,6 +105,7 @@ export function TourContent({
     >
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Positioner
+          data-slot='tour-positioner'
           anchor={detached ? centerAnchor : anchor}
           side={step?.side ?? (detached ? 'top' : side)}
           align={step?.align ?? align}
@@ -115,6 +116,7 @@ export function TourContent({
         >
           <PopoverPrimitive.Popup
             ref={popupRef}
+            data-slot='tour-content'
             className={cx(styles.popup, className)}
             style={style}
             data-detached={detached || undefined}
@@ -122,7 +124,10 @@ export function TourContent({
             data-visible={visible ? 'true' : 'false'}
           >
             {showArrow && !detached && (
-              <PopoverPrimitive.Arrow className={styles.arrow}>
+              <PopoverPrimitive.Arrow
+                data-slot='tour-arrow'
+                className={styles.arrow}
+              >
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   width='10'
@@ -139,7 +144,11 @@ export function TourContent({
               </PopoverPrimitive.Arrow>
             )}
             {renderProps && (
-              <div key={index} className={styles.stepContent}>
+              <div
+                key={index}
+                data-slot='tour-step-content'
+                className={styles.stepContent}
+              >
                 {typeof children === 'function'
                   ? children(renderProps)
                   : (children ?? <TourDefaultLayout />)}

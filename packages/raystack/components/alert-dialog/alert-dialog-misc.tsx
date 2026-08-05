@@ -15,6 +15,7 @@ export const AlertDialogHeader = ({
     direction='column'
     gap={3}
     className={cx(styles.header, alertDialogStyles.header, className)}
+    data-slot='alert-dialog-header'
     {...props}
   />
 );
@@ -29,6 +30,7 @@ export const AlertDialogFooter = ({
     gap={5}
     justify='end'
     className={cx(styles.footer, alertDialogStyles.footer, className)}
+    data-slot='alert-dialog-footer'
     {...props}
   />
 );
@@ -43,6 +45,7 @@ export const AlertDialogBody = ({
     direction='column'
     gap={3}
     className={cx(styles.body, alertDialogStyles.body, className)}
+    data-slot='alert-dialog-body'
     {...props}
   />
 );
@@ -56,6 +59,7 @@ export const AlertDialogTitle = ({
   return (
     <AlertDialogPrimitive.Title
       className={cx(styles.title, className)}
+      data-slot='alert-dialog-title'
       {...props}
     />
   );
@@ -70,6 +74,7 @@ export const AlertDialogDescription = ({
   return (
     <AlertDialogPrimitive.Description
       className={cx(styles.description, className)}
+      data-slot='alert-dialog-description'
       {...props}
     />
   );

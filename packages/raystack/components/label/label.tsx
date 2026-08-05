@@ -38,22 +38,29 @@ export function Label({
     <>
       {children}
       {required === false && (
-        <span className={styles.optional}>{optionalText}</span>
+        <span className={styles.optional} data-slot='label-indicator'>
+          {optionalText}
+        </span>
       )}
       {required === true && requiredText && (
-        <span className={styles.optional}>{requiredText}</span>
+        <span className={styles.optional} data-slot='label-indicator'>
+          {requiredText}
+        </span>
       )}
     </>
   );
+
+  const labelProps = {
+    'data-slot': 'label',
+    className: cx(styles.label, className),
+    children: content
+  };
 
   const element = useRender({
     defaultTagName: 'label',
     ref,
     render,
-    props: mergeProps<'label'>(
-      { className: cx(styles.label, className), children: content },
-      props
-    )
+    props: mergeProps<'label'>(labelProps, props)
   });
 
   return element;

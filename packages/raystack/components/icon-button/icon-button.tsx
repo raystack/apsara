@@ -44,9 +44,15 @@ export function IconButton({
       type='button'
       aria-label={ariaLabel}
       style={style}
+      data-slot='icon-button'
       {...props}
     >
-      <Flex aria-hidden='true' align='center' justify='center'>
+      <Flex
+        aria-hidden='true'
+        align='center'
+        justify='center'
+        data-slot='icon-button-icon'
+      >
         {children}
       </Flex>
     </button>

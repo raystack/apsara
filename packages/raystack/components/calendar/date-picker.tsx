@@ -224,6 +224,7 @@ export function DatePicker({
         aria-invalid={!!error}
         className={styles.datePickerInput}
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+        data-slot='date-picker-input'
         {...inputProps}
         aria-describedby={describedBy}
         ref={popover.inputRef}
@@ -237,6 +238,7 @@ export function DatePicker({
         id={errorId}
         className={styles.datePickerError}
         data-visible={error ? '' : undefined}
+        data-slot='date-picker-error'
         role='alert'
       >
         {error}
@@ -266,25 +268,28 @@ export function DatePicker({
     >
       <Popover.Trigger
         nativeButton={false}
-        render={<div>{triggerContent}</div>}
+        render={<div data-slot='date-picker-trigger'>{triggerContent}</div>}
       />
       <Popover.Content
         ref={popover.contentRef}
+        data-slot='date-picker-positioner'
         {...popoverProps}
         className={cx(styles.calendarPopover, popoverProps?.className)}
         side={popoverProps?.side ?? 'top'}
       >
-        <Calendar
-          {...calendarProps}
-          required={false}
-          timeZone={timeZone}
-          onDropdownOpen={popover.markDropdownOpen}
-          mode='single'
-          selected={selectedDate}
-          month={viewMonth}
-          onSelect={handleSelect}
-          onMonthChange={setViewMonth}
-        />
+        <div data-slot='date-picker-content'>
+          <Calendar
+            {...calendarProps}
+            required={false}
+            timeZone={timeZone}
+            onDropdownOpen={popover.markDropdownOpen}
+            mode='single'
+            selected={selectedDate}
+            month={viewMonth}
+            onSelect={handleSelect}
+            onMonthChange={setViewMonth}
+          />
+        </div>
       </Popover.Content>
     </Popover>
   );

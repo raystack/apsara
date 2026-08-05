@@ -53,6 +53,7 @@ export function PromptInputTextarea({
       onKeyDown={handleKeyDown}
       disabled={resolvedDisabled}
       placeholder={placeholder}
+      data-slot='prompt-input-textarea'
       {...props}
     />
   );

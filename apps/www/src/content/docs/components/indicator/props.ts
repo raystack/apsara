@@ -19,7 +19,10 @@ export interface IndicatorProps {
 
   /** Map of classNames for internal components */
   classNames?: {
-    /** Class for the outer container element */
+    /**
+     * Class for the outer container element.
+     * @deprecated Use `[data-slot="indicator"]` instead.
+     */
     container?: string;
   };
 }

@@ -81,6 +81,21 @@ Renders the alert dialog footer section.
 
 <auto-type-table path="./props.ts" name="AlertDialogFooterProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `alert-dialog-backdrop` | The overlay behind the alert dialog |
+| `alert-dialog-viewport` | Viewport wrapper that positions the alert dialog |
+| `alert-dialog-content` | The alert dialog popup |
+| `alert-dialog-header` | The `AlertDialog.Header` container |
+| `alert-dialog-title` | The `AlertDialog.Title` element |
+| `alert-dialog-body` | The `AlertDialog.Body` container |
+| `alert-dialog-description` | The `AlertDialog.Description` element |
+| `alert-dialog-footer` | The `AlertDialog.Footer` row |
+
 ## Examples
 
 ### Controlled

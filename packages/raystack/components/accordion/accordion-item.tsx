@@ -11,6 +11,7 @@ export const AccordionItem = ({
 }: AccordionPrimitive.Item.Props) => (
   <AccordionPrimitive.Item
     className={cx(styles['accordion-item'], className)}
+    data-slot='accordion-item'
     {...props}
   >
     {children}

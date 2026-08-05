@@ -31,6 +31,18 @@ Renders a compact element for tags, labels, or attributes.
 
 <auto-type-table path="./props.ts" name="ChipProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `chip` | The root element (`<button>` when interactive, `<span>` otherwise) |
+| `chip-leading-icon` | Wrapper around `leadingIcon` (when set) |
+| `chip-trailing-icon` | Wrapper around `trailingIcon` (when set and not dismissible) |
+| `chip-dismiss` | The dismiss button (when `isDismissible`) |
+| `chip-dismiss-icon` | The dismiss icon (when `isDismissible`) |
+
 ## Examples
 
 ### Variant

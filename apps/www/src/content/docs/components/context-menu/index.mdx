@@ -98,6 +98,26 @@ The content container for a submenu. Shares the same API as `ContextMenu.Content
 
 <auto-type-table path="./props.ts" name="ContextMenuSubContentProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `context-menu-trigger` | The `ContextMenu.Trigger` element |
+| `context-menu-positioner` | Positioning wrapper around the content popup |
+| `context-menu-content` | The `ContextMenu.Content` / `ContextMenu.SubmenuContent` popup |
+| `context-menu-search-input` | The autocomplete search input (when `autocomplete`) |
+| `context-menu-search-list` | Wrapper around items in autocomplete mode (when `autocomplete`) |
+| `context-menu-item` | Each `ContextMenu.Item` |
+| `context-menu-group` | `ContextMenu.Group` wrapper |
+| `context-menu-label` | `ContextMenu.Label` |
+| `context-menu-separator` | `ContextMenu.Separator` |
+| `context-menu-empty-state` | `ContextMenu.EmptyState` |
+| `menu-subtrigger` | `ContextMenu.SubmenuTrigger` (shared with `Menu`'s internals) |
+| `menu-cell-leading-icon` | Leading icon inside an item or submenu trigger (when provided; shared with `Menu`'s internals) |
+| `menu-cell-trailing-icon` | Trailing icon inside an item or submenu trigger (when provided; shared with `Menu`'s internals) |
+
 ## Examples
 
 ### Basic Usage

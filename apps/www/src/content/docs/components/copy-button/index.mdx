@@ -26,6 +26,18 @@ The CopyButton component extends IconButton props and accepts the following addi
 
 All IconButton props are supported
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `copy-button` | The root `<button>` element |
+| `copy-button-icons` | Wrapper that swaps between the copy and check icons |
+| `copy-button-copy-icon` | The copy icon |
+| `copy-button-check-icon` | The check icon shown after copying |
+| `copy-button-status` | Visually hidden live region announcing "Copied" |
+
 ## Examples
 
 ### Size

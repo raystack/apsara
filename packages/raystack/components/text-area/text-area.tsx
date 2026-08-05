@@ -58,6 +58,7 @@ export function TextArea({
   const textarea = (
     <textarea
       rows={3}
+      data-slot='text-area'
       className={cx(
         textAreaVariants({ size, variant }),
         disabled && styles.disabled,

@@ -43,6 +43,16 @@ Groups multiple toggle buttons and manages their shared pressed state.
 
 <auto-type-table path="./props.ts" name="ToggleGroupProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `toggle` | The toggle button itself |
+| `toggle-content` | The `<span>` wrapping the toggle's children |
+| `toggle-group` | The `Toggle.Group` container |
+
 ## Examples
 
 ### Group

@@ -6,7 +6,11 @@ import { Button } from '../button';
 import styles from './toolbar.module.css';
 
 const ToolbarRoot = ({ className, ...props }: ToolbarPrimitive.Root.Props) => (
-  <ToolbarPrimitive.Root className={cx(styles.root, className)} {...props} />
+  <ToolbarPrimitive.Root
+    data-slot='toolbar'
+    className={cx(styles.root, className)}
+    {...props}
+  />
 );
 ToolbarRoot.displayName = 'Toolbar';
 
@@ -15,6 +19,7 @@ const ToolbarButton = ({
   ...props
 }: ToolbarPrimitive.Button.Props) => (
   <ToolbarPrimitive.Button
+    data-slot='toolbar-button'
     className={cx(styles.button, className)}
     render={<Button variant='text' color='neutral' size='small' />}
     {...props}
@@ -26,7 +31,11 @@ const ToolbarGroup = ({
   className,
   ...props
 }: ToolbarPrimitive.Group.Props) => (
-  <ToolbarPrimitive.Group className={cx(styles.group, className)} {...props} />
+  <ToolbarPrimitive.Group
+    data-slot='toolbar-group'
+    className={cx(styles.group, className)}
+    {...props}
+  />
 );
 ToolbarGroup.displayName = 'Toolbar.Group';
 
@@ -35,6 +44,7 @@ const ToolbarSeparator = ({
   ...props
 }: ToolbarPrimitive.Separator.Props) => (
   <ToolbarPrimitive.Separator
+    data-slot='toolbar-separator'
     className={cx(styles.separator, className)}
     {...props}
   />

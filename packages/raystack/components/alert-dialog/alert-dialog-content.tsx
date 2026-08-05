@@ -24,6 +24,7 @@ export const AlertDialogContent = ({
   return (
     <AlertDialogPrimitive.Portal>
       <AlertDialogPrimitive.Backdrop
+        data-slot='alert-dialog-backdrop'
         {...overlay}
         className={cx(
           styles.dialogOverlay,
@@ -31,13 +32,17 @@ export const AlertDialogContent = ({
           overlay?.className
         )}
       />
-      <AlertDialogPrimitive.Viewport className={styles.viewport}>
+      <AlertDialogPrimitive.Viewport
+        className={styles.viewport}
+        data-slot='alert-dialog-viewport'
+      >
         <AlertDialogPrimitive.Popup
           className={cx(
             styles.dialogContent,
             showNestedAnimation && styles.showNestedAnimation,
             className
           )}
+          data-slot='alert-dialog-content'
           {...props}
         >
           {children}

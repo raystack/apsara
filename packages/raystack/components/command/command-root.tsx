@@ -97,7 +97,9 @@ export const CommandRoot = ({
         items={items}
         {...props}
       >
-        <div className={cx(styles.panel, className)}>{children}</div>
+        <div data-slot='command' className={cx(styles.panel, className)}>
+          {children}
+        </div>
       </AutocompletePrimitive.Root>
     </CommandContext.Provider>
   );

@@ -36,18 +36,24 @@ export function SelectContent({
           side={side}
           align={align}
           className={styles.positioner}
+          data-slot='select-positioner'
         >
           <ComboboxPrimitive.Popup
             className={cx(styles.content, className)}
             data-multiselectable={multiple ? true : undefined}
+            data-slot='select-content'
             {...props}
           >
             <ComboboxPrimitive.Input
               placeholder={searchPlaceholder}
               className={styles.comboboxInput}
               size={12}
+              data-slot='select-search'
             />
-            <ComboboxPrimitive.List className={styles.comboboxContent}>
+            <ComboboxPrimitive.List
+              className={styles.comboboxContent}
+              data-slot='select-list'
+            >
               {children}
             </ComboboxPrimitive.List>
           </ComboboxPrimitive.Popup>
@@ -63,13 +69,18 @@ export function SelectContent({
       align={align}
       className={styles.positioner}
       alignItemWithTrigger={false}
+      data-slot='select-positioner'
     >
       <SelectPrimitive.Popup
         className={cx(styles.content, className)}
         data-multiselectable={multiple ? true : undefined}
+        data-slot='select-content'
         {...props}
       >
-        <SelectPrimitive.List className={styles.viewport}>
+        <SelectPrimitive.List
+          className={styles.viewport}
+          data-slot='select-list'
+        >
           {children}
         </SelectPrimitive.List>
       </SelectPrimitive.Popup>
