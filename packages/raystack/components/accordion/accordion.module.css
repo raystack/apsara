@@ -90,7 +90,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .accordion-icon {
-    transition: transform var(--rs-duration-fast) var(--rs-ease-in-out);
+    transition: transform var(--rs-duration-fast) var(--rs-ease-out);
   }
 
   .accordion-content {

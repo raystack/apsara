@@ -124,6 +124,7 @@
 .empty {
   padding: var(--rs-space-7) var(--rs-space-3);
   text-align: center;
+  text-wrap: pretty;
   font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
