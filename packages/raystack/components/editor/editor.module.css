@@ -1,0 +1,176 @@
+/* The editing host. A contentEditable div grows with its content natively, so
+   there is no `field-sizing` here — that property applies to form controls. */
+.editor {
+  /* One line box has to be tall enough to hold a whole chip, or inserting one
+     would grow the composer and nudge the page under it. The small font's own
+     16px line box is shorter than a chip's icon and trailing slots, so the
+     editor pairs the small font with the regular line height and sizes the chip
+     to match — the line box is then the same height whatever a line holds. */
+  --editor-line-height: var(--rs-line-height-regular);
+
+  box-sizing: border-box;
+  /* ProseMirror positions widget decorations against the editing host. */
+  position: relative;
+  width: 100%;
+  outline: none;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  overflow-y: auto;
+  color: var(--rs-color-foreground-base-primary);
+  font-family: var(--rs-font-family);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--editor-line-height);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+
+.editor > p {
+  margin: 0;
+}
+
+/* prosemirror-view ships a stylesheet the editor deliberately does not load —
+   it brings its own type, layout and selection treatment. Two of those rules
+   are load-bearing rather than cosmetic, so they are mirrored here. */
+
+/* ProseMirror appends a zero-size placeholder <img> after a paragraph that ends
+   in a `contentEditable="false"` node — a chip — so the browser can draw a
+   caret past it. An app-level `img { display: block }` reset (Tailwind's
+   preflight carries one) turns that placeholder into a block box, which reads
+   as a phantom empty line under the chip and swallows a Backspace. */
+.editor :global(img.ProseMirror-separator) {
+  display: inline !important;
+  border: none !important;
+  margin: 0 !important;
+}
+
+/* A selected chip is a NodeSelection, so the text caret has to go away while
+   it is up, the way it does for any other selected object. */
+.editor:global(.ProseMirror-hideselection) {
+  caret-color: transparent;
+}
+
+.editor:global(.ProseMirror-hideselection) *::selection {
+  background: transparent;
+}
+
+/* Read from the same emptiness predicate as `data-empty` — a ProseMirror-empty
+   paragraph still holds a trailing <br>, so `:empty` would never match. */
+.placeholder::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+/* The subtle fill on the typed trigger and its query while the menu is open, so
+   a pending mention reads as pending rather than as ordinary text. */
+.activeSuggestion {
+  border-radius: var(--rs-radius-2);
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+/* Chip. Chip's tokens on the editor's own type scale, so the line box does not
+   jump, and inert — removal is editing-only, so there is no hover or active
+   treatment to advertise a press that does nothing. */
+.mention {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rs-space-1);
+  box-sizing: border-box;
+  /* Fixed to the line box's height, so nothing the chip holds can change the
+     composer's height as it lands: an icon portals in one commit after the chip
+     itself, and a consumer's trailing badge is taller than the label. */
+  height: var(--editor-line-height);
+  max-width: 16rem;
+  padding: 0 var(--rs-space-2);
+  border-radius: var(--rs-radius-2);
+  background: var(--rs-color-background-base-primary-hover);
+  color: var(--rs-color-foreground-base-primary);
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  /* Top-aligned rather than baseline-aligned: an inline-flex box takes its
+     baseline from its *first* flex item, so a chip with an icon would hang off
+     the icon's box and ride above the surrounding text. Its height matches the
+     line box, so aligning the two tops puts the label on the text's baseline. */
+  vertical-align: top;
+  white-space: nowrap;
+  user-select: none;
+  cursor: default;
+}
+
+.mentionLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mentionIcon,
+.mentionTrailing {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+/* The slots are portal targets and stay in the DOM even with nothing in them. */
+.mentionIcon:empty,
+.mentionTrailing:empty {
+  display: none;
+}
+
+.mentionIcon > svg,
+.mentionTrailing > svg {
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
+}
+
+/* NodeSelection — clicking a chip selects it as one unit. */
+.mention[data-selected] {
+  outline: var(--rs-focus-ring);
+  outline-offset: 1px;
+}
+
+.editor[data-disabled] .mention {
+  opacity: 0.7;
+}
+
+/* Suggestion menu. Positioned at the caret but sized to the composer: a caret
+   is a zero-width anchor, so `--anchor-width` is useless and the width has to
+   be stated. The guards keep it usable in narrow panels and wide layouts. */
+.suggestionMenu {
+  box-sizing: border-box;
+  width: var(--suggestion-menu-width, 20rem);
+  min-width: 240px;
+  max-width: min(var(--available-width), 420px);
+  max-height: 320px;
+  overflow-y: auto;
+  padding: var(--rs-space-2);
+}
+
+.suggestionGroup + .suggestionGroup {
+  margin-top: var(--rs-space-2);
+}
+
+.suggestionGroupLabel {
+  padding: var(--rs-space-2) var(--rs-space-3);
+  color: var(--rs-color-foreground-base-tertiary);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+  font-weight: var(--rs-font-weight-medium);
+}
+
+.suggestionRow {
+  cursor: pointer;
+}
+
+.suggestionEmpty {
+  padding: var(--rs-space-3);
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.suggestionLoadingRow {
+  padding: var(--rs-space-3);
+}

@@ -112,8 +112,16 @@ export { PreviewCard } from './components/preview-card';
 export { Progress } from './components/progress';
 export {
   PromptInput,
+  type PromptInputActions,
+  type PromptInputEditorProps,
+  type PromptInputMention,
+  type PromptInputMentionItem,
+  type PromptInputMentionRef,
+  type PromptInputMentionsProps,
+  type PromptInputMessage,
   type PromptInputProps,
-  type PromptInputStatus
+  type PromptInputStatus,
+  type PromptInputTextareaProps
 } from './components/prompt-input';
 export { Radio } from './components/radio';
 export { Reasoning } from './components/reasoning';
