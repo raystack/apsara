@@ -226,14 +226,6 @@ button.selectValue:hover {
   display: none;
 }
 
-/* The DatePicker reserves an (invisible) error line below its input so
-   appearing errors don't shift layout. Inside the 24px chip row that
-   reserved line inflates the wrapper and pushes the input off-center;
-   the chip signals date errors with the danger border below instead. */
-.dateFieldWrapper [class*="datePickerError"] {
-  display: none;
-}
-
 .dateFieldWrapper [class*="input-error-wrapper"] {
   border: 1px solid var(--rs-color-border-danger-primary);
 }
