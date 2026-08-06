@@ -343,27 +343,3 @@
 .datePickerInput {
   text-align: left;
 }
-
-.datePickerError {
-  display: block;
-  /* Reserved line: the space exists whether or not an error is showing,
-     so appearing/disappearing errors never shift the layout below. */
-  min-height: var(--rs-line-height-mini);
-  margin-top: var(--rs-space-1);
-  color: var(--rs-color-foreground-danger-primary);
-  font-weight: var(--rs-font-weight-regular);
-  font-size: var(--rs-font-size-mini);
-  line-height: var(--rs-line-height-mini);
-  letter-spacing: var(--rs-letter-spacing-mini);
-  opacity: 0;
-}
-
-.datePickerError[data-visible] {
-  opacity: 1;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .datePickerError {
-    transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
-  }
-}
