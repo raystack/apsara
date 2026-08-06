@@ -38,6 +38,7 @@ export function SidebarTrigger({
       aria-label={ariaLabel ?? (open ? 'Collapse sidebar' : 'Expand sidebar')}
       aria-expanded={open}
       aria-controls={sidebarId}
+      data-slot='sidebar-trigger'
       {...props}
     >
       {children ?? <ViewVerticalIcon />}

@@ -76,32 +76,58 @@ export function ToastRoot({
       className={cx(styles.root, className)}
       swipeDirection={swipeDirection}
       data-position={position}
+      data-slot='toast'
       {...props}
     >
-      <ToastPrimitive.Content className={styles.content}>
-        <Flex align='start' gap={3} style={{ width: '100%' }}>
+      <ToastPrimitive.Content
+        className={styles.content}
+        data-slot='toast-content'
+      >
+        <Flex
+          align='start'
+          gap={3}
+          style={{ width: '100%' }}
+          data-slot='toast-body'
+        >
           {leadingIcon && (
-            <span className={styles.leadingIcon} aria-hidden='true'>
+            <span
+              className={styles.leadingIcon}
+              aria-hidden='true'
+              data-slot='toast-leading-icon'
+            >
               {leadingIcon}
             </span>
           )}
-          <Flex direction='column' gap={3} className={styles.contentColumn}>
+          <Flex
+            direction='column'
+            gap={3}
+            className={styles.main}
+            data-slot='toast-main'
+          >
             <Flex
               align='center'
               justify='between'
               gap={5}
-              className={styles.topRow}
+              className={styles.header}
+              data-slot='toast-header'
             >
               {title && (
                 <ToastPrimitive.Title
                   className={hasBoth ? styles.title : styles.description}
+                  data-slot='toast-title'
                 >
                   {title}
                 </ToastPrimitive.Title>
               )}
-              <Flex align='center' gap={3} className={styles.actions}>
+              <Flex
+                align='center'
+                gap={3}
+                className={styles.actions}
+                data-slot='toast-actions'
+              >
                 {toast.actionProps && (
                   <ToastPrimitive.Action
+                    data-slot='toast-action'
                     {...toast.actionProps}
                     render={
                       <Button variant='text' color='neutral' size='small' />
@@ -111,13 +137,17 @@ export function ToastRoot({
                 <ToastPrimitive.Close
                   aria-label='Close toast'
                   render={<IconButton size={2} />}
+                  data-slot='toast-close'
                 >
                   <Cross1Icon />
                 </ToastPrimitive.Close>
               </Flex>
             </Flex>
             {hasBoth && (
-              <ToastPrimitive.Description className={styles.description}>
+              <ToastPrimitive.Description
+                className={styles.description}
+                data-slot='toast-description'
+              >
                 {toast.description}
               </ToastPrimitive.Description>
             )}

@@ -92,6 +92,32 @@ Renders a sidebar row that opens an Apsara menu with additional `Sidebar.Item` e
 
 <auto-type-table path="./props.ts" name="SidebarMoreProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `sidebar` | The root `<aside>` |
+| `sidebar-toggle` | The resize handle that expands/collapses the sidebar (when `collapsible`) |
+| `sidebar-trigger` | `Sidebar.Trigger` button |
+| `sidebar-header` | `Sidebar.Header` container |
+| `sidebar-main` | `Sidebar.Main` container |
+| `sidebar-footer` | `Sidebar.Footer` container |
+| `sidebar-group` | `Sidebar.Group` section |
+| `sidebar-group-header` | Group header row |
+| `sidebar-group-label` | Group label text |
+| `sidebar-group-trigger` | Group header trigger (when `collapsible`) |
+| `sidebar-group-chevron` | Group chevron icon (when `collapsible`) |
+| `sidebar-group-panel` | Group items panel (when `collapsible`) |
+| `sidebar-group-items` | Group items container |
+| `sidebar-item` | `Sidebar.Item` link/element |
+| `sidebar-item-text` | Item label text |
+| `sidebar-leading-icon` | Leading icon/avatar shared by items, groups, and `Sidebar.More` |
+| `sidebar-trailing-icon` | Trailing icon on a group header (when `trailingIcon` is set) |
+| `sidebar-more-trigger` | `Sidebar.More` trigger row |
+| `sidebar-more-text` | `Sidebar.More` trigger label |
+
 ### useSidebar
 
 A hook that reads the sidebar state from context. Use it in custom header, footer, or item content to adapt to the collapsed state, or to toggle the sidebar from your own controls. It must be used inside `<Sidebar>`, otherwise it throws.

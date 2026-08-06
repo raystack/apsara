@@ -215,6 +215,7 @@ export function SidebarRoot({
           data-closed={!visualOpen ? '' : undefined}
           data-collapse-mode={collapsible}
           data-peeking={isPeeking ? '' : undefined}
+          data-slot='sidebar'
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           aria-label='Navigation Sidebar'
@@ -228,6 +229,7 @@ export function SidebarRoot({
                   <button
                     type='button'
                     className={styles['resize-handle']}
+                    data-slot='sidebar-toggle'
                     onClick={() => handleOpenChange(!open)}
                     aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
                     aria-expanded={open}

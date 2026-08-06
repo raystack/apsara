@@ -748,6 +748,7 @@ export function ChatPanelRoot({
                 <div
                   key={direction}
                   aria-hidden='true'
+                  data-slot='chat-panel-resize-handle'
                   className={cx(
                     styles['resize-handle'],
                     styles[`resize-${direction}`]
@@ -829,6 +830,7 @@ function ChatPanelFrame({
         else if (ref) ref.current = node;
       }}
       className={cx(styles.root, className)}
+      data-slot='chat-panel'
       data-mode={mode}
       data-side={side}
       data-draggable={dragEnabled || undefined}

@@ -51,6 +51,7 @@ export function ToastProvider({
       <ToastPrimitive.Portal>
         <ToastPrimitive.Viewport
           className={cx(styles.viewport, styles[`viewport-${position}`])}
+          data-slot='toast-viewport'
         >
           <ToastList position={position} />
         </ToastPrimitive.Viewport>

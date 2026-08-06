@@ -178,6 +178,7 @@ export function PromptInputRoot({
           else if (ref) ref.current = node;
         }}
         className={cx(styles.root, className)}
+        data-slot='prompt-input'
         data-status={status}
         data-disabled={disabled || undefined}
         data-empty={value.trim() === '' || undefined}

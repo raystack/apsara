@@ -56,6 +56,18 @@ The end section is a container that accepts Flex props and section props. It's c
 
 <auto-type-table path="./props.ts" name="NavbarEndProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `navbar` | The root `<nav>` |
+| `navbar-container` | Inner grid container (Start \| Center \| End) |
+| `navbar-start` | `Navbar.Start` section |
+| `navbar-center` | `Navbar.Center` section |
+| `navbar-end` | `Navbar.End` section |
+
 ## Examples
 
 ### Sticky Navigation

@@ -5,7 +5,7 @@ import { ComponentProps } from 'react';
  * Use `Flex` component instead.
  */
 export function Box(props: ComponentProps<'div'>) {
-  return <div {...props} />;
+  return <div data-slot='box' {...props} />;
 }
 
 Box.displayName = 'Box';

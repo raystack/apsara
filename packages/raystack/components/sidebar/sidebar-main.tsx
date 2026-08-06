@@ -16,6 +16,7 @@ export function SidebarMain({
       role='list'
       gap={2}
       aria-label='Main navigation'
+      data-slot='sidebar-main'
       {...props}
     />
   );

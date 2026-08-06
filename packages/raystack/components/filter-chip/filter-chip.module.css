@@ -42,7 +42,8 @@
 /* Inputs within the chip hug their value (`field-sizing`) and shrink under
  * resize pressure so `text-overflow` ellipsizes with padding intact;
  * `min-width` keeps an empty value clickable, `max-width` caps a runaway one. */
-.chip input {
+.chip [data-slot="input"],
+.chip [data-slot="date-picker-input"] {
   border: none;
   box-shadow: none;
   background: transparent;
@@ -183,7 +184,7 @@ button.selectValue:hover {
   min-height: var(--rs-space-7);
 }
 
-.inputFieldWrapper input {
+.inputFieldWrapper [data-slot="input"] {
   padding-left: var(--rs-space-3);
   padding-right: var(--rs-space-3);
 }
@@ -212,7 +213,7 @@ button.selectValue:hover {
   min-height: var(--rs-space-7);
 }
 
-.dateField input {
+.dateField [data-slot="date-picker-input"] {
   text-align: left;
   padding-left: var(--rs-space-3);
   padding-right: var(--rs-space-3);

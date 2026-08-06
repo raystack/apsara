@@ -42,19 +42,29 @@ export function FieldRoot({
         className={cx(styles.field, className)}
         invalid={isInvalid}
         disabled={disabled}
+        data-slot='field'
         {...props}
       >
         {label && <FieldLabel required={required}>{label}</FieldLabel>}
-        <div className={styles.control}>{children}</div>
+        <div className={styles.control} data-slot='field-control'>
+          {children}
+        </div>
         {(description || error) && (
-          <div className={styles.helperSlot}>
+          <div className={styles.helperSlot} data-slot='field-helper'>
             {description && !error && (
-              <FieldPrimitive.Description className={styles.description}>
+              <FieldPrimitive.Description
+                className={styles.description}
+                data-slot='field-description'
+              >
                 {description}
               </FieldPrimitive.Description>
             )}
             {error && (
-              <FieldPrimitive.Error className={styles.error} match>
+              <FieldPrimitive.Error
+                className={styles.error}
+                data-slot='field-error'
+                match
+              >
                 {error}
               </FieldPrimitive.Error>
             )}

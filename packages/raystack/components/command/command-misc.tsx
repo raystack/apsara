@@ -18,6 +18,7 @@ export const CommandGroup = ({
 
   return (
     <AutocompletePrimitive.Group
+      data-slot='command-group'
       className={cx(styles.group, className)}
       {...props}
     >
@@ -35,6 +36,7 @@ export const CommandLabel = ({ className, ...props }: CommandLabelProps) => {
 
   return (
     <AutocompletePrimitive.GroupLabel
+      data-slot='command-label'
       className={cx(styles.label, className)}
       {...props}
     />
@@ -53,6 +55,7 @@ export const CommandSeparator = ({
 
   return (
     <AutocompletePrimitive.Separator
+      data-slot='command-separator'
       className={cx(styles.separator, className)}
       {...props}
     />
@@ -75,9 +78,17 @@ export const CommandShortcut = ({
         : [children];
 
   return (
-    <span className={cx(styles.shortcut, className)} {...props}>
+    <span
+      data-slot='command-shortcut'
+      className={cx(styles.shortcut, className)}
+      {...props}
+    >
       {keys.map((key, index) => (
-        <kbd key={index} className={styles.shortcutKey}>
+        <kbd
+          key={index}
+          data-slot='command-shortcut-key'
+          className={styles.shortcutKey}
+        >
           {key}
         </kbd>
       ))}

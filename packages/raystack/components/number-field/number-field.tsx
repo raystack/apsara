@@ -28,10 +28,14 @@ function NumberFieldRoot({
         className={cx(styles.root, className)}
         id={fieldId}
         required={resolvedRequired}
+        data-slot='number-field'
         {...props}
       >
         {children ?? (
-          <NumberFieldPrimitive.Group className={styles.group}>
+          <NumberFieldPrimitive.Group
+            className={styles.group}
+            data-slot='number-field-group'
+          >
             <NumberFieldDecrement />
             <NumberFieldInput />
             <NumberFieldIncrement />
@@ -50,6 +54,7 @@ function NumberFieldGroup({
   return (
     <NumberFieldPrimitive.Group
       className={cx(styles.group, className)}
+      data-slot='number-field-group'
       {...props}
     />
   );
@@ -63,6 +68,7 @@ function NumberFieldInput({
   return (
     <NumberFieldPrimitive.Input
       className={cx(styles.input, className)}
+      data-slot='number-field-input'
       {...props}
     />
   );
@@ -77,9 +83,16 @@ function NumberFieldDecrement({
   return (
     <NumberFieldPrimitive.Decrement
       className={cx(styles.decrement, className)}
+      data-slot='number-field-decrement'
       {...props}
     >
-      {children ?? <MinusIcon width={12} height={12} />}
+      {children ?? (
+        <MinusIcon
+          width={12}
+          height={12}
+          data-slot='number-field-decrement-icon'
+        />
+      )}
     </NumberFieldPrimitive.Decrement>
   );
 }
@@ -93,9 +106,16 @@ function NumberFieldIncrement({
   return (
     <NumberFieldPrimitive.Increment
       className={cx(styles.increment, className)}
+      data-slot='number-field-increment'
       {...props}
     >
-      {children ?? <PlusIcon width={12} height={12} />}
+      {children ?? (
+        <PlusIcon
+          width={12}
+          height={12}
+          data-slot='number-field-increment-icon'
+        />
+      )}
     </NumberFieldPrimitive.Increment>
   );
 }
@@ -116,20 +136,35 @@ function NumberFieldScrubArea({
   return (
     <NumberFieldPrimitive.ScrubArea
       className={cx(styles['scrub-area'], className)}
+      data-slot='number-field-scrub-area'
       {...props}
     >
-      <Label className={styles['scrub-area-label']} htmlFor={context?.fieldId}>
+      <Label
+        className={styles['scrub-area-label']}
+        htmlFor={context?.fieldId}
+        data-slot='number-field-scrub-area-label'
+      >
         {label}
       </Label>
-      <NumberFieldPrimitive.ScrubAreaCursor
-        className={styles['scrub-area-cursor']}
-      >
+      <NumberFieldScrubAreaCursor className={styles['scrub-area-cursor']}>
         <CursorGrowIcon />
-      </NumberFieldPrimitive.ScrubAreaCursor>
+      </NumberFieldScrubAreaCursor>
     </NumberFieldPrimitive.ScrubArea>
   );
 }
 NumberFieldScrubArea.displayName = 'NumberField.ScrubArea';
+
+function NumberFieldScrubAreaCursor(
+  props: NumberFieldPrimitive.ScrubAreaCursor.Props
+) {
+  return (
+    <NumberFieldPrimitive.ScrubAreaCursor
+      data-slot='number-field-scrub-area-cursor'
+      {...props}
+    />
+  );
+}
+NumberFieldScrubAreaCursor.displayName = 'NumberField.ScrubAreaCursor';
 
 function CursorGrowIcon(props: ComponentProps<'svg'>) {
   return (
@@ -141,6 +176,7 @@ function CursorGrowIcon(props: ComponentProps<'svg'>) {
       viewBox='0 0 24 14'
       width='26'
       xmlns='http://www.w3.org/2000/svg'
+      data-slot='number-field-scrub-area-cursor-icon'
       {...props}
     >
       <path d='M19.5 5.5L6.49737 5.51844V2L1 6.9999L6.5 12L6.49737 8.5L19.5 8.5V12L25 6.9999L19.5 2V5.5Z' />
@@ -154,5 +190,5 @@ export const NumberField = Object.assign(NumberFieldRoot, {
   Decrement: NumberFieldDecrement,
   Increment: NumberFieldIncrement,
   ScrubArea: NumberFieldScrubArea,
-  ScrubAreaCursor: NumberFieldPrimitive.ScrubAreaCursor
+  ScrubAreaCursor: NumberFieldScrubAreaCursor
 });

@@ -36,6 +36,7 @@ export const ContextMenuItem = ({
   if (autocomplete) {
     return (
       <AutocompletePrimitive.Item
+        data-slot='context-menu-item'
         value={value}
         render={<ContextMenuPrimitive.Item render={cell} />}
         {...props}
@@ -47,6 +48,7 @@ export const ContextMenuItem = ({
 
   return (
     <ContextMenuPrimitive.Item
+      data-slot='context-menu-item'
       render={cell}
       {...props}
       onFocus={e => {

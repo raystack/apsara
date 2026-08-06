@@ -59,17 +59,24 @@ export function SelectTrigger({
   return (
     <TriggerPrimitive
       data-multiselectable={multiple ? true : undefined}
+      data-slot='select-trigger'
       ref={ref}
       className={trigger({ size, variant, className })}
       aria-label={ariaLabel || 'Select option'}
       {...props}
     >
-      <Flex className={styles.triggerContent} align='center' gap={2}>
+      <Flex
+        className={styles.triggerContent}
+        align='center'
+        gap={2}
+        data-slot='select-trigger-content'
+      >
         {children}
       </Flex>
       <ChevronDownIcon
         className={styles.triggerIcon}
         aria-hidden='true'
+        data-slot='select-trigger-icon'
         {...iconProps}
       />
     </TriggerPrimitive>

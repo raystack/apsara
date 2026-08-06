@@ -21,6 +21,7 @@ export const NavbarStart = ({
       gap={gap}
       className={cx(styles.start, className)}
       aria-label={ariaLabel}
+      data-slot='navbar-start'
       {...props}
       role='group'
     >
@@ -47,6 +48,7 @@ export const NavbarCenter = ({
       gap={gap}
       className={cx(styles.center, className)}
       aria-label={ariaLabel}
+      data-slot='navbar-center'
       {...props}
       role='group'
     >
@@ -73,6 +75,7 @@ export const NavbarEnd = ({
       gap={gap}
       className={cx(styles.end, className)}
       aria-label={ariaLabel}
+      data-slot='navbar-end'
       {...props}
       role='group'
     >

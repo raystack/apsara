@@ -153,6 +153,7 @@ export const FilterChip = ({
               }}
               variant='text'
               className={styles.selectValue}
+              data-slot='filter-chip-value'
             >
               <Select.Value placeholder='Select value'>
                 {isMultiSelectColumn && filterValue.length > 1
@@ -174,7 +175,10 @@ export const FilterChip = ({
         );
       case FilterType.date:
         return (
-          <div className={styles.dateFieldWrapper}>
+          <div
+            className={styles.dateFieldWrapper}
+            data-slot='filter-chip-value'
+          >
             <DatePicker
               showCalendarIcon={false}
               {...calendarProps}
@@ -192,7 +196,10 @@ export const FilterChip = ({
         );
       default:
         return (
-          <div className={styles.inputFieldWrapper}>
+          <div
+            className={styles.inputFieldWrapper}
+            data-slot='filter-chip-value'
+          >
             <Input
               variant={variant === 'text' ? 'borderless' : 'default'}
               classNames={{ container: styles.inputField }}
@@ -212,15 +219,25 @@ export const FilterChip = ({
       role='group'
       aria-label={`Filter by ${label}`}
       data-variant={variant}
+      data-slot='filter-chip'
       {...props}
     >
-      <Flex align='center' gap={2} className={styles['chip-label']}>
+      <Flex
+        align='center'
+        gap={2}
+        className={styles['chip-label']}
+        data-slot='filter-chip-label'
+      >
         {leadingIcon && (
-          <span className={styles.leadingIcon} aria-hidden='true'>
+          <span
+            className={styles.leadingIcon}
+            aria-hidden='true'
+            data-slot='filter-chip-leading-icon'
+          >
             {leadingIcon}
           </span>
         )}
-        <Text size='small' weight='regular'>
+        <Text size='small' weight='regular' data-slot='filter-chip-label-text'>
           {label}
         </Text>
       </Flex>
@@ -237,8 +254,12 @@ export const FilterChip = ({
           className={styles.removeIconContainer}
           aria-label={`Remove ${label} filter`}
           onClick={onRemove}
+          data-slot='filter-chip-remove'
         >
-          <Cross1Icon className={styles.removeIcon} />
+          <Cross1Icon
+            className={styles.removeIcon}
+            data-slot='filter-chip-remove-icon'
+          />
         </button>
       )}
     </Flex>

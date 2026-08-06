@@ -205,6 +205,89 @@ A context-driven "Clear Filters" affordance for the empty state. Place it as a s
 
 <auto-type-table path="./props.ts" name="DataViewClearFiltersProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot). Filter chips inside `DataView.Filters` expose the [FilterChip slots](/docs/components/filter-chip#slots); `DataView.Search` exposes the [Search slots](/docs/components/search#slots).
+
+**List**
+
+| Slot | Element |
+|------|---------|
+| `data-view-list` | Scroll container |
+| `data-view-list-grid` | The grid carrying the table/list role |
+| `data-view-list-header` | Header row group |
+| `data-view-list-header-row` | Header row |
+| `data-view-list-header-cell` | Header cell |
+| `data-view-list-body` | Row container |
+| `data-view-list-row` | Data row |
+| `data-view-list-cell` | Cell (data and loader rows) |
+| `data-view-list-group-header` | Group header (incl. the sticky anchor) |
+| `data-view-list-loader-row` | Skeleton row while `isLoading` |
+| `data-view-list-sentinel` | Infinite-scroll sentinel |
+
+Header cells, body cells, and loader cells also carry `data-column="{accessorKey}"`, so a single column can be targeted without a per-column `classNames` entry:
+
+```css
+/* Right-align every cell in the "amount" column, header included */
+[data-slot="data-view-list-cell"][data-column="amount"],
+[data-slot="data-view-list-header-cell"][data-column="amount"] {
+  text-align: right;
+}
+```
+
+**Toolbar and filters**
+
+| Slot | Element |
+|------|---------|
+| `data-view-toolbar` | Toolbar container |
+| `data-view-filters` | Filter chip row |
+| `data-view-add-filter` | Default add-filter trigger |
+| `data-view-add-filter-item` | An entry in the add-filter menu |
+| `data-view-filter-summary` | "Items hidden by filters" footer |
+| `data-view-filter-summary-text` | Count + label group |
+| `data-view-filter-summary-count` | Hidden-row count |
+| `data-view-filter-summary-label` | Footer label text |
+| `data-view-filter-summary-clear` | The "Clear Filters" button |
+
+**Display controls**
+
+| Slot | Element |
+|------|---------|
+| `data-view-display-trigger` | Default "Display" trigger button |
+| `data-view-display-content` | Popover body |
+| `data-view-display-section` | A section inside the popover |
+| `data-view-display-reset` | Reset row |
+| `data-view-display-reset-button` | The "Reset to default" button |
+| `data-view-ordering` / `-label` / `-control` / `-select` / `-direction` | Ordering row and its parts |
+| `data-view-grouping` / `-label` / `-control` / `-select` | Grouping row and its parts |
+| `data-view-display-properties` / `-label` / `-list` / `-chip` | Display Properties section and its parts |
+| `data-view-view-switcher` / `-tab` | View switcher tabs |
+
+**Timeline**
+
+| Slot | Element |
+|------|---------|
+| `data-view-timeline` | Scroll container |
+| `data-view-timeline-axis` | Sticky axis |
+| `data-view-timeline-axis-band` / `-band-label` | Month/year band and its label |
+| `data-view-timeline-axis-tick` | Axis tick |
+| `data-view-timeline-axis-marker` | Today/custom marker badge on the axis |
+| `data-view-timeline-axis-cursor` | Hover cursor badge on the axis |
+| `data-view-timeline-canvas` | Card canvas |
+| `data-view-timeline-card` | Card positioning wrapper |
+| `data-view-timeline-gridline` | Vertical gridline |
+| `data-view-timeline-marker` | Marker line on the canvas |
+| `data-view-timeline-cursor` | Hover cursor line on the canvas |
+| `data-view-timeline-group-layer` / `-group-slot` / `-group-header` / `-group-header-label` | Group band layer and its parts |
+| `data-view-timeline-footer` | Sticky footer |
+
+**States**
+
+| Slot | Element |
+|------|---------|
+| `data-view-empty-state` | `DataView.EmptyState` container |
+| `data-view-zero-state` | `DataView.ZeroState` container |
+
 ## Examples
 
 ### Search

@@ -32,6 +32,19 @@ Renders a dismissible banner for announcements and alerts.
 
 <auto-type-table path="./props.ts" name="AnnouncementBarProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `announcement-bar` | The root `<div>` element |
+| `announcement-bar-icon` | Wrapper around the leading icon (when `leadingIcon` is set) |
+| `announcement-bar-text` | The main text |
+| `announcement-bar-action` | The action `<button>` (when `actionLabel` or `actionIcon` is set) |
+| `announcement-bar-action-label` | The action button's text label |
+| `announcement-bar-action-icon` | Wrapper around the action icon (when `actionIcon` is set) |
+
 ## Accessibility
 
 - The action (when `actionLabel` or `actionIcon` is provided) is rendered

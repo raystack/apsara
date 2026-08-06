@@ -77,6 +77,23 @@ Visual divider between combobox items or groups.
 
 <auto-type-table path="./props.ts" name="ComboboxSeparatorProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `combobox-input` | The text input that opens the popup |
+| `combobox-positioner` | Wrapper that positions the popup |
+| `combobox-content` | The popup container |
+| `combobox-list` | The scrollable list of items |
+| `combobox-group` | A group of related items |
+| `combobox-label` | The label for a group |
+| `combobox-separator` | The divider between items or groups |
+| `combobox-item` | A selectable option row |
+| `combobox-item-text` | The text label inside an item (when its children is a string) |
+| `combobox-item-icon` | The leading icon inside an item (when `leadingIcon` is set) |
+
 ## Examples
 
 ### Basic

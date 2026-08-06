@@ -21,19 +21,34 @@ export interface EmptyStateProps {
 
   /** Map of classNames for internal components */
   classNames?: {
-    /** Class for the container */
+    /**
+     * Class for the container.
+     * @deprecated Use `[data-slot="empty-state"]` instead.
+     */
     container?: string;
 
-    /** Class for the icon container */
+    /**
+     * Class for the icon container.
+     * @deprecated Use `[data-slot="empty-state-icon-container"]` instead.
+     */
     iconContainer?: string;
 
-    /** Class for the icon */
+    /**
+     * Class for the icon.
+     * @deprecated Use `[data-slot="empty-state-icon"]` instead.
+     */
     icon?: string;
 
-    /** Class for the heading */
+    /**
+     * Class for the heading.
+     * @deprecated Use `[data-slot="empty-state-heading"]` instead.
+     */
     heading?: string;
 
-    /** Class for the subheading */
+    /**
+     * Class for the subheading.
+     * @deprecated Use `[data-slot="empty-state-subheading"]` instead.
+     */
     subHeading?: string;
   };
 }

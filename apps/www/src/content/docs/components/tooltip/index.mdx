@@ -46,6 +46,18 @@ The Provider component serves as a context wrapper that provides global configur
 
 <auto-type-table path="./props.ts" name="TooltipProviderProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `tooltip-trigger` | The `Tooltip.Trigger` element |
+| `tooltip-positioner` | Positioner that places the popup |
+| `tooltip-content` | The tooltip popup |
+| `tooltip-text` | Text wrapper (when children is a string) |
+| `tooltip-arrow` | The arrow (when `showArrow`) |
+
 ## Examples
 
 ### Side

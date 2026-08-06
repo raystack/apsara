@@ -31,23 +31,26 @@ export function Grouping<TData>({
   };
 
   return (
-    <Flex align='center' gap={5}>
+    <Flex align='center' gap={5} data-slot='data-view-grouping'>
       <Text
         size='small'
         weight='medium'
         variant='secondary'
         className={styles['display-popover-properties-label']}
+        data-slot='data-view-grouping-label'
       >
         Grouping
       </Text>
       <Flex
         align='center'
         className={styles['display-popover-properties-control']}
+        data-slot='data-view-grouping-control'
       >
         <Select onValueChange={handleGroupChange} value={value}>
           <Select.Trigger
             size='small'
             className={styles['display-popover-properties-select']}
+            data-slot='data-view-grouping-select'
           >
             <Select.Value placeholder='Select value' />
           </Select.Trigger>

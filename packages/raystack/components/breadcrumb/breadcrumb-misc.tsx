@@ -18,10 +18,12 @@ export const BreadcrumbEllipsis = ({
       className={styles['breadcrumb-item']}
       role='presentation'
       aria-hidden='true'
+      data-slot='breadcrumb-item'
     >
       <span
         className={cx(styles['breadcrumb-ellipsis'], className)}
         ref={ref}
+        data-slot='breadcrumb-ellipsis'
         {...props}
       >
         {children}
@@ -45,12 +47,14 @@ export const BreadcrumbSeparator = ({
       className={styles['breadcrumb-item']}
       role='presentation'
       aria-hidden='true'
+      data-slot='breadcrumb-item'
     >
       <span
         className={cx(styles['breadcrumb-separator'], className)}
         ref={ref}
         role='presentation'
         aria-hidden='true'
+        data-slot='breadcrumb-separator'
         {...props}
       >
         {children}

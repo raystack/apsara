@@ -25,7 +25,7 @@ export function Search({
   ...props
 }: SearchProps) {
   const trailingIconWithClear = showClearButton ? (
-    <div className={styles.clearButtonWrapper}>
+    <div className={styles.clearButtonWrapper} data-slot='search-clear'>
       <IconButton
         size={size === 'small' ? 2 : 3}
         onClick={e => {
@@ -37,6 +37,7 @@ export function Search({
         disabled={disabled}
         aria-label='Clear search'
         className={styles.clearButton}
+        data-slot='search-clear-button'
       >
         <CrossCircledIcon />
       </IconButton>
@@ -44,8 +45,14 @@ export function Search({
   ) : undefined;
 
   return (
-    <div className={styles.container} role='search' style={{ width }}>
+    <div
+      className={styles.container}
+      role='search'
+      style={{ width }}
+      data-slot='search'
+    >
       <Input
+        data-slot='search-input'
         leadingIcon={<MagnifyingGlassIcon />}
         trailingIcon={trailingIconWithClear}
         placeholder={placeholder}

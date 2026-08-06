@@ -30,6 +30,16 @@ Renders a small label for status, count, or category indication.
 
 <auto-type-table path="./props.ts" name="BadgeProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `badge` | The root `<span>` element |
+| `badge-icon` | Wrapper around `icon` (when set) |
+| `badge-screen-reader-text` | Visually hidden text (when `screenReaderText` is set) |
+
 ## Examples
 
 ### Variant

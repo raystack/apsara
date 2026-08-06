@@ -230,6 +230,7 @@ export function DatePicker({
       placeholder='Select date'
       className={styles.datePickerInput}
       trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+      data-slot='date-picker-input'
       {...inputProps}
       ref={popover.inputRef}
       value={inputValue}
@@ -262,25 +263,28 @@ export function DatePicker({
     >
       <Popover.Trigger
         nativeButton={false}
-        render={<div>{triggerContent}</div>}
+        render={<div data-slot='date-picker-trigger'>{triggerContent}</div>}
       />
       <Popover.Content
         ref={popover.contentRef}
+        data-slot='date-picker-positioner'
         {...popoverProps}
         className={cx(styles.calendarPopover, popoverProps?.className)}
         side={popoverProps?.side ?? 'top'}
       >
-        <Calendar
-          {...calendarProps}
-          required={false}
-          timeZone={timeZone}
-          onDropdownOpen={popover.markDropdownOpen}
-          mode='single'
-          selected={selectedDate}
-          month={viewMonth}
-          onSelect={handleSelect}
-          onMonthChange={setViewMonth}
-        />
+        <div data-slot='date-picker-content'>
+          <Calendar
+            {...calendarProps}
+            required={false}
+            timeZone={timeZone}
+            onDropdownOpen={popover.markDropdownOpen}
+            mode='single'
+            selected={selectedDate}
+            month={viewMonth}
+            onSelect={handleSelect}
+            onMonthChange={setViewMonth}
+          />
+        </div>
       </Popover.Content>
     </Popover>
   );

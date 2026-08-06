@@ -67,17 +67,27 @@ export function FilterSummary({ className }: DataViewClearFiltersProps) {
       )}
       justify='center'
       align='center'
+      data-slot='data-view-filter-summary'
     >
       {mode === 'server' && hiddenLeafRowCount === null ? (
-        <span className={styles.filterSummaryLabel}>
+        <span
+          className={styles.filterSummaryLabel}
+          data-slot='data-view-filter-summary-label'
+        >
           Some items might be hidden by filters
         </span>
       ) : (
-        <Flex align='center' gap={2}>
-          <span className={styles.filterSummaryCount}>
+        <Flex align='center' gap={2} data-slot='data-view-filter-summary-text'>
+          <span
+            className={styles.filterSummaryCount}
+            data-slot='data-view-filter-summary-count'
+          >
             {hiddenLeafRowCount}
           </span>
-          <span className={styles.filterSummaryLabel}>
+          <span
+            className={styles.filterSummaryLabel}
+            data-slot='data-view-filter-summary-label'
+          >
             items hidden by filters
           </span>
         </Flex>
@@ -88,6 +98,7 @@ export function FilterSummary({ className }: DataViewClearFiltersProps) {
         size='small'
         trailingIcon={<Cross2Icon />}
         onClick={handleClearFilters}
+        data-slot='data-view-filter-summary-clear'
       >
         Clear Filters
       </Button>

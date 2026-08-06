@@ -33,6 +33,22 @@ Renders the slider track and thumb control.
 This component is used to display the current value of the slider.
 <auto-type-table path="./props.ts" name="SliderValueProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `slider` | The root container |
+| `slider-control` | The interactive control area |
+| `slider-track` | The track |
+| `slider-indicator` | The filled portion of the track |
+| `slider-thumb` | Each thumb (two in `range` mode) |
+| `slider-thumb-grip` | The thumb's visual grip (small or large) |
+| `slider-thumb-grip-line` | Each grip line (large thumb only) |
+| `slider-label` | The thumb label (when `label`) |
+| `slider-value` | The `Slider.Value` output element |
+
 ## Examples
 
 ### Variant

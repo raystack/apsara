@@ -50,6 +50,7 @@ export function Separator({
     : {};
   return (
     <SeparatorPrimitive
+      data-slot='separator'
       orientation={orientation}
       className={separator({ size, color, className })}
       {...decorativeProps}

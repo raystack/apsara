@@ -35,6 +35,15 @@ Grid.Item is a wrapper component that must be a direct child of Grid. Use it whe
 
 <auto-type-table path="./props.ts" name="GridItemProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `grid` | The grid container (or the element supplied via `render`) |
+| `grid-item` | Each `Grid.Item` element |
+
 ## Examples
 
 ### Basic Usage

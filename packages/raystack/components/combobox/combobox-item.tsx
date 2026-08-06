@@ -39,8 +39,12 @@ export const ComboboxItem = ({
   const element =
     typeof children === 'string' ? (
       <>
-        {leadingIcon && <div className={styles.itemIcon}>{leadingIcon}</div>}
-        <Text>{children}</Text>
+        {leadingIcon && (
+          <div className={styles.itemIcon} data-slot='combobox-item-icon'>
+            {leadingIcon}
+          </div>
+        )}
+        <Text data-slot='combobox-item-text'>{children}</Text>
       </>
     ) : (
       children
@@ -51,6 +55,7 @@ export const ComboboxItem = ({
       value={value}
       className={cx(styles.menuitem, className)}
       disabled={disabled}
+      data-slot='combobox-item'
       {...props}
       render={
         render

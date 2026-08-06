@@ -5,7 +5,13 @@ import { Tooltip as TooltipPrimitive } from '@base-ui/react';
 export interface TooltipTriggerProps extends TooltipPrimitive.Trigger.Props {}
 
 export function TooltipTrigger(props: TooltipPrimitive.Trigger.Props) {
-  return <TooltipPrimitive.Trigger delay={200} {...props} />;
+  return (
+    <TooltipPrimitive.Trigger
+      delay={200}
+      data-slot='tooltip-trigger'
+      {...props}
+    />
+  );
 }
 
 TooltipTrigger.displayName = 'Tooltip.Trigger';

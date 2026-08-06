@@ -33,6 +33,7 @@ export function Toolbar<TData>({
         justify='between'
         gap={3}
         align='start'
+        data-slot='data-view-toolbar'
       >
         {children}
       </Flex>
@@ -45,6 +46,7 @@ export function Toolbar<TData>({
       justify='between'
       gap={3}
       align='start'
+      data-slot='data-view-toolbar'
     >
       <Filters<TData> />
       <DisplayControls<TData> />

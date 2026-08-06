@@ -34,6 +34,7 @@ export interface InputProps
   maxChipsVisible?: number;
   variant?: 'default' | 'borderless';
   containerRef?: RefObject<HTMLDivElement | null>;
+  /** @deprecated Use `[data-slot="input-container"]` instead. */
   classNames?: { container?: string };
 }
 
@@ -65,16 +66,28 @@ export function Input({
         classNames?.container
       )}
       data-disabled={disabled || undefined}
+      data-slot='input-container'
       ref={containerRef}
     >
       {leadingIcon && (
-        <div className={styles['leading-icon']} aria-hidden='true'>
+        <div
+          className={styles['leading-icon']}
+          aria-hidden='true'
+          data-slot='input-leading-icon'
+        >
           {leadingIcon}
         </div>
       )}
-      {prefix && <div className={styles.prefix}>{prefix}</div>}
+      {prefix && (
+        <div className={styles.prefix} data-slot='input-prefix'>
+          {prefix}
+        </div>
+      )}
 
-      <div className={styles['chip-input-container']}>
+      <div
+        className={styles['chip-input-container']}
+        data-slot='input-chip-container'
+      >
         {chips?.slice(0, maxChipsVisible).map((chip, index) => (
           <Chip
             key={index}
@@ -83,16 +96,21 @@ export function Input({
             onDismiss={disabled ? undefined : chip.onRemove}
             className={styles.chip}
             disabled={disabled}
+            data-slot='input-chip'
           >
             {chip.label}
           </Chip>
         ))}
         {chips && chips.length > maxChipsVisible && (
-          <span className={styles['chip-overflow']}>
+          <span
+            className={styles['chip-overflow']}
+            data-slot='input-chip-overflow'
+          >
             +{chips.length - maxChipsVisible}
           </span>
         )}
         <InputPrimitive
+          data-slot='input'
           className={cx(
             styles['input-field'],
             leadingIcon && styles['has-leading-icon'],
@@ -108,9 +126,17 @@ export function Input({
         />
       </div>
 
-      {suffix && <div className={styles.suffix}>{suffix}</div>}
+      {suffix && (
+        <div className={styles.suffix} data-slot='input-suffix'>
+          {suffix}
+        </div>
+      )}
       {trailingIcon && (
-        <div className={styles['trailing-icon']} aria-hidden='true'>
+        <div
+          className={styles['trailing-icon']}
+          aria-hidden='true'
+          data-slot='input-trailing-icon'
+        >
           {trailingIcon}
         </div>
       )}

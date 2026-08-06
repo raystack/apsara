@@ -46,6 +46,18 @@ Groups multiple avatars with overlap and count indicator.
 
 <auto-type-table path="./props.ts" name="AvatarGroupProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `avatar` | The root element that wraps the image and fallback |
+| `avatar-image` | The `<img>` element (when the image loads) |
+| `avatar-fallback` | The fallback shown before the image loads or on error |
+| `avatar-group` | The root `<div>` of an `AvatarGroup` |
+| `avatar-group-item` | Wrapper around each avatar in the group, including the overflow avatar |
+
 ## Examples
 
 ### Variant
