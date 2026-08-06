@@ -64,6 +64,7 @@ export function TourProgress({ format, ...props }: TourProgressProps) {
       size='mini'
       weight='medium'
       variant='secondary'
+      style={{ fontVariantNumeric: 'tabular-nums' }}
       {...props}
     >
       {format ? format(index, steps.length) : `${index + 1} of ${steps.length}`}

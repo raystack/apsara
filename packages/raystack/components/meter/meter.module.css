@@ -21,6 +21,7 @@
   line-height: var(--rs-line-height-mini);
   letter-spacing: var(--rs-letter-spacing-mini);
   color: var(--rs-color-foreground-base-primary);
+  font-variant-numeric: tabular-nums;
   text-align: right;
 }
 

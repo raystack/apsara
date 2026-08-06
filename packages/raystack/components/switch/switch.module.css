@@ -56,7 +56,6 @@
   background: var(--rs-color-foreground-base-emphasis);
   border-radius: var(--rs-radius-full);
   transform: translateX(var(--rs-space-1));
-  will-change: transform;
 }
 
 @media (prefers-reduced-motion: no-preference) {

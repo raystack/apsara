@@ -62,7 +62,7 @@
   color: var(--rs-color-foreground-base-primary);
   white-space: normal;
   word-break: break-word;
-  border-radius: var(--rs-radius-2);
+  border-radius: var(--rs-radius-1);
 }
 
 .menuitem[data-highlighted] {
