@@ -1,44 +1,86 @@
 .root {
   display: flex;
   flex-direction: column;
-  gap: var(--rs-space-5);
-  margin: var(--rs-space-7) 0;
+  gap: var(--rs-space-3);
+  margin: var(--rs-space-5) 0;
 }
 
-/* The two inline chrome glyphs. Sized here so the grid variables cannot reach
-   them — they live outside .grid, and this keeps that explicit. */
-.glyph {
-  width: 16px;
-  height: 16px;
-  display: block;
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
-/* Search --------------------------------------------------------------------- */
+/* Toolbar -------------------------------------------------------------------- */
 
-.searchField {
-  position: relative;
+/* Sticky, because the search and the sliders are worth keeping in reach while
+   scrolling 243 tiles. 50px clears the docs navbar, which is sticky at the top
+   of the page; its z-index is the portal one, so this passes underneath it. */
+.bar {
+  position: sticky;
+  top: 50px;
+  z-index: 1;
+  padding: var(--rs-space-5) 0 var(--rs-space-3);
+  background-color: var(--rs-color-background-base-primary);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--rs-space-3);
+  padding: var(--rs-space-3);
+  background-color: var(--rs-color-background-base-secondary);
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: 14px;
+}
+
+/* Every segment is one raised pill on the tray. */
+.search,
+.control,
+.color,
+.reset {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
-}
-
-.searchIcon {
-  position: absolute;
-  left: 14px;
-  display: flex;
-  color: var(--rs-color-foreground-base-tertiary);
-  pointer-events: none;
-}
-
-.searchInput {
-  width: 100%;
-  height: 44px;
-  padding: 0 var(--rs-space-5) 0 40px;
-  font: inherit;
-  font-size: 14px;
-  color: var(--rs-color-foreground-base-primary);
+  height: 40px;
+  padding: 0 var(--rs-space-4);
   background-color: var(--rs-color-background-base-primary);
   border: 1px solid var(--rs-color-border-base-primary);
   border-radius: 10px;
+}
+
+.search {
+  flex: 1 1 180px;
+  gap: var(--rs-space-3);
+  min-width: 0;
+}
+
+.search:focus-within {
+  outline: 2px solid var(--rs-color-border-accent-emphasis);
+  outline-offset: -1px;
+}
+
+.searchIcon {
+  flex: none;
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  font: inherit;
+  font-size: 14px;
+  color: var(--rs-color-foreground-base-primary);
+  background: none;
+  border: none;
   outline: none;
   appearance: none;
 }
@@ -47,58 +89,71 @@
   color: var(--rs-color-foreground-base-tertiary);
 }
 
-.searchInput:focus-visible {
-  border-color: var(--rs-color-border-accent-emphasis);
-}
-
 /* The native control draws its own clear affordance, which does not match. */
 .searchInput::-webkit-search-cancel-button {
   appearance: none;
 }
 
-/* Customizer ---------------------------------------------------------------- */
-
-.customizer {
-  display: flex;
-  flex-direction: column;
-  gap: var(--rs-space-5);
-  padding: var(--rs-space-5);
-  background-color: var(--rs-color-background-base-primary);
-  border: 1px solid var(--rs-color-border-base-primary);
-  border-radius: 12px;
+.control {
+  flex: none;
+  gap: var(--rs-space-3);
 }
 
-.customizerHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.label {
+  font-size: 12px;
+  color: var(--rs-color-foreground-base-tertiary);
 }
 
-.customizerTitle {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 600;
+.value {
+  min-width: 32px;
+  font-size: 13px;
   color: var(--rs-color-foreground-base-primary);
+  font-variant-numeric: tabular-nums;
 }
 
-.reset {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  padding: 0;
+.color {
+  flex: none;
+  gap: var(--rs-space-3);
   color: var(--rs-color-foreground-base-secondary);
-  background: none;
-  border: 1px solid transparent;
-  border-radius: 8px;
   cursor: pointer;
 }
 
-.reset:hover:not(:disabled) {
+.swatch {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: currentColor;
+  box-shadow: inset 0 0 0 1px var(--rs-color-border-base-primary);
+}
+
+.hex {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
   color: var(--rs-color-foreground-base-primary);
-  background-color: var(--rs-color-background-base-secondary);
-  border-color: var(--rs-color-border-base-primary);
+}
+
+.pickerPopup {
+  width: 248px;
+}
+
+.picker {
+  width: 100%;
+  height: 208px;
+}
+
+.reset {
+  flex: none;
+  justify-content: center;
+  width: 40px;
+  padding: 0;
+  color: var(--rs-color-foreground-base-secondary);
+  cursor: pointer;
+}
+
+.color:hover,
+.reset:hover:not(:disabled) {
+  background-color: var(--rs-color-background-base-primary-hover);
 }
 
 .reset:disabled {
@@ -106,108 +161,18 @@
   cursor: default;
 }
 
-.controls {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: var(--rs-space-5);
-}
-
-.control {
-  display: flex;
-  flex-direction: column;
-  gap: var(--rs-space-3);
-  min-width: 0;
-}
-
-.controlHead {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--rs-space-3);
-}
-
-.label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--rs-color-foreground-base-primary);
-}
-
-.value {
-  font-size: 13px;
-  color: var(--rs-color-foreground-base-secondary);
-  font-variant-numeric: tabular-nums;
-}
-
-.hint {
-  margin: 0;
-  font-size: 12px;
-  color: var(--rs-color-foreground-base-tertiary);
-  font-variant-numeric: tabular-nums;
-}
-
-.note {
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--rs-color-foreground-base-tertiary);
-}
-
-.colorField {
-  display: flex;
-  align-items: center;
-  gap: var(--rs-space-3);
-  padding: 4px;
-  background-color: var(--rs-color-background-base-secondary);
-  border-radius: 8px;
-}
-
-.swatch {
-  flex: none;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  background: none;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  appearance: none;
-}
-
-.swatch::-webkit-color-swatch-wrapper {
-  padding: 0;
-}
-
-.swatch::-webkit-color-swatch {
-  border: 1px solid var(--rs-color-border-base-primary);
-  border-radius: 6px;
-}
-
-.swatch::-moz-color-swatch {
-  border: 1px solid var(--rs-color-border-base-primary);
-  border-radius: 6px;
-}
-
-.hex {
-  flex: 1;
-  min-width: 0;
-  padding: 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 13px;
-  color: var(--rs-color-foreground-base-primary);
-  background: none;
-  border: none;
-  outline: none;
-}
-
-.hex::placeholder {
-  color: var(--rs-color-foreground-base-tertiary);
+.color:focus-visible,
+.reset:focus-visible {
+  outline: 2px solid var(--rs-color-border-accent-emphasis);
+  outline-offset: -1px;
 }
 
 /* Sliders. The filled portion comes from --ig-fill, set inline from the value,
    because a range input cannot express it in CSS alone. */
 
 .slider {
-  width: 100%;
+  flex: none;
+  width: 72px;
   height: 16px;
   background: none;
   cursor: pointer;
@@ -220,7 +185,7 @@
   background: linear-gradient(
     to right,
     var(--rs-color-border-accent-emphasis) var(--ig-fill),
-    var(--rs-color-background-base-secondary) var(--ig-fill)
+    var(--rs-color-border-base-primary) var(--ig-fill)
   );
 }
 
@@ -237,7 +202,7 @@
 .slider::-moz-range-track {
   height: 4px;
   border-radius: 999px;
-  background-color: var(--rs-color-background-base-secondary);
+  background-color: var(--rs-color-border-base-primary);
 }
 
 .slider::-moz-range-progress {
@@ -262,13 +227,6 @@
 
 /* Grid ---------------------------------------------------------------------- */
 
-.status {
-  margin: 0;
-  font-size: 12px;
-  color: var(--rs-color-foreground-base-secondary);
-  font-variant-numeric: tabular-nums;
-}
-
 .empty {
   margin: 0;
   padding: var(--rs-space-9) 0;
@@ -285,38 +243,40 @@
   gap: 8px;
 }
 
-.tile,
-.tileCopied {
+.tile {
   display: flex;
   align-items: center;
   justify-content: center;
   aspect-ratio: 1;
   padding: 0;
   color: inherit;
-  background-color: var(--rs-color-background-base-secondary);
+  /* neutral-3, a step darker than the toolbar tray, so a 16px glyph still
+     reads as sitting on a tile at the smallest size. */
+  background-color: var(--rs-color-background-base-primary-hover);
   border: 1px solid transparent;
   border-radius: 12px;
   cursor: pointer;
 }
 
-.tile:hover {
-  background-color: var(--rs-color-background-base-primary-hover);
+/* data-popup-open is on the trigger whose tooltip is showing, so the tile the
+   name belongs to lights up whether it was reached by pointer or by keyboard. */
+.tile:hover,
+.tile[data-popup-open] {
+  background-color: var(--rs-color-background-neutral-secondary);
 }
 
-.tile:focus-visible,
-.tileCopied:focus-visible {
+.tile:focus-visible {
   outline: 2px solid var(--rs-color-border-accent-emphasis);
   outline-offset: 2px;
 }
 
-.tileCopied {
-  background-color: var(--rs-color-background-base-primary-hover);
+.tile[data-copied] {
+  background-color: var(--rs-color-background-neutral-secondary);
   border-color: var(--rs-color-border-accent-emphasis);
 }
 
 /* The customizer reaches the icons through these three declarations only. */
-.tile svg,
-.tileCopied svg {
+.tile svg {
   width: var(--ig-size);
   height: var(--ig-size);
   stroke-width: var(--ig-stroke);
