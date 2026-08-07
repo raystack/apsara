@@ -1,3 +1,5 @@
+import type { IconOverrides, IconProps } from '~/icons/create-icon';
+
 interface ValueObject {
   [themeName: string]: string;
 }
@@ -93,4 +95,19 @@ export interface ThemeProviderProps {
   grayColor?: GrayColor;
   /** Called when the active theme changes. `resolvedTheme` is the actual applied theme (`'light'`/`'dark'` when `theme` is `'system'`). Not fired on initial mount. */
   onThemeChange?: (theme: string, resolvedTheme: string) => void;
+  /**
+   * Icon components that replace the Apsara defaults, keyed by icon name — for
+   * example `{ XIcon: MyX }`. A partial map changes only the icons it names.
+   * A nested `<Theme icons={…}>` layers on top of an outer one, per name.
+   *
+   * The map holds functions, so a React Server Component cannot pass it. Set it
+   * from a client component (the `providers.tsx` pattern).
+   */
+  icons?: IconOverrides;
+  /**
+   * Props applied to every Apsara icon — for example `{ strokeWidth: 2 }`.
+   * The props at the call site still win. Prefer the `data-icon` attribute and
+   * CSS where a style rule is enough, because CSS re-renders nothing.
+   */
+  iconProps?: IconProps;
 }

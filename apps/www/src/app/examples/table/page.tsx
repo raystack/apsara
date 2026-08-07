@@ -157,13 +157,13 @@ const Page = () => {
             trigger={({ appliedFilters }) =>
               appliedFilters.size > 0 ? (
                 <IconButton size={4}>
-                  <FilterIcon />
+                  <ListFilterIcon />
                 </IconButton>
               ) : (
                 <Button
                   variant='outline'
                   size='small'
-                  leadingIcon={<FilterIcon />}
+                  leadingIcon={<ListFilterIcon />}
                   color='neutral'
                 >
                   Filter

@@ -1,8 +1,8 @@
 'use client';
 
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { ReactNode, useContext } from 'react';
+import { EllipsisIcon } from '~/icons/generated';
 import { Menu } from '../menu';
 import { Tooltip } from '../tooltip';
 import styles from './sidebar.module.css';
@@ -31,9 +31,7 @@ export function SidebarMore({
   const { isCollapsed, position, hideCollapsedItemTooltip } =
     useContext(SidebarContext);
   if (!children) return null;
-  const triggerIcon = leadingIcon ?? (
-    <DotsHorizontalIcon width={16} height={16} />
-  );
+  const triggerIcon = leadingIcon ?? <EllipsisIcon width={16} height={16} />;
 
   const triggerContent = (
     <button

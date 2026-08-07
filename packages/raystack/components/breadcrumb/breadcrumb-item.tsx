@@ -1,9 +1,9 @@
 'use client';
 
 import { mergeProps, useRender } from '@base-ui/react';
-import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import React, { ComponentProps, ReactNode } from 'react';
+import { ChevronDownIcon } from '~/icons/generated';
 import { Menu } from '../menu';
 import styles from './breadcrumb.module.css';
 

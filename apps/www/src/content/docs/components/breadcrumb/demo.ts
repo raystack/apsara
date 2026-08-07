@@ -152,9 +152,9 @@ export const iconsDemo = {
       <Breadcrumb>
         <Breadcrumb.Item href="#" leadingIcon={<BellIcon />}>Home</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="#" leadingIcon={<FilterIcon />}>Documents</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" leadingIcon={<ListFilterIcon />}>Documents</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="#" leadingIcon={<ShoppingBagFilledIcon />}>Settings</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" leadingIcon={<ShoppingBagIcon />}>Settings</Breadcrumb.Item>
       </Breadcrumb>`
     },
     {
@@ -163,20 +163,20 @@ export const iconsDemo = {
       <Breadcrumb>
         <Breadcrumb.Item href="#" trailingIcon={<BellIcon />}>Home</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="#" trailingIcon={<FilterIcon />}>Documents</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" trailingIcon={<ListFilterIcon />}>Documents</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="#" trailingIcon={<ShoppingBagFilledIcon />}>Settings</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" trailingIcon={<ShoppingBagIcon />}>Settings</Breadcrumb.Item>
       </Breadcrumb>`
     },
     {
       name: 'Both Icons',
       code: `
       <Breadcrumb>
-        <Breadcrumb.Item href="#" leadingIcon={<BellIcon />} trailingIcon={<FilterIcon />}>Home</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" leadingIcon={<BellIcon />} trailingIcon={<ListFilterIcon />}>Home</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="#" leadingIcon={<FilterIcon />} trailingIcon={<ShoppingBagFilledIcon />}>Documents</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" leadingIcon={<ListFilterIcon />} trailingIcon={<ShoppingBagIcon />}>Documents</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="#" leadingIcon={<ShoppingBagFilledIcon />} trailingIcon={<BellIcon />}>Settings</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" leadingIcon={<ShoppingBagIcon />} trailingIcon={<BellIcon />}>Settings</Breadcrumb.Item>
       </Breadcrumb>`
     },
     {
@@ -185,9 +185,9 @@ export const iconsDemo = {
       <Breadcrumb>
         <Breadcrumb.Item href="#" leadingIcon={<BellIcon />}/>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="#" leadingIcon={<FilterIcon />}/>
+        <Breadcrumb.Item href="#" leadingIcon={<ListFilterIcon />}/>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="#" leadingIcon={<ShoppingBagFilledIcon />}/>
+        <Breadcrumb.Item href="#" leadingIcon={<ShoppingBagIcon />}/>
       </Breadcrumb>`
     }
   ]

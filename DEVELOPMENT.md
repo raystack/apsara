@@ -192,8 +192,12 @@ pnpm lint
 # Clean build artifacts
 pnpm clean
 
-# Build icon components
-pnpm build:icons
+# Generate the icon registry from icons/icon-map.json into icons/generated/
+# (not in git — `pnpm install` runs this for you, and so do build, dev and test)
+pnpm build:icon-registry
+
+# Check that every icon-map.json entry resolves to a real lucide export
+pnpm check:icon-map
 ```
 
 ## Testing

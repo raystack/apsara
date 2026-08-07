@@ -377,7 +377,7 @@ Zero state is shown when no data has been fetched initially (no filters or searc
 
 ```tsx
 import { DataTable, EmptyState } from "@raystack/apsara";
-import { OrganizationIcon } from "@raystack/apsara/icons";
+import { Building2Icon } from "@raystack/apsara/icons";
 
 <DataTable
   data={[]}
@@ -387,7 +387,7 @@ import { OrganizationIcon } from "@raystack/apsara/icons";
   <DataTable.Content
     zeroState={
       <EmptyState
-        icon={<OrganizationIcon />}
+        icon={<Building2Icon />}
         heading="No users yet"
         subHeading="Get started by creating your first user."
       />
@@ -402,7 +402,7 @@ Empty state is shown when initial data exists but no results match after applyin
 
 ```tsx
 import { DataTable, EmptyState } from "@raystack/apsara";
-import { OrganizationIcon, FilterIcon } from "@raystack/apsara/icons";
+import { Building2Icon, ListFilterIcon } from "@raystack/apsara/icons";
 
 <DataTable
   data={initialData}
@@ -413,14 +413,14 @@ import { OrganizationIcon, FilterIcon } from "@raystack/apsara/icons";
   <DataTable.Content
     zeroState={
       <EmptyState
-        icon={<OrganizationIcon />}
+        icon={<Building2Icon />}
         heading="No users yet"
         subHeading="Get started by creating your first user."
       />
     }
     emptyState={
       <EmptyState
-        icon={<FilterIcon />}
+        icon={<ListFilterIcon />}
         heading="No users found"
         subHeading="We couldn't find any matches for that keyword or filter. Try alternative terms or check for typos."
       />
@@ -441,12 +441,12 @@ You can provide custom React components for both states:
 
 ```tsx
 import { DataTable, EmptyState, Flex, Text, Button } from "@raystack/apsara";
-import { OrganizationIcon, FilterIcon } from "@raystack/apsara/icons";
+import { Building2Icon, ListFilterIcon } from "@raystack/apsara/icons";
 
 <DataTable.Content
   zeroState={
     <Flex direction="column" gap={4} align="center" style={{ padding: "40px" }}>
-      <OrganizationIcon width={48} height={48} style={{ opacity: 0.5 }} />
+      <Building2Icon width={48} height={48} style={{ opacity: 0.5 }} />
       <Flex direction="column" gap={2} align="center">
         <Text size="regular" weight="medium">
           No data available
@@ -460,7 +460,7 @@ import { OrganizationIcon, FilterIcon } from "@raystack/apsara/icons";
   }
   emptyState={
     <EmptyState
-      icon={<FilterIcon />}
+      icon={<ListFilterIcon />}
       heading="No matches found"
       subHeading="Try adjusting your filters or search query."
     />

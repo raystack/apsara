@@ -12,7 +12,11 @@ import {
   Sidebar,
   Text
 } from '@raystack/apsara';
-import { BellIcon, FilterIcon, SidebarIcon } from '@raystack/apsara/icons';
+import {
+  BellIcon,
+  ListFilterIcon,
+  PanelLeftIcon
+} from '@raystack/apsara/icons';
 import { useState } from 'react';
 
 const sampleData = [
@@ -527,11 +531,11 @@ const Page = () => {
           </Sidebar.Item>
           <Sidebar.Item
             href='/examples/datatable'
-            leadingIcon={<SidebarIcon />}
+            leadingIcon={<PanelLeftIcon />}
           >
             DataTable
           </Sidebar.Item>
-          <Sidebar.Group label='Resources' leadingIcon={<FilterIcon />}>
+          <Sidebar.Group label='Resources' leadingIcon={<ListFilterIcon />}>
             <Sidebar.Item href='#'>Reports</Sidebar.Item>
             <Sidebar.Item href='#'>Activities</Sidebar.Item>
           </Sidebar.Group>
@@ -567,7 +571,11 @@ const Page = () => {
               size='small'
               style={{ width: '200px' }}
             />
-            <Button variant='outline' size='small' leadingIcon={<FilterIcon />}>
+            <Button
+              variant='outline'
+              size='small'
+              leadingIcon={<ListFilterIcon />}
+            >
               Actions
             </Button>
           </Navbar.End>
@@ -594,7 +602,7 @@ const Page = () => {
             <DataTable.Content
               emptyState={
                 <EmptyState
-                  icon={<FilterIcon />}
+                  icon={<ListFilterIcon />}
                   heading='No results'
                   variant='empty1'
                   subHeading='Try adjusting your filters or search.'

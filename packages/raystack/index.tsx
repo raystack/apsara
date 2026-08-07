@@ -152,3 +152,12 @@ export {
   type TourTarget,
   useTour
 } from './components/tour';
+export {
+  type IconComponent,
+  type IconOverrides,
+  type IconProps,
+  IconProvider,
+  type IconProviderProps
+} from './icons/create-icon';
+export * from './icons/generated';
+export type { IconName } from './icons/generated/types';

@@ -2,7 +2,7 @@
 
 import { cx } from 'class-variance-authority';
 import { isValidElement, ReactNode, useMemo } from 'react';
-import { FilterIcon } from '~/icons';
+import { ListFilterIcon } from '~/icons/generated';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import { Button } from '../../button';
 import { FilterChip, type FilterChipValue } from '../../filter-chip';
@@ -51,7 +51,7 @@ function AddFilter<TData, TValue>({
     else if (appliedFiltersSet.size > 0)
       return (
         <IconButton size={3} className={className}>
-          <FilterIcon />
+          <ListFilterIcon />
         </IconButton>
       );
     else
@@ -59,7 +59,7 @@ function AddFilter<TData, TValue>({
         <Button
           variant='text'
           size='small'
-          leadingIcon={<FilterIcon />}
+          leadingIcon={<ListFilterIcon />}
           color='neutral'
           className={className}
         >

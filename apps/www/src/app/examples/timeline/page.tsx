@@ -17,7 +17,11 @@ import {
   type TimelineActions,
   type TimelineCardContext
 } from '@raystack/apsara';
-import { BellIcon, FilterIcon, SidebarIcon } from '@raystack/apsara/icons';
+import {
+  BellIcon,
+  ListFilterIcon,
+  PanelLeftIcon
+} from '@raystack/apsara/icons';
 import dayjs from 'dayjs';
 import {
   type ReactNode,
@@ -701,7 +705,7 @@ const Page = () => {
         <Sidebar.Main>
           <Sidebar.Item
             href='/examples/timeline'
-            leadingIcon={<SidebarIcon />}
+            leadingIcon={<PanelLeftIcon />}
             active
           >
             Timeline
@@ -799,7 +803,7 @@ const Page = () => {
             />
             <DataView.EmptyState>
               <EmptyState
-                icon={<FilterIcon />}
+                icon={<ListFilterIcon />}
                 heading='No matching orders'
                 variant='empty1'
                 subHeading='Try adjusting your filters or search.'
@@ -807,7 +811,7 @@ const Page = () => {
             </DataView.EmptyState>
             <DataView.ZeroState>
               <EmptyState
-                icon={<FilterIcon />}
+                icon={<ListFilterIcon />}
                 heading='No orders yet'
                 variant='empty1'
                 subHeading='Orders will show up here once they are scheduled.'

@@ -1,8 +1,8 @@
 'use client';
 
-import { CheckIcon, CopyIcon } from '@radix-ui/react-icons';
 import { useEffect, useRef, useState } from 'react';
 import { useCopyToClipboard } from '~/hooks/useCopyToClipboard';
+import { CheckIcon, CopyIcon } from '~/icons/generated';
 import { IconButton, IconButtonProps } from '../icon-button/icon-button';
 import styles from './copy-button.module.css';
 

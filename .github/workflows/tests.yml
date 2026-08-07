@@ -32,6 +32,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Catches a lucide export name that no longer exists — for example after
+      # the lucide-react peer range moves.
+      - name: Check the icon map
+        run: pnpm --filter=@raystack/apsara check:icon-map
+
+      # icons/generated/ is not in git. The `prepare` script already wrote it
+      # during install; running it again here keeps the dependency explicit and
+      # fails on this step rather than inside the test or build step.
+      - name: Generate the icon registry
+        run: pnpm --filter=@raystack/apsara build:icon-registry
+
       - name: Run tests
         run: pnpm --filter=@raystack/apsara test
 

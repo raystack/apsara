@@ -25,13 +25,6 @@ import {
   UploadIcon
 } from '@radix-ui/react-icons';
 import * as Apsara from '@raystack/apsara';
-import {
-  BellIcon,
-  FilterIcon,
-  OrganizationIcon,
-  ShoppingBagFilledIcon,
-  SidebarIcon
-} from '@raystack/apsara/icons';
 import dayjs from 'dayjs';
 import { Home, Info, Laugh, X } from 'lucide-react';
 import NextLink from 'next/link';
@@ -69,13 +62,9 @@ import { DemoProps } from './types';
 export default function Demo(props: DemoProps) {
   const {
     data,
+    // `...Apsara` already carries every icon, so no icon needs its own entry.
     scope = {
       ...Apsara,
-      BellIcon,
-      FilterIcon,
-      ShoppingBagFilledIcon,
-      OrganizationIcon,
-      SidebarIcon,
       DataTableDemo,
       DataTableSearchDemo,
       DataTableVirtualizedDemo,

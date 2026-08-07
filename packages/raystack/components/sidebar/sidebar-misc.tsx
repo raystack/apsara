@@ -1,7 +1,6 @@
 'use client';
 
 import { Accordion as AccordionPrimitive } from '@base-ui/react';
-import { TriangleDownIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import {
   ComponentProps,
@@ -10,6 +9,7 @@ import {
   useContext,
   useState
 } from 'react';
+import { ChevronDownIcon } from '~/icons/generated';
 import { Flex } from '../flex';
 import styles from './sidebar.module.css';
 import { SidebarLeadingVisual } from './sidebar-leading-visual';
@@ -165,7 +165,7 @@ export function SidebarNavigationGroup({
               >
                 {label}
               </span>
-              <TriangleDownIcon
+              <ChevronDownIcon
                 className={cx(styles['nav-group-chevron'], classNames?.chevron)}
                 aria-hidden='true'
               />

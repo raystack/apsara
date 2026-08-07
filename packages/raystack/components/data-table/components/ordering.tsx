@@ -1,7 +1,9 @@
 'use client';
 
-import { TextAlignBottomIcon, TextAlignTopIcon } from '@radix-ui/react-icons';
-
+import {
+  ArrowDownWideNarrowIcon,
+  ArrowUpNarrowWideIcon
+} from '~/icons/generated';
 import { Flex } from '../../flex';
 import { IconButton } from '../../icon-button';
 import { Select } from '../../select';
@@ -74,9 +76,11 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
           disabled={columnList.length === 0}
         >
           {currentOrder === SortOrders.ASC ? (
-            <TextAlignTopIcon className={styles['display-popover-sort-icon']} />
+            <ArrowUpNarrowWideIcon
+              className={styles['display-popover-sort-icon']}
+            />
           ) : (
-            <TextAlignBottomIcon
+            <ArrowDownWideNarrowIcon
               className={styles['display-popover-sort-icon']}
             />
           )}

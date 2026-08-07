@@ -1,6 +1,5 @@
 'use client';
 
-import { Cross1Icon, InfoCircledIcon } from '@radix-ui/react-icons';
 import { cva, type VariantProps } from 'class-variance-authority';
 import {
   type ComponentProps,
@@ -9,6 +8,7 @@ import {
   useEffect,
   useState
 } from 'react';
+import { InfoIcon, XIcon } from '~/icons/generated';
 
 import { IconButton } from '../icon-button';
 import styles from './callout.module.css';
@@ -65,7 +65,7 @@ export function Callout({
   action,
   dismissible,
   onDismiss,
-  icon = <InfoCircledIcon />,
+  icon = <InfoIcon />,
   ...props
 }: CalloutProps) {
   // Dismissal is controlled when `onDismiss` is given; otherwise fall back to
@@ -114,7 +114,7 @@ export function Callout({
                   onClick={handleDismiss}
                   aria-label='Dismiss message'
                 >
-                  <Cross1Icon />
+                  <XIcon />
                 </IconButton>
               )}
             </div>

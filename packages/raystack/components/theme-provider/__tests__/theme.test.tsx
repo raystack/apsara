@@ -8,6 +8,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { XIcon } from '~/icons/generated';
 import { ThemeSwitcher } from '../switcher';
 import { Theme, useTheme } from '../theme';
 
@@ -896,6 +897,81 @@ describe('ThemeSwitcher', () => {
         'theme',
         'light'
       );
+    });
+  });
+
+  // The registry itself is tested in `icons/__tests__/registry.test.tsx`. These
+  // cover the wiring: that `<Theme>` mounts the IconProvider, and only when the
+  // consumer configures it.
+  describe('icons', () => {
+    const StubIcon = (props: React.SVGProps<SVGSVGElement>) => (
+      <svg {...props} data-testid='stub' />
+    );
+
+    it('resolves the overrides given to Theme', () => {
+      render(
+        <Theme icons={{ XIcon: StubIcon }}>
+          <XIcon />
+        </Theme>
+      );
+
+      expect(screen.getByTestId('stub')).toHaveAttribute('data-icon', 'XIcon');
+    });
+
+    it('resolves the iconProps given to Theme', () => {
+      render(
+        <Theme iconProps={{ strokeWidth: 1.5 }}>
+          <XIcon />
+        </Theme>
+      );
+
+      expect(document.querySelector('[data-icon="XIcon"]')).toHaveAttribute(
+        'stroke-width',
+        '1.5'
+      );
+    });
+
+    it('renders the defaults when Theme configures no icons', () => {
+      render(
+        <Theme>
+          <XIcon />
+        </Theme>
+      );
+
+      const icon = document.querySelector('[data-icon="XIcon"]');
+      expect(icon).toBeInTheDocument();
+      expect(icon).toHaveAttribute('stroke-width', '1.5');
+    });
+
+    it('layers a nested Theme per icon name', () => {
+      render(
+        <Theme icons={{ XIcon: StubIcon }}>
+          <Theme iconProps={{ strokeWidth: 1 }}>
+            <XIcon />
+          </Theme>
+        </Theme>
+      );
+
+      // The inner Theme sets props only, so XIcon keeps the outer override and
+      // gains the inner stroke weight.
+      expect(screen.getByTestId('stub')).toHaveAttribute('stroke-width', '1');
+    });
+
+    it('lets a nested Theme replace an icon the outer one named', () => {
+      const Inner = (props: React.SVGProps<SVGSVGElement>) => (
+        <svg {...props} data-testid='inner' />
+      );
+
+      render(
+        <Theme icons={{ XIcon: StubIcon }}>
+          <Theme icons={{ XIcon: Inner }}>
+            <XIcon />
+          </Theme>
+        </Theme>
+      );
+
+      expect(screen.getByTestId('inner')).toBeInTheDocument();
+      expect(screen.queryByTestId('stub')).not.toBeInTheDocument();
     });
   });
 });

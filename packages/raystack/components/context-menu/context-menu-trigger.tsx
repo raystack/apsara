@@ -4,7 +4,7 @@ import {
   Autocomplete as AutocompletePrimitive,
   ContextMenu as ContextMenuPrimitive
 } from '@base-ui/react';
-import { TriangleRightIcon } from '~/icons';
+import { ChevronRightIcon } from '~/icons/generated';
 import { Cell, CellBaseProps } from '../menu/cell';
 import { useMenuContext } from '../menu/menu-root';
 import { getMatch } from '../menu/utils';
@@ -33,7 +33,7 @@ export interface ContextMenuSubTriggerProps
 export const ContextMenuSubTrigger = ({
   children,
   value,
-  trailingIcon = <TriangleRightIcon />,
+  trailingIcon = <ChevronRightIcon />,
   leadingIcon,
   ...props
 }: ContextMenuSubTriggerProps) => {

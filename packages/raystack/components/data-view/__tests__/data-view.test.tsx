@@ -2,13 +2,6 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-// SVG icons are inlined via @svgr/rollup at build time. In Vitest they resolve
-// to undefined, so stub the `~/icons` module with no-op components.
-vi.mock('~/icons', () => ({
-  FilterIcon: () => null,
-  __esModule: true
-}));
-
 // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
 import { DataView } from '../data-view';
 import type {

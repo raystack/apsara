@@ -1,10 +1,10 @@
 'use client';
 
-import { CalendarIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DateRange, PropsBase } from 'react-day-picker';
+import { CalendarDaysIcon } from '~/icons/generated';
 import { Flex } from '../flex';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
@@ -219,7 +219,7 @@ export function RangePicker({
       <Input
         size='small'
         placeholder='Select start date'
-        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+        trailingIcon={showCalendarIcon ? <CalendarDaysIcon /> : undefined}
         className={styles.datePickerInput}
         {...startInputProps}
         value={startDate}
@@ -232,7 +232,7 @@ export function RangePicker({
       <Input
         size='small'
         placeholder='Select end date'
-        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+        trailingIcon={showCalendarIcon ? <CalendarDaysIcon /> : undefined}
         className={styles.datePickerInput}
         {...endInputProps}
         value={endDate}

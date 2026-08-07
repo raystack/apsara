@@ -1,7 +1,6 @@
 'use client';
 
-import { MoonIcon, SunIcon } from '@radix-ui/react-icons';
-
+import { MoonIcon, SunIcon } from '~/icons/generated';
 import { IconButton } from '../icon-button';
 import { useTheme } from './theme';
 

@@ -10,6 +10,7 @@ import {
   useRef,
   useState
 } from 'react';
+import { IconProvider } from '~/icons/create-icon';
 import type {
   ScopeRef,
   ThemeProviderProps,
@@ -43,15 +44,32 @@ export const useTheme = (options?: UseThemeOptions): UseThemeProps => {
   return ctx;
 };
 
-export function Theme(props: ThemeProviderProps) {
+export function Theme({
+  icons,
+  iconProps,
+  children,
+  ...props
+}: ThemeProviderProps) {
   const context = useContext(ThemeContext);
+
+  // Mount the icon registry only when the consumer configures it, so a tree
+  // without icon overrides gains no provider and no extra render work.
+  // Nesting layers per icon name, matching how `Scoped` layers theme tokens.
+  const content =
+    icons || iconProps ? (
+      <IconProvider icons={icons} props={iconProps}>
+        {children}
+      </IconProvider>
+    ) : (
+      children
+    );
 
   // Nested usage: scoped subtree. Render a wrapper element that overrides
   // theme tokens locally via `data-*` attributes; the parent provider's
   // global state remains the source of truth for descendants reading
   // `useTheme()`.
-  if (context) return <Scoped {...props} />;
-  return <Root {...props} />;
+  if (context) return <Scoped {...props}>{content}</Scoped>;
+  return <Root {...props}>{content}</Root>;
 }
 
 Theme.displayName = 'Theme';

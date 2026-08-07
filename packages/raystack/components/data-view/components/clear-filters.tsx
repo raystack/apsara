@@ -1,8 +1,8 @@
 'use client';
 
-import { Cross2Icon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { useCallback } from 'react';
+import { XIcon } from '~/icons/generated';
 import { Button } from '../../button';
 import { Flex } from '../../flex';
 import styles from '../data-view.module.css';
@@ -86,7 +86,7 @@ export function FilterSummary({ className }: DataViewClearFiltersProps) {
         variant='text'
         color='neutral'
         size='small'
-        trailingIcon={<Cross2Icon />}
+        trailingIcon={<XIcon />}
         onClick={handleClearFilters}
       >
         Clear Filters

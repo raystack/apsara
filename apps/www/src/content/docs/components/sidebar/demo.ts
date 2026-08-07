@@ -31,34 +31,34 @@ export const preview = {
       </Flex>
     </Sidebar.Header>
     <Sidebar.Main>
-      <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+      <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>
         Overview
       </Sidebar.Item>
-      <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+      <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>
         Preview
       </Sidebar.Item>
       <Sidebar.Group label="Main">
         <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>
           Dashboard
         </Sidebar.Item>
-        <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>
+        <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>
           Analytics
         </Sidebar.Item>
-        <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+        <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>
           Settings
         </Sidebar.Item>
       </Sidebar.Group>
       <Sidebar.Group label="Resources">
-        <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>
+        <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>
           Reports
         </Sidebar.Item>
-        <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+        <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>
           Activities
         </Sidebar.Item>
       </Sidebar.Group>
     </Sidebar.Main>
     <Sidebar.Footer>
-      <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+      <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>
         Help & Support
       </Sidebar.Item>
     </Sidebar.Footer>
@@ -82,14 +82,14 @@ export const positionDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Settings</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Settings</Sidebar.Item>
             </Sidebar.Group>
             <Sidebar.Group label="Support">
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Help</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Help</Sidebar.Item>
             </Sidebar.Group>
           </Sidebar.Main>
         </Sidebar>`)
@@ -107,14 +107,14 @@ export const positionDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Settings</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Settings</Sidebar.Item>
             </Sidebar.Group>
             <Sidebar.Group label="Support">
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Help</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Help</Sidebar.Item>
             </Sidebar.Group>
           </Sidebar.Main>
         </Sidebar>`)
@@ -139,10 +139,10 @@ export const variantDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
             </Sidebar.Group>
           </Sidebar.Main>
         </Sidebar>`)
@@ -160,10 +160,10 @@ export const variantDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
             </Sidebar.Group>
           </Sidebar.Main>
         </Sidebar>`)
@@ -181,10 +181,10 @@ export const variantDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
             </Sidebar.Group>
           </Sidebar.Main>
         </Sidebar>`)
@@ -208,14 +208,14 @@ export const stateDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Settings</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Settings</Sidebar.Item>
             </Sidebar.Group>
             <Sidebar.Group label="Support">
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Help</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Help</Sidebar.Item>
             </Sidebar.Group>
           </Sidebar.Main>
         </Sidebar>`)
@@ -232,14 +232,14 @@ export const stateDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Settings</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Settings</Sidebar.Item>
             </Sidebar.Group>
             <Sidebar.Group label="Support">
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Help</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Help</Sidebar.Item>
             </Sidebar.Group>
           </Sidebar.Main>
         </Sidebar>`)
@@ -256,14 +256,14 @@ export const stateDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Settings</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Settings</Sidebar.Item>
             </Sidebar.Group>
             <Sidebar.Group label="Support">
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Help</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Help</Sidebar.Item>
             </Sidebar.Group>
           </Sidebar.Main>
         </Sidebar>`)
@@ -280,14 +280,14 @@ export const stateDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Settings</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Settings</Sidebar.Item>
             </Sidebar.Group>
             <Sidebar.Group label="Support">
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Help</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Help</Sidebar.Item>
             </Sidebar.Group>
           </Sidebar.Main>
         </Sidebar>`)
@@ -311,14 +311,14 @@ export const tooltipDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Settings</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Settings</Sidebar.Item>
             </Sidebar.Group>
             <Sidebar.Group label="Support">
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Help</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Help</Sidebar.Item>
             </Sidebar.Group>
           </Sidebar.Main>
         </Sidebar>`),
@@ -337,10 +337,10 @@ export const collapsibleDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
             </Sidebar.Group>
           </Sidebar.Main>
         </Sidebar>`),
@@ -362,9 +362,9 @@ export const hideTooltipDemo = {
             <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Settings</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>Settings</Sidebar.Item>
             </Sidebar.Group>
-            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+            <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>
               Help
             </Sidebar.Item>
           </Sidebar.Main>
@@ -384,19 +384,19 @@ export const collapsibleGroupDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+            <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>
               Overview
             </Sidebar.Item>
             <Sidebar.Group label="Resources" collapsible>
-              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>
+              <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>
                 Reports
               </Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>
                 Activities
               </Sidebar.Item>
             </Sidebar.Group>
-            <Sidebar.Group label="Account" trailingIcon={<OrganizationIcon width={16} height={16} />}>
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+            <Sidebar.Group label="Account" trailingIcon={<Building2Icon width={16} height={16} />}>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>
                 Settings
               </Sidebar.Item>
             </Sidebar.Group>
@@ -423,7 +423,7 @@ export const controlledGroupDemo = {
                 </Flex>
               </Sidebar.Header>
               <Sidebar.Main>
-                <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+                <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>
                   Overview
                 </Sidebar.Item>
                 <Sidebar.Group
@@ -432,10 +432,10 @@ export const controlledGroupDemo = {
                   open={resourcesOpen}
                   onOpenChange={setResourcesOpen}
                 >
-                  <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>
+                  <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>
                     Reports
                   </Sidebar.Item>
-                  <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+                  <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>
                     Activities
                   </Sidebar.Item>
                 </Sidebar.Group>
@@ -470,16 +470,16 @@ export const groupIconDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Group label="Workspace" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+            <Sidebar.Group label="Workspace" leadingIcon={<Building2Icon width={16} height={16} />}>
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>
                 Dashboard
               </Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>
+              <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>
                 Analytics
               </Sidebar.Item>
             </Sidebar.Group>
-            <Sidebar.Group label="Resources" leadingIcon={<FilterIcon width={16} height={16} />}>
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+            <Sidebar.Group label="Resources" leadingIcon={<ListFilterIcon width={16} height={16} />}>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>
                 Reports
               </Sidebar.Item>
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />}>
@@ -506,18 +506,18 @@ export const moreDemo = {
             <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>
               Dashboard
             </Sidebar.Item>
-            <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>
+            <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>
               Analytics
             </Sidebar.Item>
             <Sidebar.Group label="Resources">
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>
                 Reports
               </Sidebar.Item>
               <Sidebar.More label="More">
                 <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />}>
                   Activities
                 </Sidebar.Item>
-                <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />} disabled>
+                <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />} disabled>
                   Notifications
                 </Sidebar.Item>
               </Sidebar.More>
@@ -525,10 +525,10 @@ export const moreDemo = {
           </Sidebar.Main>
           <Sidebar.Footer>
             <Sidebar.More label="More">
-              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+              <Sidebar.Item href="#" leadingIcon={<Building2Icon width={16} height={16} />}>
                 Preferences
               </Sidebar.Item>
-              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>
+              <Sidebar.Item href="#" leadingIcon={<ListFilterIcon width={16} height={16} />}>
                 Documentation
               </Sidebar.Item>
             </Sidebar.More>

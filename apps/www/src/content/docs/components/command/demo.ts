@@ -121,10 +121,10 @@ export const withIconsDemo = {
               <Command.Empty>No results found.</Command.Empty>
               <Command.Item leadingIcon={<Home />} onClick={() => setOpen(false)}>Home</Command.Item>
               <Command.Item leadingIcon={<BellIcon />} onClick={() => setOpen(false)}>Notifications</Command.Item>
-              <Command.Item leadingIcon={<FilterIcon />} onClick={() => setOpen(false)}>Filters</Command.Item>
-              <Command.Item leadingIcon={<OrganizationIcon />} onClick={() => setOpen(false)}>Organization</Command.Item>
-              <Command.Item leadingIcon={<ShoppingBagFilledIcon />} onClick={() => setOpen(false)}>Orders</Command.Item>
-              <Command.Item leadingIcon={<SidebarIcon />} onClick={() => setOpen(false)}>Layout</Command.Item>
+              <Command.Item leadingIcon={<ListFilterIcon />} onClick={() => setOpen(false)}>Filters</Command.Item>
+              <Command.Item leadingIcon={<Building2Icon />} onClick={() => setOpen(false)}>Organization</Command.Item>
+              <Command.Item leadingIcon={<ShoppingBagIcon />} onClick={() => setOpen(false)}>Orders</Command.Item>
+              <Command.Item leadingIcon={<PanelLeftIcon />} onClick={() => setOpen(false)}>Layout</Command.Item>
             </Command.Content>`)
 };
 

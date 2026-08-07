@@ -1,9 +1,9 @@
 'use client';
 
-import { Cross1Icon } from '@radix-ui/react-icons';
 import { cva, VariantProps } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import { ComponentProps, ReactElement, useCallback, useState } from 'react';
+import { XIcon } from '~/icons/generated';
 import {
   FilterOperation,
   FilterOperator,
@@ -238,7 +238,7 @@ export const FilterChip = ({
           aria-label={`Remove ${label} filter`}
           onClick={onRemove}
         >
-          <Cross1Icon className={styles.removeIcon} />
+          <XIcon className={styles.removeIcon} />
         </button>
       )}
     </Flex>

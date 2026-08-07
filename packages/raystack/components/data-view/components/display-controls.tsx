@@ -1,7 +1,7 @@
 'use client';
 
-import { MixerHorizontalIcon } from '@radix-ui/react-icons';
 import { isValidElement, ReactNode } from 'react';
+import { SlidersHorizontalIcon } from '~/icons/generated';
 
 import { Button } from '../../button';
 import { Flex } from '../../flex';
@@ -35,7 +35,7 @@ export function DisplayControls<TData>({
       variant='outline'
       color='neutral'
       size='small'
-      leadingIcon={<MixerHorizontalIcon />}
+      leadingIcon={<SlidersHorizontalIcon />}
     >
       Display
     </Button>

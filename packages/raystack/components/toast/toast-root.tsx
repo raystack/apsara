@@ -1,15 +1,15 @@
 'use client';
 
 import { Toast as ToastPrimitive } from '@base-ui/react';
-import {
-  CheckCircledIcon,
-  Cross1Icon,
-  CrossCircledIcon,
-  ExclamationTriangleIcon,
-  InfoCircledIcon
-} from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
+import {
+  CircleCheckIcon,
+  CircleXIcon,
+  InfoIcon,
+  TriangleAlertIcon,
+  XIcon
+} from '~/icons/generated';
 import { Button } from '../button';
 import { Flex } from '../flex';
 import { IconButton } from '../icon-button';
@@ -19,11 +19,11 @@ import type { ToastData } from './toast-manager';
 import type { ToastPosition } from './toast-provider';
 
 const TOAST_ICONS: Record<string, ReactNode> = {
-  default: <InfoCircledIcon />,
-  success: <CheckCircledIcon />,
-  error: <CrossCircledIcon />,
-  warning: <ExclamationTriangleIcon />,
-  info: <InfoCircledIcon />,
+  default: <InfoIcon />,
+  success: <CircleCheckIcon />,
+  error: <CircleXIcon />,
+  warning: <TriangleAlertIcon />,
+  info: <InfoIcon />,
   loading: <Spinner size={2} color='default' />
 };
 
@@ -112,7 +112,7 @@ export function ToastRoot({
                   aria-label='Close toast'
                   render={<IconButton size={2} />}
                 >
-                  <Cross1Icon />
+                  <XIcon />
                 </ToastPrimitive.Close>
               </Flex>
             </Flex>

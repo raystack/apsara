@@ -1,0 +1,263 @@
+---
+title: Usage
+description: How to import an Apsara icon, size and colour it, and replace any icon with your own component.
+source: packages/raystack/icons
+---
+
+import {
+  basicDemo,
+  sizeDemo,
+  colorDemo,
+  overrideDemo,
+  iconPropsDemo,
+  nestedDemo,
+} from "./demo.ts";
+
+Apsara ships 243 icons. 239 are drawn by [lucide](https://lucide.dev), and 4 are
+in-house SVGs that lucide cannot supply. Every icon is exported under a stable
+name, and every icon can be replaced with your own component.
+
+<Demo data={basicDemo} />
+
+Browse the set on [All icons](/docs/icons/all-icons).
+
+## Anatomy
+
+Import an icon by name from `@raystack/apsara/icons`:
+
+```tsx
+import { SearchIcon, ChevronDownIcon } from '@raystack/apsara/icons'
+
+<SearchIcon />
+```
+
+Each icon is its own module, so you pay only for the icons you import. A build
+that shows three icons ships three icons, not all 243.
+
+The package root exports the same components, so
+`import { SearchIcon } from '@raystack/apsara'` works too — it is the natural
+choice in a file that already imports Apsara components. See
+[which path to import from](#which-path-to-import-from) for the difference.
+
+## Naming
+
+An icon name is the lucide name in Pascal case with the suffix `Icon`. So lucide
+`circle-x` is `CircleXIcon`, and `list-filter` is `ListFilterIcon`.
+
+A name identifies a **shape**, not a role. Two roles that use one shape therefore
+share one name. Inside Apsara this happens once: `CircleXIcon` draws both the
+error icon of the `Toast` and the clear button of the `Search` field, so an
+override of `CircleXIcon` changes both.
+
+## Base props
+
+Every icon renders with `width={16} height={16} strokeWidth={1.5}`. The rendered
+stroke is `strokeWidth × size ÷ 24`, because lucide draws in a 24-unit viewBox.
+So the default draws the 1px stroke of the design at 16px.
+
+If you change the size and want to keep a 1px stroke, scale the stroke with it —
+`strokeWidth={24 / size}`.
+
+All three are standard SVG attributes, so any icon library accepts them. A
+library that draws solid shapes simply ignores `stroke-width`.
+
+### Size
+
+Pass `width` and `height` to change the size. A CSS class or `style` also wins,
+because CSS beats an SVG presentation attribute.
+
+<Demo data={sizeDemo} />
+
+Do not pass the lucide `size` or `absoluteStrokeWidth` props. They are specific
+to lucide, so they break as soon as an icon is overridden. `absoluteStrokeWidth`
+does nothing here in any case, because Apsara sets `width`/`height` rather than
+`size`.
+
+### Colour
+
+An icon inherits `currentColor`, so set `color` on the icon or on an ancestor.
+
+<Demo data={colorDemo} />
+
+### The `data-icon` attribute
+
+Every icon renders `data-icon="<Name>"`. Use it to style a single icon from CSS
+without re-rendering anything, and to select an icon in a test:
+
+```css
+[data-icon='ChevronDownIcon'] {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+```
+
+```tsx
+expect(document.querySelector('[data-icon="XIcon"]')).toBeInTheDocument();
+```
+
+## Replacing an icon
+
+Give `<Theme>` a map of icon name to your own component. Apsara then uses your
+component everywhere that icon appears — inside its own components too.
+
+<Demo data={overrideDemo} />
+
+```tsx
+import { Theme } from '@raystack/apsara'
+import { X, ChevronDown } from 'lucide-react'
+
+const icons = { XIcon: X, ChevronDownIcon: ChevronDown }
+
+<Theme icons={icons}>
+  <App />
+</Theme>
+```
+
+The map is partial: an icon you do not name keeps its default. You never have to
+supply a complete set.
+
+<Callout type="grey">
+  You may pass the map as an inline object literal. Apsara compares its contents,
+  so a new literal on every render costs nothing.
+</Callout>
+
+### Props for every icon
+
+`iconProps` applies props to every icon below the provider. The props at the call
+site still win.
+
+<Demo data={iconPropsDemo} />
+
+Prefer `data-icon` and CSS when a style rule is enough — `iconProps` flows through
+React and re-renders the icons, and CSS does not.
+
+### Nesting
+
+A nested `<Theme>` layers on the one above it, one name at a time. So a subtree
+can change one icon and keep everything else it inherited.
+
+<Demo data={nestedDemo} />
+
+## API Reference
+
+### Theme props
+
+<auto-type-table path="./props.ts" name="ThemeIconProps" />
+
+### IconProvider
+
+`<Theme>` mounts this for you. Use it directly only if you want icon overrides
+without a theme scope.
+
+<auto-type-table path="./props.ts" name="IconProviderProps" />
+
+### Types
+
+<auto-type-table path="./props.ts" name="IconProps" />
+
+`IconComponent` is `ComponentType<IconProps>`, and `IconOverrides` is
+`Partial<Record<IconName, IconComponent>>`. `IconName` is the union of all 243
+names, so a typo in an override map is a type error.
+
+```tsx
+import type {
+  IconComponent,
+  IconName,
+  IconOverrides,
+  IconProps
+} from '@raystack/apsara';
+```
+
+## Server components
+
+The icons are client components, and an icon map is an object of functions. A
+function cannot cross the boundary from a Server Component to a Client
+Component, so register the overrides from a client component:
+
+```tsx
+// app/providers.tsx
+'use client';
+
+import { Theme } from '@raystack/apsara';
+import { X } from 'lucide-react';
+
+const icons = { XIcon: X };
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <Theme icons={icons}>{children}</Theme>;
+}
+```
+
+```tsx
+// app/layout.tsx  (Server Component)
+import { Providers } from './providers';
+
+export default function Layout({ children }) {
+  return (
+    <html>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+```
+
+Resolution is a pure function of the context and the props — no `localStorage`,
+no `window`, no effect — so the server markup and the client markup are
+identical. There is no hydration mismatch and no flash of the wrong icon.
+
+## Which path to import from
+
+Both entry points export the same 243 icons, as the same components. What differs
+is how much work a bundler has to do to strip the rest of Apsara.
+
+```tsx
+// The same component, either way.
+import { SearchIcon } from '@raystack/apsara/icons';
+import { SearchIcon } from '@raystack/apsara';
+```
+
+`@raystack/apsara/icons` reaches no component module at all, so one icon costs one
+icon whatever the bundler does. The package root re-exports every component
+alongside the icons; Apsara sets `"sideEffects": false` so a bundler that honours
+that flag strips them and the two paths come out identical, but a bundler that
+does not honour it keeps them all. Bundling a single icon against the published
+files gives:
+
+| Import from | Bundler honours `sideEffects` | Bundler does not |
+| --- | --- | --- |
+| `@raystack/apsara/icons` | 2 modules, 1.5 kB | 2 modules, 1.5 kB |
+| `@raystack/apsara` | 2 modules, 1.5 kB | 332 modules, 541 kB |
+
+Sizes are unminified. So the subpath is the safer default: identical in the good
+case, and far cheaper in the bad one. Use the root in files that already import
+components, where a second import line buys nothing.
+
+CommonJS cannot tree-shake at all, so there the difference is unconditional:
+`require('@raystack/apsara')` loads 332 modules and every component, while
+`require('@raystack/apsara/icons')` loads 244 modules and no component.
+
+### What changed in this release
+
+The subpath used to export raw SVG assets, which meant `BellIcon` from `./icons`
+and `BellIcon` from the package root were two different components. It now
+re-exports the registry wrappers, so both give the same overridable component.
+
+Every name it exports is now a registry key, so nine of the old in-house names are
+gone. Rename them:
+
+| Removed name | Use instead |
+| --- | --- |
+| `BellSlashIcon` | `BellOffIcon` |
+| `BuildingsFilledIcon` | `Building2Icon` |
+| `CoinIcon` | `CoinsIcon` |
+| `FilterIcon` | `ListFilterIcon` |
+| `OrganizationIcon` | `Building2Icon` |
+| `ResetIcon` | `RotateCcwIcon` |
+| `ShoppingBagFilledIcon` | `ShoppingBagIcon` |
+| `SidebarIcon` | `PanelLeftIcon` |
+| `TriangleRightIcon` | `ChevronRightIcon` |
+
+The other five in-house names are registry keys already, so they keep working
+unchanged: `BellIcon`, `CoPilotIcon`, `CoinColoredIcon`, `CheckCircleFilledIcon`,
+and `CrossCircleFilledIcon`.

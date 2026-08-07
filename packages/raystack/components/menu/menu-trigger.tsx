@@ -3,7 +3,7 @@
 import { Autocomplete as AutocompletePrimitive } from '@base-ui/react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { cx } from 'class-variance-authority';
-import { TriangleRightIcon } from '~/icons';
+import { ChevronRightIcon } from '~/icons/generated';
 import { Button } from '../button';
 import { useMenubarContext } from '../menubar/menubar';
 import { Cell, CellBaseProps } from './cell';
@@ -56,7 +56,7 @@ export interface MenuSubTriggerProps
 export function MenuSubTrigger({
   children,
   value,
-  trailingIcon = <TriangleRightIcon />,
+  trailingIcon = <ChevronRightIcon />,
   leadingIcon,
   ...props
 }: MenuSubTriggerProps) {

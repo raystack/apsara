@@ -9,7 +9,7 @@ import {
   useEffect,
   useRef
 } from 'react';
-import { ReactComponent as CoPilotIcon } from '../../icons/assets/co-pilot.svg';
+import { CoPilotIcon } from '~/icons/generated';
 import styles from './chat-panel.module.css';
 import { useChatPanelContext } from './chat-panel-context';
 

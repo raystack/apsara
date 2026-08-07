@@ -2,7 +2,7 @@
 
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { Dialog, Flex, IconButton } from '@raystack/apsara';
-import { ResetIcon } from '@raystack/apsara/icons';
+import { RotateCcwIcon } from '@raystack/apsara/icons';
 import { cx } from 'class-variance-authority';
 import {
   ReadonlyURLSearchParams,
@@ -114,7 +114,7 @@ export default function DemoPlayground({
                 onClick={resetProps}
                 aria-label='Reset to default props'
               >
-                <ResetIcon />
+                <RotateCcwIcon />
               </IconButton>
               <IconButton
                 size={2}

@@ -19,7 +19,11 @@ import {
   Sidebar,
   Text
 } from '@raystack/apsara';
-import { BellIcon, FilterIcon, SidebarIcon } from '@raystack/apsara/icons';
+import {
+  BellIcon,
+  ListFilterIcon,
+  PanelLeftIcon
+} from '@raystack/apsara/icons';
 
 type ProfileCell = { row: { original: Profile } };
 
@@ -502,7 +506,7 @@ const Page = () => {
         <Sidebar.Main>
           <Sidebar.Item
             href='/examples/dataview'
-            leadingIcon={<SidebarIcon />}
+            leadingIcon={<PanelLeftIcon />}
             active
           >
             DataView
@@ -596,7 +600,7 @@ const Page = () => {
             {/* Empty/zero state lifted out of renderers — single sibling reads context */}
             <DataView.EmptyState>
               <EmptyState
-                icon={<FilterIcon />}
+                icon={<ListFilterIcon />}
                 heading='No matching people'
                 variant='empty1'
                 subHeading='Try adjusting your filters or search.'
@@ -604,7 +608,7 @@ const Page = () => {
             </DataView.EmptyState>
             <DataView.ZeroState>
               <EmptyState
-                icon={<FilterIcon />}
+                icon={<ListFilterIcon />}
                 heading='No people yet'
                 variant='empty1'
                 subHeading='Add your first teammate to get started.'

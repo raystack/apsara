@@ -1,9 +1,9 @@
 'use client';
 
 import { Dialog as DialogPrimitive } from '@base-ui/react';
-import { Cross1Icon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { type ComponentProps } from 'react';
+import { XIcon } from '~/icons/generated';
 import { Flex } from '../flex';
 import { IconButton } from '../icon-button';
 import styles from './dialog.module.css';
@@ -63,7 +63,7 @@ export function CloseButton(props: DialogPrimitive.Close.Props) {
       render={<IconButton size={3} />}
       {...props}
     >
-      <Cross1Icon aria-hidden='true' />
+      <XIcon aria-hidden='true' />
     </DialogPrimitive.Close>
   );
 }

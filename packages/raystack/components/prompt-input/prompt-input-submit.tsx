@@ -1,8 +1,8 @@
 'use client';
 
-import { ArrowUpIcon, StopIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, MouseEvent } from 'react';
+import { ArrowUpIcon, SquareIcon } from '~/icons/generated';
 import { Spinner } from '../spinner';
 import styles from './prompt-input.module.css';
 import { usePromptInputContext } from './prompt-input-context';
@@ -43,7 +43,7 @@ export function PromptInputSubmit({
         (context.status === 'submitted' ? (
           <Spinner size={2} color='default' aria-hidden='true' />
         ) : context.status === 'streaming' ? (
-          <StopIcon aria-hidden='true' />
+          <SquareIcon aria-hidden='true' />
         ) : (
           <ArrowUpIcon aria-hidden='true' />
         ))}

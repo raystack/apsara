@@ -1,6 +1,5 @@
 'use client';
 
-import { CalendarIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -8,6 +7,7 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { useEffect, useId, useRef, useState } from 'react';
 import { PropsBase } from 'react-day-picker';
+import { CalendarDaysIcon } from '~/icons/generated';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
 import { Popover } from '../popover';
@@ -223,7 +223,7 @@ export function DatePicker({
         placeholder='Select date'
         aria-invalid={!!error}
         className={styles.datePickerInput}
-        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+        trailingIcon={showCalendarIcon ? <CalendarDaysIcon /> : undefined}
         {...inputProps}
         aria-describedby={describedBy}
         ref={popover.inputRef}

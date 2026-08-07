@@ -1,12 +1,12 @@
 'use client';
 
-import { TableIcon } from '@radix-ui/react-icons';
 import type { HeaderGroup, Row } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { cx } from 'class-variance-authority';
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import tableStyles from '~/components/table/table.module.css';
+import { TableIcon } from '~/icons/generated';
 import { Badge } from '../../badge';
 import { EmptyState } from '../../empty-state';
 import { Flex } from '../../flex';
@@ -381,10 +381,7 @@ export function VirtualizedContent({
         </div>
       </div>
       {showLoaderRows && (
-        <VirtualLoaderRows
-          columns={visibleColumns}
-          count={loadingRowCount}
-        />
+        <VirtualLoaderRows columns={visibleColumns} count={loadingRowCount} />
       )}
     </div>
   );

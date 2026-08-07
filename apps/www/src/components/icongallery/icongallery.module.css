@@ -1,0 +1,323 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-5);
+  margin: var(--rs-space-7) 0;
+}
+
+/* The two inline chrome glyphs. Sized here so the grid variables cannot reach
+   them — they live outside .grid, and this keeps that explicit. */
+.glyph {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+/* Search --------------------------------------------------------------------- */
+
+.searchField {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 14px;
+  display: flex;
+  color: var(--rs-color-foreground-base-tertiary);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--rs-space-5) 0 40px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--rs-color-foreground-base-primary);
+  background-color: var(--rs-color-background-base-primary);
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: 10px;
+  outline: none;
+  appearance: none;
+}
+
+.searchInput::placeholder {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.searchInput:focus-visible {
+  border-color: var(--rs-color-border-accent-emphasis);
+}
+
+/* The native control draws its own clear affordance, which does not match. */
+.searchInput::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+/* Customizer ---------------------------------------------------------------- */
+
+.customizer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-5);
+  padding: var(--rs-space-5);
+  background-color: var(--rs-color-background-base-primary);
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: 12px;
+}
+
+.customizerHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.customizerTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.reset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: var(--rs-color-foreground-base-secondary);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.reset:hover:not(:disabled) {
+  color: var(--rs-color-foreground-base-primary);
+  background-color: var(--rs-color-background-base-secondary);
+  border-color: var(--rs-color-border-base-primary);
+}
+
+.reset:disabled {
+  color: var(--rs-color-foreground-base-tertiary);
+  cursor: default;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--rs-space-5);
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-3);
+  min-width: 0;
+}
+
+.controlHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--rs-space-3);
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.value {
+  font-size: 13px;
+  color: var(--rs-color-foreground-base-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--rs-color-foreground-base-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.note {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.colorField {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  padding: 4px;
+  background-color: var(--rs-color-background-base-secondary);
+  border-radius: 8px;
+}
+
+.swatch {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  appearance: none;
+}
+
+.swatch::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.swatch::-webkit-color-swatch {
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: 6px;
+}
+
+.swatch::-moz-color-swatch {
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: 6px;
+}
+
+.hex {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  color: var(--rs-color-foreground-base-primary);
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.hex::placeholder {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+/* Sliders. The filled portion comes from --ig-fill, set inline from the value,
+   because a range input cannot express it in CSS alone. */
+
+.slider {
+  width: 100%;
+  height: 16px;
+  background: none;
+  cursor: pointer;
+  appearance: none;
+}
+
+.slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--rs-color-border-accent-emphasis) var(--ig-fill),
+    var(--rs-color-background-base-secondary) var(--ig-fill)
+  );
+}
+
+.slider::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  margin-top: -5px;
+  background-color: var(--rs-color-background-base-primary);
+  border: 1px solid var(--rs-color-border-accent-emphasis);
+  border-radius: 50%;
+  appearance: none;
+}
+
+.slider::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background-color: var(--rs-color-background-base-secondary);
+}
+
+.slider::-moz-range-progress {
+  height: 4px;
+  border-radius: 999px;
+  background-color: var(--rs-color-border-accent-emphasis);
+}
+
+.slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background-color: var(--rs-color-background-base-primary);
+  border: 1px solid var(--rs-color-border-accent-emphasis);
+  border-radius: 50%;
+}
+
+.slider:focus-visible {
+  outline: 2px solid var(--rs-color-border-accent-emphasis);
+  outline-offset: 4px;
+  border-radius: 999px;
+}
+
+/* Grid ---------------------------------------------------------------------- */
+
+.status {
+  margin: 0;
+  font-size: 12px;
+  color: var(--rs-color-foreground-base-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.empty {
+  margin: 0;
+  padding: var(--rs-space-9) 0;
+  font-size: 14px;
+  color: var(--rs-color-foreground-base-secondary);
+  text-align: center;
+}
+
+.grid {
+  /* Tiles grow with the icon so the padding stays even at every size. */
+  --ig-tile: max(56px, calc(var(--ig-size) + 34px));
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--ig-tile), 1fr));
+  gap: 8px;
+}
+
+.tile,
+.tileCopied {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  padding: 0;
+  color: inherit;
+  background-color: var(--rs-color-background-base-secondary);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.tile:hover {
+  background-color: var(--rs-color-background-base-primary-hover);
+}
+
+.tile:focus-visible,
+.tileCopied:focus-visible {
+  outline: 2px solid var(--rs-color-border-accent-emphasis);
+  outline-offset: 2px;
+}
+
+.tileCopied {
+  background-color: var(--rs-color-background-base-primary-hover);
+  border-color: var(--rs-color-border-accent-emphasis);
+}
+
+/* The customizer reaches the icons through these three declarations only. */
+.tile svg,
+.tileCopied svg {
+  width: var(--ig-size);
+  height: var(--ig-size);
+  stroke-width: var(--ig-stroke);
+}
