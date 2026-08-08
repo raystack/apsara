@@ -47,7 +47,7 @@ Over 70 components, styled with plain CSS and `data-*` attributes so you can the
 
 - **Layout** — Box, Flex, Grid, Container, Sidebar, ScrollArea
 - **Navigation** — Tabs, Breadcrumb, Command, Menu, Navbar, Toolbar
-- **Data** — Table, DataTable, DataView, Avatar, Badge, Chip, Meter
+- **Data** — Table, DataView, Avatar, Badge, Chip, Meter
 - **Forms** — Input, Select, Combobox, Checkbox, Radio, Switch, Slider, Calendar, ColorPicker
 - **Feedback** — Toast, Tooltip, Callout, Spinner, Indicator
 - **Overlay** — Dialog, Popover, Drawer, ContextMenu
@@ -59,9 +59,9 @@ See the [documentation site](https://apsara.raystack.org) for the full list, liv
 Contributions are welcome. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the workflow and [DEVELOPMENT.md](./DEVELOPMENT.md) for local setup.
 
 ```sh
-pnpm install   # install dependencies
-pnpm start     # run the library and docs site
-pnpm test      # run tests
+pnpm install       # install dependencies
+pnpm start         # run the library and docs site
+pnpm test:apsara   # run tests
 ```
 
 ## License

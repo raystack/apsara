@@ -52,6 +52,6 @@ export interface TableSectionHeaderProps {
     cell?: string;
   };
 
-  /** Number of cells the row should span across. Ensures the section header spans all table columns. */
-  colSpan?: number;
+  /** Number of cells the row should span across. Ensures the section header spans all table columns. (Required) */
+  colSpan: number;
 }

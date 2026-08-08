@@ -25,6 +25,7 @@ Thank you for your interest in contributing to Apsara! This guide will help you 
     - [Release Workflow Details](#release-workflow-details)
     - [NPM Publishing](#npm-publishing)
     - [Canary Releases](#canary-releases)
+  - [Project Documentation](#project-documentation)
   - [Getting Help](#getting-help)
   - [Code of Conduct](#code-of-conduct)
 
@@ -57,8 +58,8 @@ pnpm dev
    ```
 
 3. **Make your changes** in the appropriate directories:
-   - **Components**: `packages/raystack/`
-   - **Documentation**: `apps/www/`
+   - **Components**: `packages/raystack/components/`
+   - **Documentation**: `apps/www/src/content/docs/`
 
 4. **Test your changes**:
    ```bash
@@ -92,19 +93,19 @@ pnpm dev
 
 ## Component Development
 
-1. Create components in `packages/raystack/`
+1. Create components in `packages/raystack/components/`
 2. Follow the existing component structure:
    ```
    component-name/
-   ├── index.ts         # Export barrel file
+   ├── index.tsx        # Export barrel file
    ├── component-name.tsx # Main component
    ├── component-name.module.css # Styles
    └── __tests__/         # Tests
        └── component-name.test.tsx
    ```
 
-3. Export new components from `packages/raystack/index.ts`
-4. Update the component documentation in `apps/www/content/docs`
+3. Export new components from `packages/raystack/index.tsx`
+4. Update the component documentation in `apps/www/src/content/docs`
 
 ## Documentation Development
 
@@ -292,6 +293,13 @@ Pushes to `main` are published the same way but don't have a PR to comment on. I
 ```bash
 pnpm add https://pkg.pr.new/raystack/apsara/@raystack/apsara@<commit-sha>
 ```
+
+## Project Documentation
+
+Beyond this guide, the repo keeps deeper docs under `docs/`:
+
+- [Migration Guide](./docs/V1-migration.md) — breaking changes and how to move from the Radix-based release to the current Base UI-based version.
+- [RFCs](./docs/rfcs/) — design proposals and decisions behind major features (Base UI migration, unified DataView, guided Tour).
 
 ## Getting Help
 

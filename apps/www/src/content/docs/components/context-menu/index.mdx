@@ -16,10 +16,19 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { ContextMenu } from '@raystack/apsara'
+
+<ContextMenu>
+  <ContextMenu.Trigger />
+  <ContextMenu.Content>
+    <ContextMenu.Item />
+  </ContextMenu.Content>
+</ContextMenu>
 ```
 
 ## API Reference
@@ -153,3 +162,18 @@ By default (`autocompleteMode="auto"`), items are automatically filtered as the 
 For submenus, you can independently enable autocomplete by passing `autocomplete` to `ContextMenu.Submenu`.
 
 <Demo data={autocompleteDemo} />
+
+## Accessibility
+
+- Built on [Base UI Context Menu](https://base-ui.com/react/components/context-menu):
+  the popup uses `role="menu"` and items use `role="menuitem"`, following the
+  [WAI-ARIA Menu pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu/).
+- Opens on right-click or long press (touch); focus moves into the menu when
+  it opens and returns to the page when it closes with Escape.
+- Arrow keys move through items, Enter activates the highlighted item, and
+  ArrowRight/ArrowLeft open and close submenus.
+- With `autocomplete`, the popup becomes a `role="dialog"` containing a search
+  input, items render as `role="option"`, and focus stays in the input while
+  arrow keys move the highlight — Escape first closes an open submenu.
+- `ContextMenu.Label` must be wrapped in `ContextMenu.Group` so the group is
+  labelled via `aria-labelledby`.

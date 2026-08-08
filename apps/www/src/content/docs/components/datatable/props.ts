@@ -25,6 +25,12 @@ export interface DataTableProps {
    */
   isLoading?: boolean;
 
+  /** Number of skeleton rows to render while loading. */
+  loadingRowCount?: number;
+
+  /** Callback fired when a row is clicked. */
+  onRowClick?: (row: T) => void;
+
   /** Default sort configuration */
   defaultSort?: Sort;
 
@@ -77,8 +83,8 @@ export interface DataTableColumnDef<TData, TValue> {
   /** Column header text */
   header: string;
 
-  /** Data type */
-  columnType: 'text' | 'number' | 'date' | 'select';
+  /** Data type used for sorting and filter value coercion */
+  dataType?: 'string' | 'number' | 'boolean';
 
   /** Enable sorting */
   enableSorting?: boolean;

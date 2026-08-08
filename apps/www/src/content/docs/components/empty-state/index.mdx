@@ -1,12 +1,16 @@
 ---
 title: Empty State
-description: Displays an empty state
+description: A placeholder for views with nothing to show yet — pairs an icon and message with optional actions to help users take the next step.
 source: packages/raystack/components/empty-state
 ---
 
 import { playground, variantsDemo } from "./demo.ts";
 
 <Demo data={playground} />
+
+## Overview
+
+`EmptyState` fills a view that has no content yet — an empty inbox, zero search results, a feature that needs setup. It pairs a required `icon` with an optional `heading`, `subHeading`, and up to two action slots (`primaryAction`, `secondaryAction`) so users always have a next step. Use the default `empty1` variant for compact, centered placeholders inside panels and lists, and `empty2` for full-page states with left-aligned content and a side-by-side action row.
 
 ## Anatomy
 
@@ -38,7 +42,21 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `empty-state-subheading` | The subheading text (when `subHeading` is set) |
 | `empty-state-actions` | Wrapper around the action buttons (`empty2` variant only) |
 
+## Examples
+
+### Variants
+
+`empty1` (the default) centers everything and stacks the actions vertically — suited to panels, tables, and lists. `empty2` left-aligns the content, uses a larger icon, and places both actions in a row — suited to full-page states.
+
+<Demo data={variantsDemo} />
+
 ## Accessibility
 
-- Uses semantic HTML elements for proper content structure
-- Heading and description are accessible to screen readers
+- The heading and subheading render as styled `Text` spans, not real
+  heading elements, so they don't join the document outline. If the empty
+  state is the main content of a page, consider passing a real heading
+  (e.g. `heading={<h2>…</h2>}`) to keep the outline intact.
+- The icon is decorative by default. If it carries meaning on its own,
+  give it an accessible name; otherwise mark it `aria-hidden`.
+- Actions are whatever you pass in — use real `Button`s so keyboard and
+  screen reader users can reach them.

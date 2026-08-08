@@ -1,12 +1,12 @@
-# Apsara v1.0.0 Migration Guide: Radix UI / Ariakit -> Base UI
+# Apsara v1 Migration Guide: Radix UI / Ariakit -> Base UI
 
-This guide covers all breaking changes when upgrading from the last stable Radix-based release to the current Base UI-based v1.0.0
+This guide covers all breaking changes when upgrading from the last stable Radix-based release to the current Base UI-based v1
 
 ---
 
 ## Table of Contents
 
-- [Apsara v1.0.0 Migration Guide: Radix UI / Ariakit -\> Base UI](#apsara-v100-migration-guide-radix-ui--ariakit---base-ui)
+- [Apsara v1 Migration Guide: Radix UI / Ariakit -\> Base UI](#apsara-v1-migration-guide-radix-ui--ariakit---base-ui)
   - [Table of Contents](#table-of-contents)
   - [Prerequisites](#prerequisites)
   - [Cross-Cutting Changes](#cross-cutting-changes)

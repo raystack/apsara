@@ -8,6 +8,10 @@ import { playground, alignDemo, truncateDemo, weightDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
+## Overview
+
+`Headline` renders page and section titles with the design system's heading scale — four sizes (`t1`–`t4`, default `t2`) plus `weight`, `align`, and `truncate` props. It outputs an `<h2>` by default; use the `render` prop to pick the heading level that fits the document outline. For body copy, labels, and any non-heading text, use [Text](/docs/components/text) instead.
+
 ## Anatomy
 
 Import and assemble the component:
@@ -36,13 +40,19 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 
 ### Alignment
 
+The `align` prop sets the text alignment within the heading's box. Default is `left`.
+
 <Demo data={alignDemo} />
 
 ### Weight
 
+Headlines come in two weights. Default is `medium`; use `regular` for a lighter look.
+
 <Demo data={weightDemo} />
 
 ### Truncation
+
+Set `truncate` to clip a headline to a single line with an ellipsis when it overflows its container.
 
 <Demo data={truncateDemo} />
 

@@ -593,4 +593,3 @@ Several alternatives were evaluated and rejected, and a handful of ideas were de
 - [Notion — Databases](https://www.notion.so/help/views-filters-and-sorts) — prior art for swappable renderers driven by one filter/sort model.
 - [MUI X Data Grid](https://mui.com/x/react-data-grid/) — reference for column features (pinning, resizing, faceted filters) flagged as future work.
 - [ag-Grid](https://www.ag-grid.com/) — reference for advanced features (pivot, aggregation, master-detail) deliberately out of scope.
-- Internal reference: `.claude/worktrees/dataview/ANALYSIS.md` — feasibility + architecture analysis backing this RFC.
