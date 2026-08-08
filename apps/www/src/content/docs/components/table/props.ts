@@ -38,20 +38,6 @@ export interface TableCellProps {
 }
 
 export interface TableSectionHeaderProps {
-  /** Map of class names for internal components. */
-  classNames?: {
-    /**
-     * CSS class for the row.
-     * @deprecated Use `[data-slot="table-section-header"]` instead.
-     */
-    row?: string;
-    /**
-     * CSS class for the cell.
-     * @deprecated Use `[data-slot="table-section-header-cell"]` instead.
-     */
-    cell?: string;
-  };
-
   /** Number of cells the row should span across. Ensures the section header spans all table columns. (Required) */
   colSpan: number;
 }

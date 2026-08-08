@@ -519,51 +519,6 @@ export function DataViewLoadingDemo() {
 }
 
 // ---------------------------------------------------------------------------
-// Loading + virtualization combined
-// ---------------------------------------------------------------------------
-
-export function DataViewVirtualizedLoadingDemo() {
-  const [isLoading, setIsLoading] = useState(true);
-  const allPeople = useMemo(() => generatePeople(1000), []);
-  return (
-    <Flex direction='column' gap={4} style={{ width: '100%' }}>
-      <Flex gap={3} align='center'>
-        <Button
-          size='small'
-          variant='outline'
-          color='neutral'
-          onClick={() => setIsLoading(v => !v)}
-        >
-          {isLoading ? 'Stop loading' : 'Show skeletons'}
-        </Button>
-        <Text size='small' variant='secondary'>
-          Skeleton rows render under existing rows even when virtualized.
-        </Text>
-      </Flex>
-      <div style={{ height: 400 }}>
-        <DataView
-          data={isLoading ? [] : allPeople}
-          fields={fields}
-          defaultSort={defaultSort}
-          isLoading={isLoading}
-          loadingRowCount={6}
-        >
-          <DataView.Toolbar>
-            <DataView.Filters />
-          </DataView.Toolbar>
-          <DataView.List
-            variant='table'
-            columns={tableColumns}
-            virtualized
-            estimatedRowHeight={44}
-          />
-        </DataView>
-      </div>
-    </Flex>
-  );
-}
-
-// ---------------------------------------------------------------------------
 // Per-view fields override demo — Email hidden in the List view only.
 // ---------------------------------------------------------------------------
 
