@@ -41,7 +41,11 @@ export interface SelectTriggerProps {
   /** Props for the chevron icon. */
   iconProps?: Record<string, unknown>;
 
-  /** Renders a native button element instead of the Base UI button. */
+  /** Whether the element supplied through `render` is a native button.
+   * Set to false when the rendered element is not a button, so Base UI
+   * skips button-only attributes and behaviors.
+   * @defaultValue true
+   */
   nativeButton?: boolean;
 
   /** Accessible label for the trigger. Falls back to "Select option" when omitted.

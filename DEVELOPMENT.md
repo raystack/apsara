@@ -258,6 +258,8 @@ This creates optimized builds in the `dist/` directory with:
 - TypeScript declarations (`dist/index.d.ts`)
 - CSS files (`dist/style.css`, `dist/normalize.css`)
 
+The package also exports a `./v1` entry point. It is a legacy alias that maps to the same root `dist` files, kept so older `@raystack/apsara/v1` imports keep working.
+
 ### Build Configuration
 
 The build process uses:
