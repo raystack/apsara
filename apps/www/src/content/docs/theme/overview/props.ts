@@ -1,4 +1,4 @@
-export type ThemeProviderProps = {
+export type ThemeProps = {
   /**
    * Default theme on first load
    * @defaultValue "system"
@@ -105,4 +105,20 @@ export type UseThemeProps = {
 
   /** Active gray color */
   grayColor?: 'gray' | 'mauve' | 'slate';
+};
+
+export type UseThemeOptions = {
+  /**
+   * Target a scope (or the root) by its `storageKey` instead of the nearest
+   * provider. Useful for flipping the page-level theme from inside a nested scope.
+   */
+  storageKey?: string;
+};
+
+export type ThemeSwitcherProps = {
+  /**
+   * Width and height of the switch button in pixels
+   * @defaultValue 30
+   */
+  size?: number;
 };

@@ -3,6 +3,8 @@ title: Overview
 description: Understanding the Apsara theming system and the Theme component.
 ---
 
+import { switcherDemo, switcherSizeDemo } from "./demo.ts";
+
 Apsara provides a theming system built on CSS custom properties (tokens). Tokens are semantic variables that automatically resolve to appropriate values based on the active theme—so your UI adapts seamlessly when users switch between light and dark modes or when you change accent colors, without any code changes.
 
 ## Installation
@@ -84,9 +86,7 @@ Tokens follow two naming patterns:
 
 The `Theme` component wraps your application and manages theme state. It handles persisting the user's preference to localStorage, syncing with system preferences, and injecting the appropriate CSS variables into the document.
 
-<auto-type-table path="./props.ts" name="ThemeProviderProps" />
-
-> `ThemeProvider` is a deprecated alias for `Theme`. New code should import `Theme`; the old name is kept for backward compatibility and will be removed in a future major release.
+<auto-type-table path="./props.ts" name="ThemeProps" />
 
 ### useTheme
 
@@ -106,7 +106,25 @@ function ThemeToggle() {
 }
 ```
 
+The hook accepts an optional options object to target a specific scope by its `storageKey` (see [Targeting a specific scope](#targeting-a-specific-scope)):
+
+<auto-type-table path="./props.ts" name="UseThemeOptions" />
+
+And returns:
+
 <auto-type-table path="./props.ts" name="UseThemeProps" />
+
+### ThemeSwitcher
+
+A ready-made icon button that toggles between light and dark. It calls `useTheme` internally, so it must render inside a `Theme` provider. The button is a native `<button>` with a descriptive `aria-label` ("Switch to light theme" / "Switch to dark theme"), so it works with keyboards and screen readers out of the box.
+
+<Demo data={switcherDemo} />
+
+The `size` prop sets the button's width and height in pixels:
+
+<Demo data={switcherSizeDemo} />
+
+<auto-type-table path="./props.ts" name="ThemeSwitcherProps" />
 
 ## Framework Integration
 
