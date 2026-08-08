@@ -37,6 +37,23 @@ function snapToTick(value: number, maxPosition: number): number {
 }
 
 /**
+ * Measure the article and container, and derive the tick bounds from the
+ * container's live height. Shared by the position and scroll callbacks so the
+ * DOM reads and tick-bounds math live in one place. Returns null if either
+ * element is missing.
+ */
+function measureLayout(container: HTMLElement | null) {
+  const article = document.querySelector(ARTICLE_SELECTOR);
+  if (!article || !container) return null;
+
+  const articleBox = article.getBoundingClientRect();
+  const containerBox = container.getBoundingClientRect();
+  const { maxPosition } = calculateTickBounds(containerBox.height);
+
+  return { container, articleBox, containerBox, maxPosition };
+}
+
+/**
  * Resolve overlapping heading positions by ensuring each heading
  * is at least one tick apart from the previous one.
  * Uses a two-pass algorithm:
@@ -103,12 +120,10 @@ export default function TableOfContents({
 
   /** Recalculate heading positions within the article */
   const recalcHeadings = useCallback(() => {
-    const article = document.querySelector(ARTICLE_SELECTOR);
-    const container = containerRef.current;
-    if (!article || !container || !tocHeadings.length) return;
+    const layout = measureLayout(containerRef.current);
+    if (!layout || !tocHeadings.length) return;
 
-    const articleBox = article.getBoundingClientRect();
-    const containerBox = container.getBoundingClientRect();
+    const { articleBox, containerBox, maxPosition: maxPos } = layout;
     const articleTop = articleBox.top + window.scrollY;
 
     // Check if content is scrollable (article height > viewport height)
@@ -117,9 +132,6 @@ export default function TableOfContents({
 
     // Store container height - tick bounds are derived via useMemo
     setContainerHeight(containerBox.height);
-
-    // Calculate the max position for this container height
-    const { maxPosition: maxPos } = calculateTickBounds(containerBox.height);
 
     const items = tocHeadings
       .map(tocItem => {
@@ -157,17 +169,13 @@ export default function TableOfContents({
 
   /** Update scroll marker position via direct DOM manipulation (no state update) */
   const handleScroll = useCallback(() => {
-    const article = document.querySelector(ARTICLE_SELECTOR);
-    const container = containerRef.current;
+    const layout = measureLayout(containerRef.current);
     const scrollMarker = scrollMarkerRef.current;
-    if (!article || !container || !scrollMarker) return;
+    if (!layout || !scrollMarker) return;
 
-    const { top, height } = article.getBoundingClientRect();
-    const { height: cHeight } = container.getBoundingClientRect();
+    const { container, articleBox, maxPosition: maxPos } = layout;
+    const { top, height } = articleBox;
     const viewportHeight = window.innerHeight;
-
-    // Calculate max position from current container height
-    const { maxPosition: maxPos } = calculateTickBounds(cHeight);
 
     let newScrollPos: number;
     if (top > 0) {
@@ -306,8 +314,6 @@ export default function TableOfContents({
               style={{
                 // Center label vertically on tick (label height ~12px, so offset by half)
                 top: `${h.yPosition - 6}px`,
-                // Indent based on heading level (h2 furthest right, h4 closest to bar)
-                // right: `${(3 - h.level) * 4 + 28}px`,
                 right: '24px',
                 zIndex: 10 * (h.level < 4 ? 1 : 0),
                 transitionDelay: `${50 * i}ms`

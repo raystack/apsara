@@ -8,6 +8,10 @@ import { playground, alignDemo, sizeDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
+## Overview
+
+`Container` constrains content to a readable width. It renders a `div` with a `size`-based max-width (`small`, `medium`, `large`, or the default `none`, which adds no limit) and an `align` prop that positions it within its parent (default `center`). Use it as the outer wrapper for pages, articles, and settings forms; lay out the content inside it with [Flex](/docs/components/flex) or [Grid](/docs/components/grid).
+
 ## Anatomy
 
 Import and assemble the component:
@@ -36,13 +40,13 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 
 ### Size
 
-Containers can have multiple size.
+The `size` prop caps the container's max-width. The default is `none`, which lets content span the full width of the parent.
 
 <Demo data={sizeDemo} />
 
 ### Align
 
-Containers can be aligned to the left, center, or right of their parent element.
+The `align` prop positions the container within its parent — left, center, or right. Default is `center`.
 
 <Demo data={alignDemo} />
 

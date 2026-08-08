@@ -9,8 +9,14 @@ This guide walks you through installing Apsara and building your first component
 
 Apsara requires:
 
-- **Node.js** 18 or later
-- **React** 18 or 19
+- **Node.js** 22 or later
+- **React** 19
+
+React and React DOM are peer dependencies. Make sure your project has them installed:
+
+```package-install
+react react-dom
+```
 
 ## Installation
 
@@ -149,11 +155,23 @@ import { MagnifyingGlassIcon, Cross2Icon } from "@raystack/apsara/icons";
 
 ## Importing Hooks
 
-Utility hooks are available from a dedicated export:
+Utility hooks such as `useCopyToClipboard`, `useDebouncedState`, and `useMouse` are available from a dedicated export:
 
 ```tsx
 import { Button } from "@raystack/apsara";
-import { useTheme } from "@raystack/apsara/hooks";
+import { useCopyToClipboard } from "@raystack/apsara/hooks";
+
+function CopyButton({ value }: { value: string }) {
+  const { copy } = useCopyToClipboard();
+
+  return <Button onClick={() => copy(value)}>Copy</Button>;
+}
+```
+
+To read or change the active theme, use `useTheme` from the main entry:
+
+```tsx
+import { Button, useTheme } from "@raystack/apsara";
 
 function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -168,6 +186,6 @@ function ThemeToggle() {
 
 ## Next Steps
 
-- [Theme Overview](/theme/overview) — Configure colors, spacing, and style variants
-- [Button](/components/button) — Start with a common component
-- [DataTable](/components/datatable) — Build data-rich interfaces
+- [Theme Overview](/docs/theme/overview) — Configure colors, spacing, and style variants
+- [Button](/docs/components/button) — Start with a common component
+- [DataView](/docs/components/dataview) — Build data-rich interfaces

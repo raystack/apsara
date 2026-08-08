@@ -1,18 +1,10 @@
 ---
 title: Announcement Bar
-description: AnnouncementBar component to display message
+description: A banner that displays a short site-wide message with an optional action, such as a product update, promotion, or warning.
 source: packages/raystack/components/announcement-bar
 ---
 
-import {
-  playground,
-  variantsDemo,
-  sizesDemo,
-  colorsDemo,
-  disabledDemo,
-  loadingDemo,
-  iconsDemo,
-} from "./demo.ts";
+import { playground, variantsDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -44,6 +36,14 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `announcement-bar-action` | The action `<button>` (when `actionLabel` or `actionIcon` is set) |
 | `announcement-bar-action-label` | The action button's text label |
 | `announcement-bar-action-icon` | Wrapper around the action icon (when `actionIcon` is set) |
+
+## Examples
+
+### Variant
+
+Variants convey the tone of the announcement. Default is `normal`; use `error` for urgent notices and `gradient` for promotional messages.
+
+<Demo data={variantsDemo} />
 
 ## Accessibility
 
