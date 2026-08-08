@@ -1,5 +1,5 @@
 ---
-title: Theme Provider
+title: Theme
 description: React API for theming — the Theme provider, useTheme hook, and ThemeSwitcher toggle.
 source: packages/raystack/components/theme-provider
 ---
@@ -11,10 +11,6 @@ import { preview, switcherSizeDemo, scopedDemo } from "./demo.ts";
 This page documents the React API for theming: the `Theme` provider component, the `useTheme` hook, and the `ThemeSwitcher` button. For the theming system itself — design tokens, colors, spacing, and scoped theming in depth — see the [Theme overview](/docs/theme/overview).
 
 `Theme` manages light/dark mode (including the `system` preference), persists the user's choice to localStorage, and applies the `style`, `accentColor`, and `grayColor` attributes that drive Apsara's design tokens. It injects a small inline script so the correct theme is applied before first paint, avoiding a flash of the wrong theme.
-
-<Callout type="attention" highContrast variant="outline">
-  `ThemeProvider` is a deprecated alias of `Theme` and will be removed in a future major release. Use `Theme` instead.
-</Callout>
 
 ## Anatomy
 
@@ -35,7 +31,7 @@ import { Theme, ThemeSwitcher, useTheme } from "@raystack/apsara";
 
 The provider component. Rendered at the root it manages the document-level theme; rendered inside another `Theme` it becomes a scoped provider that overrides theme attributes for its subtree only (see [scoped theming](/docs/theme/overview#scoped-theming)).
 
-<auto-type-table path="./props.ts" name="ThemeProviderProps" />
+<auto-type-table path="./props.ts" name="ThemeProps" />
 
 ### useTheme
 

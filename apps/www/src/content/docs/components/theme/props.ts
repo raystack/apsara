@@ -1,4 +1,4 @@
-export type ThemeProviderProps = {
+export type ThemeProps = {
   /**
    * Default theme on first load
    * @defaultValue "system"
