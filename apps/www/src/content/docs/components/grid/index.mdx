@@ -1,12 +1,16 @@
 ---
 title: Grid
-description: A flexible and powerful component for grid layout
+description: A layout primitive for CSS grid — define columns, rows, template areas, and gaps with props instead of stylesheet rules.
 source: packages/raystack/components/grid
 ---
 
 import { playground,  basicDemo } from "./demo.ts";
 
 <Demo data={playground} />
+
+## Overview
+
+`Grid` is a `div` with `display: grid`, exposing CSS grid through props: `columns` and `rows` (a number becomes `repeat(n, 1fr)`, a string passes through as-is), `templateAreas`, `autoFlow`, `gap`/`columnGap`/`rowGap`, and the alignment props. Reach for it when a layout runs in two dimensions at once — dashboards, card grids, page shells with named areas. For a single row or column, [Flex](/docs/components/flex) is the simpler tool. Children can be any elements; wrap one in `Grid.Item` only when it needs its own placement or styling.
 
 ## Anatomy
 
@@ -48,9 +52,16 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 
 ### Basic Usage
 
+A 2×2 grid defined with numeric `rows` and `columns`. Plain children and `Grid.Item` wrappers can be mixed freely — both flow into cells in order.
+
 <Demo data={basicDemo} />
 
 ## Accessibility
 
-- Uses semantic HTML for proper document structure
-- Supports standard content accessibility patterns
+- Renders a plain `<div>` and adds no roles or ARIA attributes — CSS grid
+  is purely visual layout.
+- Screen readers read children in DOM order. Explicit placement,
+  `templateAreas`, and `dense` auto-flow can make the visual order differ
+  from the reading order, so keep the DOM order meaningful.
+- Use the `render` prop to swap in a semantic element (`<ul>`, `<section>`)
+  when the grid represents a real group, such as a list of cards.

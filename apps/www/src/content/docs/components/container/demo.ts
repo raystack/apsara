@@ -25,7 +25,7 @@ export const playground = {
     children: {
       type: 'text',
       initialValue:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+        'Workspace settings control how members join, what they can access, and how billing works. Changes apply to everyone in your organization as soon as you save them.'
     }
   },
   getCode
@@ -39,7 +39,7 @@ export const alignDemo = {
       code: `
       <Container size="small" align="left">
         <Text>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+          Workspace settings control how members join, what they can access, and how billing works. Changes apply to everyone in your organization as soon as you save them.
         </Text>
       </Container>`
     },
@@ -48,7 +48,7 @@ export const alignDemo = {
       code: `
       <Container size="small" align="center">
         <Text>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+          Workspace settings control how members join, what they can access, and how billing works. Changes apply to everyone in your organization as soon as you save them.
         </Text>
       </Container>`
     },
@@ -57,7 +57,7 @@ export const alignDemo = {
       code: `
       <Container size="small" align="right">
         <Text>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+          Workspace settings control how members join, what they can access, and how billing works. Changes apply to everyone in your organization as soon as you save them.
         </Text>
       </Container>`
     }
@@ -71,7 +71,7 @@ export const sizeDemo = {
       code: `
         <Container size="none">
           <Text>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+            Workspace settings control how members join, what they can access, and how billing works. Changes apply to everyone in your organization as soon as you save them.
           </Text>
         </Container>`
     },
@@ -80,7 +80,7 @@ export const sizeDemo = {
       code: `
       <Container size="small">
           <Text>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+            Workspace settings control how members join, what they can access, and how billing works. Changes apply to everyone in your organization as soon as you save them.
           </Text>
         </Container>`
     },
@@ -89,7 +89,7 @@ export const sizeDemo = {
       code: `
       <Container size="medium">
           <Text>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+            Workspace settings control how members join, what they can access, and how billing works. Changes apply to everyone in your organization as soon as you save them.
           </Text>
         </Container>`
     },
@@ -98,7 +98,7 @@ export const sizeDemo = {
       code: `
       <Container size="large">
         <Text>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+          Workspace settings control how members join, what they can access, and how billing works. Changes apply to everyone in your organization as soon as you save them.
         </Text>
       </Container>`
     }

@@ -155,26 +155,6 @@ export interface DataViewListProps {
 
   /** When true, the active group header sticks under the table header while scrolling. */
   stickyGroupHeader?: boolean;
-
-  /**
-   * @deprecated Every rendered part carries an equivalent `[data-slot]` (see
-   * the List slot table below). Style by `data-slot` instead of threading
-   * class names through props.
-   */
-  classNames?: {
-    /** @deprecated Use `[data-slot="data-view-list"]` instead. */
-    root?: string;
-    /** @deprecated Use `[data-slot="data-view-list-header"]` instead. */
-    header?: string;
-    /** @deprecated Use `[data-slot="data-view-list-header-cell"]` instead. */
-    headerCell?: string;
-    /** @deprecated Use `[data-slot="data-view-list-row"]` instead. */
-    row?: string;
-    /** @deprecated Use `[data-slot="data-view-list-cell"]` instead. */
-    cell?: string;
-    /** @deprecated Use `[data-slot="data-view-list-group-header"]` instead. */
-    groupHeader?: string;
-  };
 }
 
 export interface DataViewListColumn {
@@ -193,14 +173,6 @@ export interface DataViewListColumn {
    * @defaultValue "1fr"
    */
   width?: string | number;
-
-  /**
-   * @deprecated Every cell and header cell carries `data-column={accessorKey}`
-   * alongside its `data-slot`. Target this column with
-   * `[data-slot="data-view-list-cell"][data-column="..."]` (and the
-   * `-header-cell` variant) instead.
-   */
-  classNames?: { cell?: string; header?: string };
 }
 
 /** Date inputs accepted by Timeline props and row fields. */
@@ -350,34 +322,6 @@ export interface DataViewTimelineProps {
    * @defaultValue true
    */
   showGroupHeaders?: boolean;
-
-  /**
-   * @deprecated Every rendered part carries an equivalent `[data-slot]` (see
-   * the Timeline slot table below). Style by `data-slot` instead of
-   * threading class names through props.
-   */
-  classNames?: {
-    /** @deprecated Use `[data-slot="data-view-timeline"]` instead. */
-    root?: string;
-    /** @deprecated Use `[data-slot="data-view-timeline-axis"]` instead. */
-    axis?: string;
-    /** @deprecated Use `[data-slot="data-view-timeline-axis-band"]` instead. */
-    band?: string;
-    /** @deprecated Use `[data-slot="data-view-timeline-axis-tick"]` instead. */
-    tick?: string;
-    /** @deprecated Use `[data-slot="data-view-timeline-marker"]` instead. */
-    marker?: string;
-    /** @deprecated Use `[data-slot="data-view-timeline-gridline"]` instead. */
-    gridline?: string;
-    /** @deprecated Use `[data-slot="data-view-timeline-cursor"]` instead. */
-    cursor?: string;
-    /** @deprecated Use `[data-slot="data-view-timeline-canvas"]` instead. */
-    canvas?: string;
-    /** @deprecated Use `[data-slot="data-view-timeline-card"]` instead. */
-    card?: string;
-    /** @deprecated Use `[data-slot="data-view-timeline-group-header"]` instead. */
-    groupHeader?: string;
-  };
 }
 
 export interface TimelineCardContext {

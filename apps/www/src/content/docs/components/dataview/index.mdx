@@ -32,6 +32,8 @@ In scope today: `DataView.List` (table + list presentations), `DataView.Timeline
 
 ## Anatomy
 
+Import and assemble the component:
+
 ```tsx
 import {
   DataView,
@@ -555,3 +557,22 @@ Start with `isLoading={true}` and fire an initial fetch on mount: with no data a
 - **Vertical space is not virtualized.** `virtualized` culls horizontally only, so a grouped timeline renders every section's cards that fall in the visible time window. Deep grouping over thousands of rows will render a tall canvas.
 - **`virtualized`** enables horizontal culling: only cards and gridlines near the viewport render. Recommended whenever the domain is long or rows are numerous.
 - **Interaction** — cards receive row clicks via the root's `onRowClick`; the background supports mouse drag-to-pan with a momentum glide; scrolling past the domain edge won't trigger browser back-swipe. The pane is a focusable, labelled region (`aria-label`, default "Timeline"), so keyboard users can Tab to it and scroll with the arrow keys.
+
+## Accessibility
+
+- `DataView.List` with `variant="table"` renders real table semantics:
+  `role="table"` on the grid with `rowgroup`, `row`, `columnheader`, and
+  `cell` on its parts. `variant="list"` uses `role="list"` with `listitem`
+  rows instead.
+- When `onRowClick` is set, each row gets `tabIndex={0}` and activates with
+  Enter or Space, matching a native button. Rows keep their structural role
+  (`row`/`listitem`) so cells stay associated with their row, and key presses
+  bubbling up from interactive children (buttons, links in cells) are ignored
+  so they don't also trigger row activation.
+- Skeleton loader rows are marked `aria-busy="true"`; the infinite-scroll
+  sentinel and the duplicate sticky group-header anchor are `aria-hidden` so
+  screen readers don't announce them.
+- The Timeline pane is a focusable, labelled `role="region"` (`aria-label`,
+  default "Timeline") that keyboard users can Tab to and scroll with arrow
+  keys; the card canvas is a `role="list"` with each card as a `listitem`,
+  and decorative gridlines, markers, and the axis are `aria-hidden`.

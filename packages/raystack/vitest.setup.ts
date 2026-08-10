@@ -7,6 +7,21 @@ global.ResizeObserver = class ResizeObserver {
   disconnect() {}
 };
 
+const emptyRectList = () => [] as unknown as DOMRectList;
+
+if (!Range.prototype.getClientRects) {
+  Range.prototype.getClientRects = emptyRectList;
+}
+if (!Range.prototype.getBoundingClientRect) {
+  Range.prototype.getBoundingClientRect = () => new DOMRect(0, 0, 0, 0);
+}
+if (!Element.prototype.getClientRects) {
+  Element.prototype.getClientRects = emptyRectList;
+}
+if (!document.elementFromPoint) {
+  document.elementFromPoint = () => null;
+}
+
 // Polyfill PointerEvent for tests (required by @base-ui/react)
 if (typeof global.PointerEvent === 'undefined') {
   class PointerEvent extends MouseEvent {

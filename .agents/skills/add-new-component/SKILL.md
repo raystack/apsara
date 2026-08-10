@@ -22,14 +22,10 @@ packages/raystack/
     ├── <name>.module.css                           # Styles
     └── __tests__/<name>.test.tsx                   # Tests
 
-apps/www/src/
-├── content/docs/components/<name>/
-│   ├── index.mdx                                   # Docs page
-│   ├── demo.ts                                     # Code demos
-│   └── props.ts                                    # Prop interfaces
-└── components/playground/
-    ├── <name>-examples.tsx                          # Playground example
-    └── index.ts                                     # Register export
+apps/www/src/content/docs/components/<name>/
+├── index.mdx                                       # Docs page
+├── demo.ts                                         # Code demos + playground
+└── props.ts                                        # Prop interfaces
 ```
 
 ## Step 1: Create the Component Source
@@ -453,38 +449,46 @@ export interface ComponentProps {
 - Keep descriptions concise
 - Include `className` prop on all sub-component interfaces
 
-## Step 7: Add Playground Example
+## Step 7: Add the Interactive Playground
 
-Create `apps/www/src/components/playground/<name>-examples.tsx`:
+The playground is a permanent, user-facing feature on the component's docs page — not a dev-time scratch file. It opens a dialog with a live preview of the component, a controls panel, and a live code editor. A reader flips the controls, and both the preview and the code update from `getCode(props)`. Control state is written to the URL, so a configured example is a shareable link. It is rendered by `apps/www/src/components/demo/demo-playground.tsx`; you only supply the `playground` export.
 
-```tsx
-'use client';
-
-import { Component, Flex, Text } from '@raystack/apsara';
-import PlaygroundLayout from './playground-layout';
-
-export function ComponentExamples() {
-  return (
-    <PlaygroundLayout title='Component'>
-      <Flex direction='column' gap='large'>
-        <Text>Default:</Text>
-        <Component>
-          <Component.Trigger>Toggle</Component.Trigger>
-          <Component.Panel>Content</Component.Panel>
-        </Component>
-      </Flex>
-    </PlaygroundLayout>
-  );
-}
-```
-
-Register in `apps/www/src/components/playground/index.ts` (alphabetical order):
+Any component with configurable props should have a real playground covering its main props — one control per prop that matters. Add the `playground` export to `demo.ts`:
 
 ```ts
-export * from './code-block-examples';
-export * from './<name>-examples';  // <-- new
-export * from './combobox-examples';
+'use client';
+
+import type { ComponentPropsType } from '@/components/demo/types';
+import { getPropsString } from '@/lib/utils';
+
+export const getCode = (props: ComponentPropsType) =>
+  `<Component${getPropsString(props)} />`;
+
+export const playground = {
+  type: 'playground',
+  controls: {
+    variant: { type: 'select', options: ['solid', 'outline'], defaultValue: 'solid' },
+    size: { type: 'select', options: ['small', 'normal'], defaultValue: 'normal' },
+    disabled: { type: 'checkbox', defaultValue: false },
+    children: { type: 'text', initialValue: 'Click me' }
+  },
+  getCode
+};
 ```
+
+Reference it from `index.mdx`:
+
+```mdx
+import { playground } from "./demo.ts";
+
+<Demo data={playground} />
+```
+
+Notes:
+- Control types: `select` (`options` + `defaultValue`), `checkbox` (`defaultValue`), `text` (`initialValue`), `icon`.
+- One control per prop that changes the component's look or behavior. Cover the real API, not a token subset.
+- `getCode` receives the changed props (values that differ from their default) and must return the JSX string for the current setup. Use `getPropsString` to serialize them; pull `children` out and place it between the tags.
+- See `button/demo.ts` for a full, real example.
 
 ## Step 8: Verify
 
@@ -502,4 +506,4 @@ Checklist:
 - [ ] Every rendered element has a `data-slot`, with a `data-slots.test.tsx` covering them
 - [ ] CSS uses `--rs-*` tokens only
 - [ ] Export in `packages/raystack/index.tsx` in alphabetical order
-- [ ] Playground example added and registered
+- [ ] Interactive `playground` added to `demo.ts`, covering the component's main props

@@ -15,14 +15,14 @@ export interface CalendarProps {
   captionLayout?: 'label' | 'dropdown' | 'dropdown-months' | 'dropdown-years';
 
   /**
-   * Earliest navigable month (was `fromYear` / `fromMonth` — both deprecated).
+   * Earliest navigable month.
    * Bounds the chevrons and the year dropdown.
    * @example startMonth={new Date(2020, 0)}
    */
   startMonth?: Date;
 
   /**
-   * Latest navigable month (was `toYear` / `toMonth` — both deprecated).
+   * Latest navigable month.
    * Bounds the chevrons and the year dropdown.
    * @example endMonth={new Date(2030, 11)}
    */
@@ -67,8 +67,7 @@ export interface CalendarProps {
     | ((date: Date) => boolean);
 
   /**
-   * Hidden dates (was `fromDate` / `toDate` — both deprecated; use
-   * `hidden={{ before: date }}` / `hidden={{ after: date }}`).
+   * Hidden dates.
    * Same matcher options as `disabled`.
    */
   hidden?:
@@ -177,15 +176,6 @@ export interface RangePickerProps {
     popover?: PopoverContentProps;
   };
 
-  /** @deprecated Use `slotProps.calendar` instead. */
-  calendarProps?: CalendarProps;
-
-  /** @deprecated Use `slotProps.startInput` / `slotProps.endInput` instead. */
-  inputsProps?: {
-    startDate?: InputProps;
-    endDate?: InputProps;
-  };
-
   /**
    * Render prop or custom trigger. Pass a function to render a custom trigger
    * receiving the formatted `startDate` / `endDate` strings, or a ReactNode to
@@ -216,9 +206,6 @@ export interface RangePickerProps {
    * If not provided, uses the local timezone.
    */
   timeZone?: string;
-
-  /** @deprecated Use `slotProps.popover` instead. */
-  popoverProps?: PopoverContentProps;
 }
 
 export interface DatePickerProps {
@@ -245,9 +232,6 @@ export interface DatePickerProps {
     calendar?: CalendarProps;
     popover?: PopoverContentProps;
   };
-
-  /** @deprecated Use `slotProps.input` instead. */
-  inputProps?: InputProps;
 
   /**
    * Controlled date value. Pair with `onSelect`. Omit (along with
@@ -305,7 +289,4 @@ export interface DatePickerProps {
    * If not provided, uses the local timezone.
    */
   timeZone?: string;
-
-  /** @deprecated Use `slotProps.popover` instead. */
-  popoverProps?: PopoverContentProps;
 }
