@@ -250,6 +250,19 @@ export interface DatePickerProps {
   onSelect?: (date: Date) => void;
 
   /**
+   * Fires when the typed-input validation state changes: with a message when
+   * the typed text stops parsing as a valid in-bounds date, and with
+   * `undefined` when it becomes valid again (or the picker commits/closes).
+   * DatePicker renders no error UI of its own — not even `aria-invalid`.
+   * Lift this into `Field`'s `error` prop (or your form library) to display
+   * it; `Field` also wires `aria-invalid` onto the input.
+   */
+  onErrorChange?: (error: string | undefined) => void;
+
+  /** @deprecated Use `slotProps.calendar` instead. */
+  calendarProps?: CalendarProps;
+
+  /**
    * Render prop or custom trigger. Pass a function to render a custom trigger
    * receiving the formatted `selectedDate` string, or a ReactNode to replace
    * the default input entirely.
