@@ -20,6 +20,7 @@ import type {
   TimelineActions
 } from '../data-view.types';
 import { useDataView } from '../hooks/useDataView';
+import { orderByX } from '../utils/order-by-x';
 import { packLanes } from '../utils/pack-lanes';
 import { buildAxis, createTimeScale, toTimestamp } from '../utils/time-scale';
 
@@ -39,6 +40,129 @@ beforeAll(() => {
 
 afterEach(() => {
   vi.restoreAllMocks();
+});
+
+/* ─────────────────── characterisation: lane assignment ───────────────────
+   Goldens pinning `packLanes` output at sizes too large to hand-write. They
+   were recorded from the implementation before the O(n) rewrite, so a digest
+   mismatch means lane assignment moved — which is a visible change: a card's
+   lane is its vertical position on the canvas, and `context.laneIndex` is
+   public API through `renderCard`.
+
+   Digests rather than 500-element literals: the arrays are only ever compared,
+   never read, and an unreadable wall of numbers hides what the test is for. */
+
+/** Seeded LCG — a failing case has to be reproducible. */
+function seededRandom(seed: number) {
+  let state = seed;
+  return () => {
+    state = (state * 1664525 + 1013904223) >>> 0;
+    return state / 0x100000000;
+  };
+}
+
+/** FNV-1a over the decimal text, so [1, 23] and [12, 3] can't collide. */
+function digest(values: readonly number[]): string {
+  let hash = 0x811c9dc5;
+  for (const value of values) {
+    const text = `${value},`;
+    for (let i = 0; i < text.length; i++) {
+      hash ^= text.charCodeAt(i);
+      hash = Math.imul(hash, 0x01000193) >>> 0;
+    }
+  }
+  return hash.toString(16).padStart(8, '0');
+}
+
+const randomItems = (seed: number, count: number) => {
+  const random = seededRandom(seed);
+  return Array.from({ length: count }, () => ({
+    x: Math.round(random() * 10000),
+    width: Math.round(random() * 200)
+  }));
+};
+
+describe('packLanes (characterisation)', () => {
+  it('pins lane assignment for randomly spread items', () => {
+    const { lanes, laneCount } = packLanes(randomItems(42, 500));
+    expect({ laneCount, lanes: digest(lanes) }).toMatchInlineSnapshot(`
+      {
+        "laneCount": 13,
+        "lanes": "908c8fec",
+      }
+    `);
+  });
+
+  it('pins lane assignment for a second, denser spread', () => {
+    const { lanes, laneCount } = packLanes(randomItems(7, 500), 4);
+    expect({ laneCount, lanes: digest(lanes) }).toMatchInlineSnapshot(`
+      {
+        "laneCount": 12,
+        "lanes": "e1515f6a",
+      }
+    `);
+  });
+
+  it('pins lane assignment when every item overlaps every other', () => {
+    // No lane is ever reusable, so lane count tracks item count — the shape
+    // that makes the lane scan quadratic.
+    const items = Array.from({ length: 400 }, (_, i) => ({
+      x: i,
+      width: 10000
+    }));
+    const { lanes, laneCount } = packLanes(items);
+    expect({ laneCount, lanes: digest(lanes) }).toMatchInlineSnapshot(`
+      {
+        "laneCount": 400,
+        "lanes": "732748cb",
+      }
+    `);
+  });
+
+  it('pins lane assignment when items cluster on a single x', () => {
+    const items = Array.from({ length: 200 }, (_, i) => ({
+      x: 500,
+      width: i % 3
+    }));
+    const { lanes, laneCount } = packLanes(items);
+    expect({ laneCount, lanes: digest(lanes) }).toMatchInlineSnapshot(`
+      {
+        "laneCount": 200,
+        "lanes": "23ec0f1f",
+      }
+    `);
+  });
+
+  it('pins lane assignment across the gap boundary', () => {
+    // Alternates releases landing exactly on the gap boundary (reusable) with
+    // ones a pixel short (not) — the comparison most at risk from a rewrite.
+    const items = Array.from({ length: 300 }, (_, i) => ({
+      x: i * 108 + (i % 2),
+      width: 100
+    }));
+    const { lanes, laneCount } = packLanes(items);
+    expect({ laneCount, lanes: digest(lanes) }).toMatchInlineSnapshot(`
+      {
+        "laneCount": 2,
+        "lanes": "05a0dca4",
+      }
+    `);
+  });
+
+  it('pins lane assignment for items sharing exact edges', () => {
+    // Ties on x, where assignment depends on the visit order the sort gives.
+    const items = Array.from({ length: 120 }, (_, i) => ({
+      x: (i % 4) * 250,
+      width: 100 + (i % 7) * 10
+    }));
+    const { lanes, laneCount } = packLanes(items);
+    expect({ laneCount, lanes: digest(lanes) }).toMatchInlineSnapshot(`
+      {
+        "laneCount": 30,
+        "lanes": "34e5e40d",
+      }
+    `);
+  });
 });
 
 /* ─────────────────────────── utils: packLanes ────────────────────────── */
@@ -89,6 +213,103 @@ describe('packLanes', () => {
     ]);
     expect(lanes).toEqual([0, 0, 1]);
     expect(laneCount).toBe(2);
+  });
+
+  it('matches a lane scan across many random inputs', () => {
+    // The goldens above pin six fixed shapes; this sweeps far more input than
+    // snapshots can carry, and reports the mismatched lane directly rather
+    // than as a changed hash. The oracle is the pre-rewrite implementation,
+    // transcribed — every input here is past the size where packLanes switches
+    // from that scan to the sweep.
+    function packByScanReference(
+      items: { x: number; width: number }[],
+      gapPx = 8
+    ) {
+      const order = items
+        .map((_, i) => i)
+        .sort((a, b) => items[a].x - items[b].x || a - b);
+      const laneEnds: number[] = [];
+      const lanes = new Array<number>(items.length).fill(0);
+      for (const index of order) {
+        const item = items[index];
+        let lane = laneEnds.findIndex(end => end + gapPx <= item.x);
+        if (lane === -1) {
+          lane = laneEnds.length;
+          laneEnds.push(0);
+        }
+        laneEnds[lane] = item.x + item.width;
+        lanes[index] = lane;
+      }
+      return { lanes, laneCount: laneEnds.length };
+    }
+
+    for (let seed = 1; seed <= 25; seed++) {
+      const items = randomItems(seed, 300);
+      expect(packLanes(items)).toEqual(packByScanReference(items));
+    }
+  });
+});
+
+/* ─────────────────────────── utils: orderByX ─────────────────────────── */
+
+describe('orderByX', () => {
+  const sortedXs = (items: { x: number }[]) =>
+    Array.from(orderByX(items), index => items[index].x);
+
+  it('returns an empty order for empty input', () => {
+    expect(Array.from(orderByX([]))).toEqual([]);
+  });
+
+  it('orders ascending by x, breaking ties by input order', () => {
+    const items = [{ x: 30 }, { x: 10 }, { x: 30 }, { x: -5 }];
+    expect(Array.from(orderByX(items))).toEqual([3, 1, 0, 2]);
+  });
+
+  /* Past 64 items orderByX swaps its comparison sort for a counting sort, so
+     the rest of these run above that threshold. */
+
+  it('matches a comparison sort on randomly spread items', () => {
+    const random = seededRandom(7);
+    for (let round = 0; round < 20; round++) {
+      const items = Array.from({ length: 500 }, () => ({
+        x: Math.round((random() - 0.5) * 20000)
+      }));
+      const expected = items
+        .map((_, i) => i)
+        .sort((a, b) => items[a].x - items[b].x || a - b);
+      expect(Array.from(orderByX(items))).toEqual(expected);
+    }
+  });
+
+  it('keeps input order when every item shares one x', () => {
+    // Zero extent — nothing to bucket by, and the tie-break is input order.
+    const items = Array.from({ length: 100 }, () => ({ x: 42 }));
+    expect(Array.from(orderByX(items))).toEqual(
+      Array.from({ length: 100 }, (_, i) => i)
+    );
+  });
+
+  it('sorts a bucket deeper than the insertion-sort cutoff', () => {
+    // 80 items on one x land in a single bucket, past the depth where that
+    // bucket hands off to a comparison sort.
+    const items = [
+      ...Array.from({ length: 80 }, () => ({ x: 100 })),
+      ...Array.from({ length: 40 }, (_, i) => ({ x: 900 - i }))
+    ];
+    expect(sortedXs(items)).toEqual(
+      items.map(item => item.x).sort((a, b) => a - b)
+    );
+  });
+
+  it('orders items clustered at both ends of the extent', () => {
+    // A near-empty middle makes the uniform bucket split maximally uneven.
+    const items = [
+      ...Array.from({ length: 60 }, (_, i) => ({ x: i / 1000 })),
+      ...Array.from({ length: 60 }, (_, i) => ({ x: 10000 + i / 1000 }))
+    ];
+    expect(sortedXs(items)).toEqual(
+      items.map(item => item.x).sort((a, b) => a - b)
+    );
   });
 });
 
@@ -1117,6 +1338,243 @@ describe('DataView.Timeline', () => {
     expect(screen.getByText('6 Jan')).toBeInTheDocument();
     // …but no card interior re-rendered.
     expect(renderSpy.mock.calls.length).toBe(callsAfterMount);
+  });
+});
+
+/* ────────────────── characterisation: rendered geometry ──────────────────
+   Behaviour the virtualization work must leave alone. The existing suite
+   already pins card x/width, lane tops, group section stacking, and the
+   horizontal cull window; these cover what it doesn't. */
+
+describe('DataView.Timeline (characterisation)', () => {
+  const cardIds = () =>
+    Array.from(document.querySelectorAll('[data-testid^="card-"]')).map(
+      card => card.getAttribute('data-testid')?.replace('card-', '') ?? ''
+    );
+
+  it('renders cards in chronological DOM order, not row-model order', () => {
+    // Row model is sorted by title (o1, o2, o3); the canvas emits by x. DOM
+    // order is invisible on an absolutely-positioned canvas but is the order a
+    // screen reader walks the `role="list"`.
+    renderTimeline();
+    expect(cardIds()).toEqual(['o1', 'o3', 'o2']); // x = 80, 100, 220
+  });
+
+  it('keeps chronological DOM order under one-per-row packing', () => {
+    // Lanes follow row-model order here, so DOM order and lane order disagree
+    // — worth pinning separately from the packed case above.
+    renderTimeline({ lanePacking: 'one-per-row' });
+    expect(cardIds()).toEqual(['o1', 'o3', 'o2']);
+    expect(screen.getByTestId('card-o2').dataset.lane).toBe('1');
+    expect(screen.getByTestId('card-o3').dataset.lane).toBe('2');
+  });
+
+  it('renders every card when virtualized without a measurable viewport', () => {
+    // jsdom reports a zero-size client box, as does SSR. The cull window is
+    // then [-400, 400] horizontally with nothing vertical, so both cards here
+    // survive — this pins the fallback, not the culling.
+    renderTimeline({ virtualized: true });
+    expect(cardIds()).toEqual(['o1', 'o3', 'o2']);
+  });
+
+  it('ignores measured card heights when virtualized', () => {
+    // The one behaviour vertical culling deliberately moved. Unvirtualized,
+    // this same setup re-stacks lane 1 to 122px on the measured 90px height
+    // (see "re-stacks lanes to the tallest measured card height"). Virtualized,
+    // a culled card never mounts and so never measures, so honouring
+    // measurements would resize lanes under the user mid-scroll — lanes hold
+    // the estimate instead, putting lane 1 back at 16 + 66 + 16.
+    vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockImplementation(
+      function (this: HTMLElement) {
+        return this.getAttribute('role') === 'listitem' ? 90 : 0;
+      }
+    );
+    renderTimeline({ virtualized: true });
+    expect(screen.getByTestId('card-o1').parentElement!.style.top).toBe('16px');
+    expect(screen.getByTestId('card-o3').parentElement!.style.top).toBe('98px');
+  });
+
+  it('keeps lane and canvas geometry stable across a re-render', () => {
+    const { rerender } = renderTimeline();
+    const before = ['o1', 'o2', 'o3'].map(
+      id => screen.getByTestId(`card-${id}`).parentElement!.style.top
+    );
+    rerender(
+      <DataView<Order>
+        data={orders}
+        fields={fields}
+        mode='client'
+        defaultSort={{ name: 'title', order: 'asc' }}
+        getRowId={(row: Order) => row.id}
+      >
+        <DataView.Timeline<Order>
+          startField='start'
+          endField='end'
+          range={['2025-01-01', '2025-01-31']}
+          scale='day'
+          unitWidth={20}
+          today={false}
+          defaultScrollTo='start'
+          renderCard={row => (
+            <div data-testid={`card-${row.original.id}`}>
+              {row.original.title}
+            </div>
+          )}
+        />
+      </DataView>
+    );
+    const after = ['o1', 'o2', 'o3'].map(
+      id => screen.getByTestId(`card-${id}`).parentElement!.style.top
+    );
+    expect(after).toEqual(before);
+  });
+});
+
+/* ──────────────────────────── virtualization ─────────────────────────────
+   `virtualized` culls on both axes. Vertical culling needs a pane height and
+   jsdom does no layout, so these stub the scroll container's client box — with
+   the deliberate exception of the last test, covering the unmeasured fallback.
+   Lane pitch under virtualization is fixed: estimatedRowHeight (66) + laneGap
+   (16) = 82, lane 0 starting at 16. */
+
+describe('DataView.Timeline virtualization', () => {
+  /** Give the scroll pane a viewport; everything else keeps jsdom's zeroes. */
+  function stubPane({ width = 600, height = 200 } = {}) {
+    const paneOnly = (el: HTMLElement, value: number) =>
+      el.dataset.slot === 'data-view-timeline' ? value : 0;
+    vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockImplementation(
+      function (this: HTMLElement) {
+        return paneOnly(this, width);
+      }
+    );
+    vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockImplementation(
+      function (this: HTMLElement) {
+        return paneOnly(this, height);
+      }
+    );
+  }
+
+  /** One lane per row, every card at the same x — isolates vertical culling. */
+  const stackedOrders: Order[] = Array.from({ length: 12 }, (_, i) => ({
+    id: `r${String(i + 1).padStart(2, '0')}`,
+    title: String(i + 1).padStart(2, '0'),
+    start: '2025-01-05',
+    end: '2025-01-10'
+  }));
+
+  const renderedIds = () =>
+    Array.from(document.querySelectorAll('[data-testid^="card-r"]')).map(
+      card => card.getAttribute('data-testid')?.replace('card-', '') ?? ''
+    );
+
+  it('renders only the lanes the vertical window covers', () => {
+    stubPane();
+    renderTimeline(
+      { virtualized: true, lanePacking: 'one-per-row' },
+      stackedOrders
+    );
+    // Window [0 - 400, 0 + 200 + 400] → lanes 0-7 (lane 8's top is 672).
+    // Without vertical culling all 12 mount, and 10k rows mount 10k.
+    expect(renderedIds()).toEqual([
+      'r01',
+      'r02',
+      'r03',
+      'r04',
+      'r05',
+      'r06',
+      'r07',
+      'r08'
+    ]);
+  });
+
+  it('swaps in lower lanes as the pane scrolls down', async () => {
+    stubPane();
+    const { container } = renderTimeline(
+      { virtualized: true, lanePacking: 'one-per-row' },
+      stackedOrders
+    );
+    const root = container.firstElementChild as HTMLElement;
+    await act(async () => {
+      root.scrollTop = 500;
+      fireEvent.scroll(root);
+      await new Promise(resolve => setTimeout(resolve, 30));
+    });
+    // Window [100, 1100] → lane 0 (bottom 82) drops off the top and the lanes
+    // past the initial cut-off mount.
+    expect(renderedIds()).toEqual([
+      'r02',
+      'r03',
+      'r04',
+      'r05',
+      'r06',
+      'r07',
+      'r08',
+      'r09',
+      'r10',
+      'r11',
+      'r12'
+    ]);
+  });
+
+  it('culls vertically through group sections too', async () => {
+    stubPane();
+    const { container } = renderGrouped({ virtualized: true });
+    // Eng's two lanes (tops 54, 136) and Design's one (272) all start inside
+    // the initial window.
+    expect(screen.getByTestId('card-a1')).toBeInTheDocument();
+    expect(screen.getByTestId('card-b1')).toBeInTheDocument();
+
+    const root = container.firstElementChild as HTMLElement;
+    await act(async () => {
+      root.scrollTop = 700;
+      fireEvent.scroll(root);
+      await new Promise(resolve => setTimeout(resolve, 30));
+    });
+    // Window [300, 1300]: Eng's lanes end at 120 and 202, above it. Bands break
+    // the uniform pitch, so this exercises the searched path, not the
+    // arithmetic one.
+    expect(screen.queryByTestId('card-a1')).toBeNull();
+    expect(screen.queryByTestId('card-a2')).toBeNull();
+    expect(screen.getByTestId('card-b1')).toBeInTheDocument();
+  });
+
+  it('keeps a card whose span reaches the window from off-screen left', async () => {
+    stubPane();
+    const { container } = renderTimeline(
+      { virtualized: true, range: ['2025-01-01', '2025-12-31'] },
+      [
+        // Both start at x = 2000, left of the window below; only the first is
+        // wide enough to reach into it.
+        { id: 'wide', title: 'Wide', start: '2025-04-11', end: '2025-05-11' },
+        {
+          id: 'narrow',
+          title: 'Narrow',
+          start: '2025-04-11',
+          end: '2025-04-12'
+        }
+      ]
+    );
+    const root = container.firstElementChild as HTMLElement;
+    await act(async () => {
+      root.scrollLeft = 3000;
+      fireEvent.scroll(root);
+      await new Promise(resolve => setTimeout(resolve, 30));
+    });
+    // Window [2400, 4200]. Culling searches by x, which is ordered, while
+    // width isn't — so each lane widens its left bound by its own widest card
+    // and then re-checks the right edge exactly.
+    expect(screen.getByTestId('card-wide')).toBeInTheDocument(); // 2000 → 2600
+    expect(screen.queryByTestId('card-narrow')).toBeNull(); // 2000 → 2020
+  });
+
+  it('skips vertical culling when the pane reports no height', () => {
+    // No stub: jsdom leaves clientHeight 0, as does SSR. A zero height would
+    // otherwise cull to a sliver of lanes — horizontal culling carries on.
+    renderTimeline(
+      { virtualized: true, lanePacking: 'one-per-row' },
+      stackedOrders
+    );
+    expect(renderedIds()).toHaveLength(12);
   });
 });
 
