@@ -1534,6 +1534,34 @@ export function DataViewTimeline<TData>({
         )
       : null;
 
+  /**
+   * Vertical span for the grid, marker, and cursor lines.
+   *
+   * The stylesheet pins them `top: 0; bottom: 0`, so each is a one-pixel-wide
+   * element as tall as the whole canvas — 28,798px at 10k rows, 139,170px at
+   * 50k. Rasterizing a dashed sub-pixel border over that height costs the same
+   * whether one card is on screen or four hundred, which is why culling their
+   * *count* (183 -> 31) never moved frame time. Clamped to the vertical window
+   * they cost what a viewport costs. Measured on a 10k-row canvas: p95 frame
+   * 291.7ms -> 20.9ms, frames over 50ms 40 -> 0.
+   *
+   * Only under `virtualized` — `needsViewport` leaves `viewport` null
+   * otherwise, and lines then keep their full-canvas span as before.
+   */
+  const lineTop = verticalRange ? Math.max(0, verticalRange.min) : 0;
+  const lineSpan = verticalRange
+    ? {
+        top: lineTop,
+        height: Math.max(
+          0,
+          Math.min(canvasHeight, verticalRange.max) - lineTop
+        ),
+        // `top` + `height` + the stylesheet's `bottom: 0` over-constrains the
+        // box; releasing `bottom` is what lets `height` win.
+        bottom: 'auto' as const
+      }
+    : null;
+
   // Visible cards. Two paths, both O(what's rendered) rather than O(cards):
   //
   // - With a lane range, walk only the lanes the viewport covers and binary
@@ -1753,7 +1781,7 @@ export function DataViewTimeline<TData>({
                   key={tick.time}
                   aria-hidden='true'
                   className={cx(styles.timelineGridline, classNames.gridline)}
-                  style={{ left: tick.x }}
+                  style={{ left: tick.x, ...lineSpan }}
                   data-slot='data-view-timeline-gridline'
                 />
               ) : null
@@ -1765,7 +1793,7 @@ export function DataViewTimeline<TData>({
             aria-hidden='true'
             className={cx(styles.timelineMarkerLine, classNames.marker)}
             data-variant={marker.variant}
-            style={{ left: marker.x }}
+            style={{ left: marker.x, ...lineSpan }}
             data-slot='data-view-timeline-marker'
           />
         ))}
@@ -1773,7 +1801,7 @@ export function DataViewTimeline<TData>({
           <div
             aria-hidden='true'
             className={cx(styles.timelineCursorLine, classNames.cursor)}
-            style={{ left: timeScale.x(cursorTime) }}
+            style={{ left: timeScale.x(cursorTime), ...lineSpan }}
             data-slot='data-view-timeline-cursor'
           />
         ) : null}
