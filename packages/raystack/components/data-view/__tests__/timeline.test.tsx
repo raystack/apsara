@@ -1369,12 +1369,12 @@ describe('DataView.Timeline (characterisation)', () => {
     expect(screen.getByTestId('card-o3').dataset.lane).toBe('2');
   });
 
-  it('renders every card when virtualized without a measurable viewport', () => {
-    // jsdom reports a zero-size client box, as does SSR. The cull window is
-    // then [-400, 400] horizontally with nothing vertical, so both cards here
-    // survive — this pins the fallback, not the culling.
+  it('falls back to the overscan floor with no measurable viewport', () => {
+    // jsdom reports a zero-size client box, as does SSR. Overscan collapses to
+    // its 200px floor, so the window is [-200, 200] horizontally and unbounded
+    // vertically — o2 at x=220 falls outside, o1 and o3 don't.
     renderTimeline({ virtualized: true });
-    expect(cardIds()).toEqual(['o1', 'o3', 'o2']);
+    expect(cardIds()).toEqual(['o1', 'o3']);
   });
 
   it('ignores measured card heights when virtualized', () => {
@@ -1430,6 +1430,114 @@ describe('DataView.Timeline (characterisation)', () => {
   });
 });
 
+/* ─────────────────── characterisation: axis chrome ───────────────────────
+   Counts of the non-card furniture: tick labels, month bands, marker badges
+   and lines, group slots. Cards and gridlines already cull; the rest is what
+   Phase 2 changes, so these pin where it stands first — unvirtualized, where
+   nothing may move, and virtualized, where it should. */
+
+describe('DataView.Timeline chrome (characterisation)', () => {
+  const countSlot = (container: HTMLElement, slot: string) =>
+    container.querySelectorAll(`[data-slot="data-view-timeline-${slot}"]`)
+      .length;
+
+  /** A year-long domain: 7280px of canvas against a 600px pane. */
+  const yearProps = {
+    range: ['2025-01-01', '2025-12-31'] as [string, string],
+    markers: [
+      { date: '2025-02-14' },
+      { date: '2025-06-30', label: 'Mid' },
+      { date: '2025-11-05', label: 'Launch' }
+    ]
+  };
+
+  it('renders chrome for the whole domain when not virtualized', () => {
+    stubPane();
+    const { container } = renderTimeline(yearProps);
+    expect({
+      tickLabels: countSlot(container, 'axis-tick'),
+      monthBands: countSlot(container, 'axis-band'),
+      markerBadges: countSlot(container, 'axis-marker'),
+      markerLines: countSlot(container, 'marker'),
+      gridlines: countSlot(container, 'gridline')
+    }).toMatchInlineSnapshot(`
+      {
+        "gridlines": 366,
+        "markerBadges": 3,
+        "markerLines": 3,
+        "monthBands": 12,
+        "tickLabels": 183,
+      }
+    `);
+  });
+
+  it('culls chrome to the visible window when virtualized', () => {
+    // Was the full domain on every count but gridlines (183 tick labels, 12
+    // bands, 3 markers) regardless of how narrow the window onto it was.
+    stubPane();
+    const { container } = renderTimeline({ ...yearProps, virtualized: true });
+    expect({
+      tickLabels: countSlot(container, 'axis-tick'),
+      monthBands: countSlot(container, 'axis-band'),
+      markerBadges: countSlot(container, 'axis-marker'),
+      markerLines: countSlot(container, 'marker'),
+      gridlines: countSlot(container, 'gridline')
+    }).toMatchInlineSnapshot(`
+      {
+        "gridlines": 46,
+        "markerBadges": 1,
+        "markerLines": 1,
+        "monthBands": 2,
+        "tickLabels": 23,
+      }
+    `);
+    // Window [-600, 1200] spans Jan-Mar, so only the February marker is in it.
+    expect(screen.queryByText('Launch')).toBeNull();
+  });
+
+  it('keeps the band straddling the left edge of the window', async () => {
+    // Bands tile the domain, so the one under the viewport's left edge starts
+    // before the cull bound. Dropping it would strand the sticky month label
+    // that is supposed to ride the left edge while its band spans the view.
+    stubPane();
+    const { container } = renderTimeline({ ...yearProps, virtualized: true });
+    const root = container.firstElementChild as HTMLElement;
+    await act(async () => {
+      root.scrollLeft = 2000; // mid-April, 240px into the month's band
+      fireEvent.scroll(root);
+      await new Promise(resolve => setTimeout(resolve, 30));
+    });
+    const labels = Array.from(
+      container.querySelectorAll('[data-slot="data-view-timeline-axis-band"]')
+    ).map(band => band.textContent);
+    expect(labels[0]).toBe('Mar');
+    expect(labels).toContain('Apr');
+  });
+
+  it('renders a slot per group section when virtualized', () => {
+    stubPane();
+    const { container } = renderGrouped({ virtualized: true });
+    expect(countSlot(container, 'group-slot')).toMatchInlineSnapshot(`2`);
+  });
+
+  it('drops group slots scrolled out of the window', async () => {
+    stubPane();
+    const { container } = renderGrouped({ virtualized: true });
+    const root = container.firstElementChild as HTMLElement;
+    await act(async () => {
+      root.scrollTop = 450;
+      fireEvent.scroll(root);
+      await new Promise(resolve => setTimeout(resolve, 30));
+    });
+    // Eng's section ends at 218, above the window [250, 850]; Design's spans
+    // 218-354, inside it. Every group's slot used to stay mounted, however far
+    // off-screen the section was.
+    expect(countSlot(container, 'group-slot')).toMatchInlineSnapshot(`1`);
+    expect(screen.getByText('Design')).toBeInTheDocument();
+    expect(screen.queryByText('Eng')).toBeNull();
+  });
+});
+
 /* ──────────────────────────── virtualization ─────────────────────────────
    `virtualized` culls on both axes. Vertical culling needs a pane height and
    jsdom does no layout, so these stub the scroll container's client box — with
@@ -1437,23 +1545,26 @@ describe('DataView.Timeline (characterisation)', () => {
    Lane pitch under virtualization is fixed: estimatedRowHeight (66) + laneGap
    (16) = 82, lane 0 starting at 16. */
 
-describe('DataView.Timeline virtualization', () => {
-  /** Give the scroll pane a viewport; everything else keeps jsdom's zeroes. */
-  function stubPane({ width = 600, height = 200 } = {}) {
-    const paneOnly = (el: HTMLElement, value: number) =>
-      el.dataset.slot === 'data-view-timeline' ? value : 0;
-    vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockImplementation(
-      function (this: HTMLElement) {
-        return paneOnly(this, width);
-      }
-    );
-    vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockImplementation(
-      function (this: HTMLElement) {
-        return paneOnly(this, height);
-      }
-    );
-  }
+/**
+ * Give the scroll pane a viewport; everything else keeps jsdom's zeroes.
+ * jsdom does no layout, so culling has no window without this.
+ */
+function stubPane({ width = 600, height = 200 } = {}) {
+  const paneOnly = (el: HTMLElement, value: number) =>
+    el.dataset.slot === 'data-view-timeline' ? value : 0;
+  vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockImplementation(
+    function (this: HTMLElement) {
+      return paneOnly(this, width);
+    }
+  );
+  vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockImplementation(
+    function (this: HTMLElement) {
+      return paneOnly(this, height);
+    }
+  );
+}
 
+describe('DataView.Timeline virtualization', () => {
   /** One lane per row, every card at the same x — isolates vertical culling. */
   const stackedOrders: Order[] = Array.from({ length: 12 }, (_, i) => ({
     id: `r${String(i + 1).padStart(2, '0')}`,
@@ -1473,18 +1584,10 @@ describe('DataView.Timeline virtualization', () => {
       { virtualized: true, lanePacking: 'one-per-row' },
       stackedOrders
     );
-    // Window [0 - 400, 0 + 200 + 400] → lanes 0-7 (lane 8's top is 672).
-    // Without vertical culling all 12 mount, and 10k rows mount 10k.
-    expect(renderedIds()).toEqual([
-      'r01',
-      'r02',
-      'r03',
-      'r04',
-      'r05',
-      'r06',
-      'r07',
-      'r08'
-    ]);
+    // Overscan is half the 200px pane, floored at 200 → window [-200, 400],
+    // covering lanes 0-4 (lane 5's top is 426). Without vertical culling all
+    // 12 mount, and 10k rows would mount 10k.
+    expect(renderedIds()).toEqual(['r01', 'r02', 'r03', 'r04', 'r05']);
   });
 
   it('swaps in lower lanes as the pane scrolls down', async () => {
@@ -1499,11 +1602,9 @@ describe('DataView.Timeline virtualization', () => {
       fireEvent.scroll(root);
       await new Promise(resolve => setTimeout(resolve, 30));
     });
-    // Window [100, 1100] → lane 0 (bottom 82) drops off the top and the lanes
-    // past the initial cut-off mount.
+    // Window [300, 900] → lanes 3-10. The lanes above scroll out of the top as
+    // the ones past the initial cut-off mount.
     expect(renderedIds()).toEqual([
-      'r02',
-      'r03',
       'r04',
       'r05',
       'r06',
@@ -1511,8 +1612,7 @@ describe('DataView.Timeline virtualization', () => {
       'r08',
       'r09',
       'r10',
-      'r11',
-      'r12'
+      'r11'
     ]);
   });
 
@@ -1526,13 +1626,13 @@ describe('DataView.Timeline virtualization', () => {
 
     const root = container.firstElementChild as HTMLElement;
     await act(async () => {
-      root.scrollTop = 700;
+      root.scrollTop = 450;
       fireEvent.scroll(root);
       await new Promise(resolve => setTimeout(resolve, 30));
     });
-    // Window [300, 1300]: Eng's lanes end at 120 and 202, above it. Bands break
-    // the uniform pitch, so this exercises the searched path, not the
-    // arithmetic one.
+    // Window [250, 850]: Eng's lanes end at 120 and 202, above it; Design's
+    // spans 272-338, inside. Bands break the uniform pitch, so this exercises
+    // the searched path, not the arithmetic one.
     expect(screen.queryByTestId('card-a1')).toBeNull();
     expect(screen.queryByTestId('card-a2')).toBeNull();
     expect(screen.getByTestId('card-b1')).toBeInTheDocument();
@@ -1556,11 +1656,11 @@ describe('DataView.Timeline virtualization', () => {
     );
     const root = container.firstElementChild as HTMLElement;
     await act(async () => {
-      root.scrollLeft = 3000;
+      root.scrollLeft = 2400;
       fireEvent.scroll(root);
       await new Promise(resolve => setTimeout(resolve, 30));
     });
-    // Window [2400, 4200]. Culling searches by x, which is ordered, while
+    // Window [2100, 3300]. Culling searches by x, which is ordered, while
     // width isn't — so each lane widens its left bound by its own widest card
     // and then re-checks the right edge exactly.
     expect(screen.getByTestId('card-wide')).toBeInTheDocument(); // 2000 → 2600
