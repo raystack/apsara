@@ -994,9 +994,9 @@ export function DataViewTimeline<TData>({
       // overscan. Scrolling is compositor work the browser does for free;
       // committing state on every pixel drags React into all 60 frames a
       // second to rebuild a slice that is nearly always identical. Overscan is
-      // a full viewport on each side, so half of it is spare coverage: the
-      // rendered set still spans the visible window with an overscan/2 margin
-      // at the moment of the next commit.
+      // half a viewport on each side (`OVERSCAN_RATIO`), so half of that is
+      // spare coverage: the rendered set still spans the visible window with
+      // an overscan/2 margin at the moment of the next commit.
       const slackX = overscanFor(prev.width) / 2;
       const slackY = overscanFor(prev.height) / 2;
       if (
@@ -1503,7 +1503,7 @@ export function DataViewTimeline<TData>({
   // `<DataView.EmptyState>` / `<DataView.ZeroState>` handle messaging.
   if (!hasData) return null;
 
-  // Horizontal culling window — one extra viewport on each side as overscan.
+  // Horizontal culling window — half a viewport on each side as overscan.
   const overscan = viewport ? overscanFor(viewport.width) : 0;
   const cullRange =
     virtualized && viewport
