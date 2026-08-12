@@ -7,7 +7,8 @@ import {
   type DataViewField,
   Flex,
   Text,
-  type TimelineCardContext
+  type TimelineCardContext,
+  type TimelineMarker
 } from '@raystack/apsara';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -41,6 +42,15 @@ const SPANS = { '1 year': 365, '5 years': 1826 } as const;
 type SpanLabel = keyof typeof SPANS;
 
 const isoDay = (ms: number) => new Date(ms).toISOString().slice(0, 10);
+
+/**
+ * Hoisted so the reference is stable. The timeline memoizes its resolved
+ * markers on this prop, and an inline literal would invalidate that memo on
+ * every commit — churn this page would then report as its own frame cost.
+ */
+const MARKERS: TimelineMarker[] = [
+  { date: '2025-07-01', label: 'H2', variant: 'accent' }
+];
 
 /** Seeded LCG — the same row count always renders the same canvas. */
 function seededRandom(seed: number) {
@@ -141,42 +151,47 @@ interface Stats {
 /**
  * Worst frame over the last second of scrolling. A mean would hide exactly
  * what matters — one 200ms frame is a visible stall no average survives.
+ *
+ * Takes the element rather than a ref: the pane is found by query after the
+ * timeline paints, and assigning a ref does not re-run an effect, so a
+ * ref-based version silently never attaches its listener.
  */
-function useFrameMonitor(paneRef: React.RefObject<HTMLElement | null>) {
+function useFrameMonitor(pane: HTMLElement | null) {
   const [worstFrame, setWorstFrame] = useState(0);
   const frameRef = useRef<number | null>(null);
+  /** Deadline for the sampling loop, pushed out by each new scroll event. */
+  const untilRef = useRef(0);
 
   const measure = useCallback(() => {
+    // Extend the window while the user keeps scrolling, rather than sampling a
+    // fixed second from the first event and ignoring the rest of the drag.
+    untilRef.current = performance.now() + 1000;
     if (frameRef.current !== null) return;
     let worst = 0;
     let last = performance.now();
-    let until = last + 1000;
     const step = () => {
       const now = performance.now();
       const delta = now - last;
       last = now;
       if (delta > worst) worst = delta;
-      if (now < until) {
+      if (now < untilRef.current) {
         frameRef.current = requestAnimationFrame(step);
       } else {
         frameRef.current = null;
         setWorstFrame(Math.round(worst));
       }
     };
-    // Extend the window while the user keeps scrolling.
-    until = performance.now() + 1000;
     frameRef.current = requestAnimationFrame(step);
   }, []);
 
   useEffect(() => {
-    const el = paneRef.current;
-    if (!el) return;
-    el.addEventListener('scroll', measure, { passive: true });
+    if (!pane) return;
+    pane.addEventListener('scroll', measure, { passive: true });
     return () => {
-      el.removeEventListener('scroll', measure);
+      pane.removeEventListener('scroll', measure);
       if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
     };
-  }, [paneRef, measure]);
+  }, [pane, measure]);
 
   return worstFrame;
 }
@@ -191,8 +206,10 @@ export default function TimelineStressPage() {
   const [buildMs, setBuildMs] = useState(0);
   const [stableRenderCard, setStableRenderCard] = useState(true);
 
-  const paneRef = useRef<HTMLElement | null>(null);
-  const worstFrame = useFrameMonitor(paneRef);
+  // State, not a ref: the frame monitor's effect has to re-run once the pane
+  // exists, and the pane is only found after the timeline paints.
+  const [pane, setPane] = useState<HTMLElement | null>(null);
+  const worstFrame = useFrameMonitor(pane);
 
   const domainDays = SPANS[spanLabel];
   const tasks = useMemo(
@@ -234,7 +251,7 @@ export default function TimelineStressPage() {
       const pane = document.querySelector<HTMLElement>(
         '[data-slot="data-view-timeline"]'
       );
-      paneRef.current = pane;
+      setPane(pane);
       if (!pane) return;
       const count = (slot: string) =>
         pane.querySelectorAll(`[data-slot="data-view-timeline-${slot}"]`)
@@ -401,7 +418,7 @@ export default function TimelineStressPage() {
               virtualized={virtualized}
               lanePacking={onePerRow ? 'one-per-row' : 'auto'}
               defaultScrollTo='start'
-              markers={[{ date: '2025-07-01', label: 'H2', variant: 'accent' }]}
+              markers={MARKERS}
               renderCard={
                 stableRenderCard
                   ? memoizedRenderCard
