@@ -132,6 +132,18 @@ export interface CommandSeparatorProps {
 }
 
 export interface CommandShortcutProps {
+  /**
+   * The keys to display. A whitespace-separated string is split into one key
+   * per token, so `"⌘ K"` renders two keys.
+   */
+  children?: React.ReactNode;
+
+  /**
+   * Visual style variant, applied to every key in the shortcut.
+   * @defaultValue "ghost"
+   */
+  variant?: 'solid' | 'ghost';
+
   /** Additional CSS class names. */
   className?: string;
 }

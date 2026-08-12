@@ -1,28 +1,51 @@
-import { cx } from 'class-variance-authority';
-import type { ComponentProps } from 'react';
+'use client';
+
+import { cva, cx, type VariantProps } from 'class-variance-authority';
+import { type ComponentProps, createContext, useContext } from 'react';
 import styles from './kbd.module.css';
 
-export type KbdProps = ComponentProps<'kbd'>;
+const kbd = cva(styles['kbd'], {
+  variants: {
+    variant: {
+      solid: styles['kbd-solid'],
+      ghost: styles['kbd-ghost']
+    }
+  },
+  defaultVariants: {
+    variant: 'solid'
+  }
+});
 
-const KbdRoot = ({ className, ...props }: KbdProps) => (
-  <kbd data-slot='kbd' className={cx(styles.kbd, className)} {...props} />
-);
+type KbdVariant = NonNullable<VariantProps<typeof kbd>['variant']>;
+
+const KbdGroupContext = createContext<KbdVariant | undefined>(undefined);
+
+export type KbdProps = ComponentProps<'kbd'> & VariantProps<typeof kbd>;
+
+const KbdRoot = ({ className, variant, ...props }: KbdProps) => {
+  const groupVariant = useContext(KbdGroupContext);
+
+  return (
+    <kbd
+      data-slot='kbd'
+      className={kbd({ variant: variant ?? groupVariant, className })}
+      {...props}
+    />
+  );
+};
 
 KbdRoot.displayName = 'Kbd';
 
-export type KbdGroupProps = ComponentProps<'kbd'>;
+export type KbdGroupProps = ComponentProps<'kbd'> & VariantProps<typeof kbd>;
 
-/**
- * Renders a `<kbd>` rather than a `<div>`: per the HTML spec a `kbd` nested
- * inside a `kbd` represents an individual key within a larger input, which is
- * exactly a shortcut sequence.
- */
-const KbdGroup = ({ className, ...props }: KbdGroupProps) => (
-  <kbd
-    data-slot='kbd-group'
-    className={cx(styles['kbd-group'], className)}
-    {...props}
-  />
+const KbdGroup = ({ className, variant, ...props }: KbdGroupProps) => (
+  <KbdGroupContext.Provider value={variant ?? undefined}>
+    <kbd
+      data-slot='kbd-group'
+      className={cx(styles['kbd-group'], className)}
+      {...props}
+    />
+  </KbdGroupContext.Provider>
 );
 
 KbdGroup.displayName = 'Kbd.Group';

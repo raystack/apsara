@@ -103,22 +103,8 @@
 }
 
 .shortcut {
-  display: inline-flex;
-  align-items: center;
   justify-content: flex-end;
-  gap: var(--rs-space-1);
   white-space: nowrap;
-  font-family: var(--rs-font-body);
-  font-weight: var(--rs-font-weight-regular);
-  font-size: var(--rs-font-size-micro);
-  line-height: var(--rs-line-height-micro);
-  letter-spacing: var(--rs-letter-spacing-micro);
-  color: var(--rs-color-foreground-base-tertiary);
-}
-
-.shortcutKey {
-  font: inherit;
-  color: inherit;
 }
 
 .empty {

@@ -2,7 +2,8 @@
 
 import { Autocomplete as AutocompletePrimitive } from '@base-ui/react/autocomplete';
 import { cx } from 'class-variance-authority';
-import { type ComponentProps } from 'react';
+import { Fragment, isValidElement } from 'react';
+import { Kbd, type KbdGroupProps } from '../kbd';
 import styles from './command.module.css';
 import { useCommandContext } from './command-root';
 
@@ -63,11 +64,12 @@ export const CommandSeparator = ({
 };
 CommandSeparator.displayName = 'Command.Separator';
 
-export type CommandShortcutProps = ComponentProps<'span'>;
+export type CommandShortcutProps = KbdGroupProps;
 
 export const CommandShortcut = ({
   className,
   children,
+  variant = 'ghost',
   ...props
 }: CommandShortcutProps) => {
   const keys =
@@ -78,21 +80,22 @@ export const CommandShortcut = ({
         : [children];
 
   return (
-    <span
+    <Kbd.Group
       data-slot='command-shortcut'
+      variant={variant}
       className={cx(styles.shortcut, className)}
       {...props}
     >
-      {keys.map((key, index) => (
-        <kbd
-          key={index}
-          data-slot='command-shortcut-key'
-          className={styles.shortcutKey}
-        >
-          {key}
-        </kbd>
-      ))}
-    </span>
+      {keys.map((key, index) =>
+        isValidElement(key) ? (
+          <Fragment key={index}>{key}</Fragment>
+        ) : (
+          <Kbd key={index} data-slot='command-shortcut-key'>
+            {key}
+          </Kbd>
+        )
+      )}
+    </Kbd.Group>
   );
 };
 CommandShortcut.displayName = 'Command.Shortcut';

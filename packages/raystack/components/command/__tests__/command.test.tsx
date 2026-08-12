@@ -2,6 +2,8 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { Kbd } from '../../kbd';
+import kbdStyles from '../../kbd/kbd.module.css';
 import { Command } from '../command';
 import styles from '../command.module.css';
 
@@ -313,6 +315,59 @@ describe('Command', () => {
       await waitFor(() => {
         expect(screen.queryByText('Calendar')).not.toBeInTheDocument();
       });
+    });
+  });
+
+  describe('Command.Shortcut', () => {
+    it('splits a string of keys into individual keys', () => {
+      render(<Command.Shortcut>⌘ K</Command.Shortcut>);
+      expect(screen.getByText('⌘')).toBeInTheDocument();
+      expect(screen.getByText('K')).toBeInTheDocument();
+    });
+
+    it('renders each key through Kbd', () => {
+      render(<Command.Shortcut>⌘ K</Command.Shortcut>);
+      const key = screen.getByText('⌘');
+      expect(key.tagName).toBe('KBD');
+      expect(key).toHaveClass(kbdStyles['kbd']);
+    });
+
+    it('defaults its keys to the ghost variant', () => {
+      render(<Command.Shortcut>⌘ K</Command.Shortcut>);
+      expect(screen.getByText('⌘')).toHaveClass(kbdStyles['kbd-ghost']);
+    });
+
+    it('allows the variant to be overridden', () => {
+      render(<Command.Shortcut variant='solid'>⌘ K</Command.Shortcut>);
+      expect(screen.getByText('⌘')).toHaveClass(kbdStyles['kbd-solid']);
+    });
+
+    it('forwards props and merges className onto the group', () => {
+      const { container } = render(
+        <Command.Shortcut className='custom' aria-label='Command K'>
+          ⌘ K
+        </Command.Shortcut>
+      );
+      const group = container.querySelector('[data-slot="command-shortcut"]');
+      expect(group).toHaveClass('custom');
+      expect(group).toHaveClass(styles.shortcut);
+      expect(group).toHaveAttribute('aria-label', 'Command K');
+    });
+
+    it('forwards ref', () => {
+      const ref = React.createRef<HTMLElement>();
+      render(<Command.Shortcut ref={ref}>⌘ K</Command.Shortcut>);
+      expect(ref.current?.tagName).toBe('KBD');
+    });
+
+    it('does not double-wrap element children in a second key', () => {
+      const { container } = render(
+        <Command.Shortcut>
+          <Kbd>⌘</Kbd>
+        </Command.Shortcut>
+      );
+      const keys = container.querySelectorAll(`.${kbdStyles['kbd']}`);
+      expect(keys).toHaveLength(1);
     });
   });
 });

@@ -1,20 +1,22 @@
 ---
 title: Kbd
-description: Displays a keyboard key or a shortcut sequence.
+description: A component for displaying keyboard keys and shortcuts.
 source: packages/raystack/components/kbd
 tag: new
 ---
 
 import {
-  preview,
+  playground,
   singleDemo,
+  variantDemo,
   groupDemo,
   separatorDemo,
   withTextDemo,
+  withInputDemo,
   withTooltipDemo,
 } from "./demo.ts";
 
-<Demo data={preview} />
+<Demo data={playground} />
 
 ## Anatomy
 
@@ -43,7 +45,7 @@ A single keyboard key. Renders a `<kbd>` element.
 
 ### Group
 
-Spaces a sequence of keys evenly. Also renders a `<kbd>`: per the HTML spec, a `kbd` nested inside a `kbd` represents an individual key within a larger input, which is exactly what a shortcut sequence is.
+Groups multiple keyboard keys for key combinations.
 
 <auto-type-table path="./props.ts" name="KbdGroupProps" />
 
@@ -64,23 +66,35 @@ Use `Kbd` on its own for a one-key hint. Keys share a minimum width so a narrow 
 
 <Demo data={singleDemo} />
 
+### Variants
+
+`solid` is the default and suits standalone hints. Use `ghost` on surfaces that already have their own background, such as a menu row, a tooltip, or an input.
+
+<Demo data={variantDemo} />
+
 ### Sequences
 
-Wrap keys in `Kbd.Group` to show a chord.
+Wrap keys in `Kbd.Group` to show a chord. Setting `variant` on the group applies it to every key inside.
 
 <Demo data={groupDemo} />
 
 ### Separators
 
-`Kbd.Group` renders whatever you put between the keys, so separators are plain text. Use `+` for keys pressed together and a word like `then` for keys pressed in order.
+`Kbd.Group` renders whatever you put between the keys, so separators are plain text. Use `+` for keys pressed together and a word like `then` for keys pressed in order. Separator text takes the surrounding typography rather than the key styling.
 
 <Demo data={separatorDemo} />
 
 ### Inline with text
 
-Keys sit on the text baseline, so they can be dropped into a sentence.
+Keys sit on the text baseline, so they can be dropped straight into a sentence.
 
 <Demo data={withTextDemo} />
+
+### In an input
+
+Surface a focus shortcut in a search field. Use a single `ghost` key here — the input's trailing slot is sized for an icon, so a multi-key `Kbd.Group` will be clipped.
+
+<Demo data={withInputDemo} />
 
 ### In a tooltip
 
@@ -90,7 +104,7 @@ A common use is surfacing a shortcut alongside the action it triggers.
 
 ## Accessibility
 
-- `Kbd` is presentational and renders the semantic `<kbd>` element, which screen readers announce as keyboard input.
-- Symbol-only keys such as `⌘`, `⇧`, or `↵` are not announced usefully on their own. Add an `aria-label` when the symbol is the only cue: `<Kbd aria-label="Command">⌘</Kbd>`.
+- `Kbd` is presentational and renders the semantic `<kbd>` element. It has no ARIA role of its own and is not exposed as a separate accessible object, so it does not change how surrounding content is announced.
+- Symbol-only keys such as `⌘`, `⇧`, or `↵` are not announced usefully on their own — they are read by their Unicode names, if at all. Add an `aria-label` when the symbol is the only cue: `<Kbd aria-label="Command">⌘</Kbd>`.
 - Keys are not focusable and carry no interaction. Keep the shortcut wired to a real handler elsewhere — `Kbd` only displays it.
-- Text selection is disabled so dragging across a menu row does not highlight the key labels.
+- Keys ignore pointer events and text selection, so clicking or dragging across a menu row does not highlight the key labels.

@@ -1,32 +1,38 @@
-/* normalize.css sets `kbd { font-family: monospace }`, so both parts restore
-   the body font explicitly rather than relying on inheritance. */
-
 .kbd,
 .kbd-group {
   display: inline-flex;
   align-items: center;
-  color: var(--rs-color-foreground-base-tertiary);
-  font-family: var(--rs-font-body);
-  font-size: var(--rs-font-size-mini);
-  line-height: var(--rs-line-height-mini);
-  letter-spacing: var(--rs-letter-spacing-mini);
+  width: fit-content;
+  pointer-events: none;
+  user-select: none;
 }
 
 .kbd {
   justify-content: center;
   box-sizing: border-box;
   height: var(--rs-space-6);
-  /* Square minimum so a narrow "K" reads the same width as a wide "⌘". */
   min-width: var(--rs-space-6);
   padding: 0 var(--rs-space-2);
   border-radius: var(--rs-radius-1);
-  background: var(--rs-color-background-neutral-primary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-mini);
   font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
   white-space: nowrap;
-  user-select: none;
 }
 
-/* Spacing container only — the nested keys carry the chip treatment. */
+.kbd-solid {
+  background: var(--rs-color-background-neutral-primary);
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+.kbd-ghost {
+  background: transparent;
+  color: var(--rs-color-foreground-base-secondary);
+}
+
 .kbd-group {
   gap: var(--rs-space-2);
+  font: inherit;
 }
