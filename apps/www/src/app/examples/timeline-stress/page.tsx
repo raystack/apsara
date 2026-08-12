@@ -36,7 +36,11 @@ const DAY_MS = 86_400_000;
 const TEAMS = ['Eng', 'Design', 'Ops', 'Data', 'Support'];
 const STATUSES: Task['status'][] = ['todo', 'active', 'done'];
 const DOMAIN_START = Date.parse('2025-01-01T00:00:00.000Z');
-const DOMAIN_DAYS = 365;
+/** Domain lengths the harness can switch between, in days. */
+const SPANS = { '1 year': 365, '5 years': 1826 } as const;
+type SpanLabel = keyof typeof SPANS;
+
+const isoDay = (ms: number) => new Date(ms).toISOString().slice(0, 10);
 
 /** Seeded LCG — the same row count always renders the same canvas. */
 function seededRandom(seed: number) {
@@ -47,10 +51,10 @@ function seededRandom(seed: number) {
   };
 }
 
-function makeTasks(count: number): Task[] {
-  const random = seededRandom(count);
+function makeTasks(count: number, domainDays: number): Task[] {
+  const random = seededRandom(count + domainDays);
   return Array.from({ length: count }, (_, i) => {
-    const startDay = Math.floor(random() * DOMAIN_DAYS);
+    const startDay = Math.floor(random() * domainDays);
     // Mostly short spans with a long tail, so lanes pack unevenly the way
     // real schedules do rather than into a tidy grid.
     const span = 1 + Math.floor(random() ** 3 * 40);
@@ -122,7 +126,16 @@ interface Stats {
   ticks: number;
   bands: number;
   groupSlots: number;
+  canvasWidth: number;
   canvasHeight: number;
+  /**
+   * Height of a single gridline. These are pinned `top: 0; bottom: 0`, so
+   * unclamped they are as tall as the whole canvas and their rasterization
+   * cost tracks the domain rather than the viewport — the dominant scroll cost
+   * before the clamp landed. Worth watching directly: it should stay near the
+   * pane height, not the canvas height.
+   */
+  gridlineHeight: number;
 }
 
 /**
@@ -170,6 +183,7 @@ function useFrameMonitor(paneRef: React.RefObject<HTMLElement | null>) {
 
 export default function TimelineStressPage() {
   const [rowCount, setRowCount] = useState(10_000);
+  const [spanLabel, setSpanLabel] = useState<SpanLabel>('1 year');
   const [virtualized, setVirtualized] = useState(true);
   const [onePerRow, setOnePerRow] = useState(false);
   const [grouped, setGrouped] = useState(false);
@@ -180,7 +194,21 @@ export default function TimelineStressPage() {
   const paneRef = useRef<HTMLElement | null>(null);
   const worstFrame = useFrameMonitor(paneRef);
 
-  const tasks = useMemo(() => makeTasks(rowCount), [rowCount]);
+  const domainDays = SPANS[spanLabel];
+  const tasks = useMemo(
+    () => makeTasks(rowCount, domainDays),
+    [rowCount, domainDays]
+  );
+  // Generation and the axis read the same day count, so the domain can never
+  // drift out from under the data.
+  const range = useMemo(
+    () =>
+      [
+        isoDay(DOMAIN_START),
+        isoDay(DOMAIN_START + (domainDays - 1) * DAY_MS)
+      ] as [string, string],
+    [domainDays]
+  );
 
   /**
    * The card memo compares `renderCard` by identity, so an inline arrow — what
@@ -196,7 +224,7 @@ export default function TimelineStressPage() {
 
   // Remount on every switch: mount cost is part of what's being measured, and
   // a stale canvas would otherwise linger under the new settings.
-  const runKey = `${rowCount}-${virtualized}-${onePerRow}-${grouped}`;
+  const runKey = `${rowCount}-${domainDays}-${virtualized}-${onePerRow}-${grouped}`;
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: `runKey` isn't read here — it's the remount signal, and re-running on it is the point.
   useEffect(() => {
@@ -212,6 +240,9 @@ export default function TimelineStressPage() {
         pane.querySelectorAll(`[data-slot="data-view-timeline-${slot}"]`)
           .length;
       const canvas = pane.querySelector<HTMLElement>('[role="list"]');
+      const gridline = pane.querySelector<HTMLElement>(
+        '[data-slot="data-view-timeline-gridline"]'
+      );
       setBuildMs(Math.round(performance.now() - start));
       setStats({
         cards: count('card'),
@@ -219,7 +250,9 @@ export default function TimelineStressPage() {
         ticks: count('axis-tick'),
         bands: count('axis-band'),
         groupSlots: count('group-slot'),
-        canvasHeight: canvas ? Math.round(canvas.offsetHeight) : 0
+        canvasWidth: canvas ? Math.round(canvas.offsetWidth) : 0,
+        canvasHeight: canvas ? Math.round(canvas.offsetHeight) : 0,
+        gridlineHeight: gridline ? Math.round(gridline.offsetHeight) : 0
       });
     });
     return () => cancelAnimationFrame(id);
@@ -271,6 +304,23 @@ export default function TimelineStressPage() {
         </Flex>
         <Flex direction='column' gap={2}>
           <Text size='micro' variant='secondary'>
+            Span
+          </Text>
+          <Flex gap={2}>
+            {(Object.keys(SPANS) as SpanLabel[]).map(label => (
+              <Button
+                key={label}
+                size='small'
+                variant={label === spanLabel ? 'solid' : 'outline'}
+                onClick={() => setSpanLabel(label)}
+              >
+                {label}
+              </Button>
+            ))}
+          </Flex>
+        </Flex>
+        <Flex direction='column' gap={2}>
+          <Text size='micro' variant='secondary'>
             Options
           </Text>
           <Flex gap={2}>
@@ -311,9 +361,14 @@ export default function TimelineStressPage() {
         {stat('Tick labels', stats?.ticks ?? '—')}
         {stat('Month bands', stats?.bands ?? '—')}
         {stat('Group slots', stats?.groupSlots ?? '—')}
+        {stat('Canvas', `${stats?.canvasWidth.toLocaleString() ?? '—'}px`)}
         {stat(
           'Canvas height',
           `${stats?.canvasHeight.toLocaleString() ?? '—'}px`
+        )}
+        {stat(
+          'Gridline height',
+          `${stats?.gridlineHeight.toLocaleString() ?? '—'}px`
         )}
         {stat('Mount', `${buildMs}ms`)}
         {stat('Worst frame', worstFrame ? `${worstFrame}ms` : 'scroll me')}
@@ -340,7 +395,7 @@ export default function TimelineStressPage() {
             <DataView.Timeline<Task>
               startField='start'
               endField='end'
-              range={['2025-01-01', '2025-12-31']}
+              range={range}
               scale='day'
               unitWidth={40}
               virtualized={virtualized}
