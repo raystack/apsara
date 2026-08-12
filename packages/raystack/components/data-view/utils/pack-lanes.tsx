@@ -132,16 +132,27 @@ function packBySweep(
   const words = new Uint32Array(wordCount);
   const summary = new Uint32Array((wordCount + 31) >> 5);
 
+  /**
+   * How many lanes the bitmap currently holds. The summary walk below is
+   * O(lanes / 1024) and returns -1 when nothing is free, so a saturated sweep
+   * pays that walk once per item to learn the same thing every time: 50k cards
+   * on a single date is ~2.45M iterations of pure no. Counting the free lanes
+   * turns the empty case into a comparison.
+   */
+  let freeLanes = 0;
+
   const markFree = (lane: number) => {
     const word = lane >> 5;
     words[word] |= 1 << (lane & 31);
     summary[word >> 5] |= 1 << (word & 31);
+    freeLanes++;
   };
 
   /** Lowest set bit's index. Undefined for 0 — callers guard. */
   const lowestBit = (bits: number) => 31 - Math.clz32(bits & -bits);
 
   const takeSmallestFree = () => {
+    if (freeLanes === 0) return -1;
     for (let block = 0; block < summary.length; block++) {
       while (summary[block] !== 0) {
         const blockBits = summary[block];
@@ -157,6 +168,7 @@ function packBySweep(
         const bitOffset = lowestBit(bits);
         words[word] = bits & ~(1 << bitOffset);
         if (words[word] === 0) summary[block] = blockBits & ~(1 << wordOffset);
+        freeLanes--;
         return (word << 5) + bitOffset;
       }
     }
