@@ -113,7 +113,8 @@ export const FilterChip = ({
   const [operation, setOperation] = useState<FilterOperation | undefined>(
     computedOperations?.[0]
   );
-  const [filterValue, setFilterValue] = useState<any>(value || '');
+  // `??` not `||` — a falsy option value like `0` is a real selection.
+  const [filterValue, setFilterValue] = useState<any>(value ?? '');
 
   const showOnRemove = typeof onRemove === 'function';
   const isMultiSelectColumn = columnType === FilterType.multiselect;
