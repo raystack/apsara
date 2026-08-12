@@ -110,7 +110,11 @@ function packBySweep(
   const colScale = span > 0 ? colCount / span : 0;
   const colOf = (value: number) => {
     const col = Math.floor((value - minX) * colScale);
-    if (col < 0) return 0;
+    // Negated rather than `col < 0` so a NaN files into column 0 as well.
+    // Unguarded it returns NaN, and a NaN index on a typed array reads
+    // undefined and writes nothing — the lane would be filed into no column at
+    // all and never released, leaking it for the rest of the sweep.
+    if (!(col >= 0)) return 0;
     return col >= colCount ? colCount - 1 : col;
   };
 

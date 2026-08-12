@@ -67,7 +67,14 @@ export function orderByX(items: readonly XPositioned[]): Int32Array {
   const starts = new Int32Array(bucketCount + 1);
   for (let i = 0; i < n; i++) {
     let bucket = Math.floor((items[i].x - minX) * scale);
-    if (bucket < 0) bucket = 0;
+    // Negated rather than `bucket < 0` so a NaN lands in bucket 0 too. `x` is
+    // finite in practice, but an unguarded NaN corrupts the whole ordering
+    // rather than misplacing one item: `bucketOf` is an Int32Array, so NaN
+    // stores as 0, while `starts[NaN + 1]++` is a silent no-op on a typed
+    // array. Bucket 0 then receives an item it never reserved a slot for and
+    // the scatter overwrites its neighbour — one index duplicated, one lost,
+    // which downstream means one card packed twice and another left unplaced.
+    if (!(bucket >= 0)) bucket = 0;
     else if (bucket >= bucketCount) bucket = bucketCount - 1;
     bucketOf[i] = bucket;
     starts[bucket + 1]++;
