@@ -9,7 +9,7 @@ RFC PR: https://github.com/raystack/apsara/pull/880
 
 This RFC proposes rewriting the `Theme` component and the token stylesheets under it. Tokens move off `<html>` onto a real element, so the root theme, a nested scope, and a portal all work the same way. That fixes server rendering, the one provider per page limit, and scoped themes breaking inside portals.
 
-On that foundation it adds the customisation surface tracked in [issue #578](https://github.com/raystack/apsara/issues/578), appearance, accent, gray, radius, scaling, panel background, reduced motion and font families, together with per-component `radius` overrides, and it retires `style`. This is a breaking change: no compatibility shim ships, and a migration guide accompanies the implementation.
+On that foundation it adds the customisation surface tracked in [issue #578](https://github.com/raystack/apsara/issues/578), appearance, accent, gray, radius, scaling, panel background and reduced motion, together with per-component `radius` overrides, and it retires `style`. Font families are customisable through CSS variables rather than a prop. This is a breaking change: no compatibility shim ships, and a migration guide accompanies the implementation.
 
 ## Table of Contents
 
@@ -102,6 +102,10 @@ Four things the browser paints itself live outside the React tree and cannot be 
 
 The root theme element MUST carry a marker attribute, `data-rs-root`, that nested themes and portal re-injections do not, so the stylesheet can tell the theme that owns the page from a theme somewhere in the tree. `<html>` then derives its colour scheme from that element with `:has()`, in the shape Radix uses: a `:root:where(:has(...))` rule matching the marker plus the appearance attribute. This needs no JavaScript, writes nothing to `<html>`, and re-evaluates as soon as the pre-hydration script patches the attribute. `enableColorScheme` and the imperative `d.style.colorScheme` write are both deleted. The overscroll area follows `color-scheme` on its own, so it lands close to the theme background without a second mechanism.
 
+At most one element per document may carry the marker. A theme claims it when it finds no ancestor theme context; one that has no ancestor but does not own the page, an embedded widget or a micro-frontend, MUST pass `isRoot={false}`. Only the marker is exclusive, and a suppressed theme is otherwise unchanged: it still carries `data-theme`, so `styles/primitives/appearance.css` still gives its own subtree a `color-scheme`, and only the three document-level surfaces defer to the host.
+
+If two elements do carry the marker with conflicting appearances, neither wins by position. Both rules match `:root` at equal specificity, so source order decides and `dark`, declared later, wins. That follows neither nesting nor mount order, and no selector can be made to, since sibling roots have no containment relationship to rank. The behaviour is documented rather than detected; the cost is a colour-scheme mismatch on three browser-painted surfaces, not a functional failure.
+
 #### The hasBackground Prop
 
 The component cannot infer whether it should paint, because re-tinting the accent and flipping a panel to dark use the same component but want opposite behaviour. A `hasBackground` prop decides.
@@ -112,7 +116,7 @@ When true, the element paints `--rs-color-background-base-primary`, and the root
 
 #### Settings
 
-One settings object describes the theme. Every key is independently seedable and controllable, and every key except `fontFamily` is independently persistable.
+One settings object describes the theme. Every key is independently seedable, controllable and persistable.
 
 | Setting | Values | Default | Mechanism |
 |---|---|---|---|
@@ -120,14 +124,11 @@ One settings object describes the theme. Every key is independently seedable and
 | `accentColor` | `indigo`, `orange`, `mint` | `indigo` | `data-accent-color` |
 | `grayColor` | `gray`, `mauve`, `slate`, `sage`, `auto` | `auto` | `data-gray-color` (resolved) |
 | `radius` | `none`, `small`, `medium`, `large`, `full` | `medium` | `data-radius` |
-| `scaling` | `90%`, `95%`, `100%`, `105%`, `110%` | `100%` | `data-scaling` |
+| `scaling` | `0.9`, `0.95`, `1`, `1.05`, `1.1` | `1` | `data-scaling` |
 | `panelBackground` | `solid`, `translucent` | `solid` | `data-panel-background` |
 | `reducedMotion` | `true`, `false`, `system` | `system` | `data-reduced-motion` |
-| `fontFamily` | `{ body, title, mono }`, each any font stack | Inter, Inter, JetBrains Mono | inline `--rs-font-body`, `--rs-font-title`, `--rs-font-mono` |
 
-The seven enumerated settings become data attributes. `fontFamily` is a single setting holding three free-form stacks that cannot be enumerated, so its members are written as inline custom properties on the theme element. That makes the prop and the CSS variable the same mechanism, which is what lets fonts be overridden either way, and it gives a clear precedence chain: stylesheet default, then the prop as an inline style, then any consumer rule on a deeper element.
-
-`fontFamily` members merge independently in `defaultValue`, in `value` and in `setValue`, exactly as top-level keys do, so passing `{ title: '...' }` leaves body and mono on their defaults rather than clearing them. Only the members actually supplied emit a custom property; the rest fall through to the stylesheet. The member is named `title` rather than issue #578's `heading` so it matches the existing `--rs-font-title` token.
+Every setting is enumerable, so each becomes a data attribute on the theme element. Font families are deliberately not a setting; they are customised through CSS variables instead, for the reasons given in [Stylesheets and Fonts](#stylesheets-and-fonts).
 
 `grayColor: 'auto'` pairs the gray ramp to the accent through a lookup map, and `appearance: 'system'` resolves against `prefers-color-scheme`. Both MUST resolve before the attribute is written, so `data-theme` only ever holds `light` or `dark`.
 
@@ -138,8 +139,9 @@ The seven enumerated settings become data attributes. `fontFamily` is a single s
 | `defaultValue` | Partial settings. Seeds uncontrolled keys. Persisted and settable at runtime. |
 | `value` | Partial settings. Controlled keys always win; never persisted, never written by the script. |
 | `onValueChange` | Fires with the full next settings object and the changed subset. |
-| `persist` | `true`, `false`, or an array of setting keys. Default `true`. |
-| `storageKey` | Storage key prefix. One key per setting, suffixed by setting name. |
+| `persist` | Which settings a namespace covers, as an array of setting keys. Defaults to all seven. Requires `persistKey`. |
+| `persistKey` | Storage namespace. Persistence is off unless this is set. Names the single entry holding the settings object. |
+| `isRoot` | Whether this theme owns the document's colour scheme. Defaults to true when there is no ancestor theme. |
 | `hasBackground` | Overrides the painting heuristic. |
 | `disableTransitionOnChange` | Suppresses the colour transition during an appearance switch. |
 | `nonce` | CSP nonce for the inline script. |
@@ -171,23 +173,27 @@ The hook MUST throw when called outside a provider rather than returning a silen
 
 Storage is read in two places, for two different jobs, and both are needed. The inline script reads it to patch the DOM before first paint, and exists only because server-rendered HTML cannot know a client-side value. React state reads it so the component knows the value, for `useTheme` consumers, re-renders and cross-tab sync.
 
-React state uses `useSyncExternalStore`, the only primitive that reads storage on the first render under CSR without breaking hydration under SSR. Its server snapshot returns the seed, so the hydration render matches the server, and its client snapshot reads storage. Under CSR there is no hydration, so the first render, and therefore the first paint, is already correct with or without the script. Under SSR the script has already corrected the DOM and the post-hydration snapshot returns the same value, so nothing moves. Its subscribe function listens to the `storage` event, which covers cross-tab sync and replaces the two hand-rolled listeners.
+React state uses `useSyncExternalStore`, the only primitive that reads storage on the first render under CSR without breaking hydration under SSR. Its server snapshot returns the seed, so the hydration render matches the server, and its client snapshot reads storage. Under CSR there is no hydration, so the first render, and therefore the first paint, is already correct with or without the script. Under SSR the script has already corrected the DOM and the post-hydration snapshot returns the same value, so nothing moves. Its subscribe function listens to the `storage` event, which covers other tabs and replaces the two hand-rolled listeners, and to an in-document notification emitted after each write, which the `storage` event does not deliver to the document that produced it.
 
-Each setting MUST be stored under its own key holding a primitive rather than as one JSON blob, so snapshots compare by value and do not loop.
+A namespace is one localStorage entry holding one JSON object, the settings it covers alongside a schema version. `getSnapshot` MUST cache the parsed object against the raw string it came from and re-parse only when that string changes, since `useSyncExternalStore` compares with `Object.is` and accepts no equality function; a freshly parsed object on every call re-renders without end.
 
 #### The Inline Script
 
 The script renders as the first child of the theme element and patches its own parent, located through `document.currentScript.parentElement` with a query-selector fallback. The parent's opening tag has already been parsed at that point, so the attribute is corrected before any child content is parsed. Nothing is written to `<html>`.
 
-It is far smaller than the current one, because accent, gray, radius, scaling and panel background are ordinary props that React server-renders correctly on the first byte. The script only patches persisted, uncontrolled settings, which in the default configuration means appearance alone, and is omitted entirely when every persistable setting is either controlled or excluded from `persist`. A consumer reading appearance from a cookie therefore ships no inline script.
+It is far smaller than the current one, because accent, gray, radius, scaling and panel background are ordinary props that React server-renders correctly on the first byte. It is emitted only for a theme with a `persistKey`, and then only for that namespace's uncontrolled settings, which usually means appearance alone. A consumer reading appearance from a cookie therefore ships no inline script, as does one that does not persist. It parses the entry defensively and falls back to the server-rendered attribute when that entry is absent or malformed, so a bad stored value cannot block first paint.
 
 The theme element MUST carry `suppressHydrationWarning`, which suppresses attribute diffs one level deep, exactly the scope required. The script and the React reader MUST be generated from one shared configuration of key names, defaults and the `system` resolution rule; the current implementation writes this logic twice and the two copies have already diverged over the `value` and `attribute` mapping.
 
 #### What Persists
 
-`persist` defaults to `true`, covering all enumerated settings, and consumers opt out wholesale or per key.
+Persistence is off unless `persistKey` is set; a theme without one holds its settings in memory and emits no inline script. `persist` then narrows which settings a namespace covers, defaulting to all seven. This generalises today's scope behaviour, where a scope persists only when given a `storageKey`, to the root, which currently defaults to `"theme"`. It also makes accidental collisions impossible: a nested scope, an embedded widget and a second independent root all keep their own state by default.
 
-`fontFamily` MUST NOT be persistable at all, rather than merely excluded by default, so `persist` accepts only the seven enumerated keys. It is the one setting with no realistic runtime picker, and persisting it would recreate the failure the controlled and uncontrolled split exists to prevent: a developer changes the default font in code and their own stale storage keeps serving the old one. It is also the one setting whose value is an object, so admitting it would break the one-primitive-per-key storage rule above. Excluding it keeps the inline script enumerated-only.
+Sharing a `persistKey` is a supported feature rather than a hazard. Two themes on one namespace stay in step, which is what a documentation page wants when several live examples should switch appearance together. Because a `storage` event does not fire in the document that produced the write, same-page sharing MUST be served by an in-document notification alongside the `storage` listener covering other tabs. Themes sharing a namespace need not agree on `persist`.
+
+A write MUST merge rather than replace, applying only the settings its `persist` covers and leaving every other field intact, including fields owned by a theme with a different `persist` on the same namespace.
+
+A missing or unparseable entry MUST resolve to the seeded defaults and be overwritten on the next write, never throw; a field outside its setting's union is discarded individually. The version field lets a later change of shape migrate rather than reset, and today's bare theme name fails to parse as an object and is therefore detectable. Font families, being CSS variables rather than state, never enter storage or the script.
 
 ### Token System Changes
 
@@ -219,7 +225,7 @@ Every theme element, whether root, scope or portal re-injection, carries a stabl
 
 Component CSS carries 357 raw pixel literals, 69 of them `1px`, and 112 border or outline declarations name a pixel width. Borders and dividers MUST NOT scale, and most of the remaining literals either already have a matching token or are decorative offsets. That leaves a tail of roughly forty intrinsic dimensions to triage individually: an intrinsic control height scales, a truncation guard's `max-width` does not.
 
-`--rs-scaling` MUST be set absolutely per value rather than multiplied, so a 90% scope nested inside a 90% scope remains 90%. Spacing, effects and z-index move off `:root` onto the theme selector as part of this, which is what makes them scopable.
+`--rs-scaling` is a unitless multiplier, so it substitutes directly into the `calc()` expressions that derive spacing, radius and type without conversion. It MUST be set absolutely per value rather than multiplied, so a `0.9` scope nested inside a `0.9` scope remains `0.9`. Spacing, effects and z-index move off `:root` onto the theme selector as part of this, which is what makes them scopable.
 
 #### Radius
 
@@ -273,7 +279,7 @@ The mechanism is a shared cva variant plus a shared CSS module, so no component 
 
 Portals present two independent problems with two different solutions.
 
-Theme values cross the portal through React context rather than the DOM. An internal component wraps portalled content and re-emits the inherited settings, both the data attributes and the inline font custom properties, onto the portalled element, merging rather than adding a node. This is the standard fix and what Radix does in every portalling component, and it repairs the existing bug where a popover opened inside a scoped theme renders in the root's theme.
+Theme values cross the portal through React context rather than the DOM. An internal component wraps portalled content and re-emits the inherited settings as data attributes onto the portalled element, merging rather than adding a node. Font variables need no re-emission, since the re-injected element carries the `rs-theme` class and a consumer rule on `.rs-theme` reaches it already. This is the standard fix and what Radix does in every portalling component, and it repairs the existing bug where a popover opened inside a scoped theme renders in the root's theme.
 
 Component overrides do not go through context, so they cannot be re-emitted. Instead the override prop lives on the portalled sub-component itself: `Popover.Content`, `Select.Content`, `Dialog.Content`. Nothing then needs forwarding, and Apsara already uses the compound Root, Trigger and Content shape across these components. Within the re-injection, the component's own override MUST resolve after the inherited theme values, or the re-emitted theme value clobbers it.
 
@@ -281,13 +287,17 @@ All thirteen portalling components additionally expose a `container` prop, givin
 
 ### Stylesheets and Fonts
 
-Font families are overridable two ways, and both resolve to the same three tokens.
+Font families are customised through three CSS variables and no prop.
 
-| Setting member | Token |
+| Token | Role |
 |---|---|
-| `fontFamily.body` | `--rs-font-body` |
-| `fontFamily.title` | `--rs-font-title` |
-| `fontFamily.mono` | `--rs-font-mono` |
+| `--rs-font-body` | Body text |
+| `--rs-font-title` | Headings |
+| `--rs-font-mono` | Monospace |
+
+A consumer redeclares any of them on `.rs-theme`, or on their own selector over a theme element to scope a font to one subtree. The token is named `--rs-font-title` rather than issue #578's `heading` because that is the token the stylesheets already use.
+
+No `fontFamily` prop is offered, though issue #578 asked for one. A font is a one-time branding choice with no runtime picker, and being free-form it could never be a data attribute like the seven settings. A prop would therefore write inline custom properties, which beat every `:where()`-wrapped token rule, making fonts the one part of the token system a consumer could not override from `.rs-theme`. Dropping it also keeps every setting enumerable, removes member-merge semantics from `defaultValue`, `value` and `setValue`, and removes font re-emission from the portal re-injector. A runtime switcher would need font loading and metrics correction in scope, and should be designed then rather than approximated now.
 
 Inter and JetBrains Mono remain the defaults. Lora and Josefin Sans are dropped along with `style`, taking the imports from four to two, and the `--rs-font-mono` stack is reordered so JetBrains Mono precedes Menlo.
 
@@ -308,9 +318,9 @@ Custom fonts carry a documented caveat rather than a guarantee. `styles/typograp
 
 | # | Proposed | Verdict | Notes |
 |---|---|---|---|
-| 1 | Scaling / density | Adopted as zoom | Radix model, `90%` to `110%`. Density is separate and out of scope |
+| 1 | Scaling / density | Adopted as zoom | Radix model, unitless `0.9` to `1.1`. Density is separate and out of scope |
 | 2 | Border radius control | Adopted | Factor model, plus element-only per-component override |
-| 3a | `fontFamily` | Adopted | One setting with `body`, `title` and `mono` members, overridable by prop or CSS variable |
+| 3a | `fontFamily` | Adopted as CSS variables | Three tokens overridable from `.rs-theme`. No prop; see [Stylesheets and Fonts](#stylesheets-and-fonts) |
 | 3b | `fontSize` scale | Rejected | Redundant, since `scaling` already multiplies every font-size token |
 | 4 | `tokens` deep-override prop | Rejected | Obsolete under the new architecture; see Discarded Approaches |
 | 5 | Component-level defaults | Rejected | See Discarded Approaches |
@@ -328,7 +338,7 @@ Custom fonts carry a documented caveat rather than a guarantee. `styles/typograp
 
 Items 1 to 10 come from the issue body, 11 to 14 from the comment thread. All four deferrals are additive rather than blocked: each is one new data attribute over one new token family, and once tokens live on the theme element and spacing, effects and z-index are scopable, any of them can land later without the API changing again. All four are recorded under [Future Work](#future-work).
 
-Two departures from the issue's spelling are deliberate. `scaling` ships as `90%` to `110%` rather than `compact | default | comfortable | spacious`, because the values are a zoom factor and density-flavoured names would mis-describe what they do; the names belong to the density feature, which is separate. `appearance` has no `inherit` value, because a nested `Theme` already inherits every key it does not set, so `inherit` is expressed by omission.
+Two departures from the issue's spelling are deliberate. `scaling` ships as `0.9` to `1.1` rather than `compact | default | comfortable | spacious`, because the values are a zoom factor and density-flavoured names would mis-describe what they do; the names belong to the density feature, which is separate. They are also unitless rather than Radix's percentages, so they substitute into `calc()` as written. `appearance` has no `inherit` value, because a nested `Theme` already inherits every key it does not set, so `inherit` is expressed by omission.
 
 The precedence model in the first comment, which layers the feature props over `style`, is superseded: `style` is retired, so each setting stands alone and there is nothing to layer over. That comment's conclusion, that features should carry absolute values rather than values relative to `style`, is preserved by the factor model, where `radius="small"` means the same thing in every configuration. The interface sketch in [issue #578](https://github.com/raystack/apsara/issues/578) is superseded by [The Theme API](#the-theme-api).
 
@@ -340,7 +350,7 @@ The precedence model in the first comment, which layers the feature props over `
 | `defaultTheme` | `defaultValue.appearance` |
 | `forcedTheme` | `value.appearance` |
 | `accentColor`, `grayColor` as flat props | `defaultValue.accentColor`, `defaultValue.grayColor` |
-| `style` | `radius` plus `fontFamily` |
+| `style` | `radius` plus the `--rs-font-*` tokens |
 | `onThemeChange` | `onValueChange` |
 | `enableSystem` | `appearance: 'system'` |
 | `enableColorScheme` | Handled by the stylesheet |
@@ -349,6 +359,8 @@ The precedence model in the first comment, which layers the feature props over `
 | `useTheme().theme` / `.setTheme` / `.resolvedTheme` / `.systemTheme` | `value` / `setValue` / `resolved` / `systemAppearance` |
 | `useTheme().themes` / `.forcedTheme` / `.style` / `.scopes` | None |
 | `useTheme({ storageKey })` | `useTheme().root` |
+| `storageKey` | `persistKey`, which now also gates persistence rather than only naming it |
+| Persistence at the root by default | `persistKey` is required to persist, at the root as well as in a scope |
 | `Image` and `Avatar` bespoke `radius` values | The shared five-value scale |
 
 Beyond the API, tokens are no longer available on `<html>`, so consumer CSS and hand-rolled portals outside the provider stop resolving `--rs-*`. `useTheme` throws outside a provider instead of returning a no-op. `ThemeSwitcher` is rewritten against the new hook, which fixes its handling of `system`.
@@ -375,18 +387,22 @@ Coverage to add:
 
 - Attribute output for every setting, at the root and in nested scopes
 - Controlled versus uncontrolled precedence, per key, including that a controlled key ignores stored values and is never written
-- `persist` in all three forms, and that `fontFamily` is not persistable in any of them
-- `fontFamily` members merging independently, so a partial object leaves the other two members on their defaults and emits no custom property for them
+- No storage access and no inline script when `persistKey` is absent
+- `persist` narrowing a namespace, and writes merging so fields it does not own survive
+- Two themes sharing a `persistKey` staying in step within one document
+- Missing, unparseable or out-of-union stored values falling back to the seed
+- The cached snapshot holding identity across renders while the stored string is unchanged
 - Storage reads under CSR, where the first render already carries the correct value
 - Storage reads under SSR, where the server snapshot matches the hydration render and the script renders inside the theme element
 - Cross-tab synchronisation through the `storage` event
 - `system` and `auto` resolution, and `resolved` versus `value`
-- The portal re-injector emitting inherited attributes and font custom properties
+- The portal re-injector emitting inherited attributes
 - `useTheme().root` reaching the root provider from inside a scope
 - `useTheme` throwing outside a provider
+- `isRoot={false}` suppressing the root marker while leaving the theme's own attributes intact
 - Script omission when every persistable setting is controlled or excluded
 
-One known limitation: jsdom does not resolve custom properties from stylesheets, so token arithmetic cannot be asserted at this layer. Whether `scaling: '90%'` produces the right spacing, and whether a per-component `radius` leaks to descendants, are verified by review against the docs playground, which renders every component. Closing that gap is Future Work.
+One known limitation: jsdom does not resolve custom properties from stylesheets, so token arithmetic cannot be asserted at this layer. Whether `scaling: '0.9'` produces the right spacing, and whether a per-component `radius` leaks to descendants, are verified by review against the docs playground, which renders every component. Closing that gap is Future Work.
 
 ## Impact
 
