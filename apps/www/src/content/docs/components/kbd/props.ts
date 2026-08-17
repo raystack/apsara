@@ -19,7 +19,8 @@ export interface KbdGroupProps {
   children?: ReactNode;
 
   /**
-   * Visual style variant applied to every key in the group.
+   * Visual style variant inherited by every key in the group. A key's own
+   * `variant` takes precedence over it.
    * @defaultValue "solid"
    */
   variant?: 'solid' | 'ghost';

@@ -139,7 +139,8 @@ export interface CommandShortcutProps {
   children?: React.ReactNode;
 
   /**
-   * Visual style variant, applied to every key in the shortcut.
+   * Visual style variant inherited by the keys of the shortcut. A `Kbd`
+   * passed as a child keeps its own `variant`.
    * @defaultValue "ghost"
    */
   variant?: 'solid' | 'ghost';
