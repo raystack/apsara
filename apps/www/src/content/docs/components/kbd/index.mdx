@@ -68,7 +68,7 @@ Use `Kbd` on its own for a one-key hint. Keys share a minimum width so a narrow 
 
 ### Variants
 
-`solid` is the default and suits standalone hints. Use `ghost` on surfaces that already have their own background, such as a menu row, a tooltip, or an input.
+`solid` is the default and suits standalone hints. Use `ghost` on surfaces that already have their own background, such as a command item, a tooltip, or an input.
 
 <Demo data={variantDemo} />
 
@@ -104,7 +104,7 @@ A common use is surfacing a shortcut alongside the action it triggers.
 
 ## Accessibility
 
-- `Kbd` is presentational and renders the semantic `<kbd>` element. It has no ARIA role of its own and is not exposed as a separate accessible object, so it does not change how surrounding content is announced.
-- Symbol-only keys such as `⌘`, `⇧`, or `↵` are not announced usefully on their own — they are read by their Unicode names, if at all. Add an `aria-label` when the symbol is the only cue: `<Kbd aria-label="Command">⌘</Kbd>`.
+- `Kbd` is presentational: it styles a key. The `<kbd>` element carries no ARIA role and no accessible name of its own, so it adds no semantics to the text around it.
+- A symbol on its own — `⌘`, `⇧`, `↵` — carries no name for the key it stands for, and how any given screen reader reads the bare glyph varies. Give the key a name whenever the symbol is the only cue: `<Kbd aria-label="Command">⌘</Kbd>`.
 - Keys are not focusable and carry no interaction. Keep the shortcut wired to a real handler elsewhere — `Kbd` only displays it.
-- Keys ignore pointer events and text selection, so clicking or dragging across a menu row does not highlight the key labels.
+- Keys ignore pointer events and text selection, so clicking or dragging across a command item does not highlight the key labels.
