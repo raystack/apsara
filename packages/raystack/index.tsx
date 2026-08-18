@@ -97,6 +97,7 @@ export { IconButton } from './components/icon-button';
 export { Image } from './components/image';
 export { Indicator } from './components/indicator';
 export { Input } from './components/input';
+export { Kbd } from './components/kbd';
 export { Label } from './components/label';
 export { Link } from './components/link';
 export { List } from './components/list';

@@ -10,7 +10,7 @@ import { useCommandContext } from './command-root';
 export interface CommandItemProps extends AutocompletePrimitive.Item.Props {
   /** Icon rendered at the start of the item. */
   leadingIcon?: ReactNode;
-  /** Icon rendered at the end of the item (e.g. `Command.Shortcut`). */
+  /** Icon rendered at the end of the item (e.g. a `Kbd` shortcut hint). */
   trailingIcon?: ReactNode;
 }
 
