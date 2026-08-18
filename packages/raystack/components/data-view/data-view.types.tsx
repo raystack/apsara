@@ -407,10 +407,17 @@ export interface DataViewTimelineProps<TData> {
    */
   lanePacking?: 'auto' | 'one-per-row';
   /**
-   * Estimated card height in px, same contract as `DataView.List`: cards
-   * render at their natural content height and are measured after paint; the
-   * estimate only seeds lane layout until real heights arrive. Each lane
-   * sizes to its tallest card. Default 66.
+   * Lane height in px. Default 66.
+   *
+   * Unvirtualized this is an estimate, same contract as `DataView.List`: cards
+   * render at their natural content height and are measured after paint, the
+   * estimate only seeding lane layout until real heights arrive, and each lane
+   * sizing to its tallest card.
+   *
+   * With `virtualized` it is exact. A culled card never mounts and so never
+   * measures, so measured lanes would resize under the user as they scroll —
+   * lanes take this value instead, and a card taller than it overflows its
+   * lane rather than growing it. Set it to your card's height.
    */
   estimatedRowHeight?: number;
   /** Vertical gap between lanes in px. Default 16. */
@@ -425,7 +432,13 @@ export interface DataViewTimelineProps<TData> {
    */
   estimatedPointWidth?: number;
 
-  /** When true, only cards/gridlines near the visible viewport are rendered (horizontal culling). */
+  /**
+   * Render only the cards and gridlines near the visible viewport, culling on
+   * both axes — a frame costs what's on screen rather than what's in the data.
+   * Recommended whenever the domain is long or rows are numerous.
+   *
+   * Lane heights become fixed to `estimatedRowHeight`; see the note there.
+   */
   virtualized?: boolean;
 
   /**

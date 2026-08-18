@@ -435,7 +435,7 @@ The Timeline owns **positioning** — the time scale (date → x, span → width
 
 `context.collapsed` flips when the span is narrower than `minCardWidth` (default 60px) — render a compact stub instead of letting the full card clip (point cards never collapse; they size to their content). Wrap card fields in `DataView.DisplayAccess` so the toolbar's Display Properties toggles reach them.
 
-Card height is content-driven, the same contract as `DataView.List` rows: cards auto-measure after paint, each lane sizes to its tallest card, and `estimatedRowHeight` (default 66) is only a layout hint until real heights arrive. Give your card an explicit height if you want uniform cards. Keep `renderCard` referentially stable (define it outside the component or wrap it in `useCallback`) — cards are memoized against it, and an inline closure forces every visible card to re-render on each scroll frame.
+Card height is content-driven, the same contract as `DataView.List` rows: cards auto-measure after paint, each lane sizes to its tallest card, and `estimatedRowHeight` (default 66) is only a layout hint until real heights arrive. Under `virtualized` this inverts — a culled card never reports a height, so measuring would resize lanes as you scroll and shift every lane below them. Lanes there take a fixed `estimatedRowHeight` pitch, and a card taller than it overlaps the lane below instead of growing its own. Give your card an explicit height if you want uniform cards, and keep that height within the pitch if you virtualize. Keep `renderCard` referentially stable (define it outside the component or wrap it in `useCallback`) — cards are memoized against it, and an inline closure forces every visible card to re-render on each scroll frame.
 
 ### Point markers
 
@@ -554,8 +554,8 @@ Start with `isLoading={true}` and fire an initial fetch on mount: with no data a
 ### Notes
 
 - **Grouping** renders as swim-lane sections and **sorting** only reaches `lanePacking="one-per-row"` — see [Grouping](#grouping) and [Ordering](#ordering). Hide a control that has no meaning for your configuration (`<DataView.DisplayControls hideOrdering />`), or pass the timeline a per-view `fields` override without `sortable`/`groupable`.
-- **Vertical space is not virtualized.** `virtualized` culls horizontally only, so a grouped timeline renders every section's cards that fall in the visible time window. Deep grouping over thousands of rows will render a tall canvas.
-- **`virtualized`** enables horizontal culling: only cards and gridlines near the viewport render. Recommended whenever the domain is long or rows are numerous.
+- **`virtualized`** culls both axes: cards, gridlines, tick labels, month bands, and markers render only near the viewport, and the grid and marker lines span the visible window rather than the full canvas height. A frame costs what is on screen rather than what is in the data, so a long domain and deep grouping stay affordable. It defaults to `false` — pass it explicitly. Recommended whenever the domain is long or rows are numerous.
+- **Without `virtualized`, nothing is culled vertically.** Every lane in the domain stays mounted and every card in the visible time window renders, so deep grouping over thousands of rows builds a tall, fully populated canvas. The trade is content-driven lane heights (see [Cards](#cards)), which virtualization gives up.
 - **Interaction** — cards receive row clicks via the root's `onRowClick`; the background supports mouse drag-to-pan with a momentum glide; scrolling past the domain edge won't trigger browser back-swipe. The pane is a focusable, labelled region (`aria-label`, default "Timeline"), so keyboard users can Tab to it and scroll with the arrow keys.
 
 ## Accessibility
