@@ -103,7 +103,7 @@ export interface CommandItemProps {
   /** Icon rendered before the item label. */
   leadingIcon?: React.ReactNode;
 
-  /** Node rendered after the item label (e.g. `Command.Shortcut` or an icon). */
+  /** Node rendered after the item label (e.g. a `Kbd` shortcut hint or an icon). */
   trailingIcon?: React.ReactNode;
 
   /**
@@ -127,11 +127,6 @@ export interface CommandLabelProps {
 }
 
 export interface CommandSeparatorProps {
-  /** Additional CSS class names. */
-  className?: string;
-}
-
-export interface CommandShortcutProps {
   /** Additional CSS class names. */
   className?: string;
 }

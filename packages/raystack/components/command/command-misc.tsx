@@ -2,7 +2,6 @@
 
 import { Autocomplete as AutocompletePrimitive } from '@base-ui/react/autocomplete';
 import { cx } from 'class-variance-authority';
-import { type ComponentProps } from 'react';
 import styles from './command.module.css';
 import { useCommandContext } from './command-root';
 
@@ -62,37 +61,3 @@ export const CommandSeparator = ({
   );
 };
 CommandSeparator.displayName = 'Command.Separator';
-
-export type CommandShortcutProps = ComponentProps<'span'>;
-
-export const CommandShortcut = ({
-  className,
-  children,
-  ...props
-}: CommandShortcutProps) => {
-  const keys =
-    typeof children === 'string'
-      ? children.trim().split(/\s+/).filter(Boolean)
-      : Array.isArray(children)
-        ? children
-        : [children];
-
-  return (
-    <span
-      data-slot='command-shortcut'
-      className={cx(styles.shortcut, className)}
-      {...props}
-    >
-      {keys.map((key, index) => (
-        <kbd
-          key={index}
-          data-slot='command-shortcut-key'
-          className={styles.shortcutKey}
-        >
-          {key}
-        </kbd>
-      ))}
-    </span>
-  );
-};
-CommandShortcut.displayName = 'Command.Shortcut';
