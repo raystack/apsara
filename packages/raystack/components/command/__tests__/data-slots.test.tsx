@@ -1,7 +1,6 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { expectSlots, getSlot } from '~/test-utils/data-slots';
-import { Kbd } from '../../kbd';
 import { Command } from '../command';
 
 // Mock scrollIntoView for test environment
@@ -19,12 +18,7 @@ const BasicCommand = () => (
         <Command.Label>Suggestions</Command.Label>
         <Command.Item
           leadingIcon={<span />}
-          trailingIcon={
-            <Kbd.Group variant='ghost'>
-              <Kbd>⌘</Kbd>
-              <Kbd>K</Kbd>
-            </Kbd.Group>
-          }
+          trailingIcon={<Command.Shortcut>⌘ K</Command.Shortcut>}
         >
           Calendar
         </Command.Item>
@@ -50,6 +44,8 @@ describe('Command data-slot contract', () => {
       'command-item-leading-icon',
       'command-item-label',
       'command-item-trailing-icon',
+      'command-shortcut',
+      'command-shortcut-key',
       'command-separator'
     ]);
   });

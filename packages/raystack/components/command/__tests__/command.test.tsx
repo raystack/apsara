@@ -2,8 +2,6 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { Kbd } from '../../kbd';
-import kbdStyles from '../../kbd/kbd.module.css';
 import { Command } from '../command';
 import styles from '../command.module.css';
 
@@ -315,32 +313,6 @@ describe('Command', () => {
       await waitFor(() => {
         expect(screen.queryByText('Calendar')).not.toBeInTheDocument();
       });
-    });
-  });
-
-  describe('Shortcut hints', () => {
-    it('renders a Kbd.Group passed as trailingIcon', () => {
-      const { container } = render(
-        <Command>
-          <Command.Content>
-            <Command.Item
-              trailingIcon={
-                <Kbd.Group variant='ghost'>
-                  <Kbd>⌘</Kbd>
-                  <Kbd>K</Kbd>
-                </Kbd.Group>
-              }
-            >
-              Search
-            </Command.Item>
-          </Command.Content>
-        </Command>
-      );
-      expect(screen.getByText('⌘')).toBeInTheDocument();
-      expect(screen.getByText('K')).toBeInTheDocument();
-      expect(container.querySelectorAll(`.${kbdStyles['kbd']}`)).toHaveLength(
-        2
-      );
     });
   });
 });
