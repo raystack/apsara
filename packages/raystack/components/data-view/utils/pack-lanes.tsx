@@ -1,3 +1,4 @@
+import { EMPTY_BUCKET_KEY, orderBucketKeys } from './order-bucket-keys';
 import { orderByX } from './order-by-x';
 
 export interface PackLaneItem {
@@ -45,6 +46,61 @@ export function packLanes(
   return items.length < SWEEP_MIN_ITEMS
     ? packByScan(items, gapPx, order)
     : packBySweep(items, gapPx, order);
+}
+
+/** An item plus the field-lane bucket it belongs to. `null` = no value. */
+export interface PackFieldLaneItem extends PackLaneItem {
+  laneKey: string | null;
+}
+
+/**
+ * Lane per distinct `laneKey`, packed by time within each: rows sharing a value
+ * share a lane, and a value only takes extra (sub-)lanes when two of its own
+ * cards overlap in time. Backs `lanePacking="one-per-field"`.
+ *
+ * Buckets come out in `order` where it lists them, then in first-seen order,
+ * with the no-value bucket last — the same rule `groupData` applies to sections,
+ * so lanes and sections agree (see `orderBucketKeys`). Within a bucket the
+ * greedy first-fit of `packLanes` decides sub-lanes, so a value with no
+ * overlapping cards occupies exactly one lane.
+ */
+export function packLanesByField(
+  items: PackFieldLaneItem[],
+  options: { order?: string[]; gapPx?: number } = {}
+): PackLanesResult {
+  const { order, gapPx = DEFAULT_CARD_GAP_PX } = options;
+  const lanes = new Array<number>(items.length).fill(0);
+  if (items.length === 0) return { lanes, laneCount: 0 };
+
+  // Indices per bucket, in input order — Map insertion order is the first-seen
+  // order `orderBucketKeys` expects.
+  const buckets = new Map<string, number[]>();
+  for (let index = 0; index < items.length; index++) {
+    const key = items[index].laneKey ?? EMPTY_BUCKET_KEY;
+    let bucket = buckets.get(key);
+    if (!bucket) {
+      bucket = [];
+      buckets.set(key, bucket);
+    }
+    bucket.push(index);
+  }
+
+  let laneCount = 0;
+  for (const key of orderBucketKeys([...buckets.keys()], order)) {
+    const bucket = buckets.get(key) as number[];
+    // Packing runs on the bucket alone, so lanes are bucket-relative and shift
+    // up by the lanes every earlier bucket already claimed.
+    const packed = packLanes(
+      bucket.map(index => ({ x: items[index].x, width: items[index].width })),
+      gapPx
+    );
+    for (let i = 0; i < bucket.length; i++) {
+      lanes[bucket[i]] = laneCount + packed.lanes[i];
+    }
+    laneCount += packed.laneCount;
+  }
+
+  return { lanes, laneCount };
 }
 
 /** First-fit by scanning every lane end — O(items × lanes). */

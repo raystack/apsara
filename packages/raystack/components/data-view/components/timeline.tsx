@@ -27,7 +27,7 @@ import {
 } from '../data-view.types';
 import { useDataView } from '../hooks/useDataView';
 import { orderByX } from '../utils/order-by-x';
-import { packLanes } from '../utils/pack-lanes';
+import { packLanes, packLanesByField } from '../utils/pack-lanes';
 import {
   buildAxis,
   createTimeScale,
@@ -55,6 +55,11 @@ const DEFAULT_MIN_CARD_WIDTH = 60;
 const DEFAULT_POINT_WIDTH = 120;
 /** Floor for the rendered wrapper so near-zero spans stay visible and clickable. */
 const MIN_RENDER_WIDTH = 24;
+/**
+ * Joins `laneOrder` into one memo key. A character no lane value realistically
+ * contains, so serialize-and-split round-trips the list unchanged.
+ */
+const LANE_ORDER_SEPARATOR = '\u0000';
 /** Units of padding around the data extent when no explicit `range` is given. */
 const DOMAIN_PAD_UNITS = 2;
 /** Half-window (in units) of the fallback domain used while loading with no data. */
@@ -235,6 +240,12 @@ interface TimedItem<TData> {
   startTime: number;
   /** Null when `endField` is omitted (point marker). */
   endTime: number | null;
+  /**
+   * Bucket the row falls in under `lanePacking="one-per-field"` — its
+   * `laneField` value as a string, or null for no usable value (that bucket
+   * lanes last). Null throughout for every other packing mode.
+   */
+  laneKey: string | null;
 }
 
 /** A timed row placed on the time scale. */
@@ -425,6 +436,8 @@ export function DataViewTimeline<TData>({
   onVisibleRangeChange,
   actionsRef,
   lanePacking = 'auto',
+  laneField,
+  laneOrder,
   estimatedRowHeight = DEFAULT_ROW_HEIGHT,
   laneGap = DEFAULT_LANE_GAP,
   minCardWidth = DEFAULT_MIN_CARD_WIDTH,
@@ -435,6 +448,7 @@ export function DataViewTimeline<TData>({
 }: DataViewTimelineProps<TData>) {
   const {
     table,
+    fields,
     onRowClick,
     activeView,
     registerFieldsForView,
@@ -516,11 +530,49 @@ export function DataViewTimeline<TData>({
     return list;
   }, [rows]);
 
+  // `one-per-field` needs a key to bucket rows by, so without `laneField` there
+  // is nothing to lane on and packing degrades to 'auto'; a `laneField` handed
+  // to any other mode is inert. Resolved to one flag the memos below read.
+  const fieldLanes = lanePacking === 'one-per-field' && laneField !== undefined;
+
+  // Config warnings, once per config rather than per render.
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production') return;
+    if (lanePacking === 'one-per-field' && laneField === undefined) {
+      console.warn(
+        '[DataView.Timeline] lanePacking="one-per-field" needs a `laneField` to build lanes from — falling back to "auto" packing.'
+      );
+    } else if (lanePacking !== 'one-per-field' && laneField !== undefined) {
+      console.warn(
+        `[DataView.Timeline] laneField="${laneField}" is ignored under lanePacking="${lanePacking}" — set lanePacking="one-per-field" to lane by it.`
+      );
+    }
+  }, [lanePacking, laneField]);
+
+  // Lane order: the prop, else the lane field's declared `groupOrder` (so one
+  // declaration drives both group sections and lanes). Serialized to a string
+  // and rebuilt, because an inline array literal would otherwise hand the
+  // layout memos a new identity on every render.
+  const laneOrderKey = fieldLanes
+    ? ((
+        laneOrder ??
+        fields.find(field => field.accessorKey === laneField)?.groupOrder
+      )?.join(LANE_ORDER_SEPARATOR) ?? '')
+    : '';
+  const effectiveLaneOrder = useMemo(
+    () =>
+      laneOrderKey === ''
+        ? undefined
+        : laneOrderKey.split(LANE_ORDER_SEPARATOR),
+    [laneOrderKey]
+  );
+
   // Resolve each row's start/end timestamps, per section. Rows without a valid
   // start are skipped (one dev warning for the whole model); inverted ranges
   // clamp to zero-length spans.
   const timedSections = useMemo(() => {
     let dropped = 0;
+    let unlaned = 0;
     const list = sections.map(section => {
       const items: TimedItem<TData>[] = [];
       for (const row of section.items) {
@@ -535,7 +587,19 @@ export function DataViewTimeline<TData>({
           endTime = toTimestamp(original?.[endField]);
           if (endTime !== null && endTime < startTime) endTime = startTime;
         }
-        items.push({ row, startTime, endTime });
+        // Lane bucket, resolved here so packing below is pure geometry. Only a
+        // primitive identifies a lane; anything else (an object, an array)
+        // shares the no-value lane rather than collapsing into one
+        // "[object Object]" bucket.
+        let laneKey: string | null = null;
+        if (fieldLanes) {
+          const value = original?.[laneField as string];
+          if (value == null || value === '') laneKey = null;
+          else if (typeof value === 'object' || typeof value === 'function') {
+            unlaned++;
+          } else laneKey = String(value);
+        }
+        items.push({ row, startTime, endTime, laneKey });
       }
       const timed: TimelineSection<TData, TimedItem<TData>> = {
         key: section.key,
@@ -549,8 +613,13 @@ export function DataViewTimeline<TData>({
         `[DataView.Timeline] Skipped ${dropped} row(s) with a missing or invalid "${startField}" value.`
       );
     }
+    if (process.env.NODE_ENV !== 'production' && unlaned > 0) {
+      console.warn(
+        `[DataView.Timeline] ${unlaned} row(s) have a non-primitive "${laneField}" value and share the last lane — "${laneField}" should resolve to a string or number.`
+      );
+    }
     return list;
-  }, [sections, startField, endField]);
+  }, [sections, startField, endField, fieldLanes, laneField]);
 
   // Data extent, for the domain below — grouping never changes the time domain.
   // Reduced in place rather than through a flattened copy: the extent is two
@@ -698,15 +767,27 @@ export function DataViewTimeline<TData>({
               lanes: section.items.map((_, i) => i),
               laneCount: section.items.length
             }
-          : packLanes(
-              section.items.map(item => ({ x: item.x, width: item.packWidth }))
-            );
+          : fieldLanes
+            ? packLanesByField(
+                section.items.map(item => ({
+                  laneKey: item.laneKey,
+                  x: item.x,
+                  width: item.packWidth
+                })),
+                { order: effectiveLaneOrder }
+              )
+            : packLanes(
+                section.items.map(item => ({
+                  x: item.x,
+                  width: item.packWidth
+                }))
+              );
       const entry = { ...section, ...packed, laneOffset: offset };
       offset += packed.laneCount;
       return entry;
     });
     return { laidOutSections: list, laneCount: offset };
-  }, [positionedSections, lanePacking]);
+  }, [positionedSections, lanePacking, fieldLanes, effectiveLaneOrder]);
 
   /**
    * Virtualizing vertically means a card off-screen never mounts and so never

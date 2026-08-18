@@ -112,6 +112,15 @@ export interface DataViewField {
 
   /** Override group bucket labels (key → label). */
   groupLabelsMap?: Record<string, string>;
+
+  /**
+   * Section order while this field is the active `group_by`, by raw group value —
+   * e.g. `['High', 'Medium', 'Low']`. Undeclared values follow in first-seen order,
+   * rows with no value land in the last section, and a declared value with no rows
+   * takes no section. Also the default lane order for
+   * `DataView.Timeline`'s `lanePacking="one-per-field"`.
+   */
+  groupOrder?: string[];
 }
 
 export interface DataViewListProps {
@@ -279,11 +288,29 @@ export interface DataViewTimelineProps {
 
   /**
    * `auto` packs non-overlapping cards into shared lanes; `one-per-row` gives every row
-   * its own lane, in row-model (sorted) order. Both apply per group section while
-   * `group_by` is active — cards never share a lane across sections.
+   * its own lane, in row-model (sorted) order; `one-per-field` gives every distinct
+   * `laneField` value its own lane, packing that value's cards by date within it. All
+   * apply per group section while `group_by` is active — cards never share a lane
+   * across sections.
    * @defaultValue "auto"
    */
-  lanePacking?: 'auto' | 'one-per-row';
+  lanePacking?: 'auto' | 'one-per-row' | 'one-per-field';
+
+  /**
+   * Accessor key whose values become lanes under `lanePacking="one-per-field"` — rows
+   * sharing a value share a lane, and a value only takes a sub-lane where two of its own
+   * cards overlap in time. Rows with no usable value (null, empty, non-primitive) share
+   * the last lane. Required by `one-per-field`, which falls back to `auto` without it.
+   */
+  laneField?: string;
+
+  /**
+   * Lane order for `lanePacking="one-per-field"`, by raw `laneField` value — e.g.
+   * `['High', 'Medium', 'Low']`. Undeclared values follow in first-seen row order, the
+   * no-value lane comes last, and a listed value with no rows takes no lane. Defaults to
+   * the lane field's `groupOrder`.
+   */
+  laneOrder?: string[];
 
   /**
    * Estimated card height in px, same contract as `DataView.List`: cards render at their

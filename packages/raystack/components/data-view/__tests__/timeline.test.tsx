@@ -303,6 +303,8 @@ type Order = {
   start: string | null;
   end: string | null;
   team?: string;
+  // biome-ignore lint/suspicious/noExplicitAny: one-per-field takes any value
+  priority?: any;
 };
 
 const fields: DataViewField<Order>[] = [
@@ -1783,5 +1785,373 @@ describe('DataView.Timeline actionsRef', () => {
     actionsRef.current!.scrollTo('today');
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('not rendered'));
     expect(actionsRef.current!.getVisibleRange()).toBeNull();
+  });
+});
+
+/* ─────────────────────── lanePacking="one-per-field" ─────────────────────── */
+
+/**
+ * Lanes come from a field's values: rows sharing a value share a lane, and a
+ * value only claims a sub-lane where two of its own cards overlap in time. Lane
+ * order is the `laneOrder` prop, else the field's `groupOrder`, else first-seen;
+ * rows with no usable value lane last.
+ */
+describe('DataView.Timeline field lanes', () => {
+  // Jan 5 → 80px, Jan 6 → 100px (overlaps Jan 5's span), Jan 12 → 220px (clear).
+  const tasks: Order[] = [
+    {
+      id: 't1',
+      title: 'A',
+      priority: 'Low',
+      start: '2025-01-05',
+      end: '2025-01-10'
+    },
+    {
+      id: 't2',
+      title: 'B',
+      priority: 'High',
+      start: '2025-01-05',
+      end: '2025-01-10'
+    },
+    {
+      id: 't3',
+      title: 'C',
+      priority: 'High',
+      start: '2025-01-12',
+      end: '2025-01-15'
+    },
+    {
+      id: 't4',
+      title: 'D',
+      priority: 'Medium',
+      start: '2025-01-05',
+      end: '2025-01-10'
+    }
+  ];
+
+  const priorityFields = (groupOrder?: string[]): DataViewField<Order>[] => [
+    { accessorKey: 'title', label: 'Title', sortable: true },
+    {
+      accessorKey: 'priority',
+      label: 'Priority',
+      groupable: true,
+      ...(groupOrder ? { groupOrder } : {})
+    }
+  ];
+
+  const laneOf = (id: string) =>
+    screen.getByTestId(`card-${id}`).dataset.lane as string;
+
+  const renderFieldLanes = (
+    props: Partial<DataViewTimelineProps<Order>> = {},
+    data: Order[] = tasks,
+    fieldList: DataViewField<Order>[] = priorityFields()
+  ) =>
+    renderTimeline(
+      { lanePacking: 'one-per-field', laneField: 'priority', ...props },
+      data,
+      { fields: fieldList }
+    );
+
+  it('gives each distinct value one lane, shared by its rows', () => {
+    renderFieldLanes();
+    // First-seen order over the sorted row model (title asc): Low, High, Medium.
+    expect(laneOf('t1')).toBe('0');
+    expect(laneOf('t2')).toBe('1');
+    expect(laneOf('t3')).toBe('1'); // same value as t2, no time overlap
+    expect(laneOf('t4')).toBe('2');
+  });
+
+  it('adds a sub-lane only where one value overlaps itself', () => {
+    renderFieldLanes(undefined, [
+      ...tasks,
+      // Overlaps t2 [80..180] and shares its value → High takes a second lane.
+      {
+        id: 't5',
+        title: 'E',
+        priority: 'High',
+        start: '2025-01-06',
+        end: '2025-01-09'
+      }
+    ]);
+    expect(laneOf('t2')).toBe('1');
+    expect(laneOf('t5')).toBe('2');
+    // Medium sits below every lane High claimed.
+    expect(laneOf('t4')).toBe('3');
+  });
+
+  it('orders lanes by the laneOrder prop', () => {
+    renderFieldLanes({ laneOrder: ['High', 'Medium', 'Low'] });
+    expect(laneOf('t2')).toBe('0');
+    expect(laneOf('t3')).toBe('0');
+    expect(laneOf('t4')).toBe('1');
+    expect(laneOf('t1')).toBe('2');
+  });
+
+  it("defaults lane order to the field's groupOrder", () => {
+    renderFieldLanes(
+      undefined,
+      tasks,
+      priorityFields(['High', 'Medium', 'Low'])
+    );
+    expect(laneOf('t2')).toBe('0');
+    expect(laneOf('t4')).toBe('1');
+    expect(laneOf('t1')).toBe('2');
+  });
+
+  it('lets laneOrder override the field groupOrder', () => {
+    renderFieldLanes(
+      { laneOrder: ['Low', 'Medium', 'High'] },
+      tasks,
+      priorityFields(['High', 'Medium', 'Low'])
+    );
+    expect(laneOf('t1')).toBe('0');
+    expect(laneOf('t4')).toBe('1');
+    expect(laneOf('t2')).toBe('2');
+  });
+
+  it('appends values missing from laneOrder in first-seen order', () => {
+    renderFieldLanes({ laneOrder: ['Medium'] });
+    expect(laneOf('t4')).toBe('0');
+    expect(laneOf('t1')).toBe('1'); // Low seen first
+    expect(laneOf('t2')).toBe('2');
+  });
+
+  it('ignores laneOrder values with no rows', () => {
+    renderFieldLanes({
+      laneOrder: ['Urgent', 'High', 'Blocked', 'Low', 'Medium']
+    });
+    expect(laneOf('t2')).toBe('0');
+    expect(laneOf('t1')).toBe('1');
+    expect(laneOf('t4')).toBe('2');
+  });
+
+  it('lanes rows with no value last', () => {
+    renderFieldLanes({ laneOrder: ['High', 'Medium', 'Low'] }, [
+      {
+        id: 'n1',
+        title: 'N1',
+        priority: null,
+        start: '2025-01-05',
+        end: '2025-01-10'
+      },
+      { id: 'n2', title: 'N2', start: '2025-01-12', end: '2025-01-15' },
+      {
+        id: 'n3',
+        title: 'N3',
+        priority: '',
+        start: '2025-01-20',
+        end: '2025-01-25'
+      },
+      ...tasks
+    ]);
+    expect(laneOf('t2')).toBe('0');
+    expect(laneOf('t4')).toBe('1');
+    expect(laneOf('t1')).toBe('2');
+    // null, undefined and '' share the one trailing lane.
+    expect(laneOf('n1')).toBe('3');
+    expect(laneOf('n2')).toBe('3');
+    expect(laneOf('n3')).toBe('3');
+  });
+
+  it('lanes non-primitive values last, with a dev warning', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    renderFieldLanes(undefined, [
+      {
+        id: 'obj',
+        title: 'Obj',
+        priority: { id: 'High' },
+        start: '2025-01-05',
+        end: '2025-01-10'
+      },
+      {
+        id: 'ok',
+        title: 'Ok',
+        priority: 'High',
+        start: '2025-01-12',
+        end: '2025-01-15'
+      }
+    ]);
+    expect(laneOf('ok')).toBe('0');
+    expect(laneOf('obj')).toBe('1');
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('non-primitive "priority" value')
+    );
+  });
+
+  it('keys numeric and boolean values by their string form', () => {
+    renderFieldLanes({ laneOrder: ['1', '2'] }, [
+      {
+        id: 'p1',
+        title: 'P1',
+        priority: 1,
+        start: '2025-01-05',
+        end: '2025-01-10'
+      },
+      {
+        id: 'p2',
+        title: 'P2',
+        priority: 2,
+        start: '2025-01-05',
+        end: '2025-01-10'
+      },
+      {
+        id: 'p3',
+        title: 'P3',
+        priority: 1,
+        start: '2025-01-12',
+        end: '2025-01-15'
+      }
+    ]);
+    expect(laneOf('p1')).toBe('0');
+    expect(laneOf('p3')).toBe('0');
+    expect(laneOf('p2')).toBe('1');
+  });
+
+  it('stacks lanes at the fixed pitch like any other packing', () => {
+    renderFieldLanes({ laneOrder: ['High', 'Medium', 'Low'] });
+    // lane 0 at laneGap 16, lane 1 at 16 + 66 + 16, lane 2 at 16 + 2 × 82.
+    expect(screen.getByTestId('card-t2').parentElement!.style.top).toBe('16px');
+    expect(screen.getByTestId('card-t4').parentElement!.style.top).toBe('98px');
+    expect(screen.getByTestId('card-t1').parentElement!.style.top).toBe(
+      '180px'
+    );
+  });
+
+  it('lanes per group section when group_by is active', () => {
+    const grouped: Order[] = [
+      {
+        id: 'e1',
+        title: 'E1',
+        team: 'Eng',
+        priority: 'High',
+        start: '2025-01-05',
+        end: '2025-01-10'
+      },
+      {
+        id: 'e2',
+        title: 'E2',
+        team: 'Eng',
+        priority: 'Low',
+        start: '2025-01-12',
+        end: '2025-01-15'
+      },
+      {
+        id: 'd1',
+        title: 'D1',
+        team: 'Design',
+        priority: 'Low',
+        start: '2025-01-05',
+        end: '2025-01-10'
+      }
+    ];
+    renderTimeline(
+      {
+        lanePacking: 'one-per-field',
+        laneField: 'priority',
+        laneOrder: ['High', 'Low']
+      },
+      grouped,
+      {
+        fields: [
+          { accessorKey: 'title', label: 'Title', sortable: true },
+          { accessorKey: 'team', label: 'Team', groupable: true },
+          { accessorKey: 'priority', label: 'Priority' }
+        ],
+        query: { group_by: ['team'] }
+      }
+    );
+    // Section-relative lanes: Design's only value starts back at lane 0, and a
+    // value never spans sections.
+    expect(laneOf('e1')).toBe('0');
+    expect(laneOf('e2')).toBe('1');
+    expect(laneOf('d1')).toBe('0');
+  });
+
+  it('degenerates to time packing when group_by is the lane field', () => {
+    const grouped: Order[] = [
+      {
+        id: 'h1',
+        title: 'H1',
+        priority: 'High',
+        start: '2025-01-05',
+        end: '2025-01-10'
+      },
+      {
+        id: 'h2',
+        title: 'H2',
+        priority: 'High',
+        start: '2025-01-12',
+        end: '2025-01-15'
+      },
+      {
+        id: 'l1',
+        title: 'L1',
+        priority: 'Low',
+        start: '2025-01-05',
+        end: '2025-01-10'
+      }
+    ];
+    renderTimeline(
+      { lanePacking: 'one-per-field', laneField: 'priority' },
+      grouped,
+      {
+        fields: priorityFields(['High', 'Low']),
+        query: { group_by: ['priority'] }
+      }
+    );
+    // Each section already holds one value → one lane per section.
+    expect(laneOf('h1')).toBe('0');
+    expect(laneOf('h2')).toBe('0');
+    expect(laneOf('l1')).toBe('0');
+  });
+
+  it('falls back to auto packing with a dev warning when laneField is missing', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    renderTimeline({ lanePacking: 'one-per-field' });
+    // The auto-packing expectations, unchanged: o1 and o3 overlap, o2 reuses 0.
+    expect(laneOf('o1')).toBe('0');
+    expect(laneOf('o3')).toBe('1');
+    expect(laneOf('o2')).toBe('0');
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('needs a `laneField`')
+    );
+  });
+
+  it('ignores laneField under another packing mode, with a dev warning', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    renderFieldLanes({ lanePacking: 'auto' });
+    // Time packing: t1, t2 and t4 all overlap at Jan 5 regardless of value.
+    expect(new Set([laneOf('t1'), laneOf('t2'), laneOf('t4')]).size).toBe(3);
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('laneField="priority" is ignored')
+    );
+  });
+
+  it('culls field lanes when virtualized', () => {
+    stubPane();
+    const many: Order[] = Array.from({ length: 12 }, (_, i) => ({
+      id: `v${String(i + 1).padStart(2, '0')}`,
+      title: String(i + 1).padStart(2, '0'),
+      priority: `p${String(i + 1).padStart(2, '0')}`,
+      start: '2025-01-05',
+      end: '2025-01-10'
+    }));
+    renderFieldLanes({ virtualized: true }, many, [
+      { accessorKey: 'title', label: 'Title', sortable: true },
+      { accessorKey: 'priority', label: 'Priority' }
+    ]);
+    // One lane per value at the fixed 82px pitch; the 200px pane plus overscan
+    // reaches lane 4 (top 344px) and stops before lane 5 (426px).
+    const rendered = Array.from(
+      document.querySelectorAll('[data-testid^="card-v"]')
+    ).map(card => (card as HTMLElement).dataset.testid);
+    expect(rendered).toEqual([
+      'card-v01',
+      'card-v02',
+      'card-v03',
+      'card-v04',
+      'card-v05'
+    ]);
   });
 });

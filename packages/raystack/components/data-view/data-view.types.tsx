@@ -94,6 +94,19 @@ export interface DataViewField<TData = any> {
   showGroupCount?: boolean;
   groupCountMap?: Record<string, number>;
   groupLabelsMap?: Record<string, string>;
+  /**
+   * Section order when this field is the active `group_by`, keyed by raw group
+   * value (the same keys `groupLabelsMap` uses) — e.g.
+   * `['High', 'Medium', 'Low']` for a priority field, which text sorting alone
+   * can't produce.
+   *
+   * Values absent from the list follow in first-seen data order, and rows with
+   * no value always land in the last section. A listed value with no rows
+   * produces no section. Honoured by every renderer that groups, and used by
+   * `DataView.Timeline` as the default lane order for
+   * `lanePacking="one-per-field"`.
+   */
+  groupOrder?: string[];
 }
 
 /**
@@ -402,10 +415,35 @@ export interface DataViewTimelineProps<TData> {
   /**
    * 'auto' (default) packs non-overlapping cards into shared lanes (greedy
    * interval scheduling); 'one-per-row' gives every row its own lane, in
-   * row-model (sorted) order. Both apply per group section when `group_by` is
-   * active — cards never share a lane across sections.
+   * row-model (sorted) order; 'one-per-field' gives every distinct `laneField`
+   * value its own lane, packing that value's cards by date within it. All
+   * apply per group section when `group_by` is active — cards never share a
+   * lane across sections.
    */
-  lanePacking?: 'auto' | 'one-per-row';
+  lanePacking?: 'auto' | 'one-per-row' | 'one-per-field';
+  /**
+   * Accessor key whose values become lanes under
+   * `lanePacking="one-per-field"` — e.g. `"priority"` puts every High task on
+   * one lane, every Low task on the next. Rows sharing a value share a lane,
+   * and a value only takes an extra sub-lane where two of its own cards
+   * overlap in time.
+   *
+   * Rows whose value is null, undefined, empty, or a non-primitive share one
+   * lane placed last. Required by `one-per-field` (which falls back to 'auto'
+   * without it) and ignored by the other packing modes.
+   */
+  laneField?: string;
+  /**
+   * Lane order for `lanePacking="one-per-field"`, by raw `laneField` value —
+   * e.g. `['High', 'Medium', 'Low']`, which sorting alone can't produce.
+   *
+   * Values absent from the list follow in first-seen row order, and the
+   * no-value lane always comes last. A listed value with no rows takes no
+   * lane. Defaults to the `laneField` field's `groupOrder`, so declaring the
+   * order once on the field drives both group sections and lanes; this prop
+   * overrides it for this renderer.
+   */
+  laneOrder?: string[];
   /**
    * Lane height in px. Default 66.
    *

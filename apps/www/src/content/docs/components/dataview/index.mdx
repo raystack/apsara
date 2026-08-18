@@ -18,6 +18,7 @@ import {
   perViewFieldsPreview,
   rowSelectionPreview,
   timelinePreview,
+  timelineFieldLanePreview,
   timelineGroupingPreview,
   timelinePointPreview,
 } from "./demo.ts";
@@ -419,7 +420,7 @@ In the demo below: drag the background to pan (with a momentum glide), hover for
 
 ### Cards
 
-The Timeline owns **positioning** — the time scale (date → x, span → width, using real timestamps so variable-length months don't distort placement), lane packing (non-overlapping cards share a lane; `lanePacking="one-per-row"` opts out), the sticky two-tier axis, and scrolling. You own the **card**: `renderCard(row, context)` draws everything visual, the same split as `DataView.List`'s `columns[].cell`.
+The Timeline owns **positioning** — the time scale (date → x, span → width, using real timestamps so variable-length months don't distort placement), lane packing (non-overlapping cards share a lane; `lanePacking` opts out — see [Lane packing](#lane-packing)), the sticky two-tier axis, and scrolling. You own the **card**: `renderCard(row, context)` draws everything visual, the same split as `DataView.List`'s `columns[].cell`.
 
 ```tsx
 <DataView.Timeline
@@ -443,6 +444,45 @@ Omit `endField` and rows render as point markers at their date — releases, inc
 
 <Demo data={timelinePointPreview} />
 
+### Lane packing
+
+`lanePacking` decides what a lane *means*. All three modes run per group section — a card never shares a lane across sections.
+
+| Mode | A lane is | Use it for |
+| --- | --- | --- |
+| `auto` (default) | a dense chronological track: cards that don't overlap in time share it | fitting many cards into the least vertical space |
+| `one-per-row` | one row | a Gantt chart, where every row needs its own visible track |
+| `one-per-field` | one distinct value of `laneField` | grouping by a property while keeping the flat single-axis layout |
+
+Under `one-per-field`, rows sharing a value share a lane and are packed by date within it; a value only claims a **sub-lane** where two of its own cards overlap in time. So a priority timeline shows a High lane, a Medium lane and a Low lane, and only the priority with genuinely concurrent work grows a second row.
+
+<Demo data={timelineFieldLanePreview} />
+
+```tsx
+// groupOrder ranks the values once — it orders group sections and seeds lane
+// order, which sorting can't do (text sort gives High, Low, Medium).
+const fields = [
+  { accessorKey: "priority", label: "Priority", groupable: true,
+    groupOrder: ["High", "Medium", "Low"] },
+  …
+];
+
+<DataView.Timeline
+  startField="start"
+  endField="end"
+  lanePacking="one-per-field"
+  laneField="priority"
+  // laneOrder={["High", "Medium", "Low"]} overrides groupOrder for this renderer
+  renderCard={renderCard}
+/>
+```
+
+- **Lane order** is `laneOrder`, else the lane field's `groupOrder`, else first-seen row order. Values missing from the list follow in first-seen order, and a listed value with no rows takes no lane — lanes are never empty.
+- **Rows with no usable value** — null, undefined, `""`, or a non-primitive (which also logs a dev warning) — share one lane, always last.
+- **Values are keyed by their string form**, so `1` and `"1"` land in the same lane. Resolve an object-valued field to a primitive before handing it to `laneField`.
+- **`laneField` is required** by this mode: without it there's nothing to lane on, so packing falls back to `auto` with a dev warning. Passing `laneField` under another mode warns too, and is ignored.
+- **With `group_by` active**, each section gets its own lane set and `context.laneIndex` stays section-relative. Grouping by the lane field is allowed and simply degenerates: a section already holds one value, so it renders as one lane (plus sub-lanes on overlap).
+
 ### Grouping
 
 Set `group_by` (from `DataView.DisplayControls` → Grouping, or on the initial `query`) and the timeline splits into **swim-lane sections** stacked under the single shared time axis: a full-width header band per group, that group's cards lane-packed beneath it. Horizontal position stays purely time — grouping reorganizes vertically only.
@@ -461,9 +501,11 @@ const fields = [
 </DataView>
 ```
 
-The timeline consumes the **same group rows** `DataView.List` renders as section headers — the root's `groupData` output, in first-occurrence order — so section order, labels (`groupLabelsMap`), and counts (`groupCountMap`, or the bucket size) match between views, in client and server mode alike. There's no timeline-specific grouping path to keep in sync.
+The timeline consumes the **same group rows** `DataView.List` renders as section headers — the root's `groupData` output — so section order, labels (`groupLabelsMap`), and counts (`groupCountMap`, or the bucket size) match between views, in client and server mode alike. There's no timeline-specific grouping path to keep in sync.
 
-- **Packing is per section.** A card only ever shares a lane with cards in its own group, and `context.laneIndex` is section-relative (every section starts at lane 0). `lanePacking="one-per-row"` applies within each section too.
+Section order is the field's `groupOrder` where it declares one (`['High', 'Medium', 'Low']` — the ranking sorting can't express), then values it doesn't list in first-occurrence order, with rows that have no value in the last section. A declared value with no rows renders no section.
+
+- **Packing is per section.** A card only ever shares a lane with cards in its own group, and `context.laneIndex` is section-relative (every section starts at lane 0). `lanePacking="one-per-row"` and `"one-per-field"` apply within each section too.
 - **Bands pin while their section is in view.** The active band sticks directly under the time axis and is pushed off by the next section's band; its label sticks to the left edge so it stays readable while you pan to a distant month. Always on — pure CSS, no prop.
 - **Empty sections disappear.** A group whose cards all fall outside an explicit `range` (or that has no valid `startField` values) renders nothing — no band, no empty strip. A band that *does* render shows the full group count, even when some of its cards are culled, matching List.
 - **`showGroupHeaders={false}`** hides the bands but keeps the sections — same semantics as the prop on `DataView.List`. Style a band with `classNames.groupHeader`.
@@ -473,6 +515,8 @@ Bands are labels only in this release: no chevron, no collapsing.
 ### Ordering
 
 Sort can't move a card horizontally — x is locked to the start date — so it surfaces in exactly one place: `lanePacking="one-per-row"`, where vertical row order follows the active sort (within each section when grouped). With the default `auto` packing, lanes are assigned by dense chronological first-fit and the sort has no visible effect, so hide the Ordering control (`<DataView.DisplayControls hideOrdering />`) or leave `sortable` off the timeline's per-view `fields` unless you use `one-per-row`.
+
+Under `one-per-field`, vertical order is a property ranking rather than a sort: it comes from `laneOrder` or the field's `groupOrder` (see [Lane packing](#lane-packing)), and the active sort only decides where undeclared values land.
 
 ### Scale and axis
 
@@ -553,7 +597,7 @@ Start with `isLoading={true}` and fire an initial fetch on mount: with no data a
 
 ### Notes
 
-- **Grouping** renders as swim-lane sections and **sorting** only reaches `lanePacking="one-per-row"` — see [Grouping](#grouping) and [Ordering](#ordering). Hide a control that has no meaning for your configuration (`<DataView.DisplayControls hideOrdering />`), or pass the timeline a per-view `fields` override without `sortable`/`groupable`.
+- **Grouping** renders as swim-lane sections and **sorting** only reaches `lanePacking="one-per-row"` (lane order under `one-per-field` comes from `laneOrder`/`groupOrder`) — see [Grouping](#grouping) and [Ordering](#ordering). Hide a control that has no meaning for your configuration (`<DataView.DisplayControls hideOrdering />`), or pass the timeline a per-view `fields` override without `sortable`/`groupable`.
 - **`virtualized`** culls both axes: cards, gridlines, tick labels, month bands, and markers render only near the viewport, and the grid and marker lines span the visible window rather than the full canvas height. A frame costs what is on screen rather than what is in the data, so a long domain and deep grouping stay affordable. It defaults to `false` — pass it explicitly. Recommended whenever the domain is long or rows are numerous.
 - **Without `virtualized`, nothing is culled vertically.** Every lane in the domain stays mounted and every card in the visible time window renders, so deep grouping over thousands of rows builds a tall, fully populated canvas. The trade is content-driven lane heights (see [Cards](#cards)), which virtualization gives up.
 - **Interaction** — cards receive row clicks via the root's `onRowClick`; the background supports mouse drag-to-pan with a momentum glide; scrolling past the domain edge won't trigger browser back-swipe. The pane is a focusable, labelled region (`aria-label`, default "Timeline"), so keyboard users can Tab to it and scroll with the arrow keys.

@@ -503,6 +503,46 @@ export const timelineGroupingPreview = {
   ]
 };
 
+export const timelineFieldLanePreview = {
+  type: 'code',
+  style: { padding: 0 },
+  previewCode: false,
+  code: `<DataViewTimelineFieldLaneDemo />`,
+  codePreview: [
+    {
+      label: 'index.tsx',
+      code: `
+      /* One lane per priority: rows sharing a value share a lane, and a value
+         only takes a second lane where two of its own cards overlap in time.
+         Lane order comes from the field's groupOrder, so one declaration ranks
+         both group sections and lanes:
+
+           { accessorKey: "priority", label: "Priority", groupable: true,
+             groupOrder: ["High", "Medium", "Low"] } */
+
+      <DataView
+        data={tasks}
+        fields={fields}
+        defaultSort={{ name: "start", order: "asc" }}
+        getRowId={(t) => t.id}>
+        <DataView.Toolbar>
+          <DataView.Filters />
+          <DataView.DisplayControls hideOrdering />
+        </DataView.Toolbar>
+
+        <DataView.Timeline
+          startField="start"
+          endField="end"
+          lanePacking="one-per-field"
+          laneField="priority"
+          // laneOrder={["High", "Medium", "Low"]} overrides groupOrder here
+          renderCard={(row, context) => <TaskCard task={row.original} context={context} />}
+        />
+      </DataView>`
+    }
+  ]
+};
+
 export const timelinePointPreview = {
   type: 'code',
   style: { padding: 0 },
