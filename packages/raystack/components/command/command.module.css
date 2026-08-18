@@ -102,11 +102,6 @@
   height: var(--rs-space-5);
 }
 
-.shortcut {
-  justify-content: flex-end;
-  white-space: nowrap;
-}
-
 .empty {
   padding: var(--rs-space-7) var(--rs-space-3);
   text-align: center;

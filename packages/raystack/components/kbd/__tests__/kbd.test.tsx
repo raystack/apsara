@@ -45,27 +45,36 @@ describe('Kbd', () => {
   });
 
   describe('Variants', () => {
-    it('applies the solid variant by default', () => {
-      render(<Kbd>Ctrl</Kbd>);
+    it('carries the solid styling on the base class by default', () => {
+      const kbd = render(<Kbd>Ctrl</Kbd>).getByText('Ctrl');
+      expect(kbd).toHaveClass(styles.kbd);
+      expect(kbd).not.toHaveClass(styles['kbd-solid']);
+      expect(kbd).not.toHaveClass(styles['kbd-ghost']);
+    });
+
+    it('applies the solid variant when requested', () => {
+      render(<Kbd variant='solid'>Ctrl</Kbd>);
       expect(screen.getByText('Ctrl')).toHaveClass(styles['kbd-solid']);
     });
 
     it('applies the ghost variant when requested', () => {
-      render(<Kbd variant='ghost'>Ctrl</Kbd>);
-      const kbd = screen.getByText('Ctrl');
+      const kbd = render(<Kbd variant='ghost'>Ctrl</Kbd>).getByText('Ctrl');
       expect(kbd).toHaveClass(styles['kbd-ghost']);
       expect(kbd).not.toHaveClass(styles['kbd-solid']);
     });
 
-    it('inherits the variant from a parent group', () => {
-      render(
+    it('marks the group so its keys inherit the variant in CSS', () => {
+      const { container } = render(
         <Kbd.Group variant='ghost'>
           <Kbd>⌘</Kbd>
           <Kbd>K</Kbd>
         </Kbd.Group>
       );
-      expect(screen.getByText('⌘')).toHaveClass(styles['kbd-ghost']);
-      expect(screen.getByText('K')).toHaveClass(styles['kbd-ghost']);
+      const group = container.querySelector(`.${styles['kbd-group']}`);
+      expect(group).toHaveClass(styles['kbd-group-ghost']);
+      // Keys carry no variant class of their own, so the group rule applies.
+      expect(screen.getByText('⌘')).not.toHaveClass(styles['kbd-solid']);
+      expect(screen.getByText('K')).not.toHaveClass(styles['kbd-solid']);
     });
 
     it('lets a key override the variant inherited from its group', () => {
@@ -76,16 +85,18 @@ describe('Kbd', () => {
         </Kbd.Group>
       );
       expect(screen.getByText('⌘')).toHaveClass(styles['kbd-solid']);
-      expect(screen.getByText('K')).toHaveClass(styles['kbd-ghost']);
+      expect(screen.getByText('K')).not.toHaveClass(styles['kbd-solid']);
     });
 
-    it('falls back to solid for keys in a group with no variant', () => {
-      render(
+    it('leaves a group with no variant unmarked', () => {
+      const { container } = render(
         <Kbd.Group>
           <Kbd>K</Kbd>
         </Kbd.Group>
       );
-      expect(screen.getByText('K')).toHaveClass(styles['kbd-solid']);
+      const group = container.querySelector(`.${styles['kbd-group']}`);
+      expect(group).not.toHaveClass(styles['kbd-group-ghost']);
+      expect(group).not.toHaveClass(styles['kbd-group-solid']);
     });
 
     it('does not put a key variant class on the group', () => {

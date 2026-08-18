@@ -103,7 +103,7 @@ export interface CommandItemProps {
   /** Icon rendered before the item label. */
   leadingIcon?: React.ReactNode;
 
-  /** Node rendered after the item label (e.g. `Command.Shortcut` or an icon). */
+  /** Node rendered after the item label (e.g. a `Kbd` shortcut hint or an icon). */
   trailingIcon?: React.ReactNode;
 
   /**
@@ -127,24 +127,6 @@ export interface CommandLabelProps {
 }
 
 export interface CommandSeparatorProps {
-  /** Additional CSS class names. */
-  className?: string;
-}
-
-export interface CommandShortcutProps {
-  /**
-   * The keys to display. A whitespace-separated string is split into one key
-   * per token, so `"⌘ K"` renders two keys.
-   */
-  children?: React.ReactNode;
-
-  /**
-   * Visual style variant inherited by the keys of the shortcut. A `Kbd`
-   * passed as a child keeps its own `variant`.
-   * @defaultValue "ghost"
-   */
-  variant?: 'solid' | 'ghost';
-
   /** Additional CSS class names. */
   className?: string;
 }

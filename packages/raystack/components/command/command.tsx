@@ -7,12 +7,7 @@ import {
 import { CommandEmpty } from './command-empty';
 import { CommandInput } from './command-input';
 import { CommandItem } from './command-item';
-import {
-  CommandGroup,
-  CommandLabel,
-  CommandSeparator,
-  CommandShortcut
-} from './command-misc';
+import { CommandGroup, CommandLabel, CommandSeparator } from './command-misc';
 import { CommandRoot } from './command-root';
 
 export const Command = Object.assign(CommandRoot, {
@@ -23,7 +18,6 @@ export const Command = Object.assign(CommandRoot, {
   Group: CommandGroup,
   Label: CommandLabel,
   Separator: CommandSeparator,
-  Shortcut: CommandShortcut,
   Dialog: CommandDialog,
   DialogTrigger: CommandDialogTrigger,
   DialogContent: CommandDialogContent

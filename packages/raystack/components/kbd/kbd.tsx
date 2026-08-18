@@ -1,7 +1,7 @@
 'use client';
 
-import { cva, cx, type VariantProps } from 'class-variance-authority';
-import { type ComponentProps, createContext, useContext } from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
+import type { ComponentProps } from 'react';
 import styles from './kbd.module.css';
 
 const kbd = cva(styles['kbd'], {
@@ -10,42 +10,35 @@ const kbd = cva(styles['kbd'], {
       solid: styles['kbd-solid'],
       ghost: styles['kbd-ghost']
     }
-  },
-  defaultVariants: {
-    variant: 'solid'
   }
 });
 
-type KbdVariant = NonNullable<VariantProps<typeof kbd>['variant']>;
-
-const KbdGroupContext = createContext<KbdVariant | undefined>(undefined);
+const kbdGroup = cva(styles['kbd-group'], {
+  variants: {
+    variant: {
+      solid: styles['kbd-group-solid'],
+      ghost: styles['kbd-group-ghost']
+    }
+  }
+});
 
 export type KbdProps = ComponentProps<'kbd'> & VariantProps<typeof kbd>;
 
-const KbdRoot = ({ className, variant, ...props }: KbdProps) => {
-  const groupVariant = useContext(KbdGroupContext);
-
-  return (
-    <kbd
-      data-slot='kbd'
-      className={kbd({ variant: variant ?? groupVariant, className })}
-      {...props}
-    />
-  );
-};
+const KbdRoot = ({ className, variant, ...props }: KbdProps) => (
+  <kbd data-slot='kbd' className={kbd({ variant, className })} {...props} />
+);
 
 KbdRoot.displayName = 'Kbd';
 
-export type KbdGroupProps = ComponentProps<'kbd'> & VariantProps<typeof kbd>;
+export type KbdGroupProps = ComponentProps<'kbd'> &
+  VariantProps<typeof kbdGroup>;
 
 const KbdGroup = ({ className, variant, ...props }: KbdGroupProps) => (
-  <KbdGroupContext.Provider value={variant ?? undefined}>
-    <kbd
-      data-slot='kbd-group'
-      className={cx(styles['kbd-group'], className)}
-      {...props}
-    />
-  </KbdGroupContext.Provider>
+  <kbd
+    data-slot='kbd-group'
+    className={kbdGroup({ variant, className })}
+    {...props}
+  />
 );
 
 KbdGroup.displayName = 'Kbd.Group';
