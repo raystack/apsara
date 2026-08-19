@@ -503,11 +503,11 @@ export const timelineGroupingPreview = {
   ]
 };
 
-export const timelineFieldLanePreview = {
+export const timelineSortValueLanePreview = {
   type: 'code',
   style: { padding: 0 },
   previewCode: false,
-  code: `<DataViewTimelineFieldLaneDemo />`,
+  code: `<DataViewTimelineSortValueLaneDemo />`,
   codePreview: [
     {
       label: 'index.tsx',
@@ -533,7 +533,7 @@ export const timelineFieldLanePreview = {
         <DataView.Timeline
           startField="start"
           endField="end"
-          lanePacking="one-per-field"
+          lanePacking="one-per-sort-value"
           renderCard={(row, context) => <TaskCard task={row.original} context={context} />}
         />
       </DataView>`

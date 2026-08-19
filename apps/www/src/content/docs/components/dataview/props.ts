@@ -287,18 +287,18 @@ export interface DataViewTimelineProps {
 
   /**
    * `auto` packs non-overlapping cards into shared lanes; `one-per-row` gives every row
-   * its own lane, in row-model (sorted) order; `one-per-field` gives every distinct value
+   * its own lane, in row-model (sorted) order; `one-per-sort-value` gives every distinct value
    * of the *sorted-by* field its own lane, packing that value's cards by date within it.
    * All apply per group section while `group_by` is active — cards never share a lane
    * across sections.
    *
-   * Under `one-per-field` the active sort picks the field lanes are built from and orders
+   * Under `one-per-sort-value` the active sort picks the field lanes are built from and orders
    * them, so the Ordering control moves lanes live. Rank values that don't sort naturally
    * (High/Medium/Low) with a numeric field and sort on that. Rows with no usable value
    * (null, empty, non-primitive) share the last lane.
    * @defaultValue "auto"
    */
-  lanePacking?: 'auto' | 'one-per-row' | 'one-per-field';
+  lanePacking?: 'auto' | 'one-per-row' | 'one-per-sort-value';
 
   /**
    * Estimated card height in px, same contract as `DataView.List`: cards render at their

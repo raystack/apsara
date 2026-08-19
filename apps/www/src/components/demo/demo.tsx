@@ -49,9 +49,9 @@ import {
   DataViewSelectionDemo,
   DataViewTableDemo,
   DataViewTimelineDemo,
-  DataViewTimelineFieldLaneDemo,
   DataViewTimelineGroupingDemo,
   DataViewTimelinePointDemo,
+  DataViewTimelineSortValueLaneDemo,
   DataViewVirtualizedDemo,
   DataViewVirtualizedGroupingDemo
 } from '../dataview-demo';
@@ -85,7 +85,7 @@ export default function Demo(props: DemoProps) {
       DataViewSearchDemo,
       DataViewSelectionDemo,
       DataViewTimelineDemo,
-      DataViewTimelineFieldLaneDemo,
+      DataViewTimelineSortValueLaneDemo,
       DataViewTimelineGroupingDemo,
       DataViewTimelinePointDemo,
       ChipInputDemo,

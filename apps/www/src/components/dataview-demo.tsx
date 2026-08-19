@@ -674,7 +674,7 @@ type Task = {
   priority: 'High' | 'Medium' | 'Low';
   /* Priority as a number. Sorting the label alphabetically gives High, Low,
      Medium — this is what "sort by priority" has to mean to be useful, and it
-     is what the field-lane timeline lanes on. */
+     is what the sort-value lane timeline lanes on. */
   rank: 1 | 2 | 3;
   start: string;
   end: string;
@@ -798,7 +798,7 @@ const taskFields: DataViewField<Task>[] = [
     ]
   },
   {
-    // Sortable because the field-lane timeline lanes by whatever is sorted:
+    // Sortable because the sort-value lane timeline lanes by whatever is sorted:
     // sorting on rank yields a High lane, a Medium lane and a Low lane.
     accessorKey: 'rank',
     label: 'Priority rank',
@@ -1090,9 +1090,9 @@ export function DataViewTimelineGroupingDemo() {
   );
 }
 
-/* ── Timeline field-lane demo (lanePacking="one-per-field") ────────────── */
+/* ── Timeline sort-value lane demo (lanePacking="one-per-sort-value") ────────────── */
 
-export function DataViewTimelineFieldLaneDemo() {
+export function DataViewTimelineSortValueLaneDemo() {
   return (
     <Flex
       direction='column'
@@ -1118,7 +1118,7 @@ export function DataViewTimelineFieldLaneDemo() {
           <DataView.Timeline<Task>
             startField='start'
             endField='end'
-            lanePacking='one-per-field'
+            lanePacking='one-per-sort-value'
             renderCard={(row, context) => (
               <TaskCard task={row.original} context={context} />
             )}

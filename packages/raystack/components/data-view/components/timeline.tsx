@@ -27,7 +27,7 @@ import {
 } from '../data-view.types';
 import { useDataView } from '../hooks/useDataView';
 import { orderByX } from '../utils/order-by-x';
-import { packLanes, packLanesByField } from '../utils/pack-lanes';
+import { packLanes, packLanesBySortValue } from '../utils/pack-lanes';
 import {
   buildAxis,
   createTimeScale,
@@ -236,7 +236,7 @@ interface TimedItem<TData> {
   /** Null when `endField` is omitted (point marker). */
   endTime: number | null;
   /**
-   * Bucket the row falls in under `lanePacking="one-per-field"` — its
+   * Bucket the row falls in under `lanePacking="one-per-sort-value"` — its
    * `laneField` value as a string, or null for no usable value (that bucket
    * lanes last). Null throughout for every other packing mode.
    */
@@ -522,14 +522,15 @@ export function DataViewTimeline<TData>({
     return list;
   }, [rows]);
 
-  // `one-per-field` lanes by the field the view is *sorted* by: the row model
+  // `one-per-sort-value` lanes by the field the view is *sorted* by: the row model
   // already arrives grouped and ranked by it, so lane membership and lane order
   // both fall out of the active sort — no second ordering vocabulary, and the
   // Ordering control repositions lanes live. Falls back to 'auto' if the query
   // somehow carries no sort (the root requires `defaultSort`, so this is a
   // guard rather than a mode).
   const laneField = tableQuery.sort?.[0]?.name;
-  const fieldLanes = lanePacking === 'one-per-field' && laneField !== undefined;
+  const fieldLanes =
+    lanePacking === 'one-per-sort-value' && laneField !== undefined;
 
   // Resolve each row's start/end timestamps, per section. Rows without a valid
   // start are skipped (one dev warning for the whole model); inverted ranges
@@ -579,7 +580,7 @@ export function DataViewTimeline<TData>({
     }
     if (process.env.NODE_ENV !== 'production' && unlaned > 0) {
       console.warn(
-        `[DataView.Timeline] ${unlaned} row(s) have a non-primitive "${laneField}" value and share the last lane — the sorted-by field should resolve to a string or number under lanePacking="one-per-field".`
+        `[DataView.Timeline] ${unlaned} row(s) have a non-primitive "${laneField}" value and share the last lane — the sorted-by field should resolve to a string or number under lanePacking="one-per-sort-value".`
       );
     }
     return list;
@@ -732,7 +733,7 @@ export function DataViewTimeline<TData>({
               laneCount: section.items.length
             }
           : fieldLanes
-            ? packLanesByField(
+            ? packLanesBySortValue(
                 section.items.map(item => ({
                   laneKey: item.laneKey,
                   x: item.x,

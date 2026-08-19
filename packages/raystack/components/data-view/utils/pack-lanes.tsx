@@ -48,15 +48,15 @@ export function packLanes(
     : packBySweep(items, gapPx, order);
 }
 
-/** An item plus the field-lane bucket it belongs to. `null` = no value. */
-export interface PackFieldLaneItem extends PackLaneItem {
+/** An item plus the sort-value lane bucket it belongs to. `null` = no value. */
+export interface PackSortValueLaneItem extends PackLaneItem {
   laneKey: string | null;
 }
 
 /**
  * Lane per distinct `laneKey`, packed by time within each: rows sharing a value
  * share a lane, and a value only takes extra (sub-)lanes when two of its own
- * cards overlap in time. Backs `lanePacking="one-per-field"`.
+ * cards overlap in time. Backs `lanePacking="one-per-sort-value"`.
  *
  * Buckets come out in first-seen order, with the no-value bucket last — the
  * same rule `groupData` applies to sections (see `orderBucketKeys`). Callers
@@ -65,8 +65,8 @@ export interface PackFieldLaneItem extends PackLaneItem {
  * of `packLanes` decides sub-lanes, so a value with no overlapping cards
  * occupies exactly one lane.
  */
-export function packLanesByField(
-  items: PackFieldLaneItem[],
+export function packLanesBySortValue(
+  items: PackSortValueLaneItem[],
   gapPx: number = DEFAULT_CARD_GAP_PX
 ): PackLanesResult {
   const lanes = new Array<number>(items.length).fill(0);

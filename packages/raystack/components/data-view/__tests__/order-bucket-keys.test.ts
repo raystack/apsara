@@ -3,7 +3,7 @@ import { EMPTY_BUCKET_KEY, orderBucketKeys } from '../utils/order-bucket-keys';
 
 /**
  * `orderBucketKeys` is the single ordering rule shared by `groupData`'s
- * sections and Timeline's field lanes: declared order first, undeclared in
+ * sections and Timeline's sort-value lanes: declared order first, undeclared in
  * first-seen order, the empty bucket last. Both callers treat its output as
  * visible layout, so every clause below is observable API.
  */

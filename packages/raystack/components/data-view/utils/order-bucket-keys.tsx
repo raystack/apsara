@@ -17,7 +17,7 @@ export const EMPTY_BUCKET_KEY = '';
  * appears in `order`, so a declared list doesn't have to mention it.
  *
  * Shared by `groupData` (section order for every renderer) and
- * `packLanesByField` (Timeline lane order) so sections and lanes can never
+ * `packLanesBySortValue` (Timeline lane order) so sections and lanes can never
  * disagree about where a value sits.
  */
 export function orderBucketKeys(keys: string[], order?: string[]): string[] {

@@ -413,19 +413,19 @@ export interface DataViewTimelineProps<TData> {
   /**
    * 'auto' (default) packs non-overlapping cards into shared lanes (greedy
    * interval scheduling); 'one-per-row' gives every row its own lane, in
-   * row-model (sorted) order; 'one-per-field' gives every distinct value of
+   * row-model (sorted) order; 'one-per-sort-value' gives every distinct value of
    * the **sorted-by** field its own lane, packing that value's cards by date
    * within it. All apply per group section when `group_by` is active — cards
    * never share a lane across sections.
    *
-   * Under 'one-per-field' the active sort does double duty: it picks the field
+   * Under 'one-per-sort-value' the active sort does double duty: it picks the field
    * lanes are built from (sort by `priority` → a High lane, a Medium lane, a
    * Low lane) and it orders them, so the Ordering control repositions lanes
    * live. Lane order is the sort's order, so rank values that don't sort
    * naturally (High/Medium/Low) with a numeric field and sort on that. Rows
    * whose value is null, empty, or a non-primitive share one lane, placed last.
    */
-  lanePacking?: 'auto' | 'one-per-row' | 'one-per-field';
+  lanePacking?: 'auto' | 'one-per-row' | 'one-per-sort-value';
   /**
    * Lane height in px. Default 66.
    *

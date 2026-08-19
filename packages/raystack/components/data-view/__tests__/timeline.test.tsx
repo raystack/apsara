@@ -303,7 +303,7 @@ type Order = {
   start: string | null;
   end: string | null;
   team?: string;
-  // biome-ignore lint/suspicious/noExplicitAny: one-per-field takes any value
+  // biome-ignore lint/suspicious/noExplicitAny: one-per-sort-value takes any value
   priority?: any;
   rank?: number;
 };
@@ -1789,7 +1789,7 @@ describe('DataView.Timeline actionsRef', () => {
   });
 });
 
-/* ─────────────────────── lanePacking="one-per-field" ─────────────────────── */
+/* ─────────────────────── lanePacking="one-per-sort-value" ─────────────────────── */
 
 /**
  * Lanes come from the field the view is *sorted* by: rows sharing a value share
@@ -1797,7 +1797,7 @@ describe('DataView.Timeline actionsRef', () => {
  * in time. The sort orders the lanes too, so the Ordering control moves them.
  * Rows with no usable value lane last.
  */
-describe('DataView.Timeline field lanes', () => {
+describe('DataView.Timeline sort-value lanes', () => {
   // Jan 5 → 80px, Jan 6 → 100px (overlaps Jan 5's span), Jan 12 → 220px (clear).
   // `rank` is the numeric ranking of `priority`, for sorts that need High before
   // Medium before Low — alphabetically that order is impossible.
@@ -1845,7 +1845,7 @@ describe('DataView.Timeline field lanes', () => {
   const laneOf = (id: string) =>
     screen.getByTestId(`card-${id}`).dataset.lane as string;
 
-  const renderFieldLanes = (
+  const renderSortValueLanes = (
     props: Partial<DataViewTimelineProps<Order>> = {},
     data: Order[] = tasks,
     root: {
@@ -1854,14 +1854,14 @@ describe('DataView.Timeline field lanes', () => {
       query?: DataViewQuery;
     } = {}
   ) =>
-    renderTimeline({ lanePacking: 'one-per-field', ...props }, data, {
+    renderTimeline({ lanePacking: 'one-per-sort-value', ...props }, data, {
       fields: root.fields ?? sortableFields,
       sort: root.sort ?? { name: 'priority', order: 'asc' },
       query: root.query
     });
 
   it('lanes by the sorted-by field, one lane per value', () => {
-    renderFieldLanes();
+    renderSortValueLanes();
     // priority asc → High, Low, Medium (text order).
     expect(laneOf('t2')).toBe('0');
     expect(laneOf('t3')).toBe('0'); // same value as t2, no time overlap
@@ -1870,7 +1870,7 @@ describe('DataView.Timeline field lanes', () => {
   });
 
   it('reorders lanes when the sort direction flips', () => {
-    renderFieldLanes(undefined, tasks, {
+    renderSortValueLanes(undefined, tasks, {
       sort: { name: 'priority', order: 'desc' }
     });
     expect(laneOf('t4')).toBe('0');
@@ -1879,7 +1879,7 @@ describe('DataView.Timeline field lanes', () => {
   });
 
   it("lanes by a rank field for orders text sorting can't produce", () => {
-    renderFieldLanes(undefined, tasks, {
+    renderSortValueLanes(undefined, tasks, {
       sort: { name: 'rank', order: 'asc' }
     });
     // rank asc → High(1), Medium(2), Low(3).
@@ -1892,14 +1892,14 @@ describe('DataView.Timeline field lanes', () => {
   it('relanes when the sort field changes', () => {
     // Sorting by title instead lanes by title — every value distinct, so one
     // lane per row, in title order.
-    renderFieldLanes(undefined, tasks, {
+    renderSortValueLanes(undefined, tasks, {
       sort: { name: 'title', order: 'asc' }
     });
     expect(['t1', 't2', 't3', 't4'].map(laneOf)).toEqual(['0', '1', '2', '3']);
   });
 
   it('adds a sub-lane only where one value overlaps itself', () => {
-    renderFieldLanes(undefined, [
+    renderSortValueLanes(undefined, [
       ...tasks,
       // Overlaps t2 [80..180] and shares its value → High takes a second lane.
       {
@@ -1918,7 +1918,7 @@ describe('DataView.Timeline field lanes', () => {
   });
 
   it('lanes rows with no value last, whatever the sort puts first', () => {
-    renderFieldLanes(undefined, [
+    renderSortValueLanes(undefined, [
       {
         id: 'n1',
         title: 'N1',
@@ -1955,7 +1955,7 @@ describe('DataView.Timeline field lanes', () => {
 
   it('lanes non-primitive values last, with a dev warning', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    renderFieldLanes(undefined, [
+    renderSortValueLanes(undefined, [
       {
         id: 'obj',
         title: 'Obj',
@@ -1981,7 +1981,7 @@ describe('DataView.Timeline field lanes', () => {
   });
 
   it('keys numeric values by their string form', () => {
-    renderFieldLanes(
+    renderSortValueLanes(
       undefined,
       [
         {
@@ -2017,7 +2017,7 @@ describe('DataView.Timeline field lanes', () => {
   });
 
   it('stacks lanes at the fixed pitch like any other packing', () => {
-    renderFieldLanes(undefined, tasks, {
+    renderSortValueLanes(undefined, tasks, {
       sort: { name: 'rank', order: 'asc' }
     });
     // lane 0 at laneGap 16, lane 1 at 16 + 66 + 16, lane 2 at 16 + 2 × 82.
@@ -2058,7 +2058,7 @@ describe('DataView.Timeline field lanes', () => {
         end: '2025-01-10'
       }
     ];
-    renderFieldLanes(undefined, grouped, {
+    renderSortValueLanes(undefined, grouped, {
       fields: [
         ...sortableFields,
         { accessorKey: 'team', label: 'Team', groupable: true }
@@ -2099,7 +2099,7 @@ describe('DataView.Timeline field lanes', () => {
         end: '2025-01-10'
       }
     ];
-    renderFieldLanes(undefined, grouped, {
+    renderSortValueLanes(undefined, grouped, {
       fields: [
         { accessorKey: 'title', label: 'Title', sortable: true },
         {
@@ -2118,7 +2118,7 @@ describe('DataView.Timeline field lanes', () => {
     expect(laneOf('l1')).toBe('0');
   });
 
-  it('culls field lanes when virtualized', () => {
+  it('culls sort-value lanes when virtualized', () => {
     stubPane();
     const many: Order[] = Array.from({ length: 12 }, (_, i) => ({
       id: `v${String(i + 1).padStart(2, '0')}`,
@@ -2127,7 +2127,7 @@ describe('DataView.Timeline field lanes', () => {
       start: '2025-01-05',
       end: '2025-01-10'
     }));
-    renderFieldLanes({ virtualized: true }, many);
+    renderSortValueLanes({ virtualized: true }, many);
     // One lane per value at the fixed 82px pitch; the 200px pane plus overscan
     // reaches lane 4 (top 344px) and stops before lane 5 (426px).
     const rendered = Array.from(
