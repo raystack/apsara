@@ -672,8 +672,18 @@ type Task = {
   team: 'Eng' | 'Design' | 'Ops';
   status: 'todo' | 'active' | 'done';
   priority: 'High' | 'Medium' | 'Low';
+  /* Priority as a number. Sorting the label alphabetically gives High, Low,
+     Medium — this is what "sort by priority" has to mean to be useful, and it
+     is what the field-lane timeline lanes on. */
+  rank: 1 | 2 | 3;
   start: string;
   end: string;
+};
+
+const TASK_RANK: Record<Task['priority'], Task['rank']> = {
+  High: 1,
+  Medium: 2,
+  Low: 3
 };
 
 const TASK_DAY_MS = 86_400_000;
@@ -726,6 +736,7 @@ const tasks: Task[] = taskSpec.map(
     team,
     status,
     priority,
+    rank: TASK_RANK[priority],
     start: taskDate(from),
     end: taskDate(to)
   })
@@ -775,9 +786,8 @@ const taskFields: DataViewField<Task>[] = [
     filterable: true,
     filterType: 'select',
     hideable: true,
-    // groupOrder ranks the values once — it orders group sections *and* seeds
-    // lane order for lanePacking="one-per-field", which sorting can't do
-    // (text sort would give High, Low, Medium).
+    // groupOrder ranks the sections when grouping by priority — text sort
+    // would give High, Low, Medium.
     groupable: true,
     showGroupCount: true,
     groupOrder: ['High', 'Medium', 'Low'],
@@ -786,6 +796,15 @@ const taskFields: DataViewField<Task>[] = [
       { label: 'Medium', value: 'Medium' },
       { label: 'Low', value: 'Low' }
     ]
+  },
+  {
+    // Sortable because the field-lane timeline lanes by whatever is sorted:
+    // sorting on rank yields a High lane, a Medium lane and a Low lane.
+    accessorKey: 'rank',
+    label: 'Priority rank',
+    sortable: true,
+    hideable: true,
+    defaultHidden: true
   },
   {
     accessorKey: 'start',
@@ -1082,12 +1101,14 @@ export function DataViewTimelineFieldLaneDemo() {
       <DataView<Task>
         data={tasks}
         fields={taskFields}
-        defaultSort={{ name: 'start', order: 'asc' }}
+        // The sort defines the lanes: rank asc → High, Medium, Low.
+        defaultSort={{ name: 'rank', order: 'asc' }}
         getRowId={task => task.id}
       >
         <DataView.Toolbar>
           <DataView.Filters />
-          <DataView.DisplayControls hideOrdering />
+          {/* Ordering stays visible — it repositions and rebuilds lanes. */}
+          <DataView.DisplayControls />
         </DataView.Toolbar>
         <Flex
           direction='column'
@@ -1098,9 +1119,6 @@ export function DataViewTimelineFieldLaneDemo() {
             startField='start'
             endField='end'
             lanePacking='one-per-field'
-            laneField='priority'
-            // Lane order comes from the priority field's groupOrder; pass
-            // laneOrder here to override it for this renderer only.
             renderCard={(row, context) => (
               <TaskCard task={row.original} context={context} />
             )}

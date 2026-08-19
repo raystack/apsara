@@ -58,17 +58,17 @@ export interface PackFieldLaneItem extends PackLaneItem {
  * share a lane, and a value only takes extra (sub-)lanes when two of its own
  * cards overlap in time. Backs `lanePacking="one-per-field"`.
  *
- * Buckets come out in `order` where it lists them, then in first-seen order,
- * with the no-value bucket last — the same rule `groupData` applies to sections,
- * so lanes and sections agree (see `orderBucketKeys`). Within a bucket the
- * greedy first-fit of `packLanes` decides sub-lanes, so a value with no
- * overlapping cards occupies exactly one lane.
+ * Buckets come out in first-seen order, with the no-value bucket last — the
+ * same rule `groupData` applies to sections (see `orderBucketKeys`). Callers
+ * hand over an already-ordered list (the timeline passes the sorted row model),
+ * so first-seen *is* the caller's order. Within a bucket the greedy first-fit
+ * of `packLanes` decides sub-lanes, so a value with no overlapping cards
+ * occupies exactly one lane.
  */
 export function packLanesByField(
   items: PackFieldLaneItem[],
-  options: { order?: string[]; gapPx?: number } = {}
+  gapPx: number = DEFAULT_CARD_GAP_PX
 ): PackLanesResult {
-  const { order, gapPx = DEFAULT_CARD_GAP_PX } = options;
   const lanes = new Array<number>(items.length).fill(0);
   if (items.length === 0) return { lanes, laneCount: 0 };
 
@@ -86,7 +86,7 @@ export function packLanesByField(
   }
 
   let laneCount = 0;
-  for (const key of orderBucketKeys([...buckets.keys()], order)) {
+  for (const key of orderBucketKeys([...buckets.keys()])) {
     const bucket = buckets.get(key) as number[];
     // Packing runs on the bucket alone, so lanes are bucket-relative and shift
     // up by the lanes every earlier bucket already claimed.

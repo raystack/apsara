@@ -514,28 +514,26 @@ export const timelineFieldLanePreview = {
       code: `
       /* One lane per priority: rows sharing a value share a lane, and a value
          only takes a second lane where two of its own cards overlap in time.
-         Lane order comes from the field's groupOrder, so one declaration ranks
-         both group sections and lanes:
+         The sort picks the lane field and orders the lanes, so try the Ordering
+         control. Sorting the "High"/"Medium"/"Low" label alphabetically gives
+         High, Low, Medium — carry a numeric rank and sort on that instead:
 
-           { accessorKey: "priority", label: "Priority", groupable: true,
-             groupOrder: ["High", "Medium", "Low"] } */
+           { accessorKey: "rank", label: "Priority rank", sortable: true } */
 
       <DataView
         data={tasks}
         fields={fields}
-        defaultSort={{ name: "start", order: "asc" }}
+        defaultSort={{ name: "rank", order: "asc" }}
         getRowId={(t) => t.id}>
         <DataView.Toolbar>
           <DataView.Filters />
-          <DataView.DisplayControls hideOrdering />
+          <DataView.DisplayControls />
         </DataView.Toolbar>
 
         <DataView.Timeline
           startField="start"
           endField="end"
           lanePacking="one-per-field"
-          laneField="priority"
-          // laneOrder={["High", "Medium", "Low"]} overrides groupOrder here
           renderCard={(row, context) => <TaskCard task={row.original} context={context} />}
         />
       </DataView>`

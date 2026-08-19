@@ -331,16 +331,12 @@ describe('packLanesByField', () => {
     });
   });
 
-  it('orders buckets first-seen when no order is given', () => {
+  it("orders buckets first-seen — the caller's order", () => {
     const items = [item('Low', 0), item('High', 0), item('Medium', 0)];
     expect(packLanesByField(items).lanes).toEqual([0, 1, 2]);
-  });
-
-  it('follows a declared order', () => {
-    const items = [item('Low', 0), item('High', 0), item('Medium', 0)];
-    expect(
-      packLanesByField(items, { order: ['High', 'Medium', 'Low'] }).lanes
-    ).toEqual([2, 0, 1]);
+    // Same values, caller-sorted differently → lanes follow the new order.
+    const resorted = [item('High', 0), item('Low', 0), item('Medium', 0)];
+    expect(packLanesByField(resorted).lanes).toEqual([0, 1, 2]);
   });
 
   it('adds a sub-lane only where a value overlaps itself', () => {
@@ -350,7 +346,7 @@ describe('packLanesByField', () => {
       item('High', 400),
       item('Low', 0)
     ];
-    expect(packLanesByField(items, { order: ['High', 'Low'] })).toEqual({
+    expect(packLanesByField(items)).toEqual({
       lanes: [0, 1, 0, 2],
       laneCount: 3
     });
@@ -364,7 +360,7 @@ describe('packLanesByField', () => {
       item('Low', 0),
       item('Low', 10) // two overlapping → lanes 3,4
     ];
-    expect(packLanesByField(items, { order: ['High', 'Low'] })).toEqual({
+    expect(packLanesByField(items)).toEqual({
       lanes: [0, 1, 2, 3, 4],
       laneCount: 5
     });
@@ -383,19 +379,11 @@ describe('packLanesByField', () => {
     });
   });
 
-  it('ignores declared values with no items', () => {
-    const items = [item('Low', 0), item('High', 0)];
-    expect(
-      packLanesByField(items, { order: ['Urgent', 'High', 'Blocked', 'Low'] })
-        .lanes
-    ).toEqual([1, 0]);
-  });
-
   it('honours gapPx when deciding a bucket sub-lane', () => {
     // Same bucket, 50px apart: a 60px gap forces a sub-lane, 8px does not.
     const items = [item('High', 0, 40), item('High', 50, 40)];
-    expect(packLanesByField(items, { gapPx: 8 }).laneCount).toBe(1);
-    expect(packLanesByField(items, { gapPx: 60 }).laneCount).toBe(2);
+    expect(packLanesByField(items, 8).laneCount).toBe(1);
+    expect(packLanesByField(items, 60).laneCount).toBe(2);
   });
 
   it('packs a single bucket exactly like packLanes', () => {
@@ -439,7 +427,7 @@ describe('packLanesByField', () => {
       ...it,
       laneKey: KEYS[i % KEYS.length]
     }));
-    const { lanes } = packLanesByField(items, { order: KEYS });
+    const { lanes } = packLanesByField(items);
     const keyByLane = new Map<number, string | null>();
     lanes.forEach((lane, index) => {
       const seen = keyByLane.get(lane);

@@ -305,6 +305,7 @@ type Order = {
   team?: string;
   // biome-ignore lint/suspicious/noExplicitAny: one-per-field takes any value
   priority?: any;
+  rank?: number;
 };
 
 const fields: DataViewField<Order>[] = [
@@ -1791,18 +1792,21 @@ describe('DataView.Timeline actionsRef', () => {
 /* ─────────────────────── lanePacking="one-per-field" ─────────────────────── */
 
 /**
- * Lanes come from a field's values: rows sharing a value share a lane, and a
- * value only claims a sub-lane where two of its own cards overlap in time. Lane
- * order is the `laneOrder` prop, else the field's `groupOrder`, else first-seen;
- * rows with no usable value lane last.
+ * Lanes come from the field the view is *sorted* by: rows sharing a value share
+ * a lane, and a value only claims a sub-lane where two of its own cards overlap
+ * in time. The sort orders the lanes too, so the Ordering control moves them.
+ * Rows with no usable value lane last.
  */
 describe('DataView.Timeline field lanes', () => {
   // Jan 5 → 80px, Jan 6 → 100px (overlaps Jan 5's span), Jan 12 → 220px (clear).
+  // `rank` is the numeric ranking of `priority`, for sorts that need High before
+  // Medium before Low — alphabetically that order is impossible.
   const tasks: Order[] = [
     {
       id: 't1',
       title: 'A',
       priority: 'Low',
+      rank: 3,
       start: '2025-01-05',
       end: '2025-01-10'
     },
@@ -1810,6 +1814,7 @@ describe('DataView.Timeline field lanes', () => {
       id: 't2',
       title: 'B',
       priority: 'High',
+      rank: 1,
       start: '2025-01-05',
       end: '2025-01-10'
     },
@@ -1817,6 +1822,7 @@ describe('DataView.Timeline field lanes', () => {
       id: 't3',
       title: 'C',
       priority: 'High',
+      rank: 1,
       start: '2025-01-12',
       end: '2025-01-15'
     },
@@ -1824,19 +1830,16 @@ describe('DataView.Timeline field lanes', () => {
       id: 't4',
       title: 'D',
       priority: 'Medium',
+      rank: 2,
       start: '2025-01-05',
       end: '2025-01-10'
     }
   ];
 
-  const priorityFields = (groupOrder?: string[]): DataViewField<Order>[] => [
+  const sortableFields: DataViewField<Order>[] = [
     { accessorKey: 'title', label: 'Title', sortable: true },
-    {
-      accessorKey: 'priority',
-      label: 'Priority',
-      groupable: true,
-      ...(groupOrder ? { groupOrder } : {})
-    }
+    { accessorKey: 'priority', label: 'Priority', sortable: true },
+    { accessorKey: 'rank', label: 'Rank', sortable: true }
   ];
 
   const laneOf = (id: string) =>
@@ -1845,21 +1848,54 @@ describe('DataView.Timeline field lanes', () => {
   const renderFieldLanes = (
     props: Partial<DataViewTimelineProps<Order>> = {},
     data: Order[] = tasks,
-    fieldList: DataViewField<Order>[] = priorityFields()
+    root: {
+      sort?: { name: string; order: 'asc' | 'desc' };
+      fields?: DataViewField<Order>[];
+      query?: DataViewQuery;
+    } = {}
   ) =>
-    renderTimeline(
-      { lanePacking: 'one-per-field', laneField: 'priority', ...props },
-      data,
-      { fields: fieldList }
-    );
+    renderTimeline({ lanePacking: 'one-per-field', ...props }, data, {
+      fields: root.fields ?? sortableFields,
+      sort: root.sort ?? { name: 'priority', order: 'asc' },
+      query: root.query
+    });
 
-  it('gives each distinct value one lane, shared by its rows', () => {
+  it('lanes by the sorted-by field, one lane per value', () => {
     renderFieldLanes();
-    // First-seen order over the sorted row model (title asc): Low, High, Medium.
-    expect(laneOf('t1')).toBe('0');
-    expect(laneOf('t2')).toBe('1');
-    expect(laneOf('t3')).toBe('1'); // same value as t2, no time overlap
+    // priority asc → High, Low, Medium (text order).
+    expect(laneOf('t2')).toBe('0');
+    expect(laneOf('t3')).toBe('0'); // same value as t2, no time overlap
+    expect(laneOf('t1')).toBe('1');
     expect(laneOf('t4')).toBe('2');
+  });
+
+  it('reorders lanes when the sort direction flips', () => {
+    renderFieldLanes(undefined, tasks, {
+      sort: { name: 'priority', order: 'desc' }
+    });
+    expect(laneOf('t4')).toBe('0');
+    expect(laneOf('t1')).toBe('1');
+    expect(laneOf('t2')).toBe('2');
+  });
+
+  it("lanes by a rank field for orders text sorting can't produce", () => {
+    renderFieldLanes(undefined, tasks, {
+      sort: { name: 'rank', order: 'asc' }
+    });
+    // rank asc → High(1), Medium(2), Low(3).
+    expect(laneOf('t2')).toBe('0');
+    expect(laneOf('t3')).toBe('0');
+    expect(laneOf('t4')).toBe('1');
+    expect(laneOf('t1')).toBe('2');
+  });
+
+  it('relanes when the sort field changes', () => {
+    // Sorting by title instead lanes by title — every value distinct, so one
+    // lane per row, in title order.
+    renderFieldLanes(undefined, tasks, {
+      sort: { name: 'title', order: 'asc' }
+    });
+    expect(['t1', 't2', 't3', 't4'].map(laneOf)).toEqual(['0', '1', '2', '3']);
   });
 
   it('adds a sub-lane only where one value overlaps itself', () => {
@@ -1870,84 +1906,47 @@ describe('DataView.Timeline field lanes', () => {
         id: 't5',
         title: 'E',
         priority: 'High',
+        rank: 1,
         start: '2025-01-06',
         end: '2025-01-09'
       }
     ]);
-    expect(laneOf('t2')).toBe('1');
-    expect(laneOf('t5')).toBe('2');
-    // Medium sits below every lane High claimed.
-    expect(laneOf('t4')).toBe('3');
-  });
-
-  it('orders lanes by the laneOrder prop', () => {
-    renderFieldLanes({ laneOrder: ['High', 'Medium', 'Low'] });
     expect(laneOf('t2')).toBe('0');
-    expect(laneOf('t3')).toBe('0');
-    expect(laneOf('t4')).toBe('1');
+    expect(laneOf('t5')).toBe('1');
+    // Low sits below every lane High claimed.
     expect(laneOf('t1')).toBe('2');
   });
 
-  it("defaults lane order to the field's groupOrder", () => {
-    renderFieldLanes(
-      undefined,
-      tasks,
-      priorityFields(['High', 'Medium', 'Low'])
-    );
-    expect(laneOf('t2')).toBe('0');
-    expect(laneOf('t4')).toBe('1');
-    expect(laneOf('t1')).toBe('2');
-  });
-
-  it('lets laneOrder override the field groupOrder', () => {
-    renderFieldLanes(
-      { laneOrder: ['Low', 'Medium', 'High'] },
-      tasks,
-      priorityFields(['High', 'Medium', 'Low'])
-    );
-    expect(laneOf('t1')).toBe('0');
-    expect(laneOf('t4')).toBe('1');
-    expect(laneOf('t2')).toBe('2');
-  });
-
-  it('appends values missing from laneOrder in first-seen order', () => {
-    renderFieldLanes({ laneOrder: ['Medium'] });
-    expect(laneOf('t4')).toBe('0');
-    expect(laneOf('t1')).toBe('1'); // Low seen first
-    expect(laneOf('t2')).toBe('2');
-  });
-
-  it('ignores laneOrder values with no rows', () => {
-    renderFieldLanes({
-      laneOrder: ['Urgent', 'High', 'Blocked', 'Low', 'Medium']
-    });
-    expect(laneOf('t2')).toBe('0');
-    expect(laneOf('t1')).toBe('1');
-    expect(laneOf('t4')).toBe('2');
-  });
-
-  it('lanes rows with no value last', () => {
-    renderFieldLanes({ laneOrder: ['High', 'Medium', 'Low'] }, [
+  it('lanes rows with no value last, whatever the sort puts first', () => {
+    renderFieldLanes(undefined, [
       {
         id: 'n1',
         title: 'N1',
         priority: null,
+        rank: 0,
         start: '2025-01-05',
         end: '2025-01-10'
       },
-      { id: 'n2', title: 'N2', start: '2025-01-12', end: '2025-01-15' },
+      {
+        id: 'n2',
+        title: 'N2',
+        rank: 0,
+        start: '2025-01-12',
+        end: '2025-01-15'
+      },
       {
         id: 'n3',
         title: 'N3',
         priority: '',
+        rank: 0,
         start: '2025-01-20',
         end: '2025-01-25'
       },
       ...tasks
     ]);
     expect(laneOf('t2')).toBe('0');
-    expect(laneOf('t4')).toBe('1');
-    expect(laneOf('t1')).toBe('2');
+    expect(laneOf('t1')).toBe('1');
+    expect(laneOf('t4')).toBe('2');
     // null, undefined and '' share the one trailing lane.
     expect(laneOf('n1')).toBe('3');
     expect(laneOf('n2')).toBe('3');
@@ -1961,6 +1960,7 @@ describe('DataView.Timeline field lanes', () => {
         id: 'obj',
         title: 'Obj',
         priority: { id: 'High' },
+        rank: 1,
         start: '2025-01-05',
         end: '2025-01-10'
       },
@@ -1968,6 +1968,7 @@ describe('DataView.Timeline field lanes', () => {
         id: 'ok',
         title: 'Ok',
         priority: 'High',
+        rank: 1,
         start: '2025-01-12',
         end: '2025-01-15'
       }
@@ -1979,37 +1980,46 @@ describe('DataView.Timeline field lanes', () => {
     );
   });
 
-  it('keys numeric and boolean values by their string form', () => {
-    renderFieldLanes({ laneOrder: ['1', '2'] }, [
-      {
-        id: 'p1',
-        title: 'P1',
-        priority: 1,
-        start: '2025-01-05',
-        end: '2025-01-10'
-      },
-      {
-        id: 'p2',
-        title: 'P2',
-        priority: 2,
-        start: '2025-01-05',
-        end: '2025-01-10'
-      },
-      {
-        id: 'p3',
-        title: 'P3',
-        priority: 1,
-        start: '2025-01-12',
-        end: '2025-01-15'
-      }
-    ]);
+  it('keys numeric values by their string form', () => {
+    renderFieldLanes(
+      undefined,
+      [
+        {
+          id: 'p1',
+          title: 'P1',
+          priority: 'x',
+          rank: 1,
+          start: '2025-01-05',
+          end: '2025-01-10'
+        },
+        {
+          id: 'p2',
+          title: 'P2',
+          priority: 'x',
+          rank: 2,
+          start: '2025-01-05',
+          end: '2025-01-10'
+        },
+        {
+          id: 'p3',
+          title: 'P3',
+          priority: 'x',
+          rank: 1,
+          start: '2025-01-12',
+          end: '2025-01-15'
+        }
+      ],
+      { sort: { name: 'rank', order: 'asc' } }
+    );
     expect(laneOf('p1')).toBe('0');
     expect(laneOf('p3')).toBe('0');
     expect(laneOf('p2')).toBe('1');
   });
 
   it('stacks lanes at the fixed pitch like any other packing', () => {
-    renderFieldLanes({ laneOrder: ['High', 'Medium', 'Low'] });
+    renderFieldLanes(undefined, tasks, {
+      sort: { name: 'rank', order: 'asc' }
+    });
     // lane 0 at laneGap 16, lane 1 at 16 + 66 + 16, lane 2 at 16 + 2 × 82.
     expect(screen.getByTestId('card-t2').parentElement!.style.top).toBe('16px');
     expect(screen.getByTestId('card-t4').parentElement!.style.top).toBe('98px');
@@ -2025,6 +2035,7 @@ describe('DataView.Timeline field lanes', () => {
         title: 'E1',
         team: 'Eng',
         priority: 'High',
+        rank: 1,
         start: '2025-01-05',
         end: '2025-01-10'
       },
@@ -2033,6 +2044,7 @@ describe('DataView.Timeline field lanes', () => {
         title: 'E2',
         team: 'Eng',
         priority: 'Low',
+        rank: 3,
         start: '2025-01-12',
         end: '2025-01-15'
       },
@@ -2041,26 +2053,18 @@ describe('DataView.Timeline field lanes', () => {
         title: 'D1',
         team: 'Design',
         priority: 'Low',
+        rank: 3,
         start: '2025-01-05',
         end: '2025-01-10'
       }
     ];
-    renderTimeline(
-      {
-        lanePacking: 'one-per-field',
-        laneField: 'priority',
-        laneOrder: ['High', 'Low']
-      },
-      grouped,
-      {
-        fields: [
-          { accessorKey: 'title', label: 'Title', sortable: true },
-          { accessorKey: 'team', label: 'Team', groupable: true },
-          { accessorKey: 'priority', label: 'Priority' }
-        ],
-        query: { group_by: ['team'] }
-      }
-    );
+    renderFieldLanes(undefined, grouped, {
+      fields: [
+        ...sortableFields,
+        { accessorKey: 'team', label: 'Team', groupable: true }
+      ],
+      query: { group_by: ['team'] }
+    });
     // Section-relative lanes: Design's only value starts back at lane 0, and a
     // value never spans sections.
     expect(laneOf('e1')).toBe('0');
@@ -2068,12 +2072,13 @@ describe('DataView.Timeline field lanes', () => {
     expect(laneOf('d1')).toBe('0');
   });
 
-  it('degenerates to time packing when group_by is the lane field', () => {
+  it('degenerates to time packing when grouped by the sorted field', () => {
     const grouped: Order[] = [
       {
         id: 'h1',
         title: 'H1',
         priority: 'High',
+        rank: 1,
         start: '2025-01-05',
         end: '2025-01-10'
       },
@@ -2081,6 +2086,7 @@ describe('DataView.Timeline field lanes', () => {
         id: 'h2',
         title: 'H2',
         priority: 'High',
+        rank: 1,
         start: '2025-01-12',
         end: '2025-01-15'
       },
@@ -2088,44 +2094,28 @@ describe('DataView.Timeline field lanes', () => {
         id: 'l1',
         title: 'L1',
         priority: 'Low',
+        rank: 3,
         start: '2025-01-05',
         end: '2025-01-10'
       }
     ];
-    renderTimeline(
-      { lanePacking: 'one-per-field', laneField: 'priority' },
-      grouped,
-      {
-        fields: priorityFields(['High', 'Low']),
-        query: { group_by: ['priority'] }
-      }
-    );
+    renderFieldLanes(undefined, grouped, {
+      fields: [
+        { accessorKey: 'title', label: 'Title', sortable: true },
+        {
+          accessorKey: 'priority',
+          label: 'Priority',
+          sortable: true,
+          groupable: true
+        },
+        { accessorKey: 'rank', label: 'Rank', sortable: true }
+      ],
+      query: { group_by: ['priority'] }
+    });
     // Each section already holds one value → one lane per section.
     expect(laneOf('h1')).toBe('0');
     expect(laneOf('h2')).toBe('0');
     expect(laneOf('l1')).toBe('0');
-  });
-
-  it('falls back to auto packing with a dev warning when laneField is missing', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    renderTimeline({ lanePacking: 'one-per-field' });
-    // The auto-packing expectations, unchanged: o1 and o3 overlap, o2 reuses 0.
-    expect(laneOf('o1')).toBe('0');
-    expect(laneOf('o3')).toBe('1');
-    expect(laneOf('o2')).toBe('0');
-    expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining('needs a `laneField`')
-    );
-  });
-
-  it('ignores laneField under another packing mode, with a dev warning', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    renderFieldLanes({ lanePacking: 'auto' });
-    // Time packing: t1, t2 and t4 all overlap at Jan 5 regardless of value.
-    expect(new Set([laneOf('t1'), laneOf('t2'), laneOf('t4')]).size).toBe(3);
-    expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining('laneField="priority" is ignored')
-    );
   });
 
   it('culls field lanes when virtualized', () => {
@@ -2137,10 +2127,7 @@ describe('DataView.Timeline field lanes', () => {
       start: '2025-01-05',
       end: '2025-01-10'
     }));
-    renderFieldLanes({ virtualized: true }, many, [
-      { accessorKey: 'title', label: 'Title', sortable: true },
-      { accessorKey: 'priority', label: 'Priority' }
-    ]);
+    renderFieldLanes({ virtualized: true }, many);
     // One lane per value at the fixed 82px pitch; the 200px pane plus overscan
     // reaches lane 4 (top 344px) and stops before lane 5 (426px).
     const rendered = Array.from(

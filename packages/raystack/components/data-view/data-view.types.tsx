@@ -102,9 +102,7 @@ export interface DataViewField<TData = any> {
    *
    * Values absent from the list follow in first-seen data order, and rows with
    * no value always land in the last section. A listed value with no rows
-   * produces no section. Honoured by every renderer that groups, and used by
-   * `DataView.Timeline` as the default lane order for
-   * `lanePacking="one-per-field"`.
+   * produces no section. Honoured by every renderer that groups.
    */
   groupOrder?: string[];
 }
@@ -415,35 +413,19 @@ export interface DataViewTimelineProps<TData> {
   /**
    * 'auto' (default) packs non-overlapping cards into shared lanes (greedy
    * interval scheduling); 'one-per-row' gives every row its own lane, in
-   * row-model (sorted) order; 'one-per-field' gives every distinct `laneField`
-   * value its own lane, packing that value's cards by date within it. All
-   * apply per group section when `group_by` is active — cards never share a
-   * lane across sections.
+   * row-model (sorted) order; 'one-per-field' gives every distinct value of
+   * the **sorted-by** field its own lane, packing that value's cards by date
+   * within it. All apply per group section when `group_by` is active — cards
+   * never share a lane across sections.
+   *
+   * Under 'one-per-field' the active sort does double duty: it picks the field
+   * lanes are built from (sort by `priority` → a High lane, a Medium lane, a
+   * Low lane) and it orders them, so the Ordering control repositions lanes
+   * live. Lane order is the sort's order, so rank values that don't sort
+   * naturally (High/Medium/Low) with a numeric field and sort on that. Rows
+   * whose value is null, empty, or a non-primitive share one lane, placed last.
    */
   lanePacking?: 'auto' | 'one-per-row' | 'one-per-field';
-  /**
-   * Accessor key whose values become lanes under
-   * `lanePacking="one-per-field"` — e.g. `"priority"` puts every High task on
-   * one lane, every Low task on the next. Rows sharing a value share a lane,
-   * and a value only takes an extra sub-lane where two of its own cards
-   * overlap in time.
-   *
-   * Rows whose value is null, undefined, empty, or a non-primitive share one
-   * lane placed last. Required by `one-per-field` (which falls back to 'auto'
-   * without it) and ignored by the other packing modes.
-   */
-  laneField?: string;
-  /**
-   * Lane order for `lanePacking="one-per-field"`, by raw `laneField` value —
-   * e.g. `['High', 'Medium', 'Low']`, which sorting alone can't produce.
-   *
-   * Values absent from the list follow in first-seen row order, and the
-   * no-value lane always comes last. A listed value with no rows takes no
-   * lane. Defaults to the `laneField` field's `groupOrder`, so declaring the
-   * order once on the field drives both group sections and lanes; this prop
-   * overrides it for this renderer.
-   */
-  laneOrder?: string[];
   /**
    * Lane height in px. Default 66.
    *

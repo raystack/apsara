@@ -452,36 +452,36 @@ Omit `endField` and rows render as point markers at their date — releases, inc
 | --- | --- | --- |
 | `auto` (default) | a dense chronological track: cards that don't overlap in time share it | fitting many cards into the least vertical space |
 | `one-per-row` | one row | a Gantt chart, where every row needs its own visible track |
-| `one-per-field` | one distinct value of `laneField` | grouping by a property while keeping the flat single-axis layout |
+| `one-per-field` | one distinct value of the **sorted-by** field | grouping by a property while keeping the flat single-axis layout |
 
-Under `one-per-field`, rows sharing a value share a lane and are packed by date within it; a value only claims a **sub-lane** where two of its own cards overlap in time. So a priority timeline shows a High lane, a Medium lane and a Low lane, and only the priority with genuinely concurrent work grows a second row.
+Under `one-per-field`, rows sharing a value share a lane and are packed by date within it; a value only claims a **sub-lane** where two of its own cards overlap in time. So a timeline sorted by priority shows a High lane, a Medium lane and a Low lane, and only the priority with genuinely concurrent work grows a second row.
+
+The active sort does double duty here: it picks the field lanes are built from *and* orders them, so the Ordering control repositions lanes live and there's no second ordering vocabulary to keep in sync.
 
 <Demo data={timelineFieldLanePreview} />
 
 ```tsx
-// groupOrder ranks the values once — it orders group sections and seeds lane
-// order, which sorting can't do (text sort gives High, Low, Medium).
-const fields = [
-  { accessorKey: "priority", label: "Priority", groupable: true,
-    groupOrder: ["High", "Medium", "Low"] },
-  …
-];
-
-<DataView.Timeline
-  startField="start"
-  endField="end"
-  lanePacking="one-per-field"
-  laneField="priority"
-  // laneOrder={["High", "Medium", "Low"]} overrides groupOrder for this renderer
-  renderCard={renderCard}
-/>
+<DataView
+  data={tasks}
+  fields={fields}
+  // The sort is the lane definition: sort by rank → one lane per rank value
+  defaultSort={{ name: "rank", order: "asc" }}
+  getRowId={(t) => t.id}>
+  <DataView.Timeline
+    startField="start"
+    endField="end"
+    lanePacking="one-per-field"
+    renderCard={renderCard}
+  />
+</DataView>
 ```
 
-- **Lane order** is `laneOrder`, else the lane field's `groupOrder`, else first-seen row order. Values missing from the list follow in first-seen order, and a listed value with no rows takes no lane — lanes are never empty.
-- **Rows with no usable value** — null, undefined, `""`, or a non-primitive (which also logs a dev warning) — share one lane, always last.
-- **Values are keyed by their string form**, so `1` and `"1"` land in the same lane. Resolve an object-valued field to a primitive before handing it to `laneField`.
-- **`laneField` is required** by this mode: without it there's nothing to lane on, so packing falls back to `auto` with a dev warning. Passing `laneField` under another mode warns too, and is ignored.
-- **With `group_by` active**, each section gets its own lane set and `context.laneIndex` stays section-relative. Grouping by the lane field is allowed and simply degenerates: a section already holds one value, so it renders as one lane (plus sub-lanes on overlap).
+- **Rank what doesn't sort naturally.** Sorting `priority` alphabetically gives High, Low, Medium. Carry a numeric `rank` alongside it and sort on that for High, Medium, Low — the lane values are then the ranks, which is invisible unless your card shows them.
+- **Rows with no usable value** — null, `undefined`, `""`, or a non-primitive (which also logs a dev warning) — share one lane, always last, wherever the sort would have put them.
+- **Values are keyed by their string form**, so `1` and `"1"` share a lane. Resolve an object-valued field to a primitive before sorting on it.
+- **No sort, no lanes.** The mode falls back to `auto` if the query carries no sort — `defaultSort` is required on the root, so that's a guard rather than a configuration.
+- **With `group_by` active**, each section gets its own lane set and `context.laneIndex` stays section-relative. Grouping by the sorted field is allowed and simply degenerates: a section already holds one value, so it renders as one lane (plus sub-lanes on overlap).
+
 
 ### Grouping
 
@@ -516,7 +516,7 @@ Bands are labels only in this release: no chevron, no collapsing.
 
 Sort can't move a card horizontally — x is locked to the start date — so it surfaces in exactly one place: `lanePacking="one-per-row"`, where vertical row order follows the active sort (within each section when grouped). With the default `auto` packing, lanes are assigned by dense chronological first-fit and the sort has no visible effect, so hide the Ordering control (`<DataView.DisplayControls hideOrdering />`) or leave `sortable` off the timeline's per-view `fields` unless you use `one-per-row`.
 
-Under `one-per-field`, vertical order is a property ranking rather than a sort: it comes from `laneOrder` or the field's `groupOrder` (see [Lane packing](#lane-packing)), and the active sort only decides where undeclared values land.
+`lanePacking="one-per-field"` is the other place sort reaches, and there it does more than reorder: the sorted-by field *defines* the lanes, so changing the sort field rebuilds them (see [Lane packing](#lane-packing)). Leave the Ordering control visible for that mode.
 
 ### Scale and axis
 
@@ -597,7 +597,7 @@ Start with `isLoading={true}` and fire an initial fetch on mount: with no data a
 
 ### Notes
 
-- **Grouping** renders as swim-lane sections and **sorting** only reaches `lanePacking="one-per-row"` (lane order under `one-per-field` comes from `laneOrder`/`groupOrder`) — see [Grouping](#grouping) and [Ordering](#ordering). Hide a control that has no meaning for your configuration (`<DataView.DisplayControls hideOrdering />`), or pass the timeline a per-view `fields` override without `sortable`/`groupable`.
+- **Grouping** renders as swim-lane sections and **sorting** only reaches `lanePacking="one-per-row"` and `"one-per-field"` (where it defines the lanes) — see [Grouping](#grouping) and [Ordering](#ordering). Hide a control that has no meaning for your configuration (`<DataView.DisplayControls hideOrdering />`), or pass the timeline a per-view `fields` override without `sortable`/`groupable`.
 - **`virtualized`** culls both axes: cards, gridlines, tick labels, month bands, and markers render only near the viewport, and the grid and marker lines span the visible window rather than the full canvas height. A frame costs what is on screen rather than what is in the data, so a long domain and deep grouping stay affordable. It defaults to `false` — pass it explicitly. Recommended whenever the domain is long or rows are numerous.
 - **Without `virtualized`, nothing is culled vertically.** Every lane in the domain stays mounted and every card in the visible time window renders, so deep grouping over thousands of rows builds a tall, fully populated canvas. The trade is content-driven lane heights (see [Cards](#cards)), which virtualization gives up.
 - **Interaction** — cards receive row clicks via the root's `onRowClick`; the background supports mouse drag-to-pan with a momentum glide; scrolling past the domain edge won't trigger browser back-swipe. The pane is a focusable, labelled region (`aria-label`, default "Timeline"), so keyboard users can Tab to it and scroll with the arrow keys.

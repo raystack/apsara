@@ -55,11 +55,6 @@ const DEFAULT_MIN_CARD_WIDTH = 60;
 const DEFAULT_POINT_WIDTH = 120;
 /** Floor for the rendered wrapper so near-zero spans stay visible and clickable. */
 const MIN_RENDER_WIDTH = 24;
-/**
- * Joins `laneOrder` into one memo key. A character no lane value realistically
- * contains, so serialize-and-split round-trips the list unchanged.
- */
-const LANE_ORDER_SEPARATOR = '\u0000';
 /** Units of padding around the data extent when no explicit `range` is given. */
 const DOMAIN_PAD_UNITS = 2;
 /** Half-window (in units) of the fallback domain used while loading with no data. */
@@ -436,8 +431,6 @@ export function DataViewTimeline<TData>({
   onVisibleRangeChange,
   actionsRef,
   lanePacking = 'auto',
-  laneField,
-  laneOrder,
   estimatedRowHeight = DEFAULT_ROW_HEIGHT,
   laneGap = DEFAULT_LANE_GAP,
   minCardWidth = DEFAULT_MIN_CARD_WIDTH,
@@ -448,7 +441,6 @@ export function DataViewTimeline<TData>({
 }: DataViewTimelineProps<TData>) {
   const {
     table,
-    fields,
     onRowClick,
     activeView,
     registerFieldsForView,
@@ -530,42 +522,14 @@ export function DataViewTimeline<TData>({
     return list;
   }, [rows]);
 
-  // `one-per-field` needs a key to bucket rows by, so without `laneField` there
-  // is nothing to lane on and packing degrades to 'auto'; a `laneField` handed
-  // to any other mode is inert. Resolved to one flag the memos below read.
+  // `one-per-field` lanes by the field the view is *sorted* by: the row model
+  // already arrives grouped and ranked by it, so lane membership and lane order
+  // both fall out of the active sort — no second ordering vocabulary, and the
+  // Ordering control repositions lanes live. Falls back to 'auto' if the query
+  // somehow carries no sort (the root requires `defaultSort`, so this is a
+  // guard rather than a mode).
+  const laneField = tableQuery.sort?.[0]?.name;
   const fieldLanes = lanePacking === 'one-per-field' && laneField !== undefined;
-
-  // Config warnings, once per config rather than per render.
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'production') return;
-    if (lanePacking === 'one-per-field' && laneField === undefined) {
-      console.warn(
-        '[DataView.Timeline] lanePacking="one-per-field" needs a `laneField` to build lanes from — falling back to "auto" packing.'
-      );
-    } else if (lanePacking !== 'one-per-field' && laneField !== undefined) {
-      console.warn(
-        `[DataView.Timeline] laneField="${laneField}" is ignored under lanePacking="${lanePacking}" — set lanePacking="one-per-field" to lane by it.`
-      );
-    }
-  }, [lanePacking, laneField]);
-
-  // Lane order: the prop, else the lane field's declared `groupOrder` (so one
-  // declaration drives both group sections and lanes). Serialized to a string
-  // and rebuilt, because an inline array literal would otherwise hand the
-  // layout memos a new identity on every render.
-  const laneOrderKey = fieldLanes
-    ? ((
-        laneOrder ??
-        fields.find(field => field.accessorKey === laneField)?.groupOrder
-      )?.join(LANE_ORDER_SEPARATOR) ?? '')
-    : '';
-  const effectiveLaneOrder = useMemo(
-    () =>
-      laneOrderKey === ''
-        ? undefined
-        : laneOrderKey.split(LANE_ORDER_SEPARATOR),
-    [laneOrderKey]
-  );
 
   // Resolve each row's start/end timestamps, per section. Rows without a valid
   // start are skipped (one dev warning for the whole model); inverted ranges
@@ -587,10 +551,10 @@ export function DataViewTimeline<TData>({
           endTime = toTimestamp(original?.[endField]);
           if (endTime !== null && endTime < startTime) endTime = startTime;
         }
-        // Lane bucket, resolved here so packing below is pure geometry. Only a
-        // primitive identifies a lane; anything else (an object, an array)
-        // shares the no-value lane rather than collapsing into one
-        // "[object Object]" bucket.
+        // Lane bucket — the sorted-by field's value. Resolved here so packing
+        // below is pure geometry. Only a primitive identifies a lane; anything
+        // else (an object, an array) shares the no-value lane rather than
+        // collapsing into one "[object Object]" bucket.
         let laneKey: string | null = null;
         if (fieldLanes) {
           const value = original?.[laneField as string];
@@ -615,7 +579,7 @@ export function DataViewTimeline<TData>({
     }
     if (process.env.NODE_ENV !== 'production' && unlaned > 0) {
       console.warn(
-        `[DataView.Timeline] ${unlaned} row(s) have a non-primitive "${laneField}" value and share the last lane — "${laneField}" should resolve to a string or number.`
+        `[DataView.Timeline] ${unlaned} row(s) have a non-primitive "${laneField}" value and share the last lane — the sorted-by field should resolve to a string or number under lanePacking="one-per-field".`
       );
     }
     return list;
@@ -773,8 +737,7 @@ export function DataViewTimeline<TData>({
                   laneKey: item.laneKey,
                   x: item.x,
                   width: item.packWidth
-                })),
-                { order: effectiveLaneOrder }
+                }))
               )
             : packLanes(
                 section.items.map(item => ({
@@ -787,7 +750,7 @@ export function DataViewTimeline<TData>({
       return entry;
     });
     return { laidOutSections: list, laneCount: offset };
-  }, [positionedSections, lanePacking, fieldLanes, effectiveLaneOrder]);
+  }, [positionedSections, lanePacking, fieldLanes]);
 
   /**
    * Virtualizing vertically means a card off-screen never mounts and so never
