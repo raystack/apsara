@@ -16,6 +16,7 @@
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
   letter-spacing: var(--rs-letter-spacing-mini);
+  text-wrap: pretty;
   margin: 0;
 }
 
@@ -25,6 +26,7 @@
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
   letter-spacing: var(--rs-letter-spacing-mini);
+  text-wrap: pretty;
   margin: 0;
 }
 

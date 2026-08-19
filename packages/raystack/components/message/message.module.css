@@ -138,6 +138,7 @@
      inside it the bubble just fills what the text needs. */
   max-width: 100%;
   min-width: 0;
+  text-wrap: pretty;
   padding: var(--rs-space-3) var(--rs-space-4);
   border-radius: var(--rs-radius-5);
   font-size: var(--rs-font-size-small);

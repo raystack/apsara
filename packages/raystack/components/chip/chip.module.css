@@ -151,7 +151,8 @@
   border-radius: var(--rs-radius-1);
 }
 
-.dismiss-button:active {
+.dismiss-button:active,
+.chip-interactive:active {
   transform: scale(var(--rs-scale-pressed-strong));
 }
 
