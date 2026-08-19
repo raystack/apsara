@@ -306,6 +306,7 @@ type Order = {
   // biome-ignore lint/suspicious/noExplicitAny: one-per-sort-value takes any value
   priority?: any;
   rank?: number;
+  meta?: { rank: number };
 };
 
 const fields: DataViewField<Order>[] = [
@@ -2116,6 +2117,63 @@ describe('DataView.Timeline sort-value lanes', () => {
     expect(laneOf('h1')).toBe('0');
     expect(laneOf('h2')).toBe('0');
     expect(laneOf('l1')).toBe('0');
+  });
+
+  it('lanes by a dotted accessorKey the way the sort reads it', () => {
+    // TanStack treats a dotted key as a path, so the lane value has to come
+    // through the row — `original['meta.rank']` would be undefined for every
+    // row and pile them all onto the no-value lane.
+    renderSortValueLanes(
+      undefined,
+      [
+        {
+          id: 'd1',
+          title: 'D1',
+          meta: { rank: 3 },
+          start: '2025-01-05',
+          end: '2025-01-10'
+        },
+        {
+          id: 'd2',
+          title: 'D2',
+          meta: { rank: 1 },
+          start: '2025-01-05',
+          end: '2025-01-10'
+        },
+        {
+          id: 'd3',
+          title: 'D3',
+          meta: { rank: 2 },
+          start: '2025-01-05',
+          end: '2025-01-10'
+        }
+      ],
+      {
+        fields: [
+          { accessorKey: 'title', label: 'Title', sortable: true },
+          { accessorKey: 'meta.rank', label: 'Rank', sortable: true }
+        ],
+        sort: { name: 'meta.rank', order: 'asc' }
+      }
+    );
+    expect(laneOf('d2')).toBe('0');
+    expect(laneOf('d3')).toBe('1');
+    expect(laneOf('d1')).toBe('2');
+  });
+
+  it('warns when the sort key matches no field', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    renderSortValueLanes(undefined, tasks, {
+      sort: { name: 'nope', order: 'asc' }
+    });
+    // Nothing to read → one bucket for every row, which then sub-lanes on time
+    // overlap alone (t1/t2/t4 all start Jan 5; t3 is clear of them). Visually
+    // indistinguishable from `auto`, hence the warning.
+    expect(['t1', 't2', 't4'].map(laneOf)).toEqual(['0', '1', '2']);
+    expect(laneOf('t3')).toBe('0');
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('which matches no field')
+    );
   });
 
   it('culls sort-value lanes when virtualized', () => {

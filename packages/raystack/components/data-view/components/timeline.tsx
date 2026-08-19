@@ -529,8 +529,19 @@ export function DataViewTimeline<TData>({
   // somehow carries no sort (the root requires `defaultSort`, so this is a
   // guard rather than a mode).
   const laneField = tableQuery.sort?.[0]?.name;
-  const fieldLanes =
+  const sortValueLanes =
     lanePacking === 'one-per-sort-value' && laneField !== undefined;
+
+  // A sort key with no column behind it reads as undefined on every row, which
+  // would silently collapse the timeline onto the single no-value lane.
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production') return;
+    if (!sortValueLanes || !table || table.getColumn(laneField as string))
+      return;
+    console.warn(
+      `[DataView.Timeline] lanePacking="one-per-sort-value" is sorted by "${laneField}", which matches no field — every card lands on one lane. Sort by a declared field.`
+    );
+  }, [sortValueLanes, laneField, table]);
 
   // Resolve each row's start/end timestamps, per section. Rows without a valid
   // start are skipped (one dev warning for the whole model); inverted ranges
@@ -557,8 +568,13 @@ export function DataViewTimeline<TData>({
         // else (an object, an array) shares the no-value lane rather than
         // collapsing into one "[object Object]" bucket.
         let laneKey: string | null = null;
-        if (fieldLanes) {
-          const value = original?.[laneField as string];
+        if (sortValueLanes) {
+          // Read through the row, not `original`: TanStack treats a dotted
+          // `accessorKey` as a path, so `original['meta.rank']` is undefined
+          // for the very key it sorted by — every row would look valueless and
+          // pile onto one lane. `getValue` yields exactly what the sort saw
+          // (undefined rather than a throw if the key names no column).
+          const value = row.getValue(laneField as string);
           if (value == null || value === '') laneKey = null;
           else if (typeof value === 'object' || typeof value === 'function') {
             unlaned++;
@@ -584,7 +600,7 @@ export function DataViewTimeline<TData>({
       );
     }
     return list;
-  }, [sections, startField, endField, fieldLanes, laneField]);
+  }, [sections, startField, endField, sortValueLanes, laneField]);
 
   // Data extent, for the domain below — grouping never changes the time domain.
   // Reduced in place rather than through a flattened copy: the extent is two
@@ -732,7 +748,7 @@ export function DataViewTimeline<TData>({
               lanes: section.items.map((_, i) => i),
               laneCount: section.items.length
             }
-          : fieldLanes
+          : sortValueLanes
             ? packLanesBySortValue(
                 section.items.map(item => ({
                   laneKey: item.laneKey,
@@ -751,7 +767,7 @@ export function DataViewTimeline<TData>({
       return entry;
     });
     return { laidOutSections: list, laneCount: offset };
-  }, [positionedSections, lanePacking, fieldLanes]);
+  }, [positionedSections, lanePacking, sortValueLanes, laneField]);
 
   /**
    * Virtualizing vertically means a card off-screen never mounts and so never

@@ -514,9 +514,9 @@ Bands are labels only in this release: no chevron, no collapsing.
 
 ### Ordering
 
-Sort can't move a card horizontally — x is locked to the start date — so it surfaces in exactly one place: `lanePacking="one-per-row"`, where vertical row order follows the active sort (within each section when grouped). With the default `auto` packing, lanes are assigned by dense chronological first-fit and the sort has no visible effect, so hide the Ordering control (`<DataView.DisplayControls hideOrdering />`) or leave `sortable` off the timeline's per-view `fields` unless you use `one-per-row`.
+Sort can't move a card horizontally — x is locked to the start date — so it reaches the vertical axis only, and only under two of the three packing modes. With `lanePacking="one-per-row"`, row order follows the active sort (within each section when grouped). With `"one-per-sort-value"` it does more than reorder: the sorted-by field *defines* the lanes, so changing the sort field rebuilds them (see [Lane packing](#lane-packing)). Leave the Ordering control visible for both.
 
-`lanePacking="one-per-sort-value"` is the other place sort reaches, and there it does more than reorder: the sorted-by field *defines* the lanes, so changing the sort field rebuilds them (see [Lane packing](#lane-packing)). Leave the Ordering control visible for that mode.
+Under the default `auto` packing the sort has no visible effect at all — lanes are assigned by dense chronological first-fit — so there, hide the control (`<DataView.DisplayControls hideOrdering />`) or leave `sortable` off the timeline's per-view `fields`.
 
 ### Scale and axis
 

@@ -16,9 +16,12 @@ export const EMPTY_BUCKET_KEY = '';
  * conjures empty bands. The empty bucket is pinned last regardless of where it
  * appears in `order`, so a declared list doesn't have to mention it.
  *
- * Shared by `groupData` (section order for every renderer) and
- * `packLanesBySortValue` (Timeline lane order) so sections and lanes can never
- * disagree about where a value sits.
+ * Shared by `groupData`, which passes the grouped field's declared `groupOrder`,
+ * and by `packLanesBySortValue`, which passes nothing — timeline lanes follow
+ * the active sort, so only the empty-bucket-last half of the rule applies
+ * there. One field that is both grouped and sorted can therefore rank its
+ * sections and its lanes differently; that's the documented contract of
+ * `lanePacking="one-per-sort-value"`, not an oversight.
  */
 export function orderBucketKeys(keys: string[], order?: string[]): string[] {
   const hasEmpty = keys.includes(EMPTY_BUCKET_KEY);

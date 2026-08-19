@@ -58,22 +58,26 @@ export interface PackSortValueLaneItem extends PackLaneItem {
  * share a lane, and a value only takes extra (sub-)lanes when two of its own
  * cards overlap in time. Backs `lanePacking="one-per-sort-value"`.
  *
- * Buckets come out in first-seen order, with the no-value bucket last — the
- * same rule `groupData` applies to sections (see `orderBucketKeys`). Callers
- * hand over an already-ordered list (the timeline passes the sorted row model),
- * so first-seen *is* the caller's order. Within a bucket the greedy first-fit
- * of `packLanes` decides sub-lanes, so a value with no overlapping cards
- * occupies exactly one lane.
+ * Buckets come out in first-seen order, with the no-value bucket last. Lane
+ * order is therefore the caller's row order — the timeline hands over the sorted
+ * row model, so lanes follow the active sort and nothing else. That's
+ * deliberately *not* `groupData`'s rule, which ranks sections by the field's
+ * declared `groupOrder`: a field that is both grouped and sorted can order its
+ * sections and its lanes differently, and the sort is what the mode promises.
+ * Only the no-value-bucket-last half is shared (see `orderBucketKeys`).
+ *
+ * Within a bucket the greedy first-fit of `packLanes` decides sub-lanes, so a
+ * value with no overlapping cards occupies exactly one lane.
  */
 export function packLanesBySortValue(
   items: PackSortValueLaneItem[],
   gapPx: number = DEFAULT_CARD_GAP_PX
 ): PackLanesResult {
+  if (items.length === 0) return { lanes: [], laneCount: 0 };
   const lanes = new Array<number>(items.length).fill(0);
-  if (items.length === 0) return { lanes, laneCount: 0 };
 
   // Indices per bucket, in input order — Map insertion order is the first-seen
-  // order `orderBucketKeys` expects.
+  // (caller-sorted) order `orderBucketKeys` preserves.
   const buckets = new Map<string, number[]>();
   for (let index = 0; index < items.length; index++) {
     const key = items[index].laneKey ?? EMPTY_BUCKET_KEY;
