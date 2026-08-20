@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowDownWideNarrowIcon } from '~/icons/generated';
+import { SortDescendingIcon } from '~/icons';
 import { Flex } from '../../flex';
 import { IconButton } from '../../icon-button';
 import { Select } from '../../select';
@@ -71,7 +71,7 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
           disabled={columnList.length === 0}
           data-slot='data-view-ordering-direction'
         >
-          <ArrowDownWideNarrowIcon
+          <SortDescendingIcon
             className={styles['display-popover-sort-icon']}
             data-order={value.order}
           />

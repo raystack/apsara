@@ -2,7 +2,7 @@
 
 import { cx } from 'class-variance-authority';
 import { isValidElement, ReactNode, useMemo } from 'react';
-import { ListFilterIcon } from '~/icons/generated';
+import { FilterIcon } from '~/icons';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import { Button } from '../../button';
 import { FilterChip } from '../../filter-chip';
@@ -52,7 +52,7 @@ function AddFilter<TData>({
           className={className}
           data-slot='data-view-add-filter'
         >
-          <ListFilterIcon />
+          <FilterIcon />
         </IconButton>
       );
     }
@@ -60,7 +60,7 @@ function AddFilter<TData>({
       <Button
         variant='text'
         size='small'
-        leadingIcon={<ListFilterIcon />}
+        leadingIcon={<FilterIcon />}
         color='neutral'
         className={className}
         data-slot='data-view-add-filter'

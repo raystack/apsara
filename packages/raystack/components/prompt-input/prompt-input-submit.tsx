@@ -2,7 +2,7 @@
 
 import { cx } from 'class-variance-authority';
 import { ComponentProps, MouseEvent } from 'react';
-import { ArrowUpIcon, SquareIcon } from '~/icons/generated';
+import { ArrowUpIcon, StopIcon } from '~/icons';
 import { Spinner } from '../spinner';
 import styles from './prompt-input.module.css';
 import { usePromptInputContext } from './prompt-input-context';
@@ -46,7 +46,7 @@ export function PromptInputSubmit({
         (context.status === 'submitted' ? (
           <Spinner size={2} color='default' aria-hidden='true' />
         ) : context.status === 'streaming' ? (
-          <SquareIcon aria-hidden='true' />
+          <StopIcon aria-hidden='true' />
         ) : (
           <ArrowUpIcon aria-hidden='true' />
         ))}

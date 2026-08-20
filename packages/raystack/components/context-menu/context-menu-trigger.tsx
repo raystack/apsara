@@ -4,7 +4,7 @@ import {
   Autocomplete as AutocompletePrimitive,
   ContextMenu as ContextMenuPrimitive
 } from '@base-ui/react';
-import { ChevronRightIcon } from '~/icons/generated';
+import { ChevronRightIcon } from '~/icons';
 import { Cell, CellBaseProps } from '../menu/cell';
 import { useMenuContext } from '../menu/menu-root';
 import { getMatch } from '../menu/utils';

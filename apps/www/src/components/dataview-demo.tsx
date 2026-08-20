@@ -1,6 +1,5 @@
 'use client';
 
-import { ListBulletIcon, RowsIcon, TransformIcon } from '@radix-ui/react-icons';
 import {
   Avatar,
   Badge,
@@ -18,6 +17,7 @@ import {
   type TimelineCardContext,
   useDataView
 } from '@raystack/apsara';
+import { Frame, LayoutList, Rows3 } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
 
 type Person = {
@@ -243,8 +243,16 @@ export function DataViewSearchDemo() {
 export function DataViewMultiViewDemo() {
   const views = useMemo(
     () => [
-      { value: 'table', label: 'Table', leadingIcon: <RowsIcon /> },
-      { value: 'list', label: 'List', leadingIcon: <ListBulletIcon /> }
+      {
+        value: 'table',
+        label: 'Table',
+        leadingIcon: <Rows3 size={16} strokeWidth={1.5} />
+      },
+      {
+        value: 'list',
+        label: 'List',
+        leadingIcon: <LayoutList size={16} strokeWidth={1.5} />
+      }
     ],
     []
   );
@@ -525,8 +533,16 @@ export function DataViewLoadingDemo() {
 export function DataViewPerViewFieldsDemo() {
   const views = useMemo(
     () => [
-      { value: 'table', label: 'Table', leadingIcon: <RowsIcon /> },
-      { value: 'list', label: 'List', leadingIcon: <ListBulletIcon /> }
+      {
+        value: 'table',
+        label: 'Table',
+        leadingIcon: <Rows3 size={16} strokeWidth={1.5} />
+      },
+      {
+        value: 'list',
+        label: 'List',
+        leadingIcon: <LayoutList size={16} strokeWidth={1.5} />
+      }
     ],
     []
   );
@@ -611,7 +627,7 @@ function SelectionBar() {
         variant='outline'
         size='large'
         color='neutral'
-        leadingIcon={<TransformIcon />}
+        leadingIcon={<Frame size={16} strokeWidth={1.5} />}
         isDismissible
         onDismiss={() => table.resetRowSelection()}
       >

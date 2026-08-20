@@ -2,7 +2,7 @@
 
 import { cx } from 'class-variance-authority';
 import { isValidElement, ReactNode } from 'react';
-import { SlidersHorizontalIcon } from '~/icons/generated';
+import { DisplayIcon } from '~/icons';
 import { Button } from '../../button';
 import { Flex } from '../../flex';
 import { Popover } from '../../popover';
@@ -28,7 +28,7 @@ export function DisplaySettings<TData, TValue>({
       variant='outline'
       color='neutral'
       size='small'
-      leadingIcon={<SlidersHorizontalIcon />}
+      leadingIcon={<DisplayIcon />}
     >
       Display
     </Button>

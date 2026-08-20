@@ -1,12 +1,8 @@
 'use client';
-import {
-  ComponentBooleanIcon,
-  CopyIcon,
-  GitHubLogoIcon
-} from '@radix-ui/react-icons';
-import { Breadcrumb, Button } from '@raystack/apsara';
+import { Breadcrumb, Button, CopyIcon } from '@raystack/apsara';
 import { useBreadcrumb } from 'fumadocs-core/breadcrumb';
 import { Root } from 'fumadocs-core/page-tree';
+import { Component, Github } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment, useState } from 'react';
@@ -94,11 +90,7 @@ export default function DocsNavbar({
             disabled={isLoading}
             onClick={() => setOpenPlayground(true)}
             leadingIcon={
-              <ComponentBooleanIcon
-                height={12}
-                width={12}
-                className={styles.icon}
-              />
+              <Component size={12} strokeWidth={1.5} className={styles.icon} />
             }
           >
             Playground
@@ -123,11 +115,7 @@ export default function DocsNavbar({
               color='neutral'
               size='small'
               leadingIcon={
-                <GitHubLogoIcon
-                  height={12}
-                  width={12}
-                  className={styles.icon}
-                />
+                <Github size={12} strokeWidth={1.5} className={styles.icon} />
               }
             >
               View source

@@ -3,13 +3,7 @@
 import { Toast as ToastPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
-import {
-  CircleCheckIcon,
-  CircleXIcon,
-  InfoIcon,
-  TriangleAlertIcon,
-  XIcon
-} from '~/icons/generated';
+import { ErrorIcon, InfoIcon, SuccessIcon, WarningIcon, XIcon } from '~/icons';
 import { Button } from '../button';
 import { Flex } from '../flex';
 import { IconButton } from '../icon-button';
@@ -20,9 +14,9 @@ import type { ToastPosition } from './toast-provider';
 
 const TOAST_ICONS: Record<string, ReactNode> = {
   default: <InfoIcon />,
-  success: <CircleCheckIcon />,
-  error: <CircleXIcon />,
-  warning: <TriangleAlertIcon />,
+  success: <SuccessIcon />,
+  error: <ErrorIcon />,
+  warning: <WarningIcon />,
   info: <InfoIcon />,
   loading: <Spinner size={2} color='default' />
 };

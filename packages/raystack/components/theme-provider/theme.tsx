@@ -44,20 +44,16 @@ export const useTheme = (options?: UseThemeOptions): UseThemeProps => {
   return ctx;
 };
 
-export function Theme({
-  icons,
-  iconProps,
-  children,
-  ...props
-}: ThemeProviderProps) {
+export function Theme({ icons, children, ...props }: ThemeProviderProps) {
   const context = useContext(ThemeContext);
 
   // Mount the icon registry only when the consumer configures it, so a tree
   // without icon overrides gains no provider and no extra render work.
-  // Nesting layers per icon name, matching how `Scoped` layers theme tokens.
+  // Nesting layers per icon key, matching how `Scoped` layers theme tokens.
+  const { components, props: iconProps } = icons ?? {};
   const content =
-    icons || iconProps ? (
-      <IconProvider icons={icons} props={iconProps}>
+    components || iconProps ? (
+      <IconProvider components={components} props={iconProps}>
         {children}
       </IconProvider>
     ) : (

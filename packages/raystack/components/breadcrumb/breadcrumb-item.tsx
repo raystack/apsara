@@ -3,7 +3,7 @@
 import { mergeProps, useRender } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import React, { ComponentProps, ReactNode } from 'react';
-import { ChevronDownIcon } from '~/icons/generated';
+import { ChevronDownIcon } from '~/icons';
 import { Menu } from '../menu';
 import styles from './breadcrumb.module.css';
 

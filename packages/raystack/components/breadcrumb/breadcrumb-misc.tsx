@@ -2,7 +2,7 @@
 
 import { cx } from 'class-variance-authority';
 import { ComponentProps } from 'react';
-import { ChevronRightIcon, EllipsisIcon } from '~/icons/generated';
+import { ChevronRightIcon, EllipsisIcon } from '~/icons';
 import styles from './breadcrumb.module.css';
 
 export interface BreadcrumbEllipsisProps extends ComponentProps<'span'> {}

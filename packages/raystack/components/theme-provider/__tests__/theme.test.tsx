@@ -8,7 +8,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { XIcon } from '~/icons/generated';
+import { XIcon } from '~/icons';
 import { ThemeSwitcher } from '../switcher';
 import { Theme, useTheme } from '../theme';
 
@@ -910,7 +910,7 @@ describe('ThemeSwitcher', () => {
 
     it('resolves the overrides given to Theme', () => {
       render(
-        <Theme icons={{ XIcon: StubIcon }}>
+        <Theme icons={{ components: { XIcon: StubIcon } }}>
           <XIcon />
         </Theme>
       );
@@ -918,9 +918,9 @@ describe('ThemeSwitcher', () => {
       expect(screen.getByTestId('stub')).toHaveAttribute('data-icon', 'XIcon');
     });
 
-    it('resolves the iconProps given to Theme', () => {
+    it('resolves the icon props given to Theme', () => {
       render(
-        <Theme iconProps={{ strokeWidth: 1.5 }}>
+        <Theme icons={{ props: { strokeWidth: 1.5 } }}>
           <XIcon />
         </Theme>
       );
@@ -943,10 +943,10 @@ describe('ThemeSwitcher', () => {
       expect(icon).toHaveAttribute('stroke-width', '1.5');
     });
 
-    it('layers a nested Theme per icon name', () => {
+    it('layers a nested Theme per icon key', () => {
       render(
-        <Theme icons={{ XIcon: StubIcon }}>
-          <Theme iconProps={{ strokeWidth: 1 }}>
+        <Theme icons={{ components: { XIcon: StubIcon } }}>
+          <Theme icons={{ props: { strokeWidth: 1 } }}>
             <XIcon />
           </Theme>
         </Theme>
@@ -963,8 +963,8 @@ describe('ThemeSwitcher', () => {
       );
 
       render(
-        <Theme icons={{ XIcon: StubIcon }}>
-          <Theme icons={{ XIcon: Inner }}>
+        <Theme icons={{ components: { XIcon: StubIcon } }}>
+          <Theme icons={{ components: { XIcon: Inner } }}>
             <XIcon />
           </Theme>
         </Theme>

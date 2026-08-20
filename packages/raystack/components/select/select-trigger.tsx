@@ -6,7 +6,7 @@ import {
 } from '@base-ui/react';
 import { cva, VariantProps } from 'class-variance-authority';
 import { ComponentProps, SVGAttributes } from 'react';
-import { ChevronDownIcon } from '~/icons/generated';
+import { ChevronDownIcon } from '~/icons';
 import { Flex } from '../flex';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';

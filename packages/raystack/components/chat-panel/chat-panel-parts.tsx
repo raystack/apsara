@@ -3,7 +3,7 @@
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, MouseEvent, PointerEvent, ReactNode } from 'react';
-import { ExpandIcon, ShrinkIcon } from '~/icons/generated';
+import { ExpandIcon, ShrinkIcon } from '~/icons';
 import { IconButton, type IconButtonProps } from '../icon-button/icon-button';
 import styles from './chat-panel.module.css';
 import { useChatPanelContext } from './chat-panel-context';

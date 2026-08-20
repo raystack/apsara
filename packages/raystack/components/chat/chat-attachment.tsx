@@ -2,7 +2,7 @@
 
 import { cx } from 'class-variance-authority';
 import { ComponentProps, ReactNode } from 'react';
-import { FileTextIcon, XIcon } from '~/icons/generated';
+import { FileTextIcon, XIcon } from '~/icons';
 import { IconButton } from '../icon-button';
 import { Spinner } from '../spinner';
 import styles from './chat.module.css';

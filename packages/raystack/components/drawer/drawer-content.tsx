@@ -3,7 +3,7 @@
 import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ReactNode } from 'react';
-import { XIcon } from '~/icons/generated';
+import { XIcon } from '~/icons';
 import { IconButton } from '../icon-button';
 import styles from './drawer.module.css';
 

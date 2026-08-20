@@ -1,27 +1,32 @@
 'use client';
 import {
   ChevronDownIcon,
-  ColorWheelIcon,
-  ComponentInstanceIcon,
-  CornersIcon,
-  Cross1Icon,
-  DashboardIcon,
-  ExclamationTriangleIcon,
-  MagnifyingGlassIcon,
-  MixIcon,
-  ReaderIcon,
-  RocketIcon,
-  ShadowIcon,
-  SpaceBetweenVerticallyIcon,
-  TextIcon
-} from '@radix-ui/react-icons';
-import { Command, EmptyState, IconButton, Spinner } from '@raystack/apsara';
+  Command,
+  EmptyState,
+  IconButton,
+  SearchIcon,
+  Spinner,
+  WarningIcon,
+  XIcon
+} from '@raystack/apsara';
 import {
   flattenTree,
   type Item as PageItem,
   Root
 } from 'fumadocs-core/page-tree';
 import { useDocsSearch } from 'fumadocs-core/search/client';
+import {
+  Blend,
+  BookOpen,
+  Component,
+  Contrast,
+  LayoutDashboard,
+  Palette,
+  Radius,
+  Rocket,
+  StretchVertical,
+  Type
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { getFileFromUrl, getFolderFromUrl } from '@/lib/utils';
@@ -37,20 +42,23 @@ type SearchItems = {
 };
 
 /* Map known page slugs to icons; everything else falls back to a generic one. */
-const PAGE_ICONS: Record<string, typeof MagnifyingGlassIcon> = {
-  docs: ReaderIcon,
-  'getting-started': RocketIcon,
-  styling: MixIcon,
-  overview: DashboardIcon,
-  colors: ColorWheelIcon,
-  typography: TextIcon,
-  spacing: SpaceBetweenVerticallyIcon,
-  radius: CornersIcon,
-  effects: ShadowIcon
+// Section glyphs. None of these is an icon Apsara publishes — the set holds
+// only what Apsara's own components draw — so they come from lucide directly
+// and are sized at the call site.
+const PAGE_ICONS: Record<string, typeof BookOpen> = {
+  docs: BookOpen,
+  'getting-started': Rocket,
+  styling: Blend,
+  overview: LayoutDashboard,
+  colors: Palette,
+  typography: Type,
+  spacing: StretchVertical,
+  radius: Radius,
+  effects: Contrast
 };
-const FallbackPageIcon = ComponentInstanceIcon;
+const FallbackPageIcon = Component;
 
-const getPageIcon = (url: string): typeof MagnifyingGlassIcon =>
+const getPageIcon = (url: string): typeof BookOpen =>
   PAGE_ICONS[getFileFromUrl(url)] ?? FallbackPageIcon;
 
 export default function DocsSearch({ pageTree }: { pageTree: Root }) {
@@ -188,7 +196,7 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
       <Command.DialogTrigger
         render={<IconButton size={3} aria-label='Search docs' />}
       >
-        <MagnifyingGlassIcon />
+        <SearchIcon />
       </Command.DialogTrigger>
       <Command.DialogContent width={512} className={styles.searchContainer}>
         <Command
@@ -202,7 +210,7 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
         >
           <div className={styles.inputContainer}>
             <Command.Input
-              leadingIcon={<MagnifyingGlassIcon />}
+              leadingIcon={<SearchIcon />}
               placeholder='Search docs'
               autoComplete='off'
             />
@@ -213,7 +221,7 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
                 onClick={() => setSearch('')}
                 className={styles.searchClearButton}
               >
-                <Cross1Icon />
+                <XIcon />
               </IconButton>
             )}
           </div>
@@ -226,7 +234,7 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
                   variant='empty1'
                   heading='No result found'
                   subHeading='The keyword you’re searching for isn’t in the document—try using a different term.'
-                  icon={<ExclamationTriangleIcon />}
+                  icon={<WarningIcon />}
                 />
               )}
             </Command.Empty>

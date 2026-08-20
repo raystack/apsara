@@ -150,44 +150,44 @@ export const iconsDemo = {
       name: 'Leading Icon',
       code: `
       <Breadcrumb>
-        <Breadcrumb.Item href="#" leadingIcon={<BellIcon />}>Home</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" leadingIcon={<Bell size={16} strokeWidth={1.5} />}>Home</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="#" leadingIcon={<ListFilterIcon />}>Documents</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" leadingIcon={<FilterIcon />}>Documents</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="#" leadingIcon={<ShoppingBagIcon />}>Settings</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" leadingIcon={<ShoppingBag size={16} strokeWidth={1.5} />}>Settings</Breadcrumb.Item>
       </Breadcrumb>`
     },
     {
       name: 'Trailing Icon',
       code: `
       <Breadcrumb>
-        <Breadcrumb.Item href="#" trailingIcon={<BellIcon />}>Home</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" trailingIcon={<Bell size={16} strokeWidth={1.5} />}>Home</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="#" trailingIcon={<ListFilterIcon />}>Documents</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" trailingIcon={<FilterIcon />}>Documents</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="#" trailingIcon={<ShoppingBagIcon />}>Settings</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" trailingIcon={<ShoppingBag size={16} strokeWidth={1.5} />}>Settings</Breadcrumb.Item>
       </Breadcrumb>`
     },
     {
       name: 'Both Icons',
       code: `
       <Breadcrumb>
-        <Breadcrumb.Item href="#" leadingIcon={<BellIcon />} trailingIcon={<ListFilterIcon />}>Home</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" leadingIcon={<Bell size={16} strokeWidth={1.5} />} trailingIcon={<FilterIcon />}>Home</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="#" leadingIcon={<ListFilterIcon />} trailingIcon={<ShoppingBagIcon />}>Documents</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" leadingIcon={<FilterIcon />} trailingIcon={<ShoppingBag size={16} strokeWidth={1.5} />}>Documents</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="#" leadingIcon={<ShoppingBagIcon />} trailingIcon={<BellIcon />}>Settings</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" leadingIcon={<ShoppingBag size={16} strokeWidth={1.5} />} trailingIcon={<Bell size={16} strokeWidth={1.5} />}>Settings</Breadcrumb.Item>
       </Breadcrumb>`
     },
     {
       name: 'Only Icon',
       code: `
       <Breadcrumb>
-        <Breadcrumb.Item href="#" leadingIcon={<BellIcon />}/>
+        <Breadcrumb.Item href="#" leadingIcon={<Bell size={16} strokeWidth={1.5} />}/>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="#" leadingIcon={<ListFilterIcon />}/>
+        <Breadcrumb.Item href="#" leadingIcon={<FilterIcon />}/>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="#" leadingIcon={<ShoppingBagIcon />}/>
+        <Breadcrumb.Item href="#" leadingIcon={<ShoppingBag size={16} strokeWidth={1.5} />}/>
       </Breadcrumb>`
     }
   ]

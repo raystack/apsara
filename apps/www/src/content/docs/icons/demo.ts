@@ -5,8 +5,8 @@ export const basicDemo = {
   code: `<Flex gap={5} align="center">
   <SearchIcon />
   <ChevronDownIcon />
-  <CircleCheckIcon />
-  <TriangleAlertIcon />
+  <SuccessIcon />
+  <WarningIcon />
   <CoPilotIcon />
 </Flex>`
 };
@@ -55,7 +55,7 @@ render(
       <Text size="micro" variant="secondary">default</Text>
     </Flex>
 
-    <Theme icons={{ ChevronDownIcon: MyChevron }}>
+    <Theme icons={{ components: { ChevronDownIcon: MyChevron } }}>
       <Flex direction="column" gap={3} align="center">
         <Select defaultValue="apple">
           <Select.Trigger style={{ width: 140 }}>
@@ -72,7 +72,7 @@ render(
 )`
 };
 
-export const iconPropsDemo = {
+export const globalPropsDemo = {
   type: 'code',
   code: `<Flex gap={7} align="center">
   <Flex gap={4} align="center">
@@ -81,7 +81,7 @@ export const iconPropsDemo = {
     <XIcon />
   </Flex>
 
-  <Theme iconProps={{ strokeWidth: 1.5 }}>
+  <Theme icons={{ props: { strokeWidth: 1 } }}>
     <Flex gap={4} align="center">
       <SearchIcon />
       <ChevronDownIcon />
@@ -106,7 +106,7 @@ const Circle = props => (
 );
 
 render(
-  <Theme icons={{ XIcon: Square, CheckIcon: Circle }}>
+  <Theme icons={{ components: { XIcon: Square, CheckIcon: Circle } }}>
     <Flex gap={7} align="center">
       <Flex gap={4} align="center">
         <XIcon />
@@ -114,7 +114,7 @@ render(
       </Flex>
 
       {/* Names only XIcon, so CheckIcon keeps the outer Circle. */}
-      <Theme icons={{ XIcon: Circle }}>
+      <Theme icons={{ components: { XIcon: Circle } }}>
         <Flex gap={4} align="center">
           <XIcon />
           <CheckIcon />

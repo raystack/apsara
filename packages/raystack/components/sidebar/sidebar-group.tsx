@@ -3,7 +3,7 @@
 import { Accordion as AccordionPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, ReactNode, useCallback, useState } from 'react';
-import { ChevronDownIcon } from '~/icons/generated';
+import { ChevronDownIcon } from '~/icons';
 import { Flex } from '../flex';
 import styles from './sidebar.module.css';
 import { SidebarLeadingVisual } from './sidebar-leading-visual';

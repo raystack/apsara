@@ -35,7 +35,7 @@ export interface CalloutProps {
 
   /**
    * Custom leading icon
-   * @defaultValue InfoCircledIcon
+   * @defaultValue InfoIcon
    */
   icon?: React.ReactNode;
 

@@ -11,7 +11,7 @@ import {
   useMemo,
   useRef
 } from 'react';
-import { ChevronRightIcon } from '~/icons/generated';
+import { ChevronRightIcon } from '~/icons';
 import { Collapsible } from '../collapsible';
 import styles from './reasoning.module.css';
 

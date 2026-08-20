@@ -2,7 +2,7 @@
 
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { type ComponentProps } from 'react';
-import { ChevronDownIcon } from '~/icons/generated';
+import { ChevronDownIcon } from '~/icons';
 import { Input } from '../input';
 import { useComboboxContext } from './combobox-root';
 

@@ -6,7 +6,7 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { cx } from 'class-variance-authority';
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import tableStyles from '~/components/table/table.module.css';
-import { TableIcon } from '~/icons/generated';
+import { TableIcon } from '~/icons';
 import { Badge } from '../../badge';
 import { EmptyState } from '../../empty-state';
 import { Flex } from '../../flex';

@@ -15,7 +15,7 @@ import {
   useRef,
   useState
 } from 'react';
-import { ArrowDownIcon } from '~/icons/generated';
+import { ArrowDownIcon } from '~/icons';
 import { ScrollAreaScrollbar } from '../scroll-area/scroll-area-scrollbar';
 import { usePrefersReducedMotion } from '../tour/use-prefers-reduced-motion';
 import styles from './chat.module.css';

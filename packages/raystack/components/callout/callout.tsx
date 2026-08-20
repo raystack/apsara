@@ -8,7 +8,7 @@ import {
   useEffect,
   useState
 } from 'react';
-import { InfoIcon, XIcon } from '~/icons/generated';
+import { InfoIcon, XIcon } from '~/icons';
 
 import { IconButton } from '../icon-button';
 import styles from './callout.module.css';

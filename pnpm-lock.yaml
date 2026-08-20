@@ -47,9 +47,6 @@ importers:
 
   apps/www:
     dependencies:
-      '@radix-ui/react-icons':
-        specifier: ^1.3.2
-        version: 1.3.2(react@19.2.1)
       '@raystack/apsara':
         specifier: workspace:*
         version: link:../../packages/raystack
@@ -236,9 +233,6 @@ importers:
       '@figma/code-connect':
         specifier: ^1.4.7
         version: 1.4.7
-      '@radix-ui/react-icons':
-        specifier: ^1.3.2
-        version: 1.3.2(react@19.2.1)
       '@raystack/tools-config':
         specifier: workspace:*
         version: link:../tools-config
@@ -10030,7 +10024,6 @@ snapshots:
       '@parcel/types': 2.12.0(@parcel/core@2.12.0)
     transitivePeerDependencies:
       - '@parcel/core'
-      - '@swc/helpers'
 
   '@parcel/plugin@2.9.2(@parcel/core@2.12.0)':
     dependencies:
@@ -10449,8 +10442,6 @@ snapshots:
       '@parcel/types': 2.12.0(@parcel/core@2.12.0)
       '@parcel/utils': 2.12.0
       nullthrows: 1.1.1
-    transitivePeerDependencies:
-      - '@swc/helpers'
 
   '@parcel/workers@2.9.2(@parcel/core@2.12.0)':
     dependencies:

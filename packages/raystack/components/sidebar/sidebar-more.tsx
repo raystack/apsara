@@ -2,7 +2,7 @@
 
 import { cx } from 'class-variance-authority';
 import { ReactNode, useContext, useEffect, useState } from 'react';
-import { EllipsisIcon } from '~/icons/generated';
+import { EllipsisIcon } from '~/icons';
 import { Menu } from '../menu';
 import { Tooltip } from '../tooltip';
 import styles from './sidebar.module.css';

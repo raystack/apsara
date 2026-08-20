@@ -16,10 +16,11 @@
 export {
   createIcon,
   type IconComponent,
+  type IconOptions,
   type IconOverrides,
   type IconProps,
   IconProvider,
   type IconProviderProps
 } from './create-icon';
-export * from './generated';
-export type { IconName } from './generated/types';
+export * from './icons';
+export type { IconName } from './types';

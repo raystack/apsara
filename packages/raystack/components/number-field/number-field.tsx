@@ -3,7 +3,7 @@
 import { NumberField as NumberFieldPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, createContext, useContext, useId } from 'react';
-import { MinusIcon, PlusIcon } from '~/icons/generated';
+import { MinusIcon, PlusIcon } from '~/icons';
 import { useFieldContext } from '../field';
 import { Label } from '../label';
 import styles from './number-field.module.css';

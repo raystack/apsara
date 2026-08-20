@@ -32,12 +32,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Check the icon map
-        run: pnpm --filter=@raystack/apsara check:icon-map
-
-      - name: Generate the icon registry
-        run: pnpm --filter=@raystack/apsara build:icon-registry
-
       - name: Run tests
         run: pnpm --filter=@raystack/apsara test
 

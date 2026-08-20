@@ -6,7 +6,13 @@ import {
   type IconProps,
   IconProvider
 } from '../create-icon';
-import { ChevronDownIcon, CircleXIcon, CoPilotIcon, XIcon } from '../generated';
+import {
+  ChevronDownIcon,
+  ClearIcon,
+  CoPilotIcon,
+  ErrorIcon,
+  XIcon
+} from '../icons';
 
 // This file imports nothing outside `icons/`. The `./icons` rollup build sets
 // `rootDir` to this directory, so an import of a component would make the
@@ -54,14 +60,14 @@ describe('icon registry', () => {
 
     it('sets displayName to the icon name', () => {
       expect(XIcon.displayName).toBe('XIcon');
-      expect(CircleXIcon.displayName).toBe('CircleXIcon');
+      expect(ErrorIcon.displayName).toBe('ErrorIcon');
     });
   });
 
   describe('overrides', () => {
     it('renders the override in place of the default', () => {
       render(
-        <IconProvider icons={{ XIcon: StubIcon }}>
+        <IconProvider components={{ XIcon: StubIcon }}>
           <XIcon />
         </IconProvider>
       );
@@ -72,7 +78,7 @@ describe('icon registry', () => {
 
     it('leaves the icons it does not name at their defaults', () => {
       render(
-        <IconProvider icons={{ XIcon: StubIcon }}>
+        <IconProvider components={{ XIcon: StubIcon }}>
           <XIcon />
           <ChevronDownIcon />
         </IconProvider>
@@ -84,18 +90,27 @@ describe('icon registry', () => {
       expect(chevron).not.toHaveAttribute('data-testid', 'stub');
     });
 
-    it('keeps one key for one shape — CircleXIcon serves two roles', () => {
-      // The toast error icon and the search clear icon share this key, so an
-      // override changes both. This is the accepted cost of naming keys after
-      // shapes rather than roles.
+    it('separates two roles that share a drawing', () => {
+      // `ErrorIcon` and `ClearIcon` both default to lucide `CircleX`, so they
+      // look identical until one is overridden. They are two keys precisely so
+      // that a consumer can change the Toast error status without changing the
+      // clear button of Search.
       render(
-        <IconProvider icons={{ CircleXIcon: StubIcon }}>
-          <CircleXIcon />
-          <CircleXIcon />
+        <IconProvider components={{ ErrorIcon: StubIcon }}>
+          <ErrorIcon />
+          <ClearIcon />
         </IconProvider>
       );
 
-      expect(screen.getAllByTestId('stub')).toHaveLength(2);
+      expect(screen.getAllByTestId('stub')).toHaveLength(1);
+      expect(screen.getByTestId('stub')).toHaveAttribute(
+        'data-icon',
+        'ErrorIcon'
+      );
+
+      const clear = document.querySelector('[data-icon="ClearIcon"]');
+      expect(clear).toBeInTheDocument();
+      expect(clear).not.toHaveAttribute('data-testid', 'stub');
     });
   });
 
@@ -134,7 +149,10 @@ describe('icon registry', () => {
 
     it('passes the props through to an override', () => {
       render(
-        <IconProvider icons={{ XIcon: StubIcon }} props={{ strokeWidth: 1 }}>
+        <IconProvider
+          components={{ XIcon: StubIcon }}
+          props={{ strokeWidth: 1 }}
+        >
           <XIcon className='call-site' />
         </IconProvider>
       );
@@ -154,8 +172,8 @@ describe('icon registry', () => {
       );
 
       render(
-        <IconProvider icons={{ XIcon: StubIcon }}>
-          <IconProvider icons={{ ChevronDownIcon: Inner }}>
+        <IconProvider components={{ XIcon: StubIcon }}>
+          <IconProvider components={{ ChevronDownIcon: Inner }}>
             <XIcon />
             <ChevronDownIcon />
           </IconProvider>
@@ -177,8 +195,8 @@ describe('icon registry', () => {
       );
 
       render(
-        <IconProvider icons={{ XIcon: StubIcon }}>
-          <IconProvider icons={{ XIcon: Inner }}>
+        <IconProvider components={{ XIcon: StubIcon }}>
+          <IconProvider components={{ XIcon: Inner }}>
             <XIcon />
           </IconProvider>
         </IconProvider>
@@ -190,7 +208,7 @@ describe('icon registry', () => {
 
     it('keeps the outer overrides when the inner provider sets only props', () => {
       render(
-        <IconProvider icons={{ XIcon: StubIcon }}>
+        <IconProvider components={{ XIcon: StubIcon }}>
           <IconProvider props={{ strokeWidth: 1 }}>
             <XIcon />
           </IconProvider>
@@ -235,7 +253,10 @@ describe('icon registry', () => {
       const App = ({ theme }: { theme: string }) => (
         // New object literals on every render. `useStable` holds the previous
         // values because their contents compare equal.
-        <IconProvider icons={{ XIcon: Counted }} props={{ strokeWidth: 2 }}>
+        <IconProvider
+          components={{ XIcon: Counted }}
+          props={{ strokeWidth: 2 }}
+        >
           <span>{theme}</span>
           <Subtree />
         </IconProvider>
@@ -266,7 +287,7 @@ describe('icon registry', () => {
       });
 
       const App = ({ icon }: { icon: IconComponent }) => (
-        <IconProvider icons={{ XIcon: icon }}>
+        <IconProvider components={{ XIcon: icon }}>
           <Subtree />
         </IconProvider>
       );

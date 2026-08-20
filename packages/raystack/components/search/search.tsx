@@ -1,6 +1,6 @@
 'use client';
 
-import { CircleXIcon, SearchIcon } from '~/icons/generated';
+import { ClearIcon, SearchIcon } from '~/icons';
 import { IconButton } from '../icon-button';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
@@ -39,7 +39,7 @@ export function Search({
         className={styles.clearButton}
         data-slot='search-clear-button'
       >
-        <CircleXIcon />
+        <ClearIcon />
       </IconButton>
     </div>
   ) : undefined;

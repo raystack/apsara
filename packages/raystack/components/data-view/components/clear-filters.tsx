@@ -2,7 +2,7 @@
 
 import { cx } from 'class-variance-authority';
 import { useCallback } from 'react';
-import { XIcon } from '~/icons/generated';
+import { XIcon } from '~/icons';
 import { Button } from '../../button';
 import { Flex } from '../../flex';
 import styles from '../data-view.module.css';

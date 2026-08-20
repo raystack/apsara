@@ -138,7 +138,7 @@ export const editorCapabilitiesDemo = {
       id: 'page',
       label: 'This page',
       type: 'page',
-      icon: <FileIcon />,
+      icon: <FileTextIcon />,
       data: { path: '/docs/ai-elements/prompt-input' }
     },
     {
@@ -146,7 +146,7 @@ export const editorCapabilitiesDemo = {
       label: 'Button',
       type: 'component',
       group: 'Components',
-      icon: <Component1Icon />,
+      icon: <Component size={16} strokeWidth={1.5} />,
       data: { status: 'stable' }
     },
     {
@@ -154,7 +154,7 @@ export const editorCapabilitiesDemo = {
       label: 'DataTable',
       type: 'component',
       group: 'Components',
-      icon: <Component1Icon />,
+      icon: <Component size={16} strokeWidth={1.5} />,
       data: { status: 'stable' }
     },
     {
@@ -162,7 +162,7 @@ export const editorCapabilitiesDemo = {
       label: 'PromptInput',
       type: 'component',
       group: 'Components',
-      icon: <Component1Icon />,
+      icon: <Component size={16} strokeWidth={1.5} />,
       data: { status: 'beta' }
     },
     {
@@ -240,7 +240,7 @@ export const editorCapabilitiesDemo = {
                 id: 'data-table',
                 label: 'DataTable',
                 type: 'component',
-                icon: <Component1Icon />,
+                icon: <Component size={16} strokeWidth={1.5} />,
                 data: { status: 'stable' }
               })
             }
@@ -427,7 +427,7 @@ export const insertMentionDemo = {
                 id: 'prompt-input',
                 label: 'PromptInput',
                 type: 'component',
-                icon: <Component1Icon />
+                icon: <Component size={16} strokeWidth={1.5} />
               })
             }
           >

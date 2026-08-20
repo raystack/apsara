@@ -3,7 +3,7 @@
 import { Popover as PopoverPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import type { ComponentProps, ReactNode } from 'react';
-import { XIcon } from '~/icons/generated';
+import { XIcon } from '~/icons';
 import { Button } from '../button';
 import { Flex } from '../flex';
 import { IconButton } from '../icon-button';

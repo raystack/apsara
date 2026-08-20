@@ -9,7 +9,7 @@ import {
   useMemo,
   useRef
 } from 'react';
-import type { IconName } from './generated/types';
+import type { IconName } from './types';
 
 /**
  * The props of an Apsara icon. `children` is excluded on purpose: an icon draws
@@ -25,14 +25,28 @@ export type IconProps = Omit<SVGProps<SVGSVGElement>, 'children'>;
 export type IconComponent = ComponentType<IconProps>;
 export type IconOverrides = Partial<Record<IconName, IconComponent>>;
 
+/**
+ * The icons and the icon props together, so `<Theme icons>` takes one object.
+ *
+ * `components` replaces a drawing by key. `props` applies to every icon built
+ * by `createIcon`, the consumer's own included.
+ */
+export interface IconOptions {
+  components?: IconOverrides;
+  props?: IconProps;
+}
+
+// The context keeps its own field names. `IconProvider` speaks of `components`
+// because that reads correctly beside `props` in `<Theme icons>`; the context
+// speaks of `icons` because that is what `createIcon` looks an override up in.
 export interface IconContextValue {
   icons?: IconOverrides;
   props?: IconProps;
 }
 
 // Overrides only. A merged `{ ...defaultIcons, ...icons }` map would make this
-// module reference all 243 icons, and no bundler could then remove the unused
-// ones. Each generated module closes over its own default instead.
+// module reference all 31 icons, and no bundler could then remove the unused
+// ones. Each wrapper closes over its own default instead.
 const IconContext = createContext<IconContextValue>({});
 
 function shallowEqual(a?: object, b?: object): boolean {
@@ -54,22 +68,22 @@ function useStable<T extends object | undefined>(value: T): T {
   return ref.current;
 }
 
-export interface IconProviderProps {
-  /** Icon components that replace the Apsara defaults, keyed by icon name. */
-  icons?: IconOverrides;
-  /** Props applied to every icon, below the props at the call site. */
-  props?: IconProps;
+export interface IconProviderProps extends IconOptions {
   children: ReactNode;
 }
 
-export function IconProvider({ icons, props, children }: IconProviderProps) {
+export function IconProvider({
+  components,
+  props,
+  children
+}: IconProviderProps) {
   const parent = useContext(IconContext);
-  const stableIcons = useStable(icons);
+  const stableIcons = useStable(components);
   const stableProps = useStable(props);
 
   // Layer on the parent so a nested provider changes only the names it gives
   // and keeps the rest, exactly as `Scoped` layers theme tokens. This merges
-  // the maps the consumer supplied — never the 243 defaults — so an icon that
+  // the maps the consumer supplied — never the defaults — so an icon that
   // nobody overrides is still absent from the context and stays removable by a
   // bundler.
   const value = useMemo(
@@ -88,9 +102,8 @@ IconProvider.displayName = 'IconProvider';
  * Builds an Apsara icon: a wrapper that applies the base props, stamps
  * `data-icon`, and lets a `<Theme icons>` above it swap the drawing.
  *
- * The generated modules in `icons/generated/` call this for the icons Apsara
- * ships. It is also public, so an app can give an icon Apsara does not ship the
- * same treatment:
+ * `icons/icons.tsx` calls this for the 31 icons Apsara ships. It is also
+ * public, so an app can give an icon Apsara does not ship the same treatment:
  *
  * ```tsx
  * // src/icons.ts
@@ -102,8 +115,8 @@ IconProvider.displayName = 'IconProvider';
  *
  * `name` is any string. Only the names Apsara ships are in `IconName`, so only
  * those are replaceable through `<Theme icons>` with types on your side — but
- * every icon built here reads the same context, so `<Theme iconProps>` tunes
- * yours along with ours.
+ * every icon built here reads the same context, so the `props` of
+ * `<Theme icons>` tune yours along with ours.
  *
  * Resolution: the override of the consumer, then `Default`.
  * Prop priority: the base values, then the provider `props`, then the props at

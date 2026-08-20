@@ -43,12 +43,3 @@ yarn-error.log*
 
 # npm pack artifacts
 *.tgz
-
-# generated Code Connect batch file (created by figma:generate-icons at publish time)
-packages/raystack/figma/icons.figma.batch.json
-
-# generated icon registry — one wrapper module per key of icons/icon-map.json.
-# Written by `build:icon-registry`, which runs on `pnpm install` (the `prepare`
-# script of @raystack/apsara) and again before build, dev and test. Edit
-# icon-map.json, never these files.
-packages/raystack/icons/generated/

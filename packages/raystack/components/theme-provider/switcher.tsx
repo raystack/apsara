@@ -1,6 +1,6 @@
 'use client';
 
-import { MoonIcon, SunIcon } from '~/icons/generated';
+import { MoonIcon, SunIcon } from '~/icons';
 import { IconButton } from '../icon-button';
 import { useTheme } from './theme';
 

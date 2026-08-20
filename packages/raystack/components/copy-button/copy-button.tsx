@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useCopyToClipboard } from '~/hooks/useCopyToClipboard';
-import { CheckIcon, CopyIcon } from '~/icons/generated';
+import { CheckIcon, CopyIcon } from '~/icons';
 import { IconButton, IconButtonProps } from '../icon-button/icon-button';
 import styles from './copy-button.module.css';
 

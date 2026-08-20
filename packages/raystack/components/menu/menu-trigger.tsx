@@ -3,7 +3,7 @@
 import { Autocomplete as AutocompletePrimitive } from '@base-ui/react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { cx } from 'class-variance-authority';
-import { ChevronRightIcon } from '~/icons/generated';
+import { ChevronRightIcon } from '~/icons';
 import { Button } from '../button';
 import { useMenubarContext } from '../menubar/menubar';
 import { Cell, CellBaseProps } from './cell';

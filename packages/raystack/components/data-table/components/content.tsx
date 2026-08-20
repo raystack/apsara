@@ -4,7 +4,7 @@ import type { HeaderGroup, Row } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
 import { cx } from 'class-variance-authority';
 import { useCallback, useEffect, useRef } from 'react';
-import { TableIcon, XIcon } from '~/icons/generated';
+import { TableIcon, XIcon } from '~/icons';
 
 import { Badge } from '../../badge';
 import { Button } from '../../button';

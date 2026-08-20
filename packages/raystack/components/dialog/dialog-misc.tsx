@@ -3,7 +3,7 @@
 import { Dialog as DialogPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { type ComponentProps } from 'react';
-import { XIcon } from '~/icons/generated';
+import { XIcon } from '~/icons';
 import { Flex } from '../flex';
 import { IconButton } from '../icon-button';
 import styles from './dialog.module.css';

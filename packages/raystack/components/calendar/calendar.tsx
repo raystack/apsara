@@ -6,7 +6,7 @@ import timezonePlugin from 'dayjs/plugin/timezone';
 import utcPlugin from 'dayjs/plugin/utc';
 import { ChangeEvent, ReactNode, useEffect, useRef, useState } from 'react';
 import { DayPicker, DayPickerProps, DropdownProps } from 'react-day-picker';
-import { ChevronLeftIcon, ChevronRightIcon } from '~/icons/generated';
+import { ChevronLeftIcon, ChevronRightIcon } from '~/icons';
 
 import { IconButton } from '../icon-button';
 import { Select } from '../select';

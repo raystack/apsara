@@ -4,7 +4,7 @@ import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DateRange, PropsBase } from 'react-day-picker';
-import { CalendarDaysIcon } from '~/icons/generated';
+import { CalendarIcon } from '~/icons';
 import { Flex } from '../flex';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
@@ -223,7 +223,7 @@ export function RangePicker({
       <Input
         size='small'
         placeholder='Select start date'
-        trailingIcon={showCalendarIcon ? <CalendarDaysIcon /> : undefined}
+        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
         data-slot='range-picker-start-input'
         {...startInputProps}
@@ -237,7 +237,7 @@ export function RangePicker({
       <Input
         size='small'
         placeholder='Select end date'
-        trailingIcon={showCalendarIcon ? <CalendarDaysIcon /> : undefined}
+        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
         data-slot='range-picker-end-input'
         {...endInputProps}

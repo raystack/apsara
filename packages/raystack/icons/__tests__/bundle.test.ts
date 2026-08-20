@@ -4,13 +4,17 @@ import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 /**
- * Protects decision 3 of the icon registry plan: one module per icon, so a
- * consumer pays only for the icons it imports.
+ * Protects the one-file map: `icons/icons.tsx` holds all 31 keys, and a
+ * consumer still pays only for the keys it imports.
  *
- * This test fails if anything reintroduces an aggregate icon map — for example
- * a merged `{ ...defaultIcons, ...overrides }` in `IconProvider`, or a runtime
- * `ICON_NAMES` array. Both would put all 243 icons in every bundle, and no
- * bundler could remove them.
+ * This is the load-bearing measurement of the design. Splitting the map into
+ * one module per icon would make per-key removal trivial for any bundler; a
+ * single module makes it depend on the `/*#__PURE__*\/` annotation on every
+ * `createIcon(…)` call, and on nothing in the module having a side effect.
+ *
+ * It also fails if anything reintroduces an aggregate icon map — a merged
+ * `{ ...defaultIcons, ...overrides }` in `IconProvider`, or a runtime
+ * `ICON_NAMES` array. Either would put all 31 icons in every bundle.
  */
 
 /** vitest runs with the package root as the cwd. */
@@ -18,14 +22,15 @@ const ICONS_DIR = resolve(process.cwd(), 'icons');
 
 const IMPORTED = ['CheckIcon', 'CopyIcon', 'XIcon'] as const;
 const NOT_IMPORTED = [
-  'CircleXIcon',
+  'ClearIcon',
+  'ErrorIcon',
   'TableIcon',
   'ArrowUpIcon',
   'CoPilotIcon',
   'ChevronDownIcon'
 ] as const;
 
-/** `createIcon('XIcon', X)` — quoted, so `XIcon` cannot match `CircleXIcon`. */
+/** `createIcon('XIcon', X)` — quoted, so `XIcon` cannot match `ClearIcon`. */
 const registration = (name: string) =>
   new RegExp(`createIcon\\(\\s*["']${name}["']`);
 
@@ -35,7 +40,7 @@ async function bundleFixture() {
   writeFileSync(
     entry,
     `import { ${IMPORTED.join(', ')} } from ${JSON.stringify(
-      join(ICONS_DIR, 'generated')
+      join(ICONS_DIR, 'icons')
     )};\n` + `export const icons = [${IMPORTED.join(', ')}];\n`
   );
 
@@ -51,9 +56,9 @@ async function bundleFixture() {
     external: [/^react($|\/)/, 'lucide-react'],
     plugins: [
       nodeResolve({ extensions: ['.ts', '.tsx', '.js'] }),
-      // The barrel reaches the 4 in-house SVG defaults, so rollup must be able
-      // to parse them even though it then shakes them out. `exportType: named`
-      // gives the `ReactComponent` export that the package build produces.
+      // The map reaches the in-house SVG default, so rollup must be able to
+      // parse it even though it then shakes it out. `exportType: named` gives
+      // the `ReactComponent` export that the package build produces.
       svgr({ exportType: 'named' }),
       typescript({
         tsconfig: false,

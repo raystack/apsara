@@ -18,9 +18,9 @@
 
 /* Toolbar -------------------------------------------------------------------- */
 
-/* Sticky, because the search and the sliders are worth keeping in reach while
-   scrolling 243 tiles. 50px clears the docs navbar, which is sticky at the top
-   of the page; its z-index is the portal one, so this passes underneath it. */
+/* Sticky, because the sliders are worth keeping in reach while scrolling the
+   grid. 50px clears the docs navbar, which is sticky at the top of the page;
+   its z-index is the portal one, so this passes underneath it. */
 .bar {
   position: sticky;
   top: 50px;
@@ -41,7 +41,6 @@
 }
 
 /* Every segment is one raised pill on the tray. */
-.search,
 .control,
 .color,
 .reset {
@@ -53,45 +52,6 @@
   background-color: var(--rs-color-background-base-primary);
   border: 1px solid var(--rs-color-border-base-primary);
   border-radius: 10px;
-}
-
-.search {
-  flex: 1 1 180px;
-  gap: var(--rs-space-3);
-  min-width: 0;
-}
-
-.search:focus-within {
-  outline: 2px solid var(--rs-color-border-accent-emphasis);
-  outline-offset: -1px;
-}
-
-.searchIcon {
-  flex: none;
-  color: var(--rs-color-foreground-base-tertiary);
-}
-
-.searchInput {
-  flex: 1;
-  min-width: 0;
-  height: 100%;
-  padding: 0;
-  font: inherit;
-  font-size: 14px;
-  color: var(--rs-color-foreground-base-primary);
-  background: none;
-  border: none;
-  outline: none;
-  appearance: none;
-}
-
-.searchInput::placeholder {
-  color: var(--rs-color-foreground-base-tertiary);
-}
-
-/* The native control draws its own clear affordance, which does not match. */
-.searchInput::-webkit-search-cancel-button {
-  appearance: none;
 }
 
 .control {
@@ -226,14 +186,6 @@
 }
 
 /* Grid ---------------------------------------------------------------------- */
-
-.empty {
-  margin: 0;
-  padding: var(--rs-space-9) 0;
-  font-size: 14px;
-  color: var(--rs-color-foreground-base-secondary);
-  text-align: center;
-}
 
 .grid {
   /* Tiles grow with the icon so the padding stays even at every size. */

@@ -1,9 +1,6 @@
 'use client';
 
-import {
-  ArrowDownWideNarrowIcon,
-  ArrowUpNarrowWideIcon
-} from '~/icons/generated';
+import { SortAscendingIcon, SortDescendingIcon } from '~/icons';
 import { Flex } from '../../flex';
 import { IconButton } from '../../icon-button';
 import { Select } from '../../select';
@@ -76,11 +73,11 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
           disabled={columnList.length === 0}
         >
           {currentOrder === SortOrders.ASC ? (
-            <ArrowUpNarrowWideIcon
+            <SortAscendingIcon
               className={styles['display-popover-sort-icon']}
             />
           ) : (
-            <ArrowDownWideNarrowIcon
+            <SortDescendingIcon
               className={styles['display-popover-sort-icon']}
             />
           )}

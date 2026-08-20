@@ -3,7 +3,7 @@
 import { cva, VariantProps } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import { ComponentProps, ReactElement, useCallback, useState } from 'react';
-import { XIcon } from '~/icons/generated';
+import { XIcon } from '~/icons';
 import {
   FilterOperation,
   FilterOperator,

@@ -1,7 +1,7 @@
 'use client';
 
 import { MouseEvent, ReactNode, useCallback } from 'react';
-import { PanelLeftIcon } from '~/icons/generated';
+import { PanelLeftIcon } from '~/icons';
 import { IconButton, IconButtonProps } from '../icon-button/icon-button';
 import { useSidebar } from './sidebar-root';
 

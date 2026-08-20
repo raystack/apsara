@@ -1,20 +1,14 @@
 'use client';
 
 import * as Apsara from '@raystack/apsara';
-import {
-  ColorPicker,
-  Popover,
-  RotateCcwIcon,
-  SearchIcon,
-  Tooltip
-} from '@raystack/apsara';
+import { ColorPicker, Popover, Tooltip } from '@raystack/apsara';
+import { RotateCcw } from 'lucide-react';
 import {
   type ComponentType,
   type CSSProperties,
   type SVGProps,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState
 } from 'react';
@@ -23,22 +17,20 @@ import styles from './icongallery.module.css';
 // The grid itself is plain elements: it is the thing being documented, so its
 // own chrome should not compete with it. The toolbar does use Apsara — the
 // colour popover is our ColorPicker, and the names come from our Tooltip.
+//
+// There is no search field. At 31 keys the whole set fits on one screen, and a
+// filter over 31 tiles hides more than it finds.
 
 type IconEntry = {
   name: string;
-  /** The name with every separator stripped, so "chevron down" also matches. */
-  term: string;
   Icon: ComponentType<SVGProps<SVGSVGElement>>;
 };
 
-const normalize = (value: string) =>
-  value.toLowerCase().replace(/[^a-z0-9]/g, '');
-
 /**
- * Every registry wrapper, read off the package barrel. `createIcon` sets
- * `displayName` to the icon name, so that test picks out the icons and leaves
+ * Every wrapper the set publishes, read off the package barrel. `createIcon`
+ * sets `displayName` to the key, so that test picks out the icons and leaves
  * `IconButton`, `IconProvider`, and the rest alone. Reading the barrel means the
- * gallery never drifts from `icon-map.json`.
+ * gallery never drifts from `icons/icons.tsx`.
  */
 const ICONS: IconEntry[] = Object.entries(
   Apsara as unknown as Record<string, unknown>
@@ -51,7 +43,6 @@ const ICONS: IconEntry[] = Object.entries(
   )
   .map(([name, value]) => ({
     name,
-    term: normalize(name.replace(/Icon$/, '')),
     Icon: value as ComponentType<SVGProps<SVGSVGElement>>
   }))
   .sort((a, b) => a.name.localeCompare(b.name));
@@ -60,7 +51,6 @@ const ICONS: IconEntry[] = Object.entries(
  * One tooltip for the whole grid, wired up with Base UI's detached triggers:
  * each tile is a `Tooltip.Trigger` carrying its name as the payload, and the
  * single `Tooltip` below renders whichever payload the active trigger sends.
- * A tooltip per tile would mean 243 portals for one visible label.
  *
  * https://base-ui.com/react/components/tooltip#detached-triggers
  */
@@ -85,7 +75,6 @@ const percent = (value: number, min: number, max: number) =>
   `${((value - min) / (max - min)) * 100}%`;
 
 export function IconGallery() {
-  const [query, setQuery] = useState('');
   const [stroke, setStroke] = useState(DEFAULT_STROKE);
   const [size, setSize] = useState(DEFAULT_SIZE);
   const [color, setColor] = useState('');
@@ -101,12 +90,6 @@ export function IconGallery() {
     timer.current = window.setTimeout(() => setCopied(null), 1600);
   }, []);
 
-  const matches = useMemo(() => {
-    const needle = normalize(query);
-    if (!needle) return ICONS;
-    return ICONS.filter(icon => icon.term.includes(needle));
-  }, [query]);
-
   const isDefault =
     stroke === DEFAULT_STROKE && size === DEFAULT_SIZE && color === '';
 
@@ -120,20 +103,6 @@ export function IconGallery() {
     <div className={styles.root}>
       <div className={styles.bar}>
         <div className={styles.toolbar}>
-          <div className={styles.search}>
-            <SearchIcon className={styles.searchIcon} />
-            <input
-              className={styles.searchInput}
-              type='search'
-              value={query}
-              onChange={event => setQuery(event.target.value)}
-              placeholder={`Search ${ICONS.length} icons…`}
-              aria-label='Search icons'
-              spellCheck={false}
-              autoComplete='off'
-            />
-          </div>
-
           <div className={styles.control}>
             <label className={styles.label} htmlFor='ig-size'>
               Size
@@ -214,52 +183,47 @@ export function IconGallery() {
             title='Reset to the Apsara defaults'
             aria-label='Reset to the Apsara defaults'
           >
-            <RotateCcwIcon />
+            {/* lucide direct, because a reset arrow is not a key the set
+                publishes — so it needs the size and stroke Apsara's icons get
+                for free. */}
+            <RotateCcw size={16} strokeWidth={1.5} />
           </button>
         </div>
       </div>
 
       <p className={styles.srOnly} aria-live='polite'>
-        {copied
-          ? `Copied ${copied}`
-          : query
-            ? `${matches.length} of ${ICONS.length} icons`
-            : `${ICONS.length} icons`}
+        {copied ? `Copied ${copied}` : `${ICONS.length} icons`}
       </p>
 
-      {matches.length === 0 ? (
-        <p className={styles.empty}>No icon matches “{query}”.</p>
-      ) : (
-        <div
-          className={styles.grid}
-          style={
-            {
-              '--ig-size': `${size}px`,
-              '--ig-stroke': String(stroke),
-              ...(color ? { color } : null)
-            } as CSSProperties
-          }
-        >
-          {matches.map(({ name, Icon }) => (
-            <Tooltip.Trigger
-              key={name}
-              className={styles.tile}
-              handle={nameTooltip}
-              payload={name}
-              // Names are the point of the grid, so show them on arrival
-              // rather than after Tooltip.Trigger's usual 200ms.
-              delay={0}
-              // The tooltip has to survive the click to become "Copied".
-              closeOnClick={false}
-              onClick={() => copy(name)}
-              data-copied={copied === name || undefined}
-              aria-label={`Copy ${name}`}
-            >
-              <Icon />
-            </Tooltip.Trigger>
-          ))}
-        </div>
-      )}
+      <div
+        className={styles.grid}
+        style={
+          {
+            '--ig-size': `${size}px`,
+            '--ig-stroke': String(stroke),
+            ...(color ? { color } : null)
+          } as CSSProperties
+        }
+      >
+        {ICONS.map(({ name, Icon }) => (
+          <Tooltip.Trigger
+            key={name}
+            className={styles.tile}
+            handle={nameTooltip}
+            payload={name}
+            // Names are the point of the grid, so show them on arrival
+            // rather than after Tooltip.Trigger's usual 200ms.
+            delay={0}
+            // The tooltip has to survive the click to become "Copied".
+            closeOnClick={false}
+            onClick={() => copy(name)}
+            data-copied={copied === name || undefined}
+            aria-label={`Copy ${name}`}
+          >
+            <Icon />
+          </Tooltip.Trigger>
+        ))}
+      </div>
 
       <Tooltip handle={nameTooltip}>
         {({ payload }) => (

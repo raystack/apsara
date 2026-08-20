@@ -7,7 +7,7 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { useEffect, useRef, useState } from 'react';
 import { PropsBase } from 'react-day-picker';
-import { CalendarDaysIcon } from '~/icons/generated';
+import { CalendarIcon } from '~/icons';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
 import { Popover } from '../popover';
@@ -229,7 +229,7 @@ export function DatePicker({
       size='small'
       placeholder='Select date'
       className={styles.datePickerInput}
-      trailingIcon={showCalendarIcon ? <CalendarDaysIcon /> : undefined}
+      trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
       data-slot='date-picker-input'
       {...inputProps}
       ref={popover.inputRef}

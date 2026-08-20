@@ -58,7 +58,7 @@ export const variantsDemo = {
   <Flex gap={9}>
     <EmptyState
       variant="empty1"
-      icon={<BellIcon />}
+      icon={<Bell size={16} strokeWidth={1.5} />}
       heading="No notifications yet"
       subHeading="When you have notifications, they will appear here"
       primaryAction={
@@ -70,7 +70,7 @@ export const variantsDemo = {
     />
     <EmptyState
       variant="empty2"
-      icon={<BellIcon />}
+      icon={<Bell size={16} strokeWidth={1.5} />}
       heading="Organization"
       subHeading="An organization in Aurora is a shared workspace where teams manage projects, AOIs, and image orders. It streamlines collaboration, analysis, and decision-making across industries."
       primaryAction={
