@@ -56,9 +56,24 @@ Renders the value text within a list item.
 
 <auto-type-table path="./props.ts" name="ListValueProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `list` | The root `<ul>` element |
+| `list-header` | The header row (`<div>` with heading role) |
+| `list-header-text` | The `<span>` wrapping the header text |
+| `list-item` | An individual list row (`<li>`) |
+| `list-label` | The `<span>` holding the key text of an item |
+| `list-value` | The `<span>` holding the value text of an item |
+
 ## Examples
 
 ### Basic Usage
+
+A `Header` labels the group, then each `Item` pairs a `Label` with its `Value`. Give the labels a shared `min-width` so the values line up in a column.
 
 <Demo data={basicDemo} />
 

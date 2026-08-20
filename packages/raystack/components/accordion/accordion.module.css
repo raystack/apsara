@@ -73,7 +73,7 @@
   height: 0;
 }
 
-.accordion-content-inner {
+.accordion-content-body {
   border: 0.5px solid var(--rs-color-border-base-primary);
   background: var(--rs-color-background-base-primary);
   box-shadow: var(--rs-shadow-inset);
@@ -90,7 +90,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .accordion-icon {
-    transition: transform var(--rs-duration-fast) var(--rs-ease-in-out);
+    transition: transform var(--rs-duration-fast) var(--rs-ease-out);
   }
 
   .accordion-content {

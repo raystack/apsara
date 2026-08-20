@@ -166,6 +166,7 @@
   line-height: var(--rs-line-height-regular);
   letter-spacing: var(--rs-letter-spacing-regular);
   color: var(--rs-color-foreground-base-secondary);
+  text-wrap: pretty;
 }
 
 .body {

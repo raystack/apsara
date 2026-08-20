@@ -11,6 +11,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-variant-numeric: tabular-nums;
   border-radius: var(--rs-radius-full);
   white-space: nowrap;
   font-weight: var(--rs-font-weight-regular);

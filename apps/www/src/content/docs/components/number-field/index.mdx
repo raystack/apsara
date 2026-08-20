@@ -76,6 +76,24 @@ An interactive area that allows adjusting the value by dragging. Renders a Label
 
 <auto-type-table path="./props.ts" name="NumberFieldScrubAreaProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `number-field` | The root container |
+| `number-field-group` | The group wrapping the input and steppers |
+| `number-field-input` | The `<input>` element itself |
+| `number-field-decrement` | The decrement button |
+| `number-field-decrement-icon` | The default minus icon (when no custom children) |
+| `number-field-increment` | The increment button |
+| `number-field-increment-icon` | The default plus icon (when no custom children) |
+| `number-field-scrub-area` | The `NumberField.ScrubArea` container |
+| `number-field-scrub-area-label` | The label inside the scrub area |
+| `number-field-scrub-area-cursor` | The virtual cursor (while scrubbing) |
+| `number-field-scrub-area-cursor-icon` | The default cursor icon (while scrubbing) |
+
 ## Examples
 
 ### Basic

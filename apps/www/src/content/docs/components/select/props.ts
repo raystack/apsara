@@ -28,26 +28,31 @@ export interface SelectRootProps {
 }
 
 export interface SelectTriggerProps {
-  /** Defines the size of the trigger. */
+  /** Defines the size of the trigger.
+   * @default "medium"
+   */
   size?: 'small' | 'medium';
 
-  /** Visual style variant. */
-  variant?: 'default' | 'filter';
+  /** Visual style variant.
+   * @default "outline"
+   */
+  variant?: 'outline' | 'text';
 
   /** Props for the chevron icon. */
   iconProps?: Record<string, unknown>;
 
-  /** Accessible label. */
-  ariaLabel?: string;
+  /** Whether the element supplied through `render` is a native button.
+   * Set to false when the rendered element is not a button, so Base UI
+   * skips button-only attributes and behaviors.
+   * @defaultValue true
+   */
+  nativeButton?: boolean;
 
-  /** ID of element describing the select. */
-  ariaDescribedby?: string;
-
-  /** Whether the select is required. */
-  ariaRequired?: boolean;
-
-  /** Whether the select has an invalid value. */
-  ariaInvalid?: boolean;
+  /** Accessible label for the trigger. Falls back to "Select option" when omitted.
+   * The trigger also accepts all native button attributes, including
+   * `aria-describedby`, `aria-required`, and `aria-invalid`.
+   */
+  'aria-label'?: string;
 }
 
 export interface SelectContentProps {

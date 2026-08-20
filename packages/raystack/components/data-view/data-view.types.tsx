@@ -1,6 +1,7 @@
 import type {
   ColumnDef,
   Row,
+  RowSelectionState,
   Table,
   Updater,
   VisibilityState
@@ -108,6 +109,12 @@ export interface DataViewListColumn<TData, TValue = unknown> {
   header?: ColumnDef<TData, TValue>['header'];
   /** CSS grid track width. `1fr`, `auto`, `'200px'`, `'minmax(80px, 1fr)'`, or a number (pixels). Defaults to `1fr`. */
   width?: string | number;
+  /**
+   * @deprecated Every cell and header cell carries `data-column={accessorKey}`
+   * alongside its `data-slot`. Target this column with
+   * `[data-slot="data-view-list-cell"][data-column="..."]` (and the
+   * `-header-cell` variant) instead.
+   */
   classNames?: { cell?: string; header?: string };
   styles?: { cell?: React.CSSProperties; header?: React.CSSProperties };
 }
@@ -145,6 +152,14 @@ export interface DataViewProps<TData> {
   onLoadMore?: () => Promise<void> | void;
   onRowClick?: (row: TData) => void;
   onColumnVisibilityChange?: (columnVisibility: VisibilityState) => void;
+  /**
+   * Fires with the new selection map whenever rows are selected or deselected
+   * (`row.toggleSelected()`, `table.toggleAllRowsSelected()`, …). Selection
+   * itself lives on the table instance — read it through
+   * `useDataView().table`; this is only for mirroring it outside the tree.
+   * Keys are `getRowId` values (row indices when `getRowId` is omitted).
+   */
+  onRowSelectionChange?: (rowSelection: RowSelectionState) => void;
   /** Stable unique id per row (React key). */
   getRowId?: (row: TData, index: number) => string;
   /** Multi-view configuration. When set, `DataView.DisplayControls` renders a view switcher and renderers gate themselves on the active view via their `name` prop. */
@@ -163,12 +178,19 @@ export interface DataViewProps<TData> {
   groupByResolvers?: Record<string, GroupByResolver<TData>>;
 }
 
+/** @deprecated Every key here has an equivalent `[data-slot]` selector — see the List slot table in the DataView docs. Prefer styling by `data-slot` over threading class names through props. */
 export type DataViewListClassNames = {
+  /** @deprecated Use `[data-slot="data-view-list"]` instead. */
   root?: string;
+  /** @deprecated Use `[data-slot="data-view-list-header"]` instead. */
   header?: string;
+  /** @deprecated Use `[data-slot="data-view-list-header-cell"]` instead. */
   headerCell?: string;
+  /** @deprecated Use `[data-slot="data-view-list-row"]` instead. */
   row?: string;
+  /** @deprecated Use `[data-slot="data-view-list-cell"]` instead. */
   cell?: string;
+  /** @deprecated Use `[data-slot="data-view-list-group-header"]` instead. */
   groupHeader?: string;
 };
 
@@ -200,6 +222,7 @@ export interface DataViewListProps<TData, TValue = unknown> {
   showGroupHeaders?: boolean;
   /** When true, group headers stick under the table header while scrolling. Default false. */
   stickyGroupHeader?: boolean;
+  /** @deprecated Style rendered parts by `[data-slot]` instead — see `DataViewListClassNames`. */
   classNames?: DataViewListClassNames;
 }
 
@@ -267,17 +290,30 @@ export interface TimelineActions {
   getVisibleRange: () => [Date, Date] | null;
 }
 
+/** @deprecated Every key here has an equivalent `[data-slot]` selector — see the Timeline slot table in the DataView docs. Prefer styling by `data-slot` over threading class names through props. */
 export type DataViewTimelineClassNames = {
+  /** @deprecated Use `[data-slot="data-view-timeline"]` instead. */
   root?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-axis"]` instead. */
   axis?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-axis-band"]` instead. */
   band?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-axis-tick"]` instead. */
   tick?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-marker"]` instead. */
   marker?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-gridline"]` instead. */
   gridline?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-cursor"]` instead. */
   cursor?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-canvas"]` instead. */
   canvas?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-card"]` instead. */
   card?: string;
-  /** Group section header band (same name/role as `DataViewListClassNames.groupHeader`). */
+  /**
+   * Group section header band (same name/role as `DataViewListClassNames.groupHeader`).
+   * @deprecated Use `[data-slot="data-view-timeline-group-header"]` instead.
+   */
   groupHeader?: string;
 };
 
@@ -371,10 +407,17 @@ export interface DataViewTimelineProps<TData> {
    */
   lanePacking?: 'auto' | 'one-per-row';
   /**
-   * Estimated card height in px, same contract as `DataView.List`: cards
-   * render at their natural content height and are measured after paint; the
-   * estimate only seeds lane layout until real heights arrive. Each lane
-   * sizes to its tallest card. Default 66.
+   * Lane height in px. Default 66.
+   *
+   * Unvirtualized this is an estimate, same contract as `DataView.List`: cards
+   * render at their natural content height and are measured after paint, the
+   * estimate only seeding lane layout until real heights arrive, and each lane
+   * sizing to its tallest card.
+   *
+   * With `virtualized` it is exact. A culled card never mounts and so never
+   * measures, so measured lanes would resize under the user as they scroll —
+   * lanes take this value instead, and a card taller than it overflows its
+   * lane rather than growing it. Set it to your card's height.
    */
   estimatedRowHeight?: number;
   /** Vertical gap between lanes in px. Default 16. */
@@ -389,7 +432,13 @@ export interface DataViewTimelineProps<TData> {
    */
   estimatedPointWidth?: number;
 
-  /** When true, only cards/gridlines near the visible viewport are rendered (horizontal culling). */
+  /**
+   * Render only the cards and gridlines near the visible viewport, culling on
+   * both axes — a frame costs what's on screen rather than what's in the data.
+   * Recommended whenever the domain is long or rows are numerous.
+   *
+   * Lane heights become fixed to `estimatedRowHeight`; see the note there.
+   */
   virtualized?: boolean;
 
   /**
@@ -398,6 +447,7 @@ export interface DataViewTimelineProps<TData> {
    * bands only — rows stay grouped into their sections. Default true.
    */
   showGroupHeaders?: boolean;
+  /** @deprecated Style rendered parts by `[data-slot]` instead — see `DataViewTimelineClassNames`. */
   classNames?: DataViewTimelineClassNames;
 }
 
@@ -427,6 +477,11 @@ export type DataViewContextType<TData> = {
   // visibility (lifted to context per RFC §"Unified Column Visibility via DisplayAccess")
   columnVisibility: VisibilityState;
   setColumnVisibility: (value: Updater<VisibilityState>) => void;
+
+  // selection — lifted so a selection change invalidates this context value
+  // (the table instance identity is stable, so it can't do that on its own).
+  rowSelection: RowSelectionState;
+  setRowSelection: (value: Updater<RowSelectionState>) => void;
 
   // multi-view
   views?: ViewSpec[];

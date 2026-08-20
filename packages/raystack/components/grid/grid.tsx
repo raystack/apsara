@@ -109,17 +109,17 @@ export function Grid({
     ...style
   };
 
+  const gridProps = {
+    'data-slot': 'grid',
+    className: grid({ inline, gap, columnGap, rowGap, className }),
+    style: gridStyle
+  };
+
   const element = useRender({
     defaultTagName: 'div',
     ref,
     render,
-    props: mergeProps<'div'>(
-      {
-        className: grid({ inline, gap, columnGap, rowGap, className }),
-        style: gridStyle
-      },
-      props
-    )
+    props: mergeProps<'div'>(gridProps, props)
   });
 
   return element;

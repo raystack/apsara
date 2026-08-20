@@ -102,28 +102,10 @@
   height: var(--rs-space-5);
 }
 
-.shortcut {
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--rs-space-1);
-  white-space: nowrap;
-  font-family: var(--rs-font-body);
-  font-weight: var(--rs-font-weight-regular);
-  font-size: var(--rs-font-size-micro);
-  line-height: var(--rs-line-height-micro);
-  letter-spacing: var(--rs-letter-spacing-micro);
-  color: var(--rs-color-foreground-base-tertiary);
-}
-
-.shortcutKey {
-  font: inherit;
-  color: inherit;
-}
-
 .empty {
   padding: var(--rs-space-7) var(--rs-space-3);
   text-align: center;
+  text-wrap: pretty;
   font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);

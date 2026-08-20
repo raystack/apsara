@@ -133,11 +133,4 @@ const mdxComponents = {
   Demo
 };
 
-// export const createRelativeLink: typeof import('./mdx.server').createRelativeLink =
-//   () => {
-//     throw new Error(
-//       '`createRelativeLink` is only supported in Node.js environment',
-//     );
-//   };
-
 export { mdxComponents };

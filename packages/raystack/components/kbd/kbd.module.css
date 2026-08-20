@@ -1,0 +1,42 @@
+.kbd,
+.kbd-group {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  pointer-events: none;
+  user-select: none;
+}
+
+.kbd {
+  justify-content: center;
+  box-sizing: border-box;
+  height: var(--rs-space-6);
+  min-width: var(--rs-space-6);
+  padding: 0 var(--rs-space-2);
+  border-radius: var(--rs-radius-1);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-mini);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+  white-space: nowrap;
+  background: var(--rs-color-background-neutral-primary);
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+:where(.kbd-group-solid) .kbd,
+.kbd.kbd-solid {
+  background: var(--rs-color-background-neutral-primary);
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+:where(.kbd-group-ghost) .kbd,
+.kbd.kbd-ghost {
+  background: transparent;
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.kbd-group {
+  gap: var(--rs-space-2);
+  font: inherit;
+}

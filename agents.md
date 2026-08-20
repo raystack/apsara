@@ -21,7 +21,7 @@ packages/raystack/           # Main component library
 ├── icons/                 # Icon components
 ├── styles/               # Global styles
 ├── types/                # Type definitions
-└── test-utils.tsx        # Testing utilities
+└── test-utils/           # Testing utilities
 
 apps/www/                  # Documentation site
 ├── src/content/docs/     # Component documentation

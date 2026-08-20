@@ -50,6 +50,17 @@ Optional wrapper for animating content transitions when multiple triggers share 
 
 <auto-type-table path="./props.ts" name="PreviewCardViewportProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `preview-card-positioner` | Positioner that places the popup |
+| `preview-card-content` | The preview card popup |
+| `preview-card-viewport` | The `PreviewCard.Viewport` wrapper |
+| `preview-card-arrow` | The arrow (when `showArrow`) |
+
 ## Examples
 
 ### With Arrow

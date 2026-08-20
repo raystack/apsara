@@ -53,6 +53,19 @@ Contains the indicator that visualizes the current value.
 
 <auto-type-table path="./props.ts" name="ProgressTrackProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `progress` | The root element |
+| `progress-label` | The `Progress.Label` element |
+| `progress-value` | The `Progress.Value` element |
+| `progress-track` | The track (an `<svg>` in the circular variant) |
+| `progress-track-circle` | The background circle (circular variant only) |
+| `progress-indicator` | The filled indicator (a `<circle>` in the circular variant) |
+
 ## Examples
 
 ### Variant

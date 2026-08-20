@@ -60,6 +60,27 @@ Lets users switch between different color models (HEX, RGB, HSL, OKLCH) via a dr
 
 Displays the current color value in the selected color model as a read-only string. The value is updated automatically as the user interacts with the area, hue, or alpha controls. Pass `copyable` to render a copy-to-clipboard button in the input's trailing slot.
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `color-picker` | The root container (Flex column) |
+| `color-picker-area` | The 2D color area (saturation/lightness or chroma/lightness plane) |
+| `color-picker-area-canvas` | The `<canvas>` painting the color plane (when in `oklch` mode) |
+| `color-picker-area-thumb` | The draggable thumb in the color area |
+| `color-picker-hue` | The hue slider root |
+| `color-picker-alpha` | The alpha slider root |
+| `color-picker-alpha-gradient` | The gradient overlay `<div>` behind the alpha track |
+| `color-picker-slider-control` | The slider control (shared by hue and alpha) |
+| `color-picker-slider-track` | The slider track (shared by hue and alpha) |
+| `color-picker-slider-range` | The filled range indicator inside the track (shared by hue and alpha) |
+| `color-picker-slider-thumb` | The slider thumb (shared by hue and alpha) |
+| `color-picker-input` | The read-only color value input |
+| `color-picker-mode` | The mode select trigger |
+| `color-picker-mode-content` | The mode select dropdown content (when open) |
+
 ## Examples
 
 ### Basic Usage

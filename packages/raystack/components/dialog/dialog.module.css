@@ -117,6 +117,7 @@
   font-weight: var(--rs-font-weight-regular);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
+  text-wrap: pretty;
   margin: 0;
 }
 

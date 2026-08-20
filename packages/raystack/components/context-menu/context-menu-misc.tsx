@@ -19,7 +19,11 @@ export const ContextMenuGroup = ({
   }
 
   return (
-    <ContextMenuPrimitive.Group className={cx(className)} {...props}>
+    <ContextMenuPrimitive.Group
+      data-slot='context-menu-group'
+      className={cx(className)}
+      {...props}
+    >
       {children}
     </ContextMenuPrimitive.Group>
   );
@@ -39,6 +43,7 @@ export const ContextMenuLabel = ({
 
   return (
     <ContextMenuPrimitive.GroupLabel
+      data-slot='context-menu-label'
       className={cx(styles.label, className)}
       {...props}
     />
@@ -58,6 +63,7 @@ export const ContextMenuSeparator = ({
 
   return (
     <div
+      data-slot='context-menu-separator'
       role='separator'
       className={cx(styles.separator, className)}
       {...props}
@@ -71,7 +77,11 @@ export const ContextMenuEmptyState = ({
   children,
   ...props
 }: ComponentProps<'div'>) => (
-  <div className={cx(styles.empty, className)} {...props}>
+  <div
+    data-slot='context-menu-empty-state'
+    className={cx(styles.empty, className)}
+    {...props}
+  >
     {children}
   </div>
 );

@@ -101,6 +101,28 @@ Every lifecycle moment is reported to `onEvent`.
 
 <auto-type-table path="./props.ts" name="TourEvent" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `tour-overlay` | `Tour.Overlay` root |
+| `tour-spotlight` | The cut-out spotlight highlight |
+| `tour-spotlight-cover` | The dimmed cover around the spotlight (when a target is resolved) |
+| `tour-overlay-hit` | Click-blocking hit-test strips around the spotlight |
+| `tour-positioner` | Positioning wrapper around the content popup |
+| `tour-content` | `Tour.Content` popup |
+| `tour-arrow` | The pointing arrow (when `showArrow` and not detached) |
+| `tour-step-content` | Wrapper around the active step's card content |
+| `tour-title` | `Tour.Title` |
+| `tour-description` | `Tour.Description` |
+| `tour-progress` | `Tour.Progress` |
+| `tour-next` | `Tour.Next` button |
+| `tour-prev` | `Tour.Prev` button (rendered from the second step onward in the default layout) |
+| `tour-skip` | `Tour.Skip` button |
+| `tour-close` | `Tour.Close` button |
+
 ## Examples
 
 ### Controlled with imperative controls

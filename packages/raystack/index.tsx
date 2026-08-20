@@ -97,6 +97,7 @@ export { IconButton } from './components/icon-button';
 export { Image } from './components/image';
 export { Indicator } from './components/indicator';
 export { Input } from './components/input';
+export { Kbd } from './components/kbd';
 export { Label } from './components/label';
 export { Link } from './components/link';
 export { List } from './components/list';
@@ -112,8 +113,16 @@ export { PreviewCard } from './components/preview-card';
 export { Progress } from './components/progress';
 export {
   PromptInput,
+  type PromptInputActions,
+  type PromptInputEditorProps,
+  type PromptInputMention,
+  type PromptInputMentionItem,
+  type PromptInputMentionRef,
+  type PromptInputMentionsProps,
+  type PromptInputMessage,
   type PromptInputProps,
-  type PromptInputStatus
+  type PromptInputStatus,
+  type PromptInputTextareaProps
 } from './components/prompt-input';
 export { Radio } from './components/radio';
 export { Reasoning } from './components/reasoning';
@@ -122,7 +131,11 @@ export { Search } from './components/search';
 export { Select } from './components/select';
 export { Separator } from './components/separator';
 export { SidePanel } from './components/side-panel';
-export { Sidebar } from './components/sidebar';
+export {
+  Sidebar,
+  type SidebarContextValue,
+  useSidebar
+} from './components/sidebar';
 export { Skeleton } from './components/skeleton';
 export { Slider } from './components/slider';
 export { Spinner } from './components/spinner';

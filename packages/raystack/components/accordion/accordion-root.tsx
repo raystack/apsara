@@ -67,6 +67,7 @@ export const AccordionRoot = ({
       value={toArray(value)}
       defaultValue={toArray(defaultValue)}
       onValueChange={handleValueChange}
+      data-slot='accordion'
       {...rest}
     />
   );

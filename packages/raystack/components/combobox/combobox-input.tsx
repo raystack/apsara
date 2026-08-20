@@ -31,6 +31,7 @@ export const ComboboxInput = ({ ref, ...props }: ComboboxInputProps) => {
               : undefined
           }
           trailingIcon={<ChevronDownIcon />}
+          data-slot='combobox-input'
           {...props}
         />
       }

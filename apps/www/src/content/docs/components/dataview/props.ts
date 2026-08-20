@@ -42,6 +42,9 @@ export interface DataViewProps {
   /** Column visibility change callback. */
   onColumnVisibilityChange?: (visibility: Record<string, boolean>) => void;
 
+  /** Fires with the new selection map whenever rows are selected or deselected. Keys are `getRowId` values (row indices when `getRowId` is omitted). */
+  onRowSelectionChange?: (rowSelection: Record<string, boolean>) => void;
+
   /** Return a stable unique id for each row (used as React key). */
   getRowId?: (row: T, index: number) => string;
 
@@ -319,9 +322,6 @@ export interface DataViewTimelineProps {
    * @defaultValue true
    */
   showGroupHeaders?: boolean;
-
-  /** Class overrides per part: root, axis, band, tick, marker, gridline, cursor, canvas, card, groupHeader. */
-  classNames?: Record<string, string>;
 }
 
 export interface TimelineCardContext {

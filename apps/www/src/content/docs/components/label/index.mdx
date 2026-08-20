@@ -29,6 +29,15 @@ child) to lay out the label and its control.
 
 <auto-type-table path="./props.ts" name="LabelProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `label` | The `<label>` element |
+| `label-indicator` | The optional/required indicator text (when `required={false}`, or `required` with `requiredText`) |
+
 ## Examples
 
 ### Inline with a control

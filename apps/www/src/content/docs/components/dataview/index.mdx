@@ -16,6 +16,7 @@ import {
   virtualizedGroupingPreview,
   loadingPreview,
   perViewFieldsPreview,
+  rowSelectionPreview,
   timelinePreview,
   timelineGroupingPreview,
   timelinePointPreview,
@@ -30,6 +31,8 @@ import {
 In scope today: `DataView.List` (table + list presentations), `DataView.Timeline` (cards positioned on a continuous time axis — full guide in [Timeline](#timeline)), and `DataView.Custom` (escape hatch for cards, kanban, gallery, etc.).
 
 ## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import {
@@ -204,6 +207,89 @@ A context-driven "Clear Filters" affordance for the empty state. Place it as a s
 
 <auto-type-table path="./props.ts" name="DataViewClearFiltersProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot). Filter chips inside `DataView.Filters` expose the [FilterChip slots](/docs/components/filter-chip#slots); `DataView.Search` exposes the [Search slots](/docs/components/search#slots).
+
+**List**
+
+| Slot | Element |
+|------|---------|
+| `data-view-list` | Scroll container |
+| `data-view-list-grid` | The grid carrying the table/list role |
+| `data-view-list-header` | Header row group |
+| `data-view-list-header-row` | Header row |
+| `data-view-list-header-cell` | Header cell |
+| `data-view-list-body` | Row container |
+| `data-view-list-row` | Data row |
+| `data-view-list-cell` | Cell (data and loader rows) |
+| `data-view-list-group-header` | Group header (incl. the sticky anchor) |
+| `data-view-list-loader-row` | Skeleton row while `isLoading` |
+| `data-view-list-sentinel` | Infinite-scroll sentinel |
+
+Header cells, body cells, and loader cells also carry `data-column="{accessorKey}"`, so a single column can be targeted without a per-column `classNames` entry:
+
+```css
+/* Right-align every cell in the "amount" column, header included */
+[data-slot="data-view-list-cell"][data-column="amount"],
+[data-slot="data-view-list-header-cell"][data-column="amount"] {
+  text-align: right;
+}
+```
+
+**Toolbar and filters**
+
+| Slot | Element |
+|------|---------|
+| `data-view-toolbar` | Toolbar container |
+| `data-view-filters` | Filter chip row |
+| `data-view-add-filter` | Default add-filter trigger |
+| `data-view-add-filter-item` | An entry in the add-filter menu |
+| `data-view-filter-summary` | "Items hidden by filters" footer |
+| `data-view-filter-summary-text` | Count + label group |
+| `data-view-filter-summary-count` | Hidden-row count |
+| `data-view-filter-summary-label` | Footer label text |
+| `data-view-filter-summary-clear` | The "Clear Filters" button |
+
+**Display controls**
+
+| Slot | Element |
+|------|---------|
+| `data-view-display-trigger` | Default "Display" trigger button |
+| `data-view-display-content` | Popover body |
+| `data-view-display-section` | A section inside the popover |
+| `data-view-display-reset` | Reset row |
+| `data-view-display-reset-button` | The "Reset to default" button |
+| `data-view-ordering` / `-label` / `-control` / `-select` / `-direction` | Ordering row and its parts |
+| `data-view-grouping` / `-label` / `-control` / `-select` | Grouping row and its parts |
+| `data-view-display-properties` / `-label` / `-list` / `-chip` | Display Properties section and its parts |
+| `data-view-view-switcher` / `-tab` | View switcher tabs |
+
+**Timeline**
+
+| Slot | Element |
+|------|---------|
+| `data-view-timeline` | Scroll container |
+| `data-view-timeline-axis` | Sticky axis |
+| `data-view-timeline-axis-band` / `-band-label` | Month/year band and its label |
+| `data-view-timeline-axis-tick` | Axis tick |
+| `data-view-timeline-axis-marker` | Today/custom marker badge on the axis |
+| `data-view-timeline-axis-cursor` | Hover cursor badge on the axis |
+| `data-view-timeline-canvas` | Card canvas |
+| `data-view-timeline-card` | Card positioning wrapper |
+| `data-view-timeline-gridline` | Vertical gridline |
+| `data-view-timeline-marker` | Marker line on the canvas |
+| `data-view-timeline-cursor` | Hover cursor line on the canvas |
+| `data-view-timeline-group-layer` / `-group-slot` / `-group-header` / `-group-header-label` | Group band layer and its parts |
+| `data-view-timeline-footer` | Sticky footer |
+
+**States**
+
+| Slot | Element |
+|------|---------|
+| `data-view-empty-state` | `DataView.EmptyState` container |
+| `data-view-zero-state` | `DataView.ZeroState` container |
+
 ## Examples
 
 ### Search
@@ -274,6 +360,24 @@ const listFields = fields.map((f) =>
 <DataView.List name="list" variant="list" columns={listColumns} fields={listFields} />;
 ```
 
+### Row selection
+
+DataView doesn't ship a selection toolbar, but the underlying TanStack table instance is exposed via `useDataView()`, so you own the affordance: add a checkbox column to the renderer and float a [`FloatingActions`](/docs/components/floating-actions) bar over the view while rows are selected.
+
+`select` is deliberately **not** declared in `fields` — an accessor with no matching field is an *unmanaged* display column. `DataView.List` always renders it (it never appears in Display Properties, and can't be filtered, sorted, or grouped) and hands the spec a `{ row, table }` context instead of a TanStack cell context. The same applies to row actions and drag handles.
+
+<Demo data={rowSelectionPreview} />
+
+Notes:
+
+- `getRowId` is optional but recommended. Without it, selection falls back to positional keys (`'0'`, `'1'`, … and `'<group>.<index>'` inside a group section). Those come from the `data` array rather than the visible order, so client-side sort, filter, and search are safe — a static dataset needs nothing. What they can't survive is the identity behind a position changing: a refetch or server-mode sort returning rows in a new order moves the selection to whatever now sits at that index, and switching Grouping on or off re-keys the rows, dropping the selection. Pass `getRowId` whenever the data can change under you, and selection follows the row through all of it.
+- Selection state lives on the table instance and is exposed through `useDataView()`. Read it with `table.getSelectedRowModel()`, clear it with `table.resetRowSelection()` (wired to `Chip`'s `onDismiss` above), and mirror it outside the tree with `onRowSelectionChange` on the root if you need it there.
+- The TanStack [row selection API](https://tanstack.com/table/v8/docs/guide/row-selection) is available as documented: `row.getIsSelected()`, `row.toggleSelected()`, `row.getIsSomeSelected()`, `table.getIsAllRowsSelected()`, `getIsSomeRowsSelected()`, `toggleAllRowsSelected()`, `setRowSelection()`, `resetRowSelection()`. The header helpers are computed over the **filtered** rows, so select-all tracks what the user can actually see rather than the whole dataset.
+- The two *handler getters* in that guide — `row.getToggleSelectedHandler()` and `table.getToggleAllRowsSelectedHandler()` — are adapters for a native `<input type="checkbox" onChange>`: they read `event.target.checked`. Apsara's [`Checkbox`](/docs/components/checkbox) reports a boolean through `onCheckedChange`, so the table-level getter throws on `undefined.checked` and the row-level one only works via its "no value means invert" fallback. Call `toggleSelected` / `toggleAllRowsSelected` with the boolean instead, as above.
+- `FloatingActions` defaults to `variant="floating"` (`position: fixed`, bottom-center), so no positioning CSS is needed at the call site. To scope the bar to the view instead of the viewport, give an ancestor `transform`, `filter`, or `contain: paint` so it becomes the containing block for `position: fixed`. Add `padding-bottom` via `classNames.root` if rows would otherwise sit behind the bar.
+- Stop propagation in the checkbox's `onClick` when the root has an `onRowClick` — otherwise ticking a checkbox also activates the row.
+- Grouping works alongside selection. Group header rows are keyed in their own id space and are not selectable — `rowSelection` holds one key per data row, and select-all covers the visible data rows without also flagging the bands. Read the count off `getSelectedRowModel().flatRows` rather than `.rows`: the latter only walks selected *top-level* rows, which is empty while grouping puts every data row one level down.
+
 ### Custom group buckets (`groupByResolvers`)
 
 The wire format keeps `group_by: string[]`. To group by something that isn't a raw accessor (e.g. "by week of created_at"), supply a resolver:
@@ -331,7 +435,7 @@ The Timeline owns **positioning** — the time scale (date → x, span → width
 
 `context.collapsed` flips when the span is narrower than `minCardWidth` (default 60px) — render a compact stub instead of letting the full card clip (point cards never collapse; they size to their content). Wrap card fields in `DataView.DisplayAccess` so the toolbar's Display Properties toggles reach them.
 
-Card height is content-driven, the same contract as `DataView.List` rows: cards auto-measure after paint, each lane sizes to its tallest card, and `estimatedRowHeight` (default 66) is only a layout hint until real heights arrive. Give your card an explicit height if you want uniform cards. Keep `renderCard` referentially stable (define it outside the component or wrap it in `useCallback`) — cards are memoized against it, and an inline closure forces every visible card to re-render on each scroll frame.
+Card height is content-driven, the same contract as `DataView.List` rows: cards auto-measure after paint, each lane sizes to its tallest card, and `estimatedRowHeight` (default 66) is only a layout hint until real heights arrive. Under `virtualized` this inverts — a culled card never reports a height, so measuring would resize lanes as you scroll and shift every lane below them. Lanes there take a fixed `estimatedRowHeight` pitch, and a card taller than it overlaps the lane below instead of growing its own. Give your card an explicit height if you want uniform cards, and keep that height within the pitch if you virtualize. Keep `renderCard` referentially stable (define it outside the component or wrap it in `useCallback`) — cards are memoized against it, and an inline closure forces every visible card to re-render on each scroll frame.
 
 ### Point markers
 
@@ -450,6 +554,25 @@ Start with `isLoading={true}` and fire an initial fetch on mount: with no data a
 ### Notes
 
 - **Grouping** renders as swim-lane sections and **sorting** only reaches `lanePacking="one-per-row"` — see [Grouping](#grouping) and [Ordering](#ordering). Hide a control that has no meaning for your configuration (`<DataView.DisplayControls hideOrdering />`), or pass the timeline a per-view `fields` override without `sortable`/`groupable`.
-- **Vertical space is not virtualized.** `virtualized` culls horizontally only, so a grouped timeline renders every section's cards that fall in the visible time window. Deep grouping over thousands of rows will render a tall canvas.
-- **`virtualized`** enables horizontal culling: only cards and gridlines near the viewport render. Recommended whenever the domain is long or rows are numerous.
+- **`virtualized`** culls both axes: cards, gridlines, tick labels, month bands, and markers render only near the viewport, and the grid and marker lines span the visible window rather than the full canvas height. A frame costs what is on screen rather than what is in the data, so a long domain and deep grouping stay affordable. It defaults to `false` — pass it explicitly. Recommended whenever the domain is long or rows are numerous.
+- **Without `virtualized`, nothing is culled vertically.** Every lane in the domain stays mounted and every card in the visible time window renders, so deep grouping over thousands of rows builds a tall, fully populated canvas. The trade is content-driven lane heights (see [Cards](#cards)), which virtualization gives up.
 - **Interaction** — cards receive row clicks via the root's `onRowClick`; the background supports mouse drag-to-pan with a momentum glide; scrolling past the domain edge won't trigger browser back-swipe. The pane is a focusable, labelled region (`aria-label`, default "Timeline"), so keyboard users can Tab to it and scroll with the arrow keys.
+
+## Accessibility
+
+- `DataView.List` with `variant="table"` renders real table semantics:
+  `role="table"` on the grid with `rowgroup`, `row`, `columnheader`, and
+  `cell` on its parts. `variant="list"` uses `role="list"` with `listitem`
+  rows instead.
+- When `onRowClick` is set, each row gets `tabIndex={0}` and activates with
+  Enter or Space, matching a native button. Rows keep their structural role
+  (`row`/`listitem`) so cells stay associated with their row, and key presses
+  bubbling up from interactive children (buttons, links in cells) are ignored
+  so they don't also trigger row activation.
+- Skeleton loader rows are marked `aria-busy="true"`; the infinite-scroll
+  sentinel and the duplicate sticky group-header anchor are `aria-hidden` so
+  screen readers don't announce them.
+- The Timeline pane is a focusable, labelled `role="region"` (`aria-label`,
+  default "Timeline") that keyboard users can Tab to and scroll with arrow
+  keys; the card canvas is a `role="list"` with each card as a `listitem`,
+  and decorative gridlines, markers, and the axis are `aria-hidden`.

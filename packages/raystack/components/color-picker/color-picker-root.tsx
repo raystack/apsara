@@ -131,7 +131,7 @@ export const ColorPickerRoot = ({
 
   return (
     <ColorPickerContext value={contextValue}>
-      <Flex direction='column' gap={4} {...props} />
+      <Flex direction='column' gap={4} data-slot='color-picker' {...props} />
     </ColorPickerContext>
   );
 };

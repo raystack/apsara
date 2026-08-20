@@ -1,6 +1,6 @@
 ---
 title: Amount
-description: Component for displaying monetary values
+description: Formats and displays monetary values with the correct currency symbol, separators, and decimal places for a given locale.
 source: packages/raystack/components/amount
 ---
 
@@ -35,6 +35,14 @@ import { Amount } from '@raystack/apsara'
 Formats and displays monetary values with locale and currency support.
 
 <auto-type-table path="./props.ts" name="AmountProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `amount` | The root `<span>` element |
 
 ## Examples
 

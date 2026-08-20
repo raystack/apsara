@@ -15,6 +15,7 @@ function FieldsetRoot({
   return (
     <FieldsetPrimitive.Root
       className={cx(styles.fieldset, className)}
+      data-slot='fieldset'
       {...props}
     >
       {legend && <FieldsetLegend>{legend}</FieldsetLegend>}
@@ -30,6 +31,7 @@ function FieldsetLegend({
   return (
     <FieldsetPrimitive.Legend
       className={cx(styles.legend, className)}
+      data-slot='fieldset-legend'
       {...props}
     />
   );

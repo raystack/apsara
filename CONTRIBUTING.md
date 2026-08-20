@@ -24,6 +24,8 @@ Thank you for your interest in contributing to Apsara! This guide will help you 
       - [For Maintainers](#for-maintainers)
     - [Release Workflow Details](#release-workflow-details)
     - [NPM Publishing](#npm-publishing)
+    - [Canary Releases](#canary-releases)
+  - [Project Documentation](#project-documentation)
   - [Getting Help](#getting-help)
   - [Code of Conduct](#code-of-conduct)
 
@@ -56,8 +58,8 @@ pnpm dev
    ```
 
 3. **Make your changes** in the appropriate directories:
-   - **Components**: `packages/raystack/`
-   - **Documentation**: `apps/www/`
+   - **Components**: `packages/raystack/components/`
+   - **Documentation**: `apps/www/src/content/docs/`
 
 4. **Test your changes**:
    ```bash
@@ -91,19 +93,19 @@ pnpm dev
 
 ## Component Development
 
-1. Create components in `packages/raystack/`
+1. Create components in `packages/raystack/components/`
 2. Follow the existing component structure:
    ```
    component-name/
-   ├── index.ts         # Export barrel file
+   ├── index.tsx        # Export barrel file
    ├── component-name.tsx # Main component
    ├── component-name.module.css # Styles
    └── __tests__/         # Tests
        └── component-name.test.tsx
    ```
 
-3. Export new components from `packages/raystack/index.ts`
-4. Update the component documentation in `apps/www/content/docs`
+3. Export new components from `packages/raystack/index.tsx`
+4. Update the component documentation in `apps/www/src/content/docs`
 
 ## Documentation Development
 
@@ -213,6 +215,11 @@ Apsara follows an automated release process using GitHub Actions and semantic ve
    - Published to NPM with `next` tag
    - Triggered by pushing tags matching `v[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+`
 
+3. **Canary Releases**:
+   - Built automatically for every pull request and every push to `main`
+   - Not published to NPM — hosted by [pkg.pr.new](https://pkg.pr.new) instead
+   - No tag or version bump needed
+
 ### Creating a Release
 
 #### For Maintainers
@@ -268,6 +275,31 @@ npm install @raystack/apsara
 # or
 pnpm add @raystack/apsara
 ```
+
+### Canary Releases
+
+Every pull request gets a preview build of `@raystack/apsara`, so you can try out changes before they're merged or released — no need to wait for a real NPM publish.
+
+The [`canary.yaml`](.github/workflows/canary.yaml) workflow builds the package and publishes it to [pkg.pr.new](https://pkg.pr.new) on every push to a PR or to `main`. pkg.pr.new then comments on the PR with an install command, for example:
+
+```bash
+pnpm add https://pkg.pr.new/raystack/apsara/@raystack/apsara@<pr-number>
+```
+
+Install that in a test project to check out the change. The preview build updates automatically as new commits are pushed to the same PR.
+
+Pushes to `main` are published the same way but don't have a PR to comment on. Install those directly using the commit SHA:
+
+```bash
+pnpm add https://pkg.pr.new/raystack/apsara/@raystack/apsara@<commit-sha>
+```
+
+## Project Documentation
+
+Beyond this guide, the repo keeps deeper docs under `docs/`:
+
+- [Migration Guide](./docs/V1-migration.md) — breaking changes and how to move from the Radix-based release to the current Base UI-based version.
+- [RFCs](./docs/rfcs/) — design proposals and decisions behind major features (Base UI migration, unified DataView, guided Tour).
 
 ## Getting Help
 

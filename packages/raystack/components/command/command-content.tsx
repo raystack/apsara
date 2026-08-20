@@ -14,6 +14,7 @@ export const CommandContent = ({
   return (
     <AutocompletePrimitive.List
       ref={ref}
+      data-slot='command-content'
       className={cx(styles.list, className)}
       {...props}
     />

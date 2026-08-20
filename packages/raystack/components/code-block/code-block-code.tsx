@@ -47,7 +47,11 @@ export const CodeBlockCode = ({
   if (!shouldRender) return null;
 
   return (
-    <div className={cx(styles.codeContent, className)} {...props}>
+    <div
+      className={cx(styles.codeContent, className)}
+      data-slot='code-block-code'
+      {...props}
+    >
       <CodeHighlight content={content} language={language} />
     </div>
   );
@@ -74,15 +78,32 @@ const CodeHighlight = memo(
             <pre
               className={cx(code.theme, styles.pre, highlightClassName)}
               style={style}
+              data-slot='code-block-pre'
             >
               {renderedTokens.map((line, i) => (
-                <div key={i} {...getLineProps({ line })}>
+                <div
+                  key={i}
+                  data-slot='code-block-line'
+                  {...getLineProps({ line })}
+                >
                   {!hideLineNumbers && (
-                    <span className={styles.lineNumber}>{i + 1}</span>
+                    <span
+                      className={styles.lineNumber}
+                      data-slot='code-block-line-number'
+                    >
+                      {i + 1}
+                    </span>
                   )}
-                  <span className={styles.lineContent}>
+                  <span
+                    className={styles.lineContent}
+                    data-slot='code-block-line-content'
+                  >
                     {line.map((token, key) => (
-                      <span key={key} {...getTokenProps({ token })} />
+                      <span
+                        key={key}
+                        data-slot='code-block-token'
+                        {...getTokenProps({ token })}
+                      />
                     ))}
                   </span>
                 </div>

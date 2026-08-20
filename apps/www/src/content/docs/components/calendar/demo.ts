@@ -185,6 +185,26 @@ export const datePickerDemo = {
       code: `<DatePicker showCalendarIcon={false} slotProps={{ input: { size: "medium" } }} />`
     },
     {
+      name: 'With Field',
+      code: `
+function DatePickerFieldExample() {
+  const [error, setError] = React.useState();
+  return (
+    <Field
+      label="Start date"
+      description="Type a date or pick one from the calendar"
+      error={error}
+      style={{ maxWidth: 240 }}
+    >
+      <DatePicker
+        onErrorChange={setError}
+        slotProps={{ input: { size: "medium" } }}
+      />
+    </Field>
+  );
+}`
+    },
+    {
       name: 'Custom Trigger',
       code: `
       <DatePicker>

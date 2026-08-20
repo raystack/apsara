@@ -43,6 +43,7 @@ export function ChatItem({
       ref={mergedRef}
       data-message-id={messageId}
       className={cx(styles.item, className)}
+      data-slot='chat-item'
       {...props}
     />
   );

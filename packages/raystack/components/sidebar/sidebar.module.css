@@ -1,6 +1,10 @@
 .root {
+  /* Single source for the open/collapsed widths; the peek margins below
+     derive from these, so they can never drift out of sync. */
+  --sidebar-open-width: 240px;
+  --sidebar-collapsed-width: var(--rs-space-12);
+
   display: flex;
-  width: 220px;
   height: 100%;
   padding: var(--rs-space-5) 0;
   flex-direction: column;
@@ -33,12 +37,52 @@
   border: none;
 }
 
+.root[data-variant="inset"] .header {
+  background: transparent;
+}
+
 .root[data-open] {
-  width: 240px;
+  width: var(--sidebar-open-width);
 }
 
 .root[data-closed] {
-  width: var(--rs-space-12);
+  width: var(--sidebar-collapsed-width);
+}
+
+/* "hidden" collapse: no icon rail, just a thin strip so the resize handle
+   stays reachable to reopen. Set on the mode (not on data-closed) so the
+   peek margin below sees the right collapsed width mid-peek too. */
+.root[data-collapse-mode="hidden"] {
+  --sidebar-collapsed-width: var(--rs-space-2);
+}
+
+.root[data-closed][data-collapse-mode="hidden"] .header,
+.root[data-closed][data-collapse-mode="hidden"] .main,
+.root[data-closed][data-collapse-mode="hidden"] .footer {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* A peek reveals the sidebar as an overlay: the aside stays in the layout
+   but a negative margin cancels everything beyond its collapsed width, so
+   it paints over the adjacent content instead of pushing it. No fixed
+   positioning, so it stays anchored inside any container. */
+.root[data-peeking] {
+  width: var(--sidebar-open-width);
+  z-index: var(--rs-z-index-portal);
+  box-shadow: var(--rs-shadow-lifted);
+}
+
+.root[data-peeking][data-position="left"] {
+  margin-right: calc(
+    var(--sidebar-collapsed-width) -
+    var(--sidebar-open-width)
+  );
+}
+
+.root[data-peeking][data-position="right"] {
+  margin-left: calc(var(--sidebar-collapsed-width) - var(--sidebar-open-width));
 }
 
 .header {
@@ -58,9 +102,9 @@
 }
 
 .root [data-collapse-hidden] {
-  /* Cap width so the collapse animates to 0; 240px = the sidebar's open width,
-     so wider consumer content is already clipped by the sidebar itself. */
-  max-width: 240px;
+  /* Cap width so the collapse animates to 0; anything wider than the open
+     sidebar is already clipped by the sidebar itself. */
+  max-width: var(--sidebar-open-width);
 }
 
 .root[data-closed] [data-collapse-hidden] {
@@ -77,7 +121,8 @@
   gap: var(--rs-space-2);
 }
 
-.nav-item {
+.nav-item,
+.more-menu-item {
   display: flex;
   padding: var(--rs-space-3);
   align-items: center;
@@ -91,7 +136,9 @@
   box-sizing: border-box;
 }
 
-.more-trigger {
+/* Resets for elements that can render as a <button> instead of an <a>. */
+.more-trigger,
+.more-menu-item {
   width: 100%;
   border: 0;
   background: transparent;
@@ -121,12 +168,6 @@
 }
 
 .nav-item[data-active="true"] {
-  display: flex;
-  padding: var(--rs-space-3);
-  align-items: center;
-  gap: var(--rs-space-3);
-  width: 100%;
-  border-radius: var(--rs-radius-2);
   background: var(--rs-color-background-neutral-secondary);
   color: var(--rs-color-foreground-base-primary);
 }
@@ -134,24 +175,6 @@
 .nav-item[data-disabled="true"] {
   opacity: 0.5;
   pointer-events: none;
-}
-
-.more-menu-item {
-  display: flex;
-  padding: var(--rs-space-3);
-  align-items: center;
-  gap: var(--rs-space-3);
-  min-height: var(--rs-space-9);
-  align-self: stretch;
-  border-radius: var(--rs-radius-2);
-  color: var(--rs-color-foreground-base-secondary);
-  cursor: pointer;
-  text-decoration: none;
-  box-sizing: border-box;
-  width: 100%;
-  border: 0;
-  background: transparent;
-  text-align: left;
 }
 
 /* data-highlighted is the menu's arrow-key focus; keep it identical to hover
@@ -172,16 +195,29 @@
   pointer-events: none;
 }
 
+/* Shared label typography; keep in sync with Text size="small" weight="medium"
+   (text.module.css). All three labels hold consumer-provided text of
+   unpredictable length, so they all truncate. */
+.nav-text,
+.nav-group-label,
 .more-menu-item-text {
-  color: var(--rs-color-foreground-base-primary);
   font-size: var(--rs-font-size-small);
   font-style: normal;
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
-  width: auto;
-  opacity: 1;
-  display: inline;
+  overflow: hidden;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  /* Flex children min-width to auto, which blocks ellipsis from engaging */
+  min-width: 0;
+}
+
+.more-menu-item-text {
+  color: var(--rs-color-foreground-base-primary);
+  /* The menu popup has no max-width of its own, so cap the label here to
+     keep a long label from stretching the popup. */
+  max-width: 200px;
 }
 
 .nav-leading-icon {
@@ -197,14 +233,6 @@
 
 .nav-text {
   color: var(--rs-color-foreground-base-primary);
-  font-size: var(--rs-font-size-small);
-  font-style: normal;
-  font-weight: var(--rs-font-weight-medium);
-  line-height: var(--rs-line-height-small);
-  letter-spacing: var(--rs-letter-spacing-small);
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   /* Cap the width so the collapse can animate to 0 (width: auto can't
      transition). 200px clears any real label; the sidebar caps them narrower. */
   max-width: 200px;
@@ -217,33 +245,32 @@
   visibility: hidden;
 }
 
-.resizeHandle {
+.resize-handle {
   position: absolute;
   top: 0;
   right: 0;
   width: var(--rs-space-2);
   height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
   cursor: pointer;
   transition: background-color var(--rs-duration-normal) var(--rs-ease-out);
   transform: translateX(50%);
 }
 
-.root[data-collapse-disabled] .resizeHandle {
-  display: none;
-}
-
-.resizeHandle:hover {
+.resize-handle:hover {
   background-color: var(--rs-color-border-base-primary);
 }
 
 /* Inset ring: the handle straddles the sidebar edge (translateX(50%)), so an
    outward ring would sit partly outside the sidebar and risk clipping. */
-.resizeHandle:focus-visible {
+.resize-handle:focus-visible {
   outline: var(--rs-focus-ring);
   outline-offset: var(--rs-focus-ring-offset-inset);
 }
 
-.root[data-position="right"] .resizeHandle {
+.root[data-position="right"] .resize-handle {
   left: 0;
   right: auto;
   transform: translateX(-50%);
@@ -285,11 +312,6 @@
 
 .nav-group-label {
   color: var(--rs-color-foreground-base-secondary);
-  font-size: var(--rs-font-size-small);
-  font-style: normal;
-  font-weight: var(--rs-font-weight-medium);
-  line-height: var(--rs-line-height-small);
-  letter-spacing: var(--rs-letter-spacing-small);
 }
 
 .nav-group-trigger {
@@ -392,9 +414,17 @@
   display: none;
 }
 
+/* No floating overrides are needed for a peek: data-open/data-closed track
+   the visual state (a peek counts as open), so every collapse-hiding rule
+   above turns off during a peek on its own. */
+
 @media (prefers-reduced-motion: no-preference) {
   .root {
-    transition: width var(--rs-duration-normal) var(--rs-ease-out);
+    /* margin moves in lockstep with width during a peek so neighboring
+       content never shifts while the overlay slides out. */
+    transition:
+      width var(--rs-duration-normal) var(--rs-ease-out),
+      margin var(--rs-duration-normal) var(--rs-ease-out);
   }
 
   .nav-group-chevron {
@@ -415,6 +445,14 @@
   .root [data-collapse-hidden] {
     transition:
       max-width var(--rs-duration-normal) var(--rs-ease-out),
+      opacity var(--rs-duration-normal) var(--rs-ease-out),
+      visibility var(--rs-duration-normal) var(--rs-ease-out);
+  }
+
+  .root[data-collapse-mode="hidden"] .header,
+  .root[data-collapse-mode="hidden"] .main,
+  .root[data-collapse-mode="hidden"] .footer {
+    transition:
       opacity var(--rs-duration-normal) var(--rs-ease-out),
       visibility var(--rs-duration-normal) var(--rs-ease-out);
   }

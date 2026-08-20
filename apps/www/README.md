@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Apsara Documentation Site
+
+The documentation site for [Apsara](https://apsara.raystack.org), built with [Next.js](https://nextjs.org) and [Fumadocs](https://fumadocs.dev).
 
 ## Getting Started
 
-First, run the development server:
+From the repo root, `pnpm start` runs both the component library and this docs site together. To run only the docs site, from this folder:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
+```sh
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see it.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The site reads the local `@raystack/apsara` package, so a build of the library runs automatically before `pnpm build`. When you change a component, restart the library dev server (or `pnpm start` from the root) to pick it up.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Content
 
-## Learn More
+Documentation lives in `src/content/docs/` as `.mdx` files. Each component has its own folder:
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/content/docs/components/<name>/
+├── index.mdx   # the page: overview, anatomy, examples, accessibility
+├── props.ts    # prop tables, rendered by <auto-type-table />
+└── demo.ts      # live code examples shown by the <Demo /> component
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Navigation for sections like `theme` and `ai-elements` is set by their `meta.json`. The `components/` folder has no `meta.json`, so its pages are picked up automatically in alphabetical order.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+To add or edit a component page, see the [Documentation Development](../../CONTRIBUTING.md#documentation-development) section in the contributing guide.
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```sh
+pnpm dev         # start the dev server
+pnpm build       # build the static site (builds the library first)
+pnpm start       # serve the production build
+pnpm lint        # check formatting and lint rules with Biome
+```

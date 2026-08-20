@@ -100,6 +100,7 @@ export const ContextMenuContent = ({
   return (
     <ContextMenuPrimitive.Portal>
       <ContextMenuPrimitive.Positioner
+        data-slot='context-menu-positioner'
         className={cx(styles.positioner)}
         sideOffset={sideOffset}
         align={align}
@@ -107,6 +108,7 @@ export const ContextMenuContent = ({
       >
         <ContextMenuPrimitive.Popup
           ref={ref}
+          data-slot='context-menu-content'
           className={cx(
             styles.content,
             autocomplete && styles.comboboxContainer,
@@ -150,6 +152,7 @@ export const ContextMenuContent = ({
               }}
             >
               <AutocompletePrimitive.Input
+                data-slot='context-menu-search-input'
                 placeholder={searchPlaceholder}
                 className={styles.comboboxInput}
                 ref={inputRef}
@@ -166,6 +169,7 @@ export const ContextMenuContent = ({
                 tabIndex={-1}
               />
               <AutocompletePrimitive.List
+                data-slot='context-menu-search-list'
                 className={styles.comboboxContent}
                 ref={containerRef}
               >

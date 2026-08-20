@@ -2,10 +2,19 @@
 
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { cx } from 'class-variance-authority';
-import { ChangeEvent, KeyboardEvent } from 'react';
+import {
+  type ChangeEvent,
+  type KeyboardEvent,
+  useCallback,
+  useMemo,
+  useRef
+} from 'react';
 import { TextArea, type TextAreaProps } from '../text-area/text-area';
 import styles from './prompt-input.module.css';
-import { usePromptInputContext } from './prompt-input-context';
+import {
+  type PromptInputInputApi,
+  usePromptInputContext
+} from './prompt-input-context';
 
 export interface PromptInputTextareaProps
   extends Omit<
@@ -23,13 +32,45 @@ export function PromptInputTextarea({
   ...props
 }: PromptInputTextareaProps) {
   const context = usePromptInputContext('Textarea');
-  const mergedRef = useMergedRefs(context.registerInput, ref);
+  const nodeRef = useRef<HTMLTextAreaElement | null>(null);
+  const valueRef = useRef(context.value);
+  valueRef.current = context.value;
+
+  // A plain textarea reports the same shape `Editor` does, so Root's callbacks
+  // have one signature either way: markup *is* text and there are never any
+  // mentions — a literal `@[x](y:z)` typed in here stays literal.
+  const api = useMemo<PromptInputInputApi>(
+    () => ({
+      focus: () => nodeRef.current?.focus(),
+      // The field renders Root's `value` straight through, so an external value
+      // has already landed by the time this would run.
+      setMarkup: () => undefined,
+      deriveExternal: markup => ({ text: markup, mentions: [] }),
+      getMessage: () => {
+        const text = nodeRef.current?.value ?? valueRef.current;
+        return { markup: text, text, mentions: [] };
+      }
+    }),
+    []
+  );
+
+  const registerInput = context.registerInput;
+  const register = useCallback(
+    (node: HTMLTextAreaElement | null) => {
+      nodeRef.current = node;
+      registerInput(node, api, 'textarea');
+    },
+    [api, registerInput]
+  );
+
+  const mergedRef = useMergedRefs(register, ref);
 
   const resolvedDisabled = disabled ?? context.disabled;
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     onChange?.(event);
-    context.setValue(event.target.value);
+    const next = event.target.value;
+    context.setValue(next, { text: next, mentions: [] });
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -53,6 +94,7 @@ export function PromptInputTextarea({
       onKeyDown={handleKeyDown}
       disabled={resolvedDisabled}
       placeholder={placeholder}
+      data-slot='prompt-input-textarea'
       {...props}
     />
   );

@@ -1,23 +1,31 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { ReactNode, useContext } from 'react';
+import { ReactNode, useContext, useEffect, useState } from 'react';
 import { EllipsisIcon } from '~/icons/generated';
 import { Menu } from '../menu';
 import { Tooltip } from '../tooltip';
 import styles from './sidebar.module.css';
 import { SidebarLeadingVisual } from './sidebar-leading-visual';
-import { SidebarMoreProvider } from './sidebar-more-context';
-import { SidebarContext } from './sidebar-root';
+import { SidebarMoreContext } from './sidebar-more-context';
+import { SidebarPopupContext, useSidebarSafe } from './sidebar-root';
 
 export interface SidebarMoreProps {
   children?: ReactNode;
   label?: string;
   leadingIcon?: ReactNode;
   classNames?: {
+    /** @deprecated Use `[data-slot="sidebar-more-trigger"]` instead. */
     root?: string;
+    /** @deprecated Use `[data-slot="sidebar-leading-icon"]` instead. */
     leadingIcon?: string;
+    /** @deprecated Use `[data-slot="sidebar-more-text"]` instead. */
     text?: string;
+    /**
+     * Not deprecated: `Menu.Content` portals to `document.body`, so a
+     * `[data-slot="menu-content"]` selector can't be scoped to just this
+     * instance's dropdown — this prop remains the only way to target it.
+     */
     menuContent?: string;
   };
 }
@@ -28,9 +36,22 @@ export function SidebarMore({
   leadingIcon,
   classNames
 }: SidebarMoreProps) {
-  const { isCollapsed, position, hideCollapsedItemTooltip } =
-    useContext(SidebarContext);
+  const { isCollapsed, position, hideItemTooltips } = useSidebarSafe();
+  const onPopupOpenChange = useContext(SidebarPopupContext);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // The menu portals outside the sidebar; report its open state so moving
+  // the pointer into it doesn't collapse a hover peek. An effect (not the
+  // onOpenChange handler) so unmounting mid-menu still decrements the
+  // sidebar's open-popup count.
+  useEffect(() => {
+    if (!menuOpen) return;
+    onPopupOpenChange(true);
+    return () => onPopupOpenChange(false);
+  }, [menuOpen, onPopupOpenChange]);
+
   if (!children) return null;
+
   const triggerIcon = leadingIcon ?? <EllipsisIcon width={16} height={16} />;
 
   const triggerContent = (
@@ -43,6 +64,7 @@ export function SidebarMore({
       )}
       role='listitem'
       aria-label={isCollapsed ? label : undefined}
+      data-slot='sidebar-more-trigger'
     >
       <SidebarLeadingVisual
         leadingIcon={triggerIcon}
@@ -50,13 +72,18 @@ export function SidebarMore({
       />
       {/* Kept mounted so it can collapse with the sidebar (max-width → 0)
           instead of popping out; CSS hides it when closed. */}
-      <span className={cx(styles['nav-text'], classNames?.text)}>{label}</span>
+      <span
+        className={cx(styles['nav-text'], classNames?.text)}
+        data-slot='sidebar-more-text'
+      >
+        {label}
+      </span>
     </button>
   );
 
   return (
-    <Menu>
-      {isCollapsed && !hideCollapsedItemTooltip ? (
+    <Menu onOpenChange={setMenuOpen}>
+      {isCollapsed && !hideItemTooltips ? (
         <Tooltip>
           <Tooltip.Trigger render={<Menu.Trigger render={triggerContent} />} />
           <Tooltip.Content
@@ -73,9 +100,7 @@ export function SidebarMore({
         className={classNames?.menuContent}
         side={position === 'left' ? 'right' : 'left'}
       >
-        <SidebarMoreProvider value={{ isInsideSidebarMore: true }}>
-          {children}
-        </SidebarMoreProvider>
+        <SidebarMoreContext value={true}>{children}</SidebarMoreContext>
       </Menu.Content>
     </Menu>
   );

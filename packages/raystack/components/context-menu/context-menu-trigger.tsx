@@ -17,7 +17,7 @@ export const ContextMenuTrigger = ({
   ...props
 }: ContextMenuTriggerProps) => {
   return (
-    <ContextMenuPrimitive.Trigger {...props}>
+    <ContextMenuPrimitive.Trigger data-slot='context-menu-trigger' {...props}>
       {children}
     </ContextMenuPrimitive.Trigger>
   );

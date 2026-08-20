@@ -15,14 +15,14 @@ export interface CalendarProps {
   captionLayout?: 'label' | 'dropdown' | 'dropdown-months' | 'dropdown-years';
 
   /**
-   * Earliest navigable month (was `fromYear` / `fromMonth` — both deprecated).
+   * Earliest navigable month.
    * Bounds the chevrons and the year dropdown.
    * @example startMonth={new Date(2020, 0)}
    */
   startMonth?: Date;
 
   /**
-   * Latest navigable month (was `toYear` / `toMonth` — both deprecated).
+   * Latest navigable month.
    * Bounds the chevrons and the year dropdown.
    * @example endMonth={new Date(2030, 11)}
    */
@@ -67,8 +67,7 @@ export interface CalendarProps {
     | ((date: Date) => boolean);
 
   /**
-   * Hidden dates (was `fromDate` / `toDate` — both deprecated; use
-   * `hidden={{ before: date }}` / `hidden={{ after: date }}`).
+   * Hidden dates.
    * Same matcher options as `disabled`.
    */
   hidden?:
@@ -177,15 +176,6 @@ export interface RangePickerProps {
     popover?: PopoverContentProps;
   };
 
-  /** @deprecated Use `slotProps.calendar` instead. */
-  calendarProps?: CalendarProps;
-
-  /** @deprecated Use `slotProps.startInput` / `slotProps.endInput` instead. */
-  inputsProps?: {
-    startDate?: InputProps;
-    endDate?: InputProps;
-  };
-
   /**
    * Render prop or custom trigger. Pass a function to render a custom trigger
    * receiving the formatted `startDate` / `endDate` strings, or a ReactNode to
@@ -216,9 +206,6 @@ export interface RangePickerProps {
    * If not provided, uses the local timezone.
    */
   timeZone?: string;
-
-  /** @deprecated Use `slotProps.popover` instead. */
-  popoverProps?: PopoverContentProps;
 }
 
 export interface DatePickerProps {
@@ -246,9 +233,6 @@ export interface DatePickerProps {
     popover?: PopoverContentProps;
   };
 
-  /** @deprecated Use `slotProps.input` instead. */
-  inputProps?: InputProps;
-
   /**
    * Controlled date value. Pair with `onSelect`. Omit (along with
    * `defaultValue`) to start the picker in an unselected state — the
@@ -264,6 +248,16 @@ export interface DatePickerProps {
 
   /** Callback function when date is selected */
   onSelect?: (date: Date) => void;
+
+  /**
+   * Fires when the typed-input validation state changes: with a message when
+   * the typed text stops parsing as a valid in-bounds date, and with
+   * `undefined` when it becomes valid again (or the picker commits/closes).
+   * DatePicker renders no error UI of its own — not even `aria-invalid`.
+   * Lift this into `Field`'s `error` prop (or your form library) to display
+   * it; `Field` also wires `aria-invalid` onto the input.
+   */
+  onErrorChange?: (error: string | undefined) => void;
 
   /** @deprecated Use `slotProps.calendar` instead. */
   calendarProps?: CalendarProps;
@@ -295,7 +289,4 @@ export interface DatePickerProps {
    * If not provided, uses the local timezone.
    */
   timeZone?: string;
-
-  /** @deprecated Use `slotProps.popover` instead. */
-  popoverProps?: PopoverContentProps;
 }

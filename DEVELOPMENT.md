@@ -96,12 +96,12 @@ apsara/
 ### Key Directories
 
 - **`packages/raystack/`**: Contains the main Apsara component library
-  - `accordion/`, `avatar/`, `badge/`, `button/`, etc.: React components (at root level)
-  - `v1/`: Legacy structure for backward compatibility
-    - `v1/components/`: Legacy component structure
-    - `v1/hooks/`: Custom React hooks
-    - `v1/icons/`: Icon components
-  - `style.css`: Main stylesheet
+  - `components/`: React components, one folder each (`accordion/`, `avatar/`, `button/`, etc.)
+  - `hooks/`: Custom React hooks
+  - `icons/`: Icon components
+  - `styles/`: Shared styles and theme tokens
+  - `types/`: Shared TypeScript types
+  - `test-utils/`: Test helpers
   - `dist/`: Built output
 
 - **`apps/www/`**: Documentation website built with Next.js and Fumadocs
@@ -125,7 +125,7 @@ import { Button, Flex } from '@raystack/apsara'
 
 // Specific feature imports
 import { ChevronDownIcon } from '@raystack/apsara/icons'
-import { useLocalStorage } from '@raystack/apsara/hooks'
+import { useCopyToClipboard } from '@raystack/apsara/hooks'
 
 // Styles
 import '@raystack/apsara/style.css'
@@ -257,10 +257,12 @@ pnpm build:apsara
 ```
 
 This creates optimized builds in the `dist/` directory with:
-- ESM modules (`dist/index.js`, `dist/v1/index.js`)
-- CommonJS modules (`dist/index.cjs`, `dist/v1/index.cjs`)
-- TypeScript declarations (`dist/index.d.ts`, `dist/v1/index.d.ts`)
+- ESM modules (`dist/index.js`)
+- CommonJS modules (`dist/index.cjs`)
+- TypeScript declarations (`dist/index.d.ts`)
 - CSS files (`dist/style.css`, `dist/normalize.css`)
+
+The package also exports a `./v1` entry point. It is a legacy alias that maps to the same root `dist` files, kept so older `@raystack/apsara/v1` imports keep working.
 
 ### Build Configuration
 

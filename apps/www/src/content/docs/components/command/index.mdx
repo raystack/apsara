@@ -73,7 +73,7 @@ Rendered when no items are visible (all filtered out, or the list is empty). Aut
 
 ### Item
 
-A selectable entry. When `value` is omitted and `children` is a string, the string is used as the value. `onClick` fires on pointer click **and** on keyboard `Enter` when the item is highlighted.
+A selectable entry. When `value` is omitted and `children` is a string, the string is used as the value. `onClick` fires on pointer click **and** on keyboard `Enter` when the item is highlighted. Pass a [`Kbd`](/docs/components/kbd) as `trailingIcon` to show a keyboard hint — use the `ghost` variant so the keys sit on the item's own background.
 
 <auto-type-table path="./props.ts" name="CommandItemProps" />
 
@@ -95,12 +95,6 @@ Visual divider between groups. The separator is hidden automatically while the u
 
 <auto-type-table path="./props.ts" name="CommandSeparatorProps" />
 
-### Shortcut
-
-A `<kbd>` element for keyboard hints. Typically passed as `trailingIcon` on `Command.Item`.
-
-<auto-type-table path="./props.ts" name="CommandShortcutProps" />
-
 ### Dialog
 
 `Command.Dialog` is an alias for the Base UI Dialog root. Pair it with `Command.DialogTrigger` and `Command.DialogContent` to render the command menu in a centered modal.
@@ -112,6 +106,28 @@ A `<kbd>` element for keyboard hints. Typically passed as `trailingIcon` on `Com
 Renders the portal, viewport, and popup for the command palette. There is no backdrop overlay. Unlike `Dialog.Content`, there is no close button; users dismiss the palette via `Escape` or by clicking outside it.
 
 <auto-type-table path="./props.ts" name="CommandDialogContentProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `command` | The root panel |
+| `command-input-container` | Wrapper around the search input |
+| `command-input` | The `<input>` element itself |
+| `command-content` | The `Command.Content` list |
+| `command-empty` | `Command.Empty` |
+| `command-group` | `Command.Group` wrapper |
+| `command-label` | `Command.Label` |
+| `command-item` | Each `Command.Item` |
+| `command-item-leading-icon` | Leading icon inside an item (when provided) |
+| `command-item-label` | The item's label text |
+| `command-item-trailing-icon` | Trailing icon inside an item (when provided) |
+| `command-separator` | `Command.Separator` |
+| `command-dialog-trigger` | `Command.DialogTrigger` |
+| `command-dialog-viewport` | Viewport wrapper for the dialog popup |
+| `command-dialog-content` | `Command.DialogContent` popup |
 
 ## Examples
 

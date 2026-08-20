@@ -34,6 +34,7 @@ export function MenuTrigger({
 
   return (
     <MenuPrimitive.Trigger
+      data-slot='menu-trigger'
       render={render ?? menubarRender}
       onClick={e => {
         if (stopPropagation) e.stopPropagation();

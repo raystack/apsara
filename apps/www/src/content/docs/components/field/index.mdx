@@ -99,6 +99,20 @@ A paragraph with additional information about the field. Renders a `<p>` element
 
 Provides field validity state to a render function. Use for custom validity-based rendering.
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `field` | The root element |
+| `field-label` | The field label (when a label is set) |
+| `field-control` | Wrapper around the field content (simple API) |
+| `field-input` | The input control (sub-component API) |
+| `field-helper` | Wrapper around the description and error (simple API, when either is set) |
+| `field-description` | The description text (when set) |
+| `field-error` | The error message (when the field is invalid) |
+
 ## Examples
 
 ### With Input

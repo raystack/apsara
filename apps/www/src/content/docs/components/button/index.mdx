@@ -32,6 +32,18 @@ Renders a clickable button element.
 
 <auto-type-table path="./props.ts" name="ButtonProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `button` | The root `<button>` element |
+| `button-leading-icon` | Wrapper around `leadingIcon` (when set and not loading) |
+| `button-trailing-icon` | Wrapper around `trailingIcon` (when set and not loading) |
+| `button-loader` | The loading spinner (when `loading`) |
+| `button-loader-text` | Wrapper around `loaderText` (when `loading` with `loaderText`) |
+
 ## Examples
 
 ### Variant

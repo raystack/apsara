@@ -3,6 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@raystack/apsara?logo=npm&color=cb3837)](https://www.npmjs.com/package/@raystack/apsara)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?logo=apache)](LICENSE)
 [![Biome](https://img.shields.io/badge/Biome-60a5fa?logo=biome&logoColor=white)](https://biomejs.dev/)
+[![pkg.pr.new](https://pkg.pr.new/badge/raystack/apsara)](https://pkg.pr.new/~/raystack/apsara)
 
 Apsara is an open-source React component library for building accessible, data-heavy interfaces. It is built on [Base UI](https://base-ui.com/) primitives and written in TypeScript.
 
@@ -44,9 +45,9 @@ import { useCopyToClipboard } from "@raystack/apsara/hooks";
 
 Over 70 components, styled with plain CSS and `data-*` attributes so you can theme them with CSS variables. A few highlights:
 
-- **Layout** — Box, Flex, Grid, Container, Sidebar, ScrollArea
+- **Layout** — Flex, Grid, Container, Sidebar, ScrollArea
 - **Navigation** — Tabs, Breadcrumb, Command, Menu, Navbar, Toolbar
-- **Data** — Table, DataTable, DataView, Avatar, Badge, Chip, Meter
+- **Data** — Table, DataView, Avatar, Badge, Chip, Meter
 - **Forms** — Input, Select, Combobox, Checkbox, Radio, Switch, Slider, Calendar, ColorPicker
 - **Feedback** — Toast, Tooltip, Callout, Spinner, Indicator
 - **Overlay** — Dialog, Popover, Drawer, ContextMenu
@@ -58,9 +59,9 @@ See the [documentation site](https://apsara.raystack.org) for the full list, liv
 Contributions are welcome. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the workflow and [DEVELOPMENT.md](./DEVELOPMENT.md) for local setup.
 
 ```sh
-pnpm install   # install dependencies
-pnpm start     # run the library and docs site
-pnpm test      # run tests
+pnpm install       # install dependencies
+pnpm start         # run the library and docs site
+pnpm test:apsara   # run tests
 ```
 
 ## License

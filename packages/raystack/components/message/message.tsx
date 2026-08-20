@@ -22,6 +22,7 @@ function MessageRoot({ className, align = 'start', ...props }: MessageProps) {
     <div
       data-align={align}
       className={cx(styles.message, className)}
+      data-slot='message'
       {...props}
     />
   );
@@ -32,7 +33,13 @@ MessageRoot.displayName = 'Message';
 export interface MessageGroupProps extends ComponentProps<'div'> {}
 
 export function MessageGroup({ className, ...props }: MessageGroupProps) {
-  return <div className={cx(styles.group, className)} {...props} />;
+  return (
+    <div
+      className={cx(styles.group, className)}
+      data-slot='message-group'
+      {...props}
+    />
+  );
 }
 
 MessageGroup.displayName = 'Message.Group';
@@ -40,7 +47,13 @@ MessageGroup.displayName = 'Message.Group';
 export interface MessageAvatarProps extends ComponentProps<'div'> {}
 
 export function MessageAvatar({ className, ...props }: MessageAvatarProps) {
-  return <div className={cx(styles['message-avatar'], className)} {...props} />;
+  return (
+    <div
+      className={cx(styles['message-avatar'], className)}
+      data-slot='message-avatar'
+      {...props}
+    />
+  );
 }
 
 MessageAvatar.displayName = 'Message.Avatar';
@@ -48,7 +61,13 @@ MessageAvatar.displayName = 'Message.Avatar';
 export interface MessageHeaderProps extends ComponentProps<'div'> {}
 
 export function MessageHeader({ className, ...props }: MessageHeaderProps) {
-  return <div className={cx(styles['message-header'], className)} {...props} />;
+  return (
+    <div
+      className={cx(styles['message-header'], className)}
+      data-slot='message-header'
+      {...props}
+    />
+  );
 }
 
 MessageHeader.displayName = 'Message.Header';
@@ -57,7 +76,11 @@ export interface MessageContentProps extends ComponentProps<'div'> {}
 
 export function MessageContent({ className, ...props }: MessageContentProps) {
   return (
-    <div className={cx(styles['message-content'], className)} {...props} />
+    <div
+      className={cx(styles['message-content'], className)}
+      data-slot='message-content'
+      {...props}
+    />
   );
 }
 
@@ -66,7 +89,13 @@ MessageContent.displayName = 'Message.Content';
 export interface MessageFooterProps extends ComponentProps<'div'> {}
 
 export function MessageFooter({ className, ...props }: MessageFooterProps) {
-  return <div className={cx(styles['message-footer'], className)} {...props} />;
+  return (
+    <div
+      className={cx(styles['message-footer'], className)}
+      data-slot='message-footer'
+      {...props}
+    />
+  );
 }
 
 MessageFooter.displayName = 'Message.Footer';
@@ -75,7 +104,11 @@ export interface MessageActionsProps extends ComponentProps<'div'> {}
 
 export function MessageActions({ className, ...props }: MessageActionsProps) {
   return (
-    <div className={cx(styles['message-actions'], className)} {...props} />
+    <div
+      className={cx(styles['message-actions'], className)}
+      data-slot='message-actions'
+      {...props}
+    />
   );
 }
 

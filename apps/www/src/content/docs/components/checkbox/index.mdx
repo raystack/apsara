@@ -1,6 +1,6 @@
 ---
 title: Checkbox
-description: Checkbox is a user interface control that enables users to toggle between checked, unchecked, and indeterminate states
+description: Checkbox is a user interface control that enables users to toggle between checked, unchecked, and indeterminate states.
 source: packages/raystack/components/checkbox
 ---
 
@@ -41,6 +41,17 @@ Renders a toggleable checkbox input.
 Groups multiple checkboxes and manages their shared checked state via a `string[]` value.
 
 <auto-type-table path="./props.ts" name="CheckboxGroupProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `checkbox` | The checkbox control itself |
+| `checkbox-indicator` | The indicator inside the control |
+| `checkbox-icon` | The check or indeterminate icon (when checked or indeterminate) |
+| `checkbox-group` | The `Checkbox.Group` container |
 
 ## Examples
 

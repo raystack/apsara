@@ -36,6 +36,7 @@ export function DisplayControls<TData>({
       color='neutral'
       size='small'
       leadingIcon={<SlidersHorizontalIcon />}
+      data-slot='data-view-display-trigger'
     >
       Display
     </Button>
@@ -84,9 +85,12 @@ export function DisplayControls<TData>({
         className={styles['display-popover-content']}
         align='end'
       >
-        <Flex direction='column'>
+        <Flex direction='column' data-slot='data-view-display-content'>
           {showViewSwitcher ? (
-            <Flex className={styles['display-popover-properties-container']}>
+            <Flex
+              className={styles['display-popover-properties-container']}
+              data-slot='data-view-display-section'
+            >
               <ViewSwitcher />
             </Flex>
           ) : null}
@@ -95,6 +99,7 @@ export function DisplayControls<TData>({
               direction='column'
               className={styles['display-popover-properties-container']}
               gap={5}
+              data-slot='data-view-display-section'
             >
               {!hideOrdering ? (
                 <Ordering
@@ -114,15 +119,24 @@ export function DisplayControls<TData>({
             </Flex>
           ) : null}
           {!hideDisplayProperties ? (
-            <Flex className={styles['display-popover-properties-container']}>
+            <Flex
+              className={styles['display-popover-properties-container']}
+              data-slot='data-view-display-section'
+            >
               <DisplayProperties fields={fields ?? []} />
             </Flex>
           ) : null}
           <Flex
             justify='end'
             className={styles['display-popover-reset-container']}
+            data-slot='data-view-display-reset'
           >
-            <Button variant='text' onClick={onReset} color='neutral'>
+            <Button
+              variant='text'
+              onClick={onReset}
+              color='neutral'
+              data-slot='data-view-display-reset-button'
+            >
               Reset to default
             </Button>
           </Flex>

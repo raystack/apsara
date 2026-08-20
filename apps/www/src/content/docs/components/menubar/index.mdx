@@ -9,7 +9,9 @@ import { preview, verticalDemo, autocompleteDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Menu, Menubar } from '@raystack/apsara'
@@ -41,6 +43,14 @@ The `Menubar` component wraps multiple `Menu` instances. Menu triggers are autom
 The container element for the menubar.
 
 <auto-type-table path="./props.ts" name="MenubarProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `menubar` | The root element |
 
 ## Examples
 

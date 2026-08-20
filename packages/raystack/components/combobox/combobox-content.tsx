@@ -30,6 +30,7 @@ export const ComboboxContent = ({
         sideOffset={sideOffset}
         className={styles.positioner}
         anchor={inputContainerRef}
+        data-slot='combobox-positioner'
         {...positionerProps}
       >
         <ComboboxPrimitive.Popup
@@ -39,8 +40,12 @@ export const ComboboxContent = ({
           render={render}
           initialFocus={initialFocus}
           finalFocus={finalFocus}
+          data-slot='combobox-content'
         >
-          <ComboboxPrimitive.List className={styles.list}>
+          <ComboboxPrimitive.List
+            className={styles.list}
+            data-slot='combobox-list'
+          >
             {children}
           </ComboboxPrimitive.List>
         </ComboboxPrimitive.Popup>

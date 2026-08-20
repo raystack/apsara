@@ -87,6 +87,7 @@ export function ChatPanelTrigger({
         else if (ref) ref.current = node;
       }}
       className={cx(styles.trigger, className)}
+      data-slot='chat-panel-trigger'
       data-chat-panel-trigger=''
       data-draggable={dragEnabled || undefined}
       data-dragging={isDragging || undefined}

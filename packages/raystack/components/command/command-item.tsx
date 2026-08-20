@@ -10,7 +10,7 @@ import { useCommandContext } from './command-root';
 export interface CommandItemProps extends AutocompletePrimitive.Item.Props {
   /** Icon rendered at the start of the item. */
   leadingIcon?: ReactNode;
-  /** Icon rendered at the end of the item (e.g. `Command.Shortcut`). */
+  /** Icon rendered at the end of the item (e.g. a `Kbd` shortcut hint). */
   trailingIcon?: ReactNode;
 }
 
@@ -43,10 +43,21 @@ export const CommandItem = ({
 
   const content = (
     <>
-      {leadingIcon && <span className={styles.itemIcon}>{leadingIcon}</span>}
-      <span className={styles.itemLabel}>{children}</span>
+      {leadingIcon && (
+        <span data-slot='command-item-leading-icon' className={styles.itemIcon}>
+          {leadingIcon}
+        </span>
+      )}
+      <span data-slot='command-item-label' className={styles.itemLabel}>
+        {children}
+      </span>
       {trailingIcon && (
-        <span className={styles.itemTrailing}>{trailingIcon}</span>
+        <span
+          data-slot='command-item-trailing-icon'
+          className={styles.itemTrailing}
+        >
+          {trailingIcon}
+        </span>
       )}
     </>
   );
@@ -58,6 +69,7 @@ export const CommandItem = ({
   if (disabled) {
     return (
       <div
+        data-slot='command-item'
         className={cx(styles.item, className)}
         role='option'
         data-disabled={true}
@@ -70,6 +82,7 @@ export const CommandItem = ({
 
   return (
     <AutocompletePrimitive.Item
+      data-slot='command-item'
       value={value}
       className={cx(styles.item, className)}
       {...props}

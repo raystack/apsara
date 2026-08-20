@@ -1,18 +1,22 @@
 'use client';
 
-import { ListBulletIcon, RowsIcon } from '@radix-ui/react-icons';
+import { ListBulletIcon, RowsIcon, TransformIcon } from '@radix-ui/react-icons';
 import {
   Avatar,
   Badge,
   Button,
+  Checkbox,
+  Chip,
   // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
   DataView,
   DataViewField,
   DataViewListColumn,
   Flex,
+  FloatingActions,
   Text,
   type TimelineActions,
-  type TimelineCardContext
+  type TimelineCardContext,
+  useDataView
 } from '@raystack/apsara';
 import { useMemo, useRef, useState } from 'react';
 
@@ -515,51 +519,6 @@ export function DataViewLoadingDemo() {
 }
 
 // ---------------------------------------------------------------------------
-// Loading + virtualization combined
-// ---------------------------------------------------------------------------
-
-export function DataViewVirtualizedLoadingDemo() {
-  const [isLoading, setIsLoading] = useState(true);
-  const allPeople = useMemo(() => generatePeople(1000), []);
-  return (
-    <Flex direction='column' gap={4} style={{ width: '100%' }}>
-      <Flex gap={3} align='center'>
-        <Button
-          size='small'
-          variant='outline'
-          color='neutral'
-          onClick={() => setIsLoading(v => !v)}
-        >
-          {isLoading ? 'Stop loading' : 'Show skeletons'}
-        </Button>
-        <Text size='small' variant='secondary'>
-          Skeleton rows render under existing rows even when virtualized.
-        </Text>
-      </Flex>
-      <div style={{ height: 400 }}>
-        <DataView
-          data={isLoading ? [] : allPeople}
-          fields={fields}
-          defaultSort={defaultSort}
-          isLoading={isLoading}
-          loadingRowCount={6}
-        >
-          <DataView.Toolbar>
-            <DataView.Filters />
-          </DataView.Toolbar>
-          <DataView.List
-            variant='table'
-            columns={tableColumns}
-            virtualized
-            estimatedRowHeight={44}
-          />
-        </DataView>
-      </div>
-    </Flex>
-  );
-}
-
-// ---------------------------------------------------------------------------
 // Per-view fields override demo — Email hidden in the List view only.
 // ---------------------------------------------------------------------------
 
@@ -603,6 +562,104 @@ export function DataViewPerViewFieldsDemo() {
           />
         </DataView>
       </div>
+    </Flex>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Row selection demo — unmanaged checkbox column + a FloatingActions bar.
+// ---------------------------------------------------------------------------
+
+const selectionColumn: DataViewListColumn<Person> = {
+  accessorKey: 'select',
+  width: 48,
+  header: ({ table }) => (
+    <Checkbox
+      size='small'
+      checked={table.getIsAllRowsSelected()}
+      indeterminate={
+        table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+      }
+      onCheckedChange={checked => table.toggleAllRowsSelected(Boolean(checked))}
+      aria-label='Select all people'
+    />
+  ),
+  cell: ({ row }) => (
+    <Checkbox
+      size='small'
+      checked={row.getIsSelected()}
+      onCheckedChange={checked => row.toggleSelected(Boolean(checked))}
+      onClick={event => event.stopPropagation()}
+      aria-label={`Select ${row.original.name}`}
+    />
+  )
+};
+
+const selectionColumns: DataViewListColumn<Person>[] = [
+  selectionColumn,
+  ...tableColumns
+];
+
+function SelectionBar() {
+  const { table } = useDataView<Person>();
+  const selectedCount = table.getSelectedRowModel().flatRows.length;
+  if (selectedCount === 0) return null;
+
+  return (
+    <FloatingActions aria-label='Selection actions'>
+      <Chip
+        variant='outline'
+        size='large'
+        color='neutral'
+        leadingIcon={<TransformIcon />}
+        isDismissible
+        onDismiss={() => table.resetRowSelection()}
+      >
+        {selectedCount} selected
+      </Chip>
+      <FloatingActions.Separator />
+      <Button variant='outline' color='neutral' size='small'>
+        Change team
+      </Button>
+      <Button variant='outline' color='neutral' size='small'>
+        Archive
+      </Button>
+    </FloatingActions>
+  );
+}
+
+export function DataViewSelectionDemo() {
+  return (
+    <Flex direction='column' gap={4} style={{ width: '100%' }}>
+      {/* `transform` scopes the bar's `position: fixed` to this box. */}
+      <div
+        style={{
+          height: 400,
+          position: 'relative',
+          overflow: 'hidden',
+          transform: 'translateZ(0)'
+        }}
+      >
+        <DataView
+          data={people}
+          fields={fields}
+          defaultSort={defaultSort}
+          getRowId={person => person.id}
+        >
+          <DataView.Toolbar>
+            <DataView.Search placeholder='Search people…' />
+            <DataView.Filters />
+            <DataView.DisplayControls />
+          </DataView.Toolbar>
+          <DataView.List
+            variant='table'
+            columns={selectionColumns}
+            classNames={{ root: 'dv-selection-demo-scroll' }}
+          />
+          <SelectionBar />
+        </DataView>
+      </div>
+      <style>{`.dv-selection-demo-scroll { padding-bottom: 64px; }`}</style>
     </Flex>
   );
 }

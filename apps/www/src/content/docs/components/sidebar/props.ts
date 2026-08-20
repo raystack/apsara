@@ -12,10 +12,29 @@ export interface SidebarRootProps {
    */
   defaultOpen?: boolean;
 
-  /** Disable the click to collapse/expand the Sidebar.
-   * @default true
+  /** Whether the user can collapse the sidebar, and what the collapsed state
+   *  looks like. `"icon"` collapses to an icon rail. `"hidden"` collapses to
+   *  a thin strip with no visible content. `"none"` prevents collapsing and
+   *  hides the resize handle. Expanding always works the same: the sidebar
+   *  opens in place and pushes content.
+   *  Not the same as `collapsible` on `Sidebar.Group`, which renders a group as an accordion.
+   * @default "icon"
    */
-  collapsible?: boolean;
+  collapsible?: 'icon' | 'hidden' | 'none';
+
+  /** Hovering a collapsed sidebar temporarily reveals it as an overlay above
+   *  the content, without changing the real open state. Reverts on mouse
+   *  leave. Has no effect when `collapsible` is `"none"`, or while the
+   *  sidebar is open.
+   * @default false
+   */
+  peekOnHover?: boolean;
+
+  /** Delay in milliseconds before a hover starts a peek. Only applies when
+   *  `peekOnHover` is set.
+   * @default 100
+   */
+  peekDelay?: number;
 
   /** Position of the Sidebar.
    * @default "left"
@@ -27,22 +46,24 @@ export interface SidebarRootProps {
    */
   variant?: 'plain' | 'floating' | 'inset';
 
-  /** Hide tooltips on sidebar items when sidebar is collapsed.
+  /** Hide the tooltips the Sidebar adds to items: the label tooltip when
+   *  collapsed, and the full-text tooltip on clipped labels when expanded.
    * @default false
    */
-  hideCollapsedItemTooltip?: boolean;
+  hideItemTooltips?: boolean;
 
-  /** Custom message for the collapsible tooltip.
+  /** Tooltip shown when hovering the collapse/expand handle.
    *  By default, it shows "Click to collapse" when expanded, "Click to expand" when collapsed
    */
-  tooltipMessage?: ReactNode;
+  collapseTooltip?: ReactNode;
 }
 
 export interface SidebarGroupProps {
   /** String for the group title. */
   label: string;
 
-  /** Makes group items collapsible.
+  /** Renders the group as an accordion whose items can be shown or hidden.
+   *  Not the same as `collapsible` on the Sidebar root, which controls the sidebar's own collapse behavior.
    * @default false
    */
   collapsible?: boolean;
@@ -60,6 +81,9 @@ export interface SidebarGroupProps {
 
   /** Optional ReactNode for group icon. */
   leadingIcon?: ReactNode;
+
+  /** Optional ReactNode for a trailing action icon in the group header. */
+  trailingIcon?: ReactNode;
 
   /** ReactNode for the group content. */
   children?: ReactNode;
@@ -93,16 +117,13 @@ export interface SidebarItemProps {
    * @default "<a />"
    */
   render?: ReactElement;
+}
 
-  /** Optional class names for customizing parts of the item. */
-  classNames?: {
-    /** Class name for the root element. */
-    root?: string;
-    /** Class name for the leading icon container. */
-    leadingIcon?: string;
-    /** Class name for the text element. */
-    text?: string;
-  };
+export interface SidebarTriggerProps {
+  /** Icon rendered inside the trigger.
+   * @default "<ViewVerticalIcon />"
+   */
+  children?: ReactNode;
 }
 
 export interface SidebarMoreProps {
@@ -117,13 +138,11 @@ export interface SidebarMoreProps {
 
   /** Optional class names for customizing parts of the more trigger/menu. */
   classNames?: {
-    /** Class name for the trigger root element. */
-    root?: string;
-    /** Class name for the leading icon container. */
-    leadingIcon?: string;
-    /** Class name for the text element. */
-    text?: string;
-    /** Class name for menu content container. */
+    /**
+     * Class name for menu content container. Not deprecated: `Menu.Content`
+     * portals to `document.body`, so a `[data-slot="menu-content"]` selector
+     * can't be scoped to just this instance's dropdown.
+     */
     menuContent?: string;
   };
 }

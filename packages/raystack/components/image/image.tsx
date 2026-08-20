@@ -85,6 +85,7 @@ export function Image({
 
   return (
     <img
+      data-slot='image'
       ref={imgRef}
       alt={alt}
       src={src}

@@ -46,6 +46,16 @@ A vertical divider sized to the bar's content. Built on top of [`Separator`](/do
 
 <auto-type-table path="./props.ts" name="FloatingActionsSeparatorProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `floating-actions` | The root element |
+| `floating-actions-group` | `FloatingActions.Group` wrapper |
+| `floating-actions-separator` | `FloatingActions.Separator` |
+
 ## Variants
 
 `floating` (default) renders with `position: fixed` anchored to the viewport via `side` and `align` — use it when the bar should follow the user as the page scrolls (bulk-selection toolbars, contextual action trays). `inline` opts out of viewport positioning so the bar flows with surrounding content.
@@ -90,9 +100,9 @@ The floating variant stays pinned to the viewport (or the nearest containing blo
 
 <Demo data={scrollingDemo} />
 
-### Use with DataTable
+### Use with DataView
 
-For the row-selection pattern — rendering this bar over a `DataTable` and wiring it to selected rows — see [DataTable → Row selection](/docs/components/datatable#row-selection).
+For the row-selection pattern — rendering this bar over a `DataView` and wiring it to selected rows — see [DataView → Row selection](/docs/components/dataview#row-selection).
 
 ## Accessibility
 

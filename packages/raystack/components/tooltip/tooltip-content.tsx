@@ -36,6 +36,7 @@ export function TooltipContent({
         align='center'
         sideOffset={showArrow ? 10 : 4}
         className={styles.positioner}
+        data-slot='tooltip-positioner'
         {...positionerProps}
       >
         <TooltipPrimitive.Popup
@@ -45,10 +46,18 @@ export function TooltipContent({
           render={render}
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledBy}
+          data-slot='tooltip-content'
         >
-          {typeof children === 'string' ? <Text>{children}</Text> : children}
+          {typeof children === 'string' ? (
+            <Text data-slot='tooltip-text'>{children}</Text>
+          ) : (
+            children
+          )}
           {showArrow && (
-            <TooltipPrimitive.Arrow className={styles.arrow}>
+            <TooltipPrimitive.Arrow
+              className={styles.arrow}
+              data-slot='tooltip-arrow'
+            >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 width='6'

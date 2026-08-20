@@ -62,6 +62,23 @@ Renders the drawer panel that slides in from a screen edge.
 
 - Inherits all HTML div element props
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `drawer-backdrop` | The overlay behind the drawer |
+| `drawer-viewport` | Viewport wrapper that positions the drawer |
+| `drawer-content` | The drawer panel (popup) |
+| `drawer-content-body` | Content wrapper inside the panel |
+| `drawer-close` | The built-in close button (when `showCloseButton`) |
+| `drawer-header` | The `Drawer.Header` container |
+| `drawer-title` | The `Drawer.Title` element |
+| `drawer-description` | The `Drawer.Description` element |
+| `drawer-body` | The `Drawer.Body` container |
+| `drawer-footer` | The `Drawer.Footer` container |
+
 ## Examples
 
 ### Basic

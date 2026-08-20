@@ -17,10 +17,19 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Menu } from '@raystack/apsara'
+
+<Menu>
+  <Menu.Trigger />
+  <Menu.Content>
+    <Menu.Item />
+  </Menu.Content>
+</Menu>
 ```
 
 ## API Reference
@@ -103,6 +112,26 @@ The content container for a submenu. Shares the same API as `Menu.Content` with 
 
 <auto-type-table path="./props.ts" name="MenuSubContentProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `menu-trigger` | The `Menu.Trigger` element |
+| `menu-positioner` | Positioning wrapper around the content popup |
+| `menu-content` | The `Menu.Content` / `Menu.SubmenuContent` popup |
+| `menu-search-input` | The autocomplete search input (when `autocomplete`) |
+| `menu-search-list` | Wrapper around items in autocomplete mode (when `autocomplete`) |
+| `menu-item` | Each `Menu.Item` |
+| `menu-cell-leading-icon` | Leading icon inside an item or submenu trigger (when provided) |
+| `menu-cell-trailing-icon` | Trailing icon inside an item or submenu trigger (when provided) |
+| `menu-group` | `Menu.Group` wrapper |
+| `menu-label` | `Menu.Label` |
+| `menu-separator` | `Menu.Separator` |
+| `menu-empty-state` | `Menu.EmptyState` |
+| `menu-subtrigger` | `Menu.SubmenuTrigger` |
+
 ## Examples
 
 ### Basic Usage
@@ -148,3 +177,19 @@ This is a Linear-inspired menu component that supports custom filtering and disp
 To closely replicate Linear-style filtering, the filtering logic should include result ranking. Using a utility like [match-sorter](https://www.npmjs.com/package/match-sorter) can help achieve this by sorting filtered results based on relevance.
 
 <Demo data={linearDemo} />
+
+## Accessibility
+
+- Built on [Base UI Menu](https://base-ui.com/react/components/menu), following
+  the [WAI-ARIA Menu pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu/):
+  the trigger exposes `aria-haspopup` and `aria-expanded`, the popup uses
+  `role="menu"`, and items use `role="menuitem"`.
+- Arrow keys move through items, Enter activates the highlighted item, Escape
+  closes the menu and returns focus to the trigger, and ArrowRight/ArrowLeft
+  open and close submenus.
+- With `autocomplete`, the popup becomes a `role="dialog"` containing a search
+  input, items render as `role="option"`, and focus stays in the input while
+  arrow keys move the highlight — ArrowRight or Enter opens a highlighted
+  submenu, and Escape first closes an open submenu.
+- `Menu.Label` must be wrapped in `Menu.Group` so the group is labelled via
+  `aria-labelledby`.

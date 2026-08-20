@@ -27,14 +27,26 @@ export const preview = {
                 <Command.Label>Actions</Command.Label>
                 <Command.Item
                   leadingIcon={<TransformIcon />}
-                  trailingIcon={<Command.Shortcut>⌘ ⇧ A</Command.Shortcut>}
+                  trailingIcon={
+                    <Kbd.Group variant="ghost">
+                      <Kbd aria-label="Command">⌘</Kbd>
+                      <Kbd aria-label="Shift">⇧</Kbd>
+                      <Kbd>A</Kbd>
+                    </Kbd.Group>
+                  }
                   onClick={() => setOpen(false)}
                 >
                   Create AOI...
                 </Command.Item>
                 <Command.Item
                   leadingIcon={<Share2Icon />}
-                  trailingIcon={<Command.Shortcut>⌘ ⇧ W</Command.Shortcut>}
+                  trailingIcon={
+                    <Kbd.Group variant="ghost">
+                      <Kbd aria-label="Command">⌘</Kbd>
+                      <Kbd aria-label="Shift">⇧</Kbd>
+                      <Kbd>W</Kbd>
+                    </Kbd.Group>
+                  }
                   onClick={() => setOpen(false)}
                   disabled
                 >
@@ -137,19 +149,34 @@ export const shortcutDemo = {
               <Command.Group>
                 <Command.Label>Suggestions</Command.Label>
                 <Command.Item
-                  trailingIcon={<Command.Shortcut>⌘ P</Command.Shortcut>}
+                  trailingIcon={
+                    <Kbd.Group variant="ghost">
+                      <Kbd aria-label="Command">⌘</Kbd>
+                      <Kbd>P</Kbd>
+                    </Kbd.Group>
+                  }
                   onClick={() => setOpen(false)}
                 >
                   Profile
                 </Command.Item>
                 <Command.Item
-                  trailingIcon={<Command.Shortcut>⌘ B</Command.Shortcut>}
+                  trailingIcon={
+                    <Kbd.Group variant="ghost">
+                      <Kbd aria-label="Command">⌘</Kbd>
+                      <Kbd>B</Kbd>
+                    </Kbd.Group>
+                  }
                   onClick={() => setOpen(false)}
                 >
                   Billing
                 </Command.Item>
                 <Command.Item
-                  trailingIcon={<Command.Shortcut>⌘ S</Command.Shortcut>}
+                  trailingIcon={
+                    <Kbd.Group variant="ghost">
+                      <Kbd aria-label="Command">⌘</Kbd>
+                      <Kbd>S</Kbd>
+                    </Kbd.Group>
+                  }
                   onClick={() => setOpen(false)}
                 >
                   Settings

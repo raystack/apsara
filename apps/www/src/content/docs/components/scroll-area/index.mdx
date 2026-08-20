@@ -1,6 +1,7 @@
 ---
 title: Scroll Area
 description: A customizable scrollable container component with smooth scrolling, hover effects, and automatic scrollbar handling. Both vertical and horizontal scrollbars are automatically rendered and shown based on content overflow.
+source: packages/raystack/components/scroll-area
 tag: new
 ---
 
@@ -30,6 +31,19 @@ import { ScrollArea } from "@raystack/apsara";
 The Scroll Area component extends standard HTML div attributes, so you can use props like `style`, `id`, `onClick`, and other standard HTML attributes in addition to the props listed below.
 
 <auto-type-table path="./props.ts" name="ScrollAreaProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `scroll-area` | The root `<div>` element |
+| `scroll-area-viewport` | The clipping viewport that holds the scrollable content |
+| `scroll-area-content` | Wrapper around the content you render |
+| `scroll-area-scrollbar` | A scrollbar track (one per axis) |
+| `scroll-area-thumb` | The draggable thumb inside a scrollbar |
+| `scroll-area-corner` | The corner between scrollbars (when both axes overflow) |
 
 ## Examples
 

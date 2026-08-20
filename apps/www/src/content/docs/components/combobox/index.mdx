@@ -1,6 +1,7 @@
 ---
 title: Combobox
 description: An input field with an attached dropdown that allows users to search and select from a list of options.
+source: packages/raystack/components/combobox
 tag: new
 ---
 
@@ -77,6 +78,23 @@ Visual divider between combobox items or groups.
 
 <auto-type-table path="./props.ts" name="ComboboxSeparatorProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `combobox-input` | The text input that opens the popup |
+| `combobox-positioner` | Wrapper that positions the popup |
+| `combobox-content` | The popup container |
+| `combobox-list` | The scrollable list of items |
+| `combobox-group` | A group of related items |
+| `combobox-label` | The label for a group |
+| `combobox-separator` | The divider between items or groups |
+| `combobox-item` | A selectable option row |
+| `combobox-item-text` | The text label inside an item (when its children is a string) |
+| `combobox-item-icon` | The leading icon inside an item (when `leadingIcon` is set) |
+
 ## Examples
 
 ### Basic
@@ -114,3 +132,19 @@ Pass the `multiple` prop to enable multi-select. Selected values appear as chips
 Use `value` and `onValueChange` for controlled behavior.
 
 <Demo data={controlledDemo} />
+
+## Accessibility
+
+- Follows the [WAI-ARIA Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)
+  via [Base UI Combobox](https://base-ui.com/react/components/combobox): the input
+  is a `role="combobox"` with `aria-expanded` and `aria-controls`, the popup list
+  is a `listbox`, and each item is an `option` with `aria-selected`.
+- Arrow keys move the highlight through visible options, Enter selects the
+  highlighted option, and Escape closes the popup — focus stays in the input
+  the whole time, so typing to filter never loses the user's place.
+- In multiple mode, each item renders a checkbox that mirrors its selected
+  state, and selected values appear in the input as removable chips.
+- Group labels use Base UI's `Combobox.GroupLabel`, which links the label to
+  its group via `aria-labelledby` — wrap `Combobox.Label` in `Combobox.Group`.
+- Wrap the Combobox with [Field](/docs/components/field) to associate a
+  visible label, description, and error message with the input.

@@ -29,12 +29,7 @@ import dayjs from 'dayjs';
 import { Home, Info, Laugh, X } from 'lucide-react';
 import NextLink from 'next/link';
 import { Suspense } from 'react';
-import {
-  DataTableDemo,
-  DataTableSearchDemo,
-  DataTableVirtualizedDemo
-} from '../datatable-demo';
-import DataTableSelectionDemo from '../datatable-selection-demo';
+import ChipInputDemo from '../chip-input-demo';
 import {
   DataViewCustomDemo,
   DataViewEmptyZeroDemo,
@@ -44,6 +39,7 @@ import {
   DataViewMultiViewDemo,
   DataViewPerViewFieldsDemo,
   DataViewSearchDemo,
+  DataViewSelectionDemo,
   DataViewTableDemo,
   DataViewTimelineDemo,
   DataViewTimelineGroupingDemo,
@@ -51,8 +47,7 @@ import {
   DataViewVirtualizedDemo,
   DataViewVirtualizedGroupingDemo
 } from '../dataview-demo';
-import ChipInputDemo from '../inputfield-chip-demo';
-import LinearMenuDemo from '../linear-dropdown-demo';
+import LinearMenuDemo from '../linear-menu-demo';
 import PopoverColorPicker from '../popover-color-picker';
 import TourDemo from '../tour-demo';
 import DemoPlayground from './demo-playground';
@@ -65,9 +60,6 @@ export default function Demo(props: DemoProps) {
     // `...Apsara` already carries every icon, so no icon needs its own entry.
     scope = {
       ...Apsara,
-      DataTableDemo,
-      DataTableSearchDemo,
-      DataTableVirtualizedDemo,
       DataViewTableDemo,
       DataViewListDemo,
       DataViewMultiViewDemo,
@@ -79,11 +71,11 @@ export default function Demo(props: DemoProps) {
       DataViewLoadingDemo,
       DataViewPerViewFieldsDemo,
       DataViewSearchDemo,
+      DataViewSelectionDemo,
       DataViewTimelineDemo,
       DataViewTimelineGroupingDemo,
       DataViewTimelinePointDemo,
       ChipInputDemo,
-      DataTableSelectionDemo,
       LinearMenuDemo,
       PopoverColorPicker,
       TourDemo,

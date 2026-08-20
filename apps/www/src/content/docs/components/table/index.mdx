@@ -69,9 +69,26 @@ Represents a section heading, grouping different rows of the table.
 
 <auto-type-table path="./props.ts" name="TableSectionHeaderProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `table` | The `<table>` element |
+| `table-header` | `<thead>` |
+| `table-body` | `<tbody>` |
+| `table-row` | `<tr>` |
+| `table-head` | `<th>` |
+| `table-cell` | `<td>` |
+| `table-section-header` | `SectionHeader`'s row |
+| `table-section-header-cell` | `SectionHeader`'s cell |
+
 ## Examples
 
 ### Basic Usage
+
+Compose a table from its parts: `Header` and `Body` wrap `Row`s, with `Head` for column titles and `Cell` for each value. Table renders static markup — for sorting, filtering, or pagination, use [DataView](/docs/components/dataview).
 
 <Demo data={basicDemo} />
 

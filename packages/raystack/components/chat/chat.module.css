@@ -49,6 +49,7 @@
 .item {
   flex-shrink: 0;
   min-width: 0;
+  text-wrap: pretty;
   content-visibility: auto;
   contain-intrinsic-size: auto 10rem;
 }
@@ -185,7 +186,7 @@
   flex-shrink: 0;
   width: var(--rs-space-9);
   height: var(--rs-space-9);
-  border-radius: var(--rs-radius-2);
+  border-radius: var(--rs-radius-1);
   background: var(--rs-color-background-neutral-secondary);
   color: var(--rs-color-foreground-base-secondary);
   overflow: hidden;

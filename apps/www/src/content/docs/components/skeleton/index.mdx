@@ -32,6 +32,15 @@ Renders a placeholder loading animation that mimics content layout.
 
 <auto-type-table path="./props.ts" name="SkeletonProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `skeleton` | The container element |
+| `skeleton-item` | Each skeleton bar (repeated `count` times) |
+
 ## Examples
 
 ### Basic Usage

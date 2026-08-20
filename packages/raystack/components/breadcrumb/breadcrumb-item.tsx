@@ -42,11 +42,23 @@ export const BreadcrumbItem = ({
     leadingIcon || trailingIcon ? (
       <>
         {leadingIcon && (
-          <span className={styles['breadcrumb-icon']}>{leadingIcon}</span>
+          <span
+            className={styles['breadcrumb-icon']}
+            data-slot='breadcrumb-leading-icon'
+          >
+            {leadingIcon}
+          </span>
         )}
-        {children != null && <span>{children}</span>}
+        {children != null && (
+          <span data-slot='breadcrumb-item-text'>{children}</span>
+        )}
         {trailingIcon && (
-          <span className={styles['breadcrumb-icon']}>{trailingIcon}</span>
+          <span
+            className={styles['breadcrumb-icon']}
+            data-slot='breadcrumb-trailing-icon'
+          >
+            {trailingIcon}
+          </span>
         )}
       </>
     ) : (
@@ -69,19 +81,24 @@ export const BreadcrumbItem = ({
       {
         className: cx(styles['breadcrumb-link']),
         href,
-        children: label
-      },
+        children: label,
+        'data-slot': 'breadcrumb-link'
+      } as useRender.ComponentProps<'a'>,
       props
     )
   });
 
   if (dropdownItems && !disabled) {
     return (
-      <li className={cx(styles['breadcrumb-item'], className)}>
+      <li
+        className={cx(styles['breadcrumb-item'], className)}
+        data-slot='breadcrumb-item'
+      >
         <Menu>
           <Menu.Trigger
             ref={ref as React.Ref<HTMLButtonElement>}
             className={styles['breadcrumb-dropdown-trigger']}
+            data-slot='breadcrumb-dropdown-trigger'
             id={id}
             title={title}
             aria-label={ariaLabel}
@@ -89,7 +106,10 @@ export const BreadcrumbItem = ({
             aria-describedby={ariaDescribedby}
           >
             {label}
-            <ChevronDownIcon className={styles['breadcrumb-dropdown-icon']} />
+            <ChevronDownIcon
+              className={styles['breadcrumb-dropdown-icon']}
+              data-slot='breadcrumb-dropdown-icon'
+            />
           </Menu.Trigger>
           <Menu.Content className={styles['breadcrumb-dropdown-content']}>
             {dropdownItems.map((dropdownItem, dropdownIndex) => {
@@ -105,6 +125,7 @@ export const BreadcrumbItem = ({
                     styles['breadcrumb-dropdown-item'],
                     itemClassName
                   )}
+                  data-slot='breadcrumb-dropdown-item'
                   {...menuItemProps}
                 />
               );
@@ -117,7 +138,10 @@ export const BreadcrumbItem = ({
 
   if (disabled || current) {
     return (
-      <li className={cx(styles['breadcrumb-item'], className)}>
+      <li
+        className={cx(styles['breadcrumb-item'], className)}
+        data-slot='breadcrumb-item'
+      >
         <span
           ref={ref as React.RefObject<HTMLSpanElement>}
           className={cx(
@@ -125,6 +149,7 @@ export const BreadcrumbItem = ({
             disabled && styles['breadcrumb-link-disabled'],
             current && styles['breadcrumb-link-active']
           )}
+          data-slot='breadcrumb-link'
           {...(disabled && {
             'aria-disabled': 'true',
             'data-disabled': 'true'
@@ -138,7 +163,12 @@ export const BreadcrumbItem = ({
   }
 
   return (
-    <li className={cx(styles['breadcrumb-item'], className)}>{linkElement}</li>
+    <li
+      className={cx(styles['breadcrumb-item'], className)}
+      data-slot='breadcrumb-item'
+    >
+      {linkElement}
+    </li>
   );
 };
 

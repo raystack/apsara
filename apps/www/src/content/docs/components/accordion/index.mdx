@@ -55,6 +55,20 @@ Contains the collapsible content for an item.
 
 <auto-type-table path="./props.ts" name="AccordionContentProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `accordion` | The root element that wraps all items |
+| `accordion-item` | Wrapper around a single header and its panel |
+| `accordion-header` | The header row that holds the trigger |
+| `accordion-trigger` | The `<button>` that toggles the item |
+| `accordion-trigger-icon` | The chevron icon inside the trigger |
+| `accordion-content` | The collapsible panel for an item |
+| `accordion-content-body` | The padded `<div>` that holds the panel content |
+
 ## Examples
 
 ### Single vs Multiple

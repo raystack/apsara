@@ -49,6 +49,36 @@ The DatePicker exposes its slots — `input`, `calendar`, `popover` — through 
 
 <auto-type-table path="./props.ts" name="DatePickerProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `calendar` | The root calendar surface |
+| `calendar-nav-previous` | The previous-month navigation button |
+| `calendar-nav-next` | The next-month navigation button |
+| `calendar-dropdown` | The month/year dropdown trigger (when `captionLayout="dropdown"`) |
+| `calendar-dropdown-content` | The dropdown's option list (when the dropdown is open) |
+| `calendar-month-grid` | Wrapper around the day grid and its skeleton |
+| `calendar-grid-table` | The `<table>` that holds the days |
+| `calendar-grid-skeleton` | The loading skeleton shown over the grid |
+| `calendar-day` | The `<button>` for a single day |
+| `calendar-day-info` | Extra info shown inside a day (when `dateInfo` resolves for that day) |
+| `calendar-day-number` | The day number inside a day button |
+| `calendar-day-tooltip` | The tooltip shown on hover (when `showTooltip` and a message exists) |
+| `date-picker-trigger` | The `<div>` wrapping the DatePicker trigger |
+| `date-picker-input` | The DatePicker's text `<input>` |
+| `date-picker-positioner` | The popover positioner for the DatePicker |
+| `date-picker-content` | The DatePicker popover content that holds the calendar |
+| `range-picker-trigger` | The `<div>` wrapping the RangePicker trigger |
+| `range-picker-trigger-group` | The row that groups the start and end inputs |
+| `range-picker-start-input` | The RangePicker's start date `<input>` |
+| `range-picker-end-input` | The RangePicker's end date `<input>` |
+| `range-picker-positioner` | The popover positioner for the RangePicker |
+| `range-picker-content` | The RangePicker popover content that holds the calendar |
+| `range-picker-footer` | The footer below the calendar (when `footer` is set) |
+
 ## Examples
 
 ### Calendar

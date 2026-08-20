@@ -332,6 +332,91 @@ export const searchPreview = {
   ]
 };
 
+export const rowSelectionPreview = {
+  type: 'code',
+  style: { padding: 0 },
+  previewCode: false,
+  code: `<DataViewSelectionDemo />`,
+  codePreview: [
+    {
+      label: 'index.tsx',
+      code: `import {
+  Button,
+  Checkbox,
+  Chip,
+  DataView,
+  FloatingActions,
+  useDataView,
+} from "@raystack/apsara";
+import { TransformIcon } from "@radix-ui/react-icons";
+
+const selectionColumn: DataViewListColumn<Person> = {
+  accessorKey: "select",
+  width: 48,
+  header: ({ table }) => (
+    <Checkbox
+      size="small"
+      checked={table.getIsAllRowsSelected()}
+      indeterminate={
+        table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+      }
+      onCheckedChange={(checked) => table.toggleAllRowsSelected(Boolean(checked))}
+      aria-label="Select all people"
+    />
+  ),
+  cell: ({ row }) => (
+    <Checkbox
+      size="small"
+      checked={row.getIsSelected()}
+      onCheckedChange={(checked) => row.toggleSelected(Boolean(checked))}
+      onClick={(event) => event.stopPropagation()}
+      aria-label={\`Select \${row.original.name}\`}
+    />
+  ),
+};
+
+function SelectionBar() {
+  const { table } = useDataView<Person>();
+  const selectedCount = table.getSelectedRowModel().flatRows.length;
+  if (selectedCount === 0) return null;
+
+  return (
+    <FloatingActions aria-label="Selection actions">
+      <Chip
+        variant="outline"
+        size="large"
+        color="neutral"
+        leadingIcon={<TransformIcon />}
+        isDismissible
+        onDismiss={() => table.resetRowSelection()}
+      >
+        {selectedCount} selected
+      </Chip>
+      <FloatingActions.Separator />
+      <Button variant="outline" color="neutral" size="small">Change team</Button>
+      <Button variant="outline" color="neutral" size="small">Archive</Button>
+    </FloatingActions>
+  );
+}
+
+<DataView
+  data={people}
+  fields={fields}
+  defaultSort={{ name: "name", order: "asc" }}
+  getRowId={(person) => person.id}
+>
+  <DataView.Toolbar>
+    <DataView.Search placeholder="Search people…" />
+    <DataView.Filters />
+    <DataView.DisplayControls />
+  </DataView.Toolbar>
+  <DataView.List variant="table" columns={[selectionColumn, ...tableColumns]} />
+  <SelectionBar />
+</DataView>`
+    }
+  ]
+};
+
 export const timelinePreview = {
   type: 'code',
   style: { padding: 0 },

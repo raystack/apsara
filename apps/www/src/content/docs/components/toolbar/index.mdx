@@ -66,6 +66,17 @@ A native input element with integrated keyboard navigation.
 
 <auto-type-table path="./props.ts" name="ToolbarInputProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `toolbar` | The root element |
+| `toolbar-button` | `Toolbar.Button` |
+| `toolbar-group` | `Toolbar.Group` wrapper |
+| `toolbar-separator` | `Toolbar.Separator` |
+
 ## Examples
 
 ### Grouped

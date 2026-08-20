@@ -1,6 +1,6 @@
 ---
 title: Text
-description: Component for Text
+description: A typography primitive for rendering text with consistent size, weight, color, and alignment across the interface.
 source: packages/raystack/components/text
 ---
 
@@ -32,6 +32,14 @@ import { Text } from '@raystack/apsara'
 Use the `render` prop to change the rendered element or provide a custom render function.
 
 <auto-type-table path="./props.ts" name="TextProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `text` | The text element (`<span>` by default, or the element supplied via `render`) |
 
 ## Examples
 

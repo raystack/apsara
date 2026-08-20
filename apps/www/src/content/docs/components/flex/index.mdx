@@ -1,12 +1,16 @@
 ---
 title: Flex
-description: Component for flexbox
+description: A layout primitive that arranges children in a row or column, with props for alignment, spacing, and wrapping.
 source: packages/raystack/components/flex
 ---
 
 import { playground, basicDemo } from "./demo.ts";
 
 <Demo data={playground} />
+
+## Overview
+
+`Flex` is the workhorse layout primitive: a `div` with `display: flex` and props for `direction`, `align`, `justify`, `wrap`, and `gap`, so you rarely write flexbox CSS by hand. By default it lays children out in a row (`direction="row"`, `align="stretch"`, `justify="start"`, `wrap="noWrap"`). Reach for it whenever you're stacking or spacing things along one axis — toolbars, form rows, sidebars. For two-dimensional layouts use [Grid](/docs/components/grid), and for a page-width wrapper use [Container](/docs/components/container).
 
 ## Anatomy
 
@@ -24,13 +28,28 @@ Renders a flex container for layout.
 
 <auto-type-table path="./props.ts" name="FlexProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `flex` | The flex container (or the element supplied via `render`) |
+
 ## Examples
 
 ### Basic Usage
+
+Nest Flex containers to compose layouts: here an outer row (the default direction) holds two columns, each spaced with `gap`.
 
 <Demo data={basicDemo} />
 
 ## Accessibility
 
-- Uses semantic HTML for proper document structure
-- Supports standard content accessibility patterns
+- Renders a plain `<div>` and adds no roles or ARIA attributes — purely
+  visual layout with no semantic meaning.
+- Screen readers read children in DOM order, so `rowReverse` and
+  `columnReverse` change only the visual order. Don't rely on them to
+  convey sequence.
+- Use the `render` prop to swap in a semantic element (`<nav>`, `<ul>`,
+  `<section>`) when the group has meaning beyond layout.
