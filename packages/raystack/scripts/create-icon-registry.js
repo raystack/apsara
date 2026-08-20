@@ -6,8 +6,9 @@
  *   - `index.tsx`, the barrel,
  *   - `types.ts`, the `IconName` union (types only, no runtime bytes).
  *
- * The output is committed, exactly as `icons/index.tsx` is. Run
- * `pnpm build:icon-registry` after editing the map.
+ * The output is gitignored. It is written on `pnpm install` (the `prepare`
+ * script) and again before build, dev and test, so a clean checkout never
+ * needs a manual step. Run `pnpm build:icon-registry` after editing the map.
  */
 
 const fs = require('fs');

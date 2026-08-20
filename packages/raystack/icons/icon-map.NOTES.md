@@ -23,6 +23,21 @@ against the real export list of `lucide-react` 0.548.0.
 | Typography | 28 | 21 | 7 |
 | **Total** | **326** | **245** | **81** |
 
+`icon-map.json` itself is the authority on what Apsara ships: **243 keys — 239 lucide names
+and 4 in-house SVGs.** `pnpm check:icon-map` prints the same split.
+
+Two figures above do not reconcile with that, and neither can be settled from this repo —
+both need a pass over the Figma file:
+
+1. **Design is either 25/15 or 27/13.** The table says 15 rows have no lucide icon; the list
+   at the bottom of this file names 13. One of the two is wrong, and the totals move with
+   it (81 versus 79 unmapped, 245 versus 247 mapped).
+2. **245 mapped rows, 243 keys.** The likeliest cause is two rows resolving to one lucide
+   name — `check-icon-map.js` rejects a duplicate, so the second would have been dropped
+   when the map was written. There is at least one known collapse of this kind: the old
+   `BuildingsFilledIcon` and `OrganizationIcon` both land on `Building2Icon`. Whether that
+   accounts for the whole gap is unconfirmed.
+
 ## Errors in the Figma file — please correct at source
 
 The cell text disagrees with the icon actually placed in **21 rows**. The icon
@@ -71,6 +86,24 @@ alias list; nothing is broken, but the Figma file is out of date.
 `X social` must never be converted to `X`. In lucide, `X` is the close cross, not the brand
 mark. `notion` has no glyph in lucide 0.548.0, so the Notion logo has no key.
 
+## Naming rule: a key freezes at adoption
+
+Every key is the lucide export name in Pascal case plus `Icon` — `Search` becomes
+`SearchIcon`. That is how a key is *chosen*. It is not a rule the key keeps following.
+
+**When lucide renames an icon, the value changes and the key does not.** If lucide renames
+`Rocket` to `RocketShip`, the entry becomes `"RocketIcon": "RocketShip"`. It does not become
+`RocketShipIcon`.
+
+The keys are the public API of `@raystack/apsara/icons`. Tracking lucide's renames forward
+would hand our consumers a breaking change every time lucide tidies its own naming, on
+lucide's release schedule rather than ours — which is the exact coupling this registry exists
+to remove. A key drifting away from its lucide name over time is the design working, not a
+mistake to correct.
+
+The seven names in the table above were adopted at lucide 0.548.0, so they read as lucide's
+current names today. They are frozen from here.
+
 ## Open questions for design
 
 1. **`Line Height` maps to `pencil`.** Neither the layer name nor the cell text reads as a
@@ -81,10 +114,11 @@ mark. `notion` has no glyph in lucide 0.548.0, so the Notion logo has no key.
    for "no equivalent". Today the cell text separates them (`--` versus the literal
    `square-dashed`). Please use a distinct placeholder glyph instead.
 
-## Rows with no lucide icon (79)
+## Rows with no lucide icon (79 named below, 81 per the table)
 
 These are absent from the map on purpose. Almost all are Figma editor icons that Apsara has
-no use for.
+no use for. The Design entry names 13 rows where the table counts 15 — see the note under
+the table.
 
 - **Abstract** (2): View None, Open in New Window
 - **Arrows** (9): Triangle Left, Triangle Right, Triangle Up, Triangle Down, Caret Left, Caret Right, Caret Up, Caret Down, All Sides

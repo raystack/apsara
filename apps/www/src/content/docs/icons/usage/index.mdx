@@ -19,7 +19,9 @@ name, and every icon can be replaced with your own component.
 
 <Demo data={basicDemo} />
 
-Browse the set on [All icons](/docs/icons/all-icons).
+Browse the set on [All icons](/docs/icons/all-icons). If you need one Apsara does
+not ship, [build it with `createIcon`](#building-your-own-icons) and it behaves
+like the rest.
 
 ## Anatomy
 
@@ -137,6 +139,57 @@ can change one icon and keep everything else it inherited.
 
 <Demo data={nestedDemo} />
 
+### An override does not remove the default
+
+Each icon module holds a real reference to its own default, and `<Theme icons>` is
+a runtime value — a bundler cannot know at build time which icons an app will
+replace, so it has to keep every default as a fallback. An icon you override and
+render therefore ships twice: your component, and the default it never draws.
+
+For a handful of overrides this is a rounding error. It is only worth thinking
+about if you replace a large set at once, where you end up shipping most of two
+icon libraries. Nothing is wrong when that happens — it is what runtime
+replacement costs.
+
+## Building your own icons
+
+Apsara's icons are built by a factory that is public, so an icon Apsara does not
+ship can behave exactly like one that does:
+
+```tsx
+// src/icons.ts — the app's single place for icons
+import { createIcon } from '@raystack/apsara/icons';
+import { Rocket, Trash2 } from 'lucide-react';
+
+export const RocketIcon = createIcon('RocketIcon', Rocket);
+export const TrashIcon = createIcon('TrashIcon', Trash2);
+```
+
+```tsx
+import { RocketIcon } from '@/icons';
+
+<RocketIcon />; // 16×16, strokeWidth 1.5, data-icon="RocketIcon"
+```
+
+You get the base props, `data-icon`, and one file to edit if you ever change icon
+library — the same things Apsara gets for its own icons. Browse
+[lucide.dev](https://lucide.dev) for the full set; the name you pass to
+`createIcon` is yours to choose and does not have to match lucide's.
+
+`iconProps` reaches your icons too, since they read the same context — so
+`<Theme iconProps={{ strokeWidth: 2 }}>` still tunes everything in one place.
+`<Theme icons>` is typed to the names Apsara ships, so replacing one of your own
+icons is an edit to the file above rather than a provider.
+
+<Callout type="grey">
+  lucide exports several aliases per icon — `Search`, `SearchIcon` and
+  `LucideSearch` are the same drawing. Apsara's names collide with the middle
+  flavour, so `import { SearchIcon } from 'lucide-react'` and `import
+  { SearchIcon } from '@raystack/apsara/icons'` are different components with one
+  name. Importing both in a file is a compile error rather than a silent bug, but
+  it is worth knowing when you read an import list.
+</Callout>
+
 ## API Reference
 
 ### Theme props
@@ -150,6 +203,17 @@ without a theme scope.
 
 <auto-type-table path="./props.ts" name="IconProviderProps" />
 
+### createIcon
+
+```tsx
+function createIcon(name: string, Default: IconComponent): IconComponent;
+```
+
+Wraps a component as an Apsara icon: base props below the call site,
+`data-icon="<name>"`, and `iconProps` from the nearest provider. `name` is any
+string — `IconName` covers only what Apsara ships, and only those names can be
+replaced through `<Theme icons>`.
+
 ### Types
 
 <auto-type-table path="./props.ts" name="IconProps" />
@@ -159,6 +223,7 @@ without a theme scope.
 names, so a typo in an override map is a type error.
 
 ```tsx
+import { createIcon } from '@raystack/apsara';
 import type {
   IconComponent,
   IconName,

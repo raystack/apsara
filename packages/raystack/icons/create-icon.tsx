@@ -85,17 +85,37 @@ export function IconProvider({ icons, props, children }: IconProviderProps) {
 IconProvider.displayName = 'IconProvider';
 
 /**
- * Builds the wrapper that Apsara exports for one icon name. The generated
- * modules in `icons/generated/` are the only callers.
+ * Builds an Apsara icon: a wrapper that applies the base props, stamps
+ * `data-icon`, and lets a `<Theme icons>` above it swap the drawing.
+ *
+ * The generated modules in `icons/generated/` call this for the icons Apsara
+ * ships. It is also public, so an app can give an icon Apsara does not ship the
+ * same treatment:
+ *
+ * ```tsx
+ * // src/icons.ts
+ * import { createIcon } from '@raystack/apsara/icons';
+ * import { Rocket } from 'lucide-react';
+ *
+ * export const RocketIcon = createIcon('RocketIcon', Rocket);
+ * ```
+ *
+ * `name` is any string. Only the names Apsara ships are in `IconName`, so only
+ * those are replaceable through `<Theme icons>` with types on your side — but
+ * every icon built here reads the same context, so `<Theme iconProps>` tunes
+ * yours along with ours.
  *
  * Resolution: the override of the consumer, then `Default`.
  * Prop priority: the base values, then the provider `props`, then the props at
  * the call site.
  */
-export function createIcon(name: IconName, Default: IconComponent) {
+export function createIcon(name: string, Default: IconComponent) {
   const Icon = (callProps: IconProps) => {
     const { icons, props } = useContext(IconContext);
-    const Resolved = icons?.[name] ?? Default;
+    // `name` is widened to `string` for consumer-built icons; the lookup is a
+    // miss for any name the consumer has not overridden, which is the same
+    // outcome as a name Apsara does not ship.
+    const Resolved = icons?.[name as IconName] ?? Default;
     return (
       // `strokeWidth` counts units of the icon's own viewBox, and lucide draws
       // in a 24-unit box, so the rendered stroke is `strokeWidth * width / 24`.

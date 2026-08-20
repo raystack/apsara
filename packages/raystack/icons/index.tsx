@@ -14,6 +14,7 @@
 // does not reach is dropped from the shared output file — which silently removed
 // IconProvider from the published package until this export was added.
 export {
+  createIcon,
   type IconComponent,
   type IconOverrides,
   type IconProps,

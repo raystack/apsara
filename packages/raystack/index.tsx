@@ -153,6 +153,7 @@ export {
   useTour
 } from './components/tour';
 export {
+  createIcon,
   type IconComponent,
   type IconOverrides,
   type IconProps,

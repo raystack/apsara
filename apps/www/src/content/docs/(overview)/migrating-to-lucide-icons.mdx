@@ -188,6 +188,22 @@ Five names are unchanged, because they were already registry keys: `BellIcon`
 Every other name from the subpath is one of the 243 registry icons, and the same
 component as the one the package root exports.
 
+## 7. For anything Apsara does not ship, use `createIcon`
+
+If you reach for an icon that is not one of the 243, wrap it yourself rather than
+importing it raw — it then gets the same base props, the same `data-icon`, and the
+same one-file swap as Apsara's own icons:
+
+```tsx
+// src/icons.ts
+import { createIcon } from '@raystack/apsara/icons';
+import { Rocket } from 'lucide-react';
+
+export const RocketIcon = createIcon('RocketIcon', Rocket);
+```
+
+See [Building your own icons](/docs/icons/usage#building-your-own-icons).
+
 ## Next
 
 See [Icons › Usage](/docs/icons/usage) for the naming rules and the override API,
