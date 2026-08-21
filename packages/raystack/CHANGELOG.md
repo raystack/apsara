@@ -1,90 +1,73 @@
 # @raystack/apsara
 
-## 0.50.0
+## Unreleased
 
-### Icon registry — lucide replaces @radix-ui/react-icons (BREAKING)
+### Icons — lucide replaces @radix-ui/react-icons (BREAKING)
 
-Apsara refers to every icon by a stable name held in one map,
-`packages/raystack/icons/icon-map.json`. Changing that map and running
-`pnpm build:icon-registry` changes the icon library for the whole design
-system — no call site and no consumer code changes. Consumers can also
-replace any icon with their own component, once, at `<Theme>`.
-
-The default library moves from `@radix-ui/react-icons` to lucide in the
-same release, so some icons look different. See the
-[migration guide](https://apsara.raystack.io/docs/migrating-to-lucide-icons).
+Apsara names every icon with a stable key that does not name a library —
+`SearchIcon`, `SortAscendingIcon`, `ClearIcon` — and draws it with lucide.
+The package exports the 31 icons its own components use, and `createIcon`
+is public, so an app builds any other icon the same way. See the
+[migration guide](https://apsara.raystack.io/docs/migrating-to-lucide-icons)
+and [Icons](https://apsara.raystack.io/docs/icons).
 
 #### Breaking changes
 
-- **`lucide-react` is a new peer dependency**, range
-  `>=0.500.0 <0.600.0`. Install it. The range is narrow because lucide is
-  a 0.x package and a wide range would let the consumer's version decide
-  how Apsara looks.
-- **`@radix-ui/react-icons` is no longer a dependency.** It remains a
-  `devDependency` because `scripts/generate-icons-code-connect.js` needs
-  it for `pnpm figma:sync`.
-- **Eight icons draw a different shape.** The sidebar collapse caret and
-  the submenu marker change from a solid triangle to a chevron (lucide has
-  no solid caret); `ChatPanel` expand/minimize become the matched
-  `ExpandIcon`/`ShrinkIcon` pair; the `PromptInput` stop button and
-  `ShoppingBagFilledIcon` go from solid to stroke; and the `DataTable` sort
-  arrows change glyph. `DatePicker` gains day marks inside its calendar
-  glyph.
+- **`lucide-react` is a new peer dependency**, range `>=0.500.0 <1.0.0`.
+  Install it.
+- **`@radix-ui/react-icons` is no longer a dependency.** If your own code
+  imports from it, keep it in your own `dependencies`.
+- **`@raystack/apsara/icons` exports icon components, not raw SVG
+  assets.** Twelve names are gone: `BellIcon`, `BellSlashIcon`,
+  `BuildingsFilledIcon`, `CheckCircleFilledIcon`, `CoinIcon`,
+  `CoinColoredIcon`, `CrossCircleFilledIcon`, `OrganizationIcon`,
+  `ResetIcon`, `ShoppingBagFilledIcon`, `SidebarIcon` and
+  `TriangleRightIcon`. Import the glyph from `lucide-react` instead, and
+  wrap it with `createIcon` if you want it replaceable. `CoPilotIcon` is
+  unchanged. `FilterIcon` keeps its name but now draws lucide
+  `ListFilter` rather than the in-house solid SVG.
 - **Icons render at 16×16** with `strokeWidth={1.5}`, where the radix
   icons were intrinsically 15×15. A call site that sets a CSS class or an
   explicit `width`/`height` is unaffected. `1.5` is 1 rendered pixel: the
   prop counts units of lucide's 24-unit viewBox, so the stroke on screen
   is `strokeWidth × width / 24`.
-- **Icon overrides must be registered from a client component.** An icon
-  map is an object of functions, and a function cannot cross the boundary
-  from a React Server Component. A `<Theme>` that sits directly in a
-  server layout must move into a `providers.tsx` marked `'use client'`.
-- **The 10 in-house SVG assets that lucide can replace are deleted.**
-  Five of their names are registry keys and still resolve; the other nine
-  must be renamed — see the subpath note below.
+- **Some icons inside Apsara's components draw a different shape.** The
+  `Sidebar` collapse control and the submenu marker become chevrons
+  (lucide has no solid caret); `ChatPanel` expand and minimize become the
+  matched `ExpandIcon` / `ShrinkIcon` pair; the `PromptInput` stop button
+  goes from solid to stroke; the `DataTable` and `DataView` sort controls
+  change glyph; and `DatePicker` gains day marks inside its calendar
+  glyph.
+- **Icon replacements must be registered from a client component.** An
+  override map is an object of functions, and a function cannot cross the
+  boundary from a React Server Component, so a `<Theme>` that sits
+  directly in a server layout must move into a `providers.tsx` marked
+  `'use client'`.
 
 #### New features
 
-- **`<Theme icons={…}>`** replaces any icon by name. The map is partial,
-  so an override of one icon leaves the rest alone, and a nested `<Theme>`
-  layers on the one above it per name.
-- **`<Theme iconProps={…}>`** applies props to every icon. The props at
-  the call site still win.
-- **`data-icon="<Name>"`** on every icon, so CSS can style one icon
+- **31 icons**, from `@raystack/apsara` and from
+  `@raystack/apsara/icons` — 30 drawn by lucide (`ClearIcon` and
+  `ErrorIcon` share one drawing) and `CoPilotIcon`, which lucide has no
+  equivalent for. These are the icons Apsara's own components draw:
+  the keys you cannot reach from your own call sites. Prefer the subpath
+  when you want icons without the component library — it reaches no
+  component module, so one icon costs one icon even in CJS, where the
+  root barrel eagerly requires every component.
+- **`<Theme icons={{ components, props }}>`** replaces the icons inside
+  Apsara's components. `components` swaps a drawing by key, `props`
+  applies to every icon built with `createIcon`. Both maps are partial,
+  the props at the call site still win, and a nested `<Theme>` layers on
+  the one above it key by key.
+- **`createIcon(key, Default)` is public.** Wrap any component with it
+  and it gets the same base props, the same `data-icon`, and the same
+  replaceability as Apsara's own icons.
+- **`data-icon="<Key>"`** on every icon, so CSS can style one icon
   without a re-render and a test can select it.
-- **243 icons**, from `@raystack/apsara/icons` and from the package root —
-  239 lucide, 4 in-house SVGs that lucide cannot draw (`CoPilotIcon`,
-  `CheckCircleFilledIcon`, `CrossCircleFilledIcon`, `CoinColoredIcon`).
-  Each icon is its own module, so a build that shows three icons ships
-  three icons rather than all 243. A bundle test enforces this. Prefer the
-  subpath: it reaches no component module, so one icon costs one icon even
-  when a bundler does not honour `"sideEffects": false`.
-- **New public types**: `IconName` (the union of all 243 names, so a typo
-  in an override map is a type error), `IconOverrides`, `IconComponent`,
-  `IconProps`, `IconProviderProps`, and `IconProvider` itself.
-- **`pnpm check:icon-map`** asserts that every lucide name in the map is a
-  real export and that every in-house `asset` names a file that exists, so
-  moving the peer range cannot silently break an icon name.
-
-#### The `@raystack/apsara/icons` subpath
-
-- **The subpath stays supported, and is now the icons-only entry point.**
-  It exports the same 243 icons as the package root, as the same
-  overridable registry wrappers, and reaches no component module — which
-  matters for CJS, where the root barrel's `.cjs` eagerly requires every
-  component.
-- **Nine in-house icon names are removed** (breaking). The subpath used to
-  export the raw SVG assets; it now exports registry keys, so rename:
-  `BellSlashIcon` → `BellOffIcon`, `BuildingsFilledIcon` →
-  `Building2Icon`, `CoinIcon` → `CoinsIcon`, `FilterIcon` →
-  `ListFilterIcon`, `OrganizationIcon` → `Building2Icon`, `ResetIcon` →
-  `RotateCcwIcon`, `ShoppingBagFilledIcon` → `ShoppingBagIcon`,
-  `SidebarIcon` → `PanelLeftIcon`, `TriangleRightIcon` →
-  `ChevronRightIcon`. `BuildingsFilledIcon` and `OrganizationIcon` both
-  become `Building2Icon`, so they are now one component. Five names are
-  unchanged because they were already registry keys: `BellIcon`,
-  `CoPilotIcon`, `CoinColoredIcon`, `CheckCircleFilledIcon`,
-  `CrossCircleFilledIcon`.
+- **New public types**: `IconName` (the union of the 31 keys, so a typo
+  in an override map is a type error), `IconOptions`, `IconOverrides`,
+  `IconComponent`, `IconProps`, `IconProviderProps`, and `IconProvider`
+  itself.
 
 ## 0.49.0
 

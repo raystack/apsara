@@ -78,7 +78,7 @@ This guide covers all breaking changes when upgrading from the last stable Radix
 
 - **React 19 required.** The peer dependency changed from `^18 || ^19` to `^19` only. React 18 is no longer supported.
 - The library no longer uses `radix-ui`, `@ariakit/react`, or `sonner`. It now uses `@base-ui/react` and `@base-ui/utils` internally. These are installed automatically as dependencies of the package.
-- `@radix-ui/react-icons` is still used.
+- Icons are drawn with `lucide-react`, which is a peer dependency — install it. `@radix-ui/react-icons` is no longer used. See [Migrating to lucide icons](https://apsara.raystack.io/docs/migrating-to-lucide-icons).
 ---
 
 ## Cross-Cutting Changes
