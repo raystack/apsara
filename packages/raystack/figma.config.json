@@ -1,10 +1,6 @@
 {
   "codeConnect": {
-    "include": [
-      "figma/**/*.figma.ts",
-      "figma/**/*.figma.batch.ts",
-      "figma/**/*.figma.batch.json"
-    ],
+    "include": ["figma/**/*.figma.ts"],
     "exclude": [],
     "parser": "react",
     "label": "React",

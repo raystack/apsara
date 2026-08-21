@@ -42,9 +42,6 @@ jobs:
       - name: Install Dependencies 🔧
         run: pnpm install
 
-      - name: Check the icon map
-        run: pnpm --filter=@raystack/apsara check:icon-map
-
       - name: Build Step 🔧
         env:
           CI: ""
