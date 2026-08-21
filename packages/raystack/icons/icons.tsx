@@ -1,16 +1,12 @@
 'use client';
 
-// The 31 icons Apsara's own components draw, and the one place that pairs a key
-// with a drawing. A key names the job or the glyph, never the library, so a
-// change of icon library is an edit to this file and nothing else.
+// The 31 icons Apsara's own components draw: the one place that pairs a key
+// with a drawing. A key names the job or the glyph, never the library, so
+// changing icon library is an edit to this file and nothing else.
 //
-// This file is the shape the documentation asks a consumer to write for an icon
-// Apsara does not ship: `createIcon` is public, and our icons are built the
-// same way theirs are.
-//
-// Every call carries `/*#__PURE__*/`. That annotation is what lets a bundler
-// drop an unused key — and its lucide import — out of this single module.
-// `icons/__tests__/bundle.test.ts` measures that it still does.
+// Keep the `/*#__PURE__*/` annotation on every call. It is what lets a bundler
+// drop an unused key — and its lucide import — out of this single module;
+// `icons/__tests__/bundle.test.ts` checks that it still does.
 
 import {
   ArrowDown,
@@ -37,13 +33,13 @@ import {
   Search,
   Shrink,
   SlidersHorizontal,
+  Sparkles,
   Square,
   Sun,
   Table,
   TriangleAlert,
   X
 } from 'lucide-react';
-import { ReactComponent as CoPilot } from './assets/co-pilot.svg';
 import { createIcon } from './create-icon';
 
 export const ArrowDownIcon = /*#__PURE__*/ createIcon(
@@ -71,7 +67,8 @@ export const ChevronRightIcon = /*#__PURE__*/ createIcon(
 );
 /** Clears an input. Shares a drawing with `ErrorIcon`, not a key. */
 export const ClearIcon = /*#__PURE__*/ createIcon('ClearIcon', CircleX);
-export const CoPilotIcon = /*#__PURE__*/ createIcon('CoPilotIcon', CoPilot);
+/** Marks an AI affordance — the ChatPanel trigger draws it. */
+export const CoPilotIcon = /*#__PURE__*/ createIcon('CoPilotIcon', Sparkles);
 export const CopyIcon = /*#__PURE__*/ createIcon('CopyIcon', Copy);
 export const DisplayIcon = /*#__PURE__*/ createIcon(
   'DisplayIcon',

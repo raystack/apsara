@@ -1,6 +1,6 @@
 ---
 title: Icons
-description: The 31 icons Apsara draws, how to replace any of them, and how to build your own.
+description: The icons Apsara draws, how to replace any of them, and how to build your own.
 source: packages/raystack/icons
 ---
 
@@ -13,27 +13,11 @@ import {
   nestedDemo,
 } from "./demo.ts";
 
-Apsara publishes **31 icons**: the ones its own components draw, and nothing
-else. 30 are drawn by [lucide](https://lucide.dev) and one is an in-house SVG
-that lucide cannot supply. Every one is exported under a stable name, and every
-one can be replaced with your own component.
+Apsara ships the 31 icons its own components draw. Each one is exported under a
+stable key, renders at 16×16, and can be replaced with a component of your own.
+Every one is a [lucide](https://lucide.dev) drawing.
 
 <Demo data={basicDemo} />
-
-## Why only 31
-
-lucide draws over 1,700 icons. Any curated subset of them is a cliff: whoever
-needs the next one has to send a pull request and wait for a release.
-
-So Apsara does not curate. What it publishes is what it must publish — the keys
-you override to change the icons **inside** Apsara's own components, because
-those are the call sites you cannot reach any other way. For everything else,
-[`createIcon` is public](#building-your-own-icons) and you own the catalog: no
-number of icons is the wrong number.
-
-<IconGallery />
-
-## Anatomy
 
 Import an icon by name from `@raystack/apsara/icons`:
 
@@ -51,19 +35,21 @@ The package root exports the same components, so
 choice in a file that already imports Apsara components. See
 [which path to import from](#which-path-to-import-from) for the difference.
 
-## Naming
+## The set
 
-A key names **the job** where lucide's own name is private vocabulary for a
-drawing we picked for that job. No other icon library has an
-"arrow-down-wide-narrow"; every library has a way to say "sort descending". So
-the key is `SortDescendingIcon`, and swapping icon libraries is a rename of one
-line rather than a hunt for an equivalent glyph.
+<IconGallery />
 
-A key names **the glyph** where the glyph is a primitive every library draws and
-names recognisably — a chevron, an X, a check, a plus, a magnifier. Naming those
-by role would split one drawing across many keys: `XIcon` alone closes a Dialog,
-a Drawer, a Callout, a Tour, a FilterChip, a chat attachment, and the filters of
-a DataView.
+Need an icon that is not here? `createIcon` is public, so
+[build your own](#building-your-own-icons) and it behaves like the ones above.
+lucide draws over 1,700 icons and your app can reach all of them — Apsara
+exports these 31 because they are the ones inside its components, which you
+cannot reach any other way.
+
+## What each key draws
+
+Most keys name the glyph, so the name tells you the shape: `ChevronDownIcon`,
+`XIcon`, `CheckIcon`, `PlusIcon`, `SearchIcon`. The rest name the job, because
+the drawing behind them is a choice rather than a shape you asked for:
 
 | Key | Draws |
 | --- | --- |
@@ -74,22 +60,22 @@ a DataView.
 | `ClearIcon` | lucide `CircleX` |
 | `StopIcon` | lucide `Square` |
 | `CalendarIcon` | lucide `CalendarDays` |
+| `CoPilotIcon` | lucide `Sparkles` |
 
-Two keys can share a drawing. `ErrorIcon` and `ClearIcon` are both lucide
-`CircleX`, so they look identical until you override one — which is the point:
-the error status of a `Toast` and the clear button of a `Search` field are
-different jobs, and you can change one without the other.
+A key is yours to rely on; the drawing behind it can change in a release. So
+prefer the key that says the job — `SortDescendingIcon` — over one that repeats
+lucide's own vocabulary.
 
-<Callout type="grey">
-  `CalendarIcon` draws lucide `CalendarDays`, not lucide `Calendar`. The key is
-  ours; the drawing is our choice, and it can change without the key changing.
-</Callout>
+Two keys can share a drawing. `ErrorIcon` and `ClearIcon` are both `CircleX`, so
+they look identical until you override one. That is the point: the error status
+of a `Toast` and the clear button of a `Search` field are different jobs, and you
+can change one without the other.
 
 ## Base props
 
 Every icon renders with `width={16} height={16} strokeWidth={1.5}`. The rendered
 stroke is `strokeWidth × size ÷ 24`, because lucide draws in a 24-unit viewBox.
-So the default draws the 1px stroke of the design at 16px.
+So the default draws a 1px stroke at 16px.
 
 If you change the size and want to keep a 1px stroke, scale the stroke with it —
 `strokeWidth={24 / size}`.
@@ -105,9 +91,9 @@ because CSS beats an SVG presentation attribute.
 <Demo data={sizeDemo} />
 
 Do not pass the lucide `size` or `absoluteStrokeWidth` props. They are specific
-to lucide, so they break as soon as an icon is overridden. `absoluteStrokeWidth`
-does nothing here in any case, because Apsara sets `width`/`height` rather than
-`size`.
+to lucide, so they stop working as soon as an icon is overridden with a component
+from somewhere else. `absoluteStrokeWidth` does nothing here in any case,
+because Apsara sets `width`/`height` rather than `size`.
 
 ### Colour
 
@@ -176,16 +162,16 @@ can change one icon and keep everything else it inherited.
 
 <Demo data={nestedDemo} />
 
-### An override does not remove the default
+### What an override costs
 
-Every icon holds a real reference to its own default, and `<Theme icons>` is a
-runtime value — a bundler cannot know at build time which icons an app will
-replace, so it has to keep every default as a fallback. An icon you override and
-render therefore ships twice: your component, and the default it never draws.
+An overridden icon ships twice: your component, and the default it never draws.
+Overrides are resolved at runtime, so a bundler cannot know which defaults to
+drop.
 
-Replacing all 31 costs about 3.6 kB gzipped of lucide that never draws. That is
-what runtime replacement costs, and it is a constant: it does not grow if you
-override more, and it would not multiply if Apsara ever shipped a second set.
+Replacing all 31 costs about 3.6 kB gzipped of lucide that never draws. The cost
+is flat — it does not grow as you override more. If you want the default gone
+from the bundle entirely, import your own icon at the call site instead of
+overriding it.
 
 ## Building your own icons
 
@@ -208,14 +194,12 @@ import { RocketIcon } from '@/icons';
 ```
 
 You get the base props, `data-icon`, and one file to edit if you ever change
-icon library — the same things Apsara gets for its own icons. In fact
-`packages/raystack/icons/icons.tsx` is this file: 31 `createIcon` calls and
-nothing more.
+icon library.
 
 The `props` half of `<Theme icons>` reaches your icons too, since they read the
-same context. The `components` half is typed to the keys Apsara ships, so
-replacing one of your own is an edit to the file above rather than a provider —
-you own that file, so you do not need a provider to reach into it.
+same context. The `components` half is typed to the keys Apsara ships — to
+change one of your own, edit the file above. You own it, so you do not need a
+provider to reach into it.
 
 <Callout type="grey">
   lucide exports several aliases per icon — `Search`, `SearchIcon` and
@@ -256,10 +240,13 @@ through `<Theme icons>`.
 
 ### Types
 
-<auto-type-table path="./props.ts" name="IconProps" />
+`IconProps` is `Omit<SVGProps<SVGSVGElement>, 'children'>`: every SVG attribute
+React accepts, minus `children`. In practice you pass `width`, `height`,
+`strokeWidth`, `className`, `style` or `color` — see [base props](#base-props).
 
-`IconComponent` is `ComponentType<IconProps>`, and `IconOverrides` is
-`Partial<Record<IconName, IconComponent>>`. `IconName` is the union of the 31
+`IconComponent` is `ComponentType<IconProps>`, so any component with those props
+can stand in for an icon. `IconOverrides` is
+`Partial<Record<IconName, IconComponent>>`, and `IconName` is the union of the 31
 keys, so a typo in an override map is a type error.
 
 ```tsx

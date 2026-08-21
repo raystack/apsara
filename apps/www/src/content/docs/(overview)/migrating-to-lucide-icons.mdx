@@ -51,12 +51,10 @@ names are gone.
 | `SidebarIcon` | `PanelLeftIcon`, or lucide `PanelLeft` | Similar |
 | `TriangleRightIcon` | `ChevronRightIcon` | Solid triangle becomes a chevron |
 
-Two names survive:
+Two names survive, both with a new drawing:
 
-- `CoPilotIcon` — unchanged. lucide has no equivalent, so it is still the
-  in-house SVG.
-- `FilterIcon` — same name, new drawing: lucide `ListFilter` in place of the
-  in-house solid funnel.
+- `CoPilotIcon` — lucide `Sparkles` in place of the in-house solid sparkle.
+- `FilterIcon` — lucide `ListFilter` in place of the in-house solid funnel.
 
 A raw lucide component draws 24×24 at `strokeWidth={2}`, so set
 `size={16} strokeWidth={1.5}` at the call site to match the Apsara icons beside
@@ -70,7 +68,7 @@ import { Bell } from 'lucide-react';
 export const BellIcon = createIcon('BellIcon', Bell);
 ```
 
-See [Building your own icons](/docs/icons#building-your-own-icons).
+See [Building your own icons](/docs/theme/icons#building-your-own-icons).
 
 ## 3. Check the icons that changed shape
 
@@ -89,6 +87,7 @@ call site. Everything else is the same glyph in a different drawing style.
 | `DataTable` and `DataView` sort descending | `TextAlignBottomIcon` | `SortDescendingIcon` | A different glyph |
 | `DataTable` and `DataView` display settings | `MixerHorizontalIcon` | `DisplayIcon` | Similar |
 | `DataTable` and `DataView` filters | in-house `FilterIcon` | `FilterIcon` (lucide `ListFilter`) | A solid funnel becomes filter lines |
+| `ChatPanel` minimized bubble | in-house `CoPilotIcon` | `CoPilotIcon` (lucide `Sparkles`) | A solid sparkle pair becomes a stroked sparkle |
 
 Two more are worth a look, though the glyph is nearly the same:
 
@@ -190,8 +189,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 }
 ```
 
-Three keys are not in the map, because radix has no equivalent: `FilterIcon` and
-`PanelLeftIcon` were in-house SVGs before, and `CoPilotIcon` still is.
+Three keys are not in the map, because radix has no equivalent: `FilterIcon`,
+`PanelLeftIcon` and `CoPilotIcon`. All three were in-house SVGs before. Radix
+`MagicWandIcon` is the nearest stand-in for `CoPilotIcon` if you want one.
 
 You do not have to take the whole map. A partial map changes only the keys it
 names.
@@ -203,9 +203,9 @@ boundary from a React Server Component to a Client Component. If your `<Theme>`
 sits directly in a server layout today, move it into a `providers.tsx` file
 marked `'use client'`, as shown above.
 
-This constraint applies to any runtime icon override, not just this design.
+This applies to any runtime icon override.
 
 ## Next
 
-See [Icons](/docs/icons) for the naming rules, the override API, and the gallery
-of the full set.
+See [Icons](/docs/theme/icons) for the full set, the override API, and what each
+key draws.

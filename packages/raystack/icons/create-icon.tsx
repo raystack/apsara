@@ -12,14 +12,12 @@ import {
 import type { IconName } from './types';
 
 /**
- * The props of an Apsara icon. `children` is excluded on purpose: an icon draws
- * a fixed shape, and excluding it is also what makes a real icon library
- * assignable to `IconComponent`.
+ * The props of an Apsara icon: the SVG attributes, without `children`.
  *
- * Function component props are contravariant, so an override must accept every
- * prop this type permits. `@radix-ui/react-icons` declares `children?: undefined`
- * to forbid children, so a type that permits `children` rejects every radix
- * icon — which would break the migration map in the documentation.
+ * An icon draws a fixed shape, so it takes no children. Leaving `children` out
+ * is also what keeps a real icon library assignable to `IconComponent`: props
+ * are contravariant, so an override has to accept every prop this type permits,
+ * and some libraries declare `children?: undefined` to forbid children.
  */
 export type IconProps = Omit<SVGProps<SVGSVGElement>, 'children'>;
 export type IconComponent = ComponentType<IconProps>;
@@ -36,17 +34,16 @@ export interface IconOptions {
   props?: IconProps;
 }
 
-// The context keeps its own field names. `IconProvider` speaks of `components`
-// because that reads correctly beside `props` in `<Theme icons>`; the context
-// speaks of `icons` because that is what `createIcon` looks an override up in.
+/** What `createIcon` reads: the override map, and the shared props. */
 export interface IconContextValue {
   icons?: IconOverrides;
   props?: IconProps;
 }
 
-// Overrides only. A merged `{ ...defaultIcons, ...icons }` map would make this
-// module reference all 31 icons, and no bundler could then remove the unused
-// ones. Each wrapper closes over its own default instead.
+// The context holds overrides only, never the defaults. A merged
+// `{ ...defaultIcons, ...icons }` map here would make this module reference
+// every icon, and no bundler could then drop the unused ones. Each wrapper
+// closes over its own default instead.
 const IconContext = createContext<IconContextValue>({});
 
 function shallowEqual(a?: object, b?: object): boolean {
@@ -81,11 +78,10 @@ export function IconProvider({
   const stableIcons = useStable(components);
   const stableProps = useStable(props);
 
-  // Layer on the parent so a nested provider changes only the names it gives
-  // and keeps the rest, exactly as `Scoped` layers theme tokens. This merges
-  // the maps the consumer supplied — never the defaults — so an icon that
-  // nobody overrides is still absent from the context and stays removable by a
-  // bundler.
+  // Layer on the parent, so a nested provider changes only the keys it names
+  // and inherits the rest — the way `Scoped` layers theme tokens. Only supplied
+  // maps are merged, never the defaults, so an icon nobody overrides stays
+  // absent from the context and removable by a bundler.
   const value = useMemo(
     () => ({
       icons: parent.icons ? { ...parent.icons, ...stableIcons } : stableIcons,
@@ -102,8 +98,7 @@ IconProvider.displayName = 'IconProvider';
  * Builds an Apsara icon: a wrapper that applies the base props, stamps
  * `data-icon`, and lets a `<Theme icons>` above it swap the drawing.
  *
- * `icons/icons.tsx` calls this for the 31 icons Apsara ships. It is also
- * public, so an app can give an icon Apsara does not ship the same treatment:
+ * Use it for an icon Apsara does not ship, and it behaves like the ones it does:
  *
  * ```tsx
  * // src/icons.ts
@@ -113,21 +108,19 @@ IconProvider.displayName = 'IconProvider';
  * export const RocketIcon = createIcon('RocketIcon', Rocket);
  * ```
  *
- * `name` is any string. Only the names Apsara ships are in `IconName`, so only
- * those are replaceable through `<Theme icons>` with types on your side — but
- * every icon built here reads the same context, so the `props` of
- * `<Theme icons>` tune yours along with ours.
+ * `name` is any string. `IconName` covers the keys Apsara ships, so those are
+ * the ones `<Theme icons>` can replace with types on your side — but every icon
+ * built here reads the same context, so its `props` reach yours too.
  *
- * Resolution: the override of the consumer, then `Default`.
+ * Resolution: the override from the context, then `Default`.
  * Prop priority: the base values, then the provider `props`, then the props at
  * the call site.
  */
 export function createIcon(name: string, Default: IconComponent) {
   const Icon = (callProps: IconProps) => {
     const { icons, props } = useContext(IconContext);
-    // `name` is widened to `string` for consumer-built icons; the lookup is a
-    // miss for any name the consumer has not overridden, which is the same
-    // outcome as a name Apsara does not ship.
+    // `name` is a plain string, so the cast only satisfies the index type. A
+    // name with no override in the context misses and falls back to `Default`.
     const Resolved = icons?.[name as IconName] ?? Default;
     return (
       // `strokeWidth` counts units of the icon's own viewBox, and lucide draws

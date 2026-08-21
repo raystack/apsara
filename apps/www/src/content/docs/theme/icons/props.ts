@@ -1,3 +1,14 @@
+// The types the Icons page renders, declared here rather than read from the
+// package, as every docs page does. Two notes for whoever edits this file:
+//
+// - `IconOverrides` is written as an index signature so the tables print the
+//   name `IconOverrides`. In the package the key is `IconName`, the union of the
+//   keys Apsara ships; a `Record<IconName, …>` here prints as its resolved
+//   shape, which reads as though any name works.
+// - `ThemeIconProps` has no counterpart in the package. It exists so the tables
+//   can show the one icon prop of `<Theme>` beside the rest; the name is never
+//   rendered.
+
 import type { ComponentType, ReactNode, SVGProps } from 'react';
 
 /**
@@ -14,12 +25,12 @@ export type IconProps = Omit<SVGProps<SVGSVGElement>, 'children'>;
 export type IconComponent = ComponentType<IconProps>;
 
 /**
- * A partial map of icon key to replacement component. Every key is optional, so
- * a map that names one icon changes that icon only. In the package this is
- * `Partial<Record<IconName, IconComponent>>` — typed to the 31 keys Apsara
- * ships, so a typo is a type error.
+ * A partial map of icon key to replacement component:
+ * `Partial<Record<IconName, IconComponent>>`. Every key is optional, so a map
+ * that names one icon changes that icon only, and a key Apsara does not ship is
+ * a type error.
  */
-export type IconOverrides = Partial<Record<string, IconComponent>>;
+export type IconOverrides = { [icon: string]: IconComponent | undefined };
 
 /** What `<Theme icons>` takes: the drawings and the props, in one object. */
 export interface IconOptions {
@@ -43,6 +54,7 @@ export interface IconProviderProps extends IconOptions {
   children: ReactNode;
 }
 
+/** The icon half of `<Theme>`'s props. */
 export interface ThemeIconProps {
   /**
    * The icons inside Apsara's components, and the props applied to every icon.

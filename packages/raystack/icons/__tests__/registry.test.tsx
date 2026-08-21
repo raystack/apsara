@@ -48,14 +48,15 @@ describe('icon registry', () => {
       expect(icon).toHaveAttribute('stroke-width', '1.5');
     });
 
-    it('renders an in-house SVG default', () => {
+    it('renders a key whose name says the job, not the glyph', () => {
       render(<CoPilotIcon />);
 
-      // SVGR turns the asset into a real component, so the wrapper resolves to
-      // it exactly as it resolves a lucide icon.
+      // The key names the AI affordance; the drawing behind it is lucide
+      // `Sparkles`, and it can change without the key changing.
       const icon = document.querySelector('[data-icon="CoPilotIcon"]');
       expect(icon).toBeInTheDocument();
       expect(icon?.tagName.toLowerCase()).toBe('svg');
+      expect(icon).toHaveAttribute('stroke-width', '1.5');
     });
 
     it('sets displayName to the icon name', () => {

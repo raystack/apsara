@@ -14,12 +14,12 @@ import {
 } from 'react';
 import styles from './icongallery.module.css';
 
-// The grid itself is plain elements: it is the thing being documented, so its
-// own chrome should not compete with it. The toolbar does use Apsara — the
-// colour popover is our ColorPicker, and the names come from our Tooltip.
+// The whole set fits on one screen, so the gallery shows every icon at once and
+// the size, stroke and colour controls apply to all of them.
 //
-// There is no search field. At 31 keys the whole set fits on one screen, and a
-// filter over 31 tiles hides more than it finds.
+// The grid itself is plain elements: the icons are what the page documents, so
+// their surroundings should not compete with them. The toolbar does use Apsara —
+// the colour popover is our ColorPicker, and the names come from our Tooltip.
 
 type IconEntry = {
   name: string;

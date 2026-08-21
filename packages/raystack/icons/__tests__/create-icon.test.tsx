@@ -8,11 +8,9 @@ import {
 } from '../create-icon';
 
 // `createIcon` is public so that a consumer can build an icon Apsara does not
-// ship and have it behave like one that Apsara does. Nothing else in this
-// repository calls the factory with a key outside the set — `icons/icons.tsx`
-// only ever passes keys that are in it, and `apps/www` imports `lucide-react`
-// directly rather than wrapping it — so this file is the only cover the public
-// contract has.
+// ship and have it behave like one that Apsara does. This file is the only
+// cover that contract has: `icons/icons.tsx` only ever passes keys inside the
+// set, so nothing else here calls the factory the way a consumer does.
 //
 // It imports nothing outside `icons/`: the `./icons` rollup build sets `rootDir`
 // to this directory, and an import of a component would make the TypeScript
@@ -25,7 +23,7 @@ const Rocket = (props: IconProps) => (
   </svg>
 );
 
-/** What the documentation asks a consumer to write in `src/icons.ts`. */
+/** The one line a consumer writes in their own `src/icons.ts`. */
 const RocketIcon = createIcon('RocketIcon', Rocket);
 
 describe('createIcon, for a key Apsara does not ship', () => {

@@ -4,17 +4,14 @@ import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 /**
- * Protects the one-file map: `icons/icons.tsx` holds all 31 keys, and a
- * consumer still pays only for the keys it imports.
+ * `icons/icons.tsx` holds all 31 keys in one module, and a consumer must still
+ * pay only for the keys it imports. This test is what keeps that true.
  *
- * This is the load-bearing measurement of the design. Splitting the map into
- * one module per icon would make per-key removal trivial for any bundler; a
- * single module makes it depend on the `/*#__PURE__*\/` annotation on every
- * `createIcon(…)` call, and on nothing in the module having a side effect.
- *
- * It also fails if anything reintroduces an aggregate icon map — a merged
+ * Per-key removal from a single module depends on the `/*#__PURE__*\/`
+ * annotation on every `createIcon(…)` call, and on nothing in the module having
+ * a side effect. It also fails on any aggregate icon map — a merged
  * `{ ...defaultIcons, ...overrides }` in `IconProvider`, or a runtime
- * `ICON_NAMES` array. Either would put all 31 icons in every bundle.
+ * `ICON_NAMES` array — because either puts all 31 icons in every bundle.
  */
 
 /** vitest runs with the package root as the cwd. */
@@ -48,7 +45,6 @@ async function bundleFixture() {
   const { rollup } = await import('rollup');
   const { nodeResolve } = await import('@rollup/plugin-node-resolve');
   const typescript = (await import('@rollup/plugin-typescript')).default;
-  const svgr = (await import('@svgr/rollup')).default;
 
   const bundle = await rollup({
     input: entry,
@@ -56,10 +52,6 @@ async function bundleFixture() {
     external: [/^react($|\/)/, 'lucide-react'],
     plugins: [
       nodeResolve({ extensions: ['.ts', '.tsx', '.js'] }),
-      // The map reaches the in-house SVG default, so rollup must be able to
-      // parse it even though it then shakes it out. `exportType: named` gives
-      // the `ReactComponent` export that the package build produces.
-      svgr({ exportType: 'named' }),
       typescript({
         tsconfig: false,
         jsx: 'react-jsx',
