@@ -11,9 +11,8 @@ This RFC proposes replacing `Calendar`, `DatePicker`, and `RangePicker` with a s
 
 The rewrite is a breaking change with no compatibility shim. `CalendarPreview` ships alongside the current family and the old exports are removed one release later. Scope covers the full Figma surface — day/range selection, month-year navigation, granularity (day / month / quarter / half-year / year), presets, and time-of-day — because all of it is greenfield with no prior work to reconcile.
 
-**Design source:** [DLS → Components → Calendar](https://www.figma.com/design/KPQKFJkIxF8OTITIBJfSpm/Components?node-id=4245-7385&m=dev)
 **Target package:** `@raystack/apsara` (`packages/raystack/components/calendar-preview/`)
-**Verification:** every file/line citation below was checked against commit `0db7b3f3`.
+**Verification:** every file/line citation below was checked against the branch point.
 
 ## Table of Contents
 
@@ -689,7 +688,6 @@ Acceptance criteria — the eight `SKILL.md:501-509` items, plus the four this r
 
 ## Helpful Links
 
-- [DLS → Components → Calendar (Figma)](https://www.figma.com/design/KPQKFJkIxF8OTITIBJfSpm/Components?node-id=4245-7385&m=dev)
 - [Calendar docs page](https://apsara.raystack.org/docs/components/calendar)
 - [PR #819 — the coordinated calendar overhaul](https://github.com/raystack/apsara/pull/819) — `CHANGELOG.md:5-180`
 - [react-day-picker v10 release notes](https://daypicker.dev/)
