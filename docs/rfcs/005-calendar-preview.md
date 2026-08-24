@@ -2,7 +2,7 @@
 ID: RFC 005
 Created: August 24, 2026
 Status: Draft
-RFC PR: TBD
+RFC PR: https://github.com/raystack/apsara/pull/890
 ---
 
 # Calendar Rewrite: `CalendarPreview`
