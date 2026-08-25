@@ -15,7 +15,7 @@ export const preview = {
       variant="outline"
       size="large"
       color="accent"
-      leadingIcon={<CheckCircledIcon />}
+      leadingIcon={<SuccessIcon />}
       isDismissible
     >
       2 selected
@@ -35,7 +35,7 @@ export const inlineDemo = {
       variant="outline"
       size="large"
       color="accent"
-      leadingIcon={<CheckCircledIcon />}
+      leadingIcon={<SuccessIcon />}
       isDismissible
     >
       2 selected
@@ -75,7 +75,7 @@ export const variantsDemo = {
       variant="outline"
       size="large"
       color="accent"
-      leadingIcon={<CheckCircledIcon />}
+      leadingIcon={<SuccessIcon />}
       isDismissible
     >
       2 selected
@@ -94,7 +94,7 @@ export const variantsDemo = {
       variant="outline"
       size="large"
       color="accent"
-      leadingIcon={<CheckCircledIcon />}
+      leadingIcon={<SuccessIcon />}
       isDismissible
     >
       2 selected
@@ -116,7 +116,7 @@ export const bulkActionsDemo = {
       variant="outline"
       size="large"
       color="accent"
-      leadingIcon={<CheckCircledIcon />}
+      leadingIcon={<SuccessIcon />}
       isDismissible
     >
       5 selected
@@ -137,10 +137,10 @@ export const iconOnlyDemo = {
     aria-label="Row actions"
     style={{ gap: 'var(--rs-space-5)' }}
   >
-    <IconButton aria-label="Edit" variant="text" color="neutral" size="small"><Pencil2Icon /></IconButton>
-    <IconButton aria-label="Upload" variant="text" color="neutral" size="small"><UploadIcon /></IconButton>
+    <IconButton aria-label="Edit" variant="text" color="neutral" size="small"><Pencil size={16} strokeWidth={1.5} /></IconButton>
+    <IconButton aria-label="Upload" variant="text" color="neutral" size="small"><Upload size={16} strokeWidth={1.5} /></IconButton>
     <FloatingActions.Separator />
-    <IconButton aria-label="More info" variant="text" color="neutral" size="small"><InfoCircledIcon /></IconButton>
+    <IconButton aria-label="More info" variant="text" color="neutral" size="small"><InfoIcon /></IconButton>
   </FloatingActions>
 </div>`
 };
@@ -173,7 +173,7 @@ export const scrollingDemo = {
             variant="outline"
             size="large"
             color="accent"
-            leadingIcon={<CheckCircledIcon />}
+            leadingIcon={<SuccessIcon />}
             isDismissible
           >
             2 selected
@@ -210,7 +210,7 @@ const placementWrapper = (props: string) =>
       variant="outline"
       size="large"
       color="accent"
-      leadingIcon={<CheckCircledIcon />}
+      leadingIcon={<SuccessIcon />}
       isDismissible
     >
       2 selected
@@ -246,7 +246,7 @@ export const groupDemo = {
       variant="outline"
       size="large"
       color="accent"
-      leadingIcon={<CheckCircledIcon />}
+      leadingIcon={<SuccessIcon />}
       isDismissible
     >
       3 selected

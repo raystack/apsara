@@ -145,7 +145,7 @@ export const leadingIconDemo = {
     <Button onClick={() => toastManager.add({
       title: "Saved successfully",
       type: "success",
-      leadingIcon: <CheckCircledIcon />
+      leadingIcon: <SuccessIcon />
     })}>
       Success with icon
     </Button>
@@ -153,14 +153,14 @@ export const leadingIconDemo = {
       title: "Upload failed",
       description: "We couldn't upload your file. Please try again.",
       type: "error",
-      leadingIcon: <CrossCircledIcon />
+      leadingIcon: <ErrorIcon />
     })}>
       Error with icon
     </Button>
     <Button onClick={() => toastManager.add({
       title: "FYI: System update available",
       type: "info",
-      leadingIcon: <InfoCircledIcon />
+      leadingIcon: <InfoIcon />
     })}>
       Info with icon
     </Button>

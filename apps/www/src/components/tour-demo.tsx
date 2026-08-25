@@ -1,6 +1,5 @@
 'use client';
 
-import { BarChartIcon, BellIcon, RocketIcon } from '@radix-ui/react-icons';
 import {
   Button,
   Flex,
@@ -11,6 +10,7 @@ import {
   type TourActions,
   type TourStep
 } from '@raystack/apsara';
+import { Bell, ChartColumn, Rocket } from 'lucide-react';
 import { useRef } from 'react';
 
 const panel: React.CSSProperties = {
@@ -64,14 +64,14 @@ export default function TourDemo() {
         </div>
         <Flex gap={2} align='center'>
           <IconButton data-tour='analytics' size={4} aria-label='Analytics'>
-            <BarChartIcon />
+            <ChartColumn size={16} strokeWidth={1.5} />
           </IconButton>
           <IconButton
             data-tour='notifications'
             size={4}
             aria-label='Notifications'
           >
-            <BellIcon />
+            <Bell size={16} strokeWidth={1.5} />
           </IconButton>
         </Flex>
       </Flex>
@@ -85,7 +85,7 @@ export default function TourDemo() {
           notifications — each anchored and spotlighted.
         </Text>
         <Button onClick={() => actionsRef.current?.start()}>
-          <RocketIcon /> Start tour
+          <Rocket size={16} strokeWidth={1.5} /> Start tour
         </Button>
       </Flex>
 

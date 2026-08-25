@@ -1,8 +1,8 @@
 'use client';
 
-import { Cross2Icon, FileTextIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, ReactNode } from 'react';
+import { FileTextIcon, XIcon } from '~/icons';
 import { IconButton } from '../icon-button';
 import { Spinner } from '../spinner';
 import styles from './chat.module.css';
@@ -96,7 +96,7 @@ export function ChatAttachment({
           onClick={onRemove}
           data-slot='chat-attachment-remove'
         >
-          <Cross2Icon />
+          <XIcon />
         </IconButton>
       )}
     </div>

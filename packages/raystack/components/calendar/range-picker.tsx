@@ -1,10 +1,10 @@
 'use client';
 
-import { CalendarIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DateRange, PropsBase } from 'react-day-picker';
+import { CalendarIcon } from '~/icons';
 import { Flex } from '../flex';
 import { Input } from '../input';
 import { InputProps } from '../input/input';

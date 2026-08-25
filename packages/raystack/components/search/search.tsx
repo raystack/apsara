@@ -1,6 +1,6 @@
 'use client';
 
-import { CrossCircledIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { ClearIcon, SearchIcon } from '~/icons';
 import { IconButton } from '../icon-button';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
@@ -39,7 +39,7 @@ export function Search({
         className={styles.clearButton}
         data-slot='search-clear-button'
       >
-        <CrossCircledIcon />
+        <ClearIcon />
       </IconButton>
     </div>
   ) : undefined;
@@ -53,7 +53,7 @@ export function Search({
     >
       <Input
         data-slot='search-input'
-        leadingIcon={<MagnifyingGlassIcon />}
+        leadingIcon={<SearchIcon />}
         trailingIcon={trailingIconWithClear}
         placeholder={placeholder}
         disabled={disabled}

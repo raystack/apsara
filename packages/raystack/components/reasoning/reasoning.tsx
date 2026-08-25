@@ -1,7 +1,6 @@
 'use client';
 
 import { useControlled } from '@base-ui/utils/useControlled';
-import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import {
   ComponentProps,
@@ -12,6 +11,7 @@ import {
   useMemo,
   useRef
 } from 'react';
+import { ChevronRightIcon } from '~/icons';
 import { Collapsible } from '../collapsible';
 import styles from './reasoning.module.css';
 

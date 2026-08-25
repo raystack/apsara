@@ -51,8 +51,8 @@ export const multiViewPreview = {
       /* The view switcher lives inside the DisplayControls popover. Give each
          view an optional leadingIcon to show alongside its label. */
       const views = [
-        { value: "table", label: "Table", leadingIcon: <RowsIcon /> },
-        { value: "list",  label: "List",  leadingIcon: <ListBulletIcon /> },
+        { value: "table", label: "Table", leadingIcon: <Rows3 size={16} strokeWidth={1.5} /> },
+        { value: "list",  label: "List",  leadingIcon: <LayoutList size={16} strokeWidth={1.5} /> },
       ];
 
       <DataView
@@ -348,7 +348,7 @@ export const rowSelectionPreview = {
   FloatingActions,
   useDataView,
 } from "@raystack/apsara";
-import { TransformIcon } from "@radix-ui/react-icons";
+import { Frame } from "lucide-react";
 
 const selectionColumn: DataViewListColumn<Person> = {
   accessorKey: "select",
@@ -386,7 +386,7 @@ function SelectionBar() {
         variant="outline"
         size="large"
         color="neutral"
-        leadingIcon={<TransformIcon />}
+        leadingIcon={<Frame size={16} strokeWidth={1.5} />}
         isDismissible
         onDismiss={() => table.resetRowSelection()}
       >

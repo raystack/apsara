@@ -1,5 +1,75 @@
 # @raystack/apsara
 
+## Unreleased
+
+### Icons — lucide replaces @radix-ui/react-icons (BREAKING)
+
+Apsara names every icon with a stable key that does not name a library —
+`SearchIcon`, `SortAscendingIcon`, `ClearIcon` — and draws it with lucide.
+The package exports the 31 icons its own components use, and `createIcon`
+is public, so an app builds any other icon the same way. See the
+[migration guide](https://apsara.raystack.io/docs/migrating-to-lucide-icons)
+and [Icons](https://apsara.raystack.io/docs/theme/icons).
+
+#### Breaking changes
+
+- **`lucide-react` is a new peer dependency**, range `>=0.500.0 <1.0.0`.
+  Install it.
+- **`@radix-ui/react-icons` is no longer a dependency.** If your own code
+  imports from it, keep it in your own `dependencies`.
+- **`@raystack/apsara/icons` exports icon components, not raw SVG
+  assets.** Twelve names are gone: `BellIcon`, `BellSlashIcon`,
+  `BuildingsFilledIcon`, `CheckCircleFilledIcon`, `CoinIcon`,
+  `CoinColoredIcon`, `CrossCircleFilledIcon`, `OrganizationIcon`,
+  `ResetIcon`, `ShoppingBagFilledIcon`, `SidebarIcon` and
+  `TriangleRightIcon`. Import the glyph from `lucide-react` instead, and
+  wrap it with `createIcon` if you want it replaceable. `CoPilotIcon` and
+  `FilterIcon` keep their names but draw lucide `Sparkles` and
+  `ListFilter` rather than the in-house solid SVGs.
+- **Icons render at 16×16** with `strokeWidth={1.5}`, where the radix
+  icons were intrinsically 15×15. A call site that sets a CSS class or an
+  explicit `width`/`height` is unaffected. `1.5` is 1 rendered pixel: the
+  prop counts units of lucide's 24-unit viewBox, so the stroke on screen
+  is `strokeWidth × width / 24`.
+- **Some icons inside Apsara's components draw a different shape.** The
+  `Sidebar` collapse control and the submenu marker become chevrons
+  (lucide has no solid caret); `ChatPanel` expand and minimize become the
+  matched `ExpandIcon` / `ShrinkIcon` pair; the `PromptInput` stop button
+  goes from solid to stroke; the `DataTable` and `DataView` sort controls
+  change glyph; the `ChatPanel` bubble goes from a solid sparkle pair to a
+  stroked `Sparkles`; and `DatePicker` gains day marks inside its calendar
+  glyph.
+- **Icon replacements must be registered from a client component.** An
+  override map is an object of functions, and a function cannot cross the
+  boundary from a React Server Component, so a `<Theme>` that sits
+  directly in a server layout must move into a `providers.tsx` marked
+  `'use client'`.
+
+#### New features
+
+- **31 icons**, from `@raystack/apsara` and from
+  `@raystack/apsara/icons` — all drawn by lucide, from 30 drawings
+  (`ClearIcon` and `ErrorIcon` share one). These are the icons Apsara's
+  own components draw: the keys you cannot reach from your own call
+  sites. Prefer the subpath
+  when you want icons without the component library — it reaches no
+  component module, so one icon costs one icon even in CJS, where the
+  root barrel eagerly requires every component.
+- **`<Theme icons={{ components, props }}>`** replaces the icons inside
+  Apsara's components. `components` swaps a drawing by key, `props`
+  applies to every icon built with `createIcon`. Both maps are partial,
+  the props at the call site still win, and a nested `<Theme>` layers on
+  the one above it key by key.
+- **`createIcon(key, Default)` is public.** Wrap any component with it
+  and it gets the same base props, the same `data-icon`, and the same
+  replaceability as Apsara's own icons.
+- **`data-icon="<Key>"`** on every icon, so CSS can style one icon
+  without a re-render and a test can select it.
+- **New public types**: `IconName` (the union of the 31 keys, so a typo
+  in an override map is a type error), `IconOptions`, `IconOverrides`,
+  `IconComponent`, `IconProps`, `IconProviderProps`, and `IconProvider`
+  itself.
+
 ## 0.49.0
 
 ### Calendar / DatePicker / RangePicker improvements (PR #819)

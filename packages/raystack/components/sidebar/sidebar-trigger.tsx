@@ -1,13 +1,13 @@
 'use client';
 
-import { ViewVerticalIcon } from '@radix-ui/react-icons';
 import { MouseEvent, ReactNode, useCallback } from 'react';
+import { PanelLeftIcon } from '~/icons';
 import { IconButton, IconButtonProps } from '../icon-button/icon-button';
 import { useSidebar } from './sidebar-root';
 
 export interface SidebarTriggerProps extends Omit<IconButtonProps, 'children'> {
   /** Icon rendered inside the trigger.
-   * @default <ViewVerticalIcon />
+   * @default <PanelLeftIcon />
    */
   children?: ReactNode;
 }
@@ -41,7 +41,7 @@ export function SidebarTrigger({
       data-slot='sidebar-trigger'
       {...props}
     >
-      {children ?? <ViewVerticalIcon />}
+      {children ?? <PanelLeftIcon />}
     </IconButton>
   );
 }

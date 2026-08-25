@@ -11,6 +11,7 @@ import type {
   TableHTMLAttributes
 } from 'react';
 import Demo from '../demo';
+import { IconGallery } from '../icongallery';
 import { TokenTable } from '../tokentable';
 import { TypeTable } from '../typetable';
 import { Code } from './code';
@@ -122,6 +123,7 @@ const mdxComponents = {
   TokenTable: (props: ComponentPropsWithoutRef<typeof TokenTable>) => (
     <TokenTable {...props} />
   ),
+  IconGallery,
   Callout: (props: ComponentPropsWithoutRef<typeof Callout>) => (
     <Callout
       {...props}

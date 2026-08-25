@@ -1,9 +1,9 @@
 'use client';
 
 import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
-import { Cross1Icon } from '@radix-ui/react-icons';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ReactNode } from 'react';
+import { XIcon } from '~/icons';
 import { IconButton } from '../icon-button';
 import styles from './drawer.module.css';
 
@@ -72,7 +72,7 @@ export function DrawerContent({
                 render={<IconButton size={3} />}
                 data-slot='drawer-close'
               >
-                <Cross1Icon aria-hidden='true' />
+                <XIcon aria-hidden='true' />
               </DrawerPrimitive.Close>
             )}
           </DrawerPrimitive.Content>

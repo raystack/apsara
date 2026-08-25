@@ -1,9 +1,9 @@
 'use client';
 
 import { Popover as PopoverPrimitive } from '@base-ui/react';
-import { Cross1Icon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import type { ComponentProps, ReactNode } from 'react';
+import { XIcon } from '~/icons';
 import { Button } from '../button';
 import { Flex } from '../flex';
 import { IconButton } from '../icon-button';
@@ -161,7 +161,7 @@ export function TourClose({
         if (!event.defaultPrevented) actions.stop();
       }}
     >
-      {children ?? <Cross1Icon aria-hidden='true' />}
+      {children ?? <XIcon aria-hidden='true' />}
     </IconButton>
   );
 }

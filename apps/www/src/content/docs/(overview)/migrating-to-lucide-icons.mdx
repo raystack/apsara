@@ -1,0 +1,211 @@
+---
+title: Migrating to lucide icons
+description: What changes when Apsara replaces @radix-ui/react-icons with lucide, and how to keep the old appearance.
+---
+
+Apsara used to draw its icons with [`@radix-ui/react-icons`](https://www.radix-ui.com/icons).
+It now draws them with [lucide](https://lucide.dev), behind stable keys you can
+replace one at a time.
+
+This is a breaking release: some icons look different, `lucide-react` is a new
+peer dependency, and the names `@raystack/apsara/icons` exports have changed.
+
+## 1. Install the peer dependency
+
+```bash
+npm install lucide-react
+```
+
+The range is wide — `>=0.500.0 <1.0.0` — so your app picks the version. If a
+lucide release changes a drawing you care about, replace that one icon (step 5)
+rather than pinning the whole library.
+
+<Callout type="grey">
+  `@radix-ui/react-icons` is no longer a dependency of Apsara. If your own code
+  imports from it, keep it in your own `dependencies`.
+</Callout>
+
+## 2. Rename what you imported from `@raystack/apsara/icons`
+
+That path used to export raw in-house SVG components. It now exports the 31
+icons Apsara's components draw, as replaceable icon components. Twelve of the old
+names are gone.
+
+<Callout type="alert">
+  These twelve imports fail to resolve. Import the glyph from `lucide-react`
+  instead.
+</Callout>
+
+| Removed name | Use instead | Appearance |
+| --- | --- | --- |
+| `BellIcon` | lucide `Bell` | Same glyph |
+| `BellSlashIcon` | lucide `BellOff` | Similar |
+| `BuildingsFilledIcon` | lucide `Building2` | Solid becomes stroke |
+| `CheckCircleFilledIcon` | lucide `CircleCheck` | Solid becomes stroke |
+| `CoinIcon` | lucide `Coins` | Similar |
+| `CoinColoredIcon` | lucide `Coins` | Loses its colour |
+| `CrossCircleFilledIcon` | lucide `CircleX` | Solid becomes stroke |
+| `OrganizationIcon` | lucide `Building2` | Similar |
+| `ResetIcon` | lucide `RotateCcw` | Similar |
+| `ShoppingBagFilledIcon` | lucide `ShoppingBag` | Solid becomes stroke |
+| `SidebarIcon` | `PanelLeftIcon`, or lucide `PanelLeft` | Similar |
+| `TriangleRightIcon` | `ChevronRightIcon` | Solid triangle becomes a chevron |
+
+Two names survive, both with a new drawing:
+
+- `CoPilotIcon` — lucide `Sparkles` in place of the in-house solid sparkle.
+- `FilterIcon` — lucide `ListFilter` in place of the in-house solid funnel.
+
+A raw lucide component draws 24×24 at `strokeWidth={2}`, so set
+`size={16} strokeWidth={1.5}` at the call site to match the Apsara icons beside
+it — or wrap it once with `createIcon`, which applies those for you:
+
+```tsx
+// src/icons.ts
+import { createIcon } from '@raystack/apsara/icons';
+import { Bell } from 'lucide-react';
+
+export const BellIcon = createIcon('BellIcon', Bell);
+```
+
+See [Building your own icons](/docs/theme/icons#building-your-own-icons).
+
+## 3. Check the icons that changed shape
+
+These are inside Apsara's own components, so they change without you touching a
+call site. Everything else is the same glyph in a different drawing style.
+
+| Where | Before (radix) | After | What changed |
+| --- | --- | --- | --- |
+| `Sidebar` collapse | `ViewVerticalIcon` | `PanelLeftIcon` | A different glyph |
+| `Sidebar` group toggle | `TriangleDownIcon` | `ChevronDownIcon` | A solid triangle becomes a chevron |
+| `Menu` and `ContextMenu` submenu marker | in-house `TriangleRightIcon` | `ChevronRightIcon` | A solid triangle becomes a chevron |
+| `ChatPanel` expand | `SizeIcon` | `ExpandIcon` | A different glyph |
+| `ChatPanel` minimize | `MinusIcon` | `ShrinkIcon` | A dash becomes the matched pair of `ExpandIcon` |
+| `PromptInput` stop | `StopIcon` | `StopIcon` (lucide `Square`) | Solid becomes stroke |
+| `DataTable` sort ascending | `TextAlignTopIcon` | `SortAscendingIcon` | A different glyph |
+| `DataTable` and `DataView` sort descending | `TextAlignBottomIcon` | `SortDescendingIcon` | A different glyph |
+| `DataTable` and `DataView` display settings | `MixerHorizontalIcon` | `DisplayIcon` | Similar |
+| `DataTable` and `DataView` filters | in-house `FilterIcon` | `FilterIcon` (lucide `ListFilter`) | A solid funnel becomes filter lines |
+| `ChatPanel` minimized bubble | in-house `CoPilotIcon` | `CoPilotIcon` (lucide `Sparkles`) | A solid sparkle pair becomes a stroked sparkle |
+
+Two more are worth a look, though the glyph is nearly the same:
+
+- `DatePicker` and `RangePicker` draw `CalendarIcon`, which is lucide
+  `CalendarDays`, so the glyph has day marks inside it.
+- `Search`'s clear button and `Toast`'s error status draw `CircleX` in place of
+  radix `CrossCircledIcon`.
+
+## 4. Expect a 1px size change in some places
+
+Every Apsara icon renders at **16×16** with `strokeWidth={1.5}`, which draws the
+1px stroke of the design because lucide's viewBox is 24 units wide. The radix
+icons were intrinsically 15×15.
+
+- A call site that set no size grows from 15px to 16px.
+- A call site that set a CSS class is unaffected — CSS beats an SVG presentation
+  attribute.
+- A call site that set `width`/`height` explicitly is unaffected — your props are
+  applied after Apsara's base values.
+
+To change the size or the stroke of every icon at once, use the `props` half of
+`<Theme icons>`:
+
+```tsx
+<Theme icons={{ props: { width: 20, height: 20, strokeWidth: 1.25 } }}>
+```
+
+## 5. If you want the radix appearance back
+
+Apsara ships no radix preset, so register the radix icons yourself at `<Theme>`.
+Keep `@radix-ui/react-icons` in your own dependencies and copy this map:
+
+```tsx
+'use client';
+
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  CalendarIcon,
+  CheckCircledIcon,
+  CheckIcon,
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  CopyIcon,
+  Cross1Icon,
+  CrossCircledIcon,
+  DotsHorizontalIcon,
+  ExclamationTriangleIcon,
+  FileTextIcon,
+  InfoCircledIcon,
+  MagnifyingGlassIcon,
+  MinusIcon,
+  MixerHorizontalIcon,
+  MoonIcon,
+  PlusIcon,
+  SizeIcon,
+  StopIcon,
+  SunIcon,
+  TableIcon,
+  TextAlignBottomIcon,
+  TextAlignTopIcon
+} from '@radix-ui/react-icons';
+import { Theme, type IconOverrides } from '@raystack/apsara';
+
+const radixIcons: IconOverrides = {
+  ArrowDownIcon: ArrowDownIcon,
+  ArrowUpIcon: ArrowUpIcon,
+  CalendarIcon: CalendarIcon,
+  CheckIcon: CheckIcon,
+  ChevronDownIcon: ChevronDownIcon,
+  ChevronLeftIcon: ChevronLeftIcon,
+  ChevronRightIcon: ChevronRightIcon,
+  ClearIcon: CrossCircledIcon,
+  CopyIcon: CopyIcon,
+  DisplayIcon: MixerHorizontalIcon,
+  EllipsisIcon: DotsHorizontalIcon,
+  ErrorIcon: CrossCircledIcon,
+  ExpandIcon: SizeIcon,
+  FileTextIcon: FileTextIcon,
+  InfoIcon: InfoCircledIcon,
+  MinusIcon: MinusIcon,
+  MoonIcon: MoonIcon,
+  PlusIcon: PlusIcon,
+  SearchIcon: MagnifyingGlassIcon,
+  ShrinkIcon: MinusIcon,
+  SortAscendingIcon: TextAlignTopIcon,
+  SortDescendingIcon: TextAlignBottomIcon,
+  StopIcon: StopIcon,
+  SuccessIcon: CheckCircledIcon,
+  SunIcon: SunIcon,
+  TableIcon: TableIcon,
+  WarningIcon: ExclamationTriangleIcon,
+  XIcon: Cross1Icon
+};
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <Theme icons={{ components: radixIcons }}>{children}</Theme>;
+}
+```
+
+Three keys are not in the map, because radix has no equivalent: `FilterIcon`,
+`PanelLeftIcon` and `CoPilotIcon`. All three were in-house SVGs before. Radix
+`MagicWandIcon` is the nearest stand-in for `CoPilotIcon` if you want one.
+
+You do not have to take the whole map. A partial map changes only the keys it
+names.
+
+## 6. Register from a client component
+
+An override map is an object of functions, and a function cannot cross the
+boundary from a React Server Component to a Client Component. If your `<Theme>`
+sits directly in a server layout today, move it into a `providers.tsx` file
+marked `'use client'`, as shown above.
+
+This applies to any runtime icon override.
+
+## Next
+
+See [Icons](/docs/theme/icons) for the full set, the override API, and what each
+key draws.

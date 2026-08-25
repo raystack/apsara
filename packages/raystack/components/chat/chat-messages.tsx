@@ -1,7 +1,6 @@
 'use client';
 
 import { ScrollArea as ScrollAreaPrimitive } from '@base-ui/react/scroll-area';
-import { ArrowDownIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import {
   ComponentProps,
@@ -16,6 +15,7 @@ import {
   useRef,
   useState
 } from 'react';
+import { ArrowDownIcon } from '~/icons';
 import { ScrollAreaScrollbar } from '../scroll-area/scroll-area-scrollbar';
 import { usePrefersReducedMotion } from '../tour/use-prefers-reduced-motion';
 import styles from './chat.module.css';
