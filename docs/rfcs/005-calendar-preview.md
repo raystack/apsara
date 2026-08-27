@@ -7,12 +7,13 @@ RFC PR: https://github.com/raystack/apsara/pull/890
 
 # Calendar Rewrite: `CalendarPreview`
 
-This RFC proposes replacing `Calendar`, `DatePicker`, and `RangePicker` with a single subcomposed root, `CalendarPreview`, that owns date state and popover state explicitly and exposes every surface as a dot-notation part. The calendar family is the only part of Apsara that never adopted the composition contract; every recurring bug in it is downstream of that. Because open state is private, the pickers cannot use Base UI's dismissal, which forces 185 lines of bespoke popover machinery, two event-provenance guesses, three lint suppressions, and one reverted feature.
+This RFC proposes replacing `Calendar`, `DatePicker`, and `RangePicker` with one subcomposed root, `CalendarPreview`, that owns date state and popover state explicitly and exposes every surface as a dot-notation part.
 
-The rewrite is a breaking change with no compatibility shim. `CalendarPreview` ships alongside the current family and the old exports are removed one release later. Scope covers the full Figma surface — day/range selection, month-year navigation, granularity (day / month / quarter / half-year / year), presets, and time-of-day — because all of it is greenfield with no prior work to reconcile.
+The calendar family is the only part of Apsara that never adopted the composition contract, and its recurring bugs all trace to one consequence: popover open state is private, so the pickers cannot hand dismissal to Base UI. That single fact costs 185 lines of bespoke popover machinery, two load-bearing guesses about where an event came from, and one reverted feature.
+
+The rewrite is a breaking change with no compatibility shim. `CalendarPreview` ships alongside the current family, and the old exports are removed one release later. Scope covers single and range selection, month-year navigation, granularity (day / month / quarter / half-year / year), presets, and time-of-day.
 
 **Target package:** `@raystack/apsara` (`packages/raystack/components/calendar-preview/`)
-**Verification:** every file/line citation below was checked against the branch point.
 
 ## Table of Contents
 
@@ -21,15 +22,6 @@ The rewrite is a breaking change with no compatibility shim. `CalendarPreview` s
   - [Background](#background)
     - [Current Architecture](#current-architecture)
     - [Current Problems](#current-problems)
-      - [1. The composition contract was never adopted](#1-the-composition-contract-was-never-adopted)
-      - [2. The causal chain: private open state to event guesses](#2-the-causal-chain-private-open-state-to-event-guesses)
-      - [3. `Date` identity, and one unguarded effect](#3-date-identity-and-one-unguarded-effect)
-      - [4. A reverted feature that is still advertised](#4-a-reverted-feature-that-is-still-advertised)
-      - [5. RDP's prop union makes spread-last unsatisfiable](#5-rdps-prop-union-makes-spread-last-unsatisfiable)
-      - [6. Global `dayjs.extend()` is import-order dependent](#6-global-dayjsextend-is-import-order-dependent)
-      - [7. Capability loss shipped as intended behaviour](#7-capability-loss-shipped-as-intended-behaviour)
-      - [8. Consumers and docs have drifted](#8-consumers-and-docs-have-drifted)
-    - [Scorecard](#scorecard)
   - [Goals and Non-Goals](#goals-and-non-goals)
   - [Proposal](#proposal)
     - [API at a Glance](#api-at-a-glance)
@@ -37,17 +29,14 @@ The rewrite is a breaking change with no compatibility shim. `CalendarPreview` s
     - [Root Props](#root-props)
     - [Parts](#parts)
     - [State Ownership](#state-ownership)
-    - [Locking One End of a Range](#locking-one-end-of-a-range)
     - [Field Integration](#field-integration)
     - [Conventions This Follows](#conventions-this-follows)
   - [Internal Architecture](#internal-architecture)
     - [File Layout](#file-layout)
-    - [Context](#context)
     - [The Date Adapter](#the-date-adapter)
     - [The react-day-picker Boundary](#the-react-day-picker-boundary)
   - [Dependencies](#dependencies)
   - [The `data-slot` Contract](#the-data-slot-contract)
-  - [Design Blockers](#design-blockers)
   - [Breaking Changes](#breaking-changes)
     - [Migration Map](#migration-map)
     - [Repo-Internal Follow-ups](#repo-internal-follow-ups)
@@ -71,45 +60,24 @@ The rewrite is a breaking change with no compatibility shim. `CalendarPreview` s
 | `use-picker-popover.ts` | 185 | Bespoke open/close, outside-click, and dropdown carve-out |
 | `calendar.module.css` | 345 | Shared styles |
 
-The barrel (`components/calendar/index.tsx`, 6 lines) exports `Calendar`, `DatePicker`, `RangePicker`, and re-exports react-day-picker's `DateRange` type directly.
+The barrel exports `Calendar`, `DatePicker`, `RangePicker`, and re-exports react-day-picker's `DateRange` type directly.
 
 ### Current Problems
 
-#### 1. The composition contract was never adopted
-
-`.agents/skills/apsara/references/composition.md:7` states the rule:
-
-> Apsara exports **one name per component** and hangs every sub-part off it as a property.
-
-The calendar family ships three flat exports with no sub-parts, and configures its internals through four mechanisms that appear nowhere else in the library:
+**The composition contract was never adopted.** `composition.md` states the rule: Apsara exports one name per component and hangs every sub-part off it as a property. The calendar family ships three flat exports with no sub-parts, and configures its internals through four mechanisms that appear nowhere else in the library:
 
 | Mechanism | Where | What the rest of Apsara does |
 |---|---|---|
-| `slotProps` object bag | `date-picker.tsx:30-34`, `range-picker.tsx:24-29` | Composable sub-parts (`composition.md:7,29`) |
-| `children` as a render function | `date-picker.tsx:61-63`, `range-picker.tsx:48-50` | `render` prop (`composition.md:43`) |
-| No `open` / `onOpenChange` — popover state is private inside `use-picker-popover.ts` | `date-picker.tsx:257-263`, `range-picker.tsx:266-272` | `open` + `onOpenChange` (`composition.md:59`) |
-| `onErrorChange` callback | `date-picker.tsx:58` | Compose inside `Field` |
+| `slotProps` object bag | `DatePickerSlotProps`, `RangePickerSlotProps` | Composable sub-parts |
+| `children` as a render function | the `children?: ReactNode \| ((props) => ReactNode)` union in both pickers | `render` prop |
+| No `open` / `onOpenChange` — popover state is private in `use-picker-popover.ts` | both pickers pass `popover.isOpen` straight into `Popover` and expose nothing | `open` + `onOpenChange` |
+| `onErrorChange` callback | `DatePickerProps.onErrorChange` | Compose inside `Field` |
 
 Everything below follows from the third row.
 
-#### 2. The causal chain: private open state to event guesses
+**Private open state forces 185 lines of popover machinery.** Because open state never surfaces, the pickers cannot hand dismissal to Base UI. `use-picker-popover.ts`'s header comment records why: `captionLayout='dropdown'` renders Selects inside the popover and their portals look "outside" to a naive dismiss handler, and reading `isOpen` through a ref was needed to keep `onOpenChange` identity stable, because Base UI's store subscriber re-binds on identity change and looped on mount. The carve-out costs six refs: two DOM handles, two internal flags, and two mirrors of state and props kept purely so callback identities stay stable. On top of that it needs two load-bearing guesses about where an event came from, both inside its `onOpenChange` — one swallows `trigger-press` closes because Base UI's `useClick` toggles against the input's `onFocus`, the other swallows redundant re-opens — plus a handler named `handleMouseDown` registered on `'mouseup'` and an uncleaned `setTimeout`. None of it is wrong for what it is asked to do; it exists only because the component owns dismissal instead of Base UI.
 
-Because open state never surfaces, the pickers cannot hand dismissal to Base UI. `use-picker-popover.ts:39-46` records why:
-
-> Why custom instead of Base UI's dismissal: Calendar's `captionLayout='dropdown'` renders Selects inside the popover; their portals look "outside" to a naive dismiss handler. […] `onOpenChange` reads `isOpen` via ref so its identity stays stable — Base UI's store subscriber re-binds on identity change, which caused an updateStoreInstance loop on mount.
-
-That single carve-out costs 185 lines containing:
-
-- **Six refs, four of which shadow state or props** (`:56`, `:62`, `:65`, `:71`) purely to keep callback identities stable.
-- **Two event-provenance guesses**, both load-bearing (`:141-167`): one swallows `trigger-press` closes because Base UI's `useClick` toggles against the input's `onFocus` (`:158`), one swallows redundant re-opens (`:165`).
-- **A handler named `handleMouseDown` registered on `'mouseup'`** (`:84-94`).
-- **An uncleaned `setTimeout`** (`:136`).
-
-None of this is wrong for what it is asked to do. It exists only because the portal carve-out exists, and the carve-out exists only because the component owns dismissal instead of Base UI.
-
-#### 3. `Date` identity, and one unguarded effect
-
-Three effects suppress `useExhaustiveDependencies` because `Date` compares by identity: `date-picker.tsx:109`, `range-picker.tsx:105`, `range-picker.tsx:129`. A fourth instance of the same pattern is **not** guarded — `date-picker.tsx:151-155`:
+**`Date` identity churn, with one effect left unguarded.** Two effects carry a `biome-ignore` for `useExhaustiveDependencies` with the same stated reason — *compare on timestamp, not Date identity* — one in `date-picker.tsx`, one in `range-picker.tsx`. A third suppression, also in `range-picker.tsx`, covers callback identity instead. A fourth effect with the same `Date` problem was never guarded at all — the `setViewMonth` effect in `date-picker.tsx`:
 
 ```tsx
 useEffect(() => {
@@ -119,95 +87,33 @@ useEffect(() => {
 }, [popover.isOpen, selectedDate, calendarProps?.defaultMonth]);
 ```
 
-`calendarProps` is rebuilt on every render (`date-picker.tsx:84`). A consumer writing `slotProps={{ calendar: { defaultMonth: new Date(2025, 0) } }}` inline gets a fresh `Date` identity per render → effect refires → `setViewMonth` → re-render → loop. Its sibling effects were hardened against exactly this; this one was missed.
+`calendarProps` is a fresh object literal on every render — `{ ...legacyCalendarProps, ...slotProps?.calendar }` — so an inline `slotProps={{ calendar: { defaultMonth: new Date(2025, 0) } }}` gives a fresh `Date` identity per render → effect refires → `setViewMonth` → re-render → loop.
 
-#### 4. A reverted feature that is still advertised
+**A reverted feature is still advertised.** Month/year dropdown navigation cannot be the default inside a picker: `'dropdown'` renders Apsara `Select`s whose unmount loops with "Maximum update depth", per the `captionLayout` comment in `range-picker.tsx`. The fix was never verified in a browser, and the header comment in `date-picker.runtime.test.tsx` guarding it cites a `useMemo` in `date-picker.tsx` that no longer exists — the file has zero `useMemo` calls. Meanwhile the "With Dropdowns" demo in `demo.ts` shows `captionLayout="dropdown"` on standalone `<Calendar />`, where it genuinely works, and nothing tells a reader it is unsafe *inside a picker*.
 
-Month/year dropdown navigation cannot be the default inside a picker. `range-picker.tsx:286-290`:
+**RDP's prop union makes spread-last unsatisfiable.** `SKILL.md` requires `...props` spread last so consumers can override defaults. `Calendar` complies; the pickers structurally cannot, because `required` is the discriminator for react-day-picker's prop union and a widened value breaks the narrowing — hence `required={true}` pinned after the spread in `range-picker.tsx`. So `mode`, `selected`, `onSelect`, `required`, `month`, and `onMonthChange` are hard-overridden *after* the consumer spread. Consumers can pass them; they are silently discarded.
 
-> No `captionLayout` default — 'dropdown' renders Apsara Selects inside the popover whose unmount loops ("Maximum update depth"). Consumers can opt in via `calendarProps.captionLayout`.
+**Global `dayjs.extend()` is import-order dependent.** Four modules extend plugins independently — `calendar.tsx` (`utc`, `timezone`), `date-picker.tsx` (`customParseFormat`, `isSameOrAfter`, `isSameOrBefore`), and `filter-operations.tsx` in both `data-table` and `data-view` (`isSameOrAfter`, `isSameOrBefore`). `range-picker.tsx` extends nothing and relies on `calendar.tsx` having been imported first; `date-picker.tsx` accepts and forwards a `timeZone` prop but never extends `utc`/`timezone`, inheriting them only via its `./calendar` import. Plugin ordering (`timezone` depends on `utc`) is enforced by a comment. This is the exact failure class behind the P0 in `CHANGELOG.md` under 0.49.0 — a `TypeError` on every keystroke because `isSameOrAfter` was missing — and two tests exist solely to guard it.
 
-The fix has never been verified in a browser — `date-picker.runtime.test.tsx:44-49`:
+**"Fix the start, pick the end" is not expressible.** Disabling either input gates the entire picker, and `range-picker.tsx` says so in a comment, because the range state machine rewrites both `from` and `to` regardless of which input was clicked. This is asserted as correct behaviour in tests; the docs tell you to constrain the calendar instead.
 
-> Passes in jsdom after the value-default useMemo + stable onOpenChange fixes. Real-browser verification still recommended before re-enabling `captionLayout='dropdown'` as the default.
+**`FilterChip` carries the cost.** It is the sole production consumer — its `DatePicker` call site in `filter-chip/filter-chip.tsx` and hits three problems at once. A consumer-passed `classNames` object **replaces** the chip's own inside `slotProps.input`, silently dropping its container class and breaking layout — objects need a deep merge, not a spread. `showCalendarIcon={false}` sits *before* the consumer spread exactly as `SKILL.md` prescribes, so a consumer can re-enable the icon and break the chip; the house rule and the component's needs are in genuine tension, and parts resolve it by making the icon something you render or don't. And the `.dateFieldWrapper` rules in `filter-chip.module.css` reach into `Input`'s hashed class names to suppress error UI the picker shouldn't be rendering at all.
 
-That comment cites a `useMemo` in `date-picker.tsx` that no longer exists — the file contains zero `useMemo` calls. The guard has drifted from the mechanism it guards.
+**A documented integration was never built.** `CHANGELOG.md` under 0.49.0 claims `DataTable` / `DataView` columns gained a `filterProps.calendar` slot. `data-view.types.tsx` has only `filterProps?: { select?: BaseSelectProps }` — the calendar filter slot exists solely on `DataTable`, which is deprecated.
 
-The docs compound this by omission rather than by error: `demo.ts:41-47` shows `captionLayout="dropdown"` on standalone `<Calendar />`, where it genuinely works. Nothing anywhere tells a reader it is unsafe *inside a picker*.
+**The published types are wrong.** Both `slotProps.calendar` entries in `props.ts` type it as the full `CalendarProps`, including `mode`, `selected`, `onSelect`, and `footer`, none of which the real type accepts. `index.mdx` renders `<auto-type-table name="RangePickerProps" />` for a type that is never exported, so **consumers cannot type a `RangePicker` wrapper**. `pickerGroupClassName` is undocumented. And of the family's six deprecated props, `props.ts` documents exactly one — `DatePicker.calendarProps`, the only one carrying an `@deprecated` marker; the other five surface only as passing names inside the two `slotProps` descriptions, never as props a reader can look up.
 
-#### 5. RDP's prop union makes spread-last unsatisfiable
-
-`.agents/skills/add-new-component/SKILL.md:75` requires "Spread `...props` last so consumers can override defaults." `Calendar` itself complies (`calendar.tsx:264`). The pickers structurally cannot — `range-picker.tsx:296-299`:
-
-> Must stay after spread: `required` is the discriminator for RDP's prop union, and a widened value would break the narrowing.
-
-So `mode`, `selected`, `onSelect`, `required`, `month`, and `onMonthChange` are all hard-overridden *after* the consumer spread (`date-picker.tsx:277-285`, `range-picker.tsx:294-306`). Consumers can pass them; they are silently discarded.
-
-#### 6. Global `dayjs.extend()` is import-order dependent
-
-Four modules extend plugins independently:
-
-| File | Plugins |
-|---|---|
-| `calendar/calendar.tsx:18-19` | `utc`, `timezone` |
-| `calendar/date-picker.tsx:19-21` | `customParseFormat`, `isSameOrAfter`, `isSameOrBefore` |
-| `data-table/utils/filter-operations.tsx:22-23` | `isSameOrAfter`, `isSameOrBefore` |
-| `data-view/utils/filter-operations.tsx:22-23` | `isSameOrAfter`, `isSameOrBefore` |
-
-`range-picker.tsx` extends **nothing** and relies on `calendar.tsx` having been imported first. `date-picker.tsx` accepts and forwards a `timeZone` prop (`:65`, `:279`) but never extends `utc`/`timezone`; it inherits them only because line 15 imports `./calendar`. Plugin ordering (`timezone` depends on `utc`) is enforced by a comment at `calendar.tsx:17`.
-
-This is the exact failure class behind the P0 at `CHANGELOG.md:33-35` — a `TypeError` on every keystroke because `isSameOrAfter` was missing — and two tests exist solely to guard it (`date-picker.test.tsx:656-698`).
-
-#### 7. Capability loss shipped as intended behaviour
-
-`range-picker.tsx:88-94`: disabling either input gates the entire picker, because the range state machine rewrites both `from` and `to` regardless of which input was clicked. This is asserted as correct at `range-picker.test.tsx:406` and `:421`. "Fix the start, let the user pick the end" is not expressible; the docs tell you to constrain the calendar instead.
-
-#### 8. Consumers and docs have drifted
-
-**`FilterChip` is the sole production consumer** (`filter-chip/filter-chip.tsx:183-195`) and carries three problems:
-
-- Inside `slotProps.input`, the chip sets `classNames: { container: styles.dateField }` and then spreads `...calendarProps?.slotProps?.input` (`:190-193`). A consumer passing any `classNames` object **replaces** the chip's, silently dropping its own container class and breaking the layout. Objects need a deep merge here, not a spread.
-- `showCalendarIcon={false}` sits *before* the consumer spread (`:184-185`). That is exactly what `SKILL.md:75` prescribes, and the consequence is that a consumer can re-enable the icon and break the chip. The house rule and the component's needs are in genuine tension; parts resolve it by making the icon a part you either render or don't.
-- `filter-chip.module.css:226-232` reaches into `Input`'s hashed class names via `[class*="helper-text"]` and `[class*="input-error-wrapper"]`, which breaks silently if `Input` renames a class. It exists only to suppress error UI the picker shouldn't be rendering.
-
-**A documented integration was never built.** `CHANGELOG.md:95-96` claims "`DataTable` / `DataView` columns gain a parallel `filterProps.calendar` slot". `data-view.types.tsx:83-85` has only `filterProps?: { select?: BaseSelectProps }`, and `data-view/components/filters.tsx:161` forwards `selectProps` and no calendar props. The calendar filter slot exists only on `DataTable`, which is deprecated.
-
-**Type and doc drift:**
-
-- `props.ts:175` and `props.ts:232` type `slotProps.calendar` as the full documented `CalendarProps`, including `mode` (`:44`), `selected` (`:47`), `onSelect` (`:50`), and `footer` (`:124`). The real type is `Omit<PropsBase, 'mode'> & CalendarPropsExtended` (`date-picker.tsx:28`), which excludes all four. That `Omit` is also vacuous — `mode` isn't in `PropsBase`, as the source comment at `date-picker.tsx:23-27` admits.
-- `index.mdx:44` renders `<auto-type-table name="RangePickerProps" />`, but `RangePickerProps` and `RangePickerSlotProps` are declared without `export` (`range-picker.tsx:31`, `:24`) and appear in neither barrel. **Consumers cannot type a `RangePicker` wrapper.** (`DatePickerProps` *is* exported, which is why `FilterChip` can `Omit` from it.)
-- `pickerGroupClassName` exists (`range-picker.tsx:45`) and is undocumented.
-- Deprecations are documented inconsistently: `props.ts:262` marks only `DatePicker.calendarProps`, omitting `inputProps` and `popoverProps`; none of `RangePicker`'s three deprecated props appear in `props.ts` at all.
-- `index.mdx:56-80` documents 23 slots; §[The `data-slot` Contract](#the-data-slot-contract) maps all of them.
-
-### Scorecard
-
-`SKILL.md:501-509` is the eight-item acceptance bar for a new component. The current family fails **two**:
-
-| Checklist item | Status |
-|---|---|
-| Component builds without errors | Pass |
-| All tests pass | Pass |
-| Docs site builds, page generated | Pass |
-| `displayName` on all sub-components | Pass |
-| `data-slot` on every element + `data-slots.test.tsx` | Pass — 23 slots, well covered |
-| Alphabetical export in `index.tsx` | Pass |
-| CSS uses `--rs-*` tokens only | **Fail** — see below |
-| Interactive `playground` in `demo.ts` | **Fail** — no `playground` export; `index.mdx` imports six demos, none of them a playground |
-
-CSS detail: three `/* Todo: var does not exist */` markers (`calendar.module.css:6`, `:30`, `:189`), a hardcoded `max-height: 260px` (`:211`), a stray `gap: 0px` (`:282`), and eight `var(--rs-space-10, 40px)` hedged fallbacks (`:73`, `:74`, `:92`, `:93`, `:112`, `:113`, `:169`, `:170`). `SKILL.md:507` admits no hardcoded values.
-
-Three further house rules — not on the checklist, but the reason this RFC exists — also fail: dot-notation composition (`composition.md:7,29`), spread-`...props`-last in the pickers (`SKILL.md:75`), and docs matching the code. The slot contract is the one genuinely clean part of this family, and the rewrite preserves it.
+Against the eight-item acceptance bar for a new component (the checklist closing `SKILL.md`), the family fails two: CSS carries non-token values (three `Todo: var does not exist` markers, a hardcoded `max-height: 260px`, eight hedged `var(--rs-space-10, 40px)` fallbacks), and there is no interactive `playground` in `demo.ts`. Three further house rules fail off-checklist — dot-notation composition, spread-last in the pickers, and docs matching code. The `data-slot` contract is the one genuinely clean part of this family, and the rewrite preserves it.
 
 ## Goals and Non-Goals
 
 **Goals**
 
-1. One export, dot-notation parts, matching `composition.md` exactly.
+1. One export with dot-notation parts, matching `composition.md` exactly.
 2. Explicit ownership of every piece of state — selection, view month, open, granularity, validity — with `value`/`onValueChange` and `open`/`onOpenChange` on the root.
 3. react-day-picker fully isolated: its discriminated union never reaches a consumer, and `...props` spread-last becomes satisfiable at every part.
 4. Month/year navigation works by default — the reverted `captionLayout` feature ships.
-5. Cover the full Figma surface: day / month / quarter / half-year / year granularity, single and dual month, presets, time-of-day.
+5. Cover the full feature set: day / month / quarter / half-year / year granularity, single and dual month, presets, time-of-day.
 6. Zero `slotProps`. Recipes for the common case, parts for everything else.
 7. Pass all eight `SKILL.md` checklist items.
 
@@ -268,7 +174,7 @@ Full part tree:
 
 ### Recipes
 
-Pre-composed compositions hung off the same object. They accept the root's props plus a small set of layout switches, and they are *literally* implemented as compositions of the parts above — no private code paths.
+Pre-composed compositions hung off the same object. They take the root's props plus a few layout switches, and they are literally implemented as compositions of the parts above — no private code paths.
 
 ```tsx
 <CalendarPreview.DatePicker     value={d} onValueChange={setD} />
@@ -278,9 +184,7 @@ Pre-composed compositions hung off the same object. They accept the root's props
 <CalendarPreview.Inline         value={d} onValueChange={setD} />   // no popover
 ```
 
-**Rule: recipes take no `slotProps` and no escape hatches.** The moment you need to change what's inside the popover, you drop to parts. This is the whole answer to the props-bag problem — there is no third state where you configure structure through props.
-
-Precedent for hanging non-part values off the root: `Object.assign` already carries `createHandle` (`dialog/dialog.tsx:22`) and `useFilter`/`useFilteredItems` (`combobox/combobox.tsx:19-20`).
+**Rule: recipes take no `slotProps` and no escape hatches.** The moment you need to change what's inside the popover, you drop to parts. That is the whole answer to the props-bag problem — there is no third state where you configure structure through props. Precedent for hanging non-part values off a root: `Dialog` carries `createHandle`, `Combobox` carries `useFilter` and `useFilteredItems`.
 
 ### Root Props
 
@@ -355,18 +259,16 @@ interface MultipleProps extends CalendarPreviewBaseProps {
   onValueChange?: (value: Date[]) => void;
   maxSelected?: number;
 }
-
-export type CalendarPreviewProps = SingleProps | RangeProps | MultipleProps;
 ```
 
 Notes on specific choices:
 
-- **`onValueChange`, not `onSelect`.** Matches `Select`, `Combobox`, and `Accordion`. Today `onSelect` fires mid-interaction with a half-built range, so the docs have to instruct consumers to gate on `range.to` (`index.mdx:112`). With `commit='immediate'` the new callback still fires on each step, but the value shape is always a complete `DateRangeValue` with explicit `null`s — no "is this partial?" inference at the call site. With `commit='explicit'` it fires once, on `Apply`.
-- **`DateRangeValue` is ours**, not RDP's `DateRange`. RDP's type currently leaks through the public barrel (`components/calendar/index.tsx:1`); that stops.
-- **`commit`** is what makes the Figma's footer-with-actions layout expressible. Today `footer` is a bare `ReactNode` slot with no way to write back into state (`range-picker.tsx:52`), which is why presets are unimplementable.
-- **`isDateUnavailable`** replaces RDP's `disabled` matcher for the common predicate case, so consumers don't need to learn RDP's matcher DSL. RDP matchers stay reachable on `Grid`.
-- **`onValidityChange`** replaces `onErrorChange` (`date-picker.tsx:58`). The component still renders no error UI — `Field` does — but the payload is a state object rather than a stringly-typed message, and it reports *why*.
-- **`lock`** lives on `RangeProps` only, since it is meaningless for the other two modes. See [Locking One End of a Range](#locking-one-end-of-a-range).
+- **`onValueChange`, not `onSelect`.** Matches `Select`, `Combobox`, and `Accordion`. Today `onSelect` fires mid-interaction with a half-built range, so the docs have to tell consumers to gate on `range.to`. The new callback still fires on each step under `commit='immediate'`, but the value shape is always a complete `DateRangeValue` with explicit `null`s — no "is this partial?" inference at the call site.
+- **`DateRangeValue` is ours**, not RDP's `DateRange`, which currently leaks through the public barrel.
+- **`commit`** is what makes a footer-with-actions layout expressible. Today `footer` is a bare `ReactNode` with no way to write back into state, which is why presets are unimplementable.
+- **`isDateUnavailable`** replaces RDP's `disabled` matcher for the common predicate case, so consumers needn't learn RDP's matcher DSL. RDP matchers stay reachable on `Grid`.
+- **`onValidityChange`** replaces `onErrorChange`. The component still renders no error UI — `Field` does — but the payload is a state object rather than a stringly-typed message, and it reports *why*.
+- **`lock`** lives on `RangeProps` only. It makes the named endpoint read-only in both input and grid, closing the partial-disable gate in `range-picker.tsx`.
 
 ### Parts
 
@@ -388,9 +290,9 @@ Notes on specific choices:
 
 Two parts carry the load of this rewrite:
 
-**`.Nav` is ours, not RDP's `components.Dropdown`.** This is the concrete fix for the reverted `captionLayout` feature. Today the loop happens because RDP mounts and unmounts Apsara `Select`s inside the popover through its `components.Dropdown` override (`calendar.tsx:154-160`). If `.Nav` is a sibling of the grid and we drive `month` ourselves, RDP runs with `hideNavigation` and `captionLayout='label'`, never mounts a `Select`, and the unmount ref-cleanup path is simply not entered. Month/year navigation becomes default-on, and `use-picker-popover.ts`'s entire reason for existing disappears with it.
+**`.Nav` is ours, not RDP's `components.Dropdown`.** This is the concrete fix for the reverted `captionLayout` feature. Today the loop happens because RDP mounts and unmounts Apsara `Select`s inside the popover through its `components.Dropdown` override. If `.Nav` is a sibling of the grid and we drive `month` ourselves, RDP runs with `hideNavigation` and `captionLayout='label'`, never mounts a `Select`, and the unmount ref-cleanup path is simply not entered. Month/year navigation becomes default-on, and `use-picker-popover.ts`'s reason for existing disappears with it.
 
-**`.Grid` is the only part that touches RDP, and it never forwards the union.** `months`, `showOutsideDays`, `showWeekNumber`, and `modifiers` are ours; `mode`, `selected`, `onSelect`, `required`, `month`, and `onMonthChange` are derived from root context and are not in `GridProps` at all. Because nothing is force-overridden after a consumer spread, `...props` spread-last holds — satisfying `SKILL.md:75` for the first time in this family.
+**`.Grid` is the only part that touches RDP, and it never forwards the union.** `months`, `showOutsideDays`, `showWeekNumber`, and `modifiers` are ours; `mode`, `selected`, `onSelect`, `required`, `month`, and `onMonthChange` are derived from root context and are not in `GridProps` at all. Because nothing is force-overridden after a consumer spread, spread-last holds — satisfying the spread-last rule for the first time in this family.
 
 ### State Ownership
 
@@ -405,23 +307,11 @@ Two parts carry the load of this rewrite:
 | Typed-input text and validity | `.Input` / `.RangeInput` | `onValidityChange` on root |
 | Focus and dismissal | Base UI `Popover` | — |
 
-The last row is the point of the exercise: **`use-picker-popover.ts` is deleted entirely.** It has three stated reasons to exist, and all three dissolve:
-
-- *The portal carve-out* (`use-picker-popover.ts:39-41`) — gone, because `.Nav` renders the `Select`s outside the grid and RDP never mounts one inside the popover.
-- *`onOpenChange` identity churn* (`:43-46`) — gone, because `useControlled` returns a setter that is stable by construction, so Base UI's store subscriber has nothing to re-bind against.
-- *The `trigger-press` double-fire* (`:158`) — gone **only if we do not re-create the race.** Today the input's `onFocus` opens the popover while Base UI's `useClick` toggles it, and the two fight. In the rewrite, opening is owned exclusively by `.Trigger`; `.Input` never calls `setOpen` from a focus handler. If a reviewer wants focus-to-open back, it has to arrive as a Base UI trigger option, not as a competing handler — that is the whole lesson of the 185 lines.
-
-### Locking One End of a Range
-
-```tsx
-<CalendarPreview selection="range" lock="from" value={range} onValueChange={setRange} />
-```
-
-`lock` makes the named endpoint read-only in both the input and the grid, so "fix the start, pick the end" becomes expressible. That closes `range-picker.tsx:88-94`, which today disables the whole picker and tells you to constrain the calendar instead.
+The last row is the point of the exercise: **`use-picker-popover.ts` is deleted entirely.** Its three stated reasons all dissolve — the portal carve-out, because `.Nav` renders the `Select`s outside the grid so RDP never mounts one in the popover; the `onOpenChange` identity churn, because `useControlled` returns a setter that is stable by construction; and the `trigger-press` double-fire, but only if we do not re-create the race. Today the input's `onFocus` opens the popover while Base UI's `useClick` toggles it, and the two fight. In the rewrite, opening is owned exclusively by `.Trigger` and `.Input` never calls `setOpen` from a focus handler. If focus-to-open comes back, it arrives as a Base UI trigger option, not a competing handler — that is the lesson of the 185 lines.
 
 ### Field Integration
 
-`CalendarPreview.Input` calls the non-throwing `useFieldContext()` exactly as `Input` does at `input/input.tsx:58`, so `required` and `aria-invalid` wire up by composition:
+`CalendarPreview.Input` calls the non-throwing `useFieldContext()` exactly as `Input` does in `input/input.tsx`, so `required` and `aria-invalid` wire up by composition:
 
 ```tsx
 <Field name="starts">
@@ -431,37 +321,32 @@ The last row is the point of the exercise: **`use-picker-popover.ts` is deleted 
 </Field>
 ```
 
-This replaces the `onErrorChange` → lift-into-`Field.error` dance the current docs prescribe (`demo.ts:188-206`) and removes the need for `FilterChip`'s hashed-class CSS hack (`filter-chip.module.css:226-232`).
+This replaces the `onErrorChange` → lift-into-`Field.error` dance the current docs prescribe, and removes the need for `FilterChip`'s hashed-class CSS hack.
 
 ### Conventions This Follows
 
-Every rule below is an existing pattern in the library, cited — not an invention.
+Every rule below is an existing pattern in the library, not an invention.
 
 | Convention | Canonical source |
 |---|---|
-| `Object.assign(Root, { … })`; no namespace literals, no `Component.Item =` | 45 occurrences, zero exceptions — e.g. `select/select.tsx:9`, `tabs/tabs.tsx:92`, `sidebar/sidebar.tsx:10` |
-| Root `displayName` is the bare name; parts are `'Root.Part'` | `select/select-root.tsx:235` (`'Select'`), `tabs/tabs.tsx:53` (`'Tabs.List'`). Only `Tabs` and `Theme` deviate, using `'X.Root'` for the root; we follow the majority. |
-| Plain function components, `ref` as a prop, no `forwardRef` | `SKILL.md:72`; one legacy `forwardRef` left in the library (`command/command-dialog.tsx`) |
-| Base UI `render` prop, never `asChild` | `composition.md:43` |
-| `useRender` + `mergeProps` for plain-DOM parts that support `render` | `sidebar/sidebar-item.tsx:94-116`, `text/text.tsx:104-108` |
-| `useControlled` from `@base-ui/utils/useControlled` | `tour/tour-root.tsx:135-145`, `chat-panel/chat-panel-root.tsx:290` |
-| `part`-aware throwing context hook | `chat-panel/chat-panel-context.tsx:30-36` |
-| `<Ctx value={…}>` (React 19), not `<Ctx.Provider>` | `sidebar/sidebar-root.tsx:208`, `data-table/data-table.tsx:221` |
-| Discriminated union for single-vs-multiple | `select/select-root.tsx:61-86` |
-| Generic value type stored as `unknown` in context, cast at the hook | `combobox/combobox-root.tsx:25-38` |
-| `data-slot` before the spread, on every rendered element | `SKILL.md:76` |
-| Non-throwing `useFieldContext()` for opt-in `Field` integration | `field/use-field-context.tsx`, consumed at `input/input.tsx:58` |
+| `Object.assign(Root, { … })`; no namespace literals | Every dot-notation component in the library, no exceptions — e.g. `select/select.tsx`, `tabs/tabs.tsx` |
+| Root `displayName` is the bare name; parts are `'Root.Part'` | `SelectRoot.displayName = 'Select'`, `TabsList.displayName = 'Tabs.List'` |
+| Plain function components, `ref` as a prop, no `forwardRef` | `SKILL.md` |
+| Base UI `render` prop, never `asChild`; `useRender` + `mergeProps` for plain-DOM parts | `composition.md`; `useRender` in `sidebar/sidebar-item.tsx` |
+| `useControlled` from `@base-ui/utils/useControlled` | `useControlled` in `tour/tour-root.tsx` |
+| `part`-aware throwing context hook, generic value stored as `unknown` and cast at the hook | `useChatPanelContext(part)`; `ComboboxContextValue<unknown>` in `combobox/combobox-root.tsx` |
+| `<Ctx value={…}>` (React 19), not `<Ctx.Provider>` | `<SidebarPopupContext value={…}>` in `sidebar/sidebar-root.tsx` |
+| Discriminated union for single-vs-multiple | `SelectRootProps = SingleSelectProps \| MultipleSelectProps` |
+| `data-slot` before the spread, on every rendered element | `SKILL.md` |
+| Non-throwing `useFieldContext()` for opt-in `Field` integration | `field/use-field-context.tsx` |
 
-Two deliberate departures from what the *old calendar* did, both of which bring it back in line:
-
-- **No `slotProps`.** Nothing else in Apsara configures a popover through a props bag. Customisation happens by composing parts.
-- **`render`, not `children`-as-function.** `composition.md:43` is explicit; the picker's `children?: ReactNode | ((props) => ReactNode)` is a fourth idiom that exists nowhere else in the library.
+Two deliberate departures from what the old calendar did: **no `slotProps`** (nothing else in Apsara configures a popover through a props bag), and **`render` instead of `children`-as-function** (`composition.md` is explicit, and the picker's `children?: ReactNode | ((props) => ReactNode)` exists nowhere else in the library).
 
 ## Internal Architecture
 
 ### File Layout
 
-Per `SKILL.md:37-46`:
+Per the file-layout convention in `SKILL.md`:
 
 ```
 packages/raystack/components/calendar-preview/
@@ -488,28 +373,11 @@ packages/raystack/components/calendar-preview/
     └── data-slots.test.tsx
 ```
 
-### Context
-
-Newest house form — `part`-aware error, per `chat-panel/chat-panel-context.tsx:30-36`:
-
-```tsx
-export const CalendarPreviewContext =
-  createContext<CalendarPreviewContextValue | null>(null);
-
-export function useCalendarPreviewContext(part: string): CalendarPreviewContextValue {
-  const context = useContext(CalendarPreviewContext);
-  if (!context) {
-    throw new Error(`CalendarPreview.${part} must be used within <CalendarPreview>`);
-  }
-  return context;
-}
-```
-
-The value type is stored as `unknown` and cast at the hook boundary — the `Combobox` technique (`combobox/combobox-root.tsx:25-38`) — so the root can stay generic over selection mode without a generic `createContext`.
+Context follows the newest house form: a `part`-aware hook that throws with the offending part name (`useChatPanelContext` in `chat-panel/chat-panel-context.tsx`), with the value type stored as `unknown` and cast at the hook boundary (the `Combobox` technique) so the root can stay generic over selection mode without a generic `createContext`.
 
 ### The Date Adapter
 
-One module, three jobs. Illustrated here with dayjs to match today's code; see [Dependencies](#dependencies) for why date-fns is the likely implementation.
+One module, three jobs. Shown with dayjs to match today's code; see [Dependencies](#dependencies) for why date-fns is the likely implementation.
 
 ```ts
 import dayjs from 'dayjs';
@@ -530,67 +398,57 @@ export function dayKey(date: Date): string;   // 'YYYY-MM-DD'
 export function epoch(date: Date): number;
 ```
 
-1. **Import-order dependence goes away.** Every module that needs a date operation imports from here; the plugin set is a single fact in a single place. The failure class behind the `CHANGELOG.md:33-35` P0 becomes impossible. `data-table/utils/filter-operations.tsx` and `data-view/utils/filter-operations.tsx` migrate onto it too.
-2. **`Date` identity churn goes away internally.** All internal comparisons, memo keys, and effect dependencies use `dayKey()` or `epoch()`. The public API stays `Date`, so migration is mechanical — but the three `biome-ignore`s and the unguarded loop at `date-picker.tsx:151-155` have nowhere left to live.
-3. **The date library becomes swappable.** The module's exported surface is identical whichever library backs it, so the decision is reversible in one file.
+1. **Import-order dependence goes away.** Every module that needs a date operation imports from here, so the plugin set is a single fact in a single place and the 0.49.0 `TypeError` failure class becomes impossible. Both `filter-operations.tsx` modules migrate onto it.
+2. **`Date` identity churn goes away internally.** All internal comparisons, memo keys, and effect dependencies use `dayKey()` or `epoch()`. The public API stays `Date`, so migration is mechanical — but the three `biome-ignore`s and the unguarded loop have nowhere left to live.
+3. **The date library becomes swappable.** The exported surface is identical whichever library backs it, so the decision is reversible in one file.
 
 ### The react-day-picker Boundary
 
-RDP still earns its place for the day grid: roving-tabindex keyboard navigation, week construction, outside days, locale-aware weekday order, and the range modifier maths are all solved and tested there. Rebuilding them is a large, low-glory job with real a11y regression risk.
+RDP still earns its place for the day grid: roving-tabindex keyboard navigation, week construction, outside days, locale-aware weekday order, and range modifier maths are all solved and tested there, and rebuilding them carries real a11y regression risk.
 
-What changes is the boundary. Today RDP's props *are* the public API — `CalendarProps = DayPickerProps & OnDropdownOpen & CalendarPropsExtended` (`calendar.tsx:37-39`) — which is why its union leaks and why `props.ts` is a hand-maintained 137-line mirror that has already drifted. In the rewrite RDP lives behind `calendar-preview-grid.tsx` only, driven by derived props, with `hideNavigation` and `captionLayout='label'` set so it never mounts a `Select`.
+What changes is the boundary. Today RDP's props *are* the public API (`CalendarProps = DayPickerProps & OnDropdownOpen & CalendarPropsExtended`), which is why its union leaks and why the `CalendarProps` block in `props.ts` is a hand-maintained mirror of RDP's props that has already drifted. In the rewrite RDP lives behind `calendar-preview-grid.tsx` only, driven by derived props, with `hideNavigation` and `captionLayout='label'` set so it never mounts a `Select`.
 
 ## Dependencies
 
-The manifest and the lockfile disagree with the ecosystem, and one number in this table changes the "just upgrade instead" argument. All rows verified against the npm registry and `pnpm-lock.yaml` on 24 Aug 2026.
+Verified against the npm registry and `pnpm-lock.yaml` on 24 Aug 2026.
 
 | Package | Manifest range | Lockfile resolves to | Latest published |
 |---|---|---|---|
-| `react-day-picker` | `^9.6.7` (`package.json:139`) | **9.6.7** | **10.0.1** |
-| `@base-ui/react` | `~1.6.0` (`:121`) | 1.6.0 | 1.7.0 |
-| `@base-ui/utils` | `~0.3.1` (`:122`) | 0.3.1 | 0.3.2 |
-| `dayjs` | `^1.11.20` (`:131`) | 1.11.20 | 1.11.23 |
+| `react-day-picker` | `^9.6.7` | **9.6.7** | **10.0.1** |
+| `@base-ui/react` | `~1.6.0` | 1.6.0 | 1.7.0 |
+| `@base-ui/utils` | `~0.3.1` | 0.3.1 | 0.3.2 |
+| `dayjs` | `^1.11.20` | 1.11.20 | 1.11.23 |
 
-Three findings follow.
+**RDP is two majors behind, and v10 does not change the union.** Diffing the 9.6.7 and 10.0.1 tarballs: `types/selection.d.ts` gained only JSDoc, so the conditionals that force `required` after the spread are structurally unchanged. All 41 `UI` values, all 20 `classNames` keys we set, and all 5 `components` overrides we supply survive. v10 drops 16 v8-era props and four unused `CustomComponents` entries, none of which `packages/raystack` references. The upgrade is a clean, separate PR that this rewrite neither needs nor blocks.
 
-**RDP is two majors behind, and v10 does not change the union.** Diffing the 9.6.7 and 10.0.1 tarballs: `types/selection.d.ts` gained only JSDoc comments, so the `T["required"] extends true ? …` conditionals that force `required` after the spread (`range-picker.tsx:296-299`) are structurally unchanged. All 41 `UI` enum string values are identical, all 20 `classNames` keys we set survive, and all 5 `components` overrides we supply survive. v10 drops 16 v8-era props from `PropsBase` (`fromDate`, `fromMonth`, `fromYear`, `toDate`, `toMonth`, `toYear`, `initialFocus`, `onWeekNumberClick`, and eight `onDay*` touch/key handlers) and four unused `CustomComponents` entries (`Button`, `formatMonthCaption`, `formatYearCaption`, `labelDay`); none of the 20 are referenced anywhere in `packages/raystack`. **The v10 upgrade is a clean, separate PR that this rewrite neither needs nor blocks — and it does not remove the reason for isolating RDP.**
+**date-fns is already in the tree, twice over.** `react-day-picker@9.6.7` declares `date-fns`, `@date-fns/tz`, and `date-fns-jalali` as hard dependencies, and `@base-ui/react@1.6.0` lists `date-fns` and `@date-fns/tz` as optional peers — already satisfied in this install by RDP. So we ship date-fns unconditionally and then *additionally* install and plugin-extend dayjs. Building `date-adapter.ts` on date-fns means one date implementation shared with the grid and with Base UI, at no install cost — subject to a measured bundle check in phase 1.
 
-**date-fns is already in the tree, twice over.** `react-day-picker` declares `date-fns` and `@date-fns/tz` as real dependencies at 9.6.7, 9.14.0, and 10.0.1, and the lockfile shows `@base-ui/react@1.6.0` resolving against `date-fns@4.1.0` and `@date-fns/tz@1.2.0` as well. So we ship date-fns unconditionally and then *additionally* install and plugin-extend dayjs. Building `date-adapter.ts` on date-fns means one date implementation shared with the grid and with Base UI, at no install cost — subject to a measured bundle check in phase 1.
-
-**Base UI is building toward date primitives but has not shipped them.** Neither 1.6.0 (81 export keys) nor 1.7.0 (83) exposes a `Calendar`, `DatePicker`, or `TimePicker`. Both do ship `./internals/temporal`, `./internals/temporal-adapter-date-fns`, and `./internals/temporal-adapter-luxon` — an adapter interface (`now`, `date`, `parse`, `setTimezone`, `isSameDay`, `startOfMonth`, `addMonths`, `getYear`, …) with two concrete implementations. Shaping `date-adapter.ts` to that method surface means adopting Base UI's primitives later is a swap inside one file rather than a third rewrite.
+**Base UI has no date primitive yet.** Neither 1.6.0 nor 1.7.0 exposes a `Calendar`, `DatePicker`, or `TimePicker`, but both ship `./internals/temporal` plus date-fns and Luxon adapters — an interface of `now`, `date`, `parse`, `setTimezone`, `isSameDay`, `startOfMonth`, `addMonths`, `getYear`, and friends. Shaping `date-adapter.ts` to that method surface makes adopting Base UI's primitives later a swap inside one file rather than a third rewrite.
 
 ## The `data-slot` Contract
 
-`SKILL.md:76` makes slot names semver-covered public API. The current 23 slots are the cleanest part of this component; the new tree preserves every meaningful one under a new prefix.
+`SKILL.md` makes slot names semver-covered public API. The current 23 slots are the cleanest part of this component. All 23 survive under a `calendar-preview-` prefix. Most renames just extend the prefix (`calendar-day` → `calendar-preview-day`); these change it:
 
 | Old slot | New slot |
 |---|---|
 | `calendar` | `calendar-preview-grid` |
-| `calendar-nav-previous` / `-next` | `calendar-preview-nav-previous` / `-next` |
-| `calendar-dropdown` / `-dropdown-content` | `calendar-preview-nav-month` / `-nav-year` |
-| `calendar-month-grid` / `-grid-table` / `-grid-skeleton` | `calendar-preview-weeks` / `-table` / `-skeleton` |
-| `calendar-day` / `-day-number` / `-day-info` / `-day-tooltip` | `calendar-preview-day` / `-day-number` / `-day-info` / `-day-tooltip` |
+| `calendar-dropdown` | `calendar-preview-nav-month` |
+| `calendar-dropdown-content` | `calendar-preview-nav-year` |
+| `calendar-month-grid` | `calendar-preview-weeks` |
+| `calendar-grid-table` | `calendar-preview-table` |
+| `calendar-grid-skeleton` | `calendar-preview-skeleton` |
 | `date-picker-trigger`, `range-picker-trigger` | `calendar-preview-trigger` |
-| `date-picker-input` | `calendar-preview-input` |
 | `date-picker-positioner`, `range-picker-positioner` | `calendar-preview-positioner` |
 | `date-picker-content`, `range-picker-content` | `calendar-preview-content` |
-| `range-picker-trigger-group` | `calendar-preview-range-inputs` |
-| `range-picker-start-input` / `-end-input` | `calendar-preview-input-start` / `-input-end` |
+| `date-picker-input` | `calendar-preview-input` |
 | `range-picker-footer` | `calendar-preview-footer` |
+| `range-picker-trigger-group` | `calendar-preview-range-inputs` |
+| `range-picker-start-input` | `calendar-preview-input-start` |
+| `range-picker-end-input` | `calendar-preview-input-end` |
 
 New slots: `calendar-preview-presets`, `-preset`, `-granularity`, `-month-grid`, `-month-cell`, `-time-field`, `-apply`, `-cancel`, `-nav-caption`.
 
 Because `CalendarPreview` is a new component name this is purely additive — the old slots keep working for as long as the old family ships.
-
-## Design Blockers
-
-From the design-side inspection of the Figma. The first three block phase 0.
-
-1. **No focus state for the day cell**, and no `Focus Ring` composition, despite a `Focus Ring` component existing elsewhere in the DLS. A calendar grid is keyboard-driven; this is a design blocker, not an implementation detail. (Today's CSS improvises one at `calendar.module.css:262-265`.)
-2. **`Active` has no `Position=Default` variant** — pressing a single non-range date is undefined.
-3. **The range band's `End` corner rounding needs confirming.** Per-position rounding should come from the Figma `Position` concept (`Start` = `12 0 0 12`, `Middle` = `0`, `End` = `0 12 12 0`), not from the ad-hoc `:first-of-type` / `:last-of-type` / `:not()` chains at `calendar.module.css:132-150`. In the variant matrix `End` appears to round on the same side as `Start`, which would be a mirror error.
-4. **Tokens.** `--rs-radius-5` = 12px (`tokens.md:130`) covers the selection pill and range-band ends. The four untokenised values in today's CSS — 346px min-height (`:7`), 0px border (`:31`), 0.5px hairline (`:190`), 260px dropdown max-height (`:211`) — need real tokens or a documented exception.
-5. **`Info label`** placement and typography are unspecified for the `dateInfo` surface.
 
 ## Breaking Changes
 
@@ -625,37 +483,33 @@ Mechanical throughout, which makes most of it codemod-able.
 
 These land with the rewrite, not after it.
 
-1. **`FilterChip`** (`filter-chip/filter-chip.tsx:183-195`) — rewrite to compose parts. Delete `toDateValue()` (`:43-50`), the shallow `slotProps.input` merge (`:188-194`), and the hashed-class CSS (`filter-chip.module.css:226-232`). `FilterChipCalendarProps` (`:58-61`) shrinks to a much smaller `Omit`.
-2. **`DataView`** — add the `filterProps.calendar` slot that `CHANGELOG.md:95-96` already claims exists (`data-view.types.tsx:83-85`, `data-view/components/filters.tsx:161`). This is the going-forward surface; `DataTable` is deprecated.
-3. **`data-table` / `data-view` filter-operations** — migrate off local `dayjs.extend()` (`:22-23` in both) onto `date-adapter.ts`.
+1. **`FilterChip`** — rewrite to compose parts. Deletes `toDateValue()`, the shallow `slotProps.input` merge, and the hashed-class CSS.
+2. **`DataView`** — add the `filterProps.calendar` slot that `CHANGELOG.md` (0.49.0) already claims exists. This is the going-forward surface; `DataTable` is deprecated.
+3. **`data-table` / `data-view` filter-operations** — migrate off local `dayjs.extend()` onto `date-adapter.ts`.
 
 ## Implementation Plan
 
 | Phase | Content | Exit criteria |
 |---|---|---|
-| **0. Design unblock** | Resolve the five gaps in [Design Blockers](#design-blockers) | Design sign-off; tokens exist or exception documented |
 | **1. Foundation** | `date-adapter.ts` (incl. the date-fns-vs-dayjs bundle measurement), context, root, `Trigger`, `Content`, `Grid` | `<CalendarPreview.Inline />` renders; `data-slots.test.tsx` green |
 | **2. Inputs and recipes** | `Input`, `RangeInput`, `Nav`, `DatePicker` / `RangePicker` / `Inline` recipes | Parity with today's behaviour, including the whole `date-picker.test.tsx` regression suite ported |
-| **3. New surfaces** | `Presets`, `Footer`, `Apply`/`Cancel`, `commit='explicit'`, `GranularityTabs`, `MonthGrid`, `TimeField`, `DateTimePicker` / `MonthPicker` | Figma's granularity selector and Month-Year Picker reproduced |
+| **3. New surfaces** | `Presets`, `Footer`, `Apply`/`Cancel`, `commit='explicit'`, `GranularityTabs`, `MonthGrid`, `TimeField`, `DateTimePicker` / `MonthPicker` | Granularity switching and the month/quarter/half-year/year grids work |
 | **4. Integrations** | `FilterChip` rewrite, `DataView` calendar filter slot, `filter-operations` on the adapter | No `slotProps` merge, no hashed-class CSS |
-| **5. Docs and ship** | `index.mdx` + `demo.ts` **with an interactive `playground`** + `props.ts`; CHANGELOG entry | All eight `SKILL.md:501-509` items pass |
+| **5. Docs and ship** | `index.mdx` + `demo.ts` **with an interactive `playground`** + `props.ts`; CHANGELOG entry | All eight `SKILL.md` checklist items pass |
 | **6. Removal** | Delete `components/calendar/`, drop the old exports | One release after phase 5 |
 
-Two dependency PRs are independent of the above and can land in parallel: `@base-ui/react` → `~1.7.0`, and `react-day-picker` → `~10.0.1` (justified in [Dependencies](#dependencies); neither is a prerequisite).
-
-Also worth resolving before phase 5: the root `package.json:27` pins `typescript@4.7` while `packages/raystack/package.json:117` pins `~5.4.3`. The workspace builds because turbo runs in the package, but the root pin is stale enough to confuse tooling.
+Two dependency PRs are independent of the above and can land in parallel: `@base-ui/react` → `~1.7.0` and `react-day-picker` → `~10.0.1`. Neither is a prerequisite.
 
 ## Testing
 
-Acceptance criteria — the eight `SKILL.md:501-509` items, plus the four this rewrite exists to fix.
+The eight `SKILL.md` checklist items, plus the four this rewrite exists to fix.
 
-- [ ] Builds clean; `pnpm --filter @raystack/apsara test -- --reporter=verbose components/calendar-preview` green
+- [ ] Builds clean; `pnpm --filter @raystack/apsara test components/calendar-preview` green
 - [ ] Docs site builds; new page generated
 - [ ] `displayName` on every part (`'CalendarPreview'`, `'CalendarPreview.Grid'`, …)
-- [ ] `data-slot` on every rendered element, covered by `data-slots.test.tsx` (portaled parts asserted against `document.body`, per `SKILL.md:270`)
+- [ ] `data-slot` on every rendered element, covered by `data-slots.test.tsx` (portaled parts asserted against `document.body`)
 - [ ] CSS uses `--rs-*` tokens only — **zero** `Todo: var does not exist`
-- [ ] Alphabetical export in `packages/raystack/index.tsx`
-- [ ] Interactive `playground` in `demo.ts`
+- [ ] Alphabetical export in `packages/raystack/index.tsx`; interactive `playground` in `demo.ts`
 - [ ] **Zero `biome-ignore`** in the new component
 - [ ] **Zero `slotProps`**; every part spreads `...props` last
 - [ ] `open` / `onOpenChange` on the root; `use-picker-popover.ts` deleted
@@ -664,31 +518,31 @@ Acceptance criteria — the eight `SKILL.md:501-509` items, plus the four this r
 
 ## Open Items
 
-1. **`quarter` / `half-year` value shape.** *(Highest impact — decide before phase 1, it shapes the type union.)* What does `onValueChange` emit for "Q2 2026" — the first day of the period, or a `{ from, to }` range? A range is more truthful and makes `selection='range'` and granularity compose, but it means `granularity !== 'day'` changes the value *shape*, which `CalendarPreviewProps` then has to express.
-2. **Name.** Does `CalendarPreview` graduate to `Calendar` at phase 6? "Preview" reads as *unstable preview*, which is honest for phases 1–4 and wrong once it is the only calendar. Proposal: keep `CalendarPreview` while both exist, then rename at phase 6 with `CalendarPreview` kept as a deprecated alias for one release. This blocks phase 5, because slot names embed the prefix and renaming them later is a breaking change under `SKILL.md:76`.
-3. **`commit` default for ranges.** `'immediate'` matches today. But the Figma's footer layout implies `'explicit'` is the intended pattern for ranges — should `selection='range'` default to it?
-4. **Presets as data or children?** `<CalendarPreview.Preset>` children is more composable; a `presets={[…]}` array on the recipes is less typing. Both precedents exist in-repo (`Combobox` takes items as children, `DataTable` takes columns as data). The recipe signatures in [Recipes](#recipes) deliberately omit `presets` until this is settled.
-5. **Time zones.** Today `timeZone` is passed to RDP and used for `dateInfo` keys, with the function form of `dateInfo` explicitly pushing tz handling onto the consumer (`calendar.tsx:28-31`). Does the rewrite own tz conversion end-to-end, or stay a pass-through?
-6. **`multiple` selection.** Nothing in the Figma calls for it. Ship it, or cut it from v1 and keep the union two-armed?
-7. **Changesets.** There is no changeset setup in the repo (no `.changeset/`, no `@changesets/cli`), and `packages/raystack/package.json:3` reads `0.48.0` while `CHANGELOG.md:3` already reads `0.49.0`. Breaking changes are currently communicated by hand-written prose. A `data-slot` rename has nothing but reviewer vigilance behind it. Introduce changesets with this work, or keep prose?
+1. **`quarter` / `half-year` value shape.** *(Decide before phase 1 — it shapes the type union.)* What does `onValueChange` emit for "Q2 2026": the first day of the period, or a `{ from, to }` range? A range is more truthful and composes with `selection='range'`, but it means `granularity !== 'day'` changes the value *shape*.
+2. **Name.** Does `CalendarPreview` graduate to `Calendar` at phase 6? "Preview" is honest for phases 1–4 and wrong once it is the only calendar. Proposal: keep the name while both exist, then rename at phase 6 with `CalendarPreview` kept as a deprecated alias for one release. This blocks phase 5, because slot names embed the prefix and renaming them later is itself breaking.
+3. **`commit` default for ranges.** `'immediate'` matches today, but a footer with Apply/Cancel implies `'explicit'` is the intended pattern for ranges. Should `selection='range'` default to it?
+4. **Presets as data or children?** `<CalendarPreview.Preset>` children is more composable; `presets={[…]}` on the recipes is less typing. Both precedents exist in-repo (`Combobox` takes items as children, `DataTable` takes columns as data). The recipe signatures above omit `presets` until this is settled.
+5. **Time zones.** Does the rewrite own tz conversion end-to-end, or stay the pass-through it is today?
+6. **`multiple` selection.** No current consumer needs it. Ship it, or cut it from v1 and keep the union two-armed?
+7. **Announcing the break.** There is no changesets setup in the repo, and `packages/raystack/package.json` reads `0.48.0` while `CHANGELOG.md` already reads `0.49.0`. A `data-slot` rename currently has nothing but reviewer vigilance behind it. Introduce changesets with this work, or keep hand-written prose?
 
 ## Alternatives
 
-**Patch the existing components again.** Rejected. `CHANGELOG.md:5-12` describes PR #819 as "a coordinated overhaul … 18 P0/P1 bugs fixed", and the family has still needed `8d138d4`, `550fffb`, and `1ce8dc7` since. Every theme in that changelog is a *contract* problem — who owns state, who owns error presentation, who owns `mode`, who owns open/close — not a rendering problem. Patches cannot supply a missing contract.
+**Patch the existing components again.** Rejected. PR #819 was already "a coordinated overhaul … 18 P0/P1 bugs fixed", and the family has needed three more fixes since. Every theme in that changelog is a *contract* problem — who owns state, error presentation, `mode`, open/close — not a rendering problem, and patches cannot supply a missing contract.
 
-**Upgrade react-day-picker to v10 instead of rewriting.** Rejected, because it addresses a different problem. Verified against the tarballs: the `mode`/`required` union is structurally unchanged from 9.6.7 through 10.0.1. The upgrade is worth taking on its own merits (see [Dependencies](#dependencies)) and should ship as its own PR, but two majors in, the union is still the shape it is. Waiting for upstream is not a plan.
+**Upgrade react-day-picker to v10 instead.** Rejected; different problem. The `mode`/`required` union is structurally unchanged from 9.6.7 through 10.0.1 (verified against the tarballs). The upgrade is worth taking on its own merits and should ship as its own PR, but waiting for upstream is not a plan.
 
-**Own the day grid, drop react-day-picker.** Tempting: it makes spread-last trivially true, matches the Figma's `Position` model exactly, and removes the union entirely. Rejected for v1 on risk — keyboard roving tabindex, locale weekday order, week numbering, and range modifier maths all become ours, and a11y regressions in a date grid are expensive. The boundary in [The react-day-picker Boundary](#the-react-day-picker-boundary) gets most of the benefit. Revisit if that boundary proves leaky in practice.
+**Own the day grid, drop react-day-picker.** Tempting — spread-last becomes trivially true and the union disappears entirely. Rejected for v1 on risk: roving tabindex, locale weekday order, week numbering, and range modifier maths all become ours, and a11y regressions in a date grid are expensive. The boundary above gets most of the benefit; revisit if it proves leaky.
 
-**Build on a Base UI date primitive.** Not available — verified, no date component at 1.6.0 or 1.7.0. The `internals/temporal*` adapters show the primitives are in flight; `date-adapter.ts` is shaped to that surface so we can adopt them without a third rewrite.
+**Build on a Base UI date primitive.** Not available — verified, no date component at 1.6.0 or 1.7.0. `date-adapter.ts` is shaped to their `internals/temporal` surface so we can adopt them without a third rewrite.
 
-**Keep the flat exports, just fix internals.** Rejected. It leaves `composition.md:29` violated, keeps `slotProps`, and keeps open state private — which keeps the custom popover hook, which keeps the whole causal chain.
+**Keep the flat exports, just fix internals.** Rejected. It leaves `composition.md`'s dot-notation rule violated, keeps `slotProps`, and keeps open state private — which keeps the custom popover hook, which keeps the whole causal chain.
 
-**ISO day strings (`'2026-04-17'`) in the public API.** Genuinely attractive: it kills timezone ambiguity and identity churn outright and serialises cleanly to URLs and forms. Rejected for v1 because it breaks every call site including `FilterChip` and `DataTable`'s filter types, and the migration stops being mechanical. `date-adapter.ts` captures the internal benefit without the external cost. Worth reconsidering for a future major.
+**ISO day strings (`'2026-04-17'`) in the public API.** Genuinely attractive: it kills timezone ambiguity and identity churn outright and serialises cleanly to URLs and forms. Rejected for v1 because it breaks every call site including `FilterChip` and `DataTable`'s filter types, and the migration stops being mechanical. `date-adapter.ts` captures the internal benefit without the external cost; worth reconsidering for a future major.
 
 ## Helpful Links
 
 - [Calendar docs page](https://apsara.raystack.org/docs/components/calendar)
-- [PR #819 — the coordinated calendar overhaul](https://github.com/raystack/apsara/pull/819) — `CHANGELOG.md:5-180`
+- [PR #819 — the coordinated calendar overhaul](https://github.com/raystack/apsara/pull/819)
 - [react-day-picker v10 release notes](https://daypicker.dev/)
 - In-repo conventions: `.agents/skills/apsara/references/composition.md`, `.agents/skills/add-new-component/SKILL.md`
