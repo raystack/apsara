@@ -94,6 +94,17 @@ export interface DataViewField<TData = any> {
   showGroupCount?: boolean;
   groupCountMap?: Record<string, number>;
   groupLabelsMap?: Record<string, string>;
+  /**
+   * Section order when this field is the active `group_by`, keyed by raw group
+   * value (the same keys `groupLabelsMap` uses) — e.g.
+   * `['High', 'Medium', 'Low']` for a priority field, which text sorting alone
+   * can't produce.
+   *
+   * Values absent from the list follow in first-seen data order, and rows with
+   * no value always land in the last section. A listed value with no rows
+   * produces no section. Honoured by every renderer that groups.
+   */
+  groupOrder?: string[];
 }
 
 /**
@@ -402,10 +413,19 @@ export interface DataViewTimelineProps<TData> {
   /**
    * 'auto' (default) packs non-overlapping cards into shared lanes (greedy
    * interval scheduling); 'one-per-row' gives every row its own lane, in
-   * row-model (sorted) order. Both apply per group section when `group_by` is
-   * active — cards never share a lane across sections.
+   * row-model (sorted) order; 'one-per-sort-value' gives every distinct value of
+   * the **sorted-by** field its own lane, packing that value's cards by date
+   * within it. All apply per group section when `group_by` is active — cards
+   * never share a lane across sections.
+   *
+   * Under 'one-per-sort-value' the active sort does double duty: it picks the field
+   * lanes are built from (sort by `priority` → a High lane, a Medium lane, a
+   * Low lane) and it orders them, so the Ordering control repositions lanes
+   * live. Lane order is the sort's order, so rank values that don't sort
+   * naturally (High/Medium/Low) with a numeric field and sort on that. Rows
+   * whose value is null, empty, or a non-primitive share one lane, placed last.
    */
-  lanePacking?: 'auto' | 'one-per-row';
+  lanePacking?: 'auto' | 'one-per-row' | 'one-per-sort-value';
   /**
    * Lane height in px. Default 66.
    *

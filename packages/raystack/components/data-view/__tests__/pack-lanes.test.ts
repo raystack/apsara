@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { packLanes } from '../utils/pack-lanes';
+import { packLanes, packLanesBySortValue } from '../utils/pack-lanes';
 import { digest, randomItems } from './helpers';
 
 /**
@@ -297,5 +297,142 @@ describe('packLanes', () => {
         expect(lane).toBeLessThan(laneCount);
       }
     }
+  });
+});
+
+/**
+ * `packLanesBySortValue` layers value bucketing over `packLanes`: one lane per
+ * distinct `laneKey`, sub-lanes only where a bucket's own cards overlap. Lane
+ * numbers are vertical position and reach `renderCard` as `context.laneIndex`,
+ * so both the bucket order and the sub-lane split are visible output.
+ */
+describe('packLanesBySortValue', () => {
+  /** `x`/`width` far apart enough that only same-bucket collisions matter. */
+  const item = (laneKey: string | null, x: number, width = 40) => ({
+    laneKey,
+    x,
+    width
+  });
+
+  it('returns no lanes for empty input', () => {
+    expect(packLanesBySortValue([])).toEqual({ lanes: [], laneCount: 0 });
+  });
+
+  it('gives one lane per value and shares it across rows', () => {
+    const items = [
+      item('High', 0),
+      item('Low', 0),
+      item('High', 200),
+      item('Low', 400)
+    ];
+    expect(packLanesBySortValue(items)).toEqual({
+      lanes: [0, 1, 0, 1],
+      laneCount: 2
+    });
+  });
+
+  it("orders buckets first-seen — the caller's order", () => {
+    const items = [item('Low', 0), item('High', 0), item('Medium', 0)];
+    expect(packLanesBySortValue(items).lanes).toEqual([0, 1, 2]);
+    // Same values, caller-sorted differently → lanes follow the new order.
+    const resorted = [item('High', 0), item('Low', 0), item('Medium', 0)];
+    expect(packLanesBySortValue(resorted).lanes).toEqual([0, 1, 2]);
+  });
+
+  it('adds a sub-lane only where a value overlaps itself', () => {
+    const items = [
+      item('High', 0),
+      item('High', 10), // overlaps the first High → sub-lane
+      item('High', 400),
+      item('Low', 0)
+    ];
+    expect(packLanesBySortValue(items)).toEqual({
+      lanes: [0, 1, 0, 2],
+      laneCount: 3
+    });
+  });
+
+  it('offsets later buckets past every sub-lane of earlier ones', () => {
+    const items = [
+      item('High', 0),
+      item('High', 10),
+      item('High', 20), // three mutually overlapping → lanes 0,1,2
+      item('Low', 0),
+      item('Low', 10) // two overlapping → lanes 3,4
+    ];
+    expect(packLanesBySortValue(items)).toEqual({
+      lanes: [0, 1, 2, 3, 4],
+      laneCount: 5
+    });
+  });
+
+  it('puts the no-value bucket last', () => {
+    const items = [item(null, 0), item('High', 0), item('Low', 0)];
+    expect(packLanesBySortValue(items).lanes).toEqual([2, 0, 1]);
+  });
+
+  it('buckets the empty string with no-value rows', () => {
+    const items = [item('', 0), item('High', 0), item(null, 400)];
+    expect(packLanesBySortValue(items)).toEqual({
+      lanes: [1, 0, 1],
+      laneCount: 2
+    });
+  });
+
+  it('honours gapPx when deciding a bucket sub-lane', () => {
+    // Same bucket, 50px apart: a 60px gap forces a sub-lane, 8px does not.
+    const items = [item('High', 0, 40), item('High', 50, 40)];
+    expect(packLanesBySortValue(items, 8).laneCount).toBe(1);
+    expect(packLanesBySortValue(items, 60).laneCount).toBe(2);
+  });
+
+  it('packs a single bucket exactly like packLanes', () => {
+    const items = randomItems(300, 7);
+    const flat = packLanes(items);
+    const bucketed = packLanesBySortValue(
+      items.map(({ x, width }) => ({ laneKey: 'one', x, width }))
+    );
+    expect(digest(bucketed.lanes)).toBe(digest(flat.lanes));
+    expect(bucketed.laneCount).toBe(flat.laneCount);
+  });
+
+  it('never lets two cards in one lane overlap', () => {
+    const KEYS = ['High', 'Medium', 'Low', null];
+    const items = randomItems(400, 11).map((it, i) => ({
+      ...it,
+      laneKey: KEYS[i % KEYS.length]
+    }));
+    const { lanes, laneCount } = packLanesBySortValue(items);
+
+    const byLane = new Map<number, { x: number; width: number }[]>();
+    lanes.forEach((lane, index) => {
+      const list = byLane.get(lane) || [];
+      list.push(items[index]);
+      byLane.set(lane, list);
+    });
+    expect(byLane.size).toBe(laneCount);
+    for (const list of byLane.values()) {
+      list.sort((a, b) => a.x - b.x);
+      for (let i = 1; i < list.length; i++) {
+        expect(list[i].x).toBeGreaterThanOrEqual(
+          list[i - 1].x + list[i - 1].width + DEFAULT_GAP_PX
+        );
+      }
+    }
+  });
+
+  it('keeps every lane inside one bucket', () => {
+    const KEYS = ['High', 'Medium', 'Low'];
+    const items = randomItems(200, 13).map((it, i) => ({
+      ...it,
+      laneKey: KEYS[i % KEYS.length]
+    }));
+    const { lanes } = packLanesBySortValue(items);
+    const keyByLane = new Map<number, string | null>();
+    lanes.forEach((lane, index) => {
+      const seen = keyByLane.get(lane);
+      if (seen === undefined) keyByLane.set(lane, items[index].laneKey);
+      else expect(items[index].laneKey).toBe(seen);
+    });
   });
 });

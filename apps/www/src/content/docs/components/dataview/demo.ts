@@ -503,6 +503,44 @@ export const timelineGroupingPreview = {
   ]
 };
 
+export const timelineSortValueLanePreview = {
+  type: 'code',
+  style: { padding: 0 },
+  previewCode: false,
+  code: `<DataViewTimelineSortValueLaneDemo />`,
+  codePreview: [
+    {
+      label: 'index.tsx',
+      code: `
+      /* One lane per priority: rows sharing a value share a lane, and a value
+         only takes a second lane where two of its own cards overlap in time.
+         The sort picks the lane field and orders the lanes, so try the Ordering
+         control. Sorting the "High"/"Medium"/"Low" label alphabetically gives
+         High, Low, Medium — carry a numeric rank and sort on that instead:
+
+           { accessorKey: "rank", label: "Priority rank", sortable: true } */
+
+      <DataView
+        data={tasks}
+        fields={fields}
+        defaultSort={{ name: "rank", order: "asc" }}
+        getRowId={(t) => t.id}>
+        <DataView.Toolbar>
+          <DataView.Filters />
+          <DataView.DisplayControls />
+        </DataView.Toolbar>
+
+        <DataView.Timeline
+          startField="start"
+          endField="end"
+          lanePacking="one-per-sort-value"
+          renderCard={(row, context) => <TaskCard task={row.original} context={context} />}
+        />
+      </DataView>`
+    }
+  ]
+};
+
 export const timelinePointPreview = {
   type: 'code',
   style: { padding: 0 },

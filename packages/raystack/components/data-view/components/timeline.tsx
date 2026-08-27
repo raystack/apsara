@@ -27,7 +27,7 @@ import {
 } from '../data-view.types';
 import { useDataView } from '../hooks/useDataView';
 import { orderByX } from '../utils/order-by-x';
-import { packLanes } from '../utils/pack-lanes';
+import { packLanes, packLanesBySortValue } from '../utils/pack-lanes';
 import {
   buildAxis,
   createTimeScale,
@@ -235,6 +235,12 @@ interface TimedItem<TData> {
   startTime: number;
   /** Null when `endField` is omitted (point marker). */
   endTime: number | null;
+  /**
+   * Bucket the row falls in under `lanePacking="one-per-sort-value"` — its
+   * `laneField` value as a string, or null for no usable value (that bucket
+   * lanes last). Null throughout for every other packing mode.
+   */
+  laneKey: string | null;
 }
 
 /** A timed row placed on the time scale. */
@@ -516,11 +522,44 @@ export function DataViewTimeline<TData>({
     return list;
   }, [rows]);
 
+  // `one-per-sort-value` lanes by the field the view is *sorted* by: the row model
+  // already arrives grouped and ranked by it, so lane membership and lane order
+  // both fall out of the active sort — no second ordering vocabulary, and the
+  // Ordering control repositions lanes live. Falls back to 'auto' if the query
+  // somehow carries no sort (the root requires `defaultSort`, so this is a
+  // guard rather than a mode).
+  const laneField = tableQuery.sort?.[0]?.name;
+  const sortValueLanes =
+    lanePacking === 'one-per-sort-value' && laneField !== undefined;
+
+  // Resolved once per render rather than once per row: `row.getValue` re-reads
+  // the column through `table.getColumn` on every call, and a miss is never
+  // cached (`_valuesCache` is written only after the lookup succeeds), so a sort
+  // key naming no field logged one `[Table] Column with id ... does not exist.`
+  // per row per recompute. Looked up on the flat column list instead of through
+  // `table.getColumn`, which logs that error itself — the warning below says the
+  // same thing and names the fix. Hidden columns are included, so a sorted field
+  // the user has toggled off still lanes.
+  const laneColumn = sortValueLanes
+    ? table?.getAllFlatColumns().find(column => column.id === laneField)
+    : undefined;
+
+  // A sort key with no column behind it reads as undefined on every row, which
+  // would silently collapse the timeline onto the single no-value lane.
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production') return;
+    if (!sortValueLanes || !table || laneColumn) return;
+    console.warn(
+      `[DataView.Timeline] lanePacking="one-per-sort-value" is sorted by "${laneField}", which matches no field — every card lands on one lane. Sort by a declared field.`
+    );
+  }, [sortValueLanes, laneColumn, laneField, table]);
+
   // Resolve each row's start/end timestamps, per section. Rows without a valid
   // start are skipped (one dev warning for the whole model); inverted ranges
   // clamp to zero-length spans.
   const timedSections = useMemo(() => {
     let dropped = 0;
+    let unlaned = 0;
     const list = sections.map(section => {
       const items: TimedItem<TData>[] = [];
       for (const row of section.items) {
@@ -535,7 +574,26 @@ export function DataViewTimeline<TData>({
           endTime = toTimestamp(original?.[endField]);
           if (endTime !== null && endTime < startTime) endTime = startTime;
         }
-        items.push({ row, startTime, endTime });
+        // Lane bucket — the sorted-by field's value. Resolved here so packing
+        // below is pure geometry. Only a primitive identifies a lane; anything
+        // else (an object, an array) shares the no-value lane rather than
+        // collapsing into one "[object Object]" bucket.
+        let laneKey: string | null = null;
+        if (sortValueLanes) {
+          // Read through the row, not `original`: TanStack treats a dotted
+          // `accessorKey` as a path, so `original['meta.rank']` is undefined
+          // for the very key it sorted by — every row would look valueless and
+          // pile onto one lane. `getValue` yields exactly what the sort saw, and
+          // is skipped outright when the key names no column (see `laneColumn`).
+          const value = laneColumn
+            ? row.getValue(laneField as string)
+            : undefined;
+          if (value == null || value === '') laneKey = null;
+          else if (typeof value === 'object' || typeof value === 'function') {
+            unlaned++;
+          } else laneKey = String(value);
+        }
+        items.push({ row, startTime, endTime, laneKey });
       }
       const timed: TimelineSection<TData, TimedItem<TData>> = {
         key: section.key,
@@ -549,8 +607,13 @@ export function DataViewTimeline<TData>({
         `[DataView.Timeline] Skipped ${dropped} row(s) with a missing or invalid "${startField}" value.`
       );
     }
+    if (process.env.NODE_ENV !== 'production' && unlaned > 0) {
+      console.warn(
+        `[DataView.Timeline] ${unlaned} row(s) have a non-primitive "${laneField}" value and share the last lane — the sorted-by field should resolve to a string or number under lanePacking="one-per-sort-value".`
+      );
+    }
     return list;
-  }, [sections, startField, endField]);
+  }, [sections, startField, endField, sortValueLanes, laneField, laneColumn]);
 
   // Data extent, for the domain below — grouping never changes the time domain.
   // Reduced in place rather than through a flattened copy: the extent is two
@@ -698,15 +761,26 @@ export function DataViewTimeline<TData>({
               lanes: section.items.map((_, i) => i),
               laneCount: section.items.length
             }
-          : packLanes(
-              section.items.map(item => ({ x: item.x, width: item.packWidth }))
-            );
+          : sortValueLanes
+            ? packLanesBySortValue(
+                section.items.map(item => ({
+                  laneKey: item.laneKey,
+                  x: item.x,
+                  width: item.packWidth
+                }))
+              )
+            : packLanes(
+                section.items.map(item => ({
+                  x: item.x,
+                  width: item.packWidth
+                }))
+              );
       const entry = { ...section, ...packed, laneOffset: offset };
       offset += packed.laneCount;
       return entry;
     });
     return { laidOutSections: list, laneCount: offset };
-  }, [positionedSections, lanePacking]);
+  }, [positionedSections, lanePacking, sortValueLanes, laneField]);
 
   /**
    * Virtualizing vertically means a card off-screen never mounts and so never

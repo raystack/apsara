@@ -23,6 +23,7 @@ import {
   getFilterOperator,
   getFilterValue
 } from './filter-operations';
+import { orderBucketKeys } from './order-bucket-keys';
 
 export function queryToTableState(query: InternalQuery): Partial<TableState> {
   const columnFilters =
@@ -84,6 +85,10 @@ export function fieldsToColumnDefs<TData>(
  * Bucket data into `GroupedData` entries keyed by `group_by`. When a resolver
  * is supplied for that key, the resolver runs per-row; otherwise the field is
  * accessed directly. Used in client mode only.
+ *
+ * Sections come out in the field's `groupOrder` where it declares one, with
+ * undeclared values following in first-seen order and the null-valued bucket
+ * last — see `orderBucketKeys`.
  */
 export function groupData<TData>(
   data: TData[],
@@ -113,7 +118,10 @@ export function groupData<TData>(
   const groupCountMap = field?.groupCountMap || {};
   const groupedData: GroupedData<TData>[] = [];
 
-  groupMap.forEach((value, key) => {
+  // Section order: the field's declared `groupOrder` first, then undeclared
+  // values in first-seen order, then the empty (null-valued) bucket last.
+  for (const key of orderBucketKeys([...groupMap.keys()], field?.groupOrder)) {
+    const value = groupMap.get(key) as TData[];
     groupedData.push({
       label: groupLabelsMap[key] || key,
       group_key: key,
@@ -121,7 +129,7 @@ export function groupData<TData>(
       count: groupCountMap[key] ?? value.length,
       showGroupCount
     });
-  });
+  }
 
   return groupedData;
 }

@@ -1,3 +1,4 @@
+import { EMPTY_BUCKET_KEY, orderBucketKeys } from './order-bucket-keys';
 import { orderByX } from './order-by-x';
 
 export interface PackLaneItem {
@@ -45,6 +46,72 @@ export function packLanes(
   return items.length < SWEEP_MIN_ITEMS
     ? packByScan(items, gapPx, order)
     : packBySweep(items, gapPx, order);
+}
+
+/** An item plus the sort-value lane bucket it belongs to. `null` = no value. */
+export interface PackSortValueLaneItem extends PackLaneItem {
+  laneKey: string | null;
+}
+
+/**
+ * Lane per distinct `laneKey`, packed by time within each: rows sharing a value
+ * share a lane, and a value only takes extra (sub-)lanes when two of its own
+ * cards overlap in time. Backs `lanePacking="one-per-sort-value"`.
+ *
+ * Buckets come out in first-seen order, with the no-value bucket last. Lane
+ * order is therefore the caller's row order — the timeline hands over the sorted
+ * row model, so lanes follow the active sort and nothing else. That's
+ * deliberately *not* `groupData`'s rule, which ranks sections by the field's
+ * declared `groupOrder`: a field that is both grouped and sorted can order its
+ * sections and its lanes differently, and the sort is what the mode promises.
+ * Only the no-value-bucket-last half is shared (see `orderBucketKeys`).
+ *
+ * Within a bucket the greedy first-fit of `packLanes` decides sub-lanes, so a
+ * value with no overlapping cards occupies exactly one lane.
+ */
+export function packLanesBySortValue(
+  items: PackSortValueLaneItem[],
+  gapPx: number = DEFAULT_CARD_GAP_PX
+): PackLanesResult {
+  if (items.length === 0) return { lanes: [], laneCount: 0 };
+  const lanes = new Array<number>(items.length).fill(0);
+
+  // Indices per bucket, in input order — Map insertion order is the first-seen
+  // (caller-sorted) order `orderBucketKeys` preserves.
+  const buckets = new Map<string, number[]>();
+  for (let index = 0; index < items.length; index++) {
+    const key = items[index].laneKey ?? EMPTY_BUCKET_KEY;
+    let bucket = buckets.get(key);
+    if (!bucket) {
+      bucket = [];
+      buckets.set(key, bucket);
+    }
+    bucket.push(index);
+  }
+
+  let laneCount = 0;
+  for (const key of orderBucketKeys([...buckets.keys()])) {
+    const bucket = buckets.get(key) as number[];
+    // A bucket of one can't collide with itself, so skip the pack — `orderByX`
+    // is a sort plus two typed arrays, and a high-cardinality sort field (which
+    // the Ordering control lets a user pick at runtime) makes that most buckets.
+    if (bucket.length === 1) {
+      lanes[bucket[0]] = laneCount++;
+      continue;
+    }
+    // Packing runs on the bucket alone, so lanes are bucket-relative and shift
+    // up by the lanes every earlier bucket already claimed.
+    const packed = packLanes(
+      bucket.map(index => ({ x: items[index].x, width: items[index].width })),
+      gapPx
+    );
+    for (let i = 0; i < bucket.length; i++) {
+      lanes[bucket[i]] = laneCount + packed.lanes[i];
+    }
+    laneCount += packed.laneCount;
+  }
+
+  return { lanes, laneCount };
 }
 
 /** First-fit by scanning every lane end — O(items × lanes). */
