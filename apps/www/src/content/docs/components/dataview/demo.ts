@@ -51,8 +51,8 @@ export const multiViewPreview = {
       /* The view switcher lives inside the DisplayControls popover. Give each
          view an optional leadingIcon to show alongside its label. */
       const views = [
-        { value: "table", label: "Table", leadingIcon: <RowsIcon /> },
-        { value: "list",  label: "List",  leadingIcon: <ListBulletIcon /> },
+        { value: "table", label: "Table", leadingIcon: <Rows3 size={16} strokeWidth={1.5} /> },
+        { value: "list",  label: "List",  leadingIcon: <LayoutList size={16} strokeWidth={1.5} /> },
       ];
 
       <DataView
@@ -348,7 +348,7 @@ export const rowSelectionPreview = {
   FloatingActions,
   useDataView,
 } from "@raystack/apsara";
-import { TransformIcon } from "@radix-ui/react-icons";
+import { Frame } from "lucide-react";
 
 const selectionColumn: DataViewListColumn<Person> = {
   accessorKey: "select",
@@ -386,7 +386,7 @@ function SelectionBar() {
         variant="outline"
         size="large"
         color="neutral"
-        leadingIcon={<TransformIcon />}
+        leadingIcon={<Frame size={16} strokeWidth={1.5} />}
         isDismissible
         onDismiss={() => table.resetRowSelection()}
       >
@@ -496,6 +496,44 @@ export const timelineGroupingPreview = {
           startField="start"
           endField="end"
           // showGroupHeaders={false} hides the bands, keeps the sections
+          renderCard={(row, context) => <TaskCard task={row.original} context={context} />}
+        />
+      </DataView>`
+    }
+  ]
+};
+
+export const timelineSortValueLanePreview = {
+  type: 'code',
+  style: { padding: 0 },
+  previewCode: false,
+  code: `<DataViewTimelineSortValueLaneDemo />`,
+  codePreview: [
+    {
+      label: 'index.tsx',
+      code: `
+      /* One lane per priority: rows sharing a value share a lane, and a value
+         only takes a second lane where two of its own cards overlap in time.
+         The sort picks the lane field and orders the lanes, so try the Ordering
+         control. Sorting the "High"/"Medium"/"Low" label alphabetically gives
+         High, Low, Medium — carry a numeric rank and sort on that instead:
+
+           { accessorKey: "rank", label: "Priority rank", sortable: true } */
+
+      <DataView
+        data={tasks}
+        fields={fields}
+        defaultSort={{ name: "rank", order: "asc" }}
+        getRowId={(t) => t.id}>
+        <DataView.Toolbar>
+          <DataView.Filters />
+          <DataView.DisplayControls />
+        </DataView.Toolbar>
+
+        <DataView.Timeline
+          startField="start"
+          endField="end"
+          lanePacking="one-per-sort-value"
           renderCard={(row, context) => <TaskCard task={row.original} context={context} />}
         />
       </DataView>`

@@ -1,6 +1,5 @@
 'use client';
 
-import { ListBulletIcon, RowsIcon, TransformIcon } from '@radix-ui/react-icons';
 import {
   Avatar,
   Badge,
@@ -18,6 +17,7 @@ import {
   type TimelineCardContext,
   useDataView
 } from '@raystack/apsara';
+import { Frame, LayoutList, Rows3 } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
 
 type Person = {
@@ -243,8 +243,16 @@ export function DataViewSearchDemo() {
 export function DataViewMultiViewDemo() {
   const views = useMemo(
     () => [
-      { value: 'table', label: 'Table', leadingIcon: <RowsIcon /> },
-      { value: 'list', label: 'List', leadingIcon: <ListBulletIcon /> }
+      {
+        value: 'table',
+        label: 'Table',
+        leadingIcon: <Rows3 size={16} strokeWidth={1.5} />
+      },
+      {
+        value: 'list',
+        label: 'List',
+        leadingIcon: <LayoutList size={16} strokeWidth={1.5} />
+      }
     ],
     []
   );
@@ -525,8 +533,16 @@ export function DataViewLoadingDemo() {
 export function DataViewPerViewFieldsDemo() {
   const views = useMemo(
     () => [
-      { value: 'table', label: 'Table', leadingIcon: <RowsIcon /> },
-      { value: 'list', label: 'List', leadingIcon: <ListBulletIcon /> }
+      {
+        value: 'table',
+        label: 'Table',
+        leadingIcon: <Rows3 size={16} strokeWidth={1.5} />
+      },
+      {
+        value: 'list',
+        label: 'List',
+        leadingIcon: <LayoutList size={16} strokeWidth={1.5} />
+      }
     ],
     []
   );
@@ -611,7 +627,7 @@ function SelectionBar() {
         variant='outline'
         size='large'
         color='neutral'
-        leadingIcon={<TransformIcon />}
+        leadingIcon={<Frame size={16} strokeWidth={1.5} />}
         isDismissible
         onDismiss={() => table.resetRowSelection()}
       >
@@ -671,8 +687,19 @@ type Task = {
   title: string;
   team: 'Eng' | 'Design' | 'Ops';
   status: 'todo' | 'active' | 'done';
+  priority: 'High' | 'Medium' | 'Low';
+  /* Priority as a number. Sorting the label alphabetically gives High, Low,
+     Medium — this is what "sort by priority" has to mean to be useful, and it
+     is what the sort-value lane timeline lanes on. */
+  rank: 1 | 2 | 3;
   start: string;
   end: string;
+};
+
+const TASK_RANK: Record<Task['priority'], Task['rank']> = {
+  High: 1,
+  Medium: 2,
+  Low: 3
 };
 
 const TASK_DAY_MS = 86_400_000;
@@ -686,38 +713,50 @@ const taskDate = (days: number) => {
 };
 
 const taskSpec: Array<
-  [string, string, Task['team'], Task['status'], number, number]
+  [
+    string,
+    string,
+    Task['team'],
+    Task['status'],
+    Task['priority'],
+    number,
+    number
+  ]
 > = [
-  ['t1', 'Design audit', 'Design', 'done', -16, -9],
-  ['t2', 'API contracts', 'Eng', 'done', -13, -6],
-  ['t3', 'Billing revamp', 'Eng', 'active', -7, 2],
-  ['t4', 'Docs sprint', 'Design', 'active', -4, 4],
-  ['t5', 'Bug bash', 'Ops', 'todo', 1, 2],
-  ['t6', 'Load testing', 'Ops', 'todo', 3, 9],
-  ['t7', 'Beta rollout', 'Eng', 'todo', 6, 14],
-  ['t8', 'Launch comms', 'Design', 'todo', 10, 16],
+  ['t1', 'Design audit', 'Design', 'done', 'High', -16, -9],
+  ['t2', 'API contracts', 'Eng', 'done', 'High', -13, -6],
+  ['t3', 'Billing revamp', 'Eng', 'active', 'High', -7, 2],
+  ['t4', 'Docs sprint', 'Design', 'active', 'Medium', -4, 4],
+  ['t5', 'Bug bash', 'Ops', 'todo', 'Low', 1, 2],
+  ['t6', 'Load testing', 'Ops', 'todo', 'Low', 3, 9],
+  ['t7', 'Beta rollout', 'Eng', 'todo', 'High', 6, 14],
+  ['t8', 'Launch comms', 'Design', 'todo', 'Medium', 10, 16],
   // Overlapping work per team, so packing stacks a few lanes deep inside each
   // group section rather than every band being a single row.
-  ['t9', 'Schema migration', 'Eng', 'done', -15, -10],
-  ['t10', 'Icon refresh', 'Design', 'done', -12, -5],
-  ['t11', 'On-call rotation', 'Ops', 'active', -11, -2],
-  ['t12', 'Runbook cleanup', 'Ops', 'done', -14, -8],
-  ['t13', 'Search indexing', 'Eng', 'active', -3, 6],
-  ['t14', 'Motion pass', 'Design', 'active', -2, 5],
-  ['t15', 'Cost review', 'Ops', 'todo', 4, 12],
-  ['t16', 'SSO hardening', 'Eng', 'todo', 8, 15],
-  ['t17', 'Empty states', 'Design', 'todo', 7, 13],
-  ['t18', 'Chaos drill', 'Ops', 'todo', 11, 15]
+  ['t9', 'Schema migration', 'Eng', 'done', 'Medium', -15, -10],
+  ['t10', 'Icon refresh', 'Design', 'done', 'Low', -12, -5],
+  ['t11', 'On-call rotation', 'Ops', 'active', 'Medium', -11, -2],
+  ['t12', 'Runbook cleanup', 'Ops', 'done', 'Low', -14, -8],
+  ['t13', 'Search indexing', 'Eng', 'active', 'Medium', -3, 6],
+  ['t14', 'Motion pass', 'Design', 'active', 'Low', -2, 5],
+  ['t15', 'Cost review', 'Ops', 'todo', 'Medium', 4, 12],
+  ['t16', 'SSO hardening', 'Eng', 'todo', 'Low', 8, 15],
+  ['t17', 'Empty states', 'Design', 'todo', 'Medium', 7, 13],
+  ['t18', 'Chaos drill', 'Ops', 'todo', 'High', 11, 15]
 ];
 
-const tasks: Task[] = taskSpec.map(([id, title, team, status, from, to]) => ({
-  id,
-  title,
-  team,
-  status,
-  start: taskDate(from),
-  end: taskDate(to)
-}));
+const tasks: Task[] = taskSpec.map(
+  ([id, title, team, status, priority, from, to]) => ({
+    id,
+    title,
+    team,
+    status,
+    priority,
+    rank: TASK_RANK[priority],
+    start: taskDate(from),
+    end: taskDate(to)
+  })
+);
 
 const taskFields: DataViewField<Task>[] = [
   {
@@ -756,6 +795,32 @@ const taskFields: DataViewField<Task>[] = [
       { label: 'Active', value: 'active' },
       { label: 'Done', value: 'done' }
     ]
+  },
+  {
+    accessorKey: 'priority',
+    label: 'Priority',
+    filterable: true,
+    filterType: 'select',
+    hideable: true,
+    // groupOrder ranks the sections when grouping by priority — text sort
+    // would give High, Low, Medium.
+    groupable: true,
+    showGroupCount: true,
+    groupOrder: ['High', 'Medium', 'Low'],
+    filterOptions: [
+      { label: 'High', value: 'High' },
+      { label: 'Medium', value: 'Medium' },
+      { label: 'Low', value: 'Low' }
+    ]
+  },
+  {
+    // Sortable because the sort-value lane timeline lanes by whatever is sorted:
+    // sorting on rank yields a High lane, a Medium lane and a Low lane.
+    accessorKey: 'rank',
+    label: 'Priority rank',
+    sortable: true,
+    hideable: true,
+    defaultHidden: true
   },
   {
     accessorKey: 'start',
@@ -837,6 +902,11 @@ function TaskCard({
         <DataView.DisplayAccess accessorKey='team'>
           <Badge size='micro' variant='neutral'>
             {task.team}
+          </Badge>
+        </DataView.DisplayAccess>
+        <DataView.DisplayAccess accessorKey='priority'>
+          <Badge size='micro' variant='neutral'>
+            {task.priority}
           </Badge>
         </DataView.DisplayAccess>
       </Flex>
@@ -1023,6 +1093,48 @@ export function DataViewTimelineGroupingDemo() {
           <DataView.Timeline<Task>
             startField='start'
             endField='end'
+            renderCard={(row, context) => (
+              <TaskCard task={row.original} context={context} />
+            )}
+          />
+          <DataView.EmptyState>
+            <Text>No tasks match your filters.</Text>
+          </DataView.EmptyState>
+        </Flex>
+      </DataView>
+    </Flex>
+  );
+}
+
+/* ── Timeline sort-value lane demo (lanePacking="one-per-sort-value") ────────────── */
+
+export function DataViewTimelineSortValueLaneDemo() {
+  return (
+    <Flex
+      direction='column'
+      style={{ width: '100%', height: 460, overflow: 'hidden' }}
+    >
+      <DataView<Task>
+        data={tasks}
+        fields={taskFields}
+        // The sort defines the lanes: rank asc → High, Medium, Low.
+        defaultSort={{ name: 'rank', order: 'asc' }}
+        getRowId={task => task.id}
+      >
+        <DataView.Toolbar>
+          <DataView.Filters />
+          {/* Ordering stays visible — it repositions and rebuilds lanes. */}
+          <DataView.DisplayControls />
+        </DataView.Toolbar>
+        <Flex
+          direction='column'
+          justify='center'
+          style={{ flex: 1, overflow: 'hidden', minWidth: 0 }}
+        >
+          <DataView.Timeline<Task>
+            startField='start'
+            endField='end'
+            lanePacking='one-per-sort-value'
             renderCard={(row, context) => (
               <TaskCard task={row.original} context={context} />
             )}

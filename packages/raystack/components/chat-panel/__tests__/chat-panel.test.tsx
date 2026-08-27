@@ -803,10 +803,7 @@ describe('ChatPanel', () => {
       const icon = screen.getByTestId('bubble').querySelector('svg');
       expect(icon).not.toBeNull();
       expect(icon).toHaveAttribute('aria-hidden', 'true');
-      expect(icon?.querySelector('path')).toHaveAttribute(
-        'fill',
-        'currentColor'
-      );
+      expect(icon).toHaveAttribute('data-icon', 'CoPilotIcon');
     });
   });
 

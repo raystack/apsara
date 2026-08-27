@@ -43,6 +43,3 @@ yarn-error.log*
 
 # npm pack artifacts
 *.tgz
-
-# generated Code Connect batch file (created by figma:generate-icons at publish time)
-packages/raystack/figma/icons.figma.batch.json

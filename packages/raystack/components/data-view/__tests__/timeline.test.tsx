@@ -3,13 +3,6 @@ import userEvent from '@testing-library/user-event';
 import dayjs from 'dayjs';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-// SVG icons are inlined via @svgr/rollup at build time. In Vitest they resolve
-// to undefined, so stub the `~/icons` module with no-op components.
-vi.mock('~/icons', () => ({
-  FilterIcon: () => null,
-  __esModule: true
-}));
-
 // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
 import { DataView } from '../data-view';
 import type {
@@ -303,6 +296,10 @@ type Order = {
   start: string | null;
   end: string | null;
   team?: string;
+  // one-per-sort-value reads whatever the sorted field holds.
+  priority?: unknown;
+  rank?: number;
+  meta?: { rank: number };
 };
 
 const fields: DataViewField<Order>[] = [
@@ -1783,5 +1780,416 @@ describe('DataView.Timeline actionsRef', () => {
     actionsRef.current!.scrollTo('today');
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('not rendered'));
     expect(actionsRef.current!.getVisibleRange()).toBeNull();
+  });
+});
+
+/* ─────────────────────── lanePacking="one-per-sort-value" ─────────────────────── */
+
+/**
+ * Lanes come from the field the view is *sorted* by: rows sharing a value share
+ * a lane, and a value only claims a sub-lane where two of its own cards overlap
+ * in time. The sort orders the lanes too, so the Ordering control moves them.
+ * Rows with no usable value lane last.
+ */
+describe('DataView.Timeline sort-value lanes', () => {
+  // Jan 5 → 80px, Jan 6 → 100px (overlaps Jan 5's span), Jan 12 → 220px (clear).
+  // `rank` is the numeric ranking of `priority`, for sorts that need High before
+  // Medium before Low — alphabetically that order is impossible.
+  const tasks: Order[] = [
+    {
+      id: 't1',
+      title: 'A',
+      priority: 'Low',
+      rank: 3,
+      start: '2025-01-05',
+      end: '2025-01-10'
+    },
+    {
+      id: 't2',
+      title: 'B',
+      priority: 'High',
+      rank: 1,
+      start: '2025-01-05',
+      end: '2025-01-10'
+    },
+    {
+      id: 't3',
+      title: 'C',
+      priority: 'High',
+      rank: 1,
+      start: '2025-01-12',
+      end: '2025-01-15'
+    },
+    {
+      id: 't4',
+      title: 'D',
+      priority: 'Medium',
+      rank: 2,
+      start: '2025-01-05',
+      end: '2025-01-10'
+    }
+  ];
+
+  const sortableFields: DataViewField<Order>[] = [
+    { accessorKey: 'title', label: 'Title', sortable: true },
+    { accessorKey: 'priority', label: 'Priority', sortable: true },
+    { accessorKey: 'rank', label: 'Rank', sortable: true }
+  ];
+
+  const laneOf = (id: string) =>
+    screen.getByTestId(`card-${id}`).dataset.lane as string;
+
+  const renderSortValueLanes = (
+    props: Partial<DataViewTimelineProps<Order>> = {},
+    data: Order[] = tasks,
+    root: {
+      sort?: { name: string; order: 'asc' | 'desc' };
+      fields?: DataViewField<Order>[];
+      query?: DataViewQuery;
+    } = {}
+  ) =>
+    renderTimeline({ lanePacking: 'one-per-sort-value', ...props }, data, {
+      fields: root.fields ?? sortableFields,
+      sort: root.sort ?? { name: 'priority', order: 'asc' },
+      query: root.query
+    });
+
+  it('lanes by the sorted-by field, one lane per value', () => {
+    renderSortValueLanes();
+    // priority asc → High, Low, Medium (text order).
+    expect(laneOf('t2')).toBe('0');
+    expect(laneOf('t3')).toBe('0'); // same value as t2, no time overlap
+    expect(laneOf('t1')).toBe('1');
+    expect(laneOf('t4')).toBe('2');
+  });
+
+  it('reorders lanes when the sort direction flips', () => {
+    renderSortValueLanes(undefined, tasks, {
+      sort: { name: 'priority', order: 'desc' }
+    });
+    expect(laneOf('t4')).toBe('0');
+    expect(laneOf('t1')).toBe('1');
+    expect(laneOf('t2')).toBe('2');
+  });
+
+  it("lanes by a rank field for orders text sorting can't produce", () => {
+    renderSortValueLanes(undefined, tasks, {
+      sort: { name: 'rank', order: 'asc' }
+    });
+    // rank asc → High(1), Medium(2), Low(3).
+    expect(laneOf('t2')).toBe('0');
+    expect(laneOf('t3')).toBe('0');
+    expect(laneOf('t4')).toBe('1');
+    expect(laneOf('t1')).toBe('2');
+  });
+
+  it('relanes when the sort field changes', () => {
+    // Sorting by title instead lanes by title — every value distinct, so one
+    // lane per row, in title order.
+    renderSortValueLanes(undefined, tasks, {
+      sort: { name: 'title', order: 'asc' }
+    });
+    expect(['t1', 't2', 't3', 't4'].map(laneOf)).toEqual(['0', '1', '2', '3']);
+  });
+
+  it('adds a sub-lane only where one value overlaps itself', () => {
+    renderSortValueLanes(undefined, [
+      ...tasks,
+      // Overlaps t2 [80..180] and shares its value → High takes a second lane.
+      {
+        id: 't5',
+        title: 'E',
+        priority: 'High',
+        rank: 1,
+        start: '2025-01-06',
+        end: '2025-01-09'
+      }
+    ]);
+    expect(laneOf('t2')).toBe('0');
+    expect(laneOf('t5')).toBe('1');
+    // Low sits below every lane High claimed.
+    expect(laneOf('t1')).toBe('2');
+  });
+
+  it('lanes rows with no value last, whatever the sort puts first', () => {
+    renderSortValueLanes(undefined, [
+      {
+        id: 'n1',
+        title: 'N1',
+        priority: null,
+        rank: 0,
+        start: '2025-01-05',
+        end: '2025-01-10'
+      },
+      {
+        id: 'n2',
+        title: 'N2',
+        rank: 0,
+        start: '2025-01-12',
+        end: '2025-01-15'
+      },
+      {
+        id: 'n3',
+        title: 'N3',
+        priority: '',
+        rank: 0,
+        start: '2025-01-20',
+        end: '2025-01-25'
+      },
+      ...tasks
+    ]);
+    expect(laneOf('t2')).toBe('0');
+    expect(laneOf('t1')).toBe('1');
+    expect(laneOf('t4')).toBe('2');
+    // null, undefined and '' share the one trailing lane.
+    expect(laneOf('n1')).toBe('3');
+    expect(laneOf('n2')).toBe('3');
+    expect(laneOf('n3')).toBe('3');
+  });
+
+  it('lanes non-primitive values last, with a dev warning', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    renderSortValueLanes(undefined, [
+      {
+        id: 'obj',
+        title: 'Obj',
+        priority: { id: 'High' },
+        rank: 1,
+        start: '2025-01-05',
+        end: '2025-01-10'
+      },
+      {
+        id: 'ok',
+        title: 'Ok',
+        priority: 'High',
+        rank: 1,
+        start: '2025-01-12',
+        end: '2025-01-15'
+      }
+    ]);
+    expect(laneOf('ok')).toBe('0');
+    expect(laneOf('obj')).toBe('1');
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('non-primitive "priority" value')
+    );
+  });
+
+  it('keys numeric values by their string form', () => {
+    renderSortValueLanes(
+      undefined,
+      [
+        {
+          id: 'p1',
+          title: 'P1',
+          priority: 'x',
+          rank: 1,
+          start: '2025-01-05',
+          end: '2025-01-10'
+        },
+        {
+          id: 'p2',
+          title: 'P2',
+          priority: 'x',
+          rank: 2,
+          start: '2025-01-05',
+          end: '2025-01-10'
+        },
+        {
+          id: 'p3',
+          title: 'P3',
+          priority: 'x',
+          rank: 1,
+          start: '2025-01-12',
+          end: '2025-01-15'
+        }
+      ],
+      { sort: { name: 'rank', order: 'asc' } }
+    );
+    expect(laneOf('p1')).toBe('0');
+    expect(laneOf('p3')).toBe('0');
+    expect(laneOf('p2')).toBe('1');
+  });
+
+  it('stacks lanes at the fixed pitch like any other packing', () => {
+    renderSortValueLanes(undefined, tasks, {
+      sort: { name: 'rank', order: 'asc' }
+    });
+    // lane 0 at laneGap 16, lane 1 at 16 + 66 + 16, lane 2 at 16 + 2 × 82.
+    expect(screen.getByTestId('card-t2').parentElement!.style.top).toBe('16px');
+    expect(screen.getByTestId('card-t4').parentElement!.style.top).toBe('98px');
+    expect(screen.getByTestId('card-t1').parentElement!.style.top).toBe(
+      '180px'
+    );
+  });
+
+  it('lanes per group section when group_by is active', () => {
+    const grouped: Order[] = [
+      {
+        id: 'e1',
+        title: 'E1',
+        team: 'Eng',
+        priority: 'High',
+        rank: 1,
+        start: '2025-01-05',
+        end: '2025-01-10'
+      },
+      {
+        id: 'e2',
+        title: 'E2',
+        team: 'Eng',
+        priority: 'Low',
+        rank: 3,
+        start: '2025-01-12',
+        end: '2025-01-15'
+      },
+      {
+        id: 'd1',
+        title: 'D1',
+        team: 'Design',
+        priority: 'Low',
+        rank: 3,
+        start: '2025-01-05',
+        end: '2025-01-10'
+      }
+    ];
+    renderSortValueLanes(undefined, grouped, {
+      fields: [
+        ...sortableFields,
+        { accessorKey: 'team', label: 'Team', groupable: true }
+      ],
+      query: { group_by: ['team'] }
+    });
+    // Section-relative lanes: Design's only value starts back at lane 0, and a
+    // value never spans sections.
+    expect(laneOf('e1')).toBe('0');
+    expect(laneOf('e2')).toBe('1');
+    expect(laneOf('d1')).toBe('0');
+  });
+
+  it('degenerates to time packing when grouped by the sorted field', () => {
+    const grouped: Order[] = [
+      {
+        id: 'h1',
+        title: 'H1',
+        priority: 'High',
+        rank: 1,
+        start: '2025-01-05',
+        end: '2025-01-10'
+      },
+      {
+        id: 'h2',
+        title: 'H2',
+        priority: 'High',
+        rank: 1,
+        start: '2025-01-12',
+        end: '2025-01-15'
+      },
+      {
+        id: 'l1',
+        title: 'L1',
+        priority: 'Low',
+        rank: 3,
+        start: '2025-01-05',
+        end: '2025-01-10'
+      }
+    ];
+    renderSortValueLanes(undefined, grouped, {
+      fields: [
+        { accessorKey: 'title', label: 'Title', sortable: true },
+        {
+          accessorKey: 'priority',
+          label: 'Priority',
+          sortable: true,
+          groupable: true
+        },
+        { accessorKey: 'rank', label: 'Rank', sortable: true }
+      ],
+      query: { group_by: ['priority'] }
+    });
+    // Each section already holds one value → one lane per section.
+    expect(laneOf('h1')).toBe('0');
+    expect(laneOf('h2')).toBe('0');
+    expect(laneOf('l1')).toBe('0');
+  });
+
+  it('lanes by a dotted accessorKey the way the sort reads it', () => {
+    // TanStack treats a dotted key as a path, so the lane value has to come
+    // through the row — `original['meta.rank']` would be undefined for every
+    // row and pile them all onto the no-value lane.
+    renderSortValueLanes(
+      undefined,
+      [
+        {
+          id: 'd1',
+          title: 'D1',
+          meta: { rank: 3 },
+          start: '2025-01-05',
+          end: '2025-01-10'
+        },
+        {
+          id: 'd2',
+          title: 'D2',
+          meta: { rank: 1 },
+          start: '2025-01-05',
+          end: '2025-01-10'
+        },
+        {
+          id: 'd3',
+          title: 'D3',
+          meta: { rank: 2 },
+          start: '2025-01-05',
+          end: '2025-01-10'
+        }
+      ],
+      {
+        fields: [
+          { accessorKey: 'title', label: 'Title', sortable: true },
+          { accessorKey: 'meta.rank', label: 'Rank', sortable: true }
+        ],
+        sort: { name: 'meta.rank', order: 'asc' }
+      }
+    );
+    expect(laneOf('d2')).toBe('0');
+    expect(laneOf('d3')).toBe('1');
+    expect(laneOf('d1')).toBe('2');
+  });
+
+  it('warns when the sort key matches no field', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    renderSortValueLanes(undefined, tasks, {
+      sort: { name: 'nope', order: 'asc' }
+    });
+    // Nothing to read → one bucket for every row, which then sub-lanes on time
+    // overlap alone (t1/t2/t4 all start Jan 5; t3 is clear of them). Visually
+    // indistinguishable from `auto`, hence the warning.
+    expect(['t1', 't2', 't4'].map(laneOf)).toEqual(['0', '1', '2']);
+    expect(laneOf('t3')).toBe('0');
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('which matches no field')
+    );
+  });
+
+  it('culls sort-value lanes when virtualized', () => {
+    stubPane();
+    const many: Order[] = Array.from({ length: 12 }, (_, i) => ({
+      id: `v${String(i + 1).padStart(2, '0')}`,
+      title: String(i + 1).padStart(2, '0'),
+      priority: `p${String(i + 1).padStart(2, '0')}`,
+      start: '2025-01-05',
+      end: '2025-01-10'
+    }));
+    renderSortValueLanes({ virtualized: true }, many);
+    // One lane per value at the fixed 82px pitch; the 200px pane plus overscan
+    // reaches lane 4 (top 344px) and stops before lane 5 (426px).
+    const rendered = Array.from(
+      document.querySelectorAll('[data-testid^="card-v"]')
+    ).map(card => (card as HTMLElement).dataset.testid);
+    expect(rendered).toEqual([
+      'card-v01',
+      'card-v02',
+      'card-v03',
+      'card-v04',
+      'card-v05'
+    ]);
   });
 });

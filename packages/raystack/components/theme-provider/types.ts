@@ -1,3 +1,5 @@
+import type { IconOptions } from '~/icons/create-icon';
+
 interface ValueObject {
   [themeName: string]: string;
 }
@@ -93,4 +95,20 @@ export interface ThemeProviderProps {
   grayColor?: GrayColor;
   /** Called when the active theme changes. `resolvedTheme` is the actual applied theme (`'light'`/`'dark'` when `theme` is `'system'`). Not fired on initial mount. */
   onThemeChange?: (theme: string, resolvedTheme: string) => void;
+  /**
+   * The icons inside Apsara's components, and the props applied to every icon.
+   *
+   * `components` replaces a drawing by key — `{ ErrorIcon: MyError }`. A partial
+   * map changes only the keys it names, and a nested `<Theme icons={…}>` layers
+   * on top of an outer one, per key.
+   *
+   * `props` applies to every icon built by `createIcon`, the consumer's own
+   * included — `{ strokeWidth: 2 }`. The props at the call site still win.
+   * Prefer the `data-icon` attribute and CSS where a style rule is enough,
+   * because CSS re-renders nothing.
+   *
+   * The map holds functions, so a React Server Component cannot pass it. Set it
+   * from a client component (the `providers.tsx` pattern).
+   */
+  icons?: IconOptions;
 }

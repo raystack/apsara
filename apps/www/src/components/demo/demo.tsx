@@ -1,39 +1,36 @@
 'use client';
 
-import {
-  BorderSolidIcon,
-  CheckCircledIcon,
-  ColorWheelIcon,
-  Component1Icon,
-  FileIcon,
-  FontBoldIcon,
-  FontFamilyIcon,
-  FontItalicIcon,
-  InfoCircledIcon,
-  LayersIcon,
-  OpenInNewWindowIcon,
-  Pencil2Icon,
-  PlusIcon,
-  ShadowIcon,
-  Share2Icon,
-  SpaceBetweenHorizontallyIcon,
-  TextAlignCenterIcon,
-  TextAlignLeftIcon,
-  TextAlignRightIcon,
-  TransformIcon,
-  UnderlineIcon,
-  UploadIcon
-} from '@radix-ui/react-icons';
 import * as Apsara from '@raystack/apsara';
-import {
-  BellIcon,
-  FilterIcon,
-  OrganizationIcon,
-  ShoppingBagFilledIcon,
-  SidebarIcon
-} from '@raystack/apsara/icons';
 import dayjs from 'dayjs';
-import { Home, Info, Laugh, X } from 'lucide-react';
+import {
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
+  Bell,
+  Bold,
+  Building2,
+  Component,
+  Contrast,
+  ExternalLink,
+  Frame,
+  Home,
+  Info,
+  Italic,
+  Laugh,
+  Layers,
+  LayoutList,
+  Minus,
+  Palette,
+  Pencil,
+  Rows3,
+  Share2,
+  ShoppingBag,
+  StretchHorizontal,
+  Type,
+  Underline,
+  Upload,
+  X
+} from 'lucide-react';
 import NextLink from 'next/link';
 import { Suspense } from 'react';
 import ChipInputDemo from '../chip-input-demo';
@@ -51,6 +48,7 @@ import {
   DataViewTimelineDemo,
   DataViewTimelineGroupingDemo,
   DataViewTimelinePointDemo,
+  DataViewTimelineSortValueLaneDemo,
   DataViewVirtualizedDemo,
   DataViewVirtualizedGroupingDemo
 } from '../dataview-demo';
@@ -64,13 +62,13 @@ import { DemoProps } from './types';
 export default function Demo(props: DemoProps) {
   const {
     data,
+    // `...Apsara` carries the 31 icons Apsara publishes, so none of those needs
+    // its own entry — and nothing below may repeat one of their keys, because a
+    // later key shadows the spread. A demo that needs any other glyph names a
+    // lucide component from the block above and sizes it at the call site,
+    // which is exactly what an application does.
     scope = {
       ...Apsara,
-      BellIcon,
-      FilterIcon,
-      ShoppingBagFilledIcon,
-      OrganizationIcon,
-      SidebarIcon,
       DataViewTableDemo,
       DataViewListDemo,
       DataViewMultiViewDemo,
@@ -84,39 +82,41 @@ export default function Demo(props: DemoProps) {
       DataViewSearchDemo,
       DataViewSelectionDemo,
       DataViewTimelineDemo,
+      DataViewTimelineSortValueLaneDemo,
       DataViewTimelineGroupingDemo,
       DataViewTimelinePointDemo,
       ChipInputDemo,
       LinearMenuDemo,
       PopoverColorPicker,
       TourDemo,
-      Info,
-      X,
-      Home,
-      Laugh,
       NextLink,
-      PlusIcon,
-      TransformIcon,
-      CheckCircledIcon,
-      Pencil2Icon,
-      InfoCircledIcon,
-      UploadIcon,
-      FontBoldIcon,
-      FontItalicIcon,
-      UnderlineIcon,
-      TextAlignLeftIcon,
-      TextAlignCenterIcon,
-      TextAlignRightIcon,
-      Component1Icon,
-      FileIcon,
-      FontFamilyIcon,
-      LayersIcon,
-      OpenInNewWindowIcon,
-      Share2Icon,
-      BorderSolidIcon,
-      ColorWheelIcon,
-      ShadowIcon,
-      SpaceBetweenHorizontallyIcon,
+      AlignCenter,
+      AlignLeft,
+      AlignRight,
+      Bell,
+      Bold,
+      Building2,
+      Component,
+      Contrast,
+      ExternalLink,
+      Frame,
+      Home,
+      Info,
+      Italic,
+      Laugh,
+      LayoutList,
+      Layers,
+      Minus,
+      Palette,
+      Pencil,
+      Rows3,
+      Share2,
+      ShoppingBag,
+      StretchHorizontal,
+      Type,
+      Underline,
+      Upload,
+      X,
       dayjs
     }
   } = props;

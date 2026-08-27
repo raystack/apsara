@@ -1,8 +1,6 @@
 import commonjs from '@rollup/plugin-commonjs';
-import image from '@rollup/plugin-image';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
-import svgr from '@svgr/rollup';
 import postcssImport from 'postcss-import';
 import nodeExternals from 'rollup-plugin-node-externals';
 import postcss from 'rollup-plugin-postcss';
@@ -23,20 +21,6 @@ const createPlugins = ({ rootDir, declarationDir }) => [
   }),
   nodeResolve(),
   commonjs(),
-  svgr({
-    svgoConfig: {
-      plugins: [
-        {
-          name: 'preset-default',
-          params: {
-            overrides: {
-              removeViewBox: false
-            }
-          }
-        }
-      ]
-    }
-  }),
   postcss({
     plugins: [postcssImport()],
     extract: 'style.css',
@@ -60,7 +44,6 @@ const createPlugins = ({ rootDir, declarationDir }) => [
     rootDir: rootDir,
     declarationDir: declarationDir
   }),
-  image(),
   preserveDirectives() //preserve `use client` directive
 ];
 

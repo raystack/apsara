@@ -5,7 +5,7 @@ import { getPropsString } from '@/lib/utils';
 
 const getCode = (props: ComponentPropsType) => {
   return `<Toggle aria-label="Bold"${getPropsString(props)}>
-  <FontBoldIcon />
+  <Bold size={16} strokeWidth={1.5} />
 </Toggle>`;
 };
 
@@ -40,13 +40,13 @@ export const groupDemo = {
   type: 'code',
   code: `<Toggle.Group defaultValue={["center"]} aria-label="Text alignment">
   <Toggle value="left" aria-label="Align left">
-    <TextAlignLeftIcon />
+    <AlignLeft size={16} strokeWidth={1.5} />
   </Toggle>
   <Toggle value="center" aria-label="Align center">
-    <TextAlignCenterIcon />
+    <AlignCenter size={16} strokeWidth={1.5} />
   </Toggle>
   <Toggle value="right" aria-label="Align right">
-    <TextAlignRightIcon />
+    <AlignRight size={16} strokeWidth={1.5} />
   </Toggle>
 </Toggle.Group>`
 };
@@ -55,13 +55,13 @@ export const multipleDemo = {
   type: 'code',
   code: `<Toggle.Group multiple aria-label="Text formatting">
   <Toggle value="bold" aria-label="Bold">
-    <FontBoldIcon />
+    <Bold size={16} strokeWidth={1.5} />
   </Toggle>
   <Toggle value="italic" aria-label="Italic">
-    <FontItalicIcon />
+    <Italic size={16} strokeWidth={1.5} />
   </Toggle>
   <Toggle value="underline" aria-label="Underline">
-    <UnderlineIcon />
+    <Underline size={16} strokeWidth={1.5} />
   </Toggle>
 </Toggle.Group>`
 };
@@ -86,16 +86,16 @@ export const sizeDemo = {
   type: 'code',
   code: `<Flex gap={9} align="center">
   <Toggle size={1} aria-label="Bold">
-    <FontBoldIcon />
+    <Bold size={16} strokeWidth={1.5} />
   </Toggle>
   <Toggle size={2} aria-label="Bold">
-    <FontBoldIcon />
+    <Bold size={16} strokeWidth={1.5} />
   </Toggle>
   <Toggle size={3} aria-label="Bold">
-    <FontBoldIcon />
+    <Bold size={16} strokeWidth={1.5} />
   </Toggle>
   <Toggle size={4} aria-label="Bold">
-    <FontBoldIcon />
+    <Bold size={16} strokeWidth={1.5} />
   </Toggle>
 </Flex>`
 };
@@ -113,10 +113,10 @@ export const disabledDemo = {
       name: 'Group',
       code: `<Toggle.Group disabled aria-label="Text alignment">
   <Toggle value="left" aria-label="Align left">
-    <TextAlignLeftIcon />
+    <AlignLeft size={16} strokeWidth={1.5} />
   </Toggle>
   <Toggle value="center" aria-label="Align center">
-    <TextAlignCenterIcon />
+    <AlignCenter size={16} strokeWidth={1.5} />
   </Toggle>
 </Toggle.Group>`
     }

@@ -1,6 +1,5 @@
 'use client';
 
-import { CalendarIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -8,6 +7,7 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { useEffect, useRef, useState } from 'react';
 import { PropsBase } from 'react-day-picker';
+import { CalendarIcon } from '~/icons';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
 import { Popover } from '../popover';

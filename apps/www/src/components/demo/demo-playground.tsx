@@ -1,9 +1,8 @@
 'use client';
 
-import { Cross2Icon } from '@radix-ui/react-icons';
-import { Dialog, Flex, IconButton } from '@raystack/apsara';
-import { ResetIcon } from '@raystack/apsara/icons';
+import { Dialog, Flex, IconButton, XIcon } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
+import { RotateCcw } from 'lucide-react';
 import {
   ReadonlyURLSearchParams,
   useRouter,
@@ -114,14 +113,14 @@ export default function DemoPlayground({
                 onClick={resetProps}
                 aria-label='Reset to default props'
               >
-                <ResetIcon />
+                <RotateCcw size={16} strokeWidth={1.5} />
               </IconButton>
               <IconButton
                 size={2}
                 onClick={() => setOpenPlayground(false)}
                 aria-label='Close playground'
               >
-                <Cross2Icon />
+                <XIcon />
               </IconButton>
             </Flex>
           </Dialog.Header>

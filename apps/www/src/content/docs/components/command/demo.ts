@@ -26,7 +26,7 @@ export const preview = {
               <Command.Group>
                 <Command.Label>Actions</Command.Label>
                 <Command.Item
-                  leadingIcon={<TransformIcon />}
+                  leadingIcon={<Frame size={16} strokeWidth={1.5} />}
                   trailingIcon={
                     <Kbd.Group variant="ghost">
                       <Kbd aria-label="Command">⌘</Kbd>
@@ -39,7 +39,7 @@ export const preview = {
                   Create AOI...
                 </Command.Item>
                 <Command.Item
-                  leadingIcon={<Share2Icon />}
+                  leadingIcon={<Share2 size={16} strokeWidth={1.5} />}
                   trailingIcon={
                     <Kbd.Group variant="ghost">
                       <Kbd aria-label="Command">⌘</Kbd>
@@ -53,8 +53,8 @@ export const preview = {
                   Run workflow...
                 </Command.Item>
                 <Command.Item
-                  leadingIcon={<FileIcon />}
-                  trailingIcon={<OpenInNewWindowIcon />}
+                  leadingIcon={<FileTextIcon />}
+                  trailingIcon={<ExternalLink size={16} strokeWidth={1.5} />}
                   onClick={() => setOpen(false)}
                 >
                   View documentation
@@ -62,25 +62,25 @@ export const preview = {
               </Command.Group>
               <Command.Group>
                 <Command.Label>Foundations</Command.Label>
-                <Command.Item leadingIcon={<FontFamilyIcon />} onClick={() => setOpen(false)}>
+                <Command.Item leadingIcon={<Type size={16} strokeWidth={1.5} />} onClick={() => setOpen(false)}>
                   Typography
                 </Command.Item>
-                <Command.Item leadingIcon={<Component1Icon />} onClick={() => setOpen(false)}>
+                <Command.Item leadingIcon={<Component size={16} strokeWidth={1.5} />} onClick={() => setOpen(false)}>
                   Design Tokens
                 </Command.Item>
-                <Command.Item leadingIcon={<LayersIcon />} onClick={() => setOpen(false)}>
+                <Command.Item leadingIcon={<Layers size={16} strokeWidth={1.5} />} onClick={() => setOpen(false)}>
                   Styles
                 </Command.Item>
-                <Command.Item leadingIcon={<ColorWheelIcon />} onClick={() => setOpen(false)}>
+                <Command.Item leadingIcon={<Palette size={16} strokeWidth={1.5} />} onClick={() => setOpen(false)}>
                   Colors
                 </Command.Item>
-                <Command.Item leadingIcon={<SpaceBetweenHorizontallyIcon />} onClick={() => setOpen(false)}>
+                <Command.Item leadingIcon={<StretchHorizontal size={16} strokeWidth={1.5} />} onClick={() => setOpen(false)}>
                   Spacing
                 </Command.Item>
-                <Command.Item leadingIcon={<BorderSolidIcon />} onClick={() => setOpen(false)}>
+                <Command.Item leadingIcon={<Minus size={16} strokeWidth={1.5} />} onClick={() => setOpen(false)}>
                   Borders
                 </Command.Item>
-                <Command.Item leadingIcon={<ShadowIcon />} onClick={() => setOpen(false)}>
+                <Command.Item leadingIcon={<Contrast size={16} strokeWidth={1.5} />} onClick={() => setOpen(false)}>
                   Shadows
                 </Command.Item>
               </Command.Group>
@@ -132,11 +132,11 @@ export const withIconsDemo = {
             <Command.Content>
               <Command.Empty>No results found.</Command.Empty>
               <Command.Item leadingIcon={<Home />} onClick={() => setOpen(false)}>Home</Command.Item>
-              <Command.Item leadingIcon={<BellIcon />} onClick={() => setOpen(false)}>Notifications</Command.Item>
+              <Command.Item leadingIcon={<Bell size={16} strokeWidth={1.5} />} onClick={() => setOpen(false)}>Notifications</Command.Item>
               <Command.Item leadingIcon={<FilterIcon />} onClick={() => setOpen(false)}>Filters</Command.Item>
-              <Command.Item leadingIcon={<OrganizationIcon />} onClick={() => setOpen(false)}>Organization</Command.Item>
-              <Command.Item leadingIcon={<ShoppingBagFilledIcon />} onClick={() => setOpen(false)}>Orders</Command.Item>
-              <Command.Item leadingIcon={<SidebarIcon />} onClick={() => setOpen(false)}>Layout</Command.Item>
+              <Command.Item leadingIcon={<Building2 size={16} strokeWidth={1.5} />} onClick={() => setOpen(false)}>Organization</Command.Item>
+              <Command.Item leadingIcon={<ShoppingBag size={16} strokeWidth={1.5} />} onClick={() => setOpen(false)}>Orders</Command.Item>
+              <Command.Item leadingIcon={<PanelLeftIcon />} onClick={() => setOpen(false)}>Layout</Command.Item>
             </Command.Content>`)
 };
 

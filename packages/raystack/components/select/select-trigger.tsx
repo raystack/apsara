@@ -4,9 +4,9 @@ import {
   Combobox as ComboboxPrimitive,
   Select as SelectPrimitive
 } from '@base-ui/react';
-import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { cva, VariantProps } from 'class-variance-authority';
 import { ComponentProps, SVGAttributes } from 'react';
+import { ChevronDownIcon } from '~/icons';
 import { Flex } from '../flex';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';

@@ -73,7 +73,7 @@ export interface BreadcrumbSeparatorProps {
 export interface BreadcrumbEllipsisProps {
   /**
    * Custom ellipsis element
-   * @defaultValue <DotsHorizontalIcon />
+   * @defaultValue <EllipsisIcon />
    */
   children?: ReactNode;
   /** Custom CSS class names */

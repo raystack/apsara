@@ -1,8 +1,8 @@
 'use client';
 
-import { ArrowUpIcon, StopIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, MouseEvent } from 'react';
+import { ArrowUpIcon, StopIcon } from '~/icons';
 import { Spinner } from '../spinner';
 import styles from './prompt-input.module.css';
 import { usePromptInputContext } from './prompt-input-context';

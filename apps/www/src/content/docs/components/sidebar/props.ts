@@ -121,7 +121,7 @@ export interface SidebarItemProps {
 
 export interface SidebarTriggerProps {
   /** Icon rendered inside the trigger.
-   * @default "<ViewVerticalIcon />"
+   * @default "<PanelLeftIcon />"
    */
   children?: ReactNode;
 }

@@ -191,10 +191,20 @@ pnpm lint
 
 # Clean build artifacts
 pnpm clean
-
-# Build icon components
-pnpm build:icons
 ```
+
+### Icons
+
+The icons live in one committed file, `packages/raystack/icons/icons.tsx`: one
+`createIcon` call per key, 31 of them. There is no generator and no build step —
+to add, remove, or repoint an icon, edit that file.
+
+`icons/types.ts` derives `IconName` from its exports with `keyof typeof icons`,
+so the union cannot drift and nothing needs to be kept in step by hand.
+
+`icons/__tests__/bundle.test.ts` is the test that matters here. It bundles a
+three-icon fixture with the real rollup and asserts the other 28 keys and their
+lucide imports are gone. That is what keeps one file from becoming one bundle.
 
 ## Testing
 
