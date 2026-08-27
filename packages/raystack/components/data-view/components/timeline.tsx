@@ -532,16 +532,27 @@ export function DataViewTimeline<TData>({
   const sortValueLanes =
     lanePacking === 'one-per-sort-value' && laneField !== undefined;
 
+  // Resolved once per render rather than once per row: `row.getValue` re-reads
+  // the column through `table.getColumn` on every call, and a miss is never
+  // cached (`_valuesCache` is written only after the lookup succeeds), so a sort
+  // key naming no field logged one `[Table] Column with id ... does not exist.`
+  // per row per recompute. Looked up on the flat column list instead of through
+  // `table.getColumn`, which logs that error itself — the warning below says the
+  // same thing and names the fix. Hidden columns are included, so a sorted field
+  // the user has toggled off still lanes.
+  const laneColumn = sortValueLanes
+    ? table?.getAllFlatColumns().find(column => column.id === laneField)
+    : undefined;
+
   // A sort key with no column behind it reads as undefined on every row, which
   // would silently collapse the timeline onto the single no-value lane.
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') return;
-    if (!sortValueLanes || !table || table.getColumn(laneField as string))
-      return;
+    if (!sortValueLanes || !table || laneColumn) return;
     console.warn(
       `[DataView.Timeline] lanePacking="one-per-sort-value" is sorted by "${laneField}", which matches no field — every card lands on one lane. Sort by a declared field.`
     );
-  }, [sortValueLanes, laneField, table]);
+  }, [sortValueLanes, laneColumn, laneField, table]);
 
   // Resolve each row's start/end timestamps, per section. Rows without a valid
   // start are skipped (one dev warning for the whole model); inverted ranges
@@ -572,9 +583,11 @@ export function DataViewTimeline<TData>({
           // Read through the row, not `original`: TanStack treats a dotted
           // `accessorKey` as a path, so `original['meta.rank']` is undefined
           // for the very key it sorted by — every row would look valueless and
-          // pile onto one lane. `getValue` yields exactly what the sort saw
-          // (undefined rather than a throw if the key names no column).
-          const value = row.getValue(laneField as string);
+          // pile onto one lane. `getValue` yields exactly what the sort saw, and
+          // is skipped outright when the key names no column (see `laneColumn`).
+          const value = laneColumn
+            ? row.getValue(laneField as string)
+            : undefined;
           if (value == null || value === '') laneKey = null;
           else if (typeof value === 'object' || typeof value === 'function') {
             unlaned++;
@@ -600,7 +613,7 @@ export function DataViewTimeline<TData>({
       );
     }
     return list;
-  }, [sections, startField, endField, sortValueLanes, laneField]);
+  }, [sections, startField, endField, sortValueLanes, laneField, laneColumn]);
 
   // Data extent, for the domain below — grouping never changes the time domain.
   // Reduced in place rather than through a flattened copy: the extent is two

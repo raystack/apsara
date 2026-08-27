@@ -518,6 +518,8 @@ Sort can't move a card horizontally — x is locked to the start date — so it 
 
 Under the default `auto` packing the sort has no visible effect at all — lanes are assigned by dense chronological first-fit — so there, hide the control (`<DataView.DisplayControls hideOrdering />`) or leave `sortable` off the timeline's per-view `fields`.
 
+In `mode="server"` the sort is the backend's to apply: rows arrive already ordered and `one-per-sort-value` takes lane order from that row order, first value seen first. A backend that ignores the `sort` in `onTableQueryChange` therefore produces lanes in whatever order it returned rows, with nothing logged to say so — the lane *membership* is still correct, only the ranking is arbitrary.
+
 ### Scale and axis
 
 Four props control the axis, and they compose rather than overlap:

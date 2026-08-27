@@ -92,6 +92,13 @@ export function packLanesBySortValue(
   let laneCount = 0;
   for (const key of orderBucketKeys([...buckets.keys()])) {
     const bucket = buckets.get(key) as number[];
+    // A bucket of one can't collide with itself, so skip the pack — `orderByX`
+    // is a sort plus two typed arrays, and a high-cardinality sort field (which
+    // the Ordering control lets a user pick at runtime) makes that most buckets.
+    if (bucket.length === 1) {
+      lanes[bucket[0]] = laneCount++;
+      continue;
+    }
     // Packing runs on the bucket alone, so lanes are bucket-relative and shift
     // up by the lanes every earlier bucket already claimed.
     const packed = packLanes(

@@ -303,8 +303,8 @@ type Order = {
   start: string | null;
   end: string | null;
   team?: string;
-  // biome-ignore lint/suspicious/noExplicitAny: one-per-sort-value takes any value
-  priority?: any;
+  // one-per-sort-value reads whatever the sorted field holds.
+  priority?: unknown;
   rank?: number;
   meta?: { rank: number };
 };
