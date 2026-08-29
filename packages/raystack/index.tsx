@@ -20,6 +20,17 @@ export {
   type DateRange,
   RangePicker
 } from './components/calendar';
+export {
+  type CalendarGranularity,
+  CalendarPreview,
+  type CalendarPreviewContentProps,
+  type CalendarPreviewGridProps,
+  type CalendarPreviewProps,
+  type CalendarPreviewTriggerProps,
+  type CalendarSelection,
+  type CalendarValue,
+  type DateRangeValue
+} from './components/calendar-preview';
 export { Callout } from './components/callout';
 export {
   Chat,

@@ -1,0 +1,196 @@
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+}
+
+.positioner {
+  z-index: var(--rs-z-index-portal);
+}
+
+/* Selector doubling raises specificity from (0,1,0) to (0,2,0), which beats
+   react-day-picker's compound selectors without !important. */
+.content.content {
+  padding: var(--rs-space-4);
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-4);
+  background: var(--rs-color-background-base-primary);
+  box-shadow: var(--rs-shadow-lifted);
+  width: fit-content;
+  min-width: max-content;
+  max-width: none;
+}
+
+.grid {
+  width: fit-content;
+  background: var(--rs-color-background-base-primary);
+}
+
+.months {
+  display: flex;
+  gap: var(--rs-space-5);
+  position: relative;
+}
+
+.monthCaption {
+  display: flex;
+  align-items: center;
+  height: var(--rs-space-7);
+  margin-bottom: var(--rs-space-3);
+}
+
+.captionLabel {
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+  color: var(--rs-color-foreground-base-primary);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* `.Nav` owns navigation, so RDP's caption is structural only. */
+.captionLabel[aria-hidden="true"] {
+  display: none;
+}
+
+.weeks {
+  position: relative;
+}
+
+.week {
+  display: flex;
+}
+
+/* The weekday header row is shorter than a day row — 32 against 40. */
+.weekday {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--rs-space-10);
+  height: var(--rs-space-9);
+  color: var(--rs-color-foreground-base-secondary);
+  text-align: center;
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+}
+
+.day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--rs-space-10);
+  height: var(--rs-space-10);
+  border: 1px solid transparent;
+  border-radius: var(--rs-radius-5);
+  background-color: var(--rs-color-background-base-primary);
+  color: var(--rs-color-foreground-base-primary);
+  text-align: center;
+}
+
+.day:hover:not(.disabled):not(.outside):not(.selected) {
+  border-color: var(--rs-color-border-accent-emphasis-hover);
+  background-color: transparent;
+}
+
+.selected:not(.rangeMiddle) {
+  border-radius: var(--rs-radius-5);
+  background: var(--rs-color-background-accent-emphasis);
+}
+
+.selected:not(.rangeMiddle) .dayButton {
+  color: var(--rs-color-foreground-base-emphasis);
+}
+
+.rangeMiddle {
+  border-radius: 0;
+  background-color: var(--rs-color-background-neutral-secondary);
+}
+
+.rangeMiddle .dayButton {
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.rangeMiddle:first-of-type {
+  border-top-left-radius: var(--rs-radius-5);
+  border-bottom-left-radius: var(--rs-radius-5);
+}
+
+.rangeMiddle:last-of-type {
+  border-top-right-radius: var(--rs-radius-5);
+  border-bottom-right-radius: var(--rs-radius-5);
+}
+
+.rangeStart:not(.rangeEnd) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.rangeEnd:not(.rangeStart) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.outside {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.dayButton {
+  position: relative;
+  display: grid;
+  place-content: center;
+  width: 100%;
+  height: 100%;
+  padding: unset;
+  border: none;
+  border-radius: inherit;
+  background: inherit;
+  color: inherit;
+  cursor: pointer;
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+
+/* Inset ring: day cells pack edge-to-edge, so an outward ring would collide
+   with the neighbouring day. */
+.dayButton:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-inset);
+}
+
+.dayNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+.day.today .dayButton::after {
+  content: "";
+  position: absolute;
+  bottom: var(--rs-space-2);
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--rs-space-2);
+  height: var(--rs-space-2);
+  border-radius: var(--rs-radius-full);
+  background-color: var(--rs-color-background-accent-emphasis);
+}
+
+.selected.day.today:not(.rangeMiddle) .dayButton::after {
+  background-color: var(--rs-color-foreground-base-emphasis);
+}
