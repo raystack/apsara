@@ -2,12 +2,14 @@
 
 import { Popover as PopoverPrimitive } from '@base-ui/react';
 import { useControlled } from '@base-ui/utils/useControlled';
-import { type ReactNode, useCallback, useMemo } from 'react';
+import { type ReactNode, useCallback, useMemo, useState } from 'react';
 import {
   type CalendarGranularity,
   type CalendarPreviewContextValue,
   CalendarPreviewProvider,
+  type CalendarRangeField,
   type CalendarSelection,
+  type CalendarValidity,
   type CalendarValue,
   type DateRangeValue
 } from './calendar-preview-context';
@@ -39,6 +41,12 @@ export interface CalendarPreviewBaseProps {
   /** @defaultValue 0 */
   weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
+  /**
+   * Reports whether the typed input currently parses and lands in range.
+   * Renders no error UI itself — compose in `Field` for that.
+   */
+  onValidityChange?: (validity: CalendarValidity) => void;
+
   /** @defaultValue false */
   disabled?: boolean;
   /** @defaultValue false */
@@ -58,6 +66,11 @@ export interface CalendarPreviewRangeProps extends CalendarPreviewBaseProps {
   value?: DateRangeValue | null;
   defaultValue?: DateRangeValue | null;
   onValueChange?: (value: DateRangeValue | null) => void;
+  /**
+   * Holds one endpoint read-only in both the input and the grid, so "fix the
+   * start, pick the end" no longer means disabling the whole picker.
+   */
+  lock?: CalendarRangeField;
 }
 
 export interface CalendarPreviewMultipleProps extends CalendarPreviewBaseProps {
@@ -79,6 +92,7 @@ export type CalendarPreviewRootProps =
  */
 interface NormalizedRootProps extends CalendarPreviewBaseProps {
   selection?: CalendarSelection;
+  lock?: CalendarRangeField;
   value?: CalendarValue;
   defaultValue?: CalendarValue;
   onValueChange?: (value: CalendarValue) => void;
@@ -97,6 +111,8 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
     month: monthProp,
     defaultMonth,
     onMonthChange,
+    lock,
+    onValidityChange,
     minDate,
     maxDate,
     isDateUnavailable,
@@ -160,6 +176,34 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
     [setOpen]
   );
 
+  /*
+   * Internal, per State Ownership in the RFC: `.RangeInput` reads it to know
+   * which field is being edited, and `.Grid` to know which endpoint a click
+   * writes. A locked endpoint can never become active.
+   */
+  const [activeFieldState, setActiveFieldState] = useState<CalendarRangeField>(
+    lock === 'from' ? 'to' : 'from'
+  );
+
+  const activeField = lock
+    ? lock === 'from'
+      ? 'to'
+      : 'from'
+    : activeFieldState;
+
+  const setActiveField = useCallback(
+    (field: CalendarRangeField) => {
+      if (lock === field) return;
+      setActiveFieldState(field);
+    },
+    [lock]
+  );
+
+  const reportValidity = useCallback(
+    (validity: CalendarValidity) => onValidityChange?.(validity),
+    [onValidityChange]
+  );
+
   const contextValue = useMemo<CalendarPreviewContextValue>(
     () => ({
       selection,
@@ -170,6 +214,10 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
       setMonth,
       open,
       setOpen,
+      activeField,
+      setActiveField,
+      lock,
+      reportValidity,
       minDate,
       maxDate,
       isDateUnavailable,
@@ -188,6 +236,10 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
       setMonth,
       open,
       setOpen,
+      activeField,
+      setActiveField,
+      lock,
+      reportValidity,
       minDate,
       maxDate,
       isDateUnavailable,

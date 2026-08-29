@@ -50,7 +50,8 @@ export function CalendarPreviewGrid({
     isDateUnavailable,
     timeZone,
     weekStartsOn,
-    disabled
+    disabled,
+    lock
   } = useCalendarPreviewContext('Grid');
 
   const disabledMatchers: Matcher[] = [];
@@ -142,11 +143,26 @@ export function CalendarPreviewGrid({
             ? { from: range.from ?? undefined, to: range.to ?? undefined }
             : undefined
         }
-        onSelect={(next: DateRange | undefined) =>
+        onSelect={(next: DateRange | undefined, triggerDate: Date) => {
+          const held = range ?? { from: null, to: null };
+          /*
+           * With an endpoint locked, RDP's range machine still rewrites both
+           * ends, so take only the clicked day and hold the locked side. This
+           * is what closes the whole-picker-disable gate — "fix the start,
+           * pick the end" no longer means disabling the picker.
+           */
+          if (lock) {
+            setValue(
+              lock === 'from'
+                ? { from: held.from, to: triggerDate }
+                : { from: triggerDate, to: held.to }
+            );
+            return;
+          }
           setValue(
             next ? { from: next.from ?? null, to: next.to ?? null } : null
-          )
-        }
+          );
+        }}
         data-slot='calendar-preview-grid'
         {...shared}
       />

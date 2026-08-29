@@ -2,11 +2,14 @@ export { CalendarPreview } from './calendar-preview';
 export type { CalendarPreviewContentProps } from './calendar-preview-content';
 export type {
   CalendarGranularity,
+  CalendarRangeField,
   CalendarSelection,
+  CalendarValidity,
   CalendarValue,
   DateRangeValue
 } from './calendar-preview-context';
 export type { CalendarPreviewGridProps } from './calendar-preview-grid';
+export type { CalendarPreviewRangeInputProps } from './calendar-preview-range-input';
 export type {
   CalendarPreviewBaseProps,
   CalendarPreviewMultipleProps,

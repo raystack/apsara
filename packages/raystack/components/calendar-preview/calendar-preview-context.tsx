@@ -19,6 +19,14 @@ export interface DateRangeValue {
 
 export type CalendarValue = Date | DateRangeValue | Date[] | null;
 
+/** Which endpoint of a range the next grid click writes to. */
+export type CalendarRangeField = 'from' | 'to';
+
+export interface CalendarValidity {
+  valid: boolean;
+  reason?: 'unparseable' | 'out-of-bounds' | 'unavailable';
+}
+
 export interface CalendarPreviewContextValue<Value = CalendarValue> {
   selection: CalendarSelection;
   granularity: CalendarGranularity;
@@ -29,6 +37,12 @@ export interface CalendarPreviewContextValue<Value = CalendarValue> {
   setMonth: (month: Date) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
+  /** Range only. Which endpoint the next grid click writes to. */
+  activeField: CalendarRangeField;
+  setActiveField: (field: CalendarRangeField) => void;
+  /** Range only. The endpoint held read-only in both the input and the grid. */
+  lock?: CalendarRangeField;
+  reportValidity: (validity: CalendarValidity) => void;
   minDate?: Date;
   maxDate?: Date;
   isDateUnavailable?: (date: Date) => boolean;

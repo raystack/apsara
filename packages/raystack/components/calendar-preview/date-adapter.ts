@@ -31,7 +31,7 @@ const zoned = (date: Date, timeZone?: string) =>
 /**
  * A stable identity for a calendar day, for memo keys and effect deps.
  * Two `Date`s for the same day compare equal here; by reference they never do,
- * which is what forced the old family's `biome-ignore`s.
+ * which is what forced the old family's lint suppressions.
  */
 export function dayKey(date: Date, timeZone?: string): string {
   return zoned(date, timeZone).format('YYYY-MM-DD');

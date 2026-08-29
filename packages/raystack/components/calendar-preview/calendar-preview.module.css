@@ -194,3 +194,20 @@
 .selected.day.today:not(.rangeMiddle) .dayButton::after {
   background-color: var(--rs-color-foreground-base-emphasis);
 }
+
+.rangeInputs {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+}
+
+.rangeSeparator {
+  color: var(--rs-color-foreground-base-tertiary);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* The field the next grid click writes to. */
+.rangeInputs [data-active] {
+  border-color: var(--rs-color-border-accent-emphasis);
+}
