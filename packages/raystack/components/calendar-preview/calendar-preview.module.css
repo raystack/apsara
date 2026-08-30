@@ -322,3 +322,13 @@
   outline: var(--rs-focus-ring);
   outline-offset: var(--rs-focus-ring-offset-accent);
 }
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--rs-space-3);
+  margin-top: var(--rs-space-4);
+  padding-top: var(--rs-space-4);
+  border-top: 1px solid var(--rs-color-border-base-primary);
+}

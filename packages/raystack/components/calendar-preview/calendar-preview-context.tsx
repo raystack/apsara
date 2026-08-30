@@ -40,6 +40,14 @@ export interface CalendarPreviewContextValue<Value = CalendarValue> {
   setMonth: (month: Date) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
+  /** `'explicit'` buffers edits until `.Apply` commits them. */
+  commitMode: 'immediate' | 'explicit';
+  /** True when `commit='explicit'` and there are buffered edits. */
+  hasPendingChanges: boolean;
+  /** Commit buffered edits. A no-op under `commit='immediate'`. */
+  applyValue: () => void;
+  /** Discard buffered edits. A no-op under `commit='immediate'`. */
+  cancelValue: () => void;
   /** Range only. Which endpoint the next grid click writes to. */
   activeField: CalendarRangeField;
   setActiveField: (field: CalendarRangeField) => void;

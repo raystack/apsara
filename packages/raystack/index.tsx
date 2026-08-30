@@ -23,7 +23,10 @@ export {
 export {
   type CalendarGranularity,
   CalendarPreview,
+  type CalendarPreviewApplyProps,
+  type CalendarPreviewCancelProps,
   type CalendarPreviewContentProps,
+  type CalendarPreviewFooterProps,
   type CalendarPreviewGranularityTabsProps,
   type CalendarPreviewGridProps,
   type CalendarPreviewInputProps,

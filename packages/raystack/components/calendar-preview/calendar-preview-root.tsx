@@ -56,6 +56,14 @@ export interface CalendarPreviewBaseProps {
    */
   onValidityChange?: (validity: CalendarValidity) => void;
 
+  /**
+   * `'immediate'` fires `onValueChange` on every interaction. `'explicit'`
+   * buffers edits until `.Apply` commits them, which is what makes a footer
+   * with actions expressible.
+   * @defaultValue 'immediate'
+   */
+  commit?: 'immediate' | 'explicit';
+
   /** @defaultValue false */
   disabled?: boolean;
   /** @defaultValue false */
@@ -132,6 +140,7 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
     defaultMonth,
     onMonthChange,
     lock,
+    commit: commitMode = 'immediate',
     onValidityChange,
     minDate,
     maxDate,
@@ -211,13 +220,35 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
     [setGranularityUnwrapped, onGranularityChange]
   );
 
+  /*
+   * Under `commit='explicit'` every part writes here instead of to the real
+   * value, so the popover can be abandoned without the parent ever seeing the
+   * intermediate states. `undefined` means "nothing buffered".
+   */
+  const [buffer, setBuffer] = useState<CalendarValue | undefined>(undefined);
+
+  const effectiveValue = buffer === undefined ? value : buffer;
+
   const setValue = useCallback(
     (next: CalendarValue) => {
+      if (commitMode === 'explicit') {
+        setBuffer(next);
+        return;
+      }
       setValueUnwrapped(next);
       onValueChange?.(next);
     },
-    [setValueUnwrapped, onValueChange]
+    [commitMode, setValueUnwrapped, onValueChange]
   );
+
+  const applyValue = useCallback(() => {
+    if (commitMode !== 'explicit' || buffer === undefined) return;
+    setValueUnwrapped(buffer);
+    onValueChange?.(buffer);
+    setBuffer(undefined);
+  }, [commitMode, buffer, setValueUnwrapped, onValueChange]);
+
+  const cancelValue = useCallback(() => setBuffer(undefined), []);
 
   const setOpen = useCallback(
     (next: boolean, details?: { reason?: string }) => {
@@ -239,6 +270,9 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
     (next: boolean, eventDetails: PopoverPrimitive.Root.ChangeEventDetails) => {
       // A disabled picker cannot be opened, only closed.
       if (next && disabled) return;
+      // Abandoning the surface discards buffered edits; only `.Apply` keeps
+      // them. Closing via `.Apply` clears the buffer before this runs.
+      if (!next) setBuffer(undefined);
       setOpen(next, { reason: eventDetails?.reason });
     },
     [setOpen, disabled]
@@ -278,12 +312,16 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
       granularity,
       setGranularity,
       granularities: offeredGranularities,
-      value,
+      value: effectiveValue,
       setValue,
       month,
       setMonth,
       open,
       setOpen,
+      commitMode,
+      hasPendingChanges: buffer !== undefined,
+      applyValue,
+      cancelValue,
       activeField,
       setActiveField,
       lock,
@@ -302,12 +340,16 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
       granularity,
       setGranularity,
       offeredGranularities,
-      value,
+      effectiveValue,
       setValue,
       month,
       setMonth,
       open,
       setOpen,
+      commitMode,
+      buffer,
+      applyValue,
+      cancelValue,
       activeField,
       setActiveField,
       lock,
