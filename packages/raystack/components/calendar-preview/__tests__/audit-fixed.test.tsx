@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { getSlot } from '~/test-utils/data-slots';
@@ -43,9 +43,9 @@ describe('audit findings stay fixed', () => {
         <CalendarPreview.MonthGrid />
       </CalendarPreview>
     );
-    const cells = [
-      ...container.querySelectorAll('[data-slot="calendar-preview-month-cell"]')
-    ] as HTMLButtonElement[];
+    const cells = Array.from(
+      container.querySelectorAll('[data-slot="calendar-preview-month-cell"]')
+    ) as HTMLButtonElement[];
     expect(cells.find(c => c.textContent === 'Apr')).not.toBeDisabled();
     expect(cells.find(c => c.textContent === 'Mar')).toBeDisabled();
   });
@@ -85,27 +85,190 @@ describe('audit findings stay fixed', () => {
 
   it('05: switching to Month scrolls the active year into view', async () => {
     const user = userEvent.setup();
+    /*
+     * jsdom has no layout, so `scrollTop` is not observable on its own — the
+     * previous form of this test asserted `scrollTop >= 0`, which is true of
+     * an untouched element. Stand a spy in its place and give the geometry
+     * non-zero values, so the assertion is about the scroll actually happening.
+     */
+    const stub = (name: string, descriptor: PropertyDescriptor) => {
+      const original = Object.getOwnPropertyDescriptor(
+        HTMLElement.prototype,
+        name
+      );
+      Object.defineProperty(HTMLElement.prototype, name, {
+        configurable: true,
+        ...descriptor
+      });
+      return () => {
+        if (original) {
+          Object.defineProperty(HTMLElement.prototype, name, original);
+        } else {
+          Reflect.deleteProperty(HTMLElement.prototype, name);
+        }
+      };
+    };
+
+    const scrolled = vi.fn();
+    const restore = [
+      stub('scrollTop', { get: () => 0, set: scrolled }),
+      stub('offsetTop', { get: () => 900 }),
+      stub('clientHeight', { get: () => 300 })
+    ];
+
+    try {
+      render(
+        <CalendarPreview
+          granularities={['day', 'month']}
+          value={new Date(2030, 5, 1)}
+          minDate={new Date(2020, 0, 1)}
+          maxDate={new Date(2035, 11, 31)}
+        >
+          <CalendarPreview.GranularityTabs />
+          <CalendarPreview.Grid />
+          <CalendarPreview.MonthGrid />
+        </CalendarPreview>
+      );
+
+      expect(scrolled).not.toHaveBeenCalled();
+      await user.click(screen.getByRole('tab', { name: 'Month' }));
+      // 900 - 300/2 + 300/2, centred on the active year.
+      expect(scrolled).toHaveBeenCalledWith(900);
+    } finally {
+      for (const undo of restore) undo();
+    }
+  });
+
+  it('08: a trigger holding a typed field claims no button semantics', async () => {
     const { container } = render(
-      <CalendarPreview
-        granularities={['day', 'month']}
-        value={new Date(2030, 5, 1)}
-        minDate={new Date(2020, 0, 1)}
-        maxDate={new Date(2035, 11, 31)}
-      >
-        <CalendarPreview.GranularityTabs />
-        <CalendarPreview.Grid />
-        <CalendarPreview.MonthGrid />
+      <CalendarPreview>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Grid />
+        </CalendarPreview.Content>
       </CalendarPreview>
     );
 
-    await user.click(screen.getByRole('tab', { name: 'Month' }));
-    const list = getSlot(
+    const trigger = getSlot(
       container,
-      'calendar-preview-month-grid'
+      'calendar-preview-trigger'
     ) as HTMLElement;
-    // jsdom reports zero layout, so assert the effect ran and addressed the
-    // container rather than a specific offset.
-    expect(list).not.toBeNull();
-    expect(list.scrollTop).toBeGreaterThanOrEqual(0);
+    // In ARIA a button's children are presentational, so the field inside was
+    // at risk of never being announced as editable; the tab stop it added sat
+    // in front of the input doing nothing a keyboard user wants.
+    await waitFor(() => expect(trigger).not.toHaveAttribute('role'));
+    expect(trigger).toHaveAttribute('tabindex', '-1');
+    expect(trigger.querySelector('input')).not.toBeNull();
+  });
+
+  it('08: a plain trigger keeps the button semantics it should have', () => {
+    const { container } = render(
+      <CalendarPreview>
+        <CalendarPreview.Trigger>Pick a date</CalendarPreview.Trigger>
+      </CalendarPreview>
+    );
+    const trigger = getSlot(
+      container,
+      'calendar-preview-trigger'
+    ) as HTMLElement;
+    expect(trigger).toHaveAttribute('role', 'button');
+    expect(trigger).toHaveAttribute('tabindex', '0');
+  });
+
+  it('09: clicking the field a second time does not close the calendar', async () => {
+    const user = userEvent.setup();
+    render(
+      <CalendarPreview defaultMonth={MONTH}>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Grid />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+
+    const field = screen.getByRole('textbox');
+    await user.click(field);
+    expect(await screen.findByRole('grid')).toBeInTheDocument();
+
+    // Repositioning the caret is an ordinary thing to do mid-edit.
+    await user.click(field);
+    expect(screen.queryByRole('grid')).toBeInTheDocument();
+  });
+
+  it('09: clicking the trigger outside the field still toggles', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <CalendarPreview defaultMonth={MONTH}>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Grid />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+
+    const trigger = getSlot(
+      container,
+      'calendar-preview-trigger'
+    ) as HTMLElement;
+    await user.click(trigger);
+    expect(await screen.findByRole('grid')).toBeInTheDocument();
+    await user.click(trigger);
+    await waitFor(() =>
+      expect(screen.queryByRole('grid')).not.toBeInTheDocument()
+    );
+  });
+
+  it('opens from the keyboard with ArrowDown, since the trigger has no tab stop', async () => {
+    const user = userEvent.setup();
+    render(
+      <CalendarPreview defaultMonth={MONTH}>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Grid />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+
+    const field = screen.getByRole('textbox');
+    field.focus();
+    await user.keyboard('{ArrowDown}');
+    expect(await screen.findByRole('grid')).toBeInTheDocument();
+  });
+
+  it('12: Escape reverts the draft first and dismisses only on the second press', async () => {
+    const user = userEvent.setup();
+    render(
+      <CalendarPreview defaultMonth={MONTH} value={new Date(2024, 3, 17)}>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Grid />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+
+    const field = screen.getByRole('textbox') as HTMLInputElement;
+    await user.click(field);
+    expect(await screen.findByRole('grid')).toBeInTheDocument();
+
+    await user.type(field, 'nonsense');
+    await user.keyboard('{Escape}');
+    // Correcting a typo must not cost you the calendar.
+    expect(field.value).toBe('17 Apr 2024');
+    expect(screen.queryByRole('grid')).toBeInTheDocument();
+
+    await user.keyboard('{Escape}');
+    await waitFor(() =>
+      expect(screen.queryByRole('grid')).not.toBeInTheDocument()
+    );
   });
 });

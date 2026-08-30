@@ -4,8 +4,8 @@ import { cx } from 'class-variance-authority';
 import {
   type ComponentProps,
   type CSSProperties,
-  useEffect,
-  useRef
+  useCallback,
+  useMemo
 } from 'react';
 import { Skeleton } from '../skeleton';
 import styles from './calendar-preview.module.css';
@@ -14,7 +14,7 @@ import type {
   DateRangeValue
 } from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import { dayKey, firstOfMonth, getYear, isWithinBounds } from './date-adapter';
+import { dayKey, firstOfMonth, getYear } from './date-adapter';
 
 const MONTH_LABELS = [
   'Jan',
@@ -67,6 +67,15 @@ const PERIODS = {
   }
 } as const satisfies Record<Exclude<CalendarGranularity, 'day'>, unknown>;
 
+/** One period button, fully resolved: no date maths left for render time. */
+interface PeriodCell {
+  key: string;
+  label: string;
+  start: Date;
+  selected: boolean;
+  unavailable: boolean;
+}
+
 export interface CalendarPreviewMonthGridProps
   extends Omit<ComponentProps<'div'>, 'children'> {
   /**
@@ -108,27 +117,96 @@ export function CalendarPreviewMonthGrid({
     loading
   } = useCalendarPreviewContext('MonthGrid');
 
-  const activeYearRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
   const anchor = firstSelected(value) ?? new Date();
   const anchorYear = getYear(anchor, timeZone);
 
   /*
-   * Bring the active year into view. With an empty dependency array this ran
-   * once against a null ref, because the component returns `null` while the
-   * day granularity is active — which is what `.Content` mounts with — so
-   * switching to Month landed the reader at the top of a list spanning
-   * decades. Scoped to the scroll container: an unqualified `scrollIntoView`
-   * inside a portal can move the page behind the popover.
+   * A callback ref rather than an effect. The effect form could not see the
+   * scroll container on mount — a child's ref attaches before its parent's, so
+   * `scrollRef.current` was still null — and a dependency array is the wrong
+   * shape for "the element to scroll to has changed". React runs this exactly
+   * when that element attaches: when the grid mounts, and again whenever the
+   * anchor year moves the ref to a different section.
+   *
+   * The container is read from the node rather than captured, both to survive
+   * that ordering and to keep the scroll scoped: an unqualified
+   * `scrollIntoView` inside a portal can move the page behind the popover.
+   * Every year element is a direct child of the scroll container.
    */
-  useEffect(() => {
-    const target = activeYearRef.current;
-    const container = scrollRef.current;
-    if (!target || !container) return;
-    container.scrollTop =
-      target.offsetTop - container.clientHeight / 2 + target.clientHeight / 2;
-  }, [granularity, anchorYear]);
+  const scrollActiveYearIntoView = useCallback(
+    (node: HTMLDivElement | null) => {
+      const container = node?.parentElement;
+      if (!node || !container) return;
+      container.scrollTop =
+        node.offsetTop - container.clientHeight / 2 + node.clientHeight / 2;
+    },
+    []
+  );
+
+  /*
+   * Every cell costs two `firstOfMonth` parses, a `dayKey` format and a bounds
+   * pair — around five dayjs constructions. A picker bounded to a couple of
+   * decades has hundreds of cells, and rebuilding them on every context change
+   * (a keystroke in the input, the popover opening) was the whole list each
+   * time. Resolved once here instead, keyed on what the cells actually depend
+   * on. `disabled` is deliberately absent: it gates the button at render time
+   * and must not rebuild the dates.
+   */
+  const sections = useMemo(() => {
+    if (granularity === 'day') return [];
+
+    const period = PERIODS[granularity];
+    const monthSpan = 12 / period.perYear;
+    const firstYear = minDate
+      ? getYear(minDate, timeZone)
+      : anchorYear - yearWindow;
+    const lastYear = maxDate
+      ? getYear(maxDate, timeZone)
+      : anchorYear + yearWindow;
+    const selectedDates = selectedDatesIn(value);
+
+    const built: { year: number; cells: PeriodCell[] }[] = [];
+    for (let year = firstYear; year <= lastYear; year += 1) {
+      const cells = Array.from({ length: period.perYear }, (_, index) => {
+        const startMonth = period.startMonth(index);
+        const start = firstOfMonth(year, startMonth, timeZone);
+        const nextStart = firstOfMonth(
+          year + (startMonth + monthSpan >= 12 ? 1 : 0),
+          (startMonth + monthSpan) % 12,
+          timeZone
+        );
+        /*
+         * Overlap, not first-day: a `minDate` falling mid-month used to
+         * disable the whole month and make every valid day in it unreachable.
+         * `.Nav` answers the same question this way.
+         */
+        const lastInstant = new Date(nextStart.getTime() - 1);
+        const outOfBounds =
+          (minDate && lastInstant < minDate) || (maxDate && start > maxDate);
+
+        return {
+          key: dayKey(start, timeZone),
+          label: granularity === 'year' ? String(year) : period.label(index),
+          start,
+          selected: selectedDates.some(
+            date => date >= start && date < nextStart
+          ),
+          unavailable: !!outOfBounds || !!isDateUnavailable?.(start)
+        } satisfies PeriodCell;
+      });
+      built.push({ year, cells });
+    }
+    return built;
+  }, [
+    granularity,
+    minDate,
+    maxDate,
+    anchorYear,
+    yearWindow,
+    value,
+    isDateUnavailable,
+    timeZone
+  ]);
 
   if (granularity === 'day') return null;
 
@@ -149,19 +227,7 @@ export function CalendarPreviewMonthGrid({
   }
 
   const period = PERIODS[granularity];
-  const monthSpan = 12 / period.perYear;
   const writable = !disabled && !readOnly;
-
-  const firstYear = minDate
-    ? getYear(minDate, timeZone)
-    : anchorYear - yearWindow;
-  const lastYear = maxDate
-    ? getYear(maxDate, timeZone)
-    : anchorYear + yearWindow;
-  const years: number[] = [];
-  for (let year = firstYear; year <= lastYear; year += 1) years.push(year);
-
-  const selectedDates = selectedDatesIn(value);
 
   const commit = (start: Date) => {
     if (!writable) return;
@@ -186,84 +252,59 @@ export function CalendarPreviewMonthGrid({
     setValue(start);
   };
 
-  const renderCell = (year: number, index: number) => {
-    const start = firstOfMonth(year, period.startMonth(index), timeZone);
-    const key = dayKey(start, timeZone);
-    const nextStart = firstOfMonth(
-      year + (period.startMonth(index) + monthSpan >= 12 ? 1 : 0),
-      (period.startMonth(index) + monthSpan) % 12,
-      timeZone
-    );
-    const selected = selectedDates.some(
-      date => date >= start && date < nextStart
-    );
-    /*
-     * Overlap, not first-day: a `minDate` falling mid-month used to disable the
-     * whole month and make every valid day in it unreachable. `.Nav` answers
-     * the same question this way.
-     */
-    const lastInstant = new Date(nextStart.getTime() - 1);
-    const outOfBounds =
-      (minDate && lastInstant < minDate) || (maxDate && start > maxDate);
-    const unavailable = !!outOfBounds || isDateUnavailable?.(start);
-
-    return (
-      <button
-        key={key}
-        type='button'
-        className={styles.monthCell}
-        disabled={disabled || unavailable}
-        aria-pressed={selected}
-        data-selected={selected || undefined}
-        data-slot='calendar-preview-month-cell'
-        onClick={() => commit(start)}
-      >
-        {granularity === 'year' ? String(year) : period.label(index)}
-      </button>
-    );
-  };
+  const renderCell = (cell: PeriodCell) => (
+    <button
+      key={cell.key}
+      type='button'
+      className={styles.monthCell}
+      disabled={disabled || cell.unavailable}
+      aria-pressed={cell.selected}
+      data-selected={cell.selected || undefined}
+      data-slot='calendar-preview-month-cell'
+      onClick={() => commit(cell.start)}
+    >
+      {cell.label}
+    </button>
+  );
 
   return (
     <div
-      ref={scrollRef}
       className={cx(styles.monthGrid, className)}
       data-granularity={granularity}
       data-slot='calendar-preview-month-grid'
       {...props}
     >
-      {period.grouped
-        ? years.map(year => (
+      {sections.map(({ year, cells }) =>
+        period.grouped ? (
+          <div
+            key={year}
+            ref={year === anchorYear ? scrollActiveYearIntoView : undefined}
+            className={styles.monthGridSection}
+          >
             <div
-              key={year}
-              ref={year === anchorYear ? activeYearRef : undefined}
-              className={styles.monthGridSection}
+              className={styles.monthGridYear}
+              data-slot='calendar-preview-month-grid-year'
             >
-              <div
-                className={styles.monthGridYear}
-                data-slot='calendar-preview-month-grid-year'
-              >
-                {year}
-              </div>
-              <div
-                className={styles.monthGridCells}
-                style={{ '--columns': period.columns } as CSSProperties}
-              >
-                {Array.from({ length: period.perYear }, (_, index) =>
-                  renderCell(year, index)
-                )}
-              </div>
+              {year}
             </div>
-          ))
-        : years.map(year => (
             <div
-              key={year}
-              ref={year === anchorYear ? activeYearRef : undefined}
               className={styles.monthGridCells}
-              style={{ '--columns': 1 } as CSSProperties}
+              style={{ '--columns': period.columns } as CSSProperties}
             >
-              {renderCell(year, 0)}
+              {cells.map(renderCell)}
             </div>
-          ))}
+          </div>
+        ) : (
+          <div
+            key={year}
+            ref={year === anchorYear ? scrollActiveYearIntoView : undefined}
+            className={styles.monthGridCells}
+            style={{ '--columns': 1 } as CSSProperties}
+          >
+            {cells.map(renderCell)}
+          </div>
+        )
+      )}
     </div>
   );
 }

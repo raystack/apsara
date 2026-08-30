@@ -2,11 +2,20 @@
 
 import { mergeProps } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { type ChangeEvent, type KeyboardEvent, useRef, useState } from 'react';
+import {
+  type ChangeEvent,
+  type KeyboardEvent,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import { Input, type InputProps } from '../input/input';
 import styles from './calendar-preview.module.css';
 import type { CalendarValidity } from './calendar-preview-context';
-import { useCalendarPreviewContext } from './calendar-preview-context';
+import {
+  useCalendarPreviewContext,
+  useInsideTrigger
+} from './calendar-preview-context';
 import {
   dayKey,
   formatForGranularity,
@@ -45,8 +54,22 @@ export function CalendarPreviewInput({
     format,
     timeZone,
     disabled,
-    readOnly
+    readOnly,
+    setOpen,
+    registerTriggerField
   } = useCalendarPreviewContext<Date | null>('Input');
+
+  /*
+   * Tell the root that the typed field is inside `.Trigger`, which is what
+   * lets the trigger drop its button role and `.Content` decline the focus it
+   * would otherwise steal from this field. Nothing happens when the field is
+   * composed inside `.Content` instead, where neither adjustment applies.
+   */
+  const insideTrigger = useInsideTrigger();
+  useEffect(() => {
+    if (!insideTrigger) return;
+    return registerTriggerField();
+  }, [insideTrigger, registerTriggerField]);
 
   const committed = value
     ? formatForGranularity(value, granularity, format, timeZone)
@@ -76,7 +99,7 @@ export function CalendarPreviewInput({
   }
 
   const validate = (date: Date): CalendarValidity => {
-    if (!isWithinBounds(date, minDate, maxDate)) {
+    if (!isWithinBounds(date, minDate, maxDate, timeZone)) {
       return { valid: false, reason: 'out-of-bounds' };
     }
     if (isDateUnavailable?.(date)) {
@@ -167,7 +190,27 @@ export function CalendarPreviewInput({
                 commit(draft);
                 setDraft(null);
               }
-              if (event.key === 'Escape') setDraft(null);
+              /*
+               * The trigger around this field carries no tab stop, so ArrowDown
+               * is how a keyboard reaches the calendar — the combobox
+               * convention, and an explicit gesture rather than the focus race
+               * the RFC retired.
+               */
+              if (event.key === 'ArrowDown' && insideTrigger) {
+                event.preventDefault();
+                setOpen(true);
+              }
+              /*
+               * Two-stage, as a combobox is: the first Escape reverts the text,
+               * a second dismisses the popover. Letting one press do both meant
+               * correcting a typo cost you the calendar. React's
+               * `stopPropagation` reaches the native event, which is what Base
+               * UI's document-level dismiss listener is on.
+               */
+              if (event.key === 'Escape' && draft !== null) {
+                event.stopPropagation();
+                setDraft(null);
+              }
             }
           } as never,
           props as never

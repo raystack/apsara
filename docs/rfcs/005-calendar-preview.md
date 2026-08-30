@@ -25,7 +25,7 @@ Breaking change, no compatibility shim. `CalendarPreview` ships alongside the cu
   - [Goals and Non-Goals](#goals-and-non-goals)
   - [Proposal](#proposal)
     - [API at a Glance](#api-at-a-glance)
-    - [Recipes](#recipes)
+    - [Recipes — resolved: not shipping](#recipes--resolved-not-shipping)
     - [Root Props](#root-props)
     - [Parts](#parts)
     - [State Ownership](#state-ownership)
@@ -112,10 +112,7 @@ useEffect(() => {
 ```tsx
 import { CalendarPreview } from '@raystack/apsara';
 
-// Zero-config recipe for the common case
-<CalendarPreview.DatePicker value={date} onValueChange={setDate} />
-
-// Same component, fully composed, when you need control
+// Parts, always — there is no zero-config form. See Open Items #6.
 <CalendarPreview selection="range" value={range} onValueChange={setRange}>
   <CalendarPreview.Trigger>
     <CalendarPreview.RangeInput />
@@ -154,21 +151,21 @@ Full part tree:
         └── <CalendarPreview.Apply />
 ```
 
-### Recipes
+### Recipes — resolved: not shipping
 
-Pre-composed compositions hung off the same object, implemented as compositions of the parts below — no private code paths.
+Earlier drafts hung five pre-composed pickers off the same object —
+`.DatePicker`, `.RangePicker`, `.DateTimePicker`, `.MonthPicker`, `.Inline`.
+**They are not built, and Open Item #6 is resolved against them.**
 
-```tsx
-<CalendarPreview.DatePicker     value={d} onValueChange={setD} />
-<CalendarPreview.RangePicker    value={r} onValueChange={setR} />
-<CalendarPreview.DateTimePicker value={d} onValueChange={setD} />
-<CalendarPreview.MonthPicker    value={d} onValueChange={setD} granularity="month" />
-<CalendarPreview.Inline         value={d} onValueChange={setD} />   // no popover
-```
+Two reasons, both raised in this document before the decision was taken.
+Nothing in the library hangs a pre-composed assembly off a root: roots carry
+parts, re-exported Base UI primitives, hooks (`Combobox.useFilter`), factories
+(`Dialog.createHandle`) and providers (`Toast.Provider`). And `.Input` (a part)
+sitting beside `.DatePicker` (a whole picker) in one namespace gives the call
+site nothing to tell them apart.
 
-**Recipes take no `slotProps` and no escape hatches.** The moment you need to change what is inside the popover, you drop to parts — there is no third state where you configure structure through props.
-
-**Recipes have no precedent.** Nothing in the library hangs a pre-composed assembly off a root: what roots carry today is parts, re-exported Base UI primitives, hooks (`Combobox.useFilter`), factories (`Dialog.createHandle`), and providers (`Toast.Provider`). The nearest thing is `CodeBlock.LanguageSelect`, a context-bound `Select` wrapper whose siblings flatten into a name prefix (`LanguageSelectTrigger`, `LanguageSelectContent`) instead of nesting. So this is a new precedent, at one cost: `.Input` (a part) and `.DatePicker` (a whole picker) share a namespace with nothing at the call site telling them apart. See [Open Items](#open-items) #8.
+What they were for survives as copyable compositions on the documentation page,
+which cost nothing to keep current and put no new precedent into the API.
 
 ### Root Props
 
@@ -306,7 +303,7 @@ The last row is the point of the exercise: **`use-picker-popover.ts` is deleted 
 
 ### Conventions This Follows
 
-Every rule below is an existing pattern in the library, not an invention. [Recipes](#recipes) are the one thing in this RFC with no precedent — see the note there.
+Every rule below is an existing pattern in the library, not an invention. Recipes were the one thing here with no precedent, and are [not shipping](#recipes--resolved-not-shipping).
 
 | Convention | Canonical source |
 |---|---|
@@ -338,10 +335,9 @@ packages/raystack/components/calendar-preview/
 ├── calendar-preview-grid.tsx      # the ONLY file importing react-day-picker
 ├── calendar-preview-<part>.tsx    # trigger, input (Input + RangeInput), content,
 │                                  # nav, month-grid, presets, time-field, footer
-├── recipes.tsx                    # DatePicker / RangePicker / DateTimePicker / MonthPicker / Inline
 ├── date-adapter.ts                # ALL date-library plugin setup lives here
 ├── calendar-preview.module.css
-└── __tests__/                     # calendar-preview, recipes, granularity, data-slots
+└── __tests__/                     # calendar-preview, granularity, data-slots, slot and export guards
 ```
 
 Context follows the newest house form: a `part`-aware hook that throws with the offending part name (`useChatPanelContext`), value stored as `unknown` and cast at the hook boundary (the `Combobox` technique), so the root stays generic over selection mode without a generic `createContext`.
@@ -431,8 +427,8 @@ Mechanical throughout, which makes most of it codemod-able.
 
 | Today | Rewrite |
 |---|---|
-| `<Calendar mode="single" selected={d} onSelect={setD} />` | `<CalendarPreview.Inline value={d} onValueChange={setD} />` |
-| `<Calendar mode="range" … />` | `<CalendarPreview.Inline selection="range" … />` |
+| `<Calendar mode="single" selected={d} onSelect={setD} />` | `<CalendarPreview value={d} onValueChange={setD}><CalendarPreview.Nav /><CalendarPreview.Grid /></CalendarPreview>` |
+| `<Calendar mode="range" … />` | the same, with `selection="range"` — parts outside `.Content` render inline |
 | `<DatePicker value={d} onSelect={setD} />` | `<CalendarPreview.DatePicker value={d} onValueChange={setD} />` |
 | `<RangePicker value={r} onSelect={setR} />` | `<CalendarPreview.RangePicker value={r} onValueChange={setR} />` |
 | `dateFormat="DD/MM/YYYY"` | `format="DD/MM/YYYY"` |
@@ -464,9 +460,9 @@ These land with the rewrite, not after it.
 
 | Phase | Content | Exit criteria |
 |---|---|---|
-| **1. Foundation** | `date-adapter.ts` (incl. the date-fns-vs-dayjs bundle measurement), context, root, `Trigger`, `Content`, `Grid` | `<CalendarPreview.Inline />` renders; `data-slots.test.tsx` green |
-| **2. Inputs and recipes** | `Input`, `RangeInput`, `Nav`, `DatePicker` / `RangePicker` / `Inline` recipes | Parity with today's behaviour, including the whole `date-picker.test.tsx` regression suite ported |
-| **3. New surfaces** | `Presets`, `Footer`, `Apply`/`Cancel`, `commit='explicit'`, `GranularityTabs`, `MonthGrid`, `TimeField`, `DateTimePicker` / `MonthPicker` | Granularity switching and the month/quarter/half-year/year grids work |
+| **1. Foundation** | `date-adapter.ts` (incl. the date-fns-vs-dayjs bundle measurement), context, root, `Trigger`, `Content`, `Grid` | Root + `Grid` render inline; `data-slots.test.tsx` green |
+| **2. Inputs** | `Input`, `RangeInput`, `Nav` | Parity with today's behaviour, including the whole `date-picker.test.tsx` regression suite ported |
+| **3. New surfaces** | `Presets`, `Footer`, `Apply`/`Cancel`, `commit='explicit'`, `GranularityTabs`, `MonthGrid`, `TimeField` | Granularity switching and the month/quarter/half-year/year grids work |
 | **4. Integrations** | `FilterChip` rewrite, `DataView` calendar filter slot, `filter-operations` on the adapter | No `slotProps` merge, no hashed-class CSS |
 | **5. Docs and ship** | `index.mdx` + `demo.ts` **with an interactive `playground`** + `props.ts`; CHANGELOG entry | All eight `SKILL.md` checklist items pass |
 | **6. Removal** | Delete `components/calendar/`, drop the old exports | One release after phase 5 |
@@ -498,7 +494,8 @@ The eight `SKILL.md` checklist items, plus the four this rewrite exists to fix.
 | 3 | **Time zones.** Does the rewrite own tz conversion end-to-end, or stay the pass-through it is today? | Phase 1 |
 | 4 | **`multiple` selection.** No current consumer needs it. Ship it, or keep the union two-armed? | Phase 1 |
 | 5 | **Announcing the break.** No changesets setup exists, and `packages/raystack/package.json` reads `0.48.0` while `CHANGELOG.md` already carries a `0.49.0` section. A `data-slot` rename has nothing but reviewer vigilance behind it. Introduce changesets, or keep hand-written prose? | Phase 5 |
-| 6 | **Do recipes ship at all?** No component hangs a pre-composed assembly off a root today, and `.Input` sitting beside `.DatePicker` in one namespace reads badly. The alternative is parts only, with the five compositions living in the docs as copyable examples. | Phase 2 — its exit criteria name them |
+| 6 | ~~**Do recipes ship at all?**~~ **Resolved: no.** No component hangs a pre-composed assembly off a root, and `.Input` beside `.DatePicker` in one namespace reads badly. Parts only; the five compositions live in the docs as copyable examples. | Resolved |
+| 7 | **Does the context become a selector store?** One context object means a month step re-renders every part. Splitting stable actions from volatile state does not help — the parts read both — so the shape that would work is a store read through selectors. Nothing renders expensively enough to justify it today; `.MonthGrid` resolves its cells in a memo. | Revisit if a part gets expensive |
 
 ## Alternatives
 

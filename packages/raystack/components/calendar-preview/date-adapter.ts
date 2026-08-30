@@ -248,17 +248,34 @@ export function parseAcrossGranularities(
   return null;
 }
 
+/**
+ * The same day identity as `dayKey`, as a sortable integer — `20240417`.
+ *
+ * The comparisons below used to format both sides to `YYYY-MM-DD` and compare
+ * the strings. Correct, but formatting is the slow half of dayjs, and these
+ * three are now the date predicates behind `DataTable` and `DataView`
+ * filtering, where they run once per row per filter. Reading the three fields
+ * costs no string building and orders identically.
+ *
+ * `dayKey` keeps returning the string: it is a React key and a `data-*` value
+ * as much as a comparison key, and it reads as a date when debugging.
+ */
+function dayOrdinal(date: Date, timeZone?: string): number {
+  const value = zoned(date, timeZone);
+  return value.year() * 10000 + (value.month() + 1) * 100 + value.date();
+}
+
 /** Day-granularity comparisons, so callers never touch a date library. */
 export function isSameDay(a: Date, b: Date, timeZone?: string): boolean {
-  return dayKey(a, timeZone) === dayKey(b, timeZone);
+  return dayOrdinal(a, timeZone) === dayOrdinal(b, timeZone);
 }
 
 export function isBeforeDay(a: Date, b: Date, timeZone?: string): boolean {
-  return dayKey(a, timeZone) < dayKey(b, timeZone);
+  return dayOrdinal(a, timeZone) < dayOrdinal(b, timeZone);
 }
 
 export function isAfterDay(a: Date, b: Date, timeZone?: string): boolean {
-  return dayKey(a, timeZone) > dayKey(b, timeZone);
+  return dayOrdinal(a, timeZone) > dayOrdinal(b, timeZone);
 }
 
 /**
@@ -280,11 +297,10 @@ export function isWithinBounds(
   maxDate?: Date,
   timeZone?: string
 ): boolean {
-  // Compared on `dayKey`, which is zone-aware; the previous `isSameOrAfter`
-  // pair worked on unzoned dayjs objects, so near midnight the typed field and
-  // the grid disagreed about whether the same date was in range.
-  const key = dayKey(date, timeZone);
-  if (minDate && key < dayKey(minDate, timeZone)) return false;
-  if (maxDate && key > dayKey(maxDate, timeZone)) return false;
+  // Compared by zoned day, inclusive at both ends. The previous
+  // `isSameOrAfter` pair worked on unzoned dayjs objects, so near midnight the
+  // typed field and the grid disagreed about whether a date was in range.
+  if (minDate && isBeforeDay(date, minDate, timeZone)) return false;
+  if (maxDate && isAfterDay(date, maxDate, timeZone)) return false;
   return true;
 }

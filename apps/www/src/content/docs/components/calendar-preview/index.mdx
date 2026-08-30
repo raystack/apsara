@@ -37,7 +37,7 @@ import { CalendarPreview } from '@raystack/apsara'
   <CalendarPreview.Trigger>
     <CalendarPreview.Input />
   </CalendarPreview.Trigger>
-  <CalendarPreview.Content initialFocus={false}>
+  <CalendarPreview.Content>
     <CalendarPreview.GranularityTabs />
     <CalendarPreview.Nav />
     <CalendarPreview.Grid />
@@ -58,6 +58,14 @@ Drop any part you do not need. `Grid` renders for the day granularity and
 ### Root
 
 Owns every piece of state and provides it to the parts.
+
+The table below flattens the root props for reading. The exported
+`CalendarPreviewProps` is a discriminated union of `CalendarPreviewSingleProps`,
+`CalendarPreviewRangeProps` and `CalendarPreviewMultipleProps`: `selection`
+narrows `value`, `defaultValue` and `onValueChange` to a single shape, and
+`lock` exists only on the range arm. Type a wrapper against one of those arms,
+or against `CalendarPreviewBaseProps` for the props that do not vary by
+selection — `Omit` over the union collapses it and loses the discriminant.
 
 <auto-type-table path="./props.ts" name="CalendarPreviewProps" />
 
@@ -244,12 +252,19 @@ by semver, so styling may target them and a rename is a breaking change.
 
 - The day grid is react-day-picker's, which supplies the grid roles, roving
   tabindex and arrow-key navigation.
-- `Trigger` renders a non-button element with button semantics supplied by Base
-  UI: it carries `role`, `tabindex`, `aria-haspopup`, `aria-expanded`, and
-  `aria-disabled` rather than a `disabled` attribute.
-- Pass `initialFocus={false}` to `Content` whenever the trigger contains a typed
-  field. Without it the popup takes focus on open and keystrokes never reach the
-  field.
+- `Trigger` renders a non-button element. With a plain trigger — a label, a
+  calendar icon — Base UI supplies the button semantics: `role`, `tabindex`,
+  `aria-haspopup`, `aria-expanded`, and `aria-disabled` rather than a `disabled`
+  attribute.
+- When the trigger contains `Input` or `RangeInput` instead, it drops that
+  button role and its tab stop, because in ARIA a button's children are
+  presentational and the field would not be announced as editable. Tab reaches
+  the field directly, and `ArrowDown` in it opens the calendar.
+- `Content` then declines initial focus on its own, so keystrokes reach the
+  field rather than the grid. Pass `initialFocus` explicitly only to override
+  that.
+- `Escape` in a typed field is two-stage, as in a combobox: the first press
+  reverts the text being edited, the second dismisses the popover.
 - The `Nav` caption is an `aria-live="polite"` region, so changing month is
   announced.
 - `MonthGrid` cells are buttons with `aria-pressed`, not tabs — the design reuses

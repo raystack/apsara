@@ -12,6 +12,15 @@ export interface DateRangeValue {
   to: Date | null;
 }
 
+/**
+ * Every root prop in one table. The *exported* type is narrower: it is a
+ * discriminated union of `CalendarPreviewSingleProps`,
+ * `CalendarPreviewRangeProps` and `CalendarPreviewMultipleProps`, so
+ * `selection` narrows `value`, `defaultValue` and `onValueChange` to one shape
+ * and `lock` exists only on the range arm. Type a wrapper against those three
+ * — or against `CalendarPreviewBaseProps` for the selection-independent props
+ * — rather than against this flattened view.
+ */
 export interface CalendarPreviewProps {
   /**
    * What may be selected. `range` pairs with `CalendarPreview.RangeInput`.
@@ -128,8 +137,9 @@ export interface CalendarPreviewContentProps {
   /** @defaultValue 4 */
   sideOffset?: number;
   /**
-   * Pass `false` when the trigger contains a typed field, or the popup takes
-   * focus on open and keystrokes never reach it.
+   * Whether the popup takes focus when it opens. Defaults to `false` when the
+   * trigger contains a typed field — otherwise keystrokes would reach the grid
+   * instead of the field — and to Base UI's behaviour otherwise.
    */
   initialFocus?: boolean;
   /** Custom CSS class names */

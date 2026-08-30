@@ -26,8 +26,11 @@ import { DataViewFilterValues } from '../data-view.types';
  * that registers dayjs plugins. Extending them here as well made the module
  * order-dependent — the failure class behind the 0.49.0 P0.
  *
- * A row value that will not parse compares false against every operator,
- * which is what an unfilterable cell should do.
+ * A row value that will not parse compares false against every operator that
+ * asserts a relationship, which is what an unfilterable cell should do. `neq`
+ * is the exception, and deliberately: it negates `eq`, so an empty or
+ * unparseable cell is "not equal to" any date and survives the filter. That
+ * matches the behaviour the old operators had.
  */
 const compare = (
   a: unknown,

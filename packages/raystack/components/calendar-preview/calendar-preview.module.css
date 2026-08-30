@@ -32,28 +32,6 @@
   position: relative;
 }
 
-.monthCaption {
-  display: flex;
-  align-items: center;
-  height: var(--rs-space-7);
-  margin-bottom: var(--rs-space-3);
-}
-
-.captionLabel {
-  font-weight: var(--rs-font-weight-medium);
-  font-size: var(--rs-font-size-mini);
-  line-height: var(--rs-line-height-mini);
-  letter-spacing: var(--rs-letter-spacing-mini);
-  color: var(--rs-color-foreground-base-primary);
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-/* `.Nav` owns navigation, so RDP's caption is structural only. */
-.captionLabel[aria-hidden="true"] {
-  display: none;
-}
-
 .weeks {
   position: relative;
 }
@@ -433,9 +411,15 @@
   outline-offset: var(--rs-focus-ring-offset-accent);
 }
 
+/* Holds the popover at the width the day grid will have, so the surface does
+   not jump when the data lands. Seven day columns is not a --rs-* size, so it
+   is a component-local custom property, as `.monthGrid` does with its height.
+   The `--rs-space-12` that used to sit here was decoration: it resolves to
+   56px and the hardcoded minimum overrode it every time. */
 .gridSkeleton {
-  width: var(--rs-space-12);
-  min-width: 280px;
+  --calendar-preview-grid-width: 280px;
+
+  width: var(--calendar-preview-grid-width);
 }
 
 .gridSkeletonRows {

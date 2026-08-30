@@ -61,7 +61,12 @@ export interface CalendarPreviewContextValue<Value = CalendarValue> {
   applyValue: () => void;
   /** Discard buffered edits. A no-op under `commit='immediate'`. */
   cancelValue: () => void;
-  /** Range only. Which endpoint the next grid click writes to. */
+  /**
+   * Range only. Which endpoint the next `.MonthGrid` or `.TimeField` write
+   * lands on, tracked from focus in `.RangeInput`. `.Grid` does not read it:
+   * react-day-picker's own range machine decides which end a day click moves,
+   * and it agrees with the focused field in the cases that matter.
+   */
   activeField: CalendarRangeField;
   setActiveField: (field: CalendarRangeField) => void;
   /** Range only. The endpoint held read-only in both the input and the grid. */
@@ -80,6 +85,19 @@ export interface CalendarPreviewContextValue<Value = CalendarValue> {
   loading: boolean;
   disabled: boolean;
   readOnly: boolean;
+  /**
+   * True while a typed field is mounted inside `.Trigger`. Three things turn
+   * on it: the trigger stops claiming button semantics it must not have around
+   * a textbox, a click inside that field stops toggling an open popover, and
+   * `.Content` declines the initial focus it would otherwise steal from the
+   * field the user is typing into.
+   */
+  triggerOwnsFocus: boolean;
+  /**
+   * Called by a typed field that finds itself inside `.Trigger`. Returns its
+   * own unregister, so it is used straight as an effect cleanup.
+   */
+  registerTriggerField: () => () => void;
 }
 
 /*
@@ -105,6 +123,22 @@ export function useCalendarPreviewContext<Value = CalendarValue>(
     );
   }
   return context as CalendarPreviewContextValue<Value>;
+}
+
+/*
+ * A second, deliberately tiny context, provided by `.Trigger` over its own
+ * subtree only. It answers one question the root cannot — *where* a typed
+ * field is composed, not merely that one exists — because `.Input` is equally
+ * valid inside `.Content`, where none of the trigger's adjustments apply.
+ */
+const CalendarPreviewTriggerScopeContext = createContext(false);
+
+export const CalendarPreviewTriggerScope =
+  CalendarPreviewTriggerScopeContext.Provider;
+
+/** True when the calling part is composed inside `.Trigger`. */
+export function useInsideTrigger(): boolean {
+  return useContext(CalendarPreviewTriggerScopeContext);
 }
 
 /**

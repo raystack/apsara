@@ -2,7 +2,13 @@
 
 import { mergeProps } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { type ChangeEvent, type KeyboardEvent, useRef, useState } from 'react';
+import {
+  type ChangeEvent,
+  type KeyboardEvent,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import { Input, type InputProps } from '../input/input';
 import styles from './calendar-preview.module.css';
 import type {
@@ -10,7 +16,10 @@ import type {
   CalendarValidity,
   DateRangeValue
 } from './calendar-preview-context';
-import { useCalendarPreviewContext } from './calendar-preview-context';
+import {
+  useCalendarPreviewContext,
+  useInsideTrigger
+} from './calendar-preview-context';
 import {
   dayKey,
   formatForGranularity,
@@ -65,8 +74,21 @@ export function CalendarPreviewRangeInput({
     format,
     timeZone,
     disabled,
-    readOnly
+    readOnly,
+    setOpen,
+    registerTriggerField
   } = useCalendarPreviewContext<DateRangeValue | null>('RangeInput');
+
+  /*
+   * Both fields count as one registration — the root counts registrations, and
+   * one is enough to say the trigger owns focus. See `.Input` for what the
+   * flag changes.
+   */
+  const insideTrigger = useInsideTrigger();
+  useEffect(() => {
+    if (!insideTrigger) return;
+    return registerTriggerField();
+  }, [insideTrigger, registerTriggerField]);
 
   const range = value ?? EMPTY_RANGE;
 
@@ -121,7 +143,7 @@ export function CalendarPreviewRangeInput({
   }
 
   const validate = (date: Date): CalendarValidity => {
-    if (!isWithinBounds(date, minDate, maxDate)) {
+    if (!isWithinBounds(date, minDate, maxDate, timeZone)) {
       return { valid: false, reason: 'out-of-bounds' };
     }
     if (isDateUnavailable?.(date)) {
@@ -259,7 +281,16 @@ export function CalendarPreviewRangeInput({
                   endRef.current?.focus();
                 }
               }
-              if (event.key === 'Escape') {
+              // See `.Input`: ArrowDown is the keyboard's way into a calendar
+              // whose trigger carries no tab stop.
+              if (event.key === 'ArrowDown' && insideTrigger) {
+                event.preventDefault();
+                setOpen(true);
+              }
+              // Two-stage, as a combobox is: revert the text first, dismiss on
+              // the second press.
+              if (event.key === 'Escape' && draft[field] !== null) {
+                event.stopPropagation();
                 setDraft(current => ({ ...current, [field]: null }));
               }
             }

@@ -2,7 +2,14 @@
 
 import { Popover as PopoverPrimitive } from '@base-ui/react';
 import { useControlled } from '@base-ui/utils/useControlled';
-import { type ReactNode, useCallback, useMemo, useRef, useState } from 'react';
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import {
   type CalendarGranularity,
   type CalendarPreviewContextValue,
@@ -14,7 +21,7 @@ import {
   type DateRangeValue,
   isSameValue
 } from './calendar-preview-context';
-import { DEFAULT_FORMAT, startOfMonth } from './date-adapter';
+import { DEFAULT_FORMAT, dayKey, startOfMonth } from './date-adapter';
 
 /**
  * Accompanies every value change with the granularity that produced it. A
@@ -267,10 +274,20 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
 
   const effectiveValue = buffer === undefined ? value : buffer;
 
+  /*
+   * Read through a ref, not closed over. The active granularity is only ever
+   * the fallback for a value change that does not name one, so depending on it
+   * turned `setValue`'s identity over — and with it the whole context object —
+   * every time the tab changed. Reading it at call time is also the more
+   * correct of the two: it cannot be a stale closure.
+   */
+  const granularityRef = useRef(granularity);
+  granularityRef.current = granularity;
+
   const setValue = useCallback(
     (next: CalendarValue, details?: { granularity?: string }) => {
       const resolved = (details?.granularity ??
-        granularity) as CalendarGranularity;
+        granularityRef.current) as CalendarGranularity;
       if (commitMode === 'explicit') {
         setBuffer(next);
         setBufferGranularity(resolved);
@@ -279,23 +296,18 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
       setValueUnwrapped(next);
       onValueChange?.(next, { granularity: resolved });
     },
-    [commitMode, setValueUnwrapped, onValueChange, granularity]
+    [commitMode, setValueUnwrapped, onValueChange]
   );
 
   const applyValue = useCallback(() => {
     if (commitMode !== 'explicit' || buffer === undefined) return;
     setValueUnwrapped(buffer);
-    onValueChange?.(buffer, { granularity: bufferGranularity ?? granularity });
+    onValueChange?.(buffer, {
+      granularity: bufferGranularity ?? granularityRef.current
+    });
     setBuffer(undefined);
     setBufferGranularity(undefined);
-  }, [
-    commitMode,
-    buffer,
-    bufferGranularity,
-    setValueUnwrapped,
-    onValueChange,
-    granularity
-  ]);
+  }, [commitMode, buffer, bufferGranularity, setValueUnwrapped, onValueChange]);
 
   const cancelValue = useCallback(() => {
     setBuffer(undefined);
@@ -330,6 +342,64 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
     },
     [setMonthUnwrapped, onMonthChange]
   );
+
+  /*
+   * The initial month above is computed once, which is right for a mount and
+   * wrong forever after: a value that arrived asynchronously was never shown,
+   * and reopening the popover left the user wherever they had last navigated
+   * rather than back on the selection.
+   *
+   * So the visible month follows the value at exactly two moments, and only
+   * while the consumer is not driving `month` themselves — on the closed → open
+   * transition, and when the value's anchor day changes. Never while the
+   * popover sits open with that anchor unchanged, because then it is the user
+   * navigating and their navigation has to win.
+   *
+   * Every comparison goes through `dayKey`, never `Date` identity: a fresh
+   * `Date` for the same day must not count as a change, or this becomes the
+   * render loop the RFC diagnosed in `DatePicker`.
+   */
+  const anchorDate = firstDateIn(effectiveValue);
+  const anchorKey = anchorDate ? dayKey(anchorDate, timeZone) : null;
+  const previousOpen = useRef(open);
+  const previousAnchorKey = useRef(anchorKey);
+
+  useEffect(() => {
+    const justOpened = open && !previousOpen.current;
+    const anchorChanged = anchorKey !== previousAnchorKey.current;
+    previousOpen.current = open;
+    previousAnchorKey.current = anchorKey;
+
+    if (monthProp !== undefined) return;
+    // Clearing a value must not yank an open calendar back to today.
+    if (!justOpened && !(anchorChanged && anchorDate)) return;
+
+    const target = startOfMonth(
+      anchorDate ?? defaultMonth ?? new Date(),
+      timeZone
+    );
+    /*
+     * Compared as months, not as days. `.Input` and `.Preset` move the month
+     * by handing over the date the user named, mid-month and all; normalising
+     * that here would fire a second `onMonthChange` for one action and report
+     * a month change that nobody can see.
+     */
+    if (
+      dayKey(target, timeZone) ===
+      dayKey(startOfMonth(month, timeZone), timeZone)
+    )
+      return;
+    setMonth(target);
+  }, [
+    open,
+    anchorKey,
+    anchorDate,
+    month,
+    monthProp,
+    defaultMonth,
+    timeZone,
+    setMonth
+  ]);
 
   const handleOpenChange = useCallback(
     (next: boolean, eventDetails: PopoverPrimitive.Root.ChangeEventDetails) => {
@@ -369,11 +439,39 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
     [lock]
   );
 
+  /*
+   * Counted rather than flagged: `.RangeInput` mounts two fields, and a
+   * composition may hold more than one input. Registration happens in a child
+   * effect, so the flag is false for the first commit — irrelevant for the
+   * click-to-open path, which is every real use, and `initialFocus` stays
+   * overridable for a picker that opens already mounted.
+   */
+  const [triggerFieldCount, setTriggerFieldCount] = useState(0);
+
+  const registerTriggerField = useCallback(() => {
+    setTriggerFieldCount(count => count + 1);
+    return () => setTriggerFieldCount(count => count - 1);
+  }, []);
+
   const reportValidity = useCallback(
     (validity: CalendarValidity) => onValidityChange?.(validity),
     [onValidityChange]
   );
 
+  /*
+   * One context object, so any state change re-renders every part — a month
+   * step re-renders `.Presets`, `.GranularityTabs`, `.TimeField` and
+   * `.Footer` too.
+   *
+   * Splitting stable actions from volatile state was considered and does not
+   * pay here: those parts all read state as well as actions, so they would
+   * still subscribe to the volatile half. The shape that would actually fix it
+   * is a store read through selectors, which is an architecture change rather
+   * than a tuning one, and no part of this component is expensive enough to
+   * render to justify it — `.MonthGrid`, the one that was, now resolves its
+   * cells in a memo. The action identities above are stable, which is the
+   * prerequisite if that day comes.
+   */
   const contextValue = useMemo<CalendarPreviewContextValue>(
     () => ({
       selection,
@@ -404,7 +502,9 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
       weekStartsOn,
       loading,
       disabled,
-      readOnly
+      readOnly,
+      triggerOwnsFocus: triggerFieldCount > 0,
+      registerTriggerField
     }),
     [
       selection,
@@ -435,7 +535,9 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
       weekStartsOn,
       loading,
       disabled,
-      readOnly
+      readOnly,
+      triggerFieldCount,
+      registerTriggerField
     ]
   );
 

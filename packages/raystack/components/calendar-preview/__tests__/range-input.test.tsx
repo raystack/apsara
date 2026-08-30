@@ -310,15 +310,21 @@ describe('CalendarPreview.RangeInput placement', () => {
   });
 
   /*
-   * Inside `.Trigger` the popup takes initial focus on open, so focus lands on
-   * the grid's focused day and the keystrokes never reach the field — Enter
-   * then selects that day instead of committing the text. `.Content` has to
-   * decline initial focus for a typable trigger to work at all.
+   * This assertion used to run the other way, and in doing so pinned a broken
+   * default in place: the popup took focus on open, keystrokes went to the
+   * grid, and Enter selected a day instead of committing the text — so every
+   * correct use had to pass `initialFocus={false}`. `.Content` now declines
+   * that focus by itself whenever a typed field is composed inside `.Trigger`.
    */
-  it('loses keystrokes inside .Trigger under the default focus behaviour', async () => {
+  it('keeps focus in the field inside .Trigger, with no flag to pass', async () => {
     const user = userEvent.setup();
+    const onValueChange = vi.fn();
     render(
-      <CalendarPreview selection='range' defaultMonth={MONTH}>
+      <CalendarPreview
+        selection='range'
+        defaultMonth={MONTH}
+        onValueChange={onValueChange}
+      >
         <CalendarPreview.Trigger>
           <CalendarPreview.RangeInput />
         </CalendarPreview.Trigger>
@@ -328,12 +334,13 @@ describe('CalendarPreview.RangeInput placement', () => {
       </CalendarPreview>
     );
 
-    await user.click(screen.getByLabelText('Start date'));
+    const startField = screen.getByLabelText('Start date');
+    await user.click(startField);
+    expect(startField).toHaveFocus();
 
-    expect(document.activeElement).toHaveAttribute(
-      'data-slot',
-      'calendar-preview-day'
-    );
+    await user.type(startField, '17 Apr 2024{Enter}');
+    const next = lastArg(onValueChange) as DateRangeValue;
+    expect(dayKey(next.from as Date)).toBe('2024-04-17');
   });
 
   it('works inside .Trigger when .Content declines initial focus', async () => {

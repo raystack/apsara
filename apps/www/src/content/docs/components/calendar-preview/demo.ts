@@ -18,7 +18,7 @@ export const preview = {
   <CalendarPreview.Trigger>
     <CalendarPreview.Input />
   </CalendarPreview.Trigger>
-  <CalendarPreview.Content initialFocus={false}>
+  <CalendarPreview.Content>
     <CalendarPreview.Nav />
     <CalendarPreview.Grid />
   </CalendarPreview.Content>
@@ -30,7 +30,7 @@ export const preview = {
   <CalendarPreview.Trigger>
     <CalendarPreview.RangeInput />
   </CalendarPreview.Trigger>
-  <CalendarPreview.Content initialFocus={false}>
+  <CalendarPreview.Content>
     <CalendarPreview.Nav months={2} />
     <CalendarPreview.Grid months={2} />
   </CalendarPreview.Content>
@@ -48,7 +48,7 @@ export const stateDemo = {
   <CalendarPreview.Trigger>
     <CalendarPreview.Input />
   </CalendarPreview.Trigger>
-  <CalendarPreview.Content initialFocus={false}>
+  <CalendarPreview.Content>
     <CalendarPreview.Nav />
     <CalendarPreview.Grid />
   </CalendarPreview.Content>
@@ -124,7 +124,7 @@ export const commitDemo = {
   <CalendarPreview.Trigger>
     <CalendarPreview.Input />
   </CalendarPreview.Trigger>
-  <CalendarPreview.Content initialFocus={false}>
+  <CalendarPreview.Content>
     <CalendarPreview.Nav />
     <CalendarPreview.Grid />
     <CalendarPreview.Footer>
@@ -185,7 +185,7 @@ export const fieldDemo = {
     <CalendarPreview.Trigger>
       <CalendarPreview.Input />
     </CalendarPreview.Trigger>
-    <CalendarPreview.Content initialFocus={false}>
+    <CalendarPreview.Content>
       <CalendarPreview.Nav />
       <CalendarPreview.Grid />
     </CalendarPreview.Content>
@@ -224,7 +224,7 @@ export const getCode = (props: Record<string, unknown>) => {
   <CalendarPreview.Trigger>
     ${input}
   </CalendarPreview.Trigger>
-  <CalendarPreview.Content initialFocus={false}>
+  <CalendarPreview.Content>
 ${switchable ? '    <CalendarPreview.GranularityTabs />\n' : ''}    <CalendarPreview.Nav${monthsProp} />
     <CalendarPreview.Grid${monthsProp} />
 ${switchable ? '    <CalendarPreview.MonthGrid />\n' : ''}${

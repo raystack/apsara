@@ -11,7 +11,7 @@ import {
   FilterTypes,
   filterOperators
 } from '~/types/filters';
-import type { CalendarPreviewProps } from '../calendar-preview';
+import type { CalendarPreviewBaseProps } from '../calendar-preview';
 import { CalendarPreview } from '../calendar-preview';
 import { toDateLoose } from '../calendar-preview/date-adapter';
 import { Flex } from '../flex';
@@ -42,10 +42,18 @@ export type FilterChipValue = string | string[] | number | Date;
  * `defaultValue` are owned by `FilterChip`; `children` would replace the
  * composed trigger and break the chip layout; `selection` is fixed to single,
  * because the chip carries one value.
+ *
+ * Built from the base props rather than as `Omit<CalendarPreviewProps, …>`.
+ * `CalendarPreviewProps` is a three-arm discriminated union and `Omit` does
+ * not distribute over one: it collapses to the keys common to all three and
+ * takes the discriminant with it. The old form happened to land close to this
+ * set, but it was right by accident, and it dropped `lock` in silence. The
+ * base interface holds exactly the selection-independent props, so this says
+ * what it means and survives a fourth arm being added.
  */
 export type FilterChipCalendarProps = Omit<
-  CalendarPreviewProps,
-  'value' | 'onValueChange' | 'defaultValue' | 'children' | 'selection'
+  CalendarPreviewBaseProps,
+  'children'
 >;
 
 export interface FilterChipProps
@@ -175,9 +183,9 @@ export const FilterChip = ({
              * `Input` through that component's public slots, so a
              * consumer-supplied class can no longer replace it.
              *
-             * `initialFocus={false}` is required, not cosmetic: the trigger
-             * holds a typed field, and without it the popup takes focus on
-             * open and keystrokes never reach the input.
+             * No `initialFocus={false}` here: `.Content` declines that focus
+             * by itself once a typed field registers from inside `.Trigger`,
+             * which is exactly this shape.
              */}
             <CalendarPreview
               {...calendarProps}
@@ -189,7 +197,7 @@ export const FilterChip = ({
                     `.Input` otherwise falls back to showing the format. */}
                 <CalendarPreview.Input placeholder='Select date' />
               </CalendarPreview.Trigger>
-              <CalendarPreview.Content initialFocus={false}>
+              <CalendarPreview.Content>
                 <CalendarPreview.Nav />
                 <CalendarPreview.Grid />
               </CalendarPreview.Content>

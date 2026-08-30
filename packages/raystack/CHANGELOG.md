@@ -11,8 +11,9 @@ for the first time and Base UI owns dismissal. See
 [CalendarPreview](https://apsara.raystack.io/docs/components/calendar-preview)
 and RFC 005.
 
-Twelve parts: `Trigger`, `Content`, `Input`, `RangeInput`, `GranularityTabs`,
-`Nav`, `Grid`, `MonthGrid`, `TimeField`, `Footer`, `Apply`, `Cancel`.
+Fourteen parts: `Trigger`, `Content`, `Input`, `RangeInput`, `Presets`,
+`Preset`, `GranularityTabs`, `Nav`, `Grid`, `MonthGrid`, `TimeField`, `Footer`,
+`Apply`, `Cancel`.
 
 The old family still ships and is unchanged. It is removed a release after
 this one.
@@ -29,7 +30,17 @@ this one.
   abandoned without the parent seeing intermediate states.
 - **No `slotProps`.** Every surface is a part, and every part spreads
   `...props` last.
+- **Presets.** `Presets` and `Preset` write straight into root state and mark
+  themselves pressed while the value matches.
+- **A loading state.** `loading` replaces the caption and the grid with a
+  shimmer and disables every control, rather than leaving live chrome over
+  data that has not arrived.
 - **The popover opens `bottom-start`**, not above the trigger.
+- **A typed trigger is a first-class shape.** With `Input` or `RangeInput`
+  inside `Trigger`, the trigger drops the button role that would make the
+  field presentational to assistive tech, clicking the field no longer toggles
+  the calendar shut, `Content` declines initial focus by itself, `ArrowDown`
+  opens, and `Escape` reverts the draft before it dismisses.
 
 #### Breaking changes
 
@@ -43,6 +54,19 @@ this one.
   names change accordingly: `date-picker-input` becomes
   `calendar-preview-input`. Styling that targeted the old slots must be
   updated.
+
+#### Dependencies
+
+These ride along with this change rather than in a separate PR, so they are
+named here:
+
+- **`react-day-picker` `^9.6.7` → `^10.0.1`**, a major. Only
+  `calendar-preview-grid.tsx` imports it, but `Calendar`, `DatePicker` and
+  `RangePicker` still ship on it for one more release and now run against v10.
+  The `captionLayout="dropdown"` unmount regression test still passes.
+- **`@base-ui/react` `~1.6.0` → `~1.7.0`** (with `@base-ui/utils` `~0.3.1` →
+  `~0.3.2`), which underlies every interactive component in the package.
+- **`dayjs` `^1.11.20` → `^1.11.23`**, a patch.
 
 #### Other changes
 

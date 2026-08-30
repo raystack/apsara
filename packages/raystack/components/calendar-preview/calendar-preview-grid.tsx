@@ -4,7 +4,6 @@ import { cx } from 'class-variance-authority';
 import { useMemo } from 'react';
 import {
   type DateRange,
-  type DayButtonProps,
   DayPicker,
   type DayPickerProps,
   type Matcher
