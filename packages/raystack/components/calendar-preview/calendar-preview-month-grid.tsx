@@ -119,6 +119,7 @@ export function CalendarPreviewMonthGrid({
   if (granularity === 'day') return null;
 
   const period = PERIODS[granularity];
+  const monthSpan = 12 / period.perYear;
   const writable = !disabled && !readOnly;
 
   const anchor = firstSelected(value) ?? new Date();
@@ -133,7 +134,7 @@ export function CalendarPreviewMonthGrid({
   const years: number[] = [];
   for (let year = firstYear; year <= lastYear; year += 1) years.push(year);
 
-  const selectedKeys = selectedPeriodKeys(value, timeZone);
+  const selectedDates = selectedDatesIn(value);
 
   const commit = (start: Date) => {
     if (!writable) return;
@@ -161,6 +162,14 @@ export function CalendarPreviewMonthGrid({
   const renderCell = (year: number, index: number) => {
     const start = firstOfMonth(year, period.startMonth(index), timeZone);
     const key = dayKey(start, timeZone);
+    const nextStart = firstOfMonth(
+      year + (period.startMonth(index) + monthSpan >= 12 ? 1 : 0),
+      (period.startMonth(index) + monthSpan) % 12,
+      timeZone
+    );
+    const selected = selectedDates.some(
+      date => date >= start && date < nextStart
+    );
     const unavailable =
       !isWithinBounds(start, minDate, maxDate) || isDateUnavailable?.(start);
 
@@ -170,8 +179,8 @@ export function CalendarPreviewMonthGrid({
         type='button'
         className={styles.monthCell}
         disabled={disabled || unavailable}
-        aria-pressed={selectedKeys.has(key)}
-        data-selected={selectedKeys.has(key) || undefined}
+        aria-pressed={selected}
+        data-selected={selected || undefined}
         data-slot='calendar-preview-month-cell'
         onClick={() => commit(start)}
       >
@@ -235,18 +244,15 @@ function firstSelected(value: unknown): Date | undefined {
 }
 
 /**
- * Cells are marked selected when a selected date *starts* the period, so a
- * value emitted by this grid round-trips. A date mid-period does not light a
- * cell — that would claim a precision the value does not carry.
+ * A cell lights when a selected date falls anywhere inside its period, not
+ * only when it starts it. Picking 17 April in the day grid and switching to
+ * Month must not show an empty grid — that reads as lost state. Clicking the
+ * cell still rewrites the value to the period start.
  */
-function selectedPeriodKeys(value: unknown, timeZone?: string): Set<string> {
-  const dates: Date[] = [];
-  if (value instanceof Date) dates.push(value);
-  else if (Array.isArray(value)) dates.push(...(value as Date[]));
-  else if (value) {
-    const range = value as DateRangeValue;
-    if (range.from) dates.push(range.from);
-    if (range.to) dates.push(range.to);
-  }
-  return new Set(dates.map(date => dayKey(date, timeZone)));
+function selectedDatesIn(value: unknown): Date[] {
+  if (value instanceof Date) return [value];
+  if (Array.isArray(value)) return value as Date[];
+  if (!value) return [];
+  const range = value as DateRangeValue;
+  return [range.from, range.to].filter(Boolean) as Date[];
 }

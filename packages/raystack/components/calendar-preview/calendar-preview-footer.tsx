@@ -75,16 +75,22 @@ export type CalendarPreviewCancelProps = ComponentProps<typeof Button>;
 export function CalendarPreviewCancel({
   className,
   children = 'Cancel',
+  disabled,
   onClick,
   ...props
 }: CalendarPreviewCancelProps) {
-  const { cancelValue, setOpen } = useCalendarPreviewContext('Cancel');
+  const {
+    cancelValue,
+    setOpen,
+    disabled: rootDisabled
+  } = useCalendarPreviewContext('Cancel');
 
   return (
     <Button
       size='small'
       variant='outline'
       color='neutral'
+      disabled={disabled ?? rootDisabled}
       className={className}
       data-slot='calendar-preview-cancel'
       onClick={event => {

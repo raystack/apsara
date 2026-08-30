@@ -174,3 +174,52 @@ describe('CalendarPreview.MonthGrid', () => {
     expect(getSlot(container, 'calendar-preview-month-grid')).not.toBeNull();
   });
 });
+
+describe('MonthGrid: third audit', () => {
+  it('lights the period containing the value, not only its first day', () => {
+    // Picking 17 April in the day grid then switching to Month must not show
+    // an empty grid — that reads as lost state.
+    const { container } = at('month', { value: new Date(2024, 3, 17) });
+    const selected = container.querySelectorAll(
+      '[data-slot="calendar-preview-month-cell"][data-selected]'
+    );
+    expect(selected).toHaveLength(1);
+    expect(selected[0]).toHaveTextContent('Apr');
+  });
+
+  it('lights the right period at every granularity', () => {
+    const midNovember = new Date(2024, 10, 20);
+    for (const [granularity, label] of [
+      ['month', 'Nov'],
+      ['quarter', 'Q4'],
+      ['half-year', 'H2'],
+      ['year', '2024']
+    ] as const) {
+      const { container, unmount } = at(granularity, { value: midNovember });
+      const selected = container.querySelectorAll(
+        '[data-slot="calendar-preview-month-cell"][data-selected]'
+      );
+      expect(selected, granularity).toHaveLength(1);
+      expect(selected[0], granularity).toHaveTextContent(label);
+      unmount();
+    }
+  });
+
+  it('does not bleed a selection into the neighbouring period', () => {
+    // 1 July is H2/Q3, never H1/Q2 — an off-by-one in the span maths shows here.
+    const { container } = at('quarter', { value: new Date(2024, 6, 1) });
+    const selected = container.querySelectorAll(
+      '[data-slot="calendar-preview-month-cell"][data-selected]'
+    );
+    expect(selected).toHaveLength(1);
+    expect(selected[0]).toHaveTextContent('Q3');
+  });
+
+  it('still emits the period start when a mid-period value is showing', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    at('month', { value: new Date(2024, 3, 17), onValueChange });
+    await user.click(screen.getAllByRole('button', { name: 'Apr' })[1]);
+    expect(dayKey(lastArg(onValueChange) as Date)).toBe('2024-04-01');
+  });
+});

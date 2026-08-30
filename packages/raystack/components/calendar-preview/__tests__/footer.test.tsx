@@ -98,3 +98,18 @@ describe('CalendarPreview.Footer', () => {
     expect(getSlot(document.body, 'calendar-preview-content')).toBeNull();
   });
 });
+
+describe('CalendarPreview.Cancel', () => {
+  it('honours root disabled, as Apply does', () => {
+    render(
+      <CalendarPreview defaultMonth={MONTH} disabled>
+        <CalendarPreview.Footer>
+          <CalendarPreview.Cancel />
+          <CalendarPreview.Apply />
+        </CalendarPreview.Footer>
+      </CalendarPreview>
+    );
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Apply' })).toBeDisabled();
+  });
+});
