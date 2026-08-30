@@ -26,4 +26,5 @@ export type {
   CalendarPreviewRootProps as CalendarPreviewProps,
   CalendarPreviewSingleProps
 } from './calendar-preview-root';
+export type { CalendarPreviewTimeFieldProps } from './calendar-preview-time-field';
 export type { CalendarPreviewTriggerProps } from './calendar-preview-trigger';

@@ -33,6 +33,7 @@ export {
   type CalendarPreviewMonthGridProps,
   type CalendarPreviewNavProps,
   type CalendarPreviewProps,
+  type CalendarPreviewTimeFieldProps,
   type CalendarPreviewTriggerProps,
   type CalendarSelection,
   type CalendarValue,

@@ -57,6 +57,29 @@ export function firstOfMonth(
     : dayjs(iso, 'YYYY-MM-DD', true).toDate();
 }
 
+export function getHours(date: Date, timeZone?: string): number {
+  return zoned(date, timeZone).hour();
+}
+
+export function getMinutes(date: Date, timeZone?: string): number {
+  return zoned(date, timeZone).minute();
+}
+
+/** The same calendar day, at a different time of day. */
+export function setTime(
+  date: Date,
+  hours: number,
+  minutes: number,
+  timeZone?: string
+): Date {
+  return zoned(date, timeZone)
+    .hour(hours)
+    .minute(minutes)
+    .second(0)
+    .millisecond(0)
+    .toDate();
+}
+
 export function getYear(date: Date, timeZone?: string): number {
   return zoned(date, timeZone).year();
 }
