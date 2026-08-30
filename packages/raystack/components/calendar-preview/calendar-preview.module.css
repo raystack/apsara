@@ -249,3 +249,8 @@
 .field {
   display: inline-flex;
 }
+
+.granularity {
+  display: flex;
+  margin-bottom: var(--rs-space-3);
+}

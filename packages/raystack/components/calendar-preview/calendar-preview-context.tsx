@@ -30,6 +30,9 @@ export interface CalendarValidity {
 export interface CalendarPreviewContextValue<Value = CalendarValue> {
   selection: CalendarSelection;
   granularity: CalendarGranularity;
+  setGranularity: (granularity: CalendarGranularity) => void;
+  /** Switchable granularities. `.GranularityTabs` renders when >1. */
+  granularities: CalendarGranularity[];
   value: Value;
   setValue: (value: Value) => void;
   /** The visible month. Independent of selection, and owned by the root. */

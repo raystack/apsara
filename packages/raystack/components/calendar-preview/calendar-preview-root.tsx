@@ -16,8 +16,17 @@ import {
 import { DEFAULT_FORMAT, startOfMonth } from './date-adapter';
 
 export interface CalendarPreviewBaseProps {
-  /** @defaultValue 'day' */
+  /** The active granularity (controlled). */
   granularity?: CalendarGranularity;
+  /** @defaultValue 'day' */
+  defaultGranularity?: CalendarGranularity;
+  onGranularityChange?: (granularity: CalendarGranularity) => void;
+  /**
+   * Granularities the user may switch between. `.GranularityTabs` renders
+   * only when there is more than one.
+   * @defaultValue ['day']
+   */
+  granularities?: CalendarGranularity[];
 
   /** Whether the popover is open (controlled). */
   open?: boolean;
@@ -109,7 +118,10 @@ function firstDateIn(value: CalendarValue | undefined): Date | undefined {
 export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
   const {
     selection = 'single',
-    granularity = 'day',
+    granularity: granularityProp,
+    defaultGranularity = 'day',
+    onGranularityChange,
+    granularities = ['day'],
     value: valueProp,
     defaultValue,
     onValueChange,
@@ -161,6 +173,22 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
     name: 'CalendarPreview',
     state: 'month'
   });
+
+  const [granularity, setGranularityUnwrapped] =
+    useControlled<CalendarGranularity>({
+      controlled: granularityProp,
+      default: defaultGranularity,
+      name: 'CalendarPreview',
+      state: 'granularity'
+    });
+
+  const setGranularity = useCallback(
+    (next: CalendarGranularity) => {
+      setGranularityUnwrapped(next);
+      onGranularityChange?.(next);
+    },
+    [setGranularityUnwrapped, onGranularityChange]
+  );
 
   const setValue = useCallback(
     (next: CalendarValue) => {
@@ -227,6 +255,8 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
     () => ({
       selection,
       granularity,
+      setGranularity,
+      granularities,
       value,
       setValue,
       month,
@@ -249,6 +279,8 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
     [
       selection,
       granularity,
+      setGranularity,
+      granularities,
       value,
       setValue,
       month,

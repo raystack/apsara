@@ -1,4 +1,5 @@
 import { CalendarPreviewContent } from './calendar-preview-content';
+import { CalendarPreviewGranularityTabs } from './calendar-preview-granularity-tabs';
 import { CalendarPreviewGrid } from './calendar-preview-grid';
 import { CalendarPreviewInput } from './calendar-preview-input';
 import { CalendarPreviewNav } from './calendar-preview-nav';
@@ -11,6 +12,7 @@ export const CalendarPreview = Object.assign(CalendarPreviewRoot, {
   Content: CalendarPreviewContent,
   Input: CalendarPreviewInput,
   RangeInput: CalendarPreviewRangeInput,
+  GranularityTabs: CalendarPreviewGranularityTabs,
   Nav: CalendarPreviewNav,
   Grid: CalendarPreviewGrid
 });

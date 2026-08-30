@@ -53,8 +53,16 @@ export function CalendarPreviewGrid({
     weekStartsOn,
     disabled,
     readOnly,
-    lock
+    lock,
+    granularity
   } = useCalendarPreviewContext('Grid');
+
+  /*
+   * The day grid renders for the day granularity only; `.MonthGrid` covers
+   * month, quarter, half-year and year. Both sit in the same composition and
+   * each shows itself for its own granularities.
+   */
+  if (granularity !== 'day') return null;
 
   /*
    * `readOnly` shows the value but refuses writes, so days stay legible and

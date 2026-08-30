@@ -8,6 +8,7 @@ export type {
   CalendarValue,
   DateRangeValue
 } from './calendar-preview-context';
+export type { CalendarPreviewGranularityTabsProps } from './calendar-preview-granularity-tabs';
 export type { CalendarPreviewGridProps } from './calendar-preview-grid';
 export type { CalendarPreviewInputProps } from './calendar-preview-input';
 export type { CalendarPreviewNavProps } from './calendar-preview-nav';
