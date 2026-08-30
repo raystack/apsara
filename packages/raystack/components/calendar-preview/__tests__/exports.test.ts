@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
@@ -25,7 +25,38 @@ const exportedNames = (source: string, from: string) => {
   );
 };
 
+/**
+ * Types the component declares public but deliberately keeps out of the
+ * barrel. Anything not listed here must be published — the list forces a
+ * decision instead of letting an omission pass unnoticed, which is how
+ * `CalendarValueChangeDetails` went missing.
+ */
+const INTERNAL = new Set([
+  'CalendarPreviewContextValue',
+  'CrossGranularityMatch'
+]);
+
 describe('CalendarPreview published surface', () => {
+  it('publishes every exported type that is not marked internal', () => {
+    const dir = join(root, 'components/calendar-preview');
+    const index = readFileSync(join(dir, 'index.tsx'), 'utf8');
+    const declared = new Set<string>();
+    for (const file of readdirSync(dir)) {
+      if (!file.endsWith('.tsx') && !file.endsWith('.ts')) continue;
+      if (file === 'index.tsx') continue;
+      const source = readFileSync(join(dir, file), 'utf8');
+      for (const match of source.matchAll(
+        /^export (?:interface|type) ([A-Za-z]\w*)/gm
+      )) {
+        declared.add(match[1]);
+      }
+    }
+    const missing = [...declared].filter(
+      name => !INTERNAL.has(name) && !new RegExp(`\\b${name}\\b`).test(index)
+    );
+    expect(missing, 'declared public but absent from index.tsx').toEqual([]);
+  });
+
   it('re-exports every public name from the root barrel', () => {
     const componentIndex = readFileSync(
       join(root, 'components/calendar-preview/index.tsx'),

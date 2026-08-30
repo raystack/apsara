@@ -419,7 +419,7 @@ Verified against the npm registry, `pnpm-lock.yaml`, and the published tarballs 
 | `range-picker-start-input` | `calendar-preview-input-start` |
 | `range-picker-end-input` | `calendar-preview-input-end` |
 
-23 old slots therefore become 18, plus ten new: `calendar-preview-presets`, `-preset`, `-granularity`, `-month-grid`, `-month-cell`, `-time-field`, `-apply`, `-cancel`, `-nav-caption`, `-nav-undo`. Because `CalendarPreview` is a new component name this is purely additive — the old slots keep working for as long as the old family ships.
+23 old slots therefore become 18, plus thirteen new: `calendar-preview-presets`, `-preset`, `-granularity`, `-month-grid`, `-month-cell`, `-time-field`, `-apply`, `-cancel`, `-nav-caption`, `-nav-undo`, `-nav`, `-meridiem`, `-month-grid-year`. The docs page carries the authoritative list, kept in step by a test. Because `CalendarPreview` is a new component name this is purely additive — the old slots keep working for as long as the old family ships.
 
 ## Breaking Changes
 

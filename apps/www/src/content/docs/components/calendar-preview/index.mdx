@@ -196,6 +196,39 @@ itself — report through `onValidityChange` and let `Field.Error` present it.
 
 <Demo data={fieldDemo} />
 
+## Slots
+
+Every rendered element carries a `data-slot`. The names are public API covered
+by semver, so styling may target them and a rename is a breaking change.
+
+| Slot |
+|---|
+| `calendar-preview-apply` |
+| `calendar-preview-cancel` |
+| `calendar-preview-content` |
+| `calendar-preview-day` |
+| `calendar-preview-day-number` |
+| `calendar-preview-footer` |
+| `calendar-preview-granularity` |
+| `calendar-preview-grid` |
+| `calendar-preview-input` |
+| `calendar-preview-meridiem` |
+| `calendar-preview-month-cell` |
+| `calendar-preview-month-grid` |
+| `calendar-preview-month-grid-year` |
+| `calendar-preview-nav` |
+| `calendar-preview-nav-caption` |
+| `calendar-preview-nav-next` |
+| `calendar-preview-nav-previous` |
+| `calendar-preview-nav-undo` |
+| `calendar-preview-positioner` |
+| `calendar-preview-presets` |
+| `calendar-preview-range-inputs` |
+| `calendar-preview-table` |
+| `calendar-preview-time-field` |
+| `calendar-preview-trigger` |
+| `calendar-preview-weeks` |
+
 ## Accessibility
 
 - The day grid is react-day-picker's, which supplies the grid roles, roving

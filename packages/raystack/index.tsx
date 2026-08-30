@@ -46,6 +46,7 @@ export {
   type CalendarSelection,
   type CalendarValidity,
   type CalendarValue,
+  type CalendarValueChangeDetails,
   type DateRangeValue
 } from './components/calendar-preview';
 export { Callout } from './components/callout';
