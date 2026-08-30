@@ -106,6 +106,12 @@ export function CalendarPreviewGrid({
           </span>
         </button>
       ),
+      /*
+       * `.Nav` owns the caption, and the design shows none inside the grid.
+       * Leaving RDP's in place renders the month twice and announces it
+       * twice, so it is dropped here rather than hidden with CSS.
+       */
+      MonthCaption: () => <></>,
       MonthGrid: (gridProps: ComponentProps<'table'>) => (
         <div className={styles.weeks} data-slot='calendar-preview-weeks'>
           <table {...gridProps} data-slot='calendar-preview-table' />

@@ -217,3 +217,35 @@
 .rangeField[data-active] [data-slot="input-container"] {
   border-color: var(--rs-color-border-accent-emphasis);
 }
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rs-space-3);
+  margin-bottom: var(--rs-space-3);
+}
+
+.nav[data-align="end"] {
+  flex-direction: row-reverse;
+}
+
+.navCaption {
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+  color: var(--rs-color-foreground-base-primary);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.navButtons {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+}
+
+.field {
+  display: inline-flex;
+}

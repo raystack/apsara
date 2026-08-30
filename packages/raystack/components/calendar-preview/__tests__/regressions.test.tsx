@@ -86,6 +86,7 @@ describe('regressions', () => {
   it('opens on the value month, not on today', () => {
     render(
       <CalendarPreview value={new Date(2020, 0, 15)}>
+        <CalendarPreview.Nav />
         <CalendarPreview.Grid />
       </CalendarPreview>
     );
@@ -98,6 +99,7 @@ describe('regressions', () => {
         selection='range'
         value={{ from: new Date(2021, 6, 4), to: null }}
       >
+        <CalendarPreview.Nav />
         <CalendarPreview.Grid />
       </CalendarPreview>
     );
@@ -107,6 +109,7 @@ describe('regressions', () => {
   it('defaultMonth still wins over the value', () => {
     render(
       <CalendarPreview value={new Date(2020, 0, 15)} defaultMonth={MONTH}>
+        <CalendarPreview.Nav />
         <CalendarPreview.Grid />
       </CalendarPreview>
     );

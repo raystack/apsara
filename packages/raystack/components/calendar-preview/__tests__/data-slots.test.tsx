@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { expectSlots, getAllSlots, getSlot } from '~/test-utils/data-slots';
 import { CalendarPreview } from '../calendar-preview';
@@ -66,7 +66,8 @@ describe('CalendarPreview data-slot contract', () => {
 
     // April 2024 has 30 days and outside days are off by default.
     expect(getAllSlots(container, 'calendar-preview-day')).toHaveLength(30);
-    expect(screen.getByText('April 2024')).toBeInTheDocument();
+    // The month name belongs to `.Nav`, which this composition omits.
+    expect(getSlot(container, 'calendar-preview-nav-caption')).toBeNull();
   });
 
   it('renders two months of day slots when months is 2', () => {

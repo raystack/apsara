@@ -170,7 +170,17 @@ describe('CalendarPreview.RangeInput', () => {
   it('moves the visible month to a typed date', async () => {
     const user = userEvent.setup();
     const onMonthChange = vi.fn();
-    setup({ onMonthChange });
+    render(
+      <CalendarPreview
+        selection='range'
+        defaultMonth={MONTH}
+        onMonthChange={onMonthChange}
+      >
+        <CalendarPreview.RangeInput />
+        <CalendarPreview.Nav />
+        <CalendarPreview.Grid />
+      </CalendarPreview>
+    );
 
     await user.click(start());
     await user.type(start(), '09 Sep 2025{Enter}');

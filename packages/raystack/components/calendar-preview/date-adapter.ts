@@ -45,6 +45,10 @@ export function addMonths(date: Date, count: number, timeZone?: string): Date {
   return zoned(date, timeZone).add(count, 'month').toDate();
 }
 
+export function endOfMonth(date: Date, timeZone?: string): Date {
+  return zoned(date, timeZone).endOf('month').toDate();
+}
+
 export function formatDate(
   date: Date,
   format: string = DEFAULT_FORMAT,

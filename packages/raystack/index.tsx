@@ -25,6 +25,8 @@ export {
   CalendarPreview,
   type CalendarPreviewContentProps,
   type CalendarPreviewGridProps,
+  type CalendarPreviewInputProps,
+  type CalendarPreviewNavProps,
   type CalendarPreviewProps,
   type CalendarPreviewTriggerProps,
   type CalendarSelection,
