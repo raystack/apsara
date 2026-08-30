@@ -147,6 +147,12 @@ month.
 The typed field follows the active granularity too, reading `Jun 2026`,
 `Q3 2026`, `H1 2026` or `2026` rather than a full date.
 
+It also reads *across* granularities: typing `Q4 2027` into a day field switches
+to Quarter and commits in one go, and a bare `Q4` resolves against the year on
+screen. The active granularity is always tried first, and only granularities the
+picker actually offers are considered — so a day-only picker rejects `Q4` rather
+than switching to a tab that is not there.
+
 ### Commit and locking
 
 `commit="explicit"` buffers edits until `Apply`, so a popover can be abandoned

@@ -34,7 +34,13 @@ export interface CalendarPreviewContextValue<Value = CalendarValue> {
   /** Switchable granularities. `.GranularityTabs` renders when >1. */
   granularities: CalendarGranularity[];
   value: Value;
-  setValue: (value: Value) => void;
+  /**
+   * `granularity` names the one that produced the value, for when it differs
+   * from the active one — typing `Q4` into a day field switches the tab and
+   * commits in the same breath, and the reported detail must be the new one,
+   * not the stale closure's.
+   */
+  setValue: (value: Value, details?: { granularity?: string }) => void;
   /** The visible month. Independent of selection, and owned by the root. */
   month: Date;
   setMonth: (month: Date) => void;

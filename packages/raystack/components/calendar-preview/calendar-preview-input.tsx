@@ -9,7 +9,9 @@ import { useCalendarPreviewContext } from './calendar-preview-context';
 import {
   dayKey,
   formatForGranularity,
+  getYear,
   isWithinBounds,
+  parseAcrossGranularities,
   parseForGranularity,
   patternForGranularity
 } from './date-adapter';
@@ -29,6 +31,9 @@ export function CalendarPreviewInput({
   const {
     selection,
     granularity,
+    granularities,
+    setGranularity,
+    month,
     value,
     setValue,
     setMonth,
@@ -87,7 +92,33 @@ export function CalendarPreviewInput({
       return;
     }
 
-    const parsed = parseForGranularity(text, granularity, format, timeZone);
+    /*
+     * The active granularity wins. Only when it cannot read the text do we
+     * scan the granularities on offer, so typing `Q4` in a day field switches
+     * to Quarter rather than failing — and a day-only picker still rejects it.
+     */
+    const visibleYear = getYear(month, timeZone);
+    let parsed = parseForGranularity(
+      text,
+      granularity,
+      format,
+      timeZone,
+      visibleYear
+    );
+    let matched = granularity;
+    if (!parsed) {
+      const across = parseAcrossGranularities(
+        text,
+        granularities,
+        format,
+        timeZone,
+        visibleYear
+      );
+      if (across) {
+        parsed = across.date;
+        matched = across.granularity as typeof granularity;
+      }
+    }
     if (!parsed) {
       reportValidity({ valid: false, reason: 'unparseable' });
       return;
@@ -97,7 +128,8 @@ export function CalendarPreviewInput({
     reportValidity(validity);
     if (!validity.valid) return;
 
-    setValue(parsed);
+    if (matched !== granularity) setGranularity(matched);
+    setValue(parsed, { granularity: matched });
     // Typing navigates the grid, so the committed day is actually visible.
     setMonth(parsed);
   };

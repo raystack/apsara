@@ -268,17 +268,24 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
    * intermediate states. `undefined` means "nothing buffered".
    */
   const [buffer, setBuffer] = useState<CalendarValue | undefined>(undefined);
+  // The granularity the buffered value was picked at, so `.Apply` reports it.
+  const [bufferGranularity, setBufferGranularity] = useState<
+    CalendarGranularity | undefined
+  >(undefined);
 
   const effectiveValue = buffer === undefined ? value : buffer;
 
   const setValue = useCallback(
-    (next: CalendarValue) => {
+    (next: CalendarValue, details?: { granularity?: string }) => {
+      const resolved = (details?.granularity ??
+        granularity) as CalendarGranularity;
       if (commitMode === 'explicit') {
         setBuffer(next);
+        setBufferGranularity(resolved);
         return;
       }
       setValueUnwrapped(next);
-      onValueChange?.(next, { granularity });
+      onValueChange?.(next, { granularity: resolved });
     },
     [commitMode, setValueUnwrapped, onValueChange, granularity]
   );
@@ -286,11 +293,22 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
   const applyValue = useCallback(() => {
     if (commitMode !== 'explicit' || buffer === undefined) return;
     setValueUnwrapped(buffer);
-    onValueChange?.(buffer, { granularity });
+    onValueChange?.(buffer, { granularity: bufferGranularity ?? granularity });
     setBuffer(undefined);
-  }, [commitMode, buffer, setValueUnwrapped, onValueChange, granularity]);
+    setBufferGranularity(undefined);
+  }, [
+    commitMode,
+    buffer,
+    bufferGranularity,
+    setValueUnwrapped,
+    onValueChange,
+    granularity
+  ]);
 
-  const cancelValue = useCallback(() => setBuffer(undefined), []);
+  const cancelValue = useCallback(() => {
+    setBuffer(undefined);
+    setBufferGranularity(undefined);
+  }, []);
 
   /*
    * Revert-to-default. `defaultValue` is read live rather than captured at
@@ -327,7 +345,10 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
       if (next && disabled) return;
       // Abandoning the surface discards buffered edits; only `.Apply` keeps
       // them. Closing via `.Apply` clears the buffer before this runs.
-      if (!next) setBuffer(undefined);
+      if (!next) {
+        setBuffer(undefined);
+        setBufferGranularity(undefined);
+      }
       setOpen(next, { reason: eventDetails?.reason });
     },
     [setOpen, disabled]

@@ -5,6 +5,7 @@ import { CalendarPreview } from '../calendar-preview';
 import {
   dayKey,
   formatForGranularity,
+  parseAcrossGranularities,
   parseForGranularity
 } from '../date-adapter';
 
@@ -163,5 +164,126 @@ describe('onValueChange reports the resolution', () => {
 
     await user.click(screen.getByRole('button', { name: 'Apply' }));
     expect(lastCall(onValueChange)[1]).toEqual({ granularity: 'year' });
+  });
+});
+
+describe('cross-granularity parsing', () => {
+  const ALL = ['day', 'month', 'quarter', 'half-year', 'year'] as const;
+
+  const typing = (props: Record<string, unknown> = {}) =>
+    render(
+      <CalendarPreview
+        defaultMonth={new Date(2026, 7, 1)}
+        granularities={[...ALL]}
+        {...props}
+      >
+        <CalendarPreview.Input />
+      </CalendarPreview>
+    );
+
+  it('matches the most specific granularity, not merely the first', () => {
+    // `15 Jun 2026` must read as a day, never as a year.
+    expect(parseAcrossGranularities('15 Jun 2026', ALL)?.granularity).toBe(
+      'day'
+    );
+    expect(parseAcrossGranularities('Q3 2026', ALL)?.granularity).toBe(
+      'quarter'
+    );
+    expect(parseAcrossGranularities('H2 2026', ALL)?.granularity).toBe(
+      'half-year'
+    );
+    expect(parseAcrossGranularities('Jun 2026', ALL)?.granularity).toBe(
+      'month'
+    );
+    expect(parseAcrossGranularities('2026', ALL)?.granularity).toBe('year');
+  });
+
+  it('resolves a bare period against the year it is given', () => {
+    const match = parseAcrossGranularities(
+      'Q4',
+      ALL,
+      undefined,
+      undefined,
+      2027
+    );
+    expect(match?.granularity).toBe('quarter');
+    expect(dayKey(match?.date as Date)).toBe('2027-10-01');
+  });
+
+  it('switches the tab when the text names another granularity', async () => {
+    const user = userEvent.setup();
+    const onGranularityChange = vi.fn();
+    const onValueChange = vi.fn();
+    typing({ onGranularityChange, onValueChange });
+
+    await user.type(screen.getByRole('textbox'), 'Q4 2027{Enter}');
+
+    expect(onGranularityChange).toHaveBeenLastCalledWith('quarter');
+    const [value, details] = lastCall(onValueChange);
+    expect(dayKey(value as Date)).toBe('2027-10-01');
+    expect(details).toEqual({ granularity: 'quarter' });
+  });
+
+  it('resolves a bare Q against the visible year', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    typing({ onValueChange });
+
+    // The visible month is August 2026, so a bare Q4 means Q4 2026.
+    await user.type(screen.getByRole('textbox'), 'Q4{Enter}');
+    expect(dayKey(lastCall(onValueChange)[0] as Date)).toBe('2026-10-01');
+  });
+
+  it('leaves the tab alone when the active granularity can read the text', async () => {
+    const user = userEvent.setup();
+    const onGranularityChange = vi.fn();
+    typing({ onGranularityChange });
+
+    await user.type(screen.getByRole('textbox'), '15 Jun 2026{Enter}');
+    expect(onGranularityChange).not.toHaveBeenCalled();
+  });
+
+  it('refuses a granularity the picker does not offer', async () => {
+    const user = userEvent.setup();
+    const onGranularityChange = vi.fn();
+    const onValidityChange = vi.fn();
+    const onValueChange = vi.fn();
+    render(
+      <CalendarPreview
+        defaultMonth={new Date(2026, 7, 1)}
+        onGranularityChange={onGranularityChange}
+        onValidityChange={onValidityChange}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Input />
+      </CalendarPreview>
+    );
+
+    // A day-only picker has no Quarter tab to switch to.
+    await user.type(screen.getByRole('textbox'), 'Q4 2027{Enter}');
+    expect(onGranularityChange).not.toHaveBeenCalled();
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(onValidityChange).toHaveBeenLastCalledWith({
+      valid: false,
+      reason: 'unparseable'
+    });
+  });
+
+  it('works in the range fields too', async () => {
+    const user = userEvent.setup();
+    const onGranularityChange = vi.fn();
+    render(
+      <CalendarPreview
+        selection='range'
+        defaultMonth={new Date(2026, 7, 1)}
+        granularities={[...ALL]}
+        onGranularityChange={onGranularityChange}
+      >
+        <CalendarPreview.RangeInput />
+      </CalendarPreview>
+    );
+
+    await user.type(screen.getByLabelText('Start date'), 'H1 2027{Enter}');
+    expect(onGranularityChange).toHaveBeenLastCalledWith('half-year');
   });
 });

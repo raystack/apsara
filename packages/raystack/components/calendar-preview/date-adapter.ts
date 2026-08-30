@@ -166,8 +166,8 @@ export function patternForGranularity(
   }
 }
 
-const QUARTER = /^Q([1-4])\s+(\d{4})$/i;
-const HALF_YEAR = /^H([12])\s+(\d{4})$/i;
+const QUARTER = /^Q([1-4])(?:\s+(\d{4}))?$/i;
+const HALF_YEAR = /^H([12])(?:\s+(\d{4}))?$/i;
 const YEAR = /^(\d{4})$/;
 
 /**
@@ -178,7 +178,9 @@ export function parseForGranularity(
   input: string,
   granularity: string,
   format: string = DEFAULT_FORMAT,
-  timeZone?: string
+  timeZone?: string,
+  /** Year used when the text omits one, as bare `Q4` does. */
+  fallbackYear: number = new Date().getFullYear()
 ): Date | null {
   const text = input.trim();
   switch (granularity) {
@@ -188,7 +190,7 @@ export function parseForGranularity(
       const match = QUARTER.exec(text);
       if (!match) return null;
       return firstOfMonth(
-        Number(match[2]),
+        match[2] ? Number(match[2]) : fallbackYear,
         (Number(match[1]) - 1) * 3,
         timeZone
       );
@@ -197,7 +199,7 @@ export function parseForGranularity(
       const match = HALF_YEAR.exec(text);
       if (!match) return null;
       return firstOfMonth(
-        Number(match[2]),
+        match[2] ? Number(match[2]) : fallbackYear,
         (Number(match[1]) - 1) * 6,
         timeZone
       );
@@ -210,6 +212,40 @@ export function parseForGranularity(
     default:
       return parseDate(text, format, timeZone);
   }
+}
+
+/**
+ * Most specific first: a day format like `15 Jun 2026` must not be mistaken
+ * for a year, and `Q4` must beat a bare-number read. Only granularities the
+ * picker actually offers are tried, so typing `Q4` into a day-only picker
+ * stays unparseable rather than silently switching to a tab that is not there.
+ */
+const PARSE_ORDER = ['day', 'quarter', 'half-year', 'month', 'year'] as const;
+
+export interface CrossGranularityMatch {
+  date: Date;
+  granularity: string;
+}
+
+export function parseAcrossGranularities(
+  input: string,
+  allowed: readonly string[],
+  format: string = DEFAULT_FORMAT,
+  timeZone?: string,
+  fallbackYear?: number
+): CrossGranularityMatch | null {
+  for (const granularity of PARSE_ORDER) {
+    if (!allowed.includes(granularity)) continue;
+    const date = parseForGranularity(
+      input,
+      granularity,
+      format,
+      timeZone,
+      fallbackYear
+    );
+    if (date) return { date, granularity };
+  }
+  return null;
 }
 
 /** Day-granularity comparisons, so callers never touch a date library. */
