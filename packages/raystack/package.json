@@ -131,7 +131,7 @@
     "prosemirror-model": "^1.25.1",
     "prosemirror-state": "^1.4.3",
     "prosemirror-view": "^1.40.0",
-    "react-day-picker": "^9.6.7"
+    "react-day-picker": "^10.0.1"
   },
   "peerDependencies": {
     "@types/react": "^19",
