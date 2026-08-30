@@ -199,3 +199,67 @@ describe('regressions', () => {
     expect(getSlot(container, 'calendar-preview-input-start')).not.toBeNull();
   });
 });
+
+describe('regressions: second audit', () => {
+  it('never warns that the month default changed', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const { rerender } = render(
+      <CalendarPreview value={new Date(2024, 3, 17)}>
+        <CalendarPreview.Grid />
+      </CalendarPreview>
+    );
+    // A controlled value moving must not re-initialise the uncontrolled month.
+    rerender(
+      <CalendarPreview value={new Date(2025, 3, 17)}>
+        <CalendarPreview.Grid />
+      </CalendarPreview>
+    );
+    const warnings = spy.mock.calls.filter(call =>
+      String(call[0]).includes('changing the default')
+    );
+    spy.mockRestore();
+    expect(warnings).toHaveLength(0);
+  });
+
+  it('captions a two-month grid as a range', () => {
+    const { container } = render(
+      <CalendarPreview defaultMonth={new Date(2024, 3, 1)}>
+        <CalendarPreview.Nav months={2} />
+        <CalendarPreview.Grid months={2} />
+      </CalendarPreview>
+    );
+    expect(
+      getSlot(container, 'calendar-preview-nav-caption')
+    ).toHaveTextContent('April 2024 – May 2024');
+    expect(
+      container.querySelectorAll('[data-slot="calendar-preview-table"]')
+    ).toHaveLength(2);
+  });
+
+  it('hides the nav outside the day granularity, as the design does', () => {
+    const { container } = render(
+      <CalendarPreview
+        defaultMonth={new Date(2024, 3, 1)}
+        granularities={['day', 'year']}
+        defaultGranularity='year'
+      >
+        <CalendarPreview.Nav />
+      </CalendarPreview>
+    );
+    expect(getSlot(container, 'calendar-preview-nav')).toBeNull();
+  });
+
+  it('never renders a tab strip with nothing selected', () => {
+    render(
+      <CalendarPreview
+        defaultMonth={new Date(2024, 3, 1)}
+        defaultGranularity='month'
+      >
+        <CalendarPreview.GranularityTabs />
+      </CalendarPreview>
+    );
+    // granularities defaults to the active granularity, so a lone tab is not
+    // worth showing at all.
+    expect(screen.queryAllByRole('tab')).toHaveLength(0);
+  });
+});

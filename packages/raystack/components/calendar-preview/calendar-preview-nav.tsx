@@ -25,6 +25,13 @@ export interface CalendarPreviewNavProps
    * @defaultValue 'MMMM YYYY'
    */
   captionFormat?: string;
+  /**
+   * How many months the grid beside this nav shows. Keep it in step with
+   * `.Grid`'s `months`, or the caption will name a month the grid does not
+   * show on its own.
+   * @defaultValue 1
+   */
+  months?: 1 | 2;
 }
 
 /**
@@ -40,10 +47,18 @@ export function CalendarPreviewNav({
   className,
   align = 'start',
   captionFormat = 'MMMM YYYY',
+  months = 1,
   ...props
 }: CalendarPreviewNavProps) {
-  const { month, setMonth, minDate, maxDate, disabled, timeZone } =
+  const { month, setMonth, minDate, maxDate, disabled, timeZone, granularity } =
     useCalendarPreviewContext('Nav');
+
+  /*
+   * Month stepping only makes sense for the day granularity, and the design
+   * hides this header entirely in its month variant. `.MonthGrid` scrolls
+   * rather than pages, so it needs no nav of its own.
+   */
+  if (granularity !== 'day') return null;
 
   const previousMonth = addMonths(month, -1, timeZone);
   const nextMonth = addMonths(month, 1, timeZone);
@@ -73,7 +88,13 @@ export function CalendarPreviewNav({
         aria-live='polite'
         data-slot='calendar-preview-nav-caption'
       >
-        {formatDate(month, captionFormat, timeZone)}
+        {months > 1
+          ? `${formatDate(month, captionFormat, timeZone)} – ${formatDate(
+              addMonths(month, months - 1, timeZone),
+              captionFormat,
+              timeZone
+            )}`
+          : formatDate(month, captionFormat, timeZone)}
       </span>
       <div className={styles.navButtons}>
         <IconButton

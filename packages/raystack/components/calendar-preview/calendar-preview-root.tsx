@@ -2,7 +2,7 @@
 
 import { Popover as PopoverPrimitive } from '@base-ui/react';
 import { useControlled } from '@base-ui/utils/useControlled';
-import { type ReactNode, useCallback, useMemo, useState } from 'react';
+import { type ReactNode, useCallback, useMemo, useRef, useState } from 'react';
 import {
   type CalendarGranularity,
   type CalendarPreviewContextValue,
@@ -121,7 +121,7 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
     granularity: granularityProp,
     defaultGranularity = 'day',
     onGranularityChange,
-    granularities = ['day'],
+    granularities,
     value: valueProp,
     defaultValue,
     onValueChange,
@@ -164,12 +164,23 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
    * Both `DatePicker` and `RangePicker` sync this today; only the mechanism
    * changes here.
    */
-  const [month, setMonthUnwrapped] = useControlled<Date>({
-    controlled: monthProp,
-    default: startOfMonth(
+  /*
+   * Computed once. `useControlled` reads `default` as the initial value and
+   * warns if it changes, so deriving it from a live `value` on every render
+   * both trips that warning and risks re-initialising the visible month
+   * underneath the user.
+   */
+  const initialMonth = useRef<Date>(null);
+  if (initialMonth.current === null) {
+    initialMonth.current = startOfMonth(
       defaultMonth ?? firstDateIn(valueProp ?? defaultValue) ?? new Date(),
       timeZone
-    ),
+    );
+  }
+
+  const [month, setMonthUnwrapped] = useControlled<Date>({
+    controlled: monthProp,
+    default: initialMonth.current,
     name: 'CalendarPreview',
     state: 'month'
   });
@@ -181,6 +192,16 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
       name: 'CalendarPreview',
       state: 'granularity'
     });
+
+  /*
+   * Defaults to just the active granularity, so a single-granularity picker
+   * shows no tabs and the active one is always present in the list.
+   */
+  const offeredGranularities = useMemo(
+    () =>
+      granularities && granularities.length > 0 ? granularities : [granularity],
+    [granularities, granularity]
+  );
 
   const setGranularity = useCallback(
     (next: CalendarGranularity) => {
@@ -256,7 +277,7 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
       selection,
       granularity,
       setGranularity,
-      granularities,
+      granularities: offeredGranularities,
       value,
       setValue,
       month,
@@ -280,7 +301,7 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
       selection,
       granularity,
       setGranularity,
-      granularities,
+      offeredGranularities,
       value,
       setValue,
       month,
