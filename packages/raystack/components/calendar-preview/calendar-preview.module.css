@@ -254,3 +254,71 @@
   display: flex;
   margin-bottom: var(--rs-space-3);
 }
+
+/* The design's viewport is 192px of scrolling year sections. No --rs-* size
+   fits, so it is a component-local custom property — the pattern
+   tabs.module.css uses — rather than a bare hardcoded value. */
+.monthGrid {
+  --calendar-preview-month-grid-height: 192px;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-4);
+  max-height: var(--calendar-preview-month-grid-height);
+  overflow-y: auto;
+}
+
+.monthGridSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-3);
+}
+
+.monthGridYear {
+  color: var(--rs-color-foreground-base-secondary);
+  font-size: var(--rs-font-size-micro);
+  line-height: var(--rs-line-height-micro);
+  letter-spacing: var(--rs-letter-spacing-micro);
+}
+
+.monthGridCells {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), 1fr);
+  gap: var(--rs-space-4);
+}
+
+.monthCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--rs-space-5);
+  padding: 0 var(--rs-space-2);
+  border: none;
+  border-radius: var(--rs-radius-2);
+  background: transparent;
+  color: var(--rs-color-foreground-base-primary);
+  cursor: pointer;
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+}
+
+.monthCell:hover:not(:disabled) {
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+.monthCell[data-selected] {
+  background: var(--rs-color-background-accent-emphasis);
+  color: var(--rs-color-foreground-base-emphasis);
+}
+
+.monthCell:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.monthCell:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-accent);
+}

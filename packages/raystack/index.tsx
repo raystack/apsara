@@ -27,6 +27,7 @@ export {
   type CalendarPreviewGranularityTabsProps,
   type CalendarPreviewGridProps,
   type CalendarPreviewInputProps,
+  type CalendarPreviewMonthGridProps,
   type CalendarPreviewNavProps,
   type CalendarPreviewProps,
   type CalendarPreviewTriggerProps,

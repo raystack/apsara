@@ -45,6 +45,22 @@ export function addMonths(date: Date, count: number, timeZone?: string): Date {
   return zoned(date, timeZone).add(count, 'month').toDate();
 }
 
+/** First instant of a month, built from parts rather than parsed. */
+export function firstOfMonth(
+  year: number,
+  monthIndex: number,
+  timeZone?: string
+): Date {
+  const iso = `${year}-${String(monthIndex + 1).padStart(2, '0')}-01`;
+  return timeZone
+    ? dayjs.tz(iso, 'YYYY-MM-DD', timeZone).toDate()
+    : dayjs(iso, 'YYYY-MM-DD', true).toDate();
+}
+
+export function getYear(date: Date, timeZone?: string): number {
+  return zoned(date, timeZone).year();
+}
+
 export function endOfMonth(date: Date, timeZone?: string): Date {
   return zoned(date, timeZone).endOf('month').toDate();
 }
