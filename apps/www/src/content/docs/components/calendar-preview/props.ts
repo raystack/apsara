@@ -190,6 +190,27 @@ export interface CalendarPreviewGranularityTabsProps {
   className?: string;
 }
 
+export interface CalendarPreviewPresetsProps {
+  /**
+   * A column beside the grid, or a row above it.
+   * @defaultValue 'vertical'
+   */
+  orientation?: 'vertical' | 'horizontal';
+  /** Custom CSS class names */
+  className?: string;
+}
+
+export interface CalendarPreviewPresetProps {
+  /** The value this preset applies. Use for `single` and `multiple`. */
+  value?: Date | Date[] | null;
+  /** The range this preset applies. Required when `selection="range"`. */
+  range?: DateRangeValue;
+  /** Render as another element — an Apsara `Button`, say. */
+  render?: React.ReactElement;
+  /** Custom CSS class names */
+  className?: string;
+}
+
 export interface CalendarPreviewFooterProps {
   /** Custom CSS class names */
   className?: string;

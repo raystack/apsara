@@ -34,6 +34,8 @@ export {
   type CalendarPreviewMonthGridProps,
   type CalendarPreviewMultipleProps,
   type CalendarPreviewNavProps,
+  type CalendarPreviewPresetProps,
+  type CalendarPreviewPresetsProps,
   type CalendarPreviewProps,
   type CalendarPreviewRangeInputProps,
   type CalendarPreviewRangeProps,

@@ -101,3 +101,26 @@ export function useCalendarPreviewContext<Value = CalendarValue>(
   }
   return context as CalendarPreviewContextValue<Value>;
 }
+
+/**
+ * Value equality across all three selection modes, compared on the exact
+ * instant so a time-of-day edit counts as a change.
+ */
+export function isSameValue(a: CalendarValue, b: CalendarValue): boolean {
+  if (a === b) return true;
+  if (a == null || b == null) return false;
+  if (a instanceof Date && b instanceof Date)
+    return a.getTime() === b.getTime();
+  if (Array.isArray(a) && Array.isArray(b)) {
+    return (
+      a.length === b.length &&
+      a.every((item, index) => item.getTime() === b[index]?.getTime())
+    );
+  }
+  if (a instanceof Date || b instanceof Date || Array.isArray(a)) return false;
+  const left = a as DateRangeValue;
+  const right = b as DateRangeValue;
+  const same = (x: Date | null, y: Date | null) =>
+    x === y || (!!x && !!y && x.getTime() === y.getTime());
+  return same(left.from, right.from) && same(left.to, right.to);
+}

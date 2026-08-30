@@ -9,6 +9,10 @@ import { CalendarPreviewGrid } from './calendar-preview-grid';
 import { CalendarPreviewInput } from './calendar-preview-input';
 import { CalendarPreviewMonthGrid } from './calendar-preview-month-grid';
 import { CalendarPreviewNav } from './calendar-preview-nav';
+import {
+  CalendarPreviewPreset,
+  CalendarPreviewPresets
+} from './calendar-preview-presets';
 import { CalendarPreviewRangeInput } from './calendar-preview-range-input';
 import { CalendarPreviewRoot } from './calendar-preview-root';
 import { CalendarPreviewTimeField } from './calendar-preview-time-field';
@@ -19,6 +23,8 @@ export const CalendarPreview = Object.assign(CalendarPreviewRoot, {
   Content: CalendarPreviewContent,
   Input: CalendarPreviewInput,
   RangeInput: CalendarPreviewRangeInput,
+  Presets: CalendarPreviewPresets,
+  Preset: CalendarPreviewPreset,
   GranularityTabs: CalendarPreviewGranularityTabs,
   Nav: CalendarPreviewNav,
   Grid: CalendarPreviewGrid,

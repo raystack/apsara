@@ -18,6 +18,10 @@ export type { CalendarPreviewGridProps } from './calendar-preview-grid';
 export type { CalendarPreviewInputProps } from './calendar-preview-input';
 export type { CalendarPreviewMonthGridProps } from './calendar-preview-month-grid';
 export type { CalendarPreviewNavProps } from './calendar-preview-nav';
+export type {
+  CalendarPreviewPresetProps,
+  CalendarPreviewPresetsProps
+} from './calendar-preview-presets';
 export type { CalendarPreviewRangeInputProps } from './calendar-preview-range-input';
 export type {
   CalendarPreviewBaseProps,

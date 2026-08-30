@@ -150,6 +150,25 @@ export const commitDemo = {
   ]
 };
 
+export const presetDemo = {
+  type: 'code',
+  code: `<CalendarPreview selection="range" defaultMonth={new Date(2024, 3, 1)}>
+  <CalendarPreview.Presets>
+    <CalendarPreview.Preset range={{ from: new Date(2024, 3, 11), to: new Date(2024, 3, 17) }}>
+      Last 7 days
+    </CalendarPreview.Preset>
+    <CalendarPreview.Preset range={{ from: new Date(2024, 2, 19), to: new Date(2024, 3, 17) }}>
+      Last 30 days
+    </CalendarPreview.Preset>
+    <CalendarPreview.Preset range={{ from: new Date(2024, 3, 1), to: new Date(2024, 3, 30) }}>
+      This month
+    </CalendarPreview.Preset>
+  </CalendarPreview.Presets>
+  <CalendarPreview.Nav />
+  <CalendarPreview.Grid />
+</CalendarPreview>`
+};
+
 export const fieldDemo = {
   type: 'code',
   code: `<Field>

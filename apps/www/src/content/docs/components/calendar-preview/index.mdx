@@ -11,6 +11,7 @@ import {
   stateDemo,
   granularityDemo,
   commitDemo,
+  presetDemo,
   fieldDemo,
 } from "./demo.ts";
 
@@ -115,6 +116,26 @@ than one granularity.
 
 <auto-type-table path="./props.ts" name="CalendarPreviewGranularityTabsProps" />
 
+### Presets
+
+Holds `Preset` buttons, as a column beside the grid or a row above it.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewPresetsProps" />
+
+### Preset
+
+One preset. It writes straight into root state, so it needs no callback of its
+own, and marks itself pressed while the current value matches.
+
+It deliberately does not close the popover: under `commit="explicit"` that would
+discard the very edit it just made, and for a range you want to see what was
+applied. Compose `Apply`, or close from `onValueChange`.
+
+Passing `range` to a single picker — or `value` to a range one — fails at render
+rather than on click, so the stack points at the preset.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewPresetProps" />
+
 ### Footer
 
 Action row for `Apply` and `Cancel`.
@@ -160,6 +181,12 @@ without the parent seeing intermediate states. `lock` holds one endpoint of a
 range read-only while the other stays pickable.
 
 <Demo data={commitDemo} />
+
+### Presets
+
+Presets write straight into root state and light up while they match.
+
+<Demo data={presetDemo} />
 
 ### Inside a Field
 

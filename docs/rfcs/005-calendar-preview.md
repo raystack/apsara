@@ -263,7 +263,7 @@ interface MultipleProps extends CalendarPreviewBaseProps {
 | `.RangeInput` | `.Trigger` | `Flex` of two `Input`s | Paired start/end fields. | `startProps`, `endProps` — both full `Input` props |
 | `.Content` | root | Base UI `Popover.Popup` | Portaled surface. | `Popover.Content` props |
 | `.Presets` | `.Content` | `div` | Preset column/row. | `orientation?: 'vertical' \| 'horizontal'` |
-| `.Preset` | `.Presets` | `button` | One preset. Writes into root state. | `value` / `range`, `render` |
+| `.Preset` | `.Presets` | `button` | One preset. Writes into root state, and marks itself pressed while the value matches. | `value` (single/multiple) \| `range` (range), `render` |
 | `.GranularityTabs` | `.Content` | Apsara `Tabs` | Day \| Month \| Quarter \| Half-year \| Year. | renders only when `granularities.length > 1` |
 | `.Nav` | `.Content` | `div` | Caption, revert-to-default, previous / next. **Ours, not RDP's, and no `Select`.** | `months?: 1 \| 2`, `align?: 'start' \| 'end'` |
 | `.Grid` | `.Content` | RDP `DayPicker` | The day grid (replaces `Calendar`). | `months?: 1 \| 2`, `showOutsideDays`, `showWeekNumber`, `modifiers`, `dayProps` |
@@ -495,11 +495,10 @@ The eight `SKILL.md` checklist items, plus the four this rewrite exists to fix.
 |---|---|---|
 | 1 | **Name.** Does `CalendarPreview` graduate to `Calendar` at phase 6? "Preview" is honest for phases 1–4 and wrong once it is the only calendar. Proposal: keep it while both exist, rename at 6, keep `CalendarPreview` as a deprecated alias for one release. | Phase 5 — slot names embed the prefix, so renaming later is itself breaking |
 | 2 | **`commit` default for ranges.** `'immediate'` matches today, but a footer with Apply/Cancel implies `'explicit'` is the intended range pattern. | Phase 3 |
-| 3 | **Presets as data or children?** `<CalendarPreview.Preset>` children composes better; `presets={[…]}` is less typing. Both precedents exist in-repo (`Combobox` items as children, `DataTable` columns as data). The recipe signatures omit `presets` until this is settled. | Phase 3 |
-| 4 | **Time zones.** Does the rewrite own tz conversion end-to-end, or stay the pass-through it is today? | Phase 1 |
-| 5 | **`multiple` selection.** No current consumer needs it. Ship it, or keep the union two-armed? | Phase 1 |
-| 6 | **Announcing the break.** No changesets setup exists, and `packages/raystack/package.json` reads `0.48.0` while `CHANGELOG.md` already carries a `0.49.0` section. A `data-slot` rename has nothing but reviewer vigilance behind it. Introduce changesets, or keep hand-written prose? | Phase 5 |
-| 7 | **Do recipes ship at all?** No component hangs a pre-composed assembly off a root today, and `.Input` sitting beside `.DatePicker` in one namespace reads badly. The alternative is parts only, with the five compositions living in the docs as copyable examples. | Phase 2 — its exit criteria name them |
+| 3 | **Time zones.** Does the rewrite own tz conversion end-to-end, or stay the pass-through it is today? | Phase 1 |
+| 4 | **`multiple` selection.** No current consumer needs it. Ship it, or keep the union two-armed? | Phase 1 |
+| 5 | **Announcing the break.** No changesets setup exists, and `packages/raystack/package.json` reads `0.48.0` while `CHANGELOG.md` already carries a `0.49.0` section. A `data-slot` rename has nothing but reviewer vigilance behind it. Introduce changesets, or keep hand-written prose? | Phase 5 |
+| 6 | **Do recipes ship at all?** No component hangs a pre-composed assembly off a root today, and `.Input` sitting beside `.DatePicker` in one namespace reads badly. The alternative is parts only, with the five compositions living in the docs as copyable examples. | Phase 2 — its exit criteria name them |
 
 ## Alternatives
 
