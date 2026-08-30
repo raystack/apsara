@@ -86,8 +86,13 @@ Paired start and end fields. Both are typable.
 
 ### Nav
 
-Caption plus previous and next buttons. Renders for the day granularity only —
-the other granularities scroll rather than page.
+Caption, a revert-to-default button, and previous / next. Renders for the day
+granularity only — the other granularities scroll rather than page.
+
+The revert button appears only when the root was given a `defaultValue` and the
+current value differs from it; pressing it restores that default. It is absent
+otherwise rather than disabled, because a control that can never do anything is
+noise.
 
 <auto-type-table path="./props.ts" name="CalendarPreviewNavProps" />
 

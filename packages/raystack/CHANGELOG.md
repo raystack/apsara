@@ -56,7 +56,7 @@ this one.
 
 Apsara names every icon with a stable key that does not name a library —
 `SearchIcon`, `SortAscendingIcon`, `ClearIcon` — and draws it with lucide.
-The package exports the 31 icons its own components use, and `createIcon`
+The package exports the 32 icons its own components use, and `createIcon`
 is public, so an app builds any other icon the same way. See the
 [migration guide](https://apsara.raystack.io/docs/migrating-to-lucide-icons)
 and [Icons](https://apsara.raystack.io/docs/theme/icons).
@@ -97,7 +97,7 @@ and [Icons](https://apsara.raystack.io/docs/theme/icons).
 
 #### New features
 
-- **31 icons**, from `@raystack/apsara` and from
+- **32 icons**, from `@raystack/apsara` and from
   `@raystack/apsara/icons` — all drawn by lucide, from 30 drawings
   (`ClearIcon` and `ErrorIcon` share one). These are the icons Apsara's
   own components draw: the keys you cannot reach from your own call
@@ -115,7 +115,7 @@ and [Icons](https://apsara.raystack.io/docs/theme/icons).
   replaceability as Apsara's own icons.
 - **`data-icon="<Key>"`** on every icon, so CSS can style one icon
   without a re-render and a test can select it.
-- **New public types**: `IconName` (the union of the 31 keys, so a typo
+- **New public types**: `IconName` (the union of the 32 keys, so a typo
   in an override map is a type error), `IconOptions`, `IconOverrides`,
   `IconComponent`, `IconProps`, `IconProviderProps`, and `IconProvider`
   itself.

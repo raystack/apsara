@@ -44,6 +44,13 @@ export interface CalendarPreviewContextValue<Value = CalendarValue> {
   commitMode: 'immediate' | 'explicit';
   /** True when `commit='explicit'` and there are buffered edits. */
   hasPendingChanges: boolean;
+  /**
+   * True when a `defaultValue` was given and the current value differs from
+   * it — the condition under which `.Nav` offers its revert button.
+   */
+  canReset: boolean;
+  /** Restore `defaultValue`. A no-op when nothing was given to revert to. */
+  resetValue: () => void;
   /** Commit buffered edits. A no-op under `commit='immediate'`. */
   applyValue: () => void;
   /** Discard buffered edits. A no-op under `commit='immediate'`. */

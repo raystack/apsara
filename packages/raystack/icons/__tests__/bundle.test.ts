@@ -4,14 +4,14 @@ import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 /**
- * `icons/icons.tsx` holds all 31 keys in one module, and a consumer must still
+ * `icons/icons.tsx` holds all 32 keys in one module, and a consumer must still
  * pay only for the keys it imports. This test is what keeps that true.
  *
  * Per-key removal from a single module depends on the `/*#__PURE__*\/`
  * annotation on every `createIcon(…)` call, and on nothing in the module having
  * a side effect. It also fails on any aggregate icon map — a merged
  * `{ ...defaultIcons, ...overrides }` in `IconProvider`, or a runtime
- * `ICON_NAMES` array — because either puts all 31 icons in every bundle.
+ * `ICON_NAMES` array — because either puts all 32 icons in every bundle.
  */
 
 /** vitest runs with the package root as the cwd. */

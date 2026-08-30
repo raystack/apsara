@@ -182,3 +182,104 @@ describe('CalendarPreview.Nav', () => {
     expect(container.querySelector('[data-day="2024-04-15"]')).toBeNull();
   });
 });
+
+describe('CalendarPreview.Nav revert button', () => {
+  const withDefault = (props: Record<string, unknown> = {}) =>
+    render(
+      <CalendarPreview
+        defaultMonth={MONTH}
+        defaultValue={new Date(2024, 3, 10)}
+        {...props}
+      >
+        <CalendarPreview.Nav />
+        <CalendarPreview.Grid />
+      </CalendarPreview>
+    );
+
+  it('is absent while the value still equals the default', () => {
+    const { container } = withDefault();
+    expect(getSlot(container, 'calendar-preview-nav-undo')).toBeNull();
+  });
+
+  it('is absent when no default was given at all', () => {
+    const { container } = render(
+      <CalendarPreview defaultMonth={MONTH} value={new Date(2024, 3, 17)}>
+        <CalendarPreview.Nav />
+      </CalendarPreview>
+    );
+    expect(getSlot(container, 'calendar-preview-nav-undo')).toBeNull();
+  });
+
+  it('appears once the selection differs from the default', async () => {
+    const user = userEvent.setup();
+    const { container } = withDefault();
+    expect(getSlot(container, 'calendar-preview-nav-undo')).toBeNull();
+
+    await user.click(
+      container.querySelector('[data-day="2024-04-17"] button') as HTMLElement
+    );
+    expect(getSlot(container, 'calendar-preview-nav-undo')).not.toBeNull();
+  });
+
+  it('restores the default value and then hides itself again', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    const { container } = withDefault({ onValueChange });
+
+    await user.click(
+      container.querySelector('[data-day="2024-04-17"] button') as HTMLElement
+    );
+    await user.click(screen.getByLabelText('Reset to default date'));
+
+    expect(dayKey(lastArg(onValueChange) as Date)).toBe('2024-04-10');
+    expect(getSlot(container, 'calendar-preview-nav-undo')).toBeNull();
+  });
+
+  it('counts a time-of-day change as differing from the default', () => {
+    const { container } = render(
+      <CalendarPreview
+        defaultMonth={MONTH}
+        defaultValue={new Date(2024, 3, 10, 9, 0)}
+        value={new Date(2024, 3, 10, 17, 30)}
+      >
+        <CalendarPreview.Nav />
+      </CalendarPreview>
+    );
+    expect(getSlot(container, 'calendar-preview-nav-undo')).not.toBeNull();
+  });
+
+  it('works for a range default too', () => {
+    const { container } = render(
+      <CalendarPreview
+        selection='range'
+        defaultMonth={MONTH}
+        defaultValue={{ from: new Date(2024, 3, 1), to: new Date(2024, 3, 5) }}
+        value={{ from: new Date(2024, 3, 1), to: new Date(2024, 3, 9) }}
+      >
+        <CalendarPreview.Nav />
+      </CalendarPreview>
+    );
+    expect(getSlot(container, 'calendar-preview-nav-undo')).not.toBeNull();
+  });
+
+  it('is disabled rather than active when the picker is readOnly', async () => {
+    const user = userEvent.setup();
+    const { container } = withDefault({ readOnly: true });
+    // readOnly still lets the grid render, so reach the differing state via a
+    // controlled value instead.
+    expect(getSlot(container, 'calendar-preview-nav-undo')).toBeNull();
+
+    const { container: c2 } = render(
+      <CalendarPreview
+        defaultMonth={MONTH}
+        defaultValue={new Date(2024, 3, 10)}
+        value={new Date(2024, 3, 17)}
+        readOnly
+      >
+        <CalendarPreview.Nav />
+      </CalendarPreview>
+    );
+    expect(getSlot(c2, 'calendar-preview-nav-undo')).toBeDisabled();
+    await user.click(screen.getAllByLabelText('Reset to default date')[0]);
+  });
+});

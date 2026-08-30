@@ -145,7 +145,7 @@ Full part tree:
     ├── <CalendarPreview.Presets>
     │   └── <CalendarPreview.Preset />
     ├── <CalendarPreview.GranularityTabs />  Day | Month | Quarter | Half-year | Year
-    ├── <CalendarPreview.Nav />              caption + previous / next buttons
+    ├── <CalendarPreview.Nav />              caption + revert / previous / next
     ├── <CalendarPreview.Grid />             the day grid (replaces `Calendar`)
     ├── <CalendarPreview.MonthGrid />        month / quarter / half-year / year grid
     ├── <CalendarPreview.TimeField />        time-of-day
@@ -265,7 +265,7 @@ interface MultipleProps extends CalendarPreviewBaseProps {
 | `.Presets` | `.Content` | `div` | Preset column/row. | `orientation?: 'vertical' \| 'horizontal'` |
 | `.Preset` | `.Presets` | `button` | One preset. Writes into root state. | `value` / `range`, `render` |
 | `.GranularityTabs` | `.Content` | Apsara `Tabs` | Day \| Month \| Quarter \| Half-year \| Year. | renders only when `granularities.length > 1` |
-| `.Nav` | `.Content` | `div` | Caption plus previous / next buttons, and a third whose action is still open. **Ours, not RDP's, and no `Select`.** | `align?: 'start' \| 'end'` |
+| `.Nav` | `.Content` | `div` | Caption, revert-to-default, previous / next. **Ours, not RDP's, and no `Select`.** | `months?: 1 \| 2`, `align?: 'start' \| 'end'` |
 | `.Grid` | `.Content` | RDP `DayPicker` | The day grid (replaces `Calendar`). | `months?: 1 \| 2`, `showOutsideDays`, `showWeekNumber`, `modifiers`, `dayProps` |
 | `.MonthGrid` | `.Content` | `div` | Month / quarter / half-year / year cells. | inherits root `granularity` |
 | `.TimeField` | `.Content` | Apsara `Input`s | Hour/minute (+ meridiem). | `step`, `hourCycle?: 12 \| 24` |
@@ -274,7 +274,7 @@ interface MultipleProps extends CalendarPreviewBaseProps {
 
 Two parts carry the load:
 
-- **`.Nav` is ours, not RDP's `components.Dropdown`, and it renders no `Select` at all** — which retires the `captionLayout` bug instead of working around it. The loop happens because RDP mounts and unmounts Apsara `Select`s through its `Dropdown` override; the new design navigates with a caption and three icon buttons — previous, next, and one more (see [Open Items](#open-items) #9) — so there is no dropdown left to mount. `.Nav` is a sibling of the grid and drives `month` itself, so RDP runs with `hideNavigation` + `captionLayout='label'` and never enters the unmount ref-cleanup path. Month, quarter, half-year, and year are picked in `.MonthGrid`, a body view reached through `.GranularityTabs` — never through a caption dropdown.
+- **`.Nav` is ours, not RDP's `components.Dropdown`, and it renders no `Select` at all** — which retires the `captionLayout` bug instead of working around it. The loop happens because RDP mounts and unmounts Apsara `Select`s through its `Dropdown` override; the new design navigates with a caption and three icon buttons — revert-to-default, previous and next — so there is no dropdown left to mount. `.Nav` is a sibling of the grid and drives `month` itself, so RDP runs with `hideNavigation` + `captionLayout='label'` and never enters the unmount ref-cleanup path. Month, quarter, half-year, and year are picked in `.MonthGrid`, a body view reached through `.GranularityTabs` — never through a caption dropdown.
 - **`.Grid` is the only part that touches RDP, and it never forwards the union.** `months`, `showOutsideDays`, `showWeekNumber`, and `modifiers` are ours; `mode`, `selected`, `onSelect`, `required`, `month`, `onMonthChange`, and `timeZone` come from root context and are not in `GridProps` at all. Nothing is force-overridden after a consumer spread, so spread-last holds — for the first time in this family.
 
 ### State Ownership
@@ -419,7 +419,7 @@ Verified against the npm registry, `pnpm-lock.yaml`, and the published tarballs 
 | `range-picker-start-input` | `calendar-preview-input-start` |
 | `range-picker-end-input` | `calendar-preview-input-end` |
 
-23 old slots therefore become 18, plus nine new: `calendar-preview-presets`, `-preset`, `-granularity`, `-month-grid`, `-month-cell`, `-time-field`, `-apply`, `-cancel`, `-nav-caption`. `.Nav`'s third button needs a tenth once its action is settled. Because `CalendarPreview` is a new component name this is purely additive — the old slots keep working for as long as the old family ships.
+23 old slots therefore become 18, plus ten new: `calendar-preview-presets`, `-preset`, `-granularity`, `-month-grid`, `-month-cell`, `-time-field`, `-apply`, `-cancel`, `-nav-caption`, `-nav-undo`. Because `CalendarPreview` is a new component name this is purely additive — the old slots keep working for as long as the old family ships.
 
 ## Breaking Changes
 
@@ -501,7 +501,6 @@ The eight `SKILL.md` checklist items, plus the four this rewrite exists to fix.
 | 6 | **`multiple` selection.** No current consumer needs it. Ship it, or keep the union two-armed? | Phase 1 |
 | 7 | **Announcing the break.** No changesets setup exists, and `packages/raystack/package.json` reads `0.48.0` while `CHANGELOG.md` already carries a `0.49.0` section. A `data-slot` rename has nothing but reviewer vigilance behind it. Introduce changesets, or keep hand-written prose? | Phase 5 |
 | 8 | **Do recipes ship at all?** No component hangs a pre-composed assembly off a root today, and `.Input` sitting beside `.DatePicker` in one namespace reads badly. The alternative is parts only, with the five compositions living in the docs as copyable examples. | Phase 2 — its exit criteria name them |
-| 9 | **`.Nav`'s third button.** The design puts an `Undo` glyph left of the chevrons with no stated action; DES-630 D3 asked for a `Today` jump, but in the *footer*. Jump-to-today, clear-selection, or revert-to-last-committed are all readable from that icon. It needs an action, a `data-slot`, possibly a prop to opt out — and an icon key, since `icons.tsx` exports no `Undo`. | Phase 2 — `.Nav` is built there |
 
 ## Alternatives
 

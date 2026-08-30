@@ -2,7 +2,7 @@
 
 import { cx } from 'class-variance-authority';
 import type { ComponentProps } from 'react';
-import { ChevronLeftIcon, ChevronRightIcon } from '~/icons';
+import { ChevronLeftIcon, ChevronRightIcon, UndoIcon } from '~/icons';
 import { IconButton } from '../icon-button';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
@@ -35,13 +35,15 @@ export interface CalendarPreviewNavProps
 }
 
 /**
- * Caption plus previous / next buttons. **Ours, not react-day-picker's** —
- * `.Grid` runs with `hideNavigation` and `captionLayout='label'`, so RDP never
- * mounts a `Select` and the unmount loop that disabled `captionLayout` has no
- * surface to occur on.
+ * Caption, a revert button, and previous / next. **Ours, not
+ * react-day-picker's** — `.Grid` runs with `hideNavigation` and
+ * `captionLayout='label'`, so RDP never mounts a `Select` and the unmount loop
+ * that disabled `captionLayout` has no surface to occur on.
  *
- * The design places a third button here, left of the chevrons. Its action is
- * unsettled (RFC 005 open item 9), so it is deliberately not built yet.
+ * The revert button appears only when the root was given a `defaultValue` and
+ * the current value differs from it; pressing it restores that default. It is
+ * absent otherwise rather than disabled, because a control that can never do
+ * anything is noise.
  */
 export function CalendarPreviewNav({
   className,
@@ -50,8 +52,18 @@ export function CalendarPreviewNav({
   months = 1,
   ...props
 }: CalendarPreviewNavProps) {
-  const { month, setMonth, minDate, maxDate, disabled, timeZone, granularity } =
-    useCalendarPreviewContext('Nav');
+  const {
+    month,
+    setMonth,
+    minDate,
+    maxDate,
+    disabled,
+    readOnly,
+    timeZone,
+    granularity,
+    canReset,
+    resetValue
+  } = useCalendarPreviewContext('Nav');
 
   /*
    * Month stepping only makes sense for the day granularity, and the design
@@ -97,6 +109,17 @@ export function CalendarPreviewNav({
           : formatDate(month, captionFormat, timeZone)}
       </span>
       <div className={styles.navButtons}>
+        {canReset && (
+          <IconButton
+            size={3}
+            aria-label='Reset to default date'
+            disabled={disabled || readOnly}
+            onClick={resetValue}
+            data-slot='calendar-preview-nav-undo'
+          >
+            <UndoIcon />
+          </IconButton>
+        )}
         <IconButton
           size={3}
           aria-label='Previous month'
