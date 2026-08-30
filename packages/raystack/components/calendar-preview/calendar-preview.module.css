@@ -432,3 +432,14 @@
   outline: var(--rs-focus-ring);
   outline-offset: var(--rs-focus-ring-offset-accent);
 }
+
+.gridSkeleton {
+  width: var(--rs-space-12);
+  min-width: 280px;
+}
+
+.gridSkeletonRows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-1);
+}

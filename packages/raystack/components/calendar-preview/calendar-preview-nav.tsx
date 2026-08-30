@@ -4,6 +4,7 @@ import { cx } from 'class-variance-authority';
 import type { ComponentProps } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon, UndoIcon } from '~/icons';
 import { IconButton } from '../icon-button';
+import { Skeleton } from '../skeleton';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
 import {
@@ -61,6 +62,7 @@ export function CalendarPreviewNav({
     readOnly,
     timeZone,
     granularity,
+    loading,
     canReset,
     resetValue
   } = useCalendarPreviewContext('Nav');
@@ -95,19 +97,27 @@ export function CalendarPreviewNav({
       data-slot='calendar-preview-nav'
       {...props}
     >
-      <span
-        className={styles.navCaption}
-        aria-live='polite'
-        data-slot='calendar-preview-nav-caption'
-      >
-        {months > 1
-          ? `${formatDate(month, captionFormat, timeZone)} – ${formatDate(
-              addMonths(month, months - 1, timeZone),
-              captionFormat,
-              timeZone
-            )}`
-          : formatDate(month, captionFormat, timeZone)}
-      </span>
+      {loading ? (
+        /* The slot goes on a wrapper: `Skeleton` does not spread unknown
+           props, so one passed to it is dropped rather than rendered. */
+        <span aria-busy='true' data-slot='calendar-preview-skeleton'>
+          <Skeleton width='var(--rs-space-12)' height='var(--rs-space-5)' />
+        </span>
+      ) : (
+        <span
+          className={styles.navCaption}
+          aria-live='polite'
+          data-slot='calendar-preview-nav-caption'
+        >
+          {months > 1
+            ? `${formatDate(month, captionFormat, timeZone)} – ${formatDate(
+                addMonths(month, months - 1, timeZone),
+                captionFormat,
+                timeZone
+              )}`
+            : formatDate(month, captionFormat, timeZone)}
+        </span>
+      )}
       <div className={styles.navButtons}>
         {canReset && (
           <IconButton

@@ -7,6 +7,7 @@ import {
   useEffect,
   useRef
 } from 'react';
+import { Skeleton } from '../skeleton';
 import styles from './calendar-preview.module.css';
 import type {
   CalendarGranularity,
@@ -103,7 +104,8 @@ export function CalendarPreviewMonthGrid({
     isDateUnavailable,
     timeZone,
     disabled,
-    readOnly
+    readOnly,
+    loading
   } = useCalendarPreviewContext('MonthGrid');
 
   const activeYearRef = useRef<HTMLDivElement>(null);
@@ -117,6 +119,22 @@ export function CalendarPreviewMonthGrid({
   }, []);
 
   if (granularity === 'day') return null;
+
+  if (loading) {
+    return (
+      <div
+        className={cx(styles.gridSkeleton, className)}
+        aria-busy='true'
+        data-slot='calendar-preview-skeleton'
+      >
+        <Skeleton
+          count={5}
+          height='var(--rs-space-7)'
+          containerClassName={styles.gridSkeletonRows}
+        />
+      </div>
+    );
+  }
 
   const period = PERIODS[granularity];
   const monthSpan = 12 / period.perYear;

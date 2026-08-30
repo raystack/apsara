@@ -73,6 +73,11 @@ export interface CalendarPreviewContextValue<Value = CalendarValue> {
   format: string;
   timeZone?: string;
   weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+  /**
+   * Already folded into `disabled`, so no part needs to check both. Read it
+   * only to decide whether to render a skeleton in place of content.
+   */
+  loading: boolean;
   disabled: boolean;
   readOnly: boolean;
 }

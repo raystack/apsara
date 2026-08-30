@@ -12,6 +12,7 @@ import {
   granularityDemo,
   commitDemo,
   presetDemo,
+  loadingDemo,
   fieldDemo,
 } from "./demo.ts";
 
@@ -188,6 +189,15 @@ Presets write straight into root state and light up while they match.
 
 <Demo data={presetDemo} />
 
+### Loading
+
+`loading` replaces the caption and the grid with a shimmer and disables every
+control. It is one flag rather than two: the old family shimmered five grid rows
+while the chrome stayed live, so the month controls were still operable over
+data that had not arrived.
+
+<Demo data={loadingDemo} />
+
 ### Inside a Field
 
 `Input` reads field context, so the label association, `required` and
@@ -224,6 +234,7 @@ by semver, so styling may target them and a rename is a breaking change.
 | `calendar-preview-positioner` |
 | `calendar-preview-presets` |
 | `calendar-preview-range-inputs` |
+| `calendar-preview-skeleton` |
 | `calendar-preview-table` |
 | `calendar-preview-time-field` |
 | `calendar-preview-trigger` |
@@ -245,3 +256,6 @@ by semver, so styling may target them and a rename is a breaking change.
   the standalone tab visual, but tab semantics without tabpanels would be wrong.
 - `readOnly` leaves days legible and focusable while refusing edits; `disabled`
   removes them from interaction and prevents the popover opening at all.
+- `loading` implies `disabled`, so nothing is operable over data that has not
+  arrived. Each shimmer region carries `aria-busy`, and the shimmer itself is
+  `aria-hidden`.

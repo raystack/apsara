@@ -169,6 +169,14 @@ export const presetDemo = {
 </CalendarPreview>`
 };
 
+export const loadingDemo = {
+  type: 'code',
+  code: `<CalendarPreview loading defaultMonth={new Date(2024, 3, 1)}>
+  <CalendarPreview.Nav />
+  <CalendarPreview.Grid />
+</CalendarPreview>`
+};
+
 export const fieldDemo = {
   type: 'code',
   code: `<Field>

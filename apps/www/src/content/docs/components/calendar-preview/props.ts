@@ -100,6 +100,13 @@ export interface CalendarPreviewProps {
     reason?: 'unparseable' | 'out-of-bounds' | 'unavailable';
   }) => void;
 
+  /**
+   * Replaces the caption and the grid with a shimmer and disables every
+   * control, rather than leaving the chrome live while the grid loads.
+   * @defaultValue false
+   */
+  loading?: boolean;
+
   /** @defaultValue false */
   disabled?: boolean;
   /** Shows the value but refuses edits. @defaultValue false */

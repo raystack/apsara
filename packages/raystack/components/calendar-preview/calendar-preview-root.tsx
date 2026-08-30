@@ -75,6 +75,13 @@ export interface CalendarPreviewBaseProps {
    */
   commit?: 'immediate' | 'explicit';
 
+  /**
+   * Replaces the caption and the grid with a shimmer and disables every
+   * control, rather than leaving the chrome live while the grid loads.
+   * @defaultValue false
+   */
+  loading?: boolean;
+
   /** @defaultValue false */
   disabled?: boolean;
   /** @defaultValue false */
@@ -168,10 +175,17 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
     format = DEFAULT_FORMAT,
     timeZone,
     weekStartsOn = 0,
-    disabled = false,
+    loading = false,
+    disabled: disabledProp = false,
     readOnly = false,
     children
   } = props as NormalizedRootProps;
+
+  /*
+   * Loading disables everything by folding into `disabled` here, once. Asking
+   * each part to check both flags would mean one of them eventually forgetting.
+   */
+  const disabled = disabledProp || loading;
 
   const [value, setValueUnwrapped] = useControlled<CalendarValue>({
     controlled: valueProp,
@@ -388,6 +402,7 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
       format,
       timeZone,
       weekStartsOn,
+      loading,
       disabled,
       readOnly
     }),
@@ -418,6 +433,7 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
       format,
       timeZone,
       weekStartsOn,
+      loading,
       disabled,
       readOnly
     ]

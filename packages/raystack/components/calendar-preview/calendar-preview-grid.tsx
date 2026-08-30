@@ -9,6 +9,7 @@ import {
   type DayPickerProps,
   type Matcher
 } from 'react-day-picker';
+import { Skeleton } from '../skeleton';
 import styles from './calendar-preview.module.css';
 import type { DateRangeValue } from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
@@ -54,7 +55,8 @@ export function CalendarPreviewGrid({
     disabled,
     readOnly,
     lock,
-    granularity
+    granularity,
+    loading
   } = useCalendarPreviewContext('Grid');
 
   /*
@@ -63,6 +65,26 @@ export function CalendarPreviewGrid({
    * each shows itself for its own granularities.
    */
   if (granularity !== 'day') return null;
+
+  /*
+   * The grid is replaced outright rather than overlaid: the old family shimmered
+   * five rows over a live grid, which left the days underneath focusable.
+   */
+  if (loading) {
+    return (
+      <div
+        className={cx(styles.gridSkeleton, className)}
+        aria-busy='true'
+        data-slot='calendar-preview-skeleton'
+      >
+        <Skeleton
+          count={7}
+          height='var(--rs-space-10)'
+          containerClassName={styles.gridSkeletonRows}
+        />
+      </div>
+    );
+  }
 
   /*
    * `readOnly` shows the value but refuses writes, so days stay legible and
