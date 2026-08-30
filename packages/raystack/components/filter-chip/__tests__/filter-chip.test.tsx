@@ -128,7 +128,7 @@ describe('FilterChip', () => {
   describe('Date Filter Type', () => {
     it('renders the date picker without crashing when no value is set', () => {
       // Regression: an unset date chip seeds its value with '' and forwarded
-      // that string to DatePicker, whose controlled-sync effect ran
+      // that string to the picker, whose controlled-sync effect ran
       // `valueProp?.getTime()` → "getTime is not a function".
       expect(() =>
         render(<FilterChip label='Created' columnType={FilterType.date} />)
@@ -184,7 +184,7 @@ describe('FilterChip', () => {
       expect(screen.getByDisplayValue('27 May 2026')).toBeInTheDocument();
     });
 
-    it('forwards calendarProps to the underlying DatePicker', () => {
+    it('forwards calendarProps to the underlying CalendarPreview', () => {
       // dateFormat is the easiest forwarded prop to observe — the formatted
       // string in the input changes when it lands on DatePicker.
       render(
@@ -192,7 +192,7 @@ describe('FilterChip', () => {
           label='Created'
           columnType={FilterType.date}
           value={new Date(2026, 4, 27)}
-          calendarProps={{ dateFormat: 'DD/MM/YYYY' }}
+          calendarProps={{ format: 'DD/MM/YYYY' }}
         />
       );
       expect(screen.getByDisplayValue('27/05/2026')).toBeInTheDocument();

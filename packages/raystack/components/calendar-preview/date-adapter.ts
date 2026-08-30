@@ -120,6 +120,32 @@ export function parseDate(
   return zonedParse.isValid() ? zonedParse.toDate() : null;
 }
 
+/** Day-granularity comparisons, so callers never touch a date library. */
+export function isSameDay(a: Date, b: Date, timeZone?: string): boolean {
+  return dayKey(a, timeZone) === dayKey(b, timeZone);
+}
+
+export function isBeforeDay(a: Date, b: Date, timeZone?: string): boolean {
+  return dayKey(a, timeZone) < dayKey(b, timeZone);
+}
+
+export function isAfterDay(a: Date, b: Date, timeZone?: string): boolean {
+  return dayKey(a, timeZone) > dayKey(b, timeZone);
+}
+
+/**
+ * Best-effort parse for values arriving from outside the component — a
+ * serialized query string, an epoch number, an ISO timestamp. Deliberately
+ * loose, unlike `parseDate`, which is strict against a display format.
+ */
+export function toDateLoose(value: unknown): Date | null {
+  if (value instanceof Date)
+    return Number.isNaN(value.getTime()) ? null : value;
+  if (typeof value !== 'string' && typeof value !== 'number') return null;
+  const parsed = dayjs(value);
+  return parsed.isValid() ? parsed.toDate() : null;
+}
+
 export function isWithinBounds(
   date: Date,
   minDate?: Date,

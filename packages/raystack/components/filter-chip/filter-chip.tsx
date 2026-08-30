@@ -1,7 +1,6 @@
 'use client';
 
 import { cva, VariantProps } from 'class-variance-authority';
-import dayjs from 'dayjs';
 import { ComponentProps, ReactElement, useCallback, useState } from 'react';
 import { XIcon } from '~/icons';
 import {
@@ -12,7 +11,9 @@ import {
   FilterTypes,
   filterOperators
 } from '~/types/filters';
-import { DatePicker, type DatePickerProps } from '../calendar';
+import type { CalendarPreviewProps } from '../calendar-preview';
+import { CalendarPreview } from '../calendar-preview';
+import { toDateLoose } from '../calendar-preview/date-adapter';
 import { Flex } from '../flex';
 import { Input } from '../input';
 import { Select } from '../select';
@@ -36,28 +37,15 @@ const chip = cva(styles.chip, {
 export type FilterChipValue = string | string[] | number | Date;
 
 /**
- * Coerce a `FilterChipValue` to the `Date` the DatePicker expects — filter
- * state hydrated from a serialized query arrives as a string or epoch number.
- * Unparseable values leave the field unselected.
- */
-const toDateValue = (value: unknown): Date | undefined => {
-  if (value instanceof Date) return value;
-  if (typeof value === 'string' || typeof value === 'number') {
-    const parsed = dayjs(value);
-    return parsed.isValid() ? parsed.toDate() : undefined;
-  }
-  return undefined;
-};
-
-/**
- * Subset of `DatePickerProps` that consumers may forward to the chip's
- * built-in DatePicker via `calendarProps`. `value`/`onSelect`/`defaultValue`
- * are owned by `FilterChip`; `children` would replace the input trigger and
- * break the chip layout.
+ * Subset of `CalendarPreview`'s root props that consumers may forward to the
+ * chip's built-in picker via `calendarProps`. `value`/`onValueChange`/
+ * `defaultValue` are owned by `FilterChip`; `children` would replace the
+ * composed trigger and break the chip layout; `selection` is fixed to single,
+ * because the chip carries one value.
  */
 export type FilterChipCalendarProps = Omit<
-  DatePickerProps,
-  'value' | 'onSelect' | 'defaultValue' | 'children'
+  CalendarPreviewProps,
+  'value' | 'onValueChange' | 'defaultValue' | 'children' | 'selection'
 >;
 
 export interface FilterChipProps
@@ -74,9 +62,10 @@ export interface FilterChipProps
   operations?: FilterOperator<string>[];
   selectProps?: BaseSelectProps;
   /**
-   * Props forwarded to the underlying `DatePicker` for `columnType="date"`.
-   * `value`/`onSelect`/`defaultValue` are owned by `FilterChip` and excluded;
-   * `children` is excluded so the chip's input trigger isn't replaced.
+   * Props forwarded to the underlying `CalendarPreview` for
+   * `columnType="date"`. `value`/`onValueChange`/`defaultValue` are owned by
+   * `FilterChip` and excluded; `children` is excluded so the chip's composed
+   * trigger isn't replaced.
    */
   calendarProps?: FilterChipCalendarProps;
 }
@@ -84,7 +73,7 @@ export interface FilterChipProps
 /**
  * A compact, removable filter pill that pairs a label and operator with a
  * value control chosen by `columnType`: a `Select` (`select`/`multiselect`),
- * a `DatePicker` (`date`), or a text `Input` (`string`/`number`). The value
+ * a `CalendarPreview` (`date`), or a text `Input` (`string`/`number`). The value
  * control sizes to its content so the chip hugs the active filter. Emits
  * `onValueChange`/`onOperationChange` and renders a remove button when
  * `onRemove` is provided.
@@ -180,19 +169,31 @@ export const FilterChip = ({
             className={styles.dateFieldWrapper}
             data-slot='filter-chip-value'
           >
-            <DatePicker
-              showCalendarIcon={false}
+            {/*
+             * Composed from parts rather than configured through `slotProps`.
+             * The chip's own styling now hangs off its wrapper and reaches
+             * `Input` through that component's public slots, so a
+             * consumer-supplied class can no longer replace it.
+             *
+             * `initialFocus={false}` is required, not cosmetic: the trigger
+             * holds a typed field, and without it the popup takes focus on
+             * open and keystrokes never reach the input.
+             */}
+            <CalendarPreview
               {...calendarProps}
-              value={toDateValue(filterValue)}
-              onSelect={date => handleFilterValueChange(date)}
-              slotProps={{
-                ...calendarProps?.slotProps,
-                input: {
-                  classNames: { container: styles.dateField },
-                  ...calendarProps?.slotProps?.input
-                }
-              }}
-            />
+              value={toDateLoose(filterValue)}
+              onValueChange={date => handleFilterValueChange(date)}
+            >
+              <CalendarPreview.Trigger className={styles.dateField}>
+                {/* Preserves the chip's long-standing empty-state wording;
+                    `.Input` otherwise falls back to showing the format. */}
+                <CalendarPreview.Input placeholder='Select date' />
+              </CalendarPreview.Trigger>
+              <CalendarPreview.Content initialFocus={false}>
+                <CalendarPreview.Nav />
+                <CalendarPreview.Grid />
+              </CalendarPreview.Content>
+            </CalendarPreview>
           </div>
         );
       default:

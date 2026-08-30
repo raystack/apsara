@@ -1,8 +1,4 @@
 import type { FilterFn } from '@tanstack/table-core';
-import dayjs from 'dayjs';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-
 import {
   DataTableFilterOperatorTypes,
   DateFilterOperatorType,
@@ -17,10 +13,31 @@ import {
   SelectFilterOperatorType,
   StringFilterOperatorType
 } from '~/types/filters';
+import {
+  isAfterDay,
+  isBeforeDay,
+  isSameDay,
+  toDateLoose
+} from '../../calendar-preview/date-adapter';
 import { DataViewFilterValues } from '../data-view.types';
 
-dayjs.extend(isSameOrAfter);
-dayjs.extend(isSameOrBefore);
+/*
+ * Date comparisons go through the calendar adapter, which is the one place
+ * that registers dayjs plugins. Extending them here as well made the module
+ * order-dependent — the failure class behind the 0.49.0 P0.
+ *
+ * A row value that will not parse compares false against every operator,
+ * which is what an unfilterable cell should do.
+ */
+const compare = (
+  a: unknown,
+  b: unknown,
+  predicate: (left: Date, right: Date) => boolean
+) => {
+  const left = toDateLoose(a);
+  const right = toDateLoose(b);
+  return left && right ? predicate(left, right) : false;
+};
 
 export type FilterFunctionsMap = {
   number: Record<NumberFilterOperatorType, FilterFn<unknown>>;
@@ -70,22 +87,24 @@ export const filterOperationsMap: FilterFunctionsMap = {
   },
   date: {
     eq: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isSame(dayjs(filterValue.date), 'day'),
+      compare(row.getValue(columnId), filterValue.date, isSameDay),
     neq: (row, columnId, filterValue: FilterValue) =>
-      !dayjs(row.getValue(columnId)).isSame(dayjs(filterValue.date), 'day'),
+      !compare(row.getValue(columnId), filterValue.date, isSameDay),
     lt: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isBefore(dayjs(filterValue.date), 'day'),
+      compare(row.getValue(columnId), filterValue.date, isBeforeDay),
     lte: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isSameOrBefore(
-        dayjs(filterValue.date),
-        'day'
+      compare(
+        row.getValue(columnId),
+        filterValue.date,
+        (a, b) => !isAfterDay(a, b)
       ),
     gt: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isAfter(dayjs(filterValue.date), 'day'),
+      compare(row.getValue(columnId), filterValue.date, isAfterDay),
     gte: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isSameOrAfter(
-        dayjs(filterValue.date),
-        'day'
+      compare(
+        row.getValue(columnId),
+        filterValue.date,
+        (a, b) => !isBeforeDay(a, b)
       )
   },
   select: {
@@ -131,9 +150,9 @@ const handleStringBasedTypes = (
 ): DataViewFilterValues => {
   switch (filterType) {
     case FilterType.date: {
-      const dateValue = dayjs(value);
+      const dateValue = toDateLoose(value);
       let stringValue = '';
-      if (dateValue.isValid()) {
+      if (dateValue) {
         try {
           stringValue = dateValue.toISOString();
         } catch {
