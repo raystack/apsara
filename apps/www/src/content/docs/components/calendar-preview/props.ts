@@ -23,8 +23,16 @@ export interface CalendarPreviewProps {
   value?: Date | DateRangeValue | Date[] | null;
   /** The initially selected value (uncontrolled). */
   defaultValue?: Date | DateRangeValue | Date[] | null;
-  /** Called with the complete value on every change. */
-  onValueChange?: (value: Date | DateRangeValue | Date[] | null) => void;
+  /**
+   * Called with the complete value on every change. The second argument names
+   * the granularity that produced it: a month pick emits the first day of that
+   * month, so without it `1 June` chosen as a day is indistinguishable from
+   * June chosen as a month.
+   */
+  onValueChange?: (
+    value: Date | DateRangeValue | Date[] | null,
+    details: { granularity: CalendarGranularity }
+  ) => void;
 
   /** Whether the popover is open (controlled). */
   open?: boolean;
@@ -60,7 +68,8 @@ export interface CalendarPreviewProps {
   isDateUnavailable?: (date: Date) => boolean;
 
   /**
-   * Display and input format for typed fields.
+   * Display and input format for typed fields at the `day` granularity. The
+   * other granularities read as `Jun 2026`, `Q3 2026`, `H1 2026` and `2026`.
    * @defaultValue 'DD MMM YYYY'
    */
   format?: string;

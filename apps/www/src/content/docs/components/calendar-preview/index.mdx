@@ -139,7 +139,13 @@ when there is more than one.
 <Demo data={granularityDemo} />
 
 `MonthGrid` emits the **first day of the chosen period** — a quarter pick in
-2024 Q3 yields 1 July 2024.
+2024 Q3 yields 1 July 2024 — and `onValueChange`'s second argument names the
+granularity that produced it. The pair is what makes the value unambiguous: a
+`Date` alone cannot distinguish 1 June picked as a day from June picked as a
+month.
+
+The typed field follows the active granularity too, reading `Jun 2026`,
+`Q3 2026`, `H1 2026` or `2026` rather than a full date.
 
 ### Commit and locking
 

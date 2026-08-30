@@ -15,6 +15,16 @@ import {
 } from './calendar-preview-context';
 import { DEFAULT_FORMAT, startOfMonth } from './date-adapter';
 
+/**
+ * Accompanies every value change with the granularity that produced it. A
+ * month pick emits the first day of that month, so without this a consumer
+ * cannot tell `1 June` chosen as a day from June chosen as a month — the same
+ * pairing the reference app sends as `startDate` plus `startDateResolution`.
+ */
+export interface CalendarValueChangeDetails {
+  granularity: CalendarGranularity;
+}
+
 export interface CalendarPreviewBaseProps {
   /** The active granularity (controlled). */
   granularity?: CalendarGranularity;
@@ -75,14 +85,20 @@ export interface CalendarPreviewSingleProps extends CalendarPreviewBaseProps {
   selection?: 'single';
   value?: Date | null;
   defaultValue?: Date | null;
-  onValueChange?: (value: Date | null) => void;
+  onValueChange?: (
+    value: Date | null,
+    details: CalendarValueChangeDetails
+  ) => void;
 }
 
 export interface CalendarPreviewRangeProps extends CalendarPreviewBaseProps {
   selection: 'range';
   value?: DateRangeValue | null;
   defaultValue?: DateRangeValue | null;
-  onValueChange?: (value: DateRangeValue | null) => void;
+  onValueChange?: (
+    value: DateRangeValue | null,
+    details: CalendarValueChangeDetails
+  ) => void;
   /**
    * Holds one endpoint read-only in both the input and the grid, so "fix the
    * start, pick the end" no longer means disabling the whole picker.
@@ -94,7 +110,7 @@ export interface CalendarPreviewMultipleProps extends CalendarPreviewBaseProps {
   selection: 'multiple';
   value?: Date[];
   defaultValue?: Date[];
-  onValueChange?: (value: Date[]) => void;
+  onValueChange?: (value: Date[], details: CalendarValueChangeDetails) => void;
 }
 
 export type CalendarPreviewRootProps =
@@ -112,7 +128,10 @@ interface NormalizedRootProps extends CalendarPreviewBaseProps {
   lock?: CalendarRangeField;
   value?: CalendarValue;
   defaultValue?: CalendarValue;
-  onValueChange?: (value: CalendarValue) => void;
+  onValueChange?: (
+    value: CalendarValue,
+    details: CalendarValueChangeDetails
+  ) => void;
 }
 
 /**
@@ -259,17 +278,17 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
         return;
       }
       setValueUnwrapped(next);
-      onValueChange?.(next);
+      onValueChange?.(next, { granularity });
     },
-    [commitMode, setValueUnwrapped, onValueChange]
+    [commitMode, setValueUnwrapped, onValueChange, granularity]
   );
 
   const applyValue = useCallback(() => {
     if (commitMode !== 'explicit' || buffer === undefined) return;
     setValueUnwrapped(buffer);
-    onValueChange?.(buffer);
+    onValueChange?.(buffer, { granularity });
     setBuffer(undefined);
-  }, [commitMode, buffer, setValueUnwrapped, onValueChange]);
+  }, [commitMode, buffer, setValueUnwrapped, onValueChange, granularity]);
 
   const cancelValue = useCallback(() => setBuffer(undefined), []);
 

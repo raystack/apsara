@@ -120,6 +120,98 @@ export function parseDate(
   return zonedParse.isValid() ? zonedParse.toDate() : null;
 }
 
+/**
+ * How a value reads at each granularity, mirroring the reference app: a month
+ * shows `Jun 2026`, a quarter `Q3 2026`, a half-year `H1 2026`, a year `2025`.
+ * Only `day` uses the consumer's `format`.
+ */
+export function formatForGranularity(
+  date: Date,
+  granularity: string,
+  format: string = DEFAULT_FORMAT,
+  timeZone?: string
+): string {
+  const year = zoned(date, timeZone).year();
+  const month = zoned(date, timeZone).month();
+  switch (granularity) {
+    case 'month':
+      return formatDate(date, 'MMM YYYY', timeZone);
+    case 'quarter':
+      return `Q${Math.floor(month / 3) + 1} ${year}`;
+    case 'half-year':
+      return `H${month < 6 ? 1 : 2} ${year}`;
+    case 'year':
+      return String(year);
+    default:
+      return formatDate(date, format, timeZone);
+  }
+}
+
+/** The hint shown in an empty field, per granularity. */
+export function patternForGranularity(
+  granularity: string,
+  format: string = DEFAULT_FORMAT
+): string {
+  switch (granularity) {
+    case 'month':
+      return 'MMM YYYY';
+    case 'quarter':
+      return 'Q# YYYY';
+    case 'half-year':
+      return 'H# YYYY';
+    case 'year':
+      return 'YYYY';
+    default:
+      return format;
+  }
+}
+
+const QUARTER = /^Q([1-4])\s+(\d{4})$/i;
+const HALF_YEAR = /^H([12])\s+(\d{4})$/i;
+const YEAR = /^(\d{4})$/;
+
+/**
+ * Parses what the field displays at the active granularity, and resolves to
+ * the first day of that period — the same instant the grid would emit.
+ */
+export function parseForGranularity(
+  input: string,
+  granularity: string,
+  format: string = DEFAULT_FORMAT,
+  timeZone?: string
+): Date | null {
+  const text = input.trim();
+  switch (granularity) {
+    case 'month':
+      return parseDate(text, 'MMM YYYY', timeZone);
+    case 'quarter': {
+      const match = QUARTER.exec(text);
+      if (!match) return null;
+      return firstOfMonth(
+        Number(match[2]),
+        (Number(match[1]) - 1) * 3,
+        timeZone
+      );
+    }
+    case 'half-year': {
+      const match = HALF_YEAR.exec(text);
+      if (!match) return null;
+      return firstOfMonth(
+        Number(match[2]),
+        (Number(match[1]) - 1) * 6,
+        timeZone
+      );
+    }
+    case 'year': {
+      const match = YEAR.exec(text);
+      if (!match) return null;
+      return firstOfMonth(Number(match[1]), 0, timeZone);
+    }
+    default:
+      return parseDate(text, format, timeZone);
+  }
+}
+
 /** Day-granularity comparisons, so callers never touch a date library. */
 export function isSameDay(a: Date, b: Date, timeZone?: string): boolean {
   return dayKey(a, timeZone) === dayKey(b, timeZone);

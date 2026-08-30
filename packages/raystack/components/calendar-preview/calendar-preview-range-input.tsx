@@ -10,7 +10,13 @@ import type {
   DateRangeValue
 } from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import { dayKey, formatDate, isWithinBounds, parseDate } from './date-adapter';
+import {
+  dayKey,
+  formatForGranularity,
+  isWithinBounds,
+  parseForGranularity,
+  patternForGranularity
+} from './date-adapter';
 
 type FieldInputProps = Omit<InputProps, 'value' | 'onChange' | 'defaultValue'>;
 
@@ -38,6 +44,7 @@ export function CalendarPreviewRangeInput({
 }: CalendarPreviewRangeInputProps) {
   const {
     selection,
+    granularity,
     value,
     setValue,
     setMonth,
@@ -57,9 +64,11 @@ export function CalendarPreviewRangeInput({
   const range = value ?? EMPTY_RANGE;
 
   const committedFrom = range.from
-    ? formatDate(range.from, format, timeZone)
+    ? formatForGranularity(range.from, granularity, format, timeZone)
     : '';
-  const committedTo = range.to ? formatDate(range.to, format, timeZone) : '';
+  const committedTo = range.to
+    ? formatForGranularity(range.to, granularity, format, timeZone)
+    : '';
 
   /*
    * Draft text per field, so a half-typed date survives a re-render. `null`
@@ -125,7 +134,7 @@ export function CalendarPreviewRangeInput({
       return true;
     }
 
-    const parsed = parseDate(text, format, timeZone);
+    const parsed = parseForGranularity(text, granularity, format, timeZone);
     if (!parsed) {
       reportValidity({ valid: false, reason: 'unparseable' });
       return false;
@@ -177,7 +186,7 @@ export function CalendarPreviewRangeInput({
       <Input
         ref={field === 'to' ? endRef : undefined}
         value={draft[field] ?? committedText}
-        placeholder={format}
+        placeholder={patternForGranularity(granularity, format)}
         disabled={disabled}
         readOnly={readOnly || lock === field}
         aria-label={field === 'from' ? 'Start date' : 'End date'}

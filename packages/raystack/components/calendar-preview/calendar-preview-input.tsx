@@ -6,7 +6,13 @@ import { Input, type InputProps } from '../input/input';
 import styles from './calendar-preview.module.css';
 import type { CalendarValidity } from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import { dayKey, formatDate, isWithinBounds, parseDate } from './date-adapter';
+import {
+  dayKey,
+  formatForGranularity,
+  isWithinBounds,
+  parseForGranularity,
+  patternForGranularity
+} from './date-adapter';
 
 export interface CalendarPreviewInputProps
   extends Omit<InputProps, 'value' | 'onChange' | 'defaultValue'> {}
@@ -22,6 +28,7 @@ export function CalendarPreviewInput({
 }: CalendarPreviewInputProps) {
   const {
     selection,
+    granularity,
     value,
     setValue,
     setMonth,
@@ -35,7 +42,9 @@ export function CalendarPreviewInput({
     readOnly
   } = useCalendarPreviewContext<Date | null>('Input');
 
-  const committed = value ? formatDate(value, format, timeZone) : '';
+  const committed = value
+    ? formatForGranularity(value, granularity, format, timeZone)
+    : '';
   const committedKey = value ? dayKey(value, timeZone) : '';
 
   /** `null` means "not editing — show the committed value". */
@@ -78,7 +87,7 @@ export function CalendarPreviewInput({
       return;
     }
 
-    const parsed = parseDate(text, format, timeZone);
+    const parsed = parseForGranularity(text, granularity, format, timeZone);
     if (!parsed) {
       reportValidity({ valid: false, reason: 'unparseable' });
       return;
@@ -100,7 +109,7 @@ export function CalendarPreviewInput({
     >
       <Input
         value={draft ?? committed}
-        placeholder={format}
+        placeholder={patternForGranularity(granularity, format)}
         disabled={disabled}
         readOnly={readOnly}
         onChange={event => setDraft(event.target.value)}

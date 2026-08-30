@@ -247,7 +247,7 @@ interface MultipleProps extends CalendarPreviewBaseProps {
 
 | Choice | Replaces | Why |
 |---|---|---|
-| `onValueChange` | `onSelect` | Matches `Select`, `Combobox`, `Accordion`. Still fires on each step under `commit='immediate'`, but the value is always a complete `DateRangeValue` with explicit `null`s — today the docs must tell consumers to gate on `range.to`. |
+| `onValueChange(value, { granularity })` | `onSelect` | Matches `Select`, `Combobox`, `Accordion`. The second argument names the granularity that produced the value — a month pick emits the first day of that month, so without it a consumer cannot tell `1 June` chosen as a day from June chosen as a month. This mirrors the reference app, which sends `startDate` plus `startDateResolution`. Still fires on each step under `commit='immediate'`, but the value is always a complete `DateRangeValue` with explicit `null`s — today the docs must tell consumers to gate on `range.to`. |
 | `DateRangeValue` | RDP's `DateRange` | Ours, not react-day-picker's, which currently leaks through the barrel. |
 | `commit` | — | Makes a footer-with-actions layout expressible. Today `footer` is a bare `ReactNode` with no way to write back into state, which is why presets are unimplementable. |
 | `isDateUnavailable` | RDP's `disabled` matcher | Covers the common predicate without learning RDP's matcher DSL. RDP matchers stay reachable on `.Grid`. |
@@ -267,7 +267,7 @@ interface MultipleProps extends CalendarPreviewBaseProps {
 | `.GranularityTabs` | `.Content` | Apsara `Tabs` | Day \| Month \| Quarter \| Half-year \| Year. | renders only when `granularities.length > 1` |
 | `.Nav` | `.Content` | `div` | Caption, revert-to-default, previous / next. **Ours, not RDP's, and no `Select`.** | `months?: 1 \| 2`, `align?: 'start' \| 'end'` |
 | `.Grid` | `.Content` | RDP `DayPicker` | The day grid (replaces `Calendar`). | `months?: 1 \| 2`, `showOutsideDays`, `showWeekNumber`, `modifiers`, `dayProps` |
-| `.MonthGrid` | `.Content` | `div` | Month / quarter / half-year / year cells. | inherits root `granularity` |
+| `.MonthGrid` | `.Content` | `div` | Month / quarter / half-year / year cells, as a scrolling list of years. Emits the first day of the period. | `yearWindow?: number` |
 | `.TimeField` | `.Content` | Apsara `Input`s | Hour/minute (+ meridiem). | `step`, `hourCycle?: 12 \| 24` |
 | `.Footer` | `.Content` | `Flex` | Action row. | — |
 | `.Apply` / `.Cancel` | `.Footer` | Apsara `Button` | Commit / discard buffered value. | `render` |
@@ -493,14 +493,13 @@ The eight `SKILL.md` checklist items, plus the four this rewrite exists to fix.
 
 | # | Question | Decide by |
 |---|---|---|
-| 1 | **`quarter` / `half-year` value shape.** Does `onValueChange` emit the first day of the period, or a `{ from, to }` range? A range is more truthful and composes with `selection='range'`, but then `granularity !== 'day'` changes the value *shape*. | Phase 1 — it shapes the type union |
-| 2 | **Name.** Does `CalendarPreview` graduate to `Calendar` at phase 6? "Preview" is honest for phases 1–4 and wrong once it is the only calendar. Proposal: keep it while both exist, rename at 6, keep `CalendarPreview` as a deprecated alias for one release. | Phase 5 — slot names embed the prefix, so renaming later is itself breaking |
-| 3 | **`commit` default for ranges.** `'immediate'` matches today, but a footer with Apply/Cancel implies `'explicit'` is the intended range pattern. | Phase 3 |
-| 4 | **Presets as data or children?** `<CalendarPreview.Preset>` children composes better; `presets={[…]}` is less typing. Both precedents exist in-repo (`Combobox` items as children, `DataTable` columns as data). The recipe signatures omit `presets` until this is settled. | Phase 3 |
-| 5 | **Time zones.** Does the rewrite own tz conversion end-to-end, or stay the pass-through it is today? | Phase 1 |
-| 6 | **`multiple` selection.** No current consumer needs it. Ship it, or keep the union two-armed? | Phase 1 |
-| 7 | **Announcing the break.** No changesets setup exists, and `packages/raystack/package.json` reads `0.48.0` while `CHANGELOG.md` already carries a `0.49.0` section. A `data-slot` rename has nothing but reviewer vigilance behind it. Introduce changesets, or keep hand-written prose? | Phase 5 |
-| 8 | **Do recipes ship at all?** No component hangs a pre-composed assembly off a root today, and `.Input` sitting beside `.DatePicker` in one namespace reads badly. The alternative is parts only, with the five compositions living in the docs as copyable examples. | Phase 2 — its exit criteria name them |
+| 1 | **Name.** Does `CalendarPreview` graduate to `Calendar` at phase 6? "Preview" is honest for phases 1–4 and wrong once it is the only calendar. Proposal: keep it while both exist, rename at 6, keep `CalendarPreview` as a deprecated alias for one release. | Phase 5 — slot names embed the prefix, so renaming later is itself breaking |
+| 2 | **`commit` default for ranges.** `'immediate'` matches today, but a footer with Apply/Cancel implies `'explicit'` is the intended range pattern. | Phase 3 |
+| 3 | **Presets as data or children?** `<CalendarPreview.Preset>` children composes better; `presets={[…]}` is less typing. Both precedents exist in-repo (`Combobox` items as children, `DataTable` columns as data). The recipe signatures omit `presets` until this is settled. | Phase 3 |
+| 4 | **Time zones.** Does the rewrite own tz conversion end-to-end, or stay the pass-through it is today? | Phase 1 |
+| 5 | **`multiple` selection.** No current consumer needs it. Ship it, or keep the union two-armed? | Phase 1 |
+| 6 | **Announcing the break.** No changesets setup exists, and `packages/raystack/package.json` reads `0.48.0` while `CHANGELOG.md` already carries a `0.49.0` section. A `data-slot` rename has nothing but reviewer vigilance behind it. Introduce changesets, or keep hand-written prose? | Phase 5 |
+| 7 | **Do recipes ship at all?** No component hangs a pre-composed assembly off a root today, and `.Input` sitting beside `.DatePicker` in one namespace reads badly. The alternative is parts only, with the five compositions living in the docs as copyable examples. | Phase 2 — its exit criteria name them |
 
 ## Alternatives
 
