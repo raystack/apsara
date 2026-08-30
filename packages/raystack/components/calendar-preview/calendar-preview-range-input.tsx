@@ -1,7 +1,8 @@
 'use client';
 
+import { mergeProps } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { useRef, useState } from 'react';
+import { type ChangeEvent, type KeyboardEvent, useRef, useState } from 'react';
 import { Input, type InputProps } from '../input/input';
 import styles from './calendar-preview.module.css';
 import type {
@@ -14,6 +15,7 @@ import {
   dayKey,
   formatForGranularity,
   getYear,
+  isAfterDay,
   isWithinBounds,
   parseAcrossGranularities,
   parseForGranularity,
@@ -183,7 +185,12 @@ export function CalendarPreviewRangeInput({
      * swapping the two: swapping silently moves a value into a field the user
      * did not type in, which reads as the component losing their input.
      */
-    if (next.from && next.to && next.from > next.to) {
+    /*
+     * A day comparison, not an instant one: typed dates parse to midnight but
+     * `.TimeField` and presets write a clock time, so `08:00 > midnight` on the
+     * same day used to delete the user's start.
+     */
+    if (next.from && next.to && isAfterDay(next.from, next.to, timeZone)) {
       if (field === 'from') next.to = null;
       else next.from = null;
     }
@@ -216,42 +223,49 @@ export function CalendarPreviewRangeInput({
       }
       data-active={activeField === field || undefined}
     >
+      {/*
+       * Merged, not just spread-last: a consumer `onBlur`/`onKeyDown` would
+       * otherwise replace parse-and-commit outright, leaving a field that
+       * accepts text and reports nothing.
+       */}
       <Input
-        ref={field === 'to' ? endRef : undefined}
-        value={draft[field] ?? committedText}
-        placeholder={patternForGranularity(granularity, format)}
-        disabled={disabled}
-        readOnly={readOnly || lock === field}
-        aria-label={field === 'from' ? 'Start date' : 'End date'}
-        onFocus={() => setActiveField(field)}
-        onChange={event =>
-          setDraft(current => ({ ...current, [field]: event.target.value }))
-        }
-        onBlur={() => {
-          if (draft[field] === null) return;
-          commit(field, draft[field] as string);
-          setDraft(current => ({ ...current, [field]: null }));
-        }}
-        onKeyDown={event => {
-          if (event.key === 'Enter') {
-            event.preventDefault();
-            const pending = draft[field];
-            if (pending === null) return;
-            const committedOk = commit(field, pending);
-            setDraft(current => ({ ...current, [field]: null }));
-            /*
-             * Advance only on an explicit Enter, never mid-typing — moving
-             * focus while someone is still editing is worse than one extra tab.
-             */
-            if (committedOk && field === 'from' && lock !== 'to') {
-              endRef.current?.focus();
+        {...(mergeProps<'input'>(
+          {
+            ref: field === 'to' ? endRef : undefined,
+            value: draft[field] ?? committedText,
+            placeholder: patternForGranularity(granularity, format),
+            disabled,
+            readOnly: readOnly || lock === field,
+            'aria-label': field === 'from' ? 'Start date' : 'End date',
+            onFocus: () => setActiveField(field),
+            onChange: (event: ChangeEvent<HTMLInputElement>) =>
+              setDraft(current => ({
+                ...current,
+                [field]: event.target.value
+              })),
+            onBlur: () => {
+              if (draft[field] === null) return;
+              commit(field, draft[field] as string);
+              setDraft(current => ({ ...current, [field]: null }));
+            },
+            onKeyDown: (event: KeyboardEvent<HTMLInputElement>) => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                const pending = draft[field];
+                if (pending === null) return;
+                const committedOk = commit(field, pending);
+                setDraft(current => ({ ...current, [field]: null }));
+                if (committedOk && field === 'from' && lock !== 'to') {
+                  endRef.current?.focus();
+                }
+              }
+              if (event.key === 'Escape') {
+                setDraft(current => ({ ...current, [field]: null }));
+              }
             }
-          }
-          if (event.key === 'Escape') {
-            setDraft(current => ({ ...current, [field]: null }));
-          }
-        }}
-        {...props}
+          } as never,
+          (props ?? {}) as never
+        ) as InputProps)}
       />
     </div>
   );

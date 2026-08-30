@@ -1,7 +1,8 @@
 'use client';
 
+import { mergeProps } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { useRef, useState } from 'react';
+import { type ChangeEvent, type KeyboardEvent, useRef, useState } from 'react';
 import { Input, type InputProps } from '../input/input';
 import styles from './calendar-preview.module.css';
 import type { CalendarValidity } from './calendar-preview-context';
@@ -139,27 +140,38 @@ export function CalendarPreviewInput({
       className={cx(styles.field, className)}
       data-slot='calendar-preview-input'
     >
+      {/*
+       * Merged, not just spread-last. Spread-last alone lets a consumer
+       * `onChange`/`onBlur`/`onKeyDown` *replace* parse-and-commit, leaving a
+       * field that accepts text and reports nothing — RFC problem 9 in a new
+       * shape. `.Preset` already merges; these now do too.
+       */}
       <Input
-        value={draft ?? committed}
-        placeholder={patternForGranularity(granularity, format)}
-        disabled={disabled}
-        readOnly={readOnly}
-        onChange={event => setDraft(event.target.value)}
-        onBlur={() => {
-          if (draft === null) return;
-          commit(draft);
-          setDraft(null);
-        }}
-        onKeyDown={event => {
-          if (event.key === 'Enter') {
-            event.preventDefault();
-            if (draft === null) return;
-            commit(draft);
-            setDraft(null);
-          }
-          if (event.key === 'Escape') setDraft(null);
-        }}
-        {...props}
+        {...(mergeProps<'input'>(
+          {
+            value: draft ?? committed,
+            placeholder: patternForGranularity(granularity, format),
+            disabled,
+            readOnly,
+            onChange: (event: ChangeEvent<HTMLInputElement>) =>
+              setDraft(event.target.value),
+            onBlur: () => {
+              if (draft === null) return;
+              commit(draft);
+              setDraft(null);
+            },
+            onKeyDown: (event: KeyboardEvent<HTMLInputElement>) => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                if (draft === null) return;
+                commit(draft);
+                setDraft(null);
+              }
+              if (event.key === 'Escape') setDraft(null);
+            }
+          } as never,
+          props as never
+        ) as InputProps)}
       />
     </div>
   );

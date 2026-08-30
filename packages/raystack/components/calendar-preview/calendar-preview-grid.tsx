@@ -1,7 +1,7 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import type { ComponentProps } from 'react';
+import { useMemo } from 'react';
 import {
   type DateRange,
   type DayButtonProps,
@@ -22,6 +22,54 @@ import { dayKey } from './date-adapter';
  * at all. That is what makes spreading `...props` last honest — nothing is
  * force-overridden after the consumer's spread.
  */
+/*
+ * Module scope, not inside the render. React compares component *types* by
+ * identity: a fresh function per render is a new type, so RDP's whole grid
+ * unmounts and remounts and the focused day node does not survive — which
+ * defeats the roving tabindex the RFC keeps react-day-picker for.
+ */
+const GRID_COMPONENTS: DayPickerProps['components'] = {
+  DayButton: ({ day: _day, modifiers: _modifiers, ...buttonProps }) => (
+    <button
+      type='button'
+      {...buttonProps}
+      className={cx(buttonProps.className, styles.dayButton)}
+      data-slot='calendar-preview-day'
+    >
+      <span
+        className={styles.dayNumber}
+        data-slot='calendar-preview-day-number'
+      >
+        {buttonProps.children}
+      </span>
+    </button>
+  ),
+  // `.Nav` owns the caption; RDP's would render the month twice.
+  MonthCaption: () => <></>,
+  MonthGrid: gridProps => (
+    <div className={styles.weeks} data-slot='calendar-preview-weeks'>
+      <table {...gridProps} data-slot='calendar-preview-table' />
+    </div>
+  )
+};
+
+const GRID_CLASS_NAMES: DayPickerProps['classNames'] = {
+  months: styles.months,
+  week: styles.week,
+  weekdays: styles.week,
+  weekday: styles.weekday,
+  day: styles.day,
+  today: styles.today,
+  outside: styles.outside,
+  disabled: styles.disabled,
+  selected: styles.selected,
+  day_button: styles.dayButton,
+  range_start: styles.rangeStart,
+  range_middle: styles.rangeMiddle,
+  range_end: styles.rangeEnd,
+  hidden: styles.hidden
+};
+
 export interface CalendarPreviewGridProps
   extends Pick<
     DayPickerProps,
@@ -59,6 +107,19 @@ export function CalendarPreviewGrid({
     loading
   } = useCalendarPreviewContext('Grid');
 
+  const disabledMatchers = useMemo(() => {
+    const matchers: Matcher[] = [];
+    if (minDate) matchers.push({ before: minDate });
+    if (maxDate) matchers.push({ after: maxDate });
+    if (isDateUnavailable) matchers.push(isDateUnavailable);
+    return matchers;
+  }, [minDate, maxDate, isDateUnavailable]);
+
+  const mergedClassNames = useMemo(
+    () => ({ ...GRID_CLASS_NAMES, ...classNames }),
+    [classNames]
+  );
+
   /*
    * The day grid renders for the day granularity only; `.MonthGrid` covers
    * month, quarter, half-year and year. Both sit in the same composition and
@@ -92,11 +153,6 @@ export function CalendarPreviewGrid({
    */
   const writable = !disabled && !readOnly;
 
-  const disabledMatchers: Matcher[] = [];
-  if (minDate) disabledMatchers.push({ before: minDate });
-  if (maxDate) disabledMatchers.push({ after: maxDate });
-  if (isDateUnavailable) disabledMatchers.push(isDateUnavailable);
-
   /*
    * Everything except the mode discriminator. `...props` sits last inside it,
    * so it stays last at every call site below — and because `mode`,
@@ -116,57 +172,8 @@ export function CalendarPreviewGrid({
     // `.Nav` is ours: RDP renders no navigation and never mounts a `Select`.
     hideNavigation: true,
     captionLayout: 'label' as const,
-    components: {
-      DayButton: ({
-        day: _day,
-        modifiers: _modifiers,
-        ...buttonProps
-      }: DayButtonProps) => (
-        <button
-          type='button'
-          {...buttonProps}
-          className={cx(buttonProps.className, styles.dayButton)}
-          data-slot='calendar-preview-day'
-        >
-          <span
-            className={styles.dayNumber}
-            data-slot='calendar-preview-day-number'
-          >
-            {buttonProps.children}
-          </span>
-        </button>
-      ),
-      /*
-       * `.Nav` owns the caption, and the design shows none inside the grid.
-       * Leaving RDP's in place renders the month twice and announces it
-       * twice, so it is dropped here rather than hidden with CSS.
-       */
-      MonthCaption: () => <></>,
-      MonthGrid: (gridProps: ComponentProps<'table'>) => (
-        <div className={styles.weeks} data-slot='calendar-preview-weeks'>
-          <table {...gridProps} data-slot='calendar-preview-table' />
-        </div>
-      )
-    },
-    classNames: {
-      months: styles.months,
-      month_caption: styles.monthCaption,
-      caption_label: styles.captionLabel,
-      week: styles.week,
-      weekdays: styles.week,
-      weekday: styles.weekday,
-      day: styles.day,
-      today: styles.today,
-      outside: styles.outside,
-      disabled: styles.disabled,
-      selected: styles.selected,
-      day_button: styles.dayButton,
-      range_start: styles.rangeStart,
-      range_middle: styles.rangeMiddle,
-      range_end: styles.rangeEnd,
-      hidden: styles.hidden,
-      ...classNames
-    },
+    components: GRID_COMPONENTS,
+    classNames: mergedClassNames,
     className: cx(styles.grid, className),
     ...props
   };

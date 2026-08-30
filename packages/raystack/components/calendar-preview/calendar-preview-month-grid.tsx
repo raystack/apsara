@@ -109,14 +109,26 @@ export function CalendarPreviewMonthGrid({
   } = useCalendarPreviewContext('MonthGrid');
 
   const activeYearRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const anchor = firstSelected(value) ?? new Date();
+  const anchorYear = getYear(anchor, timeZone);
 
   /*
-   * Bring the active year into view once. The list can span decades, so
-   * opening it scrolled to the top would usually show the wrong era.
+   * Bring the active year into view. With an empty dependency array this ran
+   * once against a null ref, because the component returns `null` while the
+   * day granularity is active — which is what `.Content` mounts with — so
+   * switching to Month landed the reader at the top of a list spanning
+   * decades. Scoped to the scroll container: an unqualified `scrollIntoView`
+   * inside a portal can move the page behind the popover.
    */
   useEffect(() => {
-    activeYearRef.current?.scrollIntoView?.({ block: 'center' });
-  }, []);
+    const target = activeYearRef.current;
+    const container = scrollRef.current;
+    if (!target || !container) return;
+    container.scrollTop =
+      target.offsetTop - container.clientHeight / 2 + target.clientHeight / 2;
+  }, [granularity, anchorYear]);
 
   if (granularity === 'day') return null;
 
@@ -139,9 +151,6 @@ export function CalendarPreviewMonthGrid({
   const period = PERIODS[granularity];
   const monthSpan = 12 / period.perYear;
   const writable = !disabled && !readOnly;
-
-  const anchor = firstSelected(value) ?? new Date();
-  const anchorYear = getYear(anchor, timeZone);
 
   const firstYear = minDate
     ? getYear(minDate, timeZone)
@@ -188,8 +197,15 @@ export function CalendarPreviewMonthGrid({
     const selected = selectedDates.some(
       date => date >= start && date < nextStart
     );
-    const unavailable =
-      !isWithinBounds(start, minDate, maxDate) || isDateUnavailable?.(start);
+    /*
+     * Overlap, not first-day: a `minDate` falling mid-month used to disable the
+     * whole month and make every valid day in it unreachable. `.Nav` answers
+     * the same question this way.
+     */
+    const lastInstant = new Date(nextStart.getTime() - 1);
+    const outOfBounds =
+      (minDate && lastInstant < minDate) || (maxDate && start > maxDate);
+    const unavailable = !!outOfBounds || isDateUnavailable?.(start);
 
     return (
       <button
@@ -209,6 +225,7 @@ export function CalendarPreviewMonthGrid({
 
   return (
     <div
+      ref={scrollRef}
       className={cx(styles.monthGrid, className)}
       data-granularity={granularity}
       data-slot='calendar-preview-month-grid'

@@ -277,10 +277,14 @@ export function toDateLoose(value: unknown): Date | null {
 export function isWithinBounds(
   date: Date,
   minDate?: Date,
-  maxDate?: Date
+  maxDate?: Date,
+  timeZone?: string
 ): boolean {
-  const value = dayjs(date);
-  if (minDate && !value.isSameOrAfter(dayjs(minDate), 'day')) return false;
-  if (maxDate && !value.isSameOrBefore(dayjs(maxDate), 'day')) return false;
+  // Compared on `dayKey`, which is zone-aware; the previous `isSameOrAfter`
+  // pair worked on unzoned dayjs objects, so near midnight the typed field and
+  // the grid disagreed about whether the same date was in range.
+  const key = dayKey(date, timeZone);
+  if (minDate && key < dayKey(minDate, timeZone)) return false;
+  if (maxDate && key > dayKey(maxDate, timeZone)) return false;
   return true;
 }

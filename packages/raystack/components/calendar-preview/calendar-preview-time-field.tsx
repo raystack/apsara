@@ -107,8 +107,12 @@ export function CalendarPreviewTimeField({
   const commitMinute = (text: string) => {
     const parsed = Number.parseInt(text, 10);
     if (Number.isNaN(parsed) || parsed < 0 || parsed > 59) return;
-    // Snap to the step so the field cannot express a time it does not offer.
-    write(hours24, Math.round(parsed / step) * step);
+    /*
+     * Clamped: an unclamped round sends 59 with step 15 to 60, and dayjs's
+     * `.minute(60)` rolls into the next hour — so validation rejected >59 two
+     * lines above and the snap then produced one anyway.
+     */
+    write(hours24, Math.min(59, Math.round(parsed / step) * step));
   };
 
   const field = (
