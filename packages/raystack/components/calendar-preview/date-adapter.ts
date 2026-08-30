@@ -37,21 +37,12 @@ export function dayKey(date: Date, timeZone?: string): string {
   return zoned(date, timeZone).format('YYYY-MM-DD');
 }
 
-/** Millisecond identity, for deps that must track time as well as day. */
-export function epoch(date: Date): number {
-  return date.getTime();
-}
-
 export function startOfMonth(date: Date, timeZone?: string): Date {
   return zoned(date, timeZone).startOf('month').toDate();
 }
 
 export function addMonths(date: Date, count: number, timeZone?: string): Date {
   return zoned(date, timeZone).add(count, 'month').toDate();
-}
-
-export function isSameDay(a: Date, b: Date, timeZone?: string): boolean {
-  return dayKey(a, timeZone) === dayKey(b, timeZone);
 }
 
 export function formatDate(
@@ -71,10 +62,19 @@ export function parseDate(
   format: string = DEFAULT_FORMAT,
   timeZone?: string
 ): Date | null {
-  const parsed = timeZone
-    ? dayjs.tz(input, format, timeZone)
-    : dayjs(input, format, true);
-  return parsed.isValid() ? parsed.toDate() : null;
+  /*
+   * Validate with the strict, zone-free parse first. `dayjs.tz` does not
+   * validate — handed something unparseable it throws `RangeError: Invalid
+   * time value` rather than returning an invalid dayjs — so it must never see
+   * input that has not already been proven good. This is the same failure
+   * class as the 0.49.0 P0: a throw on an ordinary keystroke.
+   */
+  const strict = dayjs(input, format, true);
+  if (!strict.isValid()) return null;
+  if (!timeZone) return strict.toDate();
+
+  const zonedParse = dayjs.tz(input, format, timeZone);
+  return zonedParse.isValid() ? zonedParse.toDate() : null;
 }
 
 export function isWithinBounds(

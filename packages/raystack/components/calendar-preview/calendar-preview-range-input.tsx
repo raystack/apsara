@@ -10,7 +10,7 @@ import type {
   DateRangeValue
 } from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import { formatDate, isWithinBounds, parseDate } from './date-adapter';
+import { dayKey, formatDate, isWithinBounds, parseDate } from './date-adapter';
 
 type FieldInputProps = Omit<InputProps, 'value' | 'onChange' | 'defaultValue'>;
 
@@ -82,12 +82,16 @@ export function CalendarPreviewRangeInput({
    * formatted strings means a fresh `Date` identity for the same day is a
    * no-op, which is what the old family needed lint suppressions for.
    */
-  const lastCommitted = useRef({ from: committedFrom, to: committedTo });
+  const committedKey = {
+    from: range.from ? dayKey(range.from, timeZone) : '',
+    to: range.to ? dayKey(range.to, timeZone) : ''
+  };
+  const lastCommitted = useRef(committedKey);
   if (
-    lastCommitted.current.from !== committedFrom ||
-    lastCommitted.current.to !== committedTo
+    lastCommitted.current.from !== committedKey.from ||
+    lastCommitted.current.to !== committedKey.to
   ) {
-    lastCommitted.current = { from: committedFrom, to: committedTo };
+    lastCommitted.current = committedKey;
     if (draft.from !== null || draft.to !== null) {
       setDraft({ from: null, to: null });
     }
@@ -153,49 +157,61 @@ export function CalendarPreviewRangeInput({
     committedText: string,
     props?: FieldInputProps
   ) => (
-    <Input
-      ref={field === 'to' ? endRef : undefined}
-      value={draft[field] ?? committedText}
-      placeholder={format}
-      disabled={disabled}
-      readOnly={readOnly || lock === field}
-      aria-label={field === 'from' ? 'Start date' : 'End date'}
+    /*
+     * The slot and the active flag go on a wrapper, not on `Input`. `Input`
+     * spreads `...props` last, so a `data-slot` passed to it would overwrite
+     * its own `data-slot="input"` — a semver-covered name on another
+     * component. The wrapper also gives the active style something with a
+     * border to colour, since `Input`'s border sits on its container.
+     */
+    <div
+      key={field}
+      className={styles.rangeField}
       data-slot={
         field === 'from'
           ? 'calendar-preview-input-start'
           : 'calendar-preview-input-end'
       }
       data-active={activeField === field || undefined}
-      onFocus={() => setActiveField(field)}
-      onChange={event =>
-        setDraft(current => ({ ...current, [field]: event.target.value }))
-      }
-      onBlur={() => {
-        if (draft[field] === null) return;
-        commit(field, draft[field] as string);
-        setDraft(current => ({ ...current, [field]: null }));
-      }}
-      onKeyDown={event => {
-        if (event.key === 'Enter') {
-          event.preventDefault();
-          const pending = draft[field];
-          if (pending === null) return;
-          const committedOk = commit(field, pending);
+    >
+      <Input
+        ref={field === 'to' ? endRef : undefined}
+        value={draft[field] ?? committedText}
+        placeholder={format}
+        disabled={disabled}
+        readOnly={readOnly || lock === field}
+        aria-label={field === 'from' ? 'Start date' : 'End date'}
+        onFocus={() => setActiveField(field)}
+        onChange={event =>
+          setDraft(current => ({ ...current, [field]: event.target.value }))
+        }
+        onBlur={() => {
+          if (draft[field] === null) return;
+          commit(field, draft[field] as string);
           setDraft(current => ({ ...current, [field]: null }));
-          /*
-           * Advance only on an explicit Enter, never mid-typing — moving
-           * focus while someone is still editing is worse than one extra tab.
-           */
-          if (committedOk && field === 'from' && lock !== 'to') {
-            endRef.current?.focus();
+        }}
+        onKeyDown={event => {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            const pending = draft[field];
+            if (pending === null) return;
+            const committedOk = commit(field, pending);
+            setDraft(current => ({ ...current, [field]: null }));
+            /*
+             * Advance only on an explicit Enter, never mid-typing — moving
+             * focus while someone is still editing is worse than one extra tab.
+             */
+            if (committedOk && field === 'from' && lock !== 'to') {
+              endRef.current?.focus();
+            }
           }
-        }
-        if (event.key === 'Escape') {
-          setDraft(current => ({ ...current, [field]: null }));
-        }
-      }}
-      {...props}
-    />
+          if (event.key === 'Escape') {
+            setDraft(current => ({ ...current, [field]: null }));
+          }
+        }}
+        {...props}
+      />
+    </div>
   );
 
   return (

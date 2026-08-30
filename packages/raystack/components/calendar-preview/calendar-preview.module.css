@@ -207,7 +207,13 @@
   -webkit-user-select: none;
 }
 
-/* The field the next grid click writes to. */
-.rangeInputs [data-active] {
+.rangeField {
+  display: inline-flex;
+}
+
+/* The field the next grid click writes to. `Input` carries its border on its
+   container, reached here through its public slot rather than a hashed
+   class name. */
+.rangeField[data-active] [data-slot="input-container"] {
   border-color: var(--rs-color-border-accent-emphasis);
 }

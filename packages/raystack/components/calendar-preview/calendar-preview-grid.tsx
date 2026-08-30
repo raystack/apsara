@@ -12,6 +12,7 @@ import {
 import styles from './calendar-preview.module.css';
 import type { DateRangeValue } from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
+import { dayKey } from './date-adapter';
 
 /**
  * Everything react-day-picker owns is derived from root context and is
@@ -51,8 +52,15 @@ export function CalendarPreviewGrid({
     timeZone,
     weekStartsOn,
     disabled,
+    readOnly,
     lock
   } = useCalendarPreviewContext('Grid');
+
+  /*
+   * `readOnly` shows the value but refuses writes, so days stay legible and
+   * focusable rather than dimmed — that is what separates it from `disabled`.
+   */
+  const writable = !disabled && !readOnly;
 
   const disabledMatchers: Matcher[] = [];
   if (minDate) disabledMatchers.push({ before: minDate });
@@ -144,18 +152,27 @@ export function CalendarPreviewGrid({
             : undefined
         }
         onSelect={(next: DateRange | undefined, triggerDate: Date) => {
+          if (!writable) return;
           const held = range ?? { from: null, to: null };
           /*
            * With an endpoint locked, RDP's range machine still rewrites both
-           * ends, so take only the clicked day and hold the locked side. This
-           * is what closes the whole-picker-disable gate — "fix the start,
-           * pick the end" no longer means disabling the picker.
+           * ends, so ignore its result and drive the unlocked end from the
+           * clicked day alone. This is what closes the whole-picker-disable
+           * gate — "fix the start, pick the end" no longer means disabling
+           * the picker. Re-clicking the unlocked end clears it, which is the
+           * only deselect available while a lock is held.
            */
           if (lock) {
+            const unlocked = lock === 'from' ? held.to : held.from;
+            const nextUnlocked =
+              unlocked &&
+              dayKey(unlocked, timeZone) === dayKey(triggerDate, timeZone)
+                ? null
+                : triggerDate;
             setValue(
               lock === 'from'
-                ? { from: held.from, to: triggerDate }
-                : { from: triggerDate, to: held.to }
+                ? { from: held.from, to: nextUnlocked }
+                : { from: nextUnlocked, to: held.to }
             );
             return;
           }
@@ -174,7 +191,10 @@ export function CalendarPreviewGrid({
       <DayPicker
         mode='multiple'
         selected={(value as Date[]) ?? []}
-        onSelect={(next: Date[] | undefined) => setValue(next ?? [])}
+        onSelect={(next: Date[] | undefined) => {
+          if (!writable) return;
+          setValue(next ?? []);
+        }}
         data-slot='calendar-preview-grid'
         {...shared}
       />
@@ -185,7 +205,10 @@ export function CalendarPreviewGrid({
     <DayPicker
       mode='single'
       selected={(value as Date | null) ?? undefined}
-      onSelect={(next: Date | undefined) => setValue(next ?? null)}
+      onSelect={(next: Date | undefined) => {
+        if (!writable) return;
+        setValue(next ?? null);
+      }}
       data-slot='calendar-preview-grid'
       {...shared}
     />

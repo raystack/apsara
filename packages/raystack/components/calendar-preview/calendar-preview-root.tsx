@@ -98,6 +98,14 @@ interface NormalizedRootProps extends CalendarPreviewBaseProps {
   onValueChange?: (value: CalendarValue) => void;
 }
 
+/** The earliest date a value of any selection mode carries, if any. */
+function firstDateIn(value: CalendarValue | undefined): Date | undefined {
+  if (!value) return undefined;
+  if (value instanceof Date) return value;
+  if (Array.isArray(value)) return value[0];
+  return value.from ?? value.to ?? undefined;
+}
+
 export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
   const {
     selection = 'single',
@@ -138,9 +146,18 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
     state: 'open'
   });
 
+  /*
+   * The visible month is independent state, but it has to *start* somewhere
+   * sensible: a picker holding a date in another year must not open on today.
+   * Both `DatePicker` and `RangePicker` sync this today; only the mechanism
+   * changes here.
+   */
   const [month, setMonthUnwrapped] = useControlled<Date>({
     controlled: monthProp,
-    default: startOfMonth(defaultMonth ?? new Date(), timeZone),
+    default: startOfMonth(
+      defaultMonth ?? firstDateIn(valueProp ?? defaultValue) ?? new Date(),
+      timeZone
+    ),
     name: 'CalendarPreview',
     state: 'month'
   });
@@ -171,9 +188,11 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
 
   const handleOpenChange = useCallback(
     (next: boolean, eventDetails: PopoverPrimitive.Root.ChangeEventDetails) => {
+      // A disabled picker cannot be opened, only closed.
+      if (next && disabled) return;
       setOpen(next, { reason: eventDetails?.reason });
     },
-    [setOpen]
+    [setOpen, disabled]
   );
 
   /*

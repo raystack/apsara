@@ -3,6 +3,7 @@
 import { Popover as PopoverPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import styles from './calendar-preview.module.css';
+import { useCalendarPreviewContext } from './calendar-preview-context';
 
 export interface CalendarPreviewTriggerProps
   extends PopoverPrimitive.Trigger.Props {}
@@ -18,12 +19,18 @@ export function CalendarPreviewTrigger({
   className,
   render = <div />,
   nativeButton = false,
+  disabled,
   ...props
 }: CalendarPreviewTriggerProps) {
+  const { disabled: rootDisabled } = useCalendarPreviewContext('Trigger');
+  const isDisabled = disabled ?? rootDisabled;
+
   return (
     <PopoverPrimitive.Trigger
       className={cx(styles.trigger, className)}
       render={render}
+      disabled={isDisabled}
+      data-disabled={isDisabled || undefined}
       // Tells Base UI to supply button semantics itself rather than assume a
       // native <button>, which this part deliberately never renders.
       nativeButton={nativeButton}

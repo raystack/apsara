@@ -18,6 +18,12 @@ export interface CalendarPreviewContentProps
  *
  * `side` defaults to `bottom-start` — date inputs conventionally drop down,
  * and the old family's `top` default collided with on-screen keyboards.
+ *
+ * Known limitation, shared with Apsara's own `Popover.Content`: anything not
+ * destructured above lands on the positioner, so a popup-only prop such as
+ * `id` reaches the wrong element. Partitioning by an enumerated key list was
+ * tried and rejected — Base UI has 20 positioning props and a minor bump that
+ * adds one would misroute it silently, which is worse than the limitation.
  */
 export function CalendarPreviewContent({
   ref,
