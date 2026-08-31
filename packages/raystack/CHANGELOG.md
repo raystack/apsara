@@ -75,6 +75,12 @@ named here:
 - `DataTable` and `DataView` filter operations no longer register dayjs
   plugins themselves. Date comparison lives in one adapter, which removes the
   import-order dependence behind the 0.49.0 keystroke crash.
+- **A date cell holding a numeric Unix timestamp in seconds now filters
+  correctly.** A bare number was read as milliseconds, so an epoch in seconds
+  — the more common serialization — landed in January 1970 and the row
+  compared against that instead of its real date. Numbers under 1e11 in
+  magnitude are now read as seconds. A timestamp arriving as a *string* of
+  digits is unchanged, and still reads as a year.
 
 ### Icons — lucide replaces @radix-ui/react-icons (BREAKING)
 

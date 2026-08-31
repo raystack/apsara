@@ -4,9 +4,17 @@ import { cx } from 'class-variance-authority';
 import { type ComponentProps, useRef, useState } from 'react';
 import { Input } from '../input/input';
 import styles from './calendar-preview.module.css';
-import type { DateRangeValue } from './calendar-preview-context';
+import type {
+  CalendarValidity,
+  DateRangeValue
+} from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import { getHours, getMinutes, setTime } from './date-adapter';
+import {
+  getHours,
+  getMinutes,
+  isWithinTimeBounds,
+  setTime
+} from './date-adapter';
 
 export interface CalendarPreviewTimeFieldProps
   extends Omit<ComponentProps<'div'>, 'children'> {
@@ -46,7 +54,11 @@ export function CalendarPreviewTimeField({
     lock,
     timeZone,
     disabled,
-    readOnly
+    readOnly,
+    minDate,
+    maxDate,
+    isDateUnavailable,
+    reportValidity
   } = useCalendarPreviewContext('TimeField');
 
   const [draft, setDraft] = useState<{
@@ -70,16 +82,66 @@ export function CalendarPreviewTimeField({
 
   const displayHour = hourCycle === 12 ? hours24 % 12 || 12 : hours24;
 
+  /*
+   * The same shape `.Input` and `.RangeInput` validate through, but through
+   * bounds that respect a time of day: this is the one writer whose whole job
+   * is the time inside the day, so a plain day comparison would wave through
+   * 23:00 under a `maxDate` of 10:00. Without this the picker had one writer
+   * that ignored its own bounds and one callback that never fired for it.
+   */
+  const validate = (
+    date: Date,
+    nextRange: DateRangeValue | null
+  ): CalendarValidity => {
+    if (!isWithinTimeBounds(date, minDate, maxDate, timeZone)) {
+      return { valid: false, reason: 'out-of-bounds' };
+    }
+    if (isDateUnavailable?.(date)) {
+      return { valid: false, reason: 'unavailable' };
+    }
+    /*
+     * By instant, not by day. `.RangeInput` guards ordering with `isAfterDay`
+     * because it commits whole typed dates; both endpoints of a range can sit
+     * on one day, and moving a time past the other end inverts the range
+     * without any day changing — which no day comparison can see.
+     *
+     * Refused rather than repaired. `.RangeInput` clears the opposite
+     * endpoint, which is right when the user has typed a whole date over a
+     * field, but here they nudged an hour: deleting the other end of their
+     * range in response would throw away far more than they touched, and
+     * swapping would move a value into a field they were not editing.
+     */
+    if (
+      nextRange?.from &&
+      nextRange.to &&
+      nextRange.from.getTime() > nextRange.to.getTime()
+    ) {
+      return { valid: false, reason: 'range-order' };
+    }
+    return { valid: true };
+  };
+
   const write = (nextHour24: number, nextMinute: number) => {
     if (!target || !editable) return;
     const updated = setTime(target, nextHour24, nextMinute, timeZone);
-    if (selection === 'range') {
-      const range = (value as DateRangeValue | null) ?? {
-        from: null,
-        to: null
-      };
-      const field = lock ? (lock === 'from' ? 'to' : 'from') : activeField;
-      setValue({ ...range, [field]: updated });
+
+    const field = lock ? (lock === 'from' ? 'to' : 'from') : activeField;
+    const nextRange =
+      selection === 'range'
+        ? {
+            ...((value as DateRangeValue | null) ?? { from: null, to: null }),
+            [field]: updated
+          }
+        : null;
+
+    const validity = validate(updated, nextRange);
+    reportValidity(validity);
+    // The draft is cleared by the caller either way, so a rejected edit snaps
+    // the field back to the committed time rather than leaving it stranded.
+    if (!validity.valid) return;
+
+    if (nextRange) {
+      setValue(nextRange);
       return;
     }
     if (selection === 'multiple') {

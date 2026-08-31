@@ -24,7 +24,12 @@ export type CalendarRangeField = 'from' | 'to';
 
 export interface CalendarValidity {
   valid: boolean;
-  reason?: 'unparseable' | 'out-of-bounds' | 'unavailable';
+  /**
+   * `range-order` is reported by `.TimeField` only: it is the one writer that
+   * can invert a range without changing either day, by moving a time past the
+   * opposite endpoint inside the shared day.
+   */
+  reason?: 'unparseable' | 'out-of-bounds' | 'unavailable' | 'range-order';
 }
 
 export interface CalendarPreviewContextValue<Value = CalendarValue> {

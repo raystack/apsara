@@ -28,6 +28,8 @@ export const DEFAULT_FORMAT = 'DD MMM YYYY';
 const zoned = (date: Date, timeZone?: string) =>
   timeZone ? dayjs(date).tz(timeZone) : dayjs(date);
 
+const pad = (value: number) => String(value).padStart(2, '0');
+
 /**
  * A stable identity for a calendar day, for memo keys and effect deps.
  * Two `Date`s for the same day compare equal here; by reference they never do,
@@ -65,18 +67,42 @@ export function getMinutes(date: Date, timeZone?: string): number {
   return zoned(date, timeZone).minute();
 }
 
-/** The same calendar day, at a different time of day. */
+/**
+ * The same calendar day, at a different time of day.
+ *
+ * Built from calendar parts rather than by mutating a zoned object. `zoned()`
+ * freezes the UTC offset of the instant it is handed, and a day's midnight
+ * carries the *pre*-transition offset: chaining `.hour(10)` onto 9 Mar 2025 in
+ * `America/New_York` built 10:00 at -5, which reads back as 11:00 EDT. Every
+ * time after a spring-forward landed an hour late — not just the hour that
+ * does not exist — in every DST zone, twice a year.
+ *
+ * `dayjs.tz` resolves the offset from the wall-clock time it is given, so the
+ * hour asked for is the hour that comes back. A time that genuinely does not
+ * exist (02:30 on a spring-forward day) resolves forward into the shift, which
+ * is the conventional reading and what the grid's own day arithmetic assumes.
+ */
 export function setTime(
   date: Date,
   hours: number,
   minutes: number,
   timeZone?: string
 ): Date {
-  return zoned(date, timeZone)
-    .hour(hours)
-    .minute(minutes)
-    .second(0)
-    .millisecond(0)
+  if (!timeZone) {
+    // No zone: dayjs delegates to `Date`, which already handles local DST.
+    return dayjs(date)
+      .hour(hours)
+      .minute(minutes)
+      .second(0)
+      .millisecond(0)
+      .toDate();
+  }
+  return dayjs
+    .tz(
+      `${dayKey(date, timeZone)} ${pad(hours)}:${pad(minutes)}`,
+      'YYYY-MM-DD HH:mm',
+      timeZone
+    )
     .toDate();
 }
 
@@ -279,14 +305,42 @@ export function isAfterDay(a: Date, b: Date, timeZone?: string): boolean {
 }
 
 /**
+ * Epoch numbers below this are read as seconds, above it as milliseconds.
+ * 1e11 ms is 3 Mar 1973; 1e11 seconds is the year 5138. So the split covers
+ * every plausible seconds value and every millisecond value from 1973 on.
+ */
+const EPOCH_SECONDS_CEILING = 1e11;
+
+/**
  * Best-effort parse for values arriving from outside the component — a
  * serialized query string, an epoch number, an ISO timestamp. Deliberately
  * loose, unlike `parseDate`, which is strict against a display format.
+ *
+ * Epoch seconds are the most common serialization of an epoch, and `dayjs`
+ * reads a bare number as milliseconds — so `1741046400` used to land in
+ * January 1970 and come back as a `Date`, leaving the filter to compare
+ * against a wrong date rather than decline. Numbers are now split at
+ * `EPOCH_SECONDS_CEILING`, by magnitude, so the split is symmetric about the
+ * epoch. The cost is a millisecond timestamp within roughly three years of it
+ * — late 1966 to early 1973 — which reads as seconds and lands far from where
+ * it meant. That was the cheaper of the two errors: the alternative is being
+ * silently wrong about every epoch-seconds value a consumer hands us.
+ *
+ * Only the `number` type is split. A *string* of digits still goes to dayjs,
+ * which reads `'1741046400'` as the year 1741 — the same failure in the shape
+ * a query string actually arrives in. Left alone deliberately: a bare `'2025'`
+ * has to keep parsing as a year, so a digit-string rule needs a length guard
+ * and a decision this function should not make on its own.
  */
 export function toDateLoose(value: unknown): Date | null {
   if (value instanceof Date)
     return Number.isNaN(value.getTime()) ? null : value;
-  if (typeof value !== 'string' && typeof value !== 'number') return null;
+  if (typeof value === 'number') {
+    const ms = Math.abs(value) < EPOCH_SECONDS_CEILING ? value * 1000 : value;
+    const parsed = dayjs(ms);
+    return parsed.isValid() ? parsed.toDate() : null;
+  }
+  if (typeof value !== 'string') return null;
   const parsed = dayjs(value);
   return parsed.isValid() ? parsed.toDate() : null;
 }
@@ -302,5 +356,56 @@ export function isWithinBounds(
   // typed field and the grid disagreed about whether a date was in range.
   if (minDate && isBeforeDay(date, minDate, timeZone)) return false;
   if (maxDate && isAfterDay(date, maxDate, timeZone)) return false;
+  return true;
+}
+
+/** Whether a bound carries a time of day, or is a plain midnight-anchored day. */
+function hasTimeOfDay(date: Date, timeZone?: string): boolean {
+  const value = zoned(date, timeZone);
+  return (
+    value.hour() !== 0 ||
+    value.minute() !== 0 ||
+    value.second() !== 0 ||
+    value.millisecond() !== 0
+  );
+}
+
+/**
+ * Bounds for time-of-day editing: the day check every other part applies,
+ * plus the bound's own time of day when it has one.
+ *
+ * `isWithinBounds` alone compares whole days, which is right for the grid and
+ * the typed field but useless to `.TimeField` — a `maxDate` of 17 Apr 10:00
+ * admits 23:00 on the 17th. A plain instant comparison is wrong in the other
+ * direction, and worse: `maxDate={new Date(2024, 3, 17)}` is how a picker is
+ * ordinarily bounded, and reading that midnight literally forbids *every*
+ * time of day on the last day it allows. Every other part reads a midnight
+ * bound as "through the end of that day", so this does too.
+ *
+ * So the day bound always applies, inclusive at both ends, and a bound that
+ * actually names a time additionally constrains within its own day.
+ */
+export function isWithinTimeBounds(
+  date: Date,
+  minDate?: Date,
+  maxDate?: Date,
+  timeZone?: string
+): boolean {
+  if (!isWithinBounds(date, minDate, maxDate, timeZone)) return false;
+  const instant = date.getTime();
+  if (
+    minDate &&
+    hasTimeOfDay(minDate, timeZone) &&
+    instant < minDate.getTime()
+  ) {
+    return false;
+  }
+  if (
+    maxDate &&
+    hasTimeOfDay(maxDate, timeZone) &&
+    instant > maxDate.getTime()
+  ) {
+    return false;
+  }
   return true;
 }
