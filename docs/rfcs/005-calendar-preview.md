@@ -367,7 +367,8 @@ export function epoch(date: Date): number;
 
 | Job | Effect |
 |---|---|
-| Import-order dependence goes away | Every module needing a date operation imports from here, so the plugin set is one fact in one place and the 0.49.0 `TypeError` class becomes impossible. Both `filter-operations.tsx` modules migrate onto it. |
+| Import-order dependence goes away | Every module needing a date *plugin* imports from here, so the plugin set is one fact in one place and the 0.49.0 `TypeError` class becomes impossible. Both `filter-operations.tsx` modules and both `utils/index.tsx` barrels migrate onto it, as does `time-scale.tsx`'s loose parser. |
+| Scope of that rule | Plugins, not the identifier. `time-scale.tsx` and `timeline.tsx` still `import dayjs` for core APIs only (`startOf`, `add`, `format`) and register no plugin, so no `extend()` order can break them; migrating them would mean rewriting the axis arithmetic for no correctness gain. The adapter owns every module that needs a plugin, and every module that must agree with another about what a loose value *means*. |
 | `Date` identity churn goes away internally | All internal comparisons, memo keys, and effect dependencies use `dayKey()` or `epoch()`. The public API stays `Date`, so migration is mechanical — but the three `biome-ignore`s and the unguarded loop have nowhere left to live. |
 | The date library becomes swappable | The exported surface is identical whichever library backs it, so the decision is reversible in one file. |
 

@@ -14,7 +14,7 @@ import type {
   DateRangeValue
 } from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import { dayKey, firstOfMonth, getYear } from './date-adapter';
+import { dayKey, dayOrdinal, firstOfMonth, getYear } from './date-adapter';
 
 const MONTH_LABELS = [
   'Jan',
@@ -67,20 +67,28 @@ const PERIODS = {
   }
 } as const satisfies Record<Exclude<CalendarGranularity, 'day'>, unknown>;
 
-/** One period button, fully resolved: no date maths left for render time. */
+/**
+ * One period button, fully resolved: no date maths left for render time.
+ * `selected` is not here — it is the only value-dependent field, and folding
+ * it in made a time-of-day nudge rebuild every date in the list.
+ */
 interface PeriodCell {
-  key: string;
+  key: number;
   label: string;
   start: Date;
-  selected: boolean;
+  /** First instant of the *next* period, so `selected` needs no date maths. */
+  end: Date;
   unavailable: boolean;
 }
 
 export interface CalendarPreviewMonthGridProps
   extends Omit<ComponentProps<'div'>, 'children'> {
   /**
-   * How many years either side of the active one to offer when no `minDate`
-   * or `maxDate` bounds the list.
+   * How many years either side of the active one to offer.
+   *
+   * Per edge, and only where that edge is unbounded: `minDate` fixes the first
+   * year and `maxDate` the last. With both supplied this is inert and the list
+   * spans the bounds in full — 1970–2035 really does render 792 buttons.
    * @defaultValue 5
    */
   yearWindow?: number;
@@ -144,33 +152,41 @@ export function CalendarPreviewMonthGrid({
   );
 
   /*
-   * Every cell costs two `firstOfMonth` parses, a `dayKey` format and a bounds
-   * pair — around five dayjs constructions. A picker bounded to a couple of
-   * decades has hundreds of cells, and rebuilding them on every context change
-   * (a keystroke in the input, the popover opening) was the whole list each
-   * time. Resolved once here instead, keyed on what the cells actually depend
-   * on. `disabled` is deliberately absent: it gates the button at render time
-   * and must not rebuild the dates.
+   * Each cell costs about five dayjs constructions, and a picker bounded to a
+   * couple of decades has hundreds of them. `disabled` is deliberately absent
+   * from the deps: it gates the button at render time, not the dates.
+   *
+   * Bounds enter as numbers, never as the `Date`s. `minDate={new Date(...)}`
+   * is how a bounded picker is ordinarily written, so a `Date` in the deps is
+   * a fresh identity every parent render and the memo never held at all.
    */
+  const minTime = minDate ? minDate.getTime() : null;
+  const maxTime = maxDate ? maxDate.getTime() : null;
+
+  /*
+   * Resolved out here so the memo depends on the two year numbers, not on
+   * `anchorYear` — which follows the selection, and which a bounded list never
+   * reads, so leaving it in the deps rebuilt every cell for an unmoved span.
+   */
+  const firstYear = minDate
+    ? getYear(minDate, timeZone)
+    : anchorYear - yearWindow;
+  const lastYear = maxDate
+    ? getYear(maxDate, timeZone)
+    : anchorYear + yearWindow;
+
   const sections = useMemo(() => {
     if (granularity === 'day') return [];
 
     const period = PERIODS[granularity];
     const monthSpan = 12 / period.perYear;
-    const firstYear = minDate
-      ? getYear(minDate, timeZone)
-      : anchorYear - yearWindow;
-    const lastYear = maxDate
-      ? getYear(maxDate, timeZone)
-      : anchorYear + yearWindow;
-    const selectedDates = selectedDatesIn(value);
 
     const built: { year: number; cells: PeriodCell[] }[] = [];
     for (let year = firstYear; year <= lastYear; year += 1) {
       const cells = Array.from({ length: period.perYear }, (_, index) => {
         const startMonth = period.startMonth(index);
         const start = firstOfMonth(year, startMonth, timeZone);
-        const nextStart = firstOfMonth(
+        const end = firstOfMonth(
           year + (startMonth + monthSpan >= 12 ? 1 : 0),
           (startMonth + monthSpan) % 12,
           timeZone
@@ -180,18 +196,17 @@ export function CalendarPreviewMonthGrid({
          * disable the whole month and make every valid day in it unreachable.
          * `.Nav` answers the same question this way.
          */
-        const lastInstant = new Date(nextStart.getTime() - 1);
         const outOfBounds =
-          (minDate && lastInstant < minDate) || (maxDate && start > maxDate);
+          (minTime !== null && end.getTime() - 1 < minTime) ||
+          (maxTime !== null && start.getTime() > maxTime);
 
         return {
-          key: dayKey(start, timeZone),
+          // Integer identity, not `dayKey`: React stringifies keys anyway.
+          key: dayOrdinal(start, timeZone),
           label: granularity === 'year' ? String(year) : period.label(index),
           start,
-          selected: selectedDates.some(
-            date => date >= start && date < nextStart
-          ),
-          unavailable: !!outOfBounds || !!isDateUnavailable?.(start)
+          end,
+          unavailable: outOfBounds || !!isDateUnavailable?.(start)
         } satisfies PeriodCell;
       });
       built.push({ year, cells });
@@ -199,11 +214,10 @@ export function CalendarPreviewMonthGrid({
     return built;
   }, [
     granularity,
-    minDate,
-    maxDate,
-    anchorYear,
-    yearWindow,
-    value,
+    firstYear,
+    lastYear,
+    minTime,
+    maxTime,
     isDateUnavailable,
     timeZone
   ]);
@@ -228,6 +242,7 @@ export function CalendarPreviewMonthGrid({
 
   const period = PERIODS[granularity];
   const writable = !disabled && !readOnly;
+  const selectedTimes = selectedDatesIn(value).map(date => date.getTime());
 
   const commit = (start: Date) => {
     if (!writable) return;
@@ -252,20 +267,25 @@ export function CalendarPreviewMonthGrid({
     setValue(start);
   };
 
-  const renderCell = (cell: PeriodCell) => (
-    <button
-      key={cell.key}
-      type='button'
-      className={styles.monthCell}
-      disabled={disabled || cell.unavailable}
-      aria-pressed={cell.selected}
-      data-selected={cell.selected || undefined}
-      data-slot='calendar-preview-month-cell'
-      onClick={() => commit(cell.start)}
-    >
-      {cell.label}
-    </button>
-  );
+  const renderCell = (cell: PeriodCell) => {
+    const selected = selectedTimes.some(
+      time => time >= cell.start.getTime() && time < cell.end.getTime()
+    );
+    return (
+      <button
+        key={cell.key}
+        type='button'
+        className={styles.monthCell}
+        disabled={disabled || cell.unavailable}
+        aria-pressed={selected}
+        data-selected={selected || undefined}
+        data-slot='calendar-preview-month-cell'
+        onClick={() => commit(cell.start)}
+      >
+        {cell.label}
+      </button>
+    );
+  };
 
   return (
     <div

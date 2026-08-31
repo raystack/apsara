@@ -64,16 +64,7 @@ describe('CalendarPreview published surface', () => {
     );
     const barrel = readFileSync(join(root, 'index.tsx'), 'utf8');
 
-    const fromParts = new Set<string>();
-    for (const block of componentIndex.split('\n\n')) {
-      for (const name of exportedNames(
-        componentIndex,
-        './calendar-preview.*?'
-      )) {
-        fromParts.add(name);
-      }
-      void block;
-    }
+    const fromParts = exportedNames(componentIndex, './calendar-preview.*?');
 
     // Every name the component index publishes, however it is spelled.
     const published = new Set(

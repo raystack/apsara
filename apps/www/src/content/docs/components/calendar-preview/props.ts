@@ -136,6 +136,8 @@ export interface CalendarPreviewContentProps {
   align?: 'start' | 'center' | 'end';
   /** @defaultValue 4 */
   sideOffset?: number;
+  /** @defaultValue 3 */
+  collisionPadding?: number;
   /**
    * Whether the popup takes focus when it opens. Defaults to `false` when the
    * trigger contains a typed field — otherwise keystrokes would reach the grid

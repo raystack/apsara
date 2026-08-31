@@ -1,8 +1,8 @@
 import type { Row, Table } from '@tanstack/react-table';
 import { TableState } from '@tanstack/table-core';
-import dayjs from 'dayjs';
 
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
+import { toDateLoose } from '../../calendar-preview/date-adapter';
 import {
   DataTableColumnDef,
   DataTableQuery,
@@ -25,7 +25,7 @@ export function queryToTableState(query: InternalQuery): Partial<TableState> {
     query.filters
       ?.filter(data => {
         if (data._type === FilterType.date)
-          return dayjs(data.value as string | Date).isValid();
+          return toDateLoose(data.value) !== null;
         if (data.value !== '') return true;
         return false;
       })
@@ -223,7 +223,7 @@ export function transformToDataTableQuery(
       ?.filter(data => {
         if (data._type === FilterType.select) return true;
         if (data._type === FilterType.date)
-          return dayjs(data.value as string | Date).isValid();
+          return toDateLoose(data.value) !== null;
         if (data.value !== '') return true;
         return false;
       })

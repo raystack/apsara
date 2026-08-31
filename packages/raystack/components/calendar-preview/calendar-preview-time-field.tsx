@@ -13,6 +13,7 @@ import {
   getHours,
   getMinutes,
   isWithinTimeBounds,
+  pad,
   setTime
 } from './date-adapter';
 
@@ -29,8 +30,6 @@ export interface CalendarPreviewTimeFieldProps
    */
   hourCycle?: 12 | 24;
 }
-
-const pad = (value: number) => String(value).padStart(2, '0');
 
 /**
  * Hour and minute for the selected date, plus AM/PM under a 12-hour cycle.

@@ -1,3 +1,18 @@
+/* Two local helpers: the mini type triplet had four copies in this file and
+   the user-select pair three. File-local — repetition across modules is still
+   the house norm. The `:disabled { opacity: 0.5 }` sites stay as they are;
+   `composes:` cannot target a pseudo-class selector. */
+.miniText {
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+}
+
+.unselectable {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 .trigger {
   display: inline-flex;
   align-items: center;
@@ -42,6 +57,7 @@
 
 /* The weekday header row is shorter than a day row — 32 against 40. */
 .weekday {
+  composes: miniText;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,9 +66,6 @@
   color: var(--rs-color-foreground-base-secondary);
   text-align: center;
   font-weight: var(--rs-font-weight-medium);
-  font-size: var(--rs-font-size-mini);
-  line-height: var(--rs-line-height-mini);
-  letter-spacing: var(--rs-letter-spacing-mini);
 }
 
 .day {
@@ -180,9 +193,8 @@
 }
 
 .rangeSeparator {
+  composes: unselectable;
   color: var(--rs-color-foreground-base-tertiary);
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .rangeField {
@@ -209,13 +221,9 @@
 }
 
 .navCaption {
+  composes: miniText unselectable;
   font-weight: var(--rs-font-weight-medium);
-  font-size: var(--rs-font-size-mini);
-  line-height: var(--rs-line-height-mini);
-  letter-spacing: var(--rs-letter-spacing-mini);
   color: var(--rs-color-foreground-base-primary);
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .navButtons {
@@ -266,6 +274,7 @@
 }
 
 .monthCell {
+  composes: miniText;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -277,9 +286,6 @@
   color: var(--rs-color-foreground-base-primary);
   cursor: pointer;
   font-weight: var(--rs-font-weight-medium);
-  font-size: var(--rs-font-size-mini);
-  line-height: var(--rs-line-height-mini);
-  letter-spacing: var(--rs-letter-spacing-mini);
 }
 
 .monthCell:hover:not(:disabled) {
@@ -323,9 +329,8 @@
 }
 
 .timeSeparator {
+  composes: unselectable;
   color: var(--rs-color-foreground-base-secondary);
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .meridiem {
@@ -337,14 +342,12 @@
 }
 
 .meridiemButton {
+  composes: miniText;
   padding: var(--rs-space-1) var(--rs-space-3);
   border: none;
   background: transparent;
   color: var(--rs-color-foreground-base-primary);
   cursor: pointer;
-  font-size: var(--rs-font-size-mini);
-  line-height: var(--rs-line-height-mini);
-  letter-spacing: var(--rs-letter-spacing-mini);
 }
 
 .meridiemButton[data-selected] {
@@ -415,11 +418,22 @@
    not jump when the data lands. Seven day columns is not a --rs-* size, so it
    is a component-local custom property, as `.monthGrid` does with its height.
    The `--rs-space-12` that used to sit here was decoration: it resolves to
-   56px and the hardcoded minimum overrode it every time. */
-.gridSkeleton {
-  --calendar-preview-grid-width: 280px;
+   56px and the hardcoded minimum overrode it every time.
 
-  width: var(--calendar-preview-grid-width);
+   `.week` is a bare flex row with no gap and `.day` is one --rs-space-10, so
+   seven columns is exactly 7 * --rs-space-10 rather than a literal 280px.
+   --calendar-preview-grid-months follows `.Grid`'s `months`, since two months
+   sit side by side with one --rs-space-5 between; it defaults to 1. */
+.gridSkeleton {
+  --calendar-preview-grid-width: calc(7 * var(--rs-space-10));
+  --calendar-preview-grid-months: 1;
+
+  width: calc(
+    var(--calendar-preview-grid-width) *
+    var(--calendar-preview-grid-months) +
+    var(--rs-space-5) *
+    (var(--calendar-preview-grid-months) - 1)
+  );
 }
 
 .gridSkeletonRows {

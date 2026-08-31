@@ -1,7 +1,7 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { useMemo } from 'react';
+import { type CSSProperties, useMemo } from 'react';
 import {
   type DateRange,
   DayPicker,
@@ -106,13 +106,20 @@ export function CalendarPreviewGrid({
     loading
   } = useCalendarPreviewContext('Grid');
 
+  /*
+   * Keyed on the instants, not the `Date`s: this array is handed to RDP as
+   * `disabled`, so a fresh identity every render propagates into its own memos.
+   */
+  const minTime = minDate ? minDate.getTime() : null;
+  const maxTime = maxDate ? maxDate.getTime() : null;
+
   const disabledMatchers = useMemo(() => {
     const matchers: Matcher[] = [];
-    if (minDate) matchers.push({ before: minDate });
-    if (maxDate) matchers.push({ after: maxDate });
+    if (minTime !== null) matchers.push({ before: new Date(minTime) });
+    if (maxTime !== null) matchers.push({ after: new Date(maxTime) });
     if (isDateUnavailable) matchers.push(isDateUnavailable);
     return matchers;
-  }, [minDate, maxDate, isDateUnavailable]);
+  }, [minTime, maxTime, isDateUnavailable]);
 
   const mergedClassNames = useMemo(
     () => ({ ...GRID_CLASS_NAMES, ...classNames }),
@@ -134,6 +141,11 @@ export function CalendarPreviewGrid({
     return (
       <div
         className={cx(styles.gridSkeleton, className)}
+        /*
+         * `months` widens the grid rather than lengthening it — `.months` is a
+         * flex row — so the row count below holds and only the width follows.
+         */
+        style={{ '--calendar-preview-grid-months': months } as CSSProperties}
         aria-busy='true'
         data-slot='calendar-preview-skeleton'
       >

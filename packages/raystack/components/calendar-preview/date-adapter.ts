@@ -28,7 +28,8 @@ export const DEFAULT_FORMAT = 'DD MMM YYYY';
 const zoned = (date: Date, timeZone?: string) =>
   timeZone ? dayjs(date).tz(timeZone) : dayjs(date);
 
-const pad = (value: number) => String(value).padStart(2, '0');
+/** Zero-pads to two digits. Exported: `.TimeField` had its own copy. */
+export const pad = (value: number) => String(value).padStart(2, '0');
 
 /**
  * A stable identity for a calendar day, for memo keys and effect deps.
@@ -53,7 +54,7 @@ export function firstOfMonth(
   monthIndex: number,
   timeZone?: string
 ): Date {
-  const iso = `${year}-${String(monthIndex + 1).padStart(2, '0')}-01`;
+  const iso = `${year}-${pad(monthIndex + 1)}-01`;
   return timeZone
     ? dayjs.tz(iso, 'YYYY-MM-DD', timeZone).toDate()
     : dayjs(iso, 'YYYY-MM-DD', true).toDate();
@@ -147,6 +148,13 @@ export function parseDate(
 }
 
 /**
+ * 1-based quarter containing a zero-based month index. Shared with
+ * `time-scale.tsx`, which rendered the identical expression for its tick.
+ */
+export const quarterOfMonth = (monthIndex: number): number =>
+  Math.floor(monthIndex / 3) + 1;
+
+/**
  * How a value reads at each granularity, mirroring the reference app: a month
  * shows `Jun 2026`, a quarter `Q3 2026`, a half-year `H1 2026`, a year `2025`.
  * Only `day` uses the consumer's `format`.
@@ -163,7 +171,7 @@ export function formatForGranularity(
     case 'month':
       return formatDate(date, 'MMM YYYY', timeZone);
     case 'quarter':
-      return `Q${Math.floor(month / 3) + 1} ${year}`;
+      return `Q${quarterOfMonth(month)} ${year}`;
     case 'half-year':
       return `H${month < 6 ? 1 : 2} ${year}`;
     case 'year':
@@ -286,7 +294,7 @@ export function parseAcrossGranularities(
  * `dayKey` keeps returning the string: it is a React key and a `data-*` value
  * as much as a comparison key, and it reads as a date when debugging.
  */
-function dayOrdinal(date: Date, timeZone?: string): number {
+export function dayOrdinal(date: Date, timeZone?: string): number {
   const value = zoned(date, timeZone);
   return value.year() * 10000 + (value.month() + 1) * 100 + value.date();
 }

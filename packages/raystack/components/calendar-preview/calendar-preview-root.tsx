@@ -59,7 +59,12 @@ export interface CalendarPreviewBaseProps {
 
   minDate?: Date;
   maxDate?: Date;
-  /** Covers the common predicate without learning RDP's matcher DSL. */
+  /**
+   * Covers the common predicate without learning RDP's matcher DSL.
+   *
+   * Wrap it in `useCallback`: `.MonthGrid` keys its period memo on this, so an
+   * inline predicate rebuilds every cell on every render.
+   */
   isDateUnavailable?: (date: Date) => boolean;
 
   /** @defaultValue 'DD MMM YYYY' */
