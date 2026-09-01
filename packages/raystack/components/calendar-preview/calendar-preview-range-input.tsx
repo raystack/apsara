@@ -22,13 +22,18 @@ import {
 } from './calendar-preview-context';
 import {
   dayKey,
+  endOfDay,
   formatForGranularity,
+  getHours,
+  getMinutes,
   getYear,
   isAfterDay,
   isWithinBounds,
   parseAcrossGranularities,
   parseForGranularity,
-  patternForGranularity
+  patternForGranularity,
+  setTime,
+  startOfDay
 } from './date-adapter';
 
 type FieldInputProps = Omit<InputProps, 'value' | 'onChange' | 'defaultValue'>;
@@ -201,20 +206,57 @@ export function CalendarPreviewRangeInput({
 
     if (matched !== granularity) setGranularity(matched);
 
-    const next: DateRangeValue = { ...range, [field]: parsed };
+    /*
+     * A typed day carries no time, so it inherits the one this endpoint already
+     * had — otherwise every retype silently discarded whatever `.TimeField` or
+     * a preset had put there, resetting it to midnight.
+     *
+     * Day granularity only. Every other granularity resolves to the first
+     * instant of a period, and `Q4 2024` means the quarter, not 09:30 on the
+     * day it happens to start.
+     */
+    const previous = matched === 'day' ? range[field] : null;
+    const committed = previous
+      ? setTime(
+          parsed,
+          getHours(previous, timeZone),
+          getMinutes(previous, timeZone),
+          timeZone
+        )
+      : parsed;
+
+    const next: DateRangeValue = { ...range, [field]: committed };
+
     /*
      * A typed start after the existing end clears the end rather than
      * swapping the two: swapping silently moves a value into a field the user
      * did not type in, which reads as the component losing their input.
-     */
-    /*
-     * A day comparison, not an instant one: typed dates parse to midnight but
-     * `.TimeField` and presets write a clock time, so `08:00 > midnight` on the
-     * same day used to delete the user's start.
+     *
+     * By day, deliberately. An instant comparison here would delete the user's
+     * start the moment they typed an end on the same day, because a bare date
+     * is midnight and `.TimeField` had already put 08:00 on the start.
      */
     if (next.from && next.to && isAfterDay(next.from, next.to, timeZone)) {
       if (field === 'from') next.to = null;
       else next.from = null;
+    } else if (
+      next.from &&
+      next.to &&
+      next.from.getTime() > next.to.getTime()
+    ) {
+      /*
+       * Ordered by day but inverted by instant — the case a day comparison
+       * cannot see, and the one `.TimeField` refuses outright. Here the
+       * inversion is an artefact of the missing time rather than something the
+       * user asked for, so it is resolved instead of refused: a bare end date
+       * reads as "through the end of that day", which is how every other part
+       * of this component reads a midnight bound.
+       */
+      if (field === 'to') {
+        next.to = endOfDay(next.to, timeZone);
+      } else {
+        next.from = startOfDay(next.from, timeZone);
+      }
     }
 
     setValue(next, { granularity: matched });

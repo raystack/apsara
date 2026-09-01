@@ -25,11 +25,129 @@ dayjs.extend(isSameOrBefore);
 /** The one canonical display and input format. */
 export const DEFAULT_FORMAT = 'DD MMM YYYY';
 
-const zoned = (date: Date, timeZone?: string) =>
-  timeZone ? dayjs(date).tz(timeZone) : dayjs(date);
+/*
+ * Wall-clock formatters, one per zone. `Intl.DateTimeFormat` construction is
+ * not cheap and every zoned read goes through one.
+ */
+const wallFormatters = new Map<string, Intl.DateTimeFormat>();
+
+const wallFormatter = (timeZone: string): Intl.DateTimeFormat => {
+  const cached = wallFormatters.get(timeZone);
+  if (cached) return cached;
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    // `h23` rather than `hour12: false`, which reports midnight as hour 24.
+    hourCycle: 'h23'
+  });
+  wallFormatters.set(timeZone, formatter);
+  return formatter;
+};
+
+/** The wall-clock fields of an instant, as read in a zone. */
+interface WallClock {
+  year: number;
+  /** Zero-based, matching `Date` and dayjs. */
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+  second: number;
+  ms: number;
+}
+
+/**
+ * The instant as it reads on the clock in `timeZone`.
+ *
+ * `Intl` performs the conversion, so the answer never depends on the host's own
+ * zone. Every other route does. dayjs's prototype `.tz()` round-trips through
+ * `toLocaleString('en-US', { timeZone })` and re-parses that wall clock in the
+ * host zone, so when the target's wall time falls in the host's spring-forward
+ * gap the re-parse jumps an hour: the same instant read 02:30 in Asia/Kolkata on
+ * a machine in UTC and 03:30 on one in America/New_York, so editing only the
+ * minute field moved the value by 75 of them.
+ *
+ * Reconstructing a `dayjs.tz` from these parts does not help — measured, its
+ * field accessors are host-dependent in exactly the same way, returning hour 3
+ * under New_York for the string `2024-03-10 02:30`. So the fields are read
+ * straight off `Intl` and dayjs is left out of the read path entirely.
+ */
+const wallClock = (date: Date, timeZone?: string): WallClock => {
+  if (!timeZone) {
+    return {
+      year: date.getFullYear(),
+      month: date.getMonth(),
+      day: date.getDate(),
+      hour: date.getHours(),
+      minute: date.getMinutes(),
+      second: date.getSeconds(),
+      ms: date.getMilliseconds()
+    };
+  }
+  const parts: Record<string, string> = {};
+  for (const part of wallFormatter(timeZone).formatToParts(date)) {
+    parts[part.type] = part.value;
+  }
+  return {
+    year: Number(parts.year),
+    month: Number(parts.month) - 1,
+    day: Number(parts.day),
+    hour: Number(parts.hour),
+    minute: Number(parts.minute),
+    second: Number(parts.second),
+    // Intl does not report milliseconds, and they are the same in every zone.
+    ms: date.getMilliseconds()
+  };
+};
+
+/**
+ * A dayjs carrying the target zone's wall clock, for token formatting only.
+ *
+ * Backed by UTC because UTC has no transitions: the fields handed in are the
+ * fields that read back. A local `Date` would renormalise a wall clock sitting
+ * in the *host's* gap — the bug this exists to avoid — and a `dayjs.tz` reads
+ * its fields back host-dependently. Offset tokens (`Z`, `z`) therefore describe
+ * UTC rather than `timeZone`; no format this component uses contains one.
+ */
+const forFormat = (date: Date, timeZone?: string) => {
+  if (!timeZone) return dayjs(date);
+  const w = wallClock(date, timeZone);
+  return dayjs.utc(
+    Date.UTC(w.year, w.month, w.day, w.hour, w.minute, w.second, w.ms)
+  );
+};
 
 /** Zero-pads to two digits. Exported: `.TimeField` had its own copy. */
 export const pad = (value: number) => String(value).padStart(2, '0');
+
+/**
+ * A zoned instant built from wall-clock parts.
+ *
+ * The only safe way to name a moment in a zone. Arithmetic on a dayjs pinned
+ * to the *source* instant's UTC offset carries that offset into periods where it
+ * does not apply — which is why
+ * `addMonths(1 Apr, -1)` in `America/New_York` used to land on 29 Feb 23:00 and
+ * skip March entirely. `dayjs.tz` resolves the offset from the wall clock it is
+ * handed, so the day and time asked for are the ones that come back.
+ */
+const fromParts = (
+  year: number,
+  monthIndex: number,
+  day: number,
+  hour: number,
+  minute: number,
+  timeZone?: string
+): Date => {
+  const iso = `${year}-${pad(monthIndex + 1)}-${pad(day)} ${pad(hour)}:${pad(minute)}`;
+  return timeZone
+    ? dayjs.tz(iso, 'YYYY-MM-DD HH:mm', timeZone).toDate()
+    : dayjs(iso, 'YYYY-MM-DD HH:mm', true).toDate();
+};
 
 /**
  * A stable identity for a calendar day, for memo keys and effect deps.
@@ -37,15 +155,37 @@ export const pad = (value: number) => String(value).padStart(2, '0');
  * which is what forced the old family's lint suppressions.
  */
 export function dayKey(date: Date, timeZone?: string): string {
-  return zoned(date, timeZone).format('YYYY-MM-DD');
+  const w = wallClock(date, timeZone);
+  return `${w.year}-${pad(w.month + 1)}-${pad(w.day)}`;
 }
 
 export function startOfMonth(date: Date, timeZone?: string): Date {
-  return zoned(date, timeZone).startOf('month').toDate();
+  const w = wallClock(date, timeZone);
+  return fromParts(w.year, w.month, 1, 0, 0, timeZone);
 }
 
+/**
+ * Month arithmetic on the wall clock, keeping the day of month where the
+ * target month has one — `31 Jan + 1` is the 28th or 29th, as dayjs would.
+ */
 export function addMonths(date: Date, count: number, timeZone?: string): Date {
-  return zoned(date, timeZone).add(count, 'month').toDate();
+  const w = wallClock(date, timeZone);
+  const absolute = w.month + count;
+  const year = w.year + Math.floor(absolute / 12);
+  const monthIndex = ((absolute % 12) + 12) % 12;
+  const daysInTarget = dayjs(
+    `${year}-${pad(monthIndex + 1)}-01`,
+    'YYYY-MM-DD',
+    true
+  ).daysInMonth();
+  return fromParts(
+    year,
+    monthIndex,
+    Math.min(w.day, daysInTarget),
+    w.hour,
+    w.minute,
+    timeZone
+  );
 }
 
 /** First instant of a month, built from parts rather than parsed. */
@@ -54,25 +194,50 @@ export function firstOfMonth(
   monthIndex: number,
   timeZone?: string
 ): Date {
-  const iso = `${year}-${pad(monthIndex + 1)}-01`;
-  return timeZone
-    ? dayjs.tz(iso, 'YYYY-MM-DD', timeZone).toDate()
-    : dayjs(iso, 'YYYY-MM-DD', true).toDate();
+  return fromParts(year, monthIndex, 1, 0, 0, timeZone);
+}
+
+/** Midnight at the start of the day, in the display zone. */
+export function startOfDay(date: Date, timeZone?: string): Date {
+  const w = wallClock(date, timeZone);
+  return fromParts(w.year, w.month, w.day, 0, 0, timeZone);
+}
+
+/**
+ * The last instant of the day, in the display zone.
+ *
+ * The next day is resolved through `Date.UTC`, which normalises a day overflow
+ * (31 April becomes 1 May) without any zone involved, and only then converted
+ * back to a wall clock. Adding a day to an offset-frozen dayjs would drift by
+ * an hour across a transition, which is the `addMonths` bug one unit down.
+ */
+export function endOfDay(date: Date, timeZone?: string): Date {
+  const w = wallClock(date, timeZone);
+  const next = new Date(Date.UTC(w.year, w.month, w.day + 1));
+  const nextStart = fromParts(
+    next.getUTCFullYear(),
+    next.getUTCMonth(),
+    next.getUTCDate(),
+    0,
+    0,
+    timeZone
+  );
+  return new Date(nextStart.getTime() - 1);
 }
 
 export function getHours(date: Date, timeZone?: string): number {
-  return zoned(date, timeZone).hour();
+  return wallClock(date, timeZone).hour;
 }
 
 export function getMinutes(date: Date, timeZone?: string): number {
-  return zoned(date, timeZone).minute();
+  return wallClock(date, timeZone).minute;
 }
 
 /**
  * The same calendar day, at a different time of day.
  *
- * Built from calendar parts rather than by mutating a zoned object. `zoned()`
- * freezes the UTC offset of the instant it is handed, and a day's midnight
+ * Built from calendar parts rather than by mutating a zoned object, which
+ * freezes the UTC offset of the instant it is handed. A day's midnight
  * carries the *pre*-transition offset: chaining `.hour(10)` onto 9 Mar 2025 in
  * `America/New_York` built 10:00 at -5, which reads back as 11:00 EDT. Every
  * time after a spring-forward landed an hour late — not just the hour that
@@ -108,11 +273,12 @@ export function setTime(
 }
 
 export function getYear(date: Date, timeZone?: string): number {
-  return zoned(date, timeZone).year();
+  return wallClock(date, timeZone).year;
 }
 
 export function endOfMonth(date: Date, timeZone?: string): Date {
-  return zoned(date, timeZone).endOf('month').toDate();
+  const nextFirst = addMonths(startOfMonth(date, timeZone), 1, timeZone);
+  return new Date(nextFirst.getTime() - 1);
 }
 
 export function formatDate(
@@ -120,7 +286,7 @@ export function formatDate(
   format: string = DEFAULT_FORMAT,
   timeZone?: string
 ): string {
-  return zoned(date, timeZone).format(format);
+  return forFormat(date, timeZone).format(format);
 }
 
 /**
@@ -165,8 +331,7 @@ export function formatForGranularity(
   format: string = DEFAULT_FORMAT,
   timeZone?: string
 ): string {
-  const year = zoned(date, timeZone).year();
-  const month = zoned(date, timeZone).month();
+  const { year, month } = wallClock(date, timeZone);
   switch (granularity) {
     case 'month':
       return formatDate(date, 'MMM YYYY', timeZone);
@@ -295,8 +460,8 @@ export function parseAcrossGranularities(
  * as much as a comparison key, and it reads as a date when debugging.
  */
 export function dayOrdinal(date: Date, timeZone?: string): number {
-  const value = zoned(date, timeZone);
-  return value.year() * 10000 + (value.month() + 1) * 100 + value.date();
+  const w = wallClock(date, timeZone);
+  return w.year * 10000 + (w.month + 1) * 100 + w.day;
 }
 
 /** Day-granularity comparisons, so callers never touch a date library. */
@@ -369,13 +534,8 @@ export function isWithinBounds(
 
 /** Whether a bound carries a time of day, or is a plain midnight-anchored day. */
 function hasTimeOfDay(date: Date, timeZone?: string): boolean {
-  const value = zoned(date, timeZone);
-  return (
-    value.hour() !== 0 ||
-    value.minute() !== 0 ||
-    value.second() !== 0 ||
-    value.millisecond() !== 0
-  );
+  const w = wallClock(date, timeZone);
+  return w.hour !== 0 || w.minute !== 0 || w.second !== 0 || w.ms !== 0;
 }
 
 /**

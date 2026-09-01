@@ -78,6 +78,12 @@ interface PeriodCell {
   start: Date;
   /** First instant of the *next* period, so `selected` needs no date maths. */
   end: Date;
+  /**
+   * The date this cell emits — not always its first day. The overlap rule
+   * enables a period a mid-month `minDate` only partly allows, and emitting
+   * the 1st there hands the consumer a value before the bound they declared.
+   */
+  value: Date;
   unavailable: boolean;
 }
 
@@ -122,7 +128,8 @@ export function CalendarPreviewMonthGrid({
     timeZone,
     disabled,
     readOnly,
-    loading
+    loading,
+    reportValidity
   } = useCalendarPreviewContext('MonthGrid');
 
   const anchor = firstSelected(value) ?? new Date();
@@ -199,6 +206,14 @@ export function CalendarPreviewMonthGrid({
         const outOfBounds =
           (minTime !== null && end.getTime() - 1 < minTime) ||
           (maxTime !== null && start.getTime() > maxTime);
+        /*
+         * Clamped to the lower bound only. A period starting past `maxDate` is
+         * already out of bounds above, so nothing can exceed the upper one.
+         */
+        const value =
+          minTime !== null && start.getTime() < minTime
+            ? new Date(minTime)
+            : start;
 
         return {
           // Integer identity, not `dayKey`: React stringifies keys anyway.
@@ -206,7 +221,13 @@ export function CalendarPreviewMonthGrid({
           label: granularity === 'year' ? String(year) : period.label(index),
           start,
           end,
-          unavailable: outOfBounds || !!isDateUnavailable?.(start)
+          value,
+          /*
+           * Availability is asked about `value`, not `start`: testing a day the
+           * cell would never emit both disabled reachable periods and let
+           * unavailable ones through.
+           */
+          unavailable: outOfBounds || !!isDateUnavailable?.(value)
         } satisfies PeriodCell;
       });
       built.push({ year, cells });
@@ -244,8 +265,16 @@ export function CalendarPreviewMonthGrid({
   const writable = !disabled && !readOnly;
   const selectedTimes = selectedDatesIn(value).map(date => date.getTime());
 
-  const commit = (start: Date) => {
+  const commit = (cell: PeriodCell) => {
     if (!writable) return;
+    const start = cell.value;
+    /*
+     * Valid by construction — an out-of-bounds or unavailable cell is disabled,
+     * so reaching here means `start` passes. Reported anyway: `.Grid` leaves
+     * this to RDP's own disabling, which left `onValidityChange` silent for
+     * every non-day pick.
+     */
+    reportValidity({ valid: true });
     if (selection === 'range') {
       const range = (value as DateRangeValue | null) ?? {
         from: null,
@@ -280,7 +309,7 @@ export function CalendarPreviewMonthGrid({
         aria-pressed={selected}
         data-selected={selected || undefined}
         data-slot='calendar-preview-month-cell'
-        onClick={() => commit(cell.start)}
+        onClick={() => commit(cell)}
       >
         {cell.label}
       </button>

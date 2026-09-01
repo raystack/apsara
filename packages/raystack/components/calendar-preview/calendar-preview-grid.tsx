@@ -1,9 +1,10 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { type CSSProperties, useMemo } from 'react';
+import { type CSSProperties, useEffect, useMemo, useRef } from 'react';
 import {
   type DateRange,
+  type DayButtonProps,
   DayPicker,
   type DayPickerProps,
   type Matcher
@@ -21,15 +22,29 @@ import { dayKey } from './date-adapter';
  * at all. That is what makes spreading `...props` last honest — nothing is
  * force-overridden after the consumer's spread.
  */
-/*
- * Module scope, not inside the render. React compares component *types* by
- * identity: a fresh function per render is a new type, so RDP's whole grid
- * unmounts and remounts and the focused day node does not survive — which
- * defeats the roving tabindex the RFC keeps react-day-picker for.
+/**
+ * The day button, carrying RDP's roving tabindex.
+ *
+ * Arrow keys do not move focus themselves: RDP moves a `focused` modifier
+ * between days and never touches the DOM, so the button has to focus itself
+ * when it becomes the focused one. Overriding `DayButton` without this ref and
+ * effect left the grid's arrow keys dead in every composition, and crossing a
+ * month boundary dropped focus to `<body>` — inside a popover, that strands
+ * the user outside the surface with nothing focused.
+ *
+ * `modifiers` is therefore read, not discarded. Keyboard navigation is the
+ * stated reason the RFC takes a dependency on react-day-picker at all.
  */
-const GRID_COMPONENTS: DayPickerProps['components'] = {
-  DayButton: ({ day: _day, modifiers: _modifiers, ...buttonProps }) => (
+function DayButton({ day: _day, modifiers, ...buttonProps }: DayButtonProps) {
+  const ref = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (modifiers.focused) ref.current?.focus();
+  }, [modifiers.focused]);
+
+  return (
     <button
+      ref={ref}
       type='button'
       {...buttonProps}
       className={cx(buttonProps.className, styles.dayButton)}
@@ -42,7 +57,18 @@ const GRID_COMPONENTS: DayPickerProps['components'] = {
         {buttonProps.children}
       </span>
     </button>
-  ),
+  );
+}
+
+/*
+ * Module scope, not inside the render. React compares component *types* by
+ * identity: a fresh function per render is a new type, so RDP's whole grid
+ * unmounts and remounts and the focused day node does not survive. Necessary
+ * but not sufficient — node identity is not the focus mechanism, the ref and
+ * effect above are.
+ */
+const GRID_COMPONENTS: DayPickerProps['components'] = {
+  DayButton,
   // `.Nav` owns the caption; RDP's would render the month twice.
   MonthCaption: () => <></>,
   MonthGrid: gridProps => (
