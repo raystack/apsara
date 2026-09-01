@@ -33,8 +33,14 @@ describe('surface prop routing survives the extraction', () => {
     expect(popup?.className).toMatch(/_popover_/);
     expect((popup as HTMLElement).style.zIndex).toBe('42');
     expect(positioner?.className).toMatch(/_popoverPositioner_/);
-    // rest-spread still reaches the positioner (side/sideOffset overrides)
-    expect(positioner?.getAttribute('style')).toContain('--');
+    /*
+     * `side` reaching the positioner is the whole point of the rest-spread, and
+     * `data-side` is the only observable that changes with it. Asserting the
+     * positioner merely *has* custom properties in its style attribute was
+     * hollow: Base UI emits those regardless, so deleting the spread left this
+     * test green.
+     */
+    expect(positioner?.getAttribute('data-side')).toBe('top');
   });
 
   it('CalendarPreview.Content keeps its own classes, slots and focus rule', () => {
