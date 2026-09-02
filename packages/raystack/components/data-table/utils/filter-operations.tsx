@@ -13,34 +13,9 @@ import {
   SelectFilterOperatorType,
   StringFilterOperatorType
 } from '~/types/filters';
-import {
-  isAfterDay,
-  isBeforeDay,
-  isSameDay,
-  toDateLoose
-} from '../../calendar-preview/date-adapter';
+import { toDateLoose } from '../../calendar-preview/date-adapter';
+import { dateFilterOperations } from '../../calendar-preview/filter-date-operations';
 import { DataTableFilterValues } from '../data-table.types';
-
-/*
- * Date comparisons go through the calendar adapter, which is the one place
- * that registers dayjs plugins. Extending them here as well made the module
- * order-dependent — the failure class behind the 0.49.0 P0.
- *
- * A row value that will not parse compares false against every operator that
- * asserts a relationship, which is what an unfilterable cell should do. `neq`
- * is the exception, and deliberately: it negates `eq`, so an empty or
- * unparseable cell is "not equal to" any date and survives the filter. That
- * matches the behaviour the old operators had.
- */
-const compare = (
-  a: unknown,
-  b: unknown,
-  predicate: (left: Date, right: Date) => boolean
-) => {
-  const left = toDateLoose(a);
-  const right = toDateLoose(b);
-  return left && right ? predicate(left, right) : false;
-};
 
 export type FilterPrimitive = string | string[] | number | boolean | Date;
 
@@ -102,34 +77,7 @@ export const filterOperationsMap: FilterFunctionsMap = {
       return columnValue.endsWith(filterStr);
     }
   },
-  date: {
-    eq: (row, columnId, filterValue: FilterValue, _addMeta) => {
-      return compare(row.getValue(columnId), filterValue.date, isSameDay);
-    },
-    neq: (row, columnId, filterValue: FilterValue, _addMeta) => {
-      return !compare(row.getValue(columnId), filterValue.date, isSameDay);
-    },
-    lt: (row, columnId, filterValue: FilterValue, _addMeta) => {
-      return compare(row.getValue(columnId), filterValue.date, isBeforeDay);
-    },
-    lte: (row, columnId, filterValue: FilterValue, _addMeta) => {
-      return compare(
-        row.getValue(columnId),
-        filterValue.date,
-        (a, b) => !isAfterDay(a, b)
-      );
-    },
-    gt: (row, columnId, filterValue: FilterValue, _addMeta) => {
-      return compare(row.getValue(columnId), filterValue.date, isAfterDay);
-    },
-    gte: (row, columnId, filterValue: FilterValue, _addMeta) => {
-      return compare(
-        row.getValue(columnId),
-        filterValue.date,
-        (a, b) => !isBeforeDay(a, b)
-      );
-    }
-  },
+  date: dateFilterOperations,
   select: {
     eq: (row, columnId, filterValue: FilterValue, _addMeta) => {
       if (String(filterValue.value) === EmptyFilterValue) {
