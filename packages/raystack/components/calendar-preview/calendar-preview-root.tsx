@@ -36,13 +36,16 @@ export interface CalendarValueChangeDetails {
 export interface CalendarPreviewBaseProps {
   /** The active granularity (controlled). */
   granularity?: CalendarGranularity;
-  /** @defaultValue 'day' */
+  /** Clamped into `granularities` when the two disagree. @defaultValue 'day' */
   defaultGranularity?: CalendarGranularity;
   onGranularityChange?: (granularity: CalendarGranularity) => void;
   /**
    * Granularities the user may switch between. `.GranularityTabs` renders
    * only when there is more than one.
-   * @defaultValue ['day']
+   *
+   * The active granularity is always one of these: a `granularity` or
+   * `defaultGranularity` outside the set is clamped to the first entry.
+   * @defaultValue the active granularity
    */
   granularities?: CalendarGranularity[];
 
@@ -249,13 +252,32 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
     });
 
   /*
+   * The offered set is the authority on what the picker can show, so the
+   * granularity is clamped into it. Nothing reconciled the two before, and
+   * their defaults disagree: `granularities={['month','quarter']}` left the
+   * granularity at its `'day'` default — no tab selected, the day grid
+   * rendered for a set excluding it, and clicks committing
+   * `{granularity: 'day'}` from a picker with no day view.
+   *
+   * The context and `granularityRef` both read this, not the raw state.
+   */
+  const activeGranularity =
+    granularities &&
+    granularities.length > 0 &&
+    !granularities.includes(granularity)
+      ? granularities[0]
+      : granularity;
+
+  /*
    * Defaults to just the active granularity, so a single-granularity picker
    * shows no tabs and the active one is always present in the list.
    */
   const offeredGranularities = useMemo(
     () =>
-      granularities && granularities.length > 0 ? granularities : [granularity],
-    [granularities, granularity]
+      granularities && granularities.length > 0
+        ? granularities
+        : [activeGranularity],
+    [granularities, activeGranularity]
   );
 
   const setGranularity = useCallback(
@@ -286,8 +308,8 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
    * every time the tab changed. Reading it at call time is also the more
    * correct of the two: it cannot be a stale closure.
    */
-  const granularityRef = useRef(granularity);
-  granularityRef.current = granularity;
+  const granularityRef = useRef(activeGranularity);
+  granularityRef.current = activeGranularity;
 
   /*
    * A committed value clears any standing complaint.
@@ -493,7 +515,7 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
   const contextValue = useMemo<CalendarPreviewContextValue>(
     () => ({
       selection,
-      granularity,
+      granularity: activeGranularity,
       setGranularity,
       granularities: offeredGranularities,
       value: effectiveValue,
@@ -526,7 +548,7 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
     }),
     [
       selection,
-      granularity,
+      activeGranularity,
       setGranularity,
       offeredGranularities,
       effectiveValue,

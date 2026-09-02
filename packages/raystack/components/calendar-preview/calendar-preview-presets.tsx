@@ -9,6 +9,7 @@ import {
   isSameValue,
   useCalendarPreviewContext
 } from './calendar-preview-context';
+import { isWithinBounds } from './date-adapter';
 
 export interface CalendarPreviewPresetsProps extends ComponentProps<'div'> {
   /**
@@ -68,7 +69,11 @@ export function CalendarPreviewPreset({
     setMonth,
     granularity,
     disabled,
-    readOnly
+    readOnly,
+    minDate,
+    maxDate,
+    isDateUnavailable,
+    timeZone
   } = useCalendarPreviewContext('Preset');
 
   const presetValue: CalendarValue =
@@ -81,16 +86,50 @@ export function CalendarPreviewPreset({
    * A mismatched prop writes a shape the root cannot use, so it fails at
    * render rather than on click — the stack then points at the preset instead
    * of at whatever the bad value later broke.
+   *
+   * `value` is typed `Date | Date[] | null` under every mode, so it was only
+   * `range` that got checked against `selection`. A bare `Date` under
+   * `multiple` reached `setValue`, and `.Grid` called `selected?.some` on it
+   * and threw; an array under `single` made `.MonthGrid` `.map` a `Date`.
    */
   const shapeError =
     selection === 'range' && range === undefined
       ? 'CalendarPreview.Preset needs `range` when selection="range"'
       : selection !== 'range' && range !== undefined
         ? 'CalendarPreview.Preset `range` requires selection="range" — use `value`'
-        : null;
+        : selection === 'multiple' && value != null && !Array.isArray(value)
+          ? 'CalendarPreview.Preset needs a `Date[]` value when selection="multiple"'
+          : selection === 'single' && Array.isArray(value)
+            ? 'CalendarPreview.Preset needs a single `Date` value when selection="single" — use selection="multiple" for an array'
+            : null;
+
+  /*
+   * Every other writer honours the bounds — the text fields through
+   * `validate()`, `.TimeField` through `isWithinTimeBounds`, `.Grid` through
+   * RDP's matchers, `.MonthGrid` by disabling its cells. This one checked
+   * nothing, so a preset outside the declared range looked operable and
+   * committed a value `.Input` would have refused.
+   *
+   * `aria-disabled`, not `disabled`, as `.Grid` marks an unavailable day: the
+   * preset stays focusable, so a keyboard user can reach it and read why.
+   */
+  const reachable = (date: Date) =>
+    isWithinBounds(date, minDate, maxDate, timeZone) &&
+    !isDateUnavailable?.(date);
+
+  const unreachable =
+    presetValue instanceof Date
+      ? !reachable(presetValue)
+      : Array.isArray(presetValue)
+        ? presetValue.some(date => !reachable(date))
+        : presetValue
+          ? [presetValue.from, presetValue.to].some(
+              date => date && !reachable(date)
+            )
+          : false;
 
   const apply = () => {
-    if (isDisabled) return;
+    if (isDisabled || unreachable) return;
     setValue(presetValue, { granularity });
     // Bring the applied period into view, as typing does.
     const anchor =
@@ -111,6 +150,7 @@ export function CalendarPreviewPreset({
         'data-slot': 'calendar-preview-preset',
         'data-selected': isActive || undefined,
         'aria-pressed': isActive,
+        'aria-disabled': unreachable || undefined,
         disabled: isDisabled,
         onClick: apply
       } as useRender.ComponentProps<'button'>,
