@@ -255,11 +255,83 @@ describe('regressions from the external audit', () => {
       expect(screen.queryByRole('grid')).not.toBeInTheDocument()
     );
   });
+});
 
-  /*
-   * 24. `zoned()` freezes the offset of the instant it is given. A day arrives
-   * as its own midnight, so on a spring-forward day that offset is the *old*
-   * one and every time set on top of it came back an hour late — not only the
-   * hour that does not exist.
-   */
+/*
+ * Enter belongs to the form when the field has nothing to commit.
+ * `preventDefault()` ran above the `draft === null` guard, so an untouched
+ * date field swallowed Enter for its whole life and implicit submit never
+ * worked once one was on the page. The focus hand-off sits below that same
+ * guard, so tabbing into a filled Start field and pressing Enter — the
+ * commonest keyboard flow — did nothing either.
+ */
+describe('Enter on a field with nothing to commit', () => {
+  const inForm = (onSubmit: () => void) =>
+    render(
+      <form
+        onSubmit={event => {
+          event.preventDefault();
+          onSubmit();
+        }}
+      >
+        <CalendarPreview value={new Date(2024, 3, 17)} defaultMonth={MONTH}>
+          <CalendarPreview.Input />
+        </CalendarPreview>
+        <input aria-label='Plain' />
+        <button type='submit'>Save</button>
+      </form>
+    );
+
+  it('submits the surrounding form', async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn();
+    inForm(onSubmit);
+
+    await user.click(screen.getAllByRole('textbox')[0]);
+    await user.keyboard('{Enter}');
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  // The control: proof a red result above is the component, not the harness.
+  it('behaves as a plain input in the same form does', async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn();
+    inForm(onSubmit);
+
+    await user.click(screen.getByLabelText('Plain'));
+    await user.keyboard('{Enter}');
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it('still keeps Enter for itself while an edit is pending', async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn();
+    inForm(onSubmit);
+
+    const field = screen.getAllByRole('textbox')[0];
+    await user.clear(field);
+    await user.type(field, '18 Apr 2024{Enter}');
+
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  it('hands the keyboard from Start to End in .RangeInput', async () => {
+    const user = userEvent.setup();
+    render(
+      <CalendarPreview
+        selection='range'
+        defaultMonth={MONTH}
+        value={{ from: new Date(2024, 3, 10), to: new Date(2024, 3, 20) }}
+      >
+        <CalendarPreview.RangeInput />
+      </CalendarPreview>
+    );
+
+    screen.getByLabelText('Start date').focus();
+    await user.keyboard('{Enter}');
+
+    expect(screen.getByLabelText('End date')).toHaveFocus();
+  });
 });

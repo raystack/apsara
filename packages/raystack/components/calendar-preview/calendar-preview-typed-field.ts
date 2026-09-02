@@ -114,8 +114,20 @@ export function typedFieldHandlers({
 
     onKeyDown: event => {
       if (event.key === 'Enter') {
+        /*
+         * Nothing to commit, so Enter is not ours: it belongs to the form.
+         * `preventDefault()` used to run above this guard, which blocked
+         * implicit submit for the life of an untouched field.
+         *
+         * The hand-off still runs — a field showing its committed value is
+         * trivially accepted, and tabbing into a filled Start and pressing
+         * Enter is the commonest keyboard flow through a range.
+         */
+        if (draft === null) {
+          onEnterCommitted?.(true);
+          return;
+        }
         event.preventDefault();
-        if (draft === null) return;
         const accepted = commit(draft);
         if (accepted) setDraft(null);
         onEnterCommitted?.(accepted);
