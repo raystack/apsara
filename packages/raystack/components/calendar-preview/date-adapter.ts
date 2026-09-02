@@ -320,6 +320,76 @@ export function parseDate(
 export const quarterOfMonth = (monthIndex: number): number =>
   Math.floor(monthIndex / 3) + 1;
 
+/** Months spanned by one period at each granularity. `day` is not a month span. */
+const PERIOD_MONTHS: Record<string, number> = {
+  month: 1,
+  quarter: 3,
+  'half-year': 6,
+  year: 12
+};
+
+/**
+ * Months in one period, for a caller that already knows where the period
+ * starts. `.MonthGrid` enumerates cells from a year and an index, so it has the
+ * start in hand; asking `periodRange` to rediscover it cost an extra wall-clock
+ * read and parse per cell — measured at 1.5x the grid build.
+ */
+export function periodMonths(granularity: string): number {
+  return PERIOD_MONTHS[granularity] ?? 1;
+}
+
+/**
+ * The period containing `date` at a granularity, as a half-open pair.
+ *
+ * Three writers had each derived these boundaries for themselves — `.MonthGrid`
+ * from an index and a wrapping month span, `.Input` and `.RangeInput` from a
+ * parse — and they disagreed about which instant a period commits. That
+ * disagreement is what let `.MonthGrid` emit a day before `minDate`, and what
+ * left range writers unable to compare two periods at all.
+ *
+ * `end` is the first instant of the *next* period, so a containment test is
+ * `start <= x < end` with no inclusive-boundary arithmetic at the call site.
+ */
+export function periodRange(
+  date: Date,
+  granularity: string,
+  timeZone?: string
+): { start: Date; end: Date } {
+  if (granularity === 'day') {
+    const start = startOfDay(date, timeZone);
+    return { start, end: new Date(endOfDay(date, timeZone).getTime() + 1) };
+  }
+  const months = periodMonths(granularity);
+  const w = wallClock(date, timeZone);
+  const startMonth = Math.floor(w.month / months) * months;
+  const start = firstOfMonth(w.year, startMonth, timeZone);
+  const absolute = startMonth + months;
+  const end = firstOfMonth(
+    w.year + Math.floor(absolute / 12),
+    absolute % 12,
+    timeZone
+  );
+  return { start, end };
+}
+
+/** First instant of the period containing `date`. */
+export function startOfPeriod(
+  date: Date,
+  granularity: string,
+  timeZone?: string
+): Date {
+  return periodRange(date, granularity, timeZone).start;
+}
+
+/** Last instant of the period containing `date`, inclusive. */
+export function endOfPeriod(
+  date: Date,
+  granularity: string,
+  timeZone?: string
+): Date {
+  return new Date(periodRange(date, granularity, timeZone).end.getTime() - 1);
+}
+
 /**
  * How a value reads at each granularity, mirroring the reference app: a month
  * shows `Jun 2026`, a quarter `Q3 2026`, a half-year `H1 2026`, a year `2025`.
@@ -532,9 +602,22 @@ export function isWithinBounds(
   return true;
 }
 
-/** Whether a bound carries a time of day, or is a plain midnight-anchored day. */
-function hasTimeOfDay(date: Date, timeZone?: string): boolean {
-  const w = wallClock(date, timeZone);
+/**
+ * Whether a bound carries a time of day, or is a plain midnight-anchored day.
+ *
+ * Asked of the host clock, deliberately, and not of `timeZone`. This is a
+ * question about how the bound was *written*, not about how it displays:
+ * `maxDate={new Date(2024, 3, 17)}` is the ordinary way to say "the 17th", and
+ * that constructor produces midnight in the zone the consumer's code runs in.
+ *
+ * Asking it in the display zone broke the promise one line down. With the host
+ * in UTC and `timeZone="Asia/Kolkata"`, that same `maxDate` is 05:30 IST — not
+ * midnight — so it counted as carrying a time, and the bound silently collapsed
+ * to "the 17th, but only until 05:30". `.Grid` and `.Input` accepted the whole
+ * day while `.TimeField` rejected every hour after dawn.
+ */
+function hasTimeOfDay(date: Date): boolean {
+  const w = wallClock(date);
   return w.hour !== 0 || w.minute !== 0 || w.second !== 0 || w.ms !== 0;
 }
 
@@ -561,18 +644,10 @@ export function isWithinTimeBounds(
 ): boolean {
   if (!isWithinBounds(date, minDate, maxDate, timeZone)) return false;
   const instant = date.getTime();
-  if (
-    minDate &&
-    hasTimeOfDay(minDate, timeZone) &&
-    instant < minDate.getTime()
-  ) {
+  if (minDate && hasTimeOfDay(minDate) && instant < minDate.getTime()) {
     return false;
   }
-  if (
-    maxDate &&
-    hasTimeOfDay(maxDate, timeZone) &&
-    instant > maxDate.getTime()
-  ) {
+  if (maxDate && hasTimeOfDay(maxDate) && instant > maxDate.getTime()) {
     return false;
   }
   return true;

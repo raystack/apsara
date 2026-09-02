@@ -33,7 +33,13 @@ const exportedNames = (source: string, from: string) => {
  */
 const INTERNAL = new Set([
   'CalendarPreviewContextValue',
-  'CrossGranularityMatch'
+  'CrossGranularityMatch',
+  // The shared typed-field core. Its shape is how `.Input` and `.RangeInput`
+  // talk to each other, not something a consumer composes against.
+  'TypedParse',
+  'TypedParseContext',
+  'TypedFieldHandlers',
+  'TypedFieldOptions'
 ]);
 
 describe('CalendarPreview published surface', () => {

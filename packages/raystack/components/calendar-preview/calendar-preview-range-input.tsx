@@ -2,13 +2,7 @@
 
 import { mergeProps } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import {
-  type ChangeEvent,
-  type KeyboardEvent,
-  useEffect,
-  useRef,
-  useState
-} from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Input, type InputProps } from '../input/input';
 import styles from './calendar-preview.module.css';
 import type {
@@ -21,16 +15,17 @@ import {
   useInsideTrigger
 } from './calendar-preview-context';
 import {
+  parseTypedText,
+  typedFieldHandlers
+} from './calendar-preview-typed-field';
+import {
   dayKey,
   endOfDay,
   formatForGranularity,
   getHours,
   getMinutes,
-  getYear,
   isAfterDay,
   isWithinBounds,
-  parseAcrossGranularities,
-  parseForGranularity,
   patternForGranularity,
   setTime,
   startOfDay
@@ -168,37 +163,19 @@ export function CalendarPreviewRangeInput({
       return true;
     }
 
-    /*
-     * The active granularity wins. Only when it cannot read the text do we
-     * scan the granularities on offer, so typing `Q4` in a day field switches
-     * to Quarter rather than failing — and a day-only picker still rejects it.
-     */
-    const visibleYear = getYear(month, timeZone);
-    let parsed = parseForGranularity(
-      text,
+    const read = parseTypedText(text, {
       granularity,
+      granularities,
       format,
       timeZone,
-      visibleYear
-    );
-    let matched = granularity;
-    if (!parsed) {
-      const across = parseAcrossGranularities(
-        text,
-        granularities,
-        format,
-        timeZone,
-        visibleYear
-      );
-      if (across) {
-        parsed = across.date;
-        matched = across.granularity as typeof granularity;
-      }
-    }
-    if (!parsed) {
+      month
+    });
+    if (!read) {
       reportValidity({ valid: false, reason: 'unparseable' });
       return false;
     }
+    const parsed = read.date;
+    const matched = read.granularity;
 
     const validity = validate(parsed);
     reportValidity(validity);
@@ -302,40 +279,20 @@ export function CalendarPreviewRangeInput({
             readOnly: readOnly || lock === field,
             'aria-label': field === 'from' ? 'Start date' : 'End date',
             onFocus: () => setActiveField(field),
-            onChange: (event: ChangeEvent<HTMLInputElement>) =>
-              setDraft(current => ({
-                ...current,
-                [field]: event.target.value
-              })),
-            onBlur: () => {
-              if (draft[field] === null) return;
-              commit(field, draft[field] as string);
-              setDraft(current => ({ ...current, [field]: null }));
-            },
-            onKeyDown: (event: KeyboardEvent<HTMLInputElement>) => {
-              if (event.key === 'Enter') {
-                event.preventDefault();
-                const pending = draft[field];
-                if (pending === null) return;
-                const committedOk = commit(field, pending);
-                setDraft(current => ({ ...current, [field]: null }));
-                if (committedOk && field === 'from' && lock !== 'to') {
+            ...typedFieldHandlers({
+              draft: draft[field],
+              setDraft: text =>
+                setDraft(current => ({ ...current, [field]: text })),
+              commit: text => commit(field, text),
+              insideTrigger,
+              setOpen,
+              // Committing the start hands the keyboard to the end field.
+              onEnterCommitted: accepted => {
+                if (accepted && field === 'from' && lock !== 'to') {
                   endRef.current?.focus();
                 }
               }
-              // See `.Input`: ArrowDown is the keyboard's way into a calendar
-              // whose trigger carries no tab stop.
-              if (event.key === 'ArrowDown' && insideTrigger) {
-                event.preventDefault();
-                setOpen(true);
-              }
-              // Two-stage, as a combobox is: revert the text first, dismiss on
-              // the second press.
-              if (event.key === 'Escape' && draft[field] !== null) {
-                event.stopPropagation();
-                setDraft(current => ({ ...current, [field]: null }));
-              }
-            }
+            })
           } as never,
           (props ?? {}) as never
         ) as InputProps)}

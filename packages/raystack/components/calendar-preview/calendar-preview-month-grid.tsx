@@ -11,10 +11,19 @@ import { Skeleton } from '../skeleton';
 import styles from './calendar-preview.module.css';
 import type {
   CalendarGranularity,
+  CalendarValidity,
   DateRangeValue
 } from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import { dayKey, dayOrdinal, firstOfMonth, getYear } from './date-adapter';
+import {
+  addMonths,
+  dayKey,
+  dayOrdinal,
+  firstOfMonth,
+  getYear,
+  periodMonths,
+  periodRange
+} from './date-adapter';
 
 const MONTH_LABELS = [
   'Jan',
@@ -186,18 +195,19 @@ export function CalendarPreviewMonthGrid({
     if (granularity === 'day') return [];
 
     const period = PERIODS[granularity];
-    const monthSpan = 12 / period.perYear;
+    const monthsPerPeriod = periodMonths(granularity);
 
     const built: { year: number; cells: PeriodCell[] }[] = [];
     for (let year = firstYear; year <= lastYear; year += 1) {
       const cells = Array.from({ length: period.perYear }, (_, index) => {
-        const startMonth = period.startMonth(index);
-        const start = firstOfMonth(year, startMonth, timeZone);
-        const end = firstOfMonth(
-          year + (startMonth + monthSpan >= 12 ? 1 : 0),
-          (startMonth + monthSpan) % 12,
-          timeZone
-        );
+        /*
+         * The start is known from the year and the index, so it is built once
+         * rather than rediscovered: `periodRange` would re-read the wall clock
+         * and re-parse to arrive back at this same instant. `addMonths` carries
+         * the year rollover, which is the part worth not writing twice.
+         */
+        const start = firstOfMonth(year, period.startMonth(index), timeZone);
+        const end = addMonths(start, monthsPerPeriod, timeZone);
         /*
          * Overlap, not first-day: a `minDate` falling mid-month used to
          * disable the whole month and make every valid day in it unreachable.
@@ -269,21 +279,55 @@ export function CalendarPreviewMonthGrid({
     if (!writable) return;
     const start = cell.value;
     /*
-     * Valid by construction — an out-of-bounds or unavailable cell is disabled,
-     * so reaching here means `start` passes. Reported anyway: `.Grid` leaves
-     * this to RDP's own disabling, which left `onValidityChange` silent for
-     * every non-day pick.
+     * Bounds and availability are valid by construction — such a cell is
+     * disabled, so reaching here means `start` passes both. Reported at all
+     * because `.Grid` leaves this to RDP's own disabling, which left
+     * `onValidityChange` silent for every non-day pick.
      */
-    reportValidity({ valid: true });
+    const valid: CalendarValidity = { valid: true };
+
     if (selection === 'range') {
       const range = (value as DateRangeValue | null) ?? {
         from: null,
         to: null
       };
       const field = lock ? (lock === 'from' ? 'to' : 'from') : activeField;
-      setValue({ ...range, [field]: start });
+      const opposite = field === 'from' ? 'to' : 'from';
+      const next: DateRangeValue = { ...range, [field]: start };
+      /*
+       * `.RangeInput` guards ordering, `.Grid` delegates it to RDP and
+       * `.TimeField` refuses inversion outright; this writer had none of it, so
+       * picking Dec 2026 against an existing March committed a backwards range
+       * that any `from <= x <= to` reader sees as empty.
+       *
+       * Compared by period, not by instant: two picks inside one period are the
+       * same choice, and clearing the opposite end there would discard a
+       * selection the user did not contradict.
+       */
+      if (next.from && next.to) {
+        const fromStart = periodRange(next.from, granularity, timeZone).start;
+        const toStart = periodRange(next.to, granularity, timeZone).start;
+        if (fromStart.getTime() > toStart.getTime()) {
+          /*
+           * `lock` holds the opposite endpoint read-only, and the opposite
+           * endpoint is exactly the one an inversion would clear — so under a
+           * lock there is nothing this writer may repair. Refused instead, the
+           * way `.TimeField` refuses an inversion it cannot fix, rather than
+           * deleting the endpoint the consumer pinned.
+           */
+          if (lock === opposite) {
+            reportValidity({ valid: false, reason: 'range-order' });
+            return;
+          }
+          next[opposite] = null;
+        }
+      }
+      reportValidity(valid);
+      setValue(next);
       return;
     }
+
+    reportValidity(valid);
     if (selection === 'multiple') {
       const current = (value as Date[]) ?? [];
       const key = dayKey(start, timeZone);

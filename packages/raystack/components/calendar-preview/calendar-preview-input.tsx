@@ -2,13 +2,7 @@
 
 import { mergeProps } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import {
-  type ChangeEvent,
-  type KeyboardEvent,
-  useEffect,
-  useRef,
-  useState
-} from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Input, type InputProps } from '../input/input';
 import styles from './calendar-preview.module.css';
 import type { CalendarValidity } from './calendar-preview-context';
@@ -17,12 +11,13 @@ import {
   useInsideTrigger
 } from './calendar-preview-context';
 import {
+  parseTypedText,
+  typedFieldHandlers
+} from './calendar-preview-typed-field';
+import {
   dayKey,
   formatForGranularity,
-  getYear,
   isWithinBounds,
-  parseAcrossGranularities,
-  parseForGranularity,
   patternForGranularity
 } from './date-adapter';
 
@@ -108,55 +103,44 @@ export function CalendarPreviewInput({
     return { valid: true };
   };
 
-  const commit = (text: string) => {
+  const commit = (text: string): boolean => {
     // An emptied field clears the value; that is not an error state.
     if (text.trim() === '') {
       reportValidity({ valid: true });
       setValue(null);
-      return;
+      return true;
     }
 
-    /*
-     * The active granularity wins. Only when it cannot read the text do we
-     * scan the granularities on offer, so typing `Q4` in a day field switches
-     * to Quarter rather than failing — and a day-only picker still rejects it.
-     */
-    const visibleYear = getYear(month, timeZone);
-    let parsed = parseForGranularity(
-      text,
+    const read = parseTypedText(text, {
       granularity,
+      granularities,
       format,
       timeZone,
-      visibleYear
-    );
-    let matched = granularity;
-    if (!parsed) {
-      const across = parseAcrossGranularities(
-        text,
-        granularities,
-        format,
-        timeZone,
-        visibleYear
-      );
-      if (across) {
-        parsed = across.date;
-        matched = across.granularity as typeof granularity;
-      }
-    }
-    if (!parsed) {
+      month
+    });
+    if (!read) {
       reportValidity({ valid: false, reason: 'unparseable' });
-      return;
+      return false;
     }
 
-    const validity = validate(parsed);
+    const validity = validate(read.date);
     reportValidity(validity);
-    if (!validity.valid) return;
+    if (!validity.valid) return false;
 
-    if (matched !== granularity) setGranularity(matched);
-    setValue(parsed, { granularity: matched });
+    if (read.granularity !== granularity) setGranularity(read.granularity);
+    setValue(read.date, { granularity: read.granularity });
     // Typing navigates the grid, so the committed day is actually visible.
-    setMonth(parsed);
+    setMonth(read.date);
+    return true;
   };
+
+  const handlers = typedFieldHandlers({
+    draft,
+    setDraft,
+    commit,
+    insideTrigger,
+    setOpen
+  });
 
   return (
     <div
@@ -176,42 +160,7 @@ export function CalendarPreviewInput({
             placeholder: patternForGranularity(granularity, format),
             disabled,
             readOnly,
-            onChange: (event: ChangeEvent<HTMLInputElement>) =>
-              setDraft(event.target.value),
-            onBlur: () => {
-              if (draft === null) return;
-              commit(draft);
-              setDraft(null);
-            },
-            onKeyDown: (event: KeyboardEvent<HTMLInputElement>) => {
-              if (event.key === 'Enter') {
-                event.preventDefault();
-                if (draft === null) return;
-                commit(draft);
-                setDraft(null);
-              }
-              /*
-               * The trigger around this field carries no tab stop, so ArrowDown
-               * is how a keyboard reaches the calendar — the combobox
-               * convention, and an explicit gesture rather than the focus race
-               * the RFC retired.
-               */
-              if (event.key === 'ArrowDown' && insideTrigger) {
-                event.preventDefault();
-                setOpen(true);
-              }
-              /*
-               * Two-stage, as a combobox is: the first Escape reverts the text,
-               * a second dismisses the popover. Letting one press do both meant
-               * correcting a typo cost you the calendar. React's
-               * `stopPropagation` reaches the native event, which is what Base
-               * UI's document-level dismiss listener is on.
-               */
-              if (event.key === 'Escape' && draft !== null) {
-                event.stopPropagation();
-                setDraft(null);
-              }
-            }
+            ...handlers
           } as never,
           props as never
         ) as InputProps)}

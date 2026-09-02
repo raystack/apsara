@@ -80,17 +80,21 @@ describe('audit findings stay fixed', () => {
     expect(next.getMinutes()).toBeLessThanOrEqual(59);
   });
 
-  it('11: isWithinBounds takes a timeZone like every other adapter fn', () => {
-    expect(isWithinBounds.length).toBe(4);
-    // Inclusive at both ends, and zone-aware rather than local-only.
-    expect(
-      isWithinBounds(
-        new Date(2024, 3, 17),
-        new Date(2024, 3, 17),
-        new Date(2024, 3, 17),
-        'UTC'
-      )
-    ).toBe(true);
+  /*
+   * Asserting `isWithinBounds.length === 4` only checked the declared parameter
+   * count, and the case beside it was true in every zone — so making the
+   * function ignore `timeZone` entirely left all 33 tests here green, and all
+   * 358 across the repo. This asks the only question that separates the two:
+   * one instant that falls on different days depending on the zone it is read
+   * in, against a bound that sits between them.
+   */
+  it('11: isWithinBounds resolves the day in the zone it is given', () => {
+    // 23:00 UTC on 17 Apr is already 08:00 on the 18th in Tokyo.
+    const instant = new Date(Date.UTC(2024, 3, 17, 23, 0));
+    const max = new Date(Date.UTC(2024, 3, 17, 12, 0));
+
+    expect(isWithinBounds(instant, undefined, max, 'UTC')).toBe(true);
+    expect(isWithinBounds(instant, undefined, max, 'Asia/Tokyo')).toBe(false);
   });
 
   it('05: switching to Month scrolls the active year into view', async () => {
