@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { FilterType } from '~/types/filters';
+import type { FilterChipCalendarProps } from '../filter-chip';
 import { FilterChip } from '../filter-chip';
 import styles from '../filter-chip.module.css';
 
@@ -181,6 +182,54 @@ describe('FilterChip', () => {
         valid: false,
         reason: 'unparseable'
       });
+    });
+
+    /*
+     * `FilterChipValue` is `string | string[] | number | Date` — no `null` —
+     * and `handleFilterValueChange` is typed `any`, so nothing caught the chip
+     * emitting `[null, 'eq']` when a date was cleared. Any consumer doing
+     * `value.getTime()` threw on the first clear, with no compile warning
+     * because the type says it cannot happen. The old picker declined to emit
+     * it deliberately.
+     */
+    it('emits an empty string, never null, when a date is cleared', async () => {
+      const user = userEvent.setup();
+      const onValueChange = vi.fn();
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2024, 3, 17)}
+          onValueChange={onValueChange}
+        />
+      );
+
+      const field = screen.getByRole('textbox');
+      await user.clear(field);
+      await user.tab();
+
+      expect(onValueChange).toHaveBeenCalled();
+      for (const [emitted] of onValueChange.mock.calls) {
+        expect(emitted).not.toBeNull();
+      }
+    });
+
+    /*
+     * The chip composes no `.Footer`, so `commit='explicit'` buffered every
+     * edit for an Apply button that does not exist and the chip became
+     * permanently uneditable. It is now absent from the forwarded prop type;
+     * this fails to compile if it comes back.
+     */
+    it('does not admit root props the chip cannot honour', () => {
+      const admitted: FilterChipCalendarProps = {
+        minDate: new Date(2024, 0, 1),
+        format: 'DD MMM YYYY'
+      };
+      expect(admitted.minDate).toBeInstanceOf(Date);
+
+      // @ts-expect-error `commit` has no Apply button in this composition.
+      const rejected: FilterChipCalendarProps = { commit: 'explicit' };
+      expect(rejected).toBeTruthy();
     });
 
     it('renders the date picker without crashing when no value is set', () => {

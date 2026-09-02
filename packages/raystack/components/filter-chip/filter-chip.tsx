@@ -53,7 +53,19 @@ export type FilterChipValue = string | string[] | number | Date;
  */
 export type FilterChipCalendarProps = Omit<
   CalendarPreviewBaseProps,
-  'children'
+  | 'children'
+  /*
+   * The chip composes no `.Footer` and no `.Apply`, so `commit='explicit'`
+   * buffered every edit for a button that does not exist — a valid date typed
+   * and blurred produced zero value changes and the chip became permanently
+   * uneditable. `open`/`defaultOpen`/`onOpenChange` and `loading` are the
+   * chip's own to drive for the same reason: it owns this composition.
+   */
+  | 'commit'
+  | 'open'
+  | 'defaultOpen'
+  | 'onOpenChange'
+  | 'loading'
 >;
 
 export interface FilterChipProps
@@ -203,7 +215,15 @@ export const FilterChip = ({
               value={toDateLoose(filterValue)}
               onValueChange={date => {
                 setDateInvalid(false);
-                handleFilterValueChange(date);
+                /*
+                 * `null` is not in `FilterChipValue`, and `handleFilterValueChange`
+                 * is typed `any` so nothing caught it: clearing a date chip
+                 * emitted `[null, 'eq']` and any consumer doing
+                 * `value.getTime()` threw on first use. The old picker declined
+                 * to emit it for exactly this reason; an empty date is an empty
+                 * string here, as it is for every other column type.
+                 */
+                handleFilterValueChange(date ?? '');
               }}
               onValidityChange={validity => {
                 setDateInvalid(!validity.valid);

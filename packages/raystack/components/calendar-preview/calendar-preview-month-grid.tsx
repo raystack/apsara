@@ -184,12 +184,21 @@ export function CalendarPreviewMonthGrid({
    * `anchorYear` — which follows the selection, and which a bounded list never
    * reads, so leaving it in the deps rebuilt every cell for an unmoved span.
    */
-  const firstYear = minDate
-    ? getYear(minDate, timeZone)
-    : anchorYear - yearWindow;
-  const lastYear = maxDate
-    ? getYear(maxDate, timeZone)
-    : anchorYear + yearWindow;
+  /*
+   * `yearWindow` applies to the unbounded edge, but it was measured from the
+   * anchor with nothing tying it to the bounded one — so `minDate={2035}` with
+   * no `maxDate` gave firstYear 2035 against lastYear 2031 and the loop below
+   * never ran: an empty grid with no selectable period at all. A far-past
+   * `maxDate` did the same in mirror. Each edge now yields to the other.
+   */
+  const boundedFirst = minDate ? getYear(minDate, timeZone) : null;
+  const boundedLast = maxDate ? getYear(maxDate, timeZone) : null;
+  const firstYear =
+    boundedFirst ??
+    Math.min(anchorYear - yearWindow, boundedLast ?? Number.POSITIVE_INFINITY);
+  const lastYear =
+    boundedLast ??
+    Math.max(anchorYear + yearWindow, boundedFirst ?? Number.NEGATIVE_INFINITY);
 
   const sections = useMemo(() => {
     if (granularity === 'day') return [];

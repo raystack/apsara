@@ -76,8 +76,11 @@ describe('audit findings stay fixed', () => {
     await user.clear(minute);
     await user.type(minute, '59{Enter}');
     const next = lastArg(onValueChange) as Date;
+    // `<= 59` was true of every Date ever constructed. The property is that the
+    // snap lands on the step grid without rolling the hour: 59 snaps to 45.
     expect(next.getHours()).toBe(9);
-    expect(next.getMinutes()).toBeLessThanOrEqual(59);
+    expect(next.getMinutes()).toBe(45);
+    expect(next.getMinutes() % 15).toBe(0);
   });
 
   /*

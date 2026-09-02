@@ -41,10 +41,17 @@ export interface CalendarPreviewTimeFieldProps
  */
 export function CalendarPreviewTimeField({
   className,
-  step = 1,
+  step: stepProp = 1,
   hourCycle = 24,
   ...props
 }: CalendarPreviewTimeFieldProps) {
+  /*
+   * Clamped at the boundary. `step` is public and unvalidated: `step={0}` sent
+   * `Math.round(parsed / 0) * 0` to NaN, `Math.min(59, NaN)` to NaN, and
+   * `.minute(NaN)` produced an Invalid Date that was committed and rendered as
+   * the literal string `NaN`. A fractional step rounded to a fractional minute.
+   */
+  const step = Math.max(1, Math.floor(stepProp) || 1);
   const {
     selection,
     value,
@@ -157,23 +164,45 @@ export function CalendarPreviewTimeField({
 
   const commitHour = (text: string) => {
     const parsed = Number.parseInt(text, 10);
-    if (Number.isNaN(parsed)) return;
+    /*
+     * Reported, not swallowed. Both rejections used to return in silence — no
+     * validity, no value change, the text just snapping back — so a consumer
+     * wiring `onValidityChange` was told nothing about `abc` or `99`, while the
+     * file's own comment claimed it validated the shape the typed fields do.
+     */
+    if (Number.isNaN(parsed)) {
+      reportValidity({ valid: false, reason: 'unparseable' });
+      return;
+    }
     const max = hourCycle === 12 ? 12 : 23;
     const min = hourCycle === 12 ? 1 : 0;
-    if (parsed < min || parsed > max) return;
+    if (parsed < min || parsed > max) {
+      reportValidity({ valid: false, reason: 'out-of-bounds' });
+      return;
+    }
     const next24 = hourCycle === 12 ? (parsed % 12) + (isPm ? 12 : 0) : parsed;
     write(next24, minutes);
   };
 
   const commitMinute = (text: string) => {
     const parsed = Number.parseInt(text, 10);
-    if (Number.isNaN(parsed) || parsed < 0 || parsed > 59) return;
+    if (Number.isNaN(parsed)) {
+      reportValidity({ valid: false, reason: 'unparseable' });
+      return;
+    }
+    if (parsed < 0 || parsed > 59) {
+      reportValidity({ valid: false, reason: 'out-of-bounds' });
+      return;
+    }
     /*
-     * Clamped: an unclamped round sends 59 with step 15 to 60, and dayjs's
-     * `.minute(60)` rolls into the next hour — so validation rejected >59 two
-     * lines above and the snap then produced one anyway.
+     * Snapped down to the grid, not clamped to 59. An unclamped round sends 59
+     * with step 15 to 60, and dayjs's `.minute(60)` rolls into the next hour —
+     * but clamping produced 59, a value off the field's own step grid, which is
+     * the one thing `step` promises not to emit. The last multiple that fits in
+     * the hour is 45.
      */
-    write(hours24, Math.min(59, Math.round(parsed / step) * step));
+    const snapped = Math.round(parsed / step) * step;
+    write(hours24, snapped > 59 ? Math.floor(59 / step) * step : snapped);
   };
 
   const field = (

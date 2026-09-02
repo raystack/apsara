@@ -289,10 +289,23 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
   const granularityRef = useRef(granularity);
   granularityRef.current = granularity;
 
+  /*
+   * A committed value clears any standing complaint.
+   *
+   * `reportValidity` was only ever called by the three typed fields, so an
+   * `{valid: false}` latched forever: type rubbish, then pick 5 April in the
+   * grid, and a consumer's last and only validity still read
+   * `reason: 'unparseable'` beside a perfectly good value — with
+   * `aria-invalid` stuck on the input and no user action short of retyping into
+   * that same field able to clear it. Every writer that reaches here has
+   * produced a value the component accepted, which is exactly what "valid"
+   * means; the fields still report their own failures before they get here.
+   */
   const setValue = useCallback(
     (next: CalendarValue, details?: { granularity?: string }) => {
       const resolved = (details?.granularity ??
         granularityRef.current) as CalendarGranularity;
+      onValidityChange?.({ valid: true });
       if (commitMode === 'explicit') {
         setBuffer(next);
         setBufferGranularity(resolved);
@@ -301,7 +314,7 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
       setValueUnwrapped(next);
       onValueChange?.(next, { granularity: resolved });
     },
-    [commitMode, setValueUnwrapped, onValueChange]
+    [commitMode, setValueUnwrapped, onValueChange, onValidityChange]
   );
 
   const applyValue = useCallback(() => {
