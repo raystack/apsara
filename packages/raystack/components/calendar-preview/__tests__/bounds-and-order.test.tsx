@@ -9,12 +9,15 @@ import type {
 import {
   dayKey,
   endOfPeriod,
+  getHours,
   periodRange,
   startOfPeriod
 } from '../date-adapter';
 
 const lastArg = <T,>(fn: { mock: { calls: unknown[][] } }) =>
   fn.mock.calls[fn.mock.calls.length - 1]?.[0] as T;
+
+const MONTH = new Date(2024, 3, 1);
 
 /*
  * What each writer commits, and what it does when it cannot. Bounds clamping,
@@ -528,5 +531,127 @@ describe('.MonthGrid cannot commit a backwards range', () => {
     const next = lastArg<DateRangeValue>(onValueChange);
     expect(dayKey(next.from as Date)).toBe('2026-06-01');
     expect(next.to).not.toBeNull();
+  });
+});
+
+/*
+ * Moved here from `audit-fixed.test.tsx`, which collected findings by the
+ * number they were reported under. Each assertion is unchanged; only its home
+ * is, so a failure lands beside the behaviour it describes.
+ */
+describe('regressions from the external audit', () => {
+  it('a mid-month minDate leaves that month selectable', () => {
+    const { container } = render(
+      <CalendarPreview
+        defaultGranularity='month'
+        minDate={new Date(2024, 3, 15)}
+        maxDate={new Date(2024, 11, 31)}
+      >
+        <CalendarPreview.MonthGrid />
+      </CalendarPreview>
+    );
+    const cells = Array.from(
+      container.querySelectorAll('[data-slot="calendar-preview-month-cell"]')
+    ) as HTMLButtonElement[];
+    expect(cells.find(c => c.textContent === 'Apr')).not.toBeDisabled();
+    expect(cells.find(c => c.textContent === 'Mar')).toBeDisabled();
+  });
+});
+
+describe('.TimeField cannot invert a range', () => {
+  const range = (props: Record<string, unknown> = {}) => {
+    const onValueChange = vi.fn();
+    const onValidityChange = vi.fn();
+    render(
+      <CalendarPreview
+        selection='range'
+        defaultMonth={MONTH}
+        value={{
+          from: new Date(2024, 3, 17, 9, 0),
+          to: new Date(2024, 3, 17, 10, 0)
+        }}
+        onValueChange={onValueChange}
+        onValidityChange={onValidityChange}
+        {...props}
+      >
+        <CalendarPreview.TimeField />
+      </CalendarPreview>
+    );
+    return { onValueChange, onValidityChange };
+  };
+
+  it('refuses a start pushed past the end inside the shared day', async () => {
+    const user = userEvent.setup();
+    const { onValueChange, onValidityChange } = range();
+
+    // `from` is the active endpoint by default.
+    await user.clear(screen.getByLabelText('Hour'));
+    await user.type(screen.getByLabelText('Hour'), '23{Enter}');
+
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(lastArg(onValidityChange)).toEqual({
+      valid: false,
+      reason: 'range-order'
+    });
+  });
+
+  it('refuses an end pulled before the start', async () => {
+    const user = userEvent.setup();
+    const { onValueChange, onValidityChange } = range({ lock: 'from' });
+
+    // `lock="from"` makes `to` the endpoint this field edits.
+    await user.clear(screen.getByLabelText('Hour'));
+    await user.type(screen.getByLabelText('Hour'), '08{Enter}');
+
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(lastArg(onValidityChange)).toEqual({
+      valid: false,
+      reason: 'range-order'
+    });
+  });
+
+  it('allows a time that keeps the endpoints ordered', async () => {
+    const user = userEvent.setup();
+    const { onValueChange, onValidityChange } = range();
+
+    await user.clear(screen.getByLabelText('Hour'));
+    await user.type(screen.getByLabelText('Hour'), '08{Enter}');
+
+    const next = lastArg(onValueChange) as DateRangeValue;
+    expect(getHours(next.from as Date)).toBe(8);
+    // The endpoint the user did not touch is untouched.
+    expect(getHours(next.to as Date)).toBe(10);
+    expect(lastArg(onValidityChange)).toEqual({ valid: true });
+  });
+
+  it('leaves a multi-day range alone, where the days already order it', async () => {
+    const user = userEvent.setup();
+    const { onValueChange } = range({
+      value: {
+        from: new Date(2024, 3, 17, 9, 0),
+        to: new Date(2024, 3, 18, 8, 0)
+      }
+    });
+
+    // 23:00 on the 17th is still before 08:00 on the 18th.
+    await user.clear(screen.getByLabelText('Hour'));
+    await user.type(screen.getByLabelText('Hour'), '23{Enter}');
+
+    const next = lastArg(onValueChange) as DateRangeValue;
+    expect(getHours(next.from as Date)).toBe(23);
+  });
+
+  it('commits normally when the other endpoint is empty', async () => {
+    const user = userEvent.setup();
+    const { onValueChange } = range({
+      value: { from: new Date(2024, 3, 17, 9, 0), to: null }
+    });
+
+    await user.clear(screen.getByLabelText('Hour'));
+    await user.type(screen.getByLabelText('Hour'), '23{Enter}');
+
+    const next = lastArg(onValueChange) as DateRangeValue;
+    expect(getHours(next.from as Date)).toBe(23);
+    expect(next.to).toBeNull();
   });
 });

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   addMonths,
+  DEFAULT_FORMAT,
   dayKey,
   endOfMonth,
   formatDate,
@@ -9,6 +10,8 @@ import {
   getYear,
   isWithinBounds,
   isWithinTimeBounds,
+  parseDate,
+  setTime,
   startOfMonth
 } from '../date-adapter';
 
@@ -177,5 +180,71 @@ describe('reads do not depend on the host timezone', () => {
     expect(getHours(instant, lh)).toBe(1);
     expect(getMinutes(instant, lh)).toBe(15);
     expect(dayKey(instant, lh)).toBe('2023-10-01');
+  });
+});
+
+/*
+ * Moved here from `audit-fixed.test.tsx`, which collected findings by the
+ * number they were reported under. Each assertion is unchanged; only its home
+ * is, so a failure lands beside the behaviour it describes.
+ */
+/*
+ * Regressions that arrived from review passes rather than from the spec.
+ * Each assertion sits with the behaviour it guards; which pass found it is
+ * history, not structure.
+ */
+describe('regressions', () => {
+  it('isWithinBounds resolves the day in the zone it is given', () => {
+    // 23:00 UTC on 17 Apr is already 08:00 on the 18th in Tokyo.
+    const instant = new Date(Date.UTC(2024, 3, 17, 23, 0));
+    const max = new Date(Date.UTC(2024, 3, 17, 12, 0));
+
+    expect(isWithinBounds(instant, undefined, max, 'UTC')).toBe(true);
+    expect(isWithinBounds(instant, undefined, max, 'Asia/Tokyo')).toBe(false);
+  });
+
+  it('parseDate returns null, never throws, when a timeZone is set', () => {
+    // dayjs.tz does not validate — it throws RangeError on bad input, which
+    // would crash the input on an ordinary keystroke.
+    expect(() => parseDate('not a date', 'DD MMM YYYY', 'UTC')).not.toThrow();
+    expect(parseDate('not a date', 'DD MMM YYYY', 'UTC')).toBeNull();
+    expect(parseDate('2024-04-17', 'DD MMM YYYY', 'UTC')).toBeNull();
+    expect(
+      dayKey(parseDate('17 Apr 2024', 'DD MMM YYYY', 'UTC') as Date, 'UTC')
+    ).toBe('2024-04-17');
+  });
+});
+
+describe('setTime survives a daylight-saving shift', () => {
+  const TZ = 'America/New_York';
+  // 9 Mar 2025: EST -> EDT at 02:00, so 02:00-02:59 never happens.
+  const shiftDay = parseDate('09 Mar 2025', DEFAULT_FORMAT, TZ) as Date;
+
+  it.each([
+    [1, 30],
+    [3, 0],
+    [10, 0],
+    [23, 45]
+  ])('returns %i:%i as asked', (hours, minutes) => {
+    const result = setTime(shiftDay, hours, minutes, TZ);
+    expect(getHours(result, TZ)).toBe(hours);
+    expect(getMinutes(result, TZ)).toBe(minutes);
+  });
+
+  it('resolves a time that does not exist forward into the shift', () => {
+    const result = setTime(shiftDay, 2, 30, TZ);
+    expect(getHours(result, TZ)).toBe(3);
+    expect(getMinutes(result, TZ)).toBe(30);
+  });
+
+  it('stays on the day it was handed', () => {
+    expect(dayKey(setTime(shiftDay, 23, 45, TZ), TZ)).toBe('2025-03-09');
+  });
+
+  it('holds on the autumn shift too', () => {
+    // 2 Nov 2025: 01:00-01:59 happens twice; either instant reads back as 1.
+    const fallBack = parseDate('02 Nov 2025', DEFAULT_FORMAT, TZ) as Date;
+    expect(getHours(setTime(fallBack, 1, 30, TZ), TZ)).toBe(1);
+    expect(getHours(setTime(fallBack, 10, 0, TZ), TZ)).toBe(10);
   });
 });

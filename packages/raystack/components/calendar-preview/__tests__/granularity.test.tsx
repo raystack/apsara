@@ -174,3 +174,37 @@ describe('granularity gates the grid', () => {
     expect(getSlot(container, 'calendar-preview-grid')).toBeNull();
   });
 });
+
+/*
+ * Moved here from `regressions.test.tsx`, which grouped fixes by the audit
+ * pass that found them. The assertions are unchanged; each now sits with the
+ * behaviour it guards.
+ */
+describe('regressions', () => {
+  it('hides the nav outside the day granularity, as the design does', () => {
+    const { container } = render(
+      <CalendarPreview
+        defaultMonth={new Date(2024, 3, 1)}
+        granularities={['day', 'year']}
+        defaultGranularity='year'
+      >
+        <CalendarPreview.Nav />
+      </CalendarPreview>
+    );
+    expect(getSlot(container, 'calendar-preview-nav')).toBeNull();
+  });
+
+  it('never renders a tab strip with nothing selected', () => {
+    render(
+      <CalendarPreview
+        defaultMonth={new Date(2024, 3, 1)}
+        defaultGranularity='month'
+      >
+        <CalendarPreview.GranularityTabs />
+      </CalendarPreview>
+    );
+    // granularities defaults to the active granularity, so a lone tab is not
+    // worth showing at all.
+    expect(screen.queryAllByRole('tab')).toHaveLength(0);
+  });
+});

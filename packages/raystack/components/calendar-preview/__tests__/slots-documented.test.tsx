@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { cleanup, render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { expectSlots, getAllSlots, getSlot } from '~/test-utils/data-slots';
 import { CalendarPreview } from '../calendar-preview';
 
 /*
@@ -162,5 +163,116 @@ describe('CalendarPreview data-slot documentation', () => {
       missing(documented, emitted),
       'documented but no longer emitted'
     ).toEqual([]);
+  });
+});
+
+describe('CalendarPreview data-slot contract', () => {
+  it('exposes grid slots when composed inline, with no popover', () => {
+    const { container } = render(
+      <CalendarPreview defaultMonth={MONTH}>
+        <CalendarPreview.Grid />
+      </CalendarPreview>
+    );
+
+    expectSlots(container, [
+      'calendar-preview-grid',
+      'calendar-preview-weeks',
+      'calendar-preview-table',
+      'calendar-preview-day',
+      'calendar-preview-day-number'
+    ]);
+    // Nothing portals when there is no `.Content`.
+    expect(getSlot(document.body, 'calendar-preview-content')).toBeNull();
+  });
+
+  it('exposes trigger, positioner and content slots when open', () => {
+    render(
+      <CalendarPreview defaultMonth={MONTH} defaultOpen>
+        <CalendarPreview.Trigger>Pick a date</CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Grid />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+
+    // Portaled parts are asserted against the document, not the container.
+    expectSlots(document.body, [
+      'calendar-preview-trigger',
+      'calendar-preview-positioner',
+      'calendar-preview-content',
+      'calendar-preview-grid'
+    ]);
+  });
+
+  it('omits the content slot while closed', () => {
+    render(
+      <CalendarPreview defaultMonth={MONTH}>
+        <CalendarPreview.Trigger>Pick a date</CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Grid />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+
+    expect(getSlot(document.body, 'calendar-preview-trigger')).not.toBeNull();
+    expect(getSlot(document.body, 'calendar-preview-content')).toBeNull();
+  });
+
+  it('renders one day slot per day button', () => {
+    const { container } = render(
+      <CalendarPreview defaultMonth={MONTH}>
+        <CalendarPreview.Grid />
+      </CalendarPreview>
+    );
+
+    // April 2024 has 30 days and outside days are off by default.
+    expect(getAllSlots(container, 'calendar-preview-day')).toHaveLength(30);
+    // The month name belongs to `.Nav`, which this composition omits.
+    expect(getSlot(container, 'calendar-preview-nav-caption')).toBeNull();
+  });
+
+  it('renders two months of day slots when months is 2', () => {
+    const { container } = render(
+      <CalendarPreview defaultMonth={MONTH}>
+        <CalendarPreview.Grid months={2} />
+      </CalendarPreview>
+    );
+
+    // April (30) + May (31).
+    expect(getAllSlots(container, 'calendar-preview-day')).toHaveLength(61);
+    expect(getAllSlots(container, 'calendar-preview-table')).toHaveLength(2);
+  });
+
+  it('never mounts a Select — the caption is a plain label', () => {
+    const { container } = render(
+      <CalendarPreview defaultMonth={MONTH}>
+        <CalendarPreview.Grid />
+      </CalendarPreview>
+    );
+
+    expect(getSlot(container, 'select-trigger')).toBeNull();
+    expect(getSlot(container, 'calendar-preview-nav-month')).toBeNull();
+    expect(container.querySelector('select')).toBeNull();
+  });
+});
+
+/*
+ * Moved here from `regressions.test.tsx`, which grouped fixes by the audit
+ * pass that found them. The assertions are unchanged; each now sits with the
+ * behaviour it guards.
+ */
+describe('regressions', () => {
+  it('does not clobber Input own data-slot', () => {
+    const { container } = render(
+      <CalendarPreview selection='range' defaultMonth={MONTH}>
+        <CalendarPreview.RangeInput />
+      </CalendarPreview>
+    );
+    // Both contracts hold: ours on the wrapper, Input's on its own elements.
+    expect(getSlot(container, 'calendar-preview-input-start')).not.toBeNull();
+    expect(container.querySelectorAll('[data-slot="input"]')).toHaveLength(2);
+    expect(
+      container.querySelectorAll('[data-slot="input-container"]')
+    ).toHaveLength(2);
   });
 });

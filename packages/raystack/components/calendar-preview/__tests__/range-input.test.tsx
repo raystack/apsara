@@ -22,6 +22,10 @@ const setup = (props: Record<string, unknown> = {}) =>
   );
 
 const start = () => screen.getByLabelText('Start date');
+
+/** The day button for an ISO date, via the grid's `data-day` attribute. */
+const day = (c: HTMLElement, iso: string) =>
+  c.querySelector(`[data-day="${iso}"] button`) as HTMLButtonElement;
 const end = () => screen.getByLabelText('End date');
 
 const dayButton = (container: HTMLElement, iso: string) =>
@@ -370,5 +374,129 @@ describe('CalendarPreview.RangeInput placement', () => {
 
     const next = lastArg(onValueChange) as DateRangeValue;
     expect(dayKey(next.from as Date)).toBe('2024-04-17');
+  });
+});
+
+/*
+ * Moved here from `audit-fixed.test.tsx`, which collected findings by the
+ * number they were reported under. Each assertion is unchanged; only its home
+ * is, so a failure lands beside the behaviour it describes.
+ */
+/*
+ * Regressions that arrived from review passes rather than from the spec.
+ * Each assertion sits with the behaviour it guards; which pass found it is
+ * history, not structure.
+ */
+describe('regressions', () => {
+  it('a timed start survives a typed same-day end', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(
+      <CalendarPreview
+        selection='range'
+        defaultMonth={MONTH}
+        value={{ from: new Date(2024, 3, 17, 8, 0), to: null }}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.RangeInput />
+      </CalendarPreview>
+    );
+
+    await user.type(screen.getByLabelText('End date'), '17 Apr 2024{Enter}');
+    const next = lastArg(onValueChange) as DateRangeValue;
+    // The old raw `from > to` compared instants, so 08:00 "exceeded" midnight
+    // on the same day and the start was nulled.
+    expect(next.from).not.toBeNull();
+    expect(dayKey(next.from as Date)).toBe('2024-04-17');
+  });
+
+  it('typing garbage with a timeZone set does not crash the input', async () => {
+    const user = userEvent.setup();
+    const onValidityChange = vi.fn();
+    render(
+      <CalendarPreview
+        selection='range'
+        defaultMonth={MONTH}
+        timeZone='UTC'
+        onValidityChange={onValidityChange}
+      >
+        <CalendarPreview.RangeInput />
+      </CalendarPreview>
+    );
+
+    await user.type(screen.getByLabelText('Start date'), 'nonsense{Enter}');
+    expect(onValidityChange).toHaveBeenLastCalledWith({
+      valid: false,
+      reason: 'unparseable'
+    });
+  });
+
+  it('puts the active flag on an element that owns a border', () => {
+    const { container } = render(
+      <CalendarPreview selection='range' defaultMonth={MONTH}>
+        <CalendarPreview.RangeInput />
+      </CalendarPreview>
+    );
+    const active = getSlot(container, 'calendar-preview-input-start');
+    expect(active).toHaveAttribute('data-active');
+    // The style hangs off this wrapper reaching Input's container slot.
+    expect(
+      active?.querySelector('[data-slot="input-container"]')
+    ).not.toBeNull();
+  });
+
+  it('lock still allows clearing the unlocked end', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    const { container } = render(
+      <CalendarPreview
+        selection='range'
+        defaultMonth={MONTH}
+        lock='from'
+        defaultValue={{
+          from: new Date(2024, 3, 10),
+          to: new Date(2024, 3, 20)
+        }}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Grid />
+      </CalendarPreview>
+    );
+
+    await user.click(day(container, '2024-04-20'));
+    const next = onValueChange.mock.calls[
+      onValueChange.mock.calls.length - 1
+    ][0] as DateRangeValue;
+    // Whatever RDP decides, the locked end is never moved.
+    expect(dayKey(next.from as Date)).toBe('2024-04-10');
+  });
+
+  it('drops a draft across years when the format carries no year', async () => {
+    const user = userEvent.setup();
+    const { container, rerender } = render(
+      <CalendarPreview
+        selection='range'
+        format='DD MMM'
+        value={{ from: new Date(2024, 3, 17), to: null }}
+      >
+        <CalendarPreview.RangeInput />
+      </CalendarPreview>
+    );
+
+    await user.type(screen.getByLabelText('Start date'), 'xx');
+
+    rerender(
+      <CalendarPreview
+        selection='range'
+        format='DD MMM'
+        value={{ from: new Date(2025, 3, 17), to: null }}
+      >
+        <CalendarPreview.RangeInput />
+      </CalendarPreview>
+    );
+
+    // Same rendered text either year — only dayKey sees the change.
+    expect(screen.getByLabelText('Start date')).toHaveValue('17 Apr');
+    expect(getSlot(container, 'calendar-preview-input-start')).not.toBeNull();
   });
 });

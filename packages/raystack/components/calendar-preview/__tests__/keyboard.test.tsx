@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { CalendarPreview } from '../calendar-preview';
@@ -200,4 +200,66 @@ describe('a rejected commit keeps what the user typed', () => {
     // The endpoint the user did not touch is untouched.
     expect(screen.getByLabelText('End date')).toHaveValue('20 Apr 2024');
   });
+});
+
+/*
+ * Moved here from `audit-fixed.test.tsx`, which collected findings by the
+ * number they were reported under. Each assertion is unchanged; only its home
+ * is, so a failure lands beside the behaviour it describes.
+ */
+describe('regressions from the external audit', () => {
+  it('opens from the keyboard with ArrowDown, since the trigger has no tab stop', async () => {
+    const user = userEvent.setup();
+    render(
+      <CalendarPreview defaultMonth={MONTH}>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Grid />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+
+    const field = screen.getByRole('textbox');
+    field.focus();
+    await user.keyboard('{ArrowDown}');
+    expect(await screen.findByRole('grid')).toBeInTheDocument();
+  });
+
+  it('Escape reverts the draft first and dismisses only on the second press', async () => {
+    const user = userEvent.setup();
+    render(
+      <CalendarPreview defaultMonth={MONTH} value={new Date(2024, 3, 17)}>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Grid />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+
+    const field = screen.getByRole('textbox') as HTMLInputElement;
+    await user.click(field);
+    expect(await screen.findByRole('grid')).toBeInTheDocument();
+
+    await user.type(field, 'nonsense');
+    await user.keyboard('{Escape}');
+    // Correcting a typo must not cost you the calendar.
+    expect(field.value).toBe('17 Apr 2024');
+    expect(screen.queryByRole('grid')).toBeInTheDocument();
+
+    await user.keyboard('{Escape}');
+    await waitFor(() =>
+      expect(screen.queryByRole('grid')).not.toBeInTheDocument()
+    );
+  });
+
+  /*
+   * 24. `zoned()` freezes the offset of the instant it is given. A day arrives
+   * as its own midnight, so on a spring-forward day that offset is the *old*
+   * one and every time set on top of it came back an hour late — not only the
+   * hour that does not exist.
+   */
 });

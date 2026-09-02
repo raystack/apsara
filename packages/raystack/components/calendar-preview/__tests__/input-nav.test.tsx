@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { expectSlots, getSlot } from '~/test-utils/data-slots';
@@ -281,5 +281,164 @@ describe('CalendarPreview.Nav revert button', () => {
     );
     expect(getSlot(c2, 'calendar-preview-nav-undo')).toBeDisabled();
     await user.click(screen.getAllByLabelText('Reset to default date')[0]);
+  });
+});
+
+describe('consumer handlers compose rather than replace', () => {
+  it('.Input still commits when a consumer passes onKeyDown', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    const consumerKeyDown = vi.fn();
+    render(
+      <CalendarPreview
+        defaultMonth={new Date(2024, 3, 1)}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Input onKeyDown={consumerKeyDown} />
+      </CalendarPreview>
+    );
+
+    await user.type(screen.getByRole('textbox'), '17 Apr 2024{Enter}');
+    expect(
+      dayKey(
+        onValueChange.mock.calls[onValueChange.mock.calls.length - 1][0] as Date
+      )
+    ).toBe('2024-04-17');
+    expect(consumerKeyDown).toHaveBeenCalled();
+  });
+
+  it('.Input still commits when a consumer passes onBlur', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    const onBlur = vi.fn();
+    render(
+      <CalendarPreview
+        defaultMonth={new Date(2024, 3, 1)}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Input onBlur={onBlur} />
+      </CalendarPreview>
+    );
+
+    await user.type(screen.getByRole('textbox'), '17 Apr 2024');
+    await user.tab();
+    expect(
+      dayKey(
+        onValueChange.mock.calls[onValueChange.mock.calls.length - 1][0] as Date
+      )
+    ).toBe('2024-04-17');
+    expect(onBlur).toHaveBeenCalled();
+  });
+});
+
+/*
+ * Moved here from `audit-fixed.test.tsx`, which collected findings by the
+ * number they were reported under. Each assertion is unchanged; only its home
+ * is, so a failure lands beside the behaviour it describes.
+ */
+/*
+ * Regressions that arrived from review passes rather than from the spec.
+ * Each assertion sits with the behaviour it guards; which pass found it is
+ * history, not structure.
+ */
+describe('regressions', () => {
+  it('a trigger holding a typed field claims no button semantics', async () => {
+    const { container } = render(
+      <CalendarPreview>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Grid />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+
+    const trigger = getSlot(
+      container,
+      'calendar-preview-trigger'
+    ) as HTMLElement;
+    // In ARIA a button's children are presentational, so the field inside was
+    // at risk of never being announced as editable; the tab stop it added sat
+    // in front of the input doing nothing a keyboard user wants.
+    await waitFor(() => expect(trigger).not.toHaveAttribute('role'));
+    expect(trigger).toHaveAttribute('tabindex', '-1');
+    expect(trigger.querySelector('input')).not.toBeNull();
+  });
+
+  it('a plain trigger keeps the button semantics it should have', () => {
+    const { container } = render(
+      <CalendarPreview>
+        <CalendarPreview.Trigger>Pick a date</CalendarPreview.Trigger>
+      </CalendarPreview>
+    );
+    const trigger = getSlot(
+      container,
+      'calendar-preview-trigger'
+    ) as HTMLElement;
+    expect(trigger).toHaveAttribute('role', 'button');
+    expect(trigger).toHaveAttribute('tabindex', '0');
+  });
+
+  it('clicking the field a second time does not close the calendar', async () => {
+    const user = userEvent.setup();
+    render(
+      <CalendarPreview defaultMonth={MONTH}>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Grid />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+
+    const field = screen.getByRole('textbox');
+    await user.click(field);
+    expect(await screen.findByRole('grid')).toBeInTheDocument();
+
+    // Repositioning the caret is an ordinary thing to do mid-edit.
+    await user.click(field);
+    expect(screen.queryByRole('grid')).toBeInTheDocument();
+  });
+
+  it('clicking the trigger outside the field still toggles', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <CalendarPreview defaultMonth={MONTH}>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Grid />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+
+    const trigger = getSlot(
+      container,
+      'calendar-preview-trigger'
+    ) as HTMLElement;
+    await user.click(trigger);
+    expect(await screen.findByRole('grid')).toBeInTheDocument();
+    await user.click(trigger);
+    await waitFor(() =>
+      expect(screen.queryByRole('grid')).not.toBeInTheDocument()
+    );
+  });
+
+  it('captions a two-month grid as a range', () => {
+    const { container } = render(
+      <CalendarPreview defaultMonth={new Date(2024, 3, 1)}>
+        <CalendarPreview.Nav months={2} />
+        <CalendarPreview.Grid months={2} />
+      </CalendarPreview>
+    );
+    expect(
+      getSlot(container, 'calendar-preview-nav-caption')
+    ).toHaveTextContent('April 2024 – May 2024');
+    expect(
+      container.querySelectorAll('[data-slot="calendar-preview-table"]')
+    ).toHaveLength(2);
   });
 });

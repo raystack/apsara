@@ -223,3 +223,66 @@ describe('MonthGrid: third audit', () => {
     expect(dayKey(lastArg(onValueChange) as Date)).toBe('2024-04-01');
   });
 });
+
+/*
+ * Moved here from `audit-fixed.test.tsx`, which collected findings by the
+ * number they were reported under. Each assertion is unchanged; only its home
+ * is, so a failure lands beside the behaviour it describes.
+ */
+describe('regressions from the external audit', () => {
+  it('switching to Month scrolls the active year into view', async () => {
+    const user = userEvent.setup();
+    /*
+     * jsdom has no layout, so `scrollTop` is not observable on its own — the
+     * previous form of this test asserted `scrollTop >= 0`, which is true of
+     * an untouched element. Stand a spy in its place and give the geometry
+     * non-zero values, so the assertion is about the scroll actually happening.
+     */
+    const stub = (name: string, descriptor: PropertyDescriptor) => {
+      const original = Object.getOwnPropertyDescriptor(
+        HTMLElement.prototype,
+        name
+      );
+      Object.defineProperty(HTMLElement.prototype, name, {
+        configurable: true,
+        ...descriptor
+      });
+      return () => {
+        if (original) {
+          Object.defineProperty(HTMLElement.prototype, name, original);
+        } else {
+          Reflect.deleteProperty(HTMLElement.prototype, name);
+        }
+      };
+    };
+
+    const scrolled = vi.fn();
+    const restore = [
+      stub('scrollTop', { get: () => 0, set: scrolled }),
+      stub('offsetTop', { get: () => 900 }),
+      stub('clientHeight', { get: () => 300 })
+    ];
+
+    try {
+      render(
+        <CalendarPreview
+          granularities={['day', 'month']}
+          value={new Date(2030, 5, 1)}
+          minDate={new Date(2020, 0, 1)}
+          maxDate={new Date(2035, 11, 31)}
+        >
+          <CalendarPreview.GranularityTabs />
+          <CalendarPreview.Grid />
+          <CalendarPreview.MonthGrid />
+        </CalendarPreview>
+      );
+
+      expect(scrolled).not.toHaveBeenCalled();
+      await user.click(screen.getByRole('tab', { name: 'Month' }));
+      // 900 - 300/2 + 300/2, centred on the active year.
+      expect(scrolled).toHaveBeenCalledWith(900);
+    } finally {
+      for (const undo of restore) undo();
+    }
+  });
+});
