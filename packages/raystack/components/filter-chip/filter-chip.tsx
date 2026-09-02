@@ -116,6 +116,16 @@ export const FilterChip = ({
   const showOnRemove = typeof onRemove === 'function';
   const isMultiSelectColumn = columnType === FilterType.multiselect;
 
+  /*
+   * The date field's invalid state. `CalendarPreview` renders no error UI of
+   * its own by design, reporting through `onValidityChange` so a surrounding
+   * `Field` can present it — but this chip is not a `Field`, and wiring nothing
+   * meant unparseable text simply sat there: no border, no `aria-invalid`, and
+   * a filter that silently did not apply. That is what the old picker's
+   * `updateError('Invalid date')` used to drive.
+   */
+  const [dateInvalid, setDateInvalid] = useState(false);
+
   const handleOperationChange = useCallback(
     (operation: FilterOperation) => {
       setOperation(operation);
@@ -176,6 +186,7 @@ export const FilterChip = ({
           <div
             className={styles.dateFieldWrapper}
             data-slot='filter-chip-value'
+            data-error={dateInvalid || undefined}
           >
             {/*
              * Composed from parts rather than configured through `slotProps`.
@@ -190,12 +201,22 @@ export const FilterChip = ({
             <CalendarPreview
               {...calendarProps}
               value={toDateLoose(filterValue)}
-              onValueChange={date => handleFilterValueChange(date)}
+              onValueChange={date => {
+                setDateInvalid(false);
+                handleFilterValueChange(date);
+              }}
+              onValidityChange={validity => {
+                setDateInvalid(!validity.valid);
+                calendarProps?.onValidityChange?.(validity);
+              }}
             >
               <CalendarPreview.Trigger className={styles.dateField}>
                 {/* Preserves the chip's long-standing empty-state wording;
                     `.Input` otherwise falls back to showing the format. */}
-                <CalendarPreview.Input placeholder='Select date' />
+                <CalendarPreview.Input
+                  placeholder='Select date'
+                  aria-invalid={dateInvalid || undefined}
+                />
               </CalendarPreview.Trigger>
               <CalendarPreview.Content>
                 <CalendarPreview.Nav />

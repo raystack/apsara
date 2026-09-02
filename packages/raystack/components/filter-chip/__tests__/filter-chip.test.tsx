@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { FilterType } from '~/types/filters';
 import { FilterChip } from '../filter-chip';
@@ -126,6 +127,62 @@ describe('FilterChip', () => {
   });
 
   describe('Date Filter Type', () => {
+    /*
+     * The old picker drew a red border from `updateError('Invalid date')`. Its
+     * replacement renders no error UI of its own by design, reporting through
+     * `onValidityChange` so a surrounding `Field` can present it — and this
+     * chip is not a `Field`. Wiring nothing left unparseable text sitting
+     * there with no border, no `aria-invalid` and a filter that silently did
+     * not apply: an error-identification regression on shipped code.
+     */
+    it('marks an unparseable date invalid, and recovers', async () => {
+      const user = userEvent.setup();
+      const { container } = render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2024, 3, 17)}
+        />
+      );
+
+      const field = screen.getByRole('textbox');
+      await user.clear(field);
+      await user.type(field, 'garbage');
+      await user.tab();
+
+      // `aria-invalid` over the border alone: a red edge announces nothing.
+      expect(field).toHaveAttribute('aria-invalid', 'true');
+      expect(container.querySelectorAll('[data-error]')).toHaveLength(1);
+
+      await user.clear(field);
+      await user.type(field, '18 Apr 2024{Enter}');
+
+      expect(field).not.toHaveAttribute('aria-invalid');
+      expect(container.querySelectorAll('[data-error]')).toHaveLength(0);
+    });
+
+    it('still forwards a consumer onValidityChange', async () => {
+      const user = userEvent.setup();
+      const onValidityChange = vi.fn();
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2024, 3, 17)}
+          calendarProps={{ onValidityChange }}
+        />
+      );
+
+      const field = screen.getByRole('textbox');
+      await user.clear(field);
+      await user.type(field, 'garbage{Enter}');
+
+      expect(onValidityChange).toHaveBeenLastCalledWith({
+        valid: false,
+        reason: 'unparseable'
+      });
+    });
+
     it('renders the date picker without crashing when no value is set', () => {
       // Regression: an unset date chip seeds its value with '' and forwarded
       // that string to the picker, whose controlled-sync effect ran
