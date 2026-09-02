@@ -1,9 +1,14 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;500&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;1,400;1,500&display=swap");
-
-:root {
+/*
+ * Font imports live in `./fonts.css` and `./fonts-legacy.css` so a font-free
+ * stylesheet can be published from the same source. Families are customised by
+ * redeclaring `--rs-font-body`, `--rs-font-title` or `--rs-font-mono` on
+ * `.rs-theme`, not through a prop.
+ *
+ * Caveat: the pixel sizes and line heights below are paired and the letter
+ * spacing is tuned for Inter, so a font with different metrics leaves line
+ * heights uncentred and shifts control dimensions.
+ */
+:where(:root, [data-theme]) {
   /* Fonts */
   --rs-font-inter: "Inter";
   --rs-font-lora: "Lora";
@@ -14,30 +19,32 @@
   /* Font Families */
   --rs-font-title: var(--rs-font-inter), sans-serif;
   --rs-font-body: var(--rs-font-inter), sans-serif;
+  /* JetBrains Mono precedes Menlo: with Menlo first the imported face never
+     rendered on macOS. */
   --rs-font-mono:
-    var(--rs-font-menlo), var(--rs-font-jetbrains-mono), monospace;
+    var(--rs-font-jetbrains-mono), var(--rs-font-menlo), monospace;
 
   /* Font Weights */
   --rs-font-weight-regular: 400;
   --rs-font-weight-medium: 500;
 
   /* Body Font Sizes */
-  --rs-font-size-micro: 10px;
-  --rs-font-size-mini: 11px;
-  --rs-font-size-small: 12px;
-  --rs-font-size-regular: 14px;
-  --rs-font-size-large: 16px;
+  --rs-font-size-micro: calc(10px * var(--rs-scaling, 1));
+  --rs-font-size-mini: calc(11px * var(--rs-scaling, 1));
+  --rs-font-size-small: calc(12px * var(--rs-scaling, 1));
+  --rs-font-size-regular: calc(14px * var(--rs-scaling, 1));
+  --rs-font-size-large: calc(16px * var(--rs-scaling, 1));
 
   /* Body Line Heights */
-  --rs-line-height-micro: 12px;
-  --rs-line-height-mini: 14px;
-  --rs-line-height-small: 16px;
-  --rs-line-height-regular: 20px;
-  --rs-line-height-large: 24px;
+  --rs-line-height-micro: calc(12px * var(--rs-scaling, 1));
+  --rs-line-height-mini: calc(14px * var(--rs-scaling, 1));
+  --rs-line-height-small: calc(16px * var(--rs-scaling, 1));
+  --rs-line-height-regular: calc(20px * var(--rs-scaling, 1));
+  --rs-line-height-large: calc(24px * var(--rs-scaling, 1));
 
   /* Body Letter spacing — tuned for Inter, which is spaced generously already.
      Near-zero at small sizes, slightly negative as size grows. em-based so it
-     scales with font-size. */
+     scales with font-size, and therefore with `--rs-scaling`, implicitly. */
   --rs-letter-spacing-micro: 0.01em;
   --rs-letter-spacing-mini: 0.005em;
   --rs-letter-spacing-small: 0em;
@@ -45,16 +52,16 @@
   --rs-letter-spacing-large: -0.011em;
 
   /* Title Font Sizes */
-  --rs-font-size-t1: 20px;
-  --rs-font-size-t2: 24px;
-  --rs-font-size-t3: 28px;
-  --rs-font-size-t4: 32px;
+  --rs-font-size-t1: calc(20px * var(--rs-scaling, 1));
+  --rs-font-size-t2: calc(24px * var(--rs-scaling, 1));
+  --rs-font-size-t3: calc(28px * var(--rs-scaling, 1));
+  --rs-font-size-t4: calc(32px * var(--rs-scaling, 1));
 
   /* Title Line Heights */
-  --rs-line-height-t1: 28px;
-  --rs-line-height-t2: 32px;
-  --rs-line-height-t3: 36px;
-  --rs-line-height-t4: 40px;
+  --rs-line-height-t1: calc(28px * var(--rs-scaling, 1));
+  --rs-line-height-t2: calc(32px * var(--rs-scaling, 1));
+  --rs-line-height-t3: calc(36px * var(--rs-scaling, 1));
+  --rs-line-height-t4: calc(40px * var(--rs-scaling, 1));
 
   /* Title Letter Spacing */
   --rs-letter-spacing-t1: -0.01em;
@@ -63,16 +70,16 @@
   --rs-letter-spacing-t4: -0.02em;
 
   /* Mono Font Sizes */
-  --rs-font-size-mono-mini: 11px;
-  --rs-font-size-mono-small: 12px;
-  --rs-font-size-mono-regular: 14px;
-  --rs-font-size-mono-large: 16px;
+  --rs-font-size-mono-mini: calc(11px * var(--rs-scaling, 1));
+  --rs-font-size-mono-small: calc(12px * var(--rs-scaling, 1));
+  --rs-font-size-mono-regular: calc(14px * var(--rs-scaling, 1));
+  --rs-font-size-mono-large: calc(16px * var(--rs-scaling, 1));
 
   /* Mono Line Heights */
-  --rs-line-height-mono-mini: 16px;
-  --rs-line-height-mono-small: 16px;
-  --rs-line-height-mono-regular: 20px;
-  --rs-line-height-mono-large: 24px;
+  --rs-line-height-mono-mini: calc(16px * var(--rs-scaling, 1));
+  --rs-line-height-mono-small: calc(16px * var(--rs-scaling, 1));
+  --rs-line-height-mono-regular: calc(20px * var(--rs-scaling, 1));
+  --rs-line-height-mono-large: calc(24px * var(--rs-scaling, 1));
 
   /* Mono Letter Spacing */
   --rs-letter-spacing-mono-mini: 0px;
@@ -81,6 +88,8 @@
   --rs-letter-spacing-mono-large: 0px;
 }
 
+/* Legacy: `style` on the previous `Theme` provider. `ThemePreview` never writes
+   `data-style` and leaves the font pair to the `--rs-font-*` tokens. */
 [data-style="modern"] {
   /* Re-declare (not just inherit from :root) so a modern theme nested inside a
      traditional one resets to Inter instead of inheriting Lora/Josefin. */
@@ -103,7 +112,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Only weights 400 and 500 are loaded (see @import above). Fail visibly
+  /* Only weights 400 and 500 are loaded (see styles/fonts.css). Fail visibly
      on any missing weight or style instead of rendering a faked bold/italic. */
   font-synthesis: none;
 }

@@ -9,10 +9,10 @@
   transition: color var(--rs-duration-normal) var(--rs-ease-out);
   background-color: var(--rs-color-background-base-secondary);
   border: 0.5px solid var(--rs-color-border-base-primary);
-  border-radius: var(--rs-radius-2);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
 }
 .toggleContent {
-  border-radius: var(--rs-radius-1);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-1));
   width: 100%;
   height: 100%;
   display: flex;
@@ -123,7 +123,7 @@
   padding: var(--rs-space-1);
   background-color: var(--rs-color-background-base-secondary);
   border: 0.5px solid var(--rs-color-border-base-primary);
-  border-radius: var(--rs-radius-1);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-1));
   overflow: clip;
 }
 

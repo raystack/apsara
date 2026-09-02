@@ -3,10 +3,12 @@ import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ReactNode, RefObject } from 'react';
 import { Chip } from '../chip';
 import { useFieldContext } from '../field';
+import { radiusVariants } from '../theme-preview/radius';
 import styles from './input.module.css';
 
 const inputWrapper = cva(styles['input-wrapper'], {
   variants: {
+    ...radiusVariants,
     size: {
       small: styles['size-small'],
       large: styles['size-large']
@@ -49,6 +51,7 @@ export function Input({
   chips,
   maxChipsVisible = 2,
   size,
+  radius,
   variant = 'default',
   containerRef,
   classNames,
@@ -61,7 +64,7 @@ export function Input({
   return (
     <div
       className={cx(
-        inputWrapper({ size, variant }),
+        inputWrapper({ size, variant, radius }),
         chips?.length && styles['has-chips'],
         classNames?.container
       )}

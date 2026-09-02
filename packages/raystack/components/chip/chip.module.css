@@ -8,7 +8,8 @@
   line-height: var(--rs-line-height-mini);
   letter-spacing: var(--rs-letter-spacing-mini);
   font-style: normal;
-  border-radius: var(--rs-radius-2);
+  --rs-radius-step: 4px;
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
   white-space: nowrap;
   cursor: default;
   transition: var(--rs-transition-interactive);
@@ -148,7 +149,7 @@
 
 .dismiss-button:focus-visible {
   outline: var(--rs-focus-ring);
-  border-radius: var(--rs-radius-1);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-1));
 }
 
 .dismiss-button:active,

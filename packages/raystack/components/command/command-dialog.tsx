@@ -3,6 +3,12 @@
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import { cx } from 'class-variance-authority';
 import { forwardRef, useRef } from 'react';
+import {
+  type PortalContainer,
+  useThemeInjection
+} from '../theme-preview/portal';
+import { radiusClass } from '../theme-preview/radius';
+import type { Radius } from '../theme-preview/settings';
 import styles from './command.module.css';
 
 export const CommandDialog = (props: DialogPrimitive.Root.Props) => (
@@ -24,6 +30,10 @@ CommandDialogTrigger.displayName = 'Command.DialogTrigger';
 
 export interface CommandDialogContentProps extends DialogPrimitive.Popup.Props {
   width?: string | number;
+  /** Portals into this element instead of `document.body`. */
+  container?: PortalContainer;
+  /** Corner radius for this palette only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 export function CommandDialogContent({
@@ -31,6 +41,8 @@ export function CommandDialogContent({
   children,
   width,
   style,
+  container,
+  radius,
   ...props
 }: CommandDialogContentProps) {
   const popupRef = useRef<HTMLDivElement>(null);
@@ -41,17 +53,24 @@ export function CommandDialogContent({
      usually behave: focus goes back to the trigger only when you opened it by
      clicking the trigger. */
   const originRef = useRef<HTMLElement | null>(null);
+  const theme = useThemeInjection();
 
   return (
-    <DialogPrimitive.Portal>
+    <DialogPrimitive.Portal container={container}>
       <DialogPrimitive.Viewport
         data-slot='command-dialog-viewport'
         className={styles.viewport}
       >
         <DialogPrimitive.Popup
           ref={popupRef}
+          {...theme}
           data-slot='command-dialog-content'
-          className={cx(styles.dialogPopup, className)}
+          className={cx(
+            styles.dialogPopup,
+            theme?.className,
+            radiusClass(radius),
+            className
+          )}
           style={{ width, ...style }}
           initialFocus={openType => {
             /* Runs before focus moves into the popup, so activeElement is

@@ -3,10 +3,12 @@ import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ReactNode } from 'react';
 
 import { Spinner } from '../spinner';
+import { radiusVariants } from '../theme-preview/radius';
 import styles from './button.module.css';
 
 const button = cva(styles['button'], {
   variants: {
+    ...radiusVariants,
     variant: {
       solid: styles['button-solid'],
       outline: styles['button-outline'],
@@ -138,6 +140,7 @@ export const Button = ({
   variant = 'solid',
   color = 'accent',
   size = 'normal',
+  radius,
   disabled,
   loading,
   loaderText,
@@ -152,7 +155,7 @@ export const Button = ({
   return (
     <ButtonPrimitive
       className={cx(
-        button({ variant, size, color, disabled, loading, className }),
+        button({ variant, size, color, radius, disabled, loading, className }),
         isLoaderOnly && getLoaderOnlyClass(size)
       )}
       disabled={disabled}

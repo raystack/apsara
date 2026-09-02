@@ -3,6 +3,12 @@
 import { Tooltip as TooltipPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { Text } from '../text';
+import {
+  type PortalContainer,
+  useThemeInjection
+} from '../theme-preview/portal';
+import { radiusClass } from '../theme-preview/radius';
+import type { Radius } from '../theme-preview/settings';
 import styles from './tooltip.module.css';
 
 export interface TooltipContentProps
@@ -16,6 +22,10 @@ export interface TooltipContentProps
    * `@default` false
    */
   showArrow?: boolean;
+  /** Portals into this element instead of `document.body`. */
+  container?: PortalContainer;
+  /** Corner radius for this tooltip only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 export function TooltipContent({
@@ -25,12 +35,15 @@ export function TooltipContent({
   showArrow = false,
   style,
   render,
+  container,
+  radius,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
   ...positionerProps
 }: TooltipContentProps) {
+  const theme = useThemeInjection();
   return (
-    <TooltipPrimitive.Portal>
+    <TooltipPrimitive.Portal container={container}>
       <TooltipPrimitive.Positioner
         side='top'
         align='center'
@@ -41,7 +54,13 @@ export function TooltipContent({
       >
         <TooltipPrimitive.Popup
           ref={ref}
-          className={cx(styles.content, className)}
+          {...theme}
+          className={cx(
+            styles.content,
+            theme?.className,
+            radiusClass(radius),
+            className
+          )}
           style={style}
           render={render}
           aria-label={ariaLabel}

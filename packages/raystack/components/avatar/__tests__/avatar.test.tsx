@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { radiusClasses } from '../../theme-preview/radius';
 import { Avatar, AvatarGroup } from '../avatar';
 import styles from '../avatar.module.css';
 import { getAvatarColor } from '../utils';
@@ -73,17 +74,24 @@ describe('Avatar', () => {
   });
 
   describe('Radius', () => {
-    const radii = ['small', 'full'] as const;
+    const radii = ['none', 'small', 'medium', 'large', 'full'] as const;
     it.each(radii)('renders %s radius', radius => {
       const { container } = render(<Avatar radius={radius} fallback='JD' />);
       const avatar = container.querySelector('[class*="avatar"]');
-      expect(avatar).toHaveClass(styles[`avatar-${radius}`]);
+      expect(avatar).toHaveClass(radiusClasses[radius]);
     });
 
-    it('defaults to small radius', () => {
+    it('defaults to medium radius, which reproduces the old default', () => {
       const { container } = render(<Avatar fallback='JD' />);
       const avatar = container.querySelector('[class*="avatar"]');
-      expect(avatar).toHaveClass(styles['avatar-small']);
+      expect(avatar).toHaveClass(radiusClasses.medium);
+    });
+
+    it('takes its base step from the size class', () => {
+      const { container } = render(<Avatar size={10} fallback='JD' />);
+      const avatar = container.querySelector('[class*="avatar"]');
+      expect(avatar).toHaveClass(styles['avatar-size-10']);
+      expect(avatar).toHaveClass(radiusClasses.medium);
     });
   });
 
@@ -229,7 +237,7 @@ describe('Avatar', () => {
         const overflowAvatar = screen
           .getByText('+1')
           .closest('[class*="avatar"]');
-        expect(overflowAvatar).toHaveClass(styles['avatar-full']);
+        expect(overflowAvatar).toHaveClass(radiusClasses.full);
       });
 
       it('matches first avatar variant', () => {
