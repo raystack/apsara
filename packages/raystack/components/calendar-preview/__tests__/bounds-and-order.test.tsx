@@ -416,8 +416,13 @@ describe('.MonthGrid renders and commits in a display timezone', () => {
   });
 });
 
-describe('.MonthGrid cannot commit a backwards range', () => {
-  const rangeGrid = (props: Record<string, unknown>) =>
+/*
+ * Range ordering itself lives in `range-order.test.tsx`, parameterised over
+ * every writer that can commit a range. What stays here is the one contract
+ * point that is specific to a period writer.
+ */
+describe('.MonthGrid period semantics', () => {
+  const rangeMonthGrid = (props: Record<string, unknown>) =>
     render(
       <CalendarPreview
         selection='range'
@@ -431,88 +436,6 @@ describe('.MonthGrid cannot commit a backwards range', () => {
       </CalendarPreview>
     );
 
-  it('clears the end when a chosen start moves past it', async () => {
-    const user = userEvent.setup();
-    const onValueChange = vi.fn();
-    rangeGrid({
-      value: { from: null, to: new Date(2026, 2, 1) },
-      onValueChange
-    });
-
-    await user.click(screen.getByRole('button', { name: 'Dec' }));
-
-    const next = lastArg<DateRangeValue>(onValueChange);
-    expect(dayKey(next.from as Date)).toBe('2026-12-01');
-    expect(next.to).toBeNull();
-  });
-
-  it('keeps an ordered pair intact', async () => {
-    const user = userEvent.setup();
-    const onValueChange = vi.fn();
-    rangeGrid({
-      value: { from: null, to: new Date(2026, 8, 1) },
-      onValueChange
-    });
-
-    await user.click(screen.getByRole('button', { name: 'Mar' }));
-
-    const next = lastArg<DateRangeValue>(onValueChange);
-    expect(dayKey(next.from as Date)).toBe('2026-03-01');
-    expect(dayKey(next.to as Date)).toBe('2026-09-01');
-  });
-
-  /*
-   * `lock` holds one endpoint read-only, and that endpoint is exactly the one an
-   * inversion would clear — so under a lock the ordering guard has nothing it
-   * may repair. It must refuse rather than delete the endpoint the consumer
-   * pinned, which is what the first version of this guard did.
-   */
-  describe('under a lock', () => {
-    const locked = (onValueChange: () => void, onValidityChange: () => void) =>
-      render(
-        <CalendarPreview
-          selection='range'
-          defaultGranularity='month'
-          granularities={['month']}
-          minDate={new Date(2026, 0, 1)}
-          maxDate={new Date(2026, 11, 31)}
-          lock='from'
-          value={{ from: new Date(2026, 8, 1), to: null }}
-          onValueChange={onValueChange}
-          onValidityChange={onValidityChange}
-        >
-          <CalendarPreview.MonthGrid />
-        </CalendarPreview>
-      );
-
-    it('refuses a pick that would invert, keeping the locked endpoint', async () => {
-      const user = userEvent.setup();
-      const onValueChange = vi.fn();
-      const onValidityChange = vi.fn();
-      locked(onValueChange, onValidityChange);
-
-      await user.click(screen.getByRole('button', { name: 'Mar' }));
-
-      expect(onValueChange).not.toHaveBeenCalled();
-      expect(
-        lastArg<{ valid: boolean; reason?: string }>(onValidityChange)
-      ).toEqual({ valid: false, reason: 'range-order' });
-    });
-
-    it('still commits an ordered pick', async () => {
-      const user = userEvent.setup();
-      const onValueChange = vi.fn();
-      const onValidityChange = vi.fn();
-      locked(onValueChange, onValidityChange);
-
-      await user.click(screen.getByRole('button', { name: 'Nov' }));
-
-      const next = lastArg<DateRangeValue>(onValueChange);
-      expect(dayKey(next.from as Date)).toBe('2026-09-01');
-      expect(dayKey(next.to as Date)).toBe('2026-11-01');
-    });
-  });
-
   /*
    * By period, not by instant: re-picking the period the other endpoint already
    * sits in is not a contradiction, and clearing it there would discard a
@@ -521,7 +444,7 @@ describe('.MonthGrid cannot commit a backwards range', () => {
   it('leaves the other endpoint alone when both land in one period', async () => {
     const user = userEvent.setup();
     const onValueChange = vi.fn();
-    rangeGrid({
+    rangeMonthGrid({
       value: { from: null, to: new Date(2026, 5, 20) },
       onValueChange
     });

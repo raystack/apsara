@@ -11,9 +11,12 @@ import {
 } from 'react-day-picker';
 import { Skeleton } from '../skeleton';
 import styles from './calendar-preview.module.css';
-import type { DateRangeValue } from './calendar-preview-context';
+import type {
+  CalendarRangeField,
+  DateRangeValue
+} from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import { dayKey } from './date-adapter';
+import { dayKey, isAfterDay } from './date-adapter';
 
 /**
  * Everything react-day-picker owns is derived from root context and is
@@ -129,7 +132,8 @@ export function CalendarPreviewGrid({
     readOnly,
     lock,
     granularity,
-    loading
+    loading,
+    reportValidity
   } = useCalendarPreviewContext('Grid');
 
   /*
@@ -234,6 +238,44 @@ export function CalendarPreviewGrid({
         onSelect={(next: DateRange | undefined, triggerDate: Date) => {
           if (!writable) return;
           const held = range ?? { from: null, to: null };
+
+          /*
+           * The ordering policy, shared with `.MonthGrid`. Both grids answer
+           * the same question and had answered it differently: this one wrote
+           * the clicked day through with no guard at all, so picking before a
+           * locked start emitted `from > to` and — because the root announces
+           * validity on every commit — reported it as good.
+           *
+           * Compared by day, as `.RangeInput` does: a click carries no time of
+           * day, so an instant comparison would read a 09:00 endpoint as
+           * "after" the midnight the click produces.
+           */
+          const commitRange = (
+            candidate: DateRangeValue,
+            field: CalendarRangeField
+          ) => {
+            const opposite = field === 'from' ? 'to' : 'from';
+            if (
+              candidate.from &&
+              candidate.to &&
+              isAfterDay(candidate.from, candidate.to, timeZone)
+            ) {
+              /*
+               * `lock` holds the opposite endpoint read-only, and the opposite
+               * endpoint is the only one an inversion could clear — so under a
+               * lock there is nothing to repair. Refused, as `.TimeField`
+               * refuses what it cannot fix, rather than deleting a pinned end.
+               */
+              if (lock === opposite) {
+                reportValidity({ valid: false, reason: 'range-order' });
+                return;
+              }
+              setValue({ ...candidate, [opposite]: null });
+              return;
+            }
+            setValue(candidate);
+          };
+
           /*
            * With an endpoint locked, RDP's range machine still rewrites both
            * ends, so ignore its result and drive the unlocked end from the
@@ -243,19 +285,35 @@ export function CalendarPreviewGrid({
            * only deselect available while a lock is held.
            */
           if (lock) {
-            const unlocked = lock === 'from' ? held.to : held.from;
-            const nextUnlocked =
+            const field: CalendarRangeField = lock === 'from' ? 'to' : 'from';
+            const unlocked = held[field];
+            if (
               unlocked &&
               dayKey(unlocked, timeZone) === dayKey(triggerDate, timeZone)
-                ? null
-                : triggerDate;
-            setValue(
-              lock === 'from'
-                ? { from: held.from, to: nextUnlocked }
-                : { from: nextUnlocked, to: held.to }
-            );
+            ) {
+              setValue({ ...held, [field]: null });
+              return;
+            }
+            commitRange({ ...held, [field]: triggerDate }, field);
             return;
           }
+
+          /*
+           * RDP has no answer for a range holding only an end.
+           * `addToRange` branches on `!from && !to`, `from && !to` and
+           * `from && to`; `{ from: undefined, to: D }` — which is what
+           * `{ from: null, to: D }` becomes on the way in — falls through all
+           * three, so `range` is never assigned and it returns `undefined`.
+           * Mapping that to `setValue(null)` discarded both the surviving
+           * endpoint and the click. Clearing one end is a documented move
+           * (`.RangeInput` empties a field; a typed end before the start nulls
+           * `from`), so this shape is ordinary, not exotic.
+           */
+          if (!next && held.to && !held.from) {
+            commitRange({ from: triggerDate, to: held.to }, 'from');
+            return;
+          }
+
           setValue(
             next ? { from: next.from ?? null, to: next.to ?? null } : null
           );
