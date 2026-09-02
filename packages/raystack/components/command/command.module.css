@@ -4,7 +4,8 @@
   overflow: hidden;
   isolation: isolate;
   width: 100%;
-  background-color: var(--rs-color-background-base-primary);
+  background-color: var(--rs-color-panel);
+  backdrop-filter: var(--rs-panel-backdrop-filter);
 }
 
 .inputWrapper {
@@ -51,7 +52,7 @@
   letter-spacing: var(--rs-letter-spacing-small);
   color: var(--rs-color-foreground-base-primary);
   background-color: var(--rs-color-background-base-primary);
-  border-radius: var(--rs-radius-2);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
   cursor: pointer;
   outline: none;
   user-select: none;
@@ -165,8 +166,10 @@
      centered on short ones so the popup stays inside the viewport. The input
      stays put while the list below changes height. */
   transform: translate(-50%, min(160px, calc(50vh - 50%)));
-  background-color: var(--rs-color-background-base-primary);
-  border-radius: var(--rs-radius-2);
+  background-color: var(--rs-color-panel);
+  backdrop-filter: var(--rs-panel-backdrop-filter);
+  --rs-radius-step: 4px;
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
   box-shadow: var(--rs-shadow-floating);
   overflow: hidden;
   outline: none;

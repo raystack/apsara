@@ -4,8 +4,10 @@
  * All variables must be used from colors.css file only.
  */
 
-/* [data-accent-color='indigo']  { */
-[data-theme="light"] {
+/* Indigo is the default, so it also applies where no `data-accent-color` is
+   set. Its own selector is listed too, so `data-accent-color="indigo"` inside
+   an orange scope resets the ramp instead of inheriting it. */
+:where([data-accent-color="indigo"], [data-theme="light"]) {
   --rs-accent-1: oklch(0.9943 0.0013 286.38);
   --rs-accent-2: oklch(0.9823 0.0083 271.33);
   --rs-accent-3: oklch(0.9609 0.017 267.79);
@@ -20,9 +22,8 @@
   --rs-accent-12: oklch(0.3126 0.0858 268.6);
   --rs-accent-contrast: oklch(1 0 0);
 }
-/* } */
 
-[data-theme="dark"] {
+:where([data-accent-color="indigo"][data-theme="dark"], [data-theme="dark"]) {
   --rs-accent-1: oklch(0.1909 0.0246 276.53);
   --rs-accent-2: oklch(0.2094 0.0302 274.84);
   --rs-accent-3: oklch(0.2716 0.0705 267.98);
@@ -38,7 +39,7 @@
   --rs-accent-contrast: oklch(1 0 0);
 }
 
-[data-accent-color="orange"] {
+:where([data-accent-color="orange"]) {
   --rs-accent-1: oklch(0.9923 0.0025 48.72);
   --rs-accent-2: oklch(0.9796 0.0158 73.68);
   --rs-accent-3: oklch(0.9583 0.0371 79.11);
@@ -54,7 +55,7 @@
   --rs-accent-contrast: oklch(1 0 0);
 }
 
-[data-accent-color="orange"][data-theme="dark"] {
+:where([data-accent-color="orange"][data-theme="dark"]) {
   --rs-accent-1: oklch(0.1869 0.0114 60.68);
   --rs-accent-2: oklch(0.2078 0.0185 62.72);
   --rs-accent-3: oklch(0.2579 0.0447 60.79);
@@ -70,7 +71,7 @@
   --rs-accent-contrast: oklch(1 0 0);
 }
 
-[data-accent-color="mint"] {
+:where([data-accent-color="mint"]) {
   --rs-accent-1: oklch(0.993 0.0054 183.03);
   --rs-accent-2: oklch(0.9808 0.0098 181.42);
   --rs-accent-3: oklch(0.9599 0.0306 178.93);
@@ -87,7 +88,7 @@
   --rs-accent-contrast: oklch(0 0 0);
 }
 
-[data-accent-color="mint"][data-theme="dark"] {
+:where([data-accent-color="mint"][data-theme="dark"]) {
   --rs-accent-1: oklch(0.1886 0.0106 196.29);
   --rs-accent-2: oklch(0.2109 0.017 195.94);
   --rs-accent-3: oklch(0.2683 0.0391 192.36);

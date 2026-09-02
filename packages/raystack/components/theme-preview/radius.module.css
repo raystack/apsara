@@ -1,0 +1,33 @@
+/*
+ * The shared per-component radius override.
+ *
+ * It affects only the element it is set on — never re-declaring the radius
+ * token scale, since custom properties inherit — and it does not compound with
+ * the theme radius: the value is re-derived from the component's own base step,
+ * `--rs-radius-step`, declared next to its `border-radius` rule.
+ *
+ * Selectors are doubled because the override class and the component's own
+ * class have equal specificity and CSS Modules ordering is not guaranteed.
+ */
+
+.radius-none.radius-none {
+  border-radius: 0;
+}
+
+.radius-small.radius-small {
+  border-radius: calc(var(--rs-radius-step, 4px) * var(--rs-scaling, 1) * 0.75);
+}
+
+.radius-medium.radius-medium {
+  border-radius: calc(var(--rs-radius-step, 4px) * var(--rs-scaling, 1));
+}
+
+.radius-large.radius-large {
+  border-radius: calc(var(--rs-radius-step, 4px) * var(--rs-scaling, 1) * 1.5);
+}
+
+/* A literal length, not `--rs-radius-pill`: that token is 0 unless the theme
+   itself is `full`, and a component override must not depend on the theme. */
+.radius-full.radius-full {
+  border-radius: 9999px;
+}

@@ -5,6 +5,12 @@ import {
   Select as SelectPrimitive
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import {
+  type PortalContainer,
+  useThemeInjection
+} from '../theme-preview/portal';
+import { radiusClass } from '../theme-preview/radius';
+import type { Radius } from '../theme-preview/settings';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';
 
@@ -15,6 +21,14 @@ export interface SelectContentProps
     >,
     SelectPrimitive.Popup.Props {
   searchPlaceholder?: string;
+  /**
+   * Portals into this element instead of `document.body`. Only the
+   * autocomplete variant portals; the plain variant keeps its items in the
+   * DOM so the trigger can display the selected value.
+   */
+  container?: PortalContainer;
+  /** Corner radius for this popup only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 export function SelectContent({
@@ -24,13 +38,16 @@ export function SelectContent({
   sideOffset = 4,
   side = 'bottom',
   align = 'start',
+  container,
+  radius,
   ...props
 }: SelectContentProps) {
   const { autocomplete, multiple } = useSelectContext();
+  const theme = useThemeInjection();
 
   if (autocomplete) {
     return (
-      <ComboboxPrimitive.Portal keepMounted>
+      <ComboboxPrimitive.Portal keepMounted container={container}>
         <ComboboxPrimitive.Positioner
           sideOffset={sideOffset}
           side={side}
@@ -39,7 +56,13 @@ export function SelectContent({
           data-slot='select-positioner'
         >
           <ComboboxPrimitive.Popup
-            className={cx(styles.content, className)}
+            {...theme}
+            className={cx(
+              styles.content,
+              theme?.className,
+              radiusClass(radius),
+              className
+            )}
             data-multiselectable={multiple ? true : undefined}
             data-slot='select-content'
             {...props}
@@ -72,7 +95,13 @@ export function SelectContent({
       data-slot='select-positioner'
     >
       <SelectPrimitive.Popup
-        className={cx(styles.content, className)}
+        {...theme}
+        className={cx(
+          styles.content,
+          theme?.className,
+          radiusClass(radius),
+          className
+        )}
         data-multiselectable={multiple ? true : undefined}
         data-slot='select-content'
         {...props}

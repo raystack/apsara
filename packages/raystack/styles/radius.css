@@ -1,19 +1,28 @@
+/*
+ * Legacy: the two hardcoded scales keyed off `data-style` on the previous
+ * `Theme` provider. The factor model that replaces them lives in
+ * `styles/theme.css`.
+ *
+ * Deliberately not wrapped in `:where()`: at (0,1,0) they beat the
+ * zero-specificity base scale on a `data-style` element whichever order the two
+ * files land in. `ThemePreview` never writes `data-style`.
+ */
 [data-style="modern"] {
-    --rs-radius-1: 2px;
-    --rs-radius-2: 4px;
-    --rs-radius-3: 6px;
-    --rs-radius-4: 8px;
-    --rs-radius-5: 12px;
-    --rs-radius-6: 16px;
-    --rs-radius-full: 800px;
+  --rs-radius-1: 2px;
+  --rs-radius-2: 4px;
+  --rs-radius-3: 6px;
+  --rs-radius-4: 8px;
+  --rs-radius-5: 12px;
+  --rs-radius-6: 16px;
+  --rs-radius-full: 800px;
 }
 
 [data-style="traditional"] {
-    --rs-radius-1: 8px;
-    --rs-radius-2: 16px;
-    --rs-radius-3: 20px;
-    --rs-radius-4: 24px;
-    --rs-radius-5: 32px;
-    --rs-radius-6: 40px;
-    --rs-radius-full: 1600px;
+  --rs-radius-1: 8px;
+  --rs-radius-2: 16px;
+  --rs-radius-3: 20px;
+  --rs-radius-4: 24px;
+  --rs-radius-5: 32px;
+  --rs-radius-6: 40px;
+  --rs-radius-full: 1600px;
 }

@@ -28,6 +28,7 @@
       "require": "./dist/hooks/index.cjs"
     },
     "./style.css": "./dist/style.css",
+    "./style-no-fonts.css": "./dist/style-no-fonts.css",
     "./normalize.css": "./dist/normalize.css"
   },
   "files": [
@@ -36,7 +37,7 @@
   ],
   "scripts": {
     "prebuild": "npm run clean",
-    "build": "rollup --config",
+    "build": "rollup --config && node scripts/build-no-fonts-css.js",
     "dev": "rollup --config --watch",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",

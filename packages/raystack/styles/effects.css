@@ -1,5 +1,4 @@
-:root,
-[data-theme="light"] {
+:where(:root, [data-theme="light"]) {
   /* Shadows */
   /* Example usage: box-shadow: var(--rs-shadow-feather); */
   --rs-shadow-feather:
@@ -17,7 +16,7 @@
   --rs-shadow-inset: 0px 1px 1px 0px oklch(0 0 0 / 0.04) inset;
 }
 
-:root {
+:where(:root, [data-theme]) {
   /* Transitions */
   --rs-transition-interactive:
     background-color var(--rs-duration-normal) var(--rs-ease-out),
@@ -82,7 +81,7 @@
   --rs-blur-xl: blur(4px);
 }
 
-[data-theme="dark"] {
+:where([data-theme="dark"]) {
   --rs-shadow-feather:
     0px 1px 1px 0px oklch(0 0 0 / 0.3), 0px 4px 4px -1px oklch(0 0 0 / 0.25);
   --rs-shadow-soft:

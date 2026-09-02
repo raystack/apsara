@@ -1,0 +1,430 @@
+---
+title: ThemePreview
+description: The rewritten theme — tokens on a real element, seven settings, and per-component radius.
+---
+
+import {
+  accentDemo,
+  componentRadiusDemo,
+  panelDemo,
+  radiusDemo,
+  scalingDemo,
+  scopeDemo,
+  switcherDemo
+} from "./demo.ts";
+
+`ThemePreview` is the next `Theme`, shipping alongside the existing one so applications can migrate at their own pace. It mounts every token-bearing attribute on a **real element** instead of `<html>`, which is what makes the root theme, a nested scope and a portal all behave the same way.
+
+Three long-standing problems close with that change:
+
+- **The root can be server-rendered.** Attributes on `<html>` came only from an effect or a blocking script, so the server emitted nothing. Every setting is now an ordinary prop that renders on the first byte.
+- **More than one provider can exist per page.** Nothing competes for `<html>`, so an embedded widget or a second independent root just works.
+- **Scoped themes reach into portals.** Theme values cross a portal through React context and are re-emitted onto the portalled element, so a popover opened inside a dark scope is dark.
+
+<Callout type="grey">
+  `ThemePreview` is additive. The existing `Theme`, `useTheme` and `ThemeSwitcher` are unchanged and keep working. Do not nest one inside the other — pick one per application.
+</Callout>
+
+## Installation
+
+```tsx
+import { ThemePreview } from "@raystack/apsara";
+
+export default function App() {
+  return (
+    <ThemePreview persistKey="app-theme">
+      <YourApp />
+    </ThemePreview>
+  );
+}
+```
+
+Tokens live on the element `ThemePreview` renders, so everything that needs them must be inside it. Consumer CSS and hand-rolled portals mounted outside the provider will not resolve `--rs-*`; the `container` prop on every portalling component is the supported way to place portalled content back inside the theme.
+
+## Theme panel
+
+Every setting, live, next to a sampler of components. The panel is a scope with
+`isRoot={false}`, so it re-themes itself without touching the page.
+
+<Demo data={panelDemo} />
+
+## Settings
+
+One settings object describes the theme. Every key is independently seedable, controllable and persistable, and every key becomes a data attribute on the theme element.
+
+| Setting | Values | Default | Attribute |
+|---|---|---|---|
+| `appearance` | `light`, `dark`, `system` | `system` | `data-theme` (resolved) |
+| `accentColor` | `indigo`, `orange`, `mint` | `indigo` | `data-accent-color` |
+| `grayColor` | `gray`, `mauve`, `slate`, `sage`, `auto` | `auto` | `data-gray-color` (resolved) |
+| `radius` | `none`, `small`, `medium`, `large`, `full` | `medium` | `data-radius` |
+| `scaling` | `0.9`, `0.95`, `1`, `1.05`, `1.1` | `1` | `data-scaling` |
+| `panelBackground` | `solid`, `translucent` | `solid` | `data-panel-background` |
+| `reducedMotion` | `true`, `false`, `system` | `system` | `data-reduced-motion` |
+
+`appearance: "system"` resolves against `prefers-color-scheme` and `grayColor: "auto"` pairs a complementary gray to the accent, both before the attribute is written — `data-theme` only ever holds `light` or `dark`.
+
+Font families are deliberately not a setting. They are customised through CSS variables instead; see [Fonts](#fonts).
+
+### Appearance
+
+<Demo data={scopeDemo} />
+
+### Accent
+
+<Demo data={accentDemo} />
+
+### Radius
+
+Radius is a factor applied to a fixed base scale, so `radius="small"` means the same thing in every configuration.
+
+<Demo data={radiusDemo} />
+
+### Scaling
+
+Scaling is a **zoom**, not a density control: it multiplies spacing, radius, type and line height together. Border and divider widths, and font weights, do not scale.
+
+<Demo data={scalingDemo} />
+
+## Controlled and uncontrolled
+
+`defaultValue` seeds uncontrolled keys; a stored user choice may override it. `value` is authoritative: a controlled key always wins, is never persisted and is never written by the inline script.
+
+Control is **per key**, so a page can drive appearance from a cookie while leaving accent and radius adjustable:
+
+```tsx
+<ThemePreview
+  value={{ appearance: appearanceFromCookie }}
+  defaultValue={{ accentColor: "mint" }}
+  persistKey="app-theme"
+>
+  <App />
+</ThemePreview>
+```
+
+## Persistence
+
+Persistence is **off** unless `persistKey` is set. A theme without one holds its settings in memory and emits no inline script, so a nested scope, an embedded widget and a second independent root all keep their own state by default and cannot collide.
+
+```tsx
+// Persist everything under one namespace
+<ThemePreview persistKey="app-theme" />
+
+// Persist only the appearance; the rest stays in memory
+<ThemePreview persistKey="app-theme" persist={["appearance"]} />
+```
+
+A namespace is one `localStorage` entry holding one JSON object alongside a schema version. A write **merges**: it applies only the settings its `persist` covers and leaves every other field intact, including fields owned by a theme with a different `persist` on the same namespace. A missing or unparseable entry falls back to the seeded defaults and is overwritten on the next write; a field outside its union is discarded individually.
+
+Sharing a `persistKey` is a supported feature, not a hazard — it is exactly what a documentation page wants when several live examples should switch appearance together. Themes on one namespace stay in step within a document, and across tabs through the `storage` event.
+
+## Server rendering
+
+Accent, gray, radius, scaling and panel background are ordinary props, so React server-renders them correctly on the first byte. Only appearance can differ between the server and the browser, and only when it is uncontrolled and persisted — which is the one case the inline script covers.
+
+```tsx
+// Next.js App Router: app/layout.tsx
+import { ThemePreview } from "@raystack/apsara";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <ThemePreview persistKey="app-theme">{children}</ThemePreview>
+      </body>
+    </html>
+  );
+}
+```
+
+No `suppressHydrationWarning` on `<html>` is needed: nothing is written there. The theme element carries it itself, which suppresses attribute diffs exactly one level deep.
+
+The script renders as the theme element's first child and patches its own parent. It is emitted only for a theme with a `persistKey`, and then only for that namespace's uncontrolled settings — a consumer reading appearance from a cookie ships no script at all. Pass `nonce` if your CSP requires one.
+
+## Scoping
+
+A nested `ThemePreview` inherits every key it does not set, so "inherit" is expressed by omission rather than by a value.
+
+```tsx
+<ThemePreview persistKey="app-theme">
+  {/* Only the accent changes; appearance, radius and scaling inherit */}
+  <ThemePreview defaultValue={{ accentColor: "mint" }}>
+    <Card />
+  </ThemePreview>
+</ThemePreview>
+```
+
+### hasBackground
+
+The component cannot infer whether it should paint, because re-tinting the accent and flipping a panel to dark use the same component but want opposite behaviour. `hasBackground` decides, and its default follows a heuristic: true at the root, true for a nested theme that sets an explicit `light` or `dark` appearance, false for one that only changes accent, gray, radius or scaling.
+
+Pass `hasBackground={false}` if your application paints its own page background. Foreground colour applies regardless.
+
+### isRoot
+
+Exactly one theme per document may own the page's colour scheme, which is what the browser paints in the overscroll area, the document scrollbar, the region below short content, and native widget defaults. That theme carries a `data-rs-root` marker, and `<html>` derives `color-scheme` from it with `:has()` — no JavaScript, nothing written to `<html>`.
+
+A theme claims the marker when it finds no ancestor theme. A theme that has no ancestor but does **not** own the page — an embedded widget, a micro-frontend — must pass `isRoot={false}`. Everything else about it is unchanged: it still carries `data-theme`, so its own subtree still gets a `color-scheme`; only the three document-level surfaces defer to the host.
+
+If two elements carry the marker with conflicting appearances, neither wins by position — both rules match `:root` at equal specificity, so `dark` wins because it is declared later. Set `isRoot={false}` on the one that does not own the page.
+
+### render
+
+`render` is the `asChild`-style escape hatch: it merges the theme's attributes onto an element you supply instead of adding a wrapper node.
+
+```tsx
+<ThemePreview render={<main className="page" />}>
+  <App />
+</ThemePreview>
+```
+
+## The useThemePreview hook
+
+```tsx
+import { useThemePreview } from "@raystack/apsara";
+
+function AppearanceToggle() {
+  const { resolved, setValue } = useThemePreview();
+  const isDark = resolved.appearance === "dark";
+
+  return (
+    <button onClick={() => setValue({ appearance: isDark ? "light" : "dark" })}>
+      Toggle
+    </button>
+  );
+}
+```
+
+<auto-type-table path="./props.ts" name="UseThemePreviewReturn" />
+
+`value` is the settings as set, `system` and `auto` included; `resolved` is the settings as applied. Branch on `resolved`, not `value` — that is what the viewer is actually looking at.
+
+`root` is the same shape bound to the root provider, so a control inside a scope can flip the page theme:
+
+```tsx
+function PageToggle() {
+  const { root } = useThemePreview();
+  return (
+    <button onClick={() => root.setValue({ appearance: "dark" })}>
+      Darken the page
+    </button>
+  );
+}
+```
+
+The hook **throws** outside a provider rather than returning a silent no-op: every colour token is declared under `[data-theme]`, so a tree with no provider has no colours at all.
+
+### ThemePreviewSwitcher
+
+A ready-made icon button that flips between light and dark. It reads `resolved.appearance`, so `system` shows the icon for what is actually on screen.
+
+<Demo data={switcherDemo} />
+
+<auto-type-table path="./props.ts" name="ThemePreviewSwitcherProps" />
+
+## Per-component radius
+
+Components take a `radius` prop with the same five values as the theme setting. Two rules distinguish it from a subtree scope:
+
+1. It affects **only** the component it is set on, never anything inside it. Tree-level changes belong to `ThemePreview`.
+2. It does **not compound** with the theme radius — a `large` theme with a `small` component yields small, not large multiplied by small.
+
+<Demo data={componentRadiusDemo} />
+
+`radius` is available on `Button`, `IconButton`, `Badge`, `Callout`, `Chip`, `Input`, `TextArea`, `Image`, `Avatar`, and on the portalled sub-components: `Dialog.Content`, `AlertDialog.Content`, `Drawer.Content`, `Popover.Content`, `Menu.Content`, `ContextMenu.Content`, `Select.Content`, `Combobox.Content`, `Tooltip.Content`, `PreviewCard.Content`, `Command.DialogContent` and `Tour.Content`.
+
+It lives on the portalled sub-component rather than the root because a portal carries nothing forward: `<Popover.Content radius="none">`, not `<Popover radius="none">`.
+
+## Portals
+
+Every portalling component exposes a `container` prop, so portalled content can be placed inside a subtree you control:
+
+```tsx
+<Popover.Content container={panelRef}>…</Popover.Content>
+```
+
+You rarely need it for theming — the inherited theme is re-emitted onto the portalled element automatically — but it is the supported way to keep portalled content inside a specific scroll container, dialog, or shadow root.
+
+## Panel background
+
+`panelBackground` selects between opaque and translucent overlay surfaces: dialogs, drawers, menus, popovers, selects, comboboxes, tooltips, toasts, preview cards, command palettes and tour cards. The default is `solid`, so translucency is opt-in.
+
+```tsx
+<ThemePreview defaultValue={{ panelBackground: "translucent" }}>
+```
+
+## Reduced motion
+
+`reducedMotion: "system"` is the default and honours `prefers-reduced-motion`, which fifty component stylesheets already respect. A forced `"true"` collapses the duration tokens to a near-zero value, which neutralises transitions and any animation whose duration comes from a token.
+
+It does not reach animations gated behind `@media (prefers-reduced-motion: no-preference)` blocks. Converting those is tracked separately.
+
+## Overriding tokens
+
+Every `--rs-*` declaration in the package is wrapped in `:where()`, so it contributes zero specificity. Every theme element — root, scope or portal re-injection — carries a stable, unhashed `rs-theme` class. A single-class rule of yours therefore beats every built-in token declaration, without `!important` and regardless of stylesheet order:
+
+```css
+.rs-theme {
+  --rs-color-background-accent-emphasis: #6d28d9;
+  --rs-radius-3: 10px;
+}
+```
+
+Scope it like any CSS:
+
+```css
+.marketing-page .rs-theme {
+  --rs-font-title: "Playfair Display", serif;
+}
+```
+
+Inline `style` works too, since tokens now live on a real element:
+
+```tsx
+<ThemePreview style={{ "--rs-space-5": "18px" }}>
+```
+
+This cuts both ways: an unintended selector can overwrite tokens as easily as an intended one. Given the alternative is overrides that cannot be made to work at all, it is the better failure.
+
+## Fonts
+
+Three CSS variables and no prop:
+
+| Token | Role |
+|---|---|
+| `--rs-font-body` | Body text |
+| `--rs-font-title` | Headings |
+| `--rs-font-mono` | Monospace |
+
+```css
+.rs-theme {
+  --rs-font-body: "Geist", system-ui, sans-serif;
+  --rs-font-title: "Geist", system-ui, sans-serif;
+}
+```
+
+There is no `fontFamily` prop. A font is a one-time branding choice with no runtime picker, and being free-form it could never be a data attribute like the seven settings. A prop would have to write inline custom properties, which beat every `:where()`-wrapped token rule — making fonts the one part of the token system you could not override from a stylesheet.
+
+Two stylesheets are published and you import exactly one:
+
+| Export | Contents |
+|---|---|
+| `@raystack/apsara/style.css` | Tokens, components, and the font imports |
+| `@raystack/apsara/style-no-fonts.css` | Tokens and components, no font imports |
+
+<Callout type="grey">
+  Custom fonts carry a caveat, not a guarantee. The typography scale pairs pixel font sizes with pixel line heights, and its letter spacing is tuned for Inter. A font with different metrics leaves line heights uncentred and tracking wrong, and because controls are sized by padding plus line-height, their dimensions shift with it.
+</Callout>
+
+## Migrating from Theme
+
+`ThemePreview` is a clean break rather than a superset. Migrate a whole application at once; do not nest the two.
+
+| Removed | Replacement |
+|---|---|
+| `theme` | `value.appearance` |
+| `defaultTheme` | `defaultValue.appearance` |
+| `forcedTheme` | `value.appearance` |
+| `accentColor`, `grayColor` as flat props | `defaultValue.accentColor`, `defaultValue.grayColor` |
+| `style` | `radius` plus the `--rs-font-*` tokens |
+| `onThemeChange` | `onValueChange` |
+| `enableSystem` | `appearance: "system"` |
+| `enableColorScheme` | Handled by the stylesheet |
+| `themes`, `attribute`, `value` as a name-to-attribute map | None. Arbitrary named themes are not supported |
+| `ThemeProvider` alias | `ThemePreview` |
+| `useTheme().theme` / `.setTheme` / `.resolvedTheme` / `.systemTheme` | `value` / `setValue` / `resolved` / `systemAppearance` |
+| `useTheme().themes` / `.forcedTheme` / `.style` / `.scopes` | None |
+| `useTheme({ storageKey })` | `useThemePreview().root` |
+| `storageKey` | `persistKey`, which now also gates persistence rather than only naming it |
+| Persistence at the root by default | `persistKey` is required to persist, at the root as well as in a scope |
+| `ThemeSwitcher` | `ThemePreviewSwitcher` |
+
+### Before and after
+
+```tsx
+// Before
+<Theme
+  defaultTheme="system"
+  storageKey="theme"
+  style="modern"
+  accentColor="orange"
+  grayColor="mauve"
+  onThemeChange={(theme, resolved) => track(resolved)}
+>
+  <App />
+</Theme>
+
+// After
+<ThemePreview
+  persistKey="theme"
+  defaultValue={{
+    appearance: "system",
+    accentColor: "orange",
+    grayColor: "mauve"
+  }}
+  onValueChange={(value, changed) => {
+    if (changed.appearance) track(value.appearance);
+  }}
+>
+  <App />
+</ThemePreview>
+```
+
+```tsx
+// Before — force dark for a subtree
+<Theme forcedTheme="dark">
+  <Sidebar />
+</Theme>
+
+// After
+<ThemePreview value={{ appearance: "dark" }}>
+  <Sidebar />
+</ThemePreview>
+```
+
+```tsx
+// Before — flip the page theme from inside a scope
+const { setTheme } = useTheme({ storageKey: "theme" });
+
+// After
+const { root } = useThemePreview();
+root.setValue({ appearance: "dark" });
+```
+
+### style is retired
+
+`style="modern" | "traditional"` decomposed exactly into a radius level plus a font pair, both of which are now first-class. Traditional was not a constant multiple of modern — the two scales ran 2/4/6/8/12/16 and 8/16/20/24/32/40 — so it could not survive as a factor without changing its output. It becomes a recipe instead:
+
+```tsx
+<ThemePreview defaultValue={{ radius: "large" }}>
+```
+
+```css
+.rs-theme {
+  --rs-font-title: "Lora", serif;
+  --rs-font-body: "Josefin Sans", sans-serif;
+}
+```
+
+### Component radius values
+
+`Image` and `Avatar` had bespoke radius scales disconnected from the theme; both now use the shared five values.
+
+- **`Image`** — `none`, `medium` and `full` are unchanged; `small` is now 0.75× the base step rather than a separate token, and `large` is new.
+- **`Avatar`** — the default moves from `small` to `medium`, which renders exactly as the old default did. An explicit `radius="small"` is now slightly tighter; `full` is unchanged.
+
+### Other things to know
+
+- Tokens are no longer on `<html>`, so consumer CSS and hand-rolled portals living outside the provider stop resolving `--rs-*`. Move them inside, or use a `container` prop.
+- `useThemePreview` throws outside a provider instead of returning a no-op.
+- The mono font stack now puts JetBrains Mono ahead of Menlo, so the imported face actually renders on macOS.
+
+## API Reference
+
+### ThemePreview
+
+<auto-type-table path="./props.ts" name="ThemePreviewProps" />
+
+### ThemeSettings
+
+<auto-type-table path="./props.ts" name="ThemeSettings" />

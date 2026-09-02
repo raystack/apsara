@@ -1,9 +1,17 @@
+/* Font faces first: `@import url(...)` must precede every rule. */
+@import "./fonts.css";
+@import "./fonts-legacy.css";
+
 @import "./global.css";
 @import "./primitives/gray.css";
 @import "./primitives/accent.css";
 @import "./primitives/appearance.css";
 @import "./primitives/z-index.css";
 @import "./colors.css";
+/* Before radius.css, whose `data-style` scales must win over the base scale,
+   and after primitives/appearance.css, whose `:root` colour-scheme rule this
+   overrides only by source order. */
+@import "./theme.css";
 @import "./radius.css";
 @import "./spacing.css";
 @import "./effects.css";

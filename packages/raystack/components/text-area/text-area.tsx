@@ -2,11 +2,13 @@ import { Field as FieldPrimitive } from '@base-ui/react/field';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ChangeEvent, type ComponentProps } from 'react';
 import { useFieldContext } from '../field';
+import { radiusVariants } from '../theme-preview/radius';
 
 import styles from './text-area.module.css';
 
 const textAreaVariants = cva(styles.textarea, {
   variants: {
+    ...radiusVariants,
     size: {
       small: styles['size-small'],
       large: styles['size-large']
@@ -44,6 +46,7 @@ export function TextArea({
   placeholder,
   required,
   size,
+  radius,
   variant,
   ...props
 }: TextAreaProps) {
@@ -60,7 +63,7 @@ export function TextArea({
       rows={3}
       data-slot='text-area'
       className={cx(
-        textAreaVariants({ size, variant }),
+        textAreaVariants({ size, variant, radius }),
         disabled && styles.disabled,
         className
       )}

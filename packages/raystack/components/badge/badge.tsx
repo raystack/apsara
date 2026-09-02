@@ -1,10 +1,12 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import { ComponentProps, ReactNode } from 'react';
 
+import { radiusVariants } from '../theme-preview/radius';
 import styles from './badge.module.css';
 
 const badge = cva(styles['badge'], {
   variants: {
+    ...radiusVariants,
     variant: {
       accent: styles['badge-accent'],
       warning: styles['badge-warning'],
@@ -36,6 +38,7 @@ type BadgeProps = VariantProps<typeof badge> &
 export const Badge = ({
   variant = 'accent',
   size = 'small',
+  radius,
   icon,
   children,
   className,
@@ -44,7 +47,7 @@ export const Badge = ({
 }: BadgeProps) => {
   return (
     <span
-      className={badge({ variant, size, className })}
+      className={badge({ variant, size, radius, className })}
       data-slot='badge'
       {...props}
     >

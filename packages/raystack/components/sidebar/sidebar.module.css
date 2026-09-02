@@ -26,7 +26,7 @@
 
 .root[data-variant="floating"] {
   box-shadow: var(--rs-shadow-lifted);
-  border-radius: var(--rs-radius-3);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-3));
   margin: var(--rs-space-4);
   border: 0.5px solid var(--rs-color-border-base-primary);
 }
@@ -129,7 +129,7 @@
   gap: var(--rs-space-3);
   min-height: var(--rs-space-9);
   align-self: stretch;
-  border-radius: var(--rs-radius-2);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
   color: var(--rs-color-foreground-base-secondary);
   cursor: pointer;
   text-decoration: none;
@@ -295,7 +295,7 @@
   align-items: center;
   align-self: stretch;
   color: var(--rs-color-foreground-base-secondary);
-  border-radius: var(--rs-radius-2);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
 }
 
 .nav-group-accordion-item .nav-group-header:hover {

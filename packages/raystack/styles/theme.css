@@ -1,0 +1,182 @@
+/*
+ * The theme element.
+ *
+ * Every declaration here is attribute-keyed and wrapped in `:where()`, so it
+ * contributes zero specificity and any consumer selector on `.rs-theme` wins
+ * regardless of stylesheet order and without `!important`.
+ *
+ * `:where([data-theme])` is the theme selector: it matches the new theme
+ * element and, for backwards compatibility, the `<html>` element the previous
+ * `Theme` provider writes its attributes to.
+ */
+
+/* `:global` because the build runs every stylesheet through CSS Modules, which
+   would otherwise hash this documented override target. */
+:global(.rs-theme) {
+  font-family: var(--rs-font-body);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+/* Foreground colour applies regardless of `hasBackground`; only the fill is
+   conditional. */
+:global(.rs-theme)[data-rs-background] {
+  background-color: var(--rs-color-background-base-primary);
+}
+
+/* The root additionally covers the viewport, so a short page does not leave an
+   unthemed strip below the content. */
+:global(.rs-theme)[data-rs-root][data-rs-background] {
+  min-height: 100dvh;
+  isolation: isolate;
+}
+
+/* ---------------------------------------------------------------------------
+ * Root colour scheme
+ *
+ * The overscroll area, the document scrollbar, the region below short content
+ * and native widget defaults are painted by the browser outside the React tree
+ * and follow the root element's `color-scheme`, so `<html>` derives it from the
+ * marked root theme. No JavaScript, nothing written to `<html>`, and it
+ * re-evaluates as soon as the pre-hydration script patches the attribute.
+ *
+ * These must stay after `primitives/appearance.css`: its `:root` rule has the
+ * same specificity, so source order decides.
+ * ------------------------------------------------------------------------- */
+
+:root:where(:has(:global(.rs-theme)[data-rs-root][data-theme="light"])) {
+  color-scheme: light;
+}
+
+:root:where(:has(:global(.rs-theme)[data-rs-root][data-theme="dark"])) {
+  color-scheme: dark;
+}
+
+/* ---------------------------------------------------------------------------
+ * Scaling
+ *
+ * A zoom, not a density control: it multiplies type along with everything else.
+ * Unitless so it substitutes directly into `calc()`, and set absolutely per
+ * value so a `0.9` scope nested inside a `0.9` scope stays `0.9`.
+ * ------------------------------------------------------------------------- */
+
+:where([data-theme]) {
+  --rs-scaling: 1;
+}
+
+:where([data-scaling="0.9"]) {
+  --rs-scaling: 0.9;
+}
+:where([data-scaling="0.95"]) {
+  --rs-scaling: 0.95;
+}
+:where([data-scaling="1"]) {
+  --rs-scaling: 1;
+}
+:where([data-scaling="1.05"]) {
+  --rs-scaling: 1.05;
+}
+:where([data-scaling="1.1"]) {
+  --rs-scaling: 1.1;
+}
+
+/* ---------------------------------------------------------------------------
+ * Radius
+ *
+ * A factor applied to a fixed base scale, plus a separate pill length that
+ * pill-shaped elements select with `max(var(--rs-radius-pill), …)`.
+ *
+ * `--rs-radius-full` is the legacy pill token the `data-style` scales declared;
+ * `styles/radius.css` still overrides it there.
+ * ------------------------------------------------------------------------- */
+
+:where([data-theme]) {
+  --rs-radius-factor: 1;
+  --rs-radius-pill: 0px;
+
+  --rs-radius-1: calc(2px * var(--rs-scaling) * var(--rs-radius-factor));
+  --rs-radius-2: calc(4px * var(--rs-scaling) * var(--rs-radius-factor));
+  --rs-radius-3: calc(6px * var(--rs-scaling) * var(--rs-radius-factor));
+  --rs-radius-4: calc(8px * var(--rs-scaling) * var(--rs-radius-factor));
+  --rs-radius-5: calc(12px * var(--rs-scaling) * var(--rs-radius-factor));
+  --rs-radius-6: calc(16px * var(--rs-scaling) * var(--rs-radius-factor));
+  --rs-radius-full: 800px;
+}
+
+:where([data-radius="none"]) {
+  --rs-radius-factor: 0;
+  --rs-radius-pill: 0px;
+}
+:where([data-radius="small"]) {
+  --rs-radius-factor: 0.75;
+  --rs-radius-pill: 0px;
+}
+:where([data-radius="medium"]) {
+  --rs-radius-factor: 1;
+  --rs-radius-pill: 0px;
+}
+:where([data-radius="large"]) {
+  --rs-radius-factor: 1.5;
+  --rs-radius-pill: 0px;
+}
+:where([data-radius="full"]) {
+  --rs-radius-factor: 1.5;
+  --rs-radius-pill: 9999px;
+}
+
+/* ---------------------------------------------------------------------------
+ * Surfaces and panel background
+ *
+ * The default is `solid`, so the appearance of the overlay components does not
+ * change silently; translucency is opt-in.
+ * ------------------------------------------------------------------------- */
+
+:where([data-theme]) {
+  --rs-color-panel-solid: var(--rs-color-background-base-primary);
+  --rs-color-panel-translucent: color-mix(
+    in oklab,
+    var(--rs-color-background-base-primary) 80%,
+    transparent
+  );
+  --rs-color-panel: var(--rs-color-panel-solid);
+  /* Matches what the overlay components painted by hand before. */
+  --rs-color-overlay: var(--rs-color-overlay-black-a5);
+  --rs-panel-backdrop-filter: none;
+}
+
+:where([data-panel-background="solid"]) {
+  --rs-color-panel: var(--rs-color-panel-solid);
+  --rs-panel-backdrop-filter: none;
+}
+
+:where([data-panel-background="translucent"]) {
+  --rs-color-panel: var(--rs-color-panel-translucent);
+  --rs-panel-backdrop-filter: blur(64px);
+}
+
+/* ---------------------------------------------------------------------------
+ * Reduced motion
+ *
+ * Collapsing the duration tokens neutralises transitions and any animation
+ * whose duration comes from a token. It does not reach animations gated behind
+ * `@media (prefers-reduced-motion: no-preference)` blocks.
+ * ------------------------------------------------------------------------- */
+
+:where([data-reduced-motion="true"]) {
+  --rs-duration-press: 1ms;
+  --rs-duration-fast: 1ms;
+  --rs-duration-normal: 1ms;
+  --rs-duration-moderate: 1ms;
+  --rs-duration-slow: 1ms;
+  --rs-duration-drawer: 1ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where([data-reduced-motion="system"]) {
+    --rs-duration-press: 1ms;
+    --rs-duration-fast: 1ms;
+    --rs-duration-normal: 1ms;
+    --rs-duration-moderate: 1ms;
+    --rs-duration-slow: 1ms;
+    --rs-duration-drawer: 1ms;
+  }
+}
