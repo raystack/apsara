@@ -358,12 +358,23 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
    * Revert-to-default. `defaultValue` is read live rather than captured at
    * mount, so it works for a controlled picker too: there it means "the value
    * to revert to" rather than "the initial value".
+   *
+   * Compared against `undefined`, not against null. `defaultValue={null}` is
+   * the natural way to say "the default is no date", and `!= null` conflated
+   * it with the prop being absent — so the revert button never appeared and
+   * `resetValue` was a permanent no-op. "Revert to cleared" could not be
+   * expressed at all.
+   *
+   * Under `commit='explicit'` this buffers like every other edit and reaches
+   * the parent on `.Apply`. Reset writing through would make it the one
+   * control that escapes the buffer, which is the opposite of what an
+   * explicit commit promises.
    */
   const canReset =
-    defaultValue != null && !isSameValue(effectiveValue, defaultValue);
+    defaultValue !== undefined && !isSameValue(effectiveValue, defaultValue);
 
   const resetValue = useCallback(() => {
-    if (defaultValue == null) return;
+    if (defaultValue === undefined) return;
     setValue(defaultValue);
   }, [defaultValue, setValue]);
 

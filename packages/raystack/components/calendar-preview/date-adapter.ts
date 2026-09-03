@@ -135,6 +135,33 @@ export const pad = (value: number) => String(value).padStart(2, '0');
  * skip March entirely. `dayjs.tz` resolves the offset from the wall clock it is
  * handed, so the day and time asked for are the ones that come back.
  */
+/**
+ * Days in a month, computed rather than probed.
+ *
+ * This used to ask dayjs, by parsing an interpolated `YYYY-MM-DD`. The year
+ * was not padded, so every year below 1000 failed the strict parse,
+ * `daysInMonth()` was `NaN`, and the `NaN` rode `Math.min` into the returned
+ * date — an Invalid Date reaching the caller with nothing raised near the
+ * cause, surfacing later as a `RangeError` from whoever serialised it.
+ */
+const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+const isLeapYear = (year: number): boolean =>
+  year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+const daysInMonth = (year: number, monthIndex: number): number =>
+  monthIndex === 1 && isLeapYear(year) ? 29 : DAYS_IN_MONTH[monthIndex];
+
+/*
+ * `YYYY` is exactly four digits, so the year is padded — and a year it cannot
+ * express is refused rather than quietly mangled. Unpadded, a three-digit
+ * year failed the strict parse and `dayjs.tz` coerced years under 100 into the
+ * 1900s and truncated five-digit ones; both returned something that looked
+ * like a date. Throwing here cannot happen from the UI: every path in reaches
+ * through a `Date` the host already built.
+ *
+ * Exact for 1000–9999 in every zone. Below 1000 the wall clock is right
+ * without a display zone, but a zone's pre-standard-time offsets are not
+ * reliable that far back — a limit of the IANA data, not of this module.
+ */
 const fromParts = (
   year: number,
   monthIndex: number,
@@ -143,10 +170,16 @@ const fromParts = (
   minute: number,
   timeZone?: string
 ): Date => {
-  const iso = `${year}-${pad(monthIndex + 1)}-${pad(day)} ${pad(hour)}:${pad(minute)}`;
-  return timeZone
-    ? dayjs.tz(iso, 'YYYY-MM-DD HH:mm', timeZone).toDate()
-    : dayjs(iso, 'YYYY-MM-DD HH:mm', true).toDate();
+  const iso = `${String(year).padStart(4, '0')}-${pad(monthIndex + 1)}-${pad(day)} ${pad(hour)}:${pad(minute)}`;
+  const built = timeZone
+    ? dayjs.tz(iso, 'YYYY-MM-DD HH:mm', timeZone)
+    : dayjs(iso, 'YYYY-MM-DD HH:mm', true);
+  if (!built.isValid()) {
+    throw new RangeError(
+      `CalendarPreview date adapter: year ${year} is out of range (0001-9999 has to fit four digits)`
+    );
+  }
+  return built.toDate();
 };
 
 /**
@@ -173,15 +206,10 @@ export function addMonths(date: Date, count: number, timeZone?: string): Date {
   const absolute = w.month + count;
   const year = w.year + Math.floor(absolute / 12);
   const monthIndex = ((absolute % 12) + 12) % 12;
-  const daysInTarget = dayjs(
-    `${year}-${pad(monthIndex + 1)}-01`,
-    'YYYY-MM-DD',
-    true
-  ).daysInMonth();
   return fromParts(
     year,
     monthIndex,
-    Math.min(w.day, daysInTarget),
+    Math.min(w.day, daysInMonth(year, monthIndex)),
     w.hour,
     w.minute,
     timeZone

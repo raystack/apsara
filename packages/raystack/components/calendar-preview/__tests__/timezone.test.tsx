@@ -3,6 +3,7 @@ import {
   addMonths,
   DEFAULT_FORMAT,
   dayKey,
+  endOfDay,
   endOfMonth,
   formatDate,
   getHours,
@@ -12,6 +13,7 @@ import {
   isWithinTimeBounds,
   parseDate,
   setTime,
+  startOfDay,
   startOfMonth
 } from '../date-adapter';
 
@@ -246,5 +248,65 @@ describe('setTime survives a daylight-saving shift', () => {
     const fallBack = parseDate('02 Nov 2025', DEFAULT_FORMAT, TZ) as Date;
     expect(getHours(setTime(fallBack, 1, 30, TZ), TZ)).toBe(1);
     expect(getHours(setTime(fallBack, 10, 0, TZ), TZ)).toBe(10);
+  });
+});
+
+/*
+ * The year was interpolated unpadded into a strict `YYYY-MM-DD` parse, so
+ * every year below 1000 failed it: `daysInMonth()` was NaN, `Math.min` carried
+ * the NaN into the returned date, and an Invalid Date reached the caller with
+ * no error raised anywhere near the cause. It only surfaced later, as a
+ * `RangeError` from whoever serialised it — or as `null` from JSON.stringify.
+ *
+ * Not reachable through the UI. Covered because this module exists to make
+ * exactly that failure class impossible.
+ */
+describe('three-digit years are ordinary dates', () => {
+  it.each([900, 999, 1000, 9999])('builds valid dates in year %i', year => {
+    const start = new Date(Date.UTC(0, 0, 31));
+    start.setUTCFullYear(year);
+
+    for (const built of [
+      addMonths(start, 1),
+      startOfMonth(start),
+      startOfDay(start),
+      endOfDay(start)
+    ]) {
+      expect(Number.isNaN(built.getTime())).toBe(false);
+    }
+  });
+
+  /*
+   * The day count is computed here now rather than asked of dayjs, so the
+   * century rule is this module's to get right.
+   */
+  it.each([
+    [2024, '02-29'],
+    [2023, '02-28'],
+    [1900, '02-28'],
+    [2000, '02-29'],
+    [1600, '02-29']
+  ])('gives February its %i length', (year, expected) => {
+    const jan31 = new Date(Date.UTC(0, 0, 31));
+    jan31.setUTCFullYear(year);
+    expect(dayKey(addMonths(jan31, 1)).slice(5)).toBe(expected);
+  });
+
+  it('still clamps the day of month', () => {
+    const jan31 = new Date(Date.UTC(0, 0, 31));
+    jan31.setUTCFullYear(900);
+    // 900 is divisible by 100 and not by 400, so February has 28 days.
+    expect(dayKey(addMonths(jan31, 1))).toBe('900-02-28');
+  });
+
+  /*
+   * A year `YYYY` cannot express is refused loudly instead of coming back as
+   * an Invalid Date — `dayjs.tz` used to coerce years under 100 into the
+   * 1900s and truncate five-digit ones, both of which look like dates.
+   */
+  it('refuses a year outside four digits rather than mangling it', () => {
+    const ancient = new Date(Date.UTC(0, 0, 15));
+    ancient.setUTCFullYear(50);
+    expect(() => addMonths(ancient, 1)).toThrow(/out of range/);
   });
 });

@@ -201,6 +201,38 @@ describe('CalendarPreview.Nav revert button', () => {
     expect(getSlot(container, 'calendar-preview-nav-undo')).toBeNull();
   });
 
+  /*
+   * `defaultValue={null}` is the natural way to say "the default is no date",
+   * and `!= null` conflated it with the prop being absent — so the revert
+   * button never appeared and `resetValue` was a permanent no-op. "Revert to
+   * cleared" could not be expressed at all.
+   */
+  it('treats an explicit null default as a default', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    const { container } = render(
+      <CalendarPreview
+        defaultMonth={MONTH}
+        defaultValue={null}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Nav />
+        <CalendarPreview.Grid />
+      </CalendarPreview>
+    );
+
+    expect(getSlot(container, 'calendar-preview-nav-undo')).toBeNull();
+    await user.click(screen.getByRole('button', { name: /April 17th/ }));
+
+    const undo = getSlot(container, 'calendar-preview-nav-undo');
+    expect(undo).not.toBeNull();
+    await user.click(undo as HTMLElement);
+
+    // Reverting to a null default means clearing, and it has to reach the
+    // consumer as such — not merely stop reporting.
+    expect(lastArg(onValueChange)).toBeNull();
+  });
+
   it('is absent when no default was given at all', () => {
     const { container } = render(
       <CalendarPreview defaultMonth={MONTH} value={new Date(2024, 3, 17)}>
