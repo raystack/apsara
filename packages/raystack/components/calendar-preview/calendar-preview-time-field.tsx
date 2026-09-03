@@ -228,12 +228,22 @@ export function CalendarPreviewTimeField({
       }}
       onKeyDown={event => {
         if (event.key === 'Enter') {
-          event.preventDefault();
+          // Nothing typed, so Enter belongs to the form — as in the typed
+          // fields, where preventing it unconditionally blocked implicit
+          // submit for the life of an untouched field.
           if (draft[part] === null) return;
+          event.preventDefault();
           commit(draft[part] as string);
           setDraft(current => ({ ...current, [part]: null }));
         }
-        if (event.key === 'Escape') {
+        /*
+         * Two-stage, as `.Input` and `.RangeInput` are: the first press
+         * reverts the digits, a second dismisses the popover. Without the
+         * stop, correcting a mistyped hour cost you the calendar — the exact
+         * cost the shared contract was written to avoid.
+         */
+        if (event.key === 'Escape' && draft[part] !== null) {
+          event.stopPropagation();
           setDraft(current => ({ ...current, [part]: null }));
         }
       }}

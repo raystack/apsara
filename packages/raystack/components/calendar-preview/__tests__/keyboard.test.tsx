@@ -335,3 +335,67 @@ describe('Enter on a field with nothing to commit', () => {
     expect(screen.getByLabelText('End date')).toHaveFocus();
   });
 });
+
+/*
+ * `.TimeField` is the third typed writer and never got the two-stage Escape
+ * the other two share: no `stopPropagation`, so the press that reverted a
+ * mistyped hour also dismissed the popover — the exact cost the shared
+ * contract exists to avoid.
+ */
+describe('.TimeField joins the Escape contract', () => {
+  const withTime = () =>
+    render(
+      <CalendarPreview defaultValue={new Date(2024, 3, 17, 9, 30)}>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Grid />
+          <CalendarPreview.TimeField />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+
+  it('reverts the hour first and dismisses only on the second press', async () => {
+    const user = userEvent.setup();
+    withTime();
+
+    await user.click(screen.getByRole('textbox'));
+    const field = await screen.findByLabelText('Hour');
+
+    await user.clear(field);
+    await user.type(field, '7');
+    await user.keyboard('{Escape}');
+
+    expect(field).toHaveValue('09');
+    expect(screen.queryByRole('grid')).toBeInTheDocument();
+
+    await user.keyboard('{Escape}');
+    await waitFor(() =>
+      expect(screen.queryByRole('grid')).not.toBeInTheDocument()
+    );
+  });
+
+  it('leaves Enter to the form when the hour is untouched', async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn();
+    render(
+      <form
+        onSubmit={event => {
+          event.preventDefault();
+          onSubmit();
+        }}
+      >
+        <CalendarPreview defaultValue={new Date(2024, 3, 17, 9, 30)}>
+          <CalendarPreview.TimeField />
+        </CalendarPreview>
+        <button type='submit'>Save</button>
+      </form>
+    );
+
+    screen.getByLabelText('Hour').focus();
+    await user.keyboard('{Enter}');
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+});
