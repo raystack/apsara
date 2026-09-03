@@ -310,3 +310,58 @@ describe('three-digit years are ordinary dates', () => {
     expect(() => addMonths(ancient, 1)).toThrow(/out of range/);
   });
 });
+
+/*
+ * `forFormat` is backed by UTC, deliberately and correctly — UTC has no
+ * transitions, so the wall-clock fields handed in are the fields that read
+ * back. The cost was that offset tokens described UTC: the comment conceded it
+ * and rested on "no format this component uses contains one", but `format` is
+ * a public root prop, so that is not something the component can guarantee.
+ * The wall clock was right and only the offset wrong, which is the harder
+ * version to notice.
+ */
+describe('offset tokens describe the display zone', () => {
+  const JUNE = new Date(Date.UTC(2026, 5, 17, 6, 0));
+
+  it('substitutes the real offset for Z', () => {
+    expect(formatDate(JUNE, 'DD MMM YYYY HH:mm Z', IST)).toBe(
+      '17 Jun 2026 11:30 +05:30'
+    );
+  });
+
+  it('and for the compact ZZ', () => {
+    expect(formatDate(JUNE, 'HH:mm ZZ', IST)).toBe('11:30 +0530');
+  });
+
+  it('reads a negative offset, and a DST one', () => {
+    expect(formatDate(JUNE, 'Z', NY)).toBe('-04:00');
+    expect(formatDate(new Date(Date.UTC(2026, 0, 17, 12)), 'Z', NY)).toBe(
+      '-05:00'
+    );
+  });
+
+  /*
+   * `z` fell through dayjs as the literal letter — its plugin only fills that
+   * in for a `.tz()` object, and this one is UTC-backed.
+   */
+  it('names the zone for z, and spells it out for zzzz', () => {
+    expect(formatDate(JUNE, 'z', NY)).toBe('EDT');
+    expect(formatDate(JUNE, 'zzzz', NY)).toBe('Eastern Daylight Time');
+  });
+
+  it('leaves an escaped token alone', () => {
+    expect(formatDate(JUNE, '[Z] HH:mm', IST)).toBe('Z 11:30');
+  });
+
+  // No display zone means the host zone, which dayjs already reports right.
+  it('leaves the host zone to dayjs', () => {
+    const minutes = -JUNE.getTimezoneOffset();
+    const sign = minutes < 0 ? '-' : '+';
+    const abs = Math.abs(minutes);
+    expect(formatDate(JUNE, 'Z')).toBe(
+      `${sign}${String(Math.floor(abs / 60)).padStart(2, '0')}:${String(
+        abs % 60
+      ).padStart(2, '0')}`
+    );
+  });
+});

@@ -111,8 +111,10 @@ const wallClock = (date: Date, timeZone?: string): WallClock => {
  * Backed by UTC because UTC has no transitions: the fields handed in are the
  * fields that read back. A local `Date` would renormalise a wall clock sitting
  * in the *host's* gap — the bug this exists to avoid — and a `dayjs.tz` reads
- * its fields back host-dependently. Offset tokens (`Z`, `z`) therefore describe
- * UTC rather than `timeZone`; no format this component uses contains one.
+ * its fields back host-dependently.
+ *
+ * The wall clock is therefore right and the offset wrong, so zone tokens are
+ * substituted before formatting rather than left to dayjs. See `zoneTokens`.
  */
 const forFormat = (date: Date, timeZone?: string) => {
   if (!timeZone) return dayjs(date);
@@ -120,6 +122,60 @@ const forFormat = (date: Date, timeZone?: string) => {
   return dayjs.utc(
     Date.UTC(w.year, w.month, w.day, w.hour, w.minute, w.second, w.ms)
   );
+};
+
+/*
+ * Zone-name formatters, cached per zone and style like the wall-clock ones.
+ */
+const zoneFormatters = new Map<string, Intl.DateTimeFormat>();
+
+const zoneName = (
+  date: Date,
+  timeZone: string,
+  style: 'longOffset' | 'short' | 'long'
+): string => {
+  const key = `${timeZone}\u0000${style}`;
+  let formatter = zoneFormatters.get(key);
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      timeZoneName: style
+    });
+    zoneFormatters.set(key, formatter);
+  }
+  const part = formatter
+    .formatToParts(date)
+    .find(item => item.type === 'timeZoneName');
+  return part ? part.value : '';
+};
+
+/**
+ * A format string with its zone tokens resolved against the display zone.
+ *
+ * `forFormat` is UTC-backed, so `Z` and `ZZ` reported `+00:00` for every zone,
+ * and `z` fell through dayjs as the literal letter — its plugin only fills
+ * that in for a `.tz()` object. `format` is a public root prop, so "no format
+ * this component uses contains one" was not a property the component could
+ * promise. The wall clock was right and only the offset wrong, which is the
+ * harder version to notice.
+ *
+ * Substituted as bracketed literals, and bracketed spans are matched first so
+ * an escaped `[Z]` stays the letter Z.
+ */
+const ZONE_TOKENS = /\[[^\]]*\]|Z{1,2}|z{1,4}/g;
+
+const zoneTokens = (format: string, date: Date, timeZone: string): string => {
+  if (!/[Zz]/.test(format)) return format;
+  return format.replace(ZONE_TOKENS, token => {
+    if (token.startsWith('[')) return token;
+    if (token[0] === 'Z') {
+      // `GMT+05:30`, or a bare `GMT` for a zero offset in some ICU versions.
+      const offset = zoneName(date, timeZone, 'longOffset').replace('GMT', '');
+      const padded = offset || '+00:00';
+      return `[${token === 'ZZ' ? padded.replace(':', '') : padded}]`;
+    }
+    return `[${zoneName(date, timeZone, token.length > 3 ? 'long' : 'short')}]`;
+  });
 };
 
 /** Zero-pads to two digits. Exported: `.TimeField` had its own copy. */
@@ -336,7 +392,9 @@ export function formatDate(
   format: string = DEFAULT_FORMAT,
   timeZone?: string
 ): string {
-  return forFormat(date, timeZone).format(format);
+  return forFormat(date, timeZone).format(
+    timeZone ? zoneTokens(format, date, timeZone) : format
+  );
 }
 
 /**
