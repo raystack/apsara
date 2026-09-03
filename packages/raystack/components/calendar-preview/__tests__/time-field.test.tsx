@@ -288,3 +288,158 @@ describe('.TimeField honours the picker bounds', () => {
     expect(lastArg(onValidityChange)).toEqual({ valid: true });
   });
 });
+
+/*
+ * A day carries no time of day, so every writer that commits one has to decide
+ * what happens to the time already on the value. `.RangeInput` inherits it, and
+ * says why: otherwise a retype silently discards whatever `.TimeField` or a
+ * preset put there. `.Input` and `.Grid` discarded it — so setting 09:30 and
+ * then correcting the date reset the clock to midnight, and `.TimeField`, which
+ * reads the committed value, showed 00:00 for a time the user never chose.
+ *
+ * Day granularity only, as `.RangeInput` specifies: every coarser granularity
+ * resolves to the first instant of a period, and `Q4 2024` means the quarter,
+ * not 09:30 on the day it starts.
+ */
+describe('the time of day survives every other writer', () => {
+  const AT_0930 = new Date(2024, 3, 17, 9, 30);
+  const clock = (date: unknown) =>
+    `${getHours(date as Date)}:${getMinutes(date as Date)}`;
+
+  it('.Input keeps it through a retype', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(
+      <CalendarPreview
+        defaultValue={AT_0930}
+        defaultMonth={MONTH}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Input />
+      </CalendarPreview>
+    );
+
+    const field = screen.getByRole('textbox');
+    await user.clear(field);
+    await user.type(field, '18 Apr 2024{Enter}');
+
+    expect(clock(lastArg(onValueChange))).toBe('9:30');
+  });
+
+  it('.Grid keeps it through a day click', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(
+      <CalendarPreview
+        defaultValue={AT_0930}
+        defaultMonth={MONTH}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Grid />
+        <CalendarPreview.TimeField />
+      </CalendarPreview>
+    );
+
+    await user.click(screen.getByRole('button', { name: /April 18th/ }));
+
+    expect(clock(lastArg(onValueChange))).toBe('9:30');
+    // The field reads the committed value, so it must not have moved either.
+    expect(hour()).toHaveValue('09');
+    expect(minute()).toHaveValue('30');
+  });
+
+  it('.Grid keeps each endpoint of a range on its own clock', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(
+      <CalendarPreview
+        selection='range'
+        defaultValue={{
+          from: new Date(2024, 3, 10, 8, 0),
+          to: new Date(2024, 3, 20, 17, 45)
+        }}
+        defaultMonth={MONTH}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Grid />
+      </CalendarPreview>
+    );
+
+    await user.click(screen.getByRole('button', { name: /April 22nd/ }));
+
+    const next = lastArg(onValueChange) as DateRangeValue;
+    expect(clock(next.from)).toBe('8:0');
+    expect(clock(next.to)).toBe('17:45');
+  });
+
+  // The writer that already did this, kept as the control.
+  it('.RangeInput keeps it through a retype', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(
+      <CalendarPreview
+        selection='range'
+        defaultValue={{ from: AT_0930, to: new Date(2024, 3, 20, 17, 45) }}
+        defaultMonth={MONTH}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.RangeInput />
+      </CalendarPreview>
+    );
+
+    const field = screen.getByLabelText('Start date');
+    await user.clear(field);
+    await user.type(field, '18 Apr 2024{Enter}');
+
+    expect(clock((lastArg(onValueChange) as DateRangeValue).from)).toBe('9:30');
+  });
+
+  /*
+   * Nothing is inherited across days under `multiple`: each date holds its own
+   * time, and a newly picked day has no earlier time of its own to keep.
+   * Copying another day's would be inventing a value, not preserving one.
+   */
+  it('.Grid leaves the other days alone under multiple', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(
+      <CalendarPreview
+        selection='multiple'
+        defaultValue={[AT_0930]}
+        defaultMonth={MONTH}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Grid />
+      </CalendarPreview>
+    );
+
+    await user.click(screen.getByRole('button', { name: /April 18th/ }));
+
+    const next = lastArg(onValueChange) as Date[];
+    expect(next).toHaveLength(2);
+    expect(clock(next[0])).toBe('9:30');
+    expect(clock(next[1])).toBe('0:0');
+  });
+
+  it('does not inherit one onto a coarser granularity', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(
+      <CalendarPreview
+        granularities={['day', 'month']}
+        defaultValue={AT_0930}
+        defaultMonth={MONTH}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Input />
+      </CalendarPreview>
+    );
+
+    const field = screen.getByRole('textbox');
+    await user.clear(field);
+    // `May 2024` is the month, not 09:30 on the day it starts.
+    await user.type(field, 'May 2024{Enter}');
+
+    expect(clock(lastArg(onValueChange))).toBe('0:0');
+  });
+});

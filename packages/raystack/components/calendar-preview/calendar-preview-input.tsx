@@ -18,7 +18,8 @@ import {
   dayKey,
   formatForGranularity,
   isWithinBounds,
-  patternForGranularity
+  patternForGranularity,
+  withTimeOf
 } from './date-adapter';
 
 export interface CalendarPreviewInputProps
@@ -128,7 +129,17 @@ export function CalendarPreviewInput({
     if (!validity.valid) return false;
 
     if (read.granularity !== granularity) setGranularity(read.granularity);
-    setValue(read.date, { granularity: read.granularity });
+    /*
+     * A typed day carries no time, so it keeps the one the value already had.
+     * Day granularity only: every coarser one resolves to the first instant of
+     * a period, and `Q4 2024` means the quarter, not 09:30 on the day it
+     * starts. `.RangeInput` and `.Grid` inherit through the same helper.
+     */
+    const committed =
+      read.granularity === 'day'
+        ? withTimeOf(read.date, value, timeZone)
+        : read.date;
+    setValue(committed, { granularity: read.granularity });
     // Typing navigates the grid, so the committed day is actually visible.
     setMonth(read.date);
     return true;

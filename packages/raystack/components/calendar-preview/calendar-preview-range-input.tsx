@@ -22,13 +22,11 @@ import {
   dayKey,
   endOfDay,
   formatForGranularity,
-  getHours,
-  getMinutes,
   isAfterDay,
   isWithinBounds,
   patternForGranularity,
-  setTime,
-  startOfDay
+  startOfDay,
+  withTimeOf
 } from './date-adapter';
 
 type FieldInputProps = Omit<InputProps, 'value' | 'onChange' | 'defaultValue'>;
@@ -192,15 +190,8 @@ export function CalendarPreviewRangeInput({
      * instant of a period, and `Q4 2024` means the quarter, not 09:30 on the
      * day it happens to start.
      */
-    const previous = matched === 'day' ? range[field] : null;
-    const committed = previous
-      ? setTime(
-          parsed,
-          getHours(previous, timeZone),
-          getMinutes(previous, timeZone),
-          timeZone
-        )
-      : parsed;
+    const committed =
+      matched === 'day' ? withTimeOf(parsed, range[field], timeZone) : parsed;
 
     const next: DateRangeValue = { ...range, [field]: committed };
 

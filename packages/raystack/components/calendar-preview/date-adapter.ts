@@ -272,6 +272,28 @@ export function setTime(
     .toDate();
 }
 
+/**
+ * `date`'s day, wearing `source`'s time of day.
+ *
+ * A day click and a bare typed date both arrive at midnight, so committing one
+ * as-is discards whatever `.TimeField` or a preset put on the value. Every
+ * writer that commits a whole day inherits through here, so the three cannot
+ * drift into different answers again.
+ */
+export function withTimeOf(
+  date: Date,
+  source: Date | null | undefined,
+  timeZone?: string
+): Date {
+  if (!source) return date;
+  return setTime(
+    date,
+    getHours(source, timeZone),
+    getMinutes(source, timeZone),
+    timeZone
+  );
+}
+
 export function getYear(date: Date, timeZone?: string): number {
   return wallClock(date, timeZone).year;
 }

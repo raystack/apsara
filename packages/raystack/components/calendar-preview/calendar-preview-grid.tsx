@@ -16,7 +16,7 @@ import type {
   DateRangeValue
 } from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import { dayKey, isAfterDay } from './date-adapter';
+import { dayKey, isAfterDay, withTimeOf } from './date-adapter';
 
 /**
  * Everything react-day-picker owns is derived from root context and is
@@ -240,6 +240,27 @@ export function CalendarPreviewGrid({
           const held = range ?? { from: null, to: null };
 
           /*
+           * A click is midnight, so each endpoint keeps the time it already
+           * had — the same inheritance `.Input` and `.RangeInput` do, and for
+           * the same reason: otherwise moving one end of a range reset it to
+           * 00:00 and `.TimeField`, which reads the committed value, showed a
+           * time nobody chose. Per field, so the two ends never trade clocks.
+           * Identity is short-circuited because RDP hands back the untouched
+           * endpoint's own `Date`, which already has its time.
+           */
+          const keepClock = (
+            next: Date | null,
+            previous: Date | null
+          ): Date | null =>
+            !next || next === previous
+              ? next
+              : withTimeOf(next, previous, timeZone);
+          const inherit = (candidate: DateRangeValue): DateRangeValue => ({
+            from: keepClock(candidate.from, held.from),
+            to: keepClock(candidate.to, held.to)
+          });
+
+          /*
            * The ordering policy, shared with `.MonthGrid`. Both grids answer
            * the same question and had answered it differently: this one wrote
            * the clicked day through with no guard at all, so picking before a
@@ -294,7 +315,7 @@ export function CalendarPreviewGrid({
               setValue({ ...held, [field]: null });
               return;
             }
-            commitRange({ ...held, [field]: triggerDate }, field);
+            commitRange(inherit({ ...held, [field]: triggerDate }), field);
             return;
           }
 
@@ -310,12 +331,14 @@ export function CalendarPreviewGrid({
            * `from`), so this shape is ordinary, not exotic.
            */
           if (!next && held.to && !held.from) {
-            commitRange({ from: triggerDate, to: held.to }, 'from');
+            commitRange(inherit({ from: triggerDate, to: held.to }), 'from');
             return;
           }
 
           setValue(
-            next ? { from: next.from ?? null, to: next.to ?? null } : null
+            next
+              ? inherit({ from: next.from ?? null, to: next.to ?? null })
+              : null
           );
         }}
         data-slot='calendar-preview-grid'
@@ -345,7 +368,9 @@ export function CalendarPreviewGrid({
       selected={(value as Date | null) ?? undefined}
       onSelect={(next: Date | undefined) => {
         if (!writable) return;
-        setValue(next ?? null);
+        setValue(
+          next ? withTimeOf(next, value as Date | null, timeZone) : null
+        );
       }}
       data-slot='calendar-preview-grid'
       {...shared}
