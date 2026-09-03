@@ -42,7 +42,13 @@ const wallFormatter = (timeZone: string): Intl.DateTimeFormat => {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
-    // `h23` rather than `hour12: false`, which reports midnight as hour 24.
+    /*
+     * `h23` spelled out rather than `hour12: false`. The two agree here —
+     * `hour12: false` resolves to `h23` and both give `00:00` on Node 22 /
+     * ICU 78, where an earlier comment claimed it gave hour 24. Only an
+     * explicit `h24` does that. Named directly because the cycle is what this
+     * code depends on, not a boolean that happens to resolve to it.
+     */
     hourCycle: 'h23'
   });
   wallFormatters.set(timeZone, formatter);
@@ -69,8 +75,8 @@ interface WallClock {
  * `toLocaleString('en-US', { timeZone })` and re-parses that wall clock in the
  * host zone, so when the target's wall time falls in the host's spring-forward
  * gap the re-parse jumps an hour: the same instant read 02:30 in Asia/Kolkata on
- * a machine in UTC and 03:30 on one in America/New_York, so editing only the
- * minute field moved the value by 75 of them.
+ * a machine in UTC and 03:30 on one in America/New_York, so a user nudging the
+ * minute field by 5 moved the value by 65.
  *
  * Reconstructing a `dayjs.tz` from these parts does not help — measured, its
  * field accessors are host-dependent in exactly the same way, returning hour 3
@@ -407,11 +413,13 @@ export function parseDate(
   timeZone?: string
 ): Date | null {
   /*
-   * Validate with the strict, zone-free parse first. `dayjs.tz` does not
-   * validate — handed something unparseable it throws `RangeError: Invalid
-   * time value` rather than returning an invalid dayjs — so it must never see
-   * input that has not already been proven good. This is the same failure
-   * class as the 0.49.0 P0: a throw on an ordinary keystroke.
+   * Validate with the strict, zone-free parse first, because `dayjs.tz` does
+   * not validate — and not in the way an earlier version of this comment
+   * claimed. It does not throw: handed garbage it returns an invalid dayjs,
+   * and handed something *nearly* right it silently coerces.
+   * `dayjs.tz('32 Apr 2024', 'DD MMM YYYY', tz)` is 2 May. Rolling a typo into
+   * a real date the user never typed is the failure this guard exists for,
+   * and it is quieter than a throw would have been.
    */
   const strict = dayjs(input, format, true);
   if (!strict.isValid()) return null;
@@ -440,7 +448,9 @@ const PERIOD_MONTHS: Record<string, number> = {
  * Months in one period, for a caller that already knows where the period
  * starts. `.MonthGrid` enumerates cells from a year and an index, so it has the
  * start in hand; asking `periodRange` to rediscover it cost an extra wall-clock
- * read and parse per cell — measured at 1.5x the grid build.
+ * read and parse per cell, and the per-cell work measured 2.7x slower for it.
+ * Whole-grid build time was not instrumented, so that ratio is the isolated
+ * work rather than what a user waits for.
  */
 export function periodMonths(granularity: string): number {
   return PERIOD_MONTHS[granularity] ?? 1;
@@ -632,7 +642,13 @@ export function parseAcrossGranularities(
  * the strings. Correct, but formatting is the slow half of dayjs, and these
  * three are now the date predicates behind `DataTable` and `DataView`
  * filtering, where they run once per row per filter. Reading the three fields
- * costs no string building and orders identically.
+ * orders identically and builds no strings.
+ *
+ * That is a win on the filter path, which passes no `timeZone`: 1.7 ms against
+ * 99 ms for the format-compare over 20k rows. With a `timeZone` it is a loss —
+ * each read goes through `Intl.formatToParts`, about 1.9x the old string
+ * compare. Host independence is worth that on the calendar's own path; it is
+ * just not a speed-up there.
  *
  * `dayKey` keeps returning the string: it is a React key and a `data-*` value
  * as much as a comparison key, and it reads as a date when debugging.

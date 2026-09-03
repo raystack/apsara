@@ -317,6 +317,75 @@ describe('Enter on a field with nothing to commit', () => {
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
+  /*
+   * With one exception: an open calendar. ArrowDown opens the popover without
+   * moving focus out of the field, so Enter would otherwise submit the form
+   * from under an open calendar. An expanded combobox takes the key to
+   * dismiss itself, which is also the symmetry with Escape.
+   */
+  it('dismisses an open calendar instead of submitting', async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn();
+    render(
+      <form
+        onSubmit={event => {
+          event.preventDefault();
+          onSubmit();
+        }}
+      >
+        <CalendarPreview value={new Date(2024, 3, 17)} defaultMonth={MONTH}>
+          <CalendarPreview.Trigger>
+            <CalendarPreview.Input />
+          </CalendarPreview.Trigger>
+          <CalendarPreview.Content>
+            <CalendarPreview.Grid />
+          </CalendarPreview.Content>
+        </CalendarPreview>
+        <button type='submit'>Save</button>
+      </form>
+    );
+
+    const field = screen.getByRole('textbox');
+    field.focus();
+    await user.keyboard('{ArrowDown}');
+    expect(await screen.findByRole('grid')).toBeInTheDocument();
+
+    await user.keyboard('{Enter}');
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    await waitFor(() =>
+      expect(screen.queryByRole('grid')).not.toBeInTheDocument()
+    );
+  });
+
+  it('submits once the calendar is closed again', async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn();
+    render(
+      <form
+        onSubmit={event => {
+          event.preventDefault();
+          onSubmit();
+        }}
+      >
+        <CalendarPreview value={new Date(2024, 3, 17)} defaultMonth={MONTH}>
+          <CalendarPreview.Trigger>
+            <CalendarPreview.Input />
+          </CalendarPreview.Trigger>
+          <CalendarPreview.Content>
+            <CalendarPreview.Grid />
+          </CalendarPreview.Content>
+        </CalendarPreview>
+        <button type='submit'>Save</button>
+      </form>
+    );
+
+    screen.getByRole('textbox').focus();
+    await user.keyboard('{Enter}');
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
   it('hands the keyboard from Start to End in .RangeInput', async () => {
     const user = userEvent.setup();
     render(

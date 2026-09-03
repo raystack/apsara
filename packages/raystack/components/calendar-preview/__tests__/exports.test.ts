@@ -10,6 +10,29 @@ import { describe, expect, it } from 'vitest';
  */
 const root = join(__dirname, '../../..');
 
+/**
+ * The names a barrel actually lists, taken from the left of any `as`.
+ *
+ * The check below used to be `new RegExp(`\\b${name}\\b`).test(index)` — a
+ * name appearing anywhere in `index.tsx` satisfied it, a mention in a comment
+ * included. It agreed with the stricter barrel check today, so it was a latent
+ * gap rather than a live defect; this closes it before it matters.
+ */
+const barrelLocalNames = (source: string) =>
+  new Set(
+    (source.match(/export (?:type )?\{[^}]*\}/g) ?? [])
+      .flatMap(block => block.replace(/^[^{]*\{|\}$/g, '').split(','))
+      .map(
+        entry =>
+          entry
+            .trim()
+            .replace(/^type\s+/, '')
+            .split(' as ')[0]
+      )
+      .map(entry => entry.trim())
+      .filter(Boolean)
+  );
+
 const exportedNames = (source: string, from: string) => {
   const blocks = source.match(
     new RegExp(`export (?:type )?\\{[^}]*\\} from '${from}'`, 'g')
@@ -57,8 +80,9 @@ describe('CalendarPreview published surface', () => {
         declared.add(match[1]);
       }
     }
+    const listed = barrelLocalNames(index);
     const missing = [...declared].filter(
-      name => !INTERNAL.has(name) && !new RegExp(`\\b${name}\\b`).test(index)
+      name => !INTERNAL.has(name) && !listed.has(name)
     );
     expect(missing, 'declared public but absent from index.tsx').toEqual([]);
   });

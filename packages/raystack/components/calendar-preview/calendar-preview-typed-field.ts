@@ -80,6 +80,8 @@ export interface TypedFieldOptions {
   /** Returns whether the text was accepted. */
   commit: (text: string) => boolean;
   insideTrigger: boolean;
+  /** Whether the surrounding popover is open, when there is one. */
+  open: boolean;
   setOpen: (open: boolean) => void;
   /** Runs after a commit from Enter, with the result. Used to advance focus. */
   onEnterCommitted?: (accepted: boolean) => void;
@@ -101,6 +103,7 @@ export function typedFieldHandlers({
   setDraft,
   commit,
   insideTrigger,
+  open,
   setOpen,
   onEnterCommitted
 }: TypedFieldOptions): TypedFieldHandlers {
@@ -124,6 +127,18 @@ export function typedFieldHandlers({
          * Enter is the commonest keyboard flow through a range.
          */
         if (draft === null) {
+          /*
+           * Unless the calendar is open, in which case Enter belongs to it:
+           * an expanded combobox takes the key to dismiss itself rather than
+           * letting it submit the form behind the popover. Opening with
+           * ArrowDown does not move focus out of the field, so without this
+           * the form submitted from under an open calendar.
+           */
+          if (insideTrigger && open) {
+            event.preventDefault();
+            setOpen(false);
+            return;
+          }
           onEnterCommitted?.(true);
           return;
         }

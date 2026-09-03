@@ -51,6 +51,7 @@ export function CalendarPreviewInput({
     timeZone,
     disabled,
     readOnly,
+    open,
     setOpen,
     registerTriggerField
   } = useCalendarPreviewContext<Date | null>('Input');
@@ -150,6 +151,7 @@ export function CalendarPreviewInput({
     setDraft,
     commit,
     insideTrigger,
+    open,
     setOpen
   });
 

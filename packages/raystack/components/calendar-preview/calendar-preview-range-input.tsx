@@ -73,6 +73,7 @@ export function CalendarPreviewRangeInput({
     timeZone,
     disabled,
     readOnly,
+    open,
     setOpen,
     registerTriggerField
   } = useCalendarPreviewContext<DateRangeValue | null>('RangeInput');
@@ -276,6 +277,7 @@ export function CalendarPreviewRangeInput({
                 setDraft(current => ({ ...current, [field]: text })),
               commit: text => commit(field, text),
               insideTrigger,
+              open,
               setOpen,
               // Committing the start hands the keyboard to the end field.
               onEnterCommitted: accepted => {
