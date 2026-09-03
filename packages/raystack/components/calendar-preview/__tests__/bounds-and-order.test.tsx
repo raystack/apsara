@@ -582,3 +582,91 @@ describe('.TimeField cannot invert a range', () => {
     expect(next.to).toBeNull();
   });
 });
+
+/*
+ * What the first click in an empty range picker means.
+ *
+ * RDP answers `{from: D, to: D}` — `addToRange` branches on `!from && !to`
+ * and fills `to` with the same day whenever `min` is 0 — so one click already
+ * emitted a finished same-day range, and under `commit="immediate"` the
+ * consumer saw a complete value the user had not expressed. Clicking that day
+ * again then emitted `null`, losing the start too.
+ *
+ * Every other writer here commits one endpoint at a time — `.RangeInput` per
+ * field, `.MonthGrid` per period, and `commitRange` is built around
+ * `{from, to: null}` throughout — so the day grid now agrees: the first click
+ * sets the start, the next one closes the range. Normalised in our own handler
+ * rather than through RDP's `min`, which also forbids a same-day range, and
+ * without depending on which branch of `addToRange` runs.
+ */
+describe('the first click in an empty range picker', () => {
+  const emptyRange = (props: Record<string, unknown> = {}) =>
+    render(
+      <CalendarPreview
+        selection='range'
+        defaultMonth={new Date(2026, 5, 1)}
+        {...props}
+      >
+        <CalendarPreview.Grid />
+      </CalendarPreview>
+    );
+
+  const pick = async (day: string) => {
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button', { name: new RegExp(day) }));
+  };
+
+  it('sets the start and leaves the end open', async () => {
+    const onValueChange = vi.fn();
+    emptyRange({ onValueChange });
+
+    await pick('June 10th');
+
+    const next = lastArg<DateRangeValue>(onValueChange);
+    expect(dayKey(next.from as Date)).toBe('2026-06-10');
+    expect(next.to).toBeNull();
+  });
+
+  it('closes the range on the next click', async () => {
+    const onValueChange = vi.fn();
+    emptyRange({ onValueChange });
+
+    await pick('June 10th');
+    await pick('June 14th');
+
+    const next = lastArg<DateRangeValue>(onValueChange);
+    expect(dayKey(next.from as Date)).toBe('2026-06-10');
+    expect(dayKey(next.to as Date)).toBe('2026-06-14');
+  });
+
+  it('still allows a same-day range, in two clicks', async () => {
+    const onValueChange = vi.fn();
+    emptyRange({ onValueChange });
+
+    await pick('June 10th');
+    await pick('June 10th');
+
+    const next = lastArg<DateRangeValue>(onValueChange);
+    expect(dayKey(next.from as Date)).toBe('2026-06-10');
+    expect(dayKey(next.to as Date)).toBe('2026-06-10');
+  });
+
+  /*
+   * Only the empty case is normalised. A range that already holds an endpoint
+   * is RDP's to extend, and the branch below it — a range holding only an end
+   * — is the one `resetOnSelect` would have destroyed.
+   */
+  it('extends a range that already holds a start', async () => {
+    const onValueChange = vi.fn();
+    emptyRange({
+      value: { from: new Date(2026, 5, 1), to: null },
+      onValueChange
+    });
+
+    await pick('June 10th');
+
+    const next = lastArg<DateRangeValue>(onValueChange);
+    expect(dayKey(next.from as Date)).toBe('2026-06-01');
+    expect(dayKey(next.to as Date)).toBe('2026-06-10');
+  });
+});

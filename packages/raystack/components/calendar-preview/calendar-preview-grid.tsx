@@ -330,6 +330,29 @@ export function CalendarPreviewGrid({
            * (`.RangeInput` empties a field; a typed end before the start nulls
            * `from`), so this shape is ordinary, not exotic.
            */
+          /*
+           * The first click sets the start and leaves the end open.
+           * `addToRange`'s empty branch fills `to` with the clicked day
+           * whenever `min` is 0, so one click emitted a finished same-day
+           * range — a complete value the user had not expressed, and under
+           * `commit="immediate"` one the consumer saw straight away. Clicking
+           * that day again then emitted `null`, losing the start too. A
+           * same-day range is still reachable: click the day twice.
+           *
+           * Done here rather than through RDP's `resetOnSelect`, whose
+           * condition is `hasFullRange || !selected?.from` — the second half
+           * catches a range holding only an end and discards the end, which
+           * is the shape the branch below exists to protect.
+           *
+           * `!held.to` is belt-and-braces: RDP returns `undefined` for that
+           * shape today, so it would skip this branch anyway, but the
+           * condition should not depend on which branch of `addToRange` ran.
+           */
+          if (!held.from && !held.to && next?.from) {
+            setValue({ from: next.from, to: null });
+            return;
+          }
+
           if (!next && held.to && !held.from) {
             commitRange(inherit({ from: triggerDate, to: held.to }), 'from');
             return;

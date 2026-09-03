@@ -86,15 +86,15 @@ describe('CalendarPreview root', () => {
     await user.click(dayButton(container, '2024-04-17'));
 
     /*
-     * react-day-picker opens a range as a one-day range, so the first click
-     * already yields both ends. What the root guarantees is the *shape*:
-     * always a complete DateRangeValue, with `null` rather than `undefined`
-     * for a missing end — consumers never have to gate on `undefined`.
+     * The first click sets the start and leaves the end open. What the root
+     * guarantees is the *shape*: always a complete DateRangeValue, with
+     * `null` rather than `undefined` for a missing end, so consumers never
+     * have to gate on `undefined`.
      */
     const first = onValueChange.mock.calls[0][0] as DateRangeValue;
     expect(dayKey(first.from as Date)).toBe('2024-04-17');
     expect(first.to).not.toBeUndefined();
-    expect(dayKey(first.to as Date)).toBe('2024-04-17');
+    expect(first.to).toBeNull();
 
     await user.click(dayButton(container, '2024-04-20'));
 
