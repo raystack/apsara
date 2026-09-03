@@ -73,7 +73,8 @@ export function CalendarPreviewPreset({
     minDate,
     maxDate,
     isDateUnavailable,
-    timeZone
+    timeZone,
+    reportValidity
   } = useCalendarPreviewContext('Preset');
 
   const presetValue: CalendarValue =
@@ -130,6 +131,8 @@ export function CalendarPreviewPreset({
 
   const apply = () => {
     if (isDisabled || unreachable) return;
+    // Past the reachability check above, so this writer can say so itself.
+    reportValidity({ valid: true });
     setValue(presetValue, { granularity });
     // Bring the applied period into view, as typing does.
     const anchor =

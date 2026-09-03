@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { getAllSlots } from '~/test-utils/data-slots';
 import { CalendarPreview } from '../calendar-preview';
@@ -159,5 +160,133 @@ describe('.MonthGrid always offers a selectable period', () => {
       'calendar-preview-month-grid-year'
     ).map(node => node.textContent);
     expect(years.some(text => text?.includes('2030'))).toBe(true);
+  });
+});
+
+/*
+ * One commit, one verdict.
+ *
+ * `setValue` announced `{valid: true}` unconditionally, and every typed writer
+ * already reported its own verdict immediately before calling it — so a single
+ * valid Enter emitted the consumer's callback twice with identical payloads.
+ * Anything driving a `Field` off the callback ran its render work twice per
+ * keystroke that committed.
+ *
+ * That line was also *why* a writer could assert validity it had never
+ * computed: `.Grid` did no checking of its own and still announced good on the
+ * consumer's behalf. Every writer validates now, so the announcement belongs
+ * to whoever did the checking.
+ */
+describe('validity is announced once per commit', () => {
+  const counted = (children: ReactNode, props = {}) => {
+    const onValidityChange = vi.fn();
+    render(
+      <CalendarPreview
+        defaultMonth={MONTH}
+        onValidityChange={onValidityChange}
+        {...props}
+      >
+        {children}
+      </CalendarPreview>
+    );
+    return onValidityChange;
+  };
+
+  it('for a typed commit', async () => {
+    const user = userEvent.setup();
+    const onValidityChange = counted(<CalendarPreview.Input />);
+
+    await user.type(screen.getByRole('textbox'), '17 Apr 2024{Enter}');
+
+    expect(onValidityChange.mock.calls).toEqual([[{ valid: true }]]);
+  });
+
+  it('for a grid pick', async () => {
+    const user = userEvent.setup();
+    const onValidityChange = counted(<CalendarPreview.Grid />);
+
+    await user.click(screen.getByRole('button', { name: /April 5th/ }));
+
+    expect(onValidityChange.mock.calls).toEqual([[{ valid: true }]]);
+  });
+
+  it('for a range pick, whichever endpoint it lands on', async () => {
+    const user = userEvent.setup();
+    const onValidityChange = counted(<CalendarPreview.Grid />, {
+      selection: 'range'
+    });
+
+    await user.click(screen.getByRole('button', { name: /April 5th/ }));
+    await user.click(screen.getByRole('button', { name: /April 9th/ }));
+
+    expect(onValidityChange.mock.calls).toEqual([
+      [{ valid: true }],
+      [{ valid: true }]
+    ]);
+  });
+
+  it('for a period pick', async () => {
+    const user = userEvent.setup();
+    const onValidityChange = counted(<CalendarPreview.MonthGrid />, {
+      defaultGranularity: 'month',
+      granularities: ['month']
+    });
+
+    await user.click(screen.getAllByRole('button', { name: /^Apr \d{4}$/ })[0]);
+
+    expect(onValidityChange.mock.calls).toEqual([[{ valid: true }]]);
+  });
+
+  it('for a time-of-day edit', async () => {
+    const user = userEvent.setup();
+    const onValidityChange = counted(<CalendarPreview.TimeField />, {
+      defaultValue: new Date(2024, 3, 17, 9, 0)
+    });
+
+    await user.clear(screen.getByLabelText('Hour'));
+    await user.type(screen.getByLabelText('Hour'), '10{Enter}');
+
+    expect(onValidityChange.mock.calls).toEqual([[{ valid: true }]]);
+  });
+
+  /*
+   * A preset commits without any typing, and `.Preset` is the writer whose
+   * bounds check was added last — so it has to speak for itself rather than
+   * inherit a verdict from the root.
+   */
+  it('for a preset, which reports for itself', async () => {
+    const user = userEvent.setup();
+    const onValidityChange = counted(
+      <CalendarPreview.Presets>
+        <CalendarPreview.Preset value={new Date(2024, 3, 17)}>
+          The 17th
+        </CalendarPreview.Preset>
+      </CalendarPreview.Presets>
+    );
+
+    await user.click(screen.getByRole('button', { name: 'The 17th' }));
+
+    expect(onValidityChange.mock.calls).toEqual([[{ valid: true }]]);
+  });
+
+  it('and for the revert button', async () => {
+    const user = userEvent.setup();
+    const onValidityChange = counted(
+      <>
+        <CalendarPreview.Nav />
+        <CalendarPreview.Grid />
+      </>,
+      { defaultValue: new Date(2024, 3, 10) }
+    );
+
+    await user.click(screen.getByRole('button', { name: /April 17th/ }));
+    await user.click(
+      getAllSlots(document.body, 'calendar-preview-nav-undo')[0]
+    );
+
+    expect(onValidityChange.mock.calls).toEqual([
+      [{ valid: true }],
+      [{ valid: true }]
+    ]);
   });
 });

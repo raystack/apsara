@@ -240,6 +240,19 @@ export function CalendarPreviewGrid({
           const held = range ?? { from: null, to: null };
 
           /*
+           * Valid by construction, and said so rather than assumed: RDP
+           * disables every day outside the bounds or refused by
+           * `isDateUnavailable`, and `commitRange` below refuses an
+           * inversion. The root used to announce this on our behalf, which
+           * is how this writer committed a backwards range under a lock and
+           * reported it good.
+           */
+          const accept = (next: DateRangeValue | null) => {
+            reportValidity({ valid: true });
+            setValue(next);
+          };
+
+          /*
            * A click is midnight, so each endpoint keeps the time it already
            * had — the same inheritance `.Input` and `.RangeInput` do, and for
            * the same reason: otherwise moving one end of a range reset it to
@@ -291,10 +304,10 @@ export function CalendarPreviewGrid({
                 reportValidity({ valid: false, reason: 'range-order' });
                 return;
               }
-              setValue({ ...candidate, [opposite]: null });
+              accept({ ...candidate, [opposite]: null });
               return;
             }
-            setValue(candidate);
+            accept(candidate);
           };
 
           /*
@@ -312,7 +325,7 @@ export function CalendarPreviewGrid({
               unlocked &&
               dayKey(unlocked, timeZone) === dayKey(triggerDate, timeZone)
             ) {
-              setValue({ ...held, [field]: null });
+              accept({ ...held, [field]: null });
               return;
             }
             commitRange(inherit({ ...held, [field]: triggerDate }), field);
@@ -349,7 +362,7 @@ export function CalendarPreviewGrid({
            * condition should not depend on which branch of `addToRange` ran.
            */
           if (!held.from && !held.to && next?.from) {
-            setValue({ from: next.from, to: null });
+            accept({ from: next.from, to: null });
             return;
           }
 
@@ -358,7 +371,7 @@ export function CalendarPreviewGrid({
             return;
           }
 
-          setValue(
+          accept(
             next
               ? inherit({ from: next.from ?? null, to: next.to ?? null })
               : null
@@ -377,6 +390,7 @@ export function CalendarPreviewGrid({
         selected={(value as Date[]) ?? []}
         onSelect={(next: Date[] | undefined) => {
           if (!writable) return;
+          reportValidity({ valid: true });
           setValue(next ?? []);
         }}
         data-slot='calendar-preview-grid'
@@ -391,6 +405,7 @@ export function CalendarPreviewGrid({
       selected={(value as Date | null) ?? undefined}
       onSelect={(next: Date | undefined) => {
         if (!writable) return;
+        reportValidity({ valid: true });
         setValue(
           next ? withTimeOf(next, value as Date | null, timeZone) : null
         );

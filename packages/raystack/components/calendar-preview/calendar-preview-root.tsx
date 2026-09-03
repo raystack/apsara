@@ -338,23 +338,36 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
   const granularityRef = useRef(activeGranularity);
   granularityRef.current = activeGranularity;
 
+  const reportValidity = useCallback(
+    (validity: CalendarValidity) => onValidityChange?.(validity),
+    [onValidityChange]
+  );
+
   /*
-   * A committed value clears any standing complaint.
+   * A committed value clears any standing complaint — but the writer says so,
+   * not this function.
    *
-   * `reportValidity` was only ever called by the three typed fields, so an
-   * `{valid: false}` latched forever: type rubbish, then pick 5 April in the
-   * grid, and a consumer's last and only validity still read
-   * `reason: 'unparseable'` beside a perfectly good value — with
-   * `aria-invalid` stuck on the input and no user action short of retyping into
-   * that same field able to clear it. Every writer that reaches here has
-   * produced a value the component accepted, which is exactly what "valid"
-   * means; the fields still report their own failures before they get here.
+   * It used to announce `{valid: true}` here, unconditionally, which fixed a
+   * latching bug (an `{valid: false}` from a typed field survived a perfectly
+   * good grid pick) by creating two others. Every typed writer already
+   * reported its own verdict immediately before calling this, so one valid
+   * Enter emitted the consumer's callback twice with identical payloads. And
+   * a writer that validated nothing still announced good on the consumer's
+   * behalf — which is how `.Grid` came to commit a backwards range under a
+   * lock and report it valid.
+   *
+   * So the announcement belongs to whoever did the checking. Every writer
+   * reports now, including the two that commit without any typing: `.Preset`
+   * after its reachability check, and the revert button below.
+   *
+   * A side benefit: this no longer depends on `onValidityChange`, so an
+   * inline one no longer turns `setValue`'s identity — and with it the whole
+   * context object — over on every parent render.
    */
   const setValue = useCallback(
     (next: CalendarValue, details?: { granularity?: string }) => {
       const resolved = (details?.granularity ??
         granularityRef.current) as CalendarGranularity;
-      onValidityChange?.({ valid: true });
       if (commitMode === 'explicit') {
         setBuffer(next);
         setBufferGranularity(resolved);
@@ -363,7 +376,7 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
       setValueUnwrapped(next);
       onValueChange?.(next, { granularity: resolved });
     },
-    [commitMode, setValueUnwrapped, onValueChange, onValidityChange]
+    [commitMode, setValueUnwrapped, onValueChange]
   );
 
   const applyValue = useCallback(() => {
@@ -402,8 +415,10 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
 
   const resetValue = useCallback(() => {
     if (defaultValue === undefined) return;
+    // The default is by definition a value the consumer accepts.
+    reportValidity({ valid: true });
     setValue(defaultValue);
-  }, [defaultValue, setValue]);
+  }, [defaultValue, reportValidity, setValue]);
 
   const setOpen = useCallback(
     (next: boolean, details?: { reason?: string }) => {
@@ -530,11 +545,6 @@ export function CalendarPreviewRoot(props: CalendarPreviewRootProps) {
     setTriggerFieldCount(count => count + 1);
     return () => setTriggerFieldCount(count => count - 1);
   }, []);
-
-  const reportValidity = useCallback(
-    (validity: CalendarValidity) => onValidityChange?.(validity),
-    [onValidityChange]
-  );
 
   /*
    * One context object, so any state change re-renders every part — a month
