@@ -114,8 +114,9 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "@base-ui/react": "~1.6.0",
-    "@base-ui/utils": "~0.3.1",
+    "@base-ui/react": "~1.7.0",
+    "@base-ui/utils": "~0.3.2",
+    "@date-fns/tz": "^1.5.0",
     "@dnd-kit/core": "^6.3.1",
     "@tanstack/match-sorter-utils": "^8.8.4",
     "@tanstack/react-table": "^8.9.2",
@@ -123,7 +124,8 @@
     "@tanstack/table-core": "^8.9.2",
     "class-variance-authority": "^0.7.1",
     "culori": "^4.0.2",
-    "dayjs": "^1.11.20",
+    "date-fns": "^4.1.0",
+    "dayjs": "^1.11.23",
     "prism-react-renderer": "^2.4.1",
     "prosemirror-commands": "^1.7.1",
     "prosemirror-history": "^1.4.1",
@@ -131,7 +133,7 @@
     "prosemirror-model": "^1.25.1",
     "prosemirror-state": "^1.4.3",
     "prosemirror-view": "^1.40.0",
-    "react-day-picker": "^9.6.7"
+    "react-day-picker": "~10.0.1"
   },
   "peerDependencies": {
     "@types/react": "^19",
