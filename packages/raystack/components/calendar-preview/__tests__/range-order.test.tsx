@@ -88,7 +88,9 @@ const WRITERS: RangeWriter[] = [
     async pick(month) {
       const user = userEvent.setup();
       await user.click(
-        screen.getAllByRole('button', { name: MONTH_LABEL[month] })[0]
+        screen.getAllByRole('button', {
+          name: new RegExp(`^${MONTH_LABEL[month]} \\d{4}$`)
+        })[0]
       );
     },
     committed: month => `2026-${String(month + 1).padStart(2, '0')}-01`

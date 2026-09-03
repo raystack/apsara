@@ -129,6 +129,7 @@ export function CalendarPreviewMonthGrid({
     selection,
     value,
     setValue,
+    month,
     activeField,
     lock,
     minDate,
@@ -141,7 +142,15 @@ export function CalendarPreviewMonthGrid({
     reportValidity
   } = useCalendarPreviewContext('MonthGrid');
 
-  const anchor = firstSelected(value) ?? new Date();
+  /*
+   * The selection first, then the month the picker has been driven to.
+   * `month` is a documented public prop that every other view honours; this
+   * one fell back to `new Date()`, so with nothing selected it opened on the
+   * host's current year wherever the consumer had navigated, and the
+   * `setMonth` calls `.Preset` and `.Input` make after a commit were
+   * invisible here.
+   */
+  const anchor = firstSelected(value) ?? month;
   const anchorYear = getYear(anchor, timeZone);
 
   /*
@@ -185,20 +194,22 @@ export function CalendarPreviewMonthGrid({
    * reads, so leaving it in the deps rebuilt every cell for an unmoved span.
    */
   /*
-   * `yearWindow` applies to the unbounded edge, but it was measured from the
-   * anchor with nothing tying it to the bounded one — so `minDate={2035}` with
-   * no `maxDate` gave firstYear 2035 against lastYear 2031 and the loop below
-   * never ran: an empty grid with no selectable period at all. A far-past
-   * `maxDate` did the same in mirror. Each edge now yields to the other.
+   * The window is measured from the anchor *after* it is clamped into the
+   * bounds. Measured from the raw anchor, the far edge could only clamp the
+   * span and never extend it, which broke it in both directions:
+   * `minDate={2035}` with no `maxDate` gave firstYear 2035 against lastYear
+   * 2031 and the loop below never ran at all, and `minDate={2040}` with
+   * `yearWindow={5}` collapsed to the single year 2040 instead of 2040–2045.
+   * Clamping first makes each edge yield to the other by construction.
    */
   const boundedFirst = minDate ? getYear(minDate, timeZone) : null;
   const boundedLast = maxDate ? getYear(maxDate, timeZone) : null;
-  const firstYear =
-    boundedFirst ??
-    Math.min(anchorYear - yearWindow, boundedLast ?? Number.POSITIVE_INFINITY);
-  const lastYear =
-    boundedLast ??
-    Math.max(anchorYear + yearWindow, boundedFirst ?? Number.NEGATIVE_INFINITY);
+  const scrollYear = Math.min(
+    Math.max(anchorYear, boundedFirst ?? Number.NEGATIVE_INFINITY),
+    boundedLast ?? Number.POSITIVE_INFINITY
+  );
+  const firstYear = boundedFirst ?? scrollYear - yearWindow;
+  const lastYear = boundedLast ?? scrollYear + yearWindow;
 
   const sections = useMemo(() => {
     if (granularity === 'day') return [];
@@ -349,7 +360,7 @@ export function CalendarPreviewMonthGrid({
     setValue(start);
   };
 
-  const renderCell = (cell: PeriodCell) => {
+  const renderCell = (cell: PeriodCell, year: number) => {
     const selected = selectedTimes.some(
       time => time >= cell.start.getTime() && time < cell.end.getTime()
     );
@@ -359,7 +370,21 @@ export function CalendarPreviewMonthGrid({
         type='button'
         className={styles.monthCell}
         disabled={disabled || cell.unavailable}
+        /*
+         * `readOnly` used to reach only the commit guard, so every cell was
+         * announced as an operable unpressed toggle that silently did
+         * nothing. `aria-disabled` rather than `disabled`, as `.Grid` marks
+         * an unavailable day: the cell stays focusable and legible, which is
+         * what separates read-only from disabled.
+         */
+        aria-disabled={readOnly || undefined}
         aria-pressed={selected}
+        /*
+         * The year lives in a sibling element, so a screen reader heard the
+         * same bare "Q1" from four buttons across an 11-year list with
+         * nothing to tell them apart. The year granularity labels itself.
+         */
+        aria-label={period.grouped ? `${cell.label} ${year}` : undefined}
         data-selected={selected || undefined}
         data-slot='calendar-preview-month-cell'
         onClick={() => commit(cell)}
@@ -380,8 +405,9 @@ export function CalendarPreviewMonthGrid({
         period.grouped ? (
           <div
             key={year}
-            ref={year === anchorYear ? scrollActiveYearIntoView : undefined}
+            ref={year === scrollYear ? scrollActiveYearIntoView : undefined}
             className={styles.monthGridSection}
+            data-scroll-anchor={year === scrollYear || undefined}
           >
             <div
               className={styles.monthGridYear}
@@ -393,17 +419,18 @@ export function CalendarPreviewMonthGrid({
               className={styles.monthGridCells}
               style={{ '--columns': period.columns } as CSSProperties}
             >
-              {cells.map(renderCell)}
+              {cells.map(cell => renderCell(cell, year))}
             </div>
           </div>
         ) : (
           <div
             key={year}
-            ref={year === anchorYear ? scrollActiveYearIntoView : undefined}
+            ref={year === scrollYear ? scrollActiveYearIntoView : undefined}
             className={styles.monthGridCells}
+            data-scroll-anchor={year === scrollYear || undefined}
             style={{ '--columns': 1 } as CSSProperties}
           >
-            {cells.map(renderCell)}
+            {cells.map(cell => renderCell(cell, year))}
           </div>
         )
       )}

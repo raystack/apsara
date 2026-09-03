@@ -51,7 +51,7 @@ describe('.MonthGrid commits inside its bounds', () => {
   it('leaves a partially valid month selectable', () => {
     monthPicker(vi.fn());
     expect(
-      screen.getAllByRole('button', { name: 'Jun' })[0]
+      screen.getAllByRole('button', { name: /^Jun \d{4}$/ })[0]
     ).not.toBeDisabled();
   });
 
@@ -60,7 +60,7 @@ describe('.MonthGrid commits inside its bounds', () => {
     const onValueChange = vi.fn();
     monthPicker(onValueChange);
 
-    await user.click(screen.getAllByRole('button', { name: 'Jun' })[0]);
+    await user.click(screen.getAllByRole('button', { name: /^Jun \d{4}$/ })[0]);
 
     const emitted = lastArg<Date>(onValueChange);
     expect(dayKey(emitted)).toBe('2026-06-15');
@@ -72,7 +72,7 @@ describe('.MonthGrid commits inside its bounds', () => {
     const onValueChange = vi.fn();
     monthPicker(onValueChange);
 
-    await user.click(screen.getAllByRole('button', { name: 'Aug' })[0]);
+    await user.click(screen.getAllByRole('button', { name: /^Aug \d{4}$/ })[0]);
 
     expect(dayKey(lastArg<Date>(onValueChange))).toBe('2026-08-01');
   });
@@ -100,7 +100,7 @@ describe('.MonthGrid commits inside its bounds', () => {
       </CalendarPreview>
     );
 
-    const jun = screen.getAllByRole('button', { name: 'Jun' })[0];
+    const jun = screen.getAllByRole('button', { name: /^Jun \d{4}$/ })[0];
     expect(jun).not.toBeDisabled();
     await user.click(jun);
     expect(dayKey(lastArg<Date>(onValueChange))).toBe('2026-06-15');
@@ -117,7 +117,9 @@ describe('.MonthGrid commits inside its bounds', () => {
         <CalendarPreview.MonthGrid />
       </CalendarPreview>
     );
-    expect(screen.getAllByRole('button', { name: 'Jun' })[0]).toBeDisabled();
+    expect(
+      screen.getAllByRole('button', { name: /^Jun \d{4}$/ })[0]
+    ).toBeDisabled();
   });
 
   it('reports validity for a non-day pick, which used to stay silent', async () => {
@@ -134,7 +136,7 @@ describe('.MonthGrid commits inside its bounds', () => {
       </CalendarPreview>
     );
 
-    await user.click(screen.getAllByRole('button', { name: 'Jun' })[0]);
+    await user.click(screen.getAllByRole('button', { name: /^Jun \d{4}$/ })[0]);
 
     expect(onValidityChange).toHaveBeenCalled();
     expect(lastArg<CalendarValidity>(onValidityChange).valid).toBe(true);
@@ -155,7 +157,7 @@ describe('.MonthGrid commits inside its bounds', () => {
       </CalendarPreview>
     );
 
-    await user.click(screen.getAllByRole('button', { name: 'Jun' })[0]);
+    await user.click(screen.getAllByRole('button', { name: /^Jun \d{4}$/ })[0]);
     // The field now shows Jun 2026; committing that same text must be accepted.
     await user.type(screen.getByRole('textbox'), '{Enter}');
 
@@ -409,8 +411,10 @@ describe('.MonthGrid renders and commits in a display timezone', () => {
       </CalendarPreview>
     );
 
-    expect(screen.getAllByRole('button', { name: /^Q\d$/ })).toHaveLength(4);
-    await user.click(screen.getByRole('button', { name: 'Q3' }));
+    expect(screen.getAllByRole('button', { name: /^Q\d \d{4}$/ })).toHaveLength(
+      4
+    );
+    await user.click(screen.getByRole('button', { name: /^Q3 \d{4}$/ }));
 
     expect(readsNY(lastArg<Date>(onValueChange))).toBe('2026-07-01, 00');
   });
@@ -449,7 +453,7 @@ describe('.MonthGrid period semantics', () => {
       onValueChange
     });
 
-    await user.click(screen.getByRole('button', { name: 'Jun' }));
+    await user.click(screen.getByRole('button', { name: /^Jun \d{4}$/ }));
 
     const next = lastArg<DateRangeValue>(onValueChange);
     expect(dayKey(next.from as Date)).toBe('2026-06-01');

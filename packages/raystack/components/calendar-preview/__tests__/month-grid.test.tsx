@@ -40,7 +40,9 @@ describe('CalendarPreview.MonthGrid', () => {
     expect(getAllSlots(container, 'calendar-preview-month-cell')).toHaveLength(
       36
     );
-    expect(screen.getAllByRole('button', { name: 'Jan' })).toHaveLength(3);
+    expect(screen.getAllByRole('button', { name: /^Jan \d{4}$/ })).toHaveLength(
+      3
+    );
   });
 
   it('renders four quarters per year', () => {
@@ -48,7 +50,9 @@ describe('CalendarPreview.MonthGrid', () => {
     expect(getAllSlots(container, 'calendar-preview-month-cell')).toHaveLength(
       12
     );
-    expect(screen.getAllByRole('button', { name: 'Q4' })).toHaveLength(3);
+    expect(screen.getAllByRole('button', { name: /^Q4 \d{4}$/ })).toHaveLength(
+      3
+    );
   });
 
   it('renders two halves per year', () => {
@@ -56,7 +60,9 @@ describe('CalendarPreview.MonthGrid', () => {
     expect(getAllSlots(container, 'calendar-preview-month-cell')).toHaveLength(
       6
     );
-    expect(screen.getAllByRole('button', { name: 'H2' })).toHaveLength(3);
+    expect(screen.getAllByRole('button', { name: /^H2 \d{4}$/ })).toHaveLength(
+      3
+    );
   });
 
   it('renders years as a flat list with no year headings', () => {
@@ -75,7 +81,7 @@ describe('CalendarPreview.MonthGrid', () => {
     const onValueChange = vi.fn();
     at('quarter', { onValueChange });
 
-    await user.click(screen.getAllByRole('button', { name: 'Q3' })[1]);
+    await user.click(screen.getAllByRole('button', { name: /^Q3 \d{4}$/ })[1]);
     expect(dayKey(lastArg(onValueChange) as Date)).toBe('2024-07-01');
   });
 
@@ -88,7 +94,7 @@ describe('CalendarPreview.MonthGrid', () => {
     unmount();
 
     at('half-year', { onValueChange });
-    await user.click(screen.getAllByRole('button', { name: 'H2' })[0]);
+    await user.click(screen.getAllByRole('button', { name: /^H2 \d{4}$/ })[0]);
     expect(dayKey(lastArg(onValueChange) as Date)).toBe('2023-07-01');
   });
 
@@ -111,7 +117,7 @@ describe('CalendarPreview.MonthGrid', () => {
       onValueChange
     });
 
-    await user.click(screen.getAllByRole('button', { name: 'Sep' })[1]);
+    await user.click(screen.getAllByRole('button', { name: /^Sep \d{4}$/ })[1]);
     const next = lastArg(onValueChange) as DateRangeValue;
     expect(dayKey(next.from as Date)).toBe('2023-01-01');
     expect(dayKey(next.to as Date)).toBe('2024-09-01');
@@ -128,9 +134,11 @@ describe('CalendarPreview.MonthGrid', () => {
     );
     // The window starts at minDate's year, so January 2024 is offered but out
     // of range.
-    expect(screen.getAllByRole('button', { name: 'Jan' })[0]).toBeDisabled();
     expect(
-      screen.getAllByRole('button', { name: 'Jul' })[0]
+      screen.getAllByRole('button', { name: /^Jan \d{4}$/ })[0]
+    ).toBeDisabled();
+    expect(
+      screen.getAllByRole('button', { name: /^Jul \d{4}$/ })[0]
     ).not.toBeDisabled();
   });
 
@@ -138,7 +146,7 @@ describe('CalendarPreview.MonthGrid', () => {
     const user = userEvent.setup();
     const onValueChange = vi.fn();
     at('month', { readOnly: true, onValueChange });
-    await user.click(screen.getAllByRole('button', { name: 'Mar' })[0]);
+    await user.click(screen.getAllByRole('button', { name: /^Mar \d{4}$/ })[0]);
     expect(onValueChange).not.toHaveBeenCalled();
   });
 
@@ -147,7 +155,7 @@ describe('CalendarPreview.MonthGrid', () => {
     const onValueChange = vi.fn();
     at('month', { selection: 'multiple', onValueChange });
 
-    await user.click(screen.getAllByRole('button', { name: 'Feb' })[0]);
+    await user.click(screen.getAllByRole('button', { name: /^Feb \d{4}$/ })[0]);
     expect((lastArg(onValueChange) as Date[]).map(d => dayKey(d))).toEqual([
       '2023-02-01'
     ]);
@@ -219,7 +227,7 @@ describe('MonthGrid: third audit', () => {
     const user = userEvent.setup();
     const onValueChange = vi.fn();
     at('month', { value: new Date(2024, 3, 17), onValueChange });
-    await user.click(screen.getAllByRole('button', { name: 'Apr' })[1]);
+    await user.click(screen.getAllByRole('button', { name: /^Apr \d{4}$/ })[1]);
     expect(dayKey(lastArg(onValueChange) as Date)).toBe('2024-04-01');
   });
 });
@@ -284,5 +292,124 @@ describe('regressions from the external audit', () => {
     } finally {
       for (const undo of restore) undo();
     }
+  });
+});
+
+const years = () =>
+  getAllSlots(document.body, 'calendar-preview-month-grid-year').map(
+    node => node.textContent
+  );
+
+/** `yearWindow` belongs to `.MonthGrid`, so it is passed separately. */
+const unbounded = (
+  props: Record<string, unknown> = {},
+  gridProps: Record<string, unknown> = {}
+) =>
+  render(
+    <CalendarPreview defaultGranularity='month' {...props}>
+      <CalendarPreview.MonthGrid {...gridProps} />
+    </CalendarPreview>
+  );
+
+/*
+ * `month` is a documented public prop and every other view honours it. This
+ * one anchored on `new Date()` whenever nothing was selected, so it opened on
+ * the host's current year wherever the consumer had driven the picker — and
+ * the `setMonth` calls `.Preset` and `.Input` make after a commit were
+ * invisible here.
+ */
+describe('.MonthGrid honours the month it is driven to', () => {
+  it('centres on a controlled month with nothing selected', () => {
+    unbounded({ month: new Date(2030, 11, 1) }, { yearWindow: 2 });
+    expect(years()).toEqual(['2028', '2029', '2030', '2031', '2032']);
+  });
+
+  it('still prefers the selection when there is one', () => {
+    unbounded(
+      { month: new Date(2030, 11, 1), value: new Date(2020, 5, 1) },
+      { yearWindow: 1 }
+    );
+    expect(years()).toEqual(['2019', '2020', '2021']);
+  });
+});
+
+/*
+ * `yearWindow` is documented as "how many years either side of the active one
+ * … only where that edge is unbounded". It was measured from the raw anchor,
+ * and the far edge could only clamp the span, never extend it — so an anchor
+ * further from the bound than the window collapsed the list to a single year.
+ */
+describe('yearWindow spans the window it promises', () => {
+  it('extends away from a distant future bound', () => {
+    unbounded({ minDate: new Date(2040, 0, 1) }, { yearWindow: 5 });
+    expect(years()).toEqual(['2040', '2041', '2042', '2043', '2044', '2045']);
+  });
+
+  it('extends away from a distant past bound', () => {
+    unbounded({ maxDate: new Date(2000, 11, 31) }, { yearWindow: 3 });
+    expect(years()).toEqual(['1997', '1998', '1999', '2000']);
+  });
+
+  // The control: unbounded, the window applies to both edges.
+  it('spans both sides when nothing is bounded', () => {
+    unbounded({ month: new Date(2026, 0, 1) }, { yearWindow: 5 });
+    expect(years()).toHaveLength(11);
+  });
+
+  it('is inert with both edges bounded', () => {
+    unbounded(
+      { minDate: new Date(2023, 0, 1), maxDate: new Date(2025, 11, 31) },
+      { yearWindow: 5 }
+    );
+    expect(years()).toEqual(['2023', '2024', '2025']);
+  });
+
+  /*
+   * The section carrying the scroll ref is the one the list opens on, so it
+   * has to be a year the list actually renders. Keyed on the raw anchor, it
+   * never attached for a clamped anchor and the list opened at the top.
+   */
+  it('scrolls to a year inside the rendered span', () => {
+    unbounded({ minDate: new Date(2040, 0, 1) }, { yearWindow: 5 });
+    const scrolled = getAllSlots(
+      document.body,
+      'calendar-preview-month-grid-year'
+    ).filter(node => node.parentElement?.dataset.scrollAnchor === 'true');
+    expect(scrolled.map(node => node.textContent)).toEqual(['2040']);
+  });
+});
+
+/*
+ * `readOnly` reached only the commit guard, so every cell stayed an operable
+ * unpressed toggle that silently did nothing. And the year lives in a sibling
+ * element, so across an 11-year list a screen reader heard the same bare "Q1"
+ * from four different buttons with nothing to tell them apart.
+ */
+describe('.MonthGrid announces what it actually is', () => {
+  it('marks its cells under readOnly', () => {
+    at('quarter', { readOnly: true });
+    const cell = screen.getAllByRole('button')[0];
+    expect(cell).toHaveAttribute('aria-disabled', 'true');
+    // Not `disabled`: the cell stays focusable and legible, as `.Grid`'s days
+    // do, so a keyboard user can still read the value.
+    expect(cell).not.toBeDisabled();
+  });
+
+  it('leaves them operable when it is not read-only', () => {
+    at('quarter');
+    expect(screen.getAllByRole('button')[0]).not.toHaveAttribute(
+      'aria-disabled'
+    );
+  });
+
+  it('names each period with its year', () => {
+    at('quarter');
+    expect(screen.getByRole('button', { name: 'Q1 2024' })).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: /^Q1/ })).toHaveLength(3);
+  });
+
+  it('does not repeat the year for the year granularity', () => {
+    at('year');
+    expect(screen.getByRole('button', { name: '2024' })).toBeInTheDocument();
   });
 });

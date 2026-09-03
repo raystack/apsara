@@ -131,12 +131,11 @@ describe('.MonthGrid memo stability', () => {
     isDateUnavailable.mockClear();
 
     // `value` moves, but the dates do not — only which one is selected.
-    await user.click(screen.getAllByRole('button', { name: 'Mar' })[0]);
+    await user.click(screen.getAllByRole('button', { name: /^Mar \d{4}$/ })[0]);
 
     expect(isDateUnavailable).toHaveBeenCalledTimes(0);
-    expect(screen.getAllByRole('button', { name: 'Mar' })[0]).toHaveAttribute(
-      'aria-pressed',
-      'true'
-    );
+    expect(
+      screen.getAllByRole('button', { name: /^Mar \d{4}$/ })[0]
+    ).toHaveAttribute('aria-pressed', 'true');
   });
 });

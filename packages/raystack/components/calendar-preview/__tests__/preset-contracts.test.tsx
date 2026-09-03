@@ -271,7 +271,7 @@ describe('the active granularity is one the picker offers', () => {
     const onValueChange = vi.fn();
     offered({ defaultGranularity: 'day', onValueChange });
 
-    await user.click(screen.getAllByRole('button', { name: 'Jun' })[0]);
+    await user.click(screen.getAllByRole('button', { name: /^Jun \d{4}$/ })[0]);
 
     expect(lastDetails(onValueChange)).toMatchObject({
       granularity: 'month'
