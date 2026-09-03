@@ -1,8 +1,4 @@
 import type { FilterFn } from '@tanstack/table-core';
-import dayjs from 'dayjs';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-
 import {
   DataTableFilterOperatorTypes,
   DateFilterOperatorType,
@@ -17,10 +13,9 @@ import {
   SelectFilterOperatorType,
   StringFilterOperatorType
 } from '~/types/filters';
+import { toDateLoose } from '../../calendar-preview/date-adapter';
+import { dateFilterOperations } from '../../calendar-preview/filter-date-operations';
 import { DataViewFilterValues } from '../data-view.types';
-
-dayjs.extend(isSameOrAfter);
-dayjs.extend(isSameOrBefore);
 
 export type FilterFunctionsMap = {
   number: Record<NumberFilterOperatorType, FilterFn<unknown>>;
@@ -68,26 +63,7 @@ export const filterOperationsMap: FilterFunctionsMap = {
       return columnValue.endsWith(filterStr);
     }
   },
-  date: {
-    eq: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isSame(dayjs(filterValue.date), 'day'),
-    neq: (row, columnId, filterValue: FilterValue) =>
-      !dayjs(row.getValue(columnId)).isSame(dayjs(filterValue.date), 'day'),
-    lt: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isBefore(dayjs(filterValue.date), 'day'),
-    lte: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isSameOrBefore(
-        dayjs(filterValue.date),
-        'day'
-      ),
-    gt: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isAfter(dayjs(filterValue.date), 'day'),
-    gte: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isSameOrAfter(
-        dayjs(filterValue.date),
-        'day'
-      )
-  },
+  date: dateFilterOperations,
   select: {
     eq: (row, columnId, filterValue: FilterValue) => {
       if (String(filterValue.value) === EmptyFilterValue)
@@ -131,9 +107,9 @@ const handleStringBasedTypes = (
 ): DataViewFilterValues => {
   switch (filterType) {
     case FilterType.date: {
-      const dateValue = dayjs(value);
+      const dateValue = toDateLoose(value);
       let stringValue = '';
-      if (dateValue.isValid()) {
+      if (dateValue) {
         try {
           stringValue = dateValue.toISOString();
         } catch {

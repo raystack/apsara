@@ -1,7 +1,6 @@
 'use client';
 
 import { cva, VariantProps } from 'class-variance-authority';
-import dayjs from 'dayjs';
 import { ComponentProps, ReactElement, useCallback, useState } from 'react';
 import { XIcon } from '~/icons';
 import {
@@ -12,7 +11,9 @@ import {
   FilterTypes,
   filterOperators
 } from '~/types/filters';
-import { DatePicker, type DatePickerProps } from '../calendar';
+import type { CalendarPreviewBaseProps } from '../calendar-preview';
+import { CalendarPreview } from '../calendar-preview';
+import { toDateLoose } from '../calendar-preview/date-adapter';
 import { Flex } from '../flex';
 import { Input } from '../input';
 import { Select } from '../select';
@@ -36,28 +37,35 @@ const chip = cva(styles.chip, {
 export type FilterChipValue = string | string[] | number | Date;
 
 /**
- * Coerce a `FilterChipValue` to the `Date` the DatePicker expects — filter
- * state hydrated from a serialized query arrives as a string or epoch number.
- * Unparseable values leave the field unselected.
- */
-const toDateValue = (value: unknown): Date | undefined => {
-  if (value instanceof Date) return value;
-  if (typeof value === 'string' || typeof value === 'number') {
-    const parsed = dayjs(value);
-    return parsed.isValid() ? parsed.toDate() : undefined;
-  }
-  return undefined;
-};
-
-/**
- * Subset of `DatePickerProps` that consumers may forward to the chip's
- * built-in DatePicker via `calendarProps`. `value`/`onSelect`/`defaultValue`
- * are owned by `FilterChip`; `children` would replace the input trigger and
- * break the chip layout.
+ * Subset of `CalendarPreview`'s root props that consumers may forward to the
+ * chip's built-in picker via `calendarProps`. `value`/`onValueChange`/
+ * `defaultValue` are owned by `FilterChip`; `children` would replace the
+ * composed trigger and break the chip layout; `selection` is fixed to single,
+ * because the chip carries one value.
+ *
+ * Built from the base props rather than as `Omit<CalendarPreviewProps, …>`.
+ * `CalendarPreviewProps` is a three-arm discriminated union and `Omit` does
+ * not distribute over one: it collapses to the keys common to all three and
+ * takes the discriminant with it. The old form happened to land close to this
+ * set, but it was right by accident, and it dropped `lock` in silence. The
+ * base interface holds exactly the selection-independent props, so this says
+ * what it means and survives a fourth arm being added.
  */
 export type FilterChipCalendarProps = Omit<
-  DatePickerProps,
-  'value' | 'onSelect' | 'defaultValue' | 'children'
+  CalendarPreviewBaseProps,
+  | 'children'
+  /*
+   * The chip composes no `.Footer` and no `.Apply`, so `commit='explicit'`
+   * buffered every edit for a button that does not exist — a valid date typed
+   * and blurred produced zero value changes and the chip became permanently
+   * uneditable. `open`/`defaultOpen`/`onOpenChange` and `loading` are the
+   * chip's own to drive for the same reason: it owns this composition.
+   */
+  | 'commit'
+  | 'open'
+  | 'defaultOpen'
+  | 'onOpenChange'
+  | 'loading'
 >;
 
 export interface FilterChipProps
@@ -74,9 +82,10 @@ export interface FilterChipProps
   operations?: FilterOperator<string>[];
   selectProps?: BaseSelectProps;
   /**
-   * Props forwarded to the underlying `DatePicker` for `columnType="date"`.
-   * `value`/`onSelect`/`defaultValue` are owned by `FilterChip` and excluded;
-   * `children` is excluded so the chip's input trigger isn't replaced.
+   * Props forwarded to the underlying `CalendarPreview` for
+   * `columnType="date"`. `value`/`onValueChange`/`defaultValue` are owned by
+   * `FilterChip` and excluded; `children` is excluded so the chip's composed
+   * trigger isn't replaced.
    */
   calendarProps?: FilterChipCalendarProps;
 }
@@ -84,7 +93,7 @@ export interface FilterChipProps
 /**
  * A compact, removable filter pill that pairs a label and operator with a
  * value control chosen by `columnType`: a `Select` (`select`/`multiselect`),
- * a `DatePicker` (`date`), or a text `Input` (`string`/`number`). The value
+ * a `CalendarPreview` (`date`), or a text `Input` (`string`/`number`). The value
  * control sizes to its content so the chip hugs the active filter. Emits
  * `onValueChange`/`onOperationChange` and renders a remove button when
  * `onRemove` is provided.
@@ -118,6 +127,16 @@ export const FilterChip = ({
 
   const showOnRemove = typeof onRemove === 'function';
   const isMultiSelectColumn = columnType === FilterType.multiselect;
+
+  /*
+   * The date field's invalid state. `CalendarPreview` renders no error UI of
+   * its own by design, reporting through `onValidityChange` so a surrounding
+   * `Field` can present it — but this chip is not a `Field`, and wiring nothing
+   * meant unparseable text simply sat there: no border, no `aria-invalid`, and
+   * a filter that silently did not apply. That is what the old picker's
+   * `updateError('Invalid date')` used to drive.
+   */
+  const [dateInvalid, setDateInvalid] = useState(false);
 
   const handleOperationChange = useCallback(
     (operation: FilterOperation) => {
@@ -179,20 +198,51 @@ export const FilterChip = ({
           <div
             className={styles.dateFieldWrapper}
             data-slot='filter-chip-value'
+            data-error={dateInvalid || undefined}
           >
-            <DatePicker
-              showCalendarIcon={false}
+            {/*
+             * Composed from parts rather than configured through `slotProps`.
+             * The chip's own styling now hangs off its wrapper and reaches
+             * `Input` through that component's public slots, so a
+             * consumer-supplied class can no longer replace it.
+             *
+             * No `initialFocus={false}` here: `.Content` declines that focus
+             * by itself once a typed field registers from inside `.Trigger`,
+             * which is exactly this shape.
+             */}
+            <CalendarPreview
               {...calendarProps}
-              value={toDateValue(filterValue)}
-              onSelect={date => handleFilterValueChange(date)}
-              slotProps={{
-                ...calendarProps?.slotProps,
-                input: {
-                  classNames: { container: styles.dateField },
-                  ...calendarProps?.slotProps?.input
-                }
+              value={toDateLoose(filterValue)}
+              onValueChange={date => {
+                setDateInvalid(false);
+                /*
+                 * `null` is not in `FilterChipValue`, and `handleFilterValueChange`
+                 * is typed `any` so nothing caught it: clearing a date chip
+                 * emitted `[null, 'eq']` and any consumer doing
+                 * `value.getTime()` threw on first use. The old picker declined
+                 * to emit it for exactly this reason; an empty date is an empty
+                 * string here, as it is for every other column type.
+                 */
+                handleFilterValueChange(date ?? '');
               }}
-            />
+              onValidityChange={validity => {
+                setDateInvalid(!validity.valid);
+                calendarProps?.onValidityChange?.(validity);
+              }}
+            >
+              <CalendarPreview.Trigger className={styles.dateField}>
+                {/* Preserves the chip's long-standing empty-state wording;
+                    `.Input` otherwise falls back to showing the format. */}
+                <CalendarPreview.Input
+                  placeholder='Select date'
+                  aria-invalid={dateInvalid || undefined}
+                />
+              </CalendarPreview.Trigger>
+              <CalendarPreview.Content>
+                <CalendarPreview.Nav />
+                <CalendarPreview.Grid />
+              </CalendarPreview.Content>
+            </CalendarPreview>
           </div>
         );
       default:

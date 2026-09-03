@@ -1,0 +1,448 @@
+/* Two local helpers: the mini type triplet had four copies in this file and
+   the user-select pair three. File-local — repetition across modules is still
+   the house norm. The `:disabled { opacity: 0.5 }` sites stay as they are;
+   `composes:` cannot target a pseudo-class selector. */
+.miniText {
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+}
+
+.unselectable {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+}
+
+.positioner {
+  z-index: var(--rs-z-index-portal);
+}
+
+/* Selector doubling raises specificity from (0,1,0) to (0,2,0), which beats
+   react-day-picker's compound selectors without !important. */
+.content.content {
+  padding: var(--rs-space-4);
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-4);
+  background: var(--rs-color-background-base-primary);
+  box-shadow: var(--rs-shadow-lifted);
+  width: fit-content;
+  min-width: max-content;
+  max-width: none;
+}
+
+.grid {
+  width: fit-content;
+  background: var(--rs-color-background-base-primary);
+}
+
+.months {
+  display: flex;
+  gap: var(--rs-space-5);
+  position: relative;
+}
+
+.weeks {
+  position: relative;
+}
+
+.week {
+  display: flex;
+}
+
+/* The weekday header row is shorter than a day row — 32 against 40. */
+.weekday {
+  composes: miniText;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--rs-space-10);
+  height: var(--rs-space-9);
+  color: var(--rs-color-foreground-base-secondary);
+  text-align: center;
+  font-weight: var(--rs-font-weight-medium);
+}
+
+.day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--rs-space-10);
+  height: var(--rs-space-10);
+  border: 1px solid transparent;
+  border-radius: var(--rs-radius-5);
+  background-color: var(--rs-color-background-base-primary);
+  color: var(--rs-color-foreground-base-primary);
+  text-align: center;
+}
+
+.day:hover:not(.disabled):not(.outside):not(.selected) {
+  border-color: var(--rs-color-border-accent-emphasis-hover);
+  background-color: transparent;
+}
+
+.selected:not(.rangeMiddle) {
+  border-radius: var(--rs-radius-5);
+  background: var(--rs-color-background-accent-emphasis);
+}
+
+.selected:not(.rangeMiddle) .dayButton {
+  color: var(--rs-color-foreground-base-emphasis);
+}
+
+.rangeMiddle {
+  border-radius: 0;
+  background-color: var(--rs-color-background-neutral-secondary);
+}
+
+.rangeMiddle .dayButton {
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.rangeMiddle:first-of-type {
+  border-top-left-radius: var(--rs-radius-5);
+  border-bottom-left-radius: var(--rs-radius-5);
+}
+
+.rangeMiddle:last-of-type {
+  border-top-right-radius: var(--rs-radius-5);
+  border-bottom-right-radius: var(--rs-radius-5);
+}
+
+.rangeStart:not(.rangeEnd) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.rangeEnd:not(.rangeStart) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.outside {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.dayButton {
+  position: relative;
+  display: grid;
+  place-content: center;
+  width: 100%;
+  height: 100%;
+  padding: unset;
+  border: none;
+  border-radius: inherit;
+  background: inherit;
+  color: inherit;
+  cursor: pointer;
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+
+/* Inset ring: day cells pack edge-to-edge, so an outward ring would collide
+   with the neighbouring day. */
+.dayButton:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-inset);
+}
+
+.dayNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+.day.today .dayButton::after {
+  content: "";
+  position: absolute;
+  bottom: var(--rs-space-2);
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--rs-space-2);
+  height: var(--rs-space-2);
+  border-radius: var(--rs-radius-full);
+  background-color: var(--rs-color-background-accent-emphasis);
+}
+
+.selected.day.today:not(.rangeMiddle) .dayButton::after {
+  background-color: var(--rs-color-foreground-base-emphasis);
+}
+
+.rangeInputs {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+}
+
+.rangeSeparator {
+  composes: unselectable;
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.rangeField {
+  display: inline-flex;
+}
+
+/* The field the next grid click writes to. `Input` carries its border on its
+   container, reached here through its public slot rather than a hashed
+   class name. */
+.rangeField[data-active] [data-slot="input-container"] {
+  border-color: var(--rs-color-border-accent-emphasis);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rs-space-3);
+  margin-bottom: var(--rs-space-3);
+}
+
+.nav[data-align="end"] {
+  flex-direction: row-reverse;
+}
+
+.navCaption {
+  composes: miniText unselectable;
+  font-weight: var(--rs-font-weight-medium);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.navButtons {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+}
+
+.field {
+  display: inline-flex;
+}
+
+.granularity {
+  display: flex;
+  margin-bottom: var(--rs-space-3);
+}
+
+/* The design's viewport is 192px of scrolling year sections. No --rs-* size
+   fits, so it is a component-local custom property — the pattern
+   tabs.module.css uses — rather than a bare hardcoded value. */
+/* `position: relative` is load-bearing, not decoration. `overflow-y` alone does
+   not make an element an offsetParent, so `scrollActiveYearIntoView` measured
+   `offsetTop` from whatever ancestor was positioned — the popup inside a
+   popover, or `<body>` inline, which clamped the list to its last year. */
+.monthGrid {
+  --calendar-preview-month-grid-height: 192px;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-4);
+  max-height: var(--calendar-preview-month-grid-height);
+  overflow-y: auto;
+}
+
+.monthGridSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-3);
+}
+
+.monthGridYear {
+  color: var(--rs-color-foreground-base-secondary);
+  font-size: var(--rs-font-size-micro);
+  line-height: var(--rs-line-height-micro);
+  letter-spacing: var(--rs-letter-spacing-micro);
+}
+
+.monthGridCells {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), 1fr);
+  gap: var(--rs-space-4);
+}
+
+.monthCell {
+  composes: miniText;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--rs-space-5);
+  padding: 0 var(--rs-space-2);
+  border: none;
+  border-radius: var(--rs-radius-2);
+  background: transparent;
+  color: var(--rs-color-foreground-base-primary);
+  cursor: pointer;
+  font-weight: var(--rs-font-weight-medium);
+}
+
+.monthCell:hover:not(:disabled) {
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+.monthCell[data-selected] {
+  background: var(--rs-color-background-accent-emphasis);
+  color: var(--rs-color-foreground-base-emphasis);
+}
+
+.monthCell:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.monthCell:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-accent);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--rs-space-3);
+  margin-top: var(--rs-space-4);
+  padding-top: var(--rs-space-4);
+  border-top: 1px solid var(--rs-color-border-base-primary);
+}
+
+.timeField {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+}
+
+.timeInput {
+  width: var(--rs-space-11);
+  text-align: center;
+}
+
+.timeSeparator {
+  composes: unselectable;
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+.meridiem {
+  display: flex;
+  margin-left: var(--rs-space-2);
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-2);
+  overflow: hidden;
+}
+
+.meridiemButton {
+  composes: miniText;
+  padding: var(--rs-space-1) var(--rs-space-3);
+  border: none;
+  background: transparent;
+  color: var(--rs-color-foreground-base-primary);
+  cursor: pointer;
+}
+
+.meridiemButton[data-selected] {
+  background: var(--rs-color-background-accent-emphasis);
+  color: var(--rs-color-foreground-base-emphasis);
+}
+
+.meridiemButton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.presets {
+  display: flex;
+  gap: var(--rs-space-2);
+}
+
+.presets[data-orientation="vertical"] {
+  flex-direction: column;
+  min-width: var(--rs-space-12);
+  padding-right: var(--rs-space-4);
+  border-right: 1px solid var(--rs-color-border-base-primary);
+}
+
+.presets[data-orientation="horizontal"] {
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: var(--rs-space-3);
+}
+
+.preset {
+  display: flex;
+  align-items: center;
+  height: var(--rs-space-7);
+  padding: 0 var(--rs-space-3);
+  border: none;
+  border-radius: var(--rs-radius-2);
+  background: transparent;
+  color: var(--rs-color-foreground-base-primary);
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+
+.preset:hover:not(:disabled) {
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+.preset[data-selected] {
+  background: var(--rs-color-background-accent-emphasis);
+  color: var(--rs-color-foreground-base-emphasis);
+}
+
+.preset:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.preset:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-accent);
+}
+
+/* Holds the popover at the width the day grid will have, so the surface does
+   not jump when the data lands. Seven day columns is not a --rs-* size, so it
+   is a component-local custom property, as `.monthGrid` does with its height.
+   The `--rs-space-12` that used to sit here was decoration: it resolves to
+   56px and the hardcoded minimum overrode it every time.
+
+   `.week` is a bare flex row with no gap and `.day` is one --rs-space-10, so
+   seven columns is exactly 7 * --rs-space-10 rather than a literal 280px.
+   --calendar-preview-grid-months follows `.Grid`'s `months`, since two months
+   sit side by side with one --rs-space-5 between; it defaults to 1. */
+.gridSkeleton {
+  --calendar-preview-grid-width: calc(7 * var(--rs-space-10));
+  --calendar-preview-grid-months: 1;
+
+  width: calc(
+    var(--calendar-preview-grid-width) *
+    var(--calendar-preview-grid-months) +
+    var(--rs-space-5) *
+    (var(--calendar-preview-grid-months) - 1)
+  );
+}
+
+.gridSkeletonRows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-1);
+}

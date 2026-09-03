@@ -3,46 +3,23 @@
 import { Popover as PopoverPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import styles from './popover.module.css';
+import { PopoverSurface, type PopoverSurfaceProps } from './popover-surface';
 
 export interface PopoverContentProps
   extends Omit<
-      PopoverPrimitive.Positioner.Props,
-      'render' | 'className' | 'style' | 'ref'
-    >,
-    PopoverPrimitive.Popup.Props {}
+    PopoverSurfaceProps,
+    'positionerClassName' | 'positionerSlot' | 'popupSlot'
+  > {}
 
-function PopoverContent({
-  ref,
-  initialFocus,
-  finalFocus,
-  className,
-  style,
-  render,
-  children,
-  ...positionerProps
-}: PopoverContentProps) {
+function PopoverContent({ className, ...props }: PopoverContentProps) {
   return (
-    <PopoverPrimitive.Portal>
-      <PopoverPrimitive.Positioner
-        sideOffset={4}
-        collisionPadding={3}
-        className={styles.popoverPositioner}
-        data-slot='popover-positioner'
-        {...positionerProps}
-      >
-        <PopoverPrimitive.Popup
-          ref={ref}
-          className={cx(styles.popover, className)}
-          render={render}
-          initialFocus={initialFocus}
-          finalFocus={finalFocus}
-          style={style}
-          data-slot='popover-content'
-        >
-          {children}
-        </PopoverPrimitive.Popup>
-      </PopoverPrimitive.Positioner>
-    </PopoverPrimitive.Portal>
+    <PopoverSurface
+      positionerClassName={styles.popoverPositioner}
+      positionerSlot='popover-positioner'
+      popupSlot='popover-content'
+      className={cx(styles.popover, className)}
+      {...props}
+    />
   );
 }
 PopoverContent.displayName = 'Popover.Content';

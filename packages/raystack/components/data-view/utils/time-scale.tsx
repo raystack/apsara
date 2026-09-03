@@ -1,5 +1,9 @@
 import dayjs, { type Dayjs } from 'dayjs';
 
+import {
+  quarterOfMonth,
+  toDateLoose
+} from '../../calendar-preview/date-adapter';
 import type { TimelineScale } from '../data-view.types';
 
 /**
@@ -25,21 +29,15 @@ export const TIMELINE_DEFAULT_UNIT_WIDTH: Record<TimelineScale, number> = {
 /** Minimum px between rendered tick labels — denser ticks skip labels. */
 const TICK_LABEL_MIN_SPACE = 28;
 
-/** Coerce a consumer-provided date (Date | epoch ms | parseable string) to ms. */
+/**
+ * Coerce a consumer-provided date (Date | epoch | parseable string) to ms.
+ *
+ * Delegates to the adapter's `toDateLoose`. This module used to parse for
+ * itself, so the epoch-seconds fix landed in one parser and not the other:
+ * `1741046400` filtered as March 2025 but drew at January 1970 here.
+ */
 export function toTimestamp(value: unknown): number | null {
-  if (value == null) return null;
-  if (value instanceof Date) {
-    const time = value.getTime();
-    return Number.isNaN(time) ? null : time;
-  }
-  if (typeof value === 'number') {
-    return Number.isFinite(value) ? value : null;
-  }
-  if (typeof value === 'string') {
-    const parsed = dayjs(value);
-    return parsed.isValid() ? parsed.valueOf() : null;
-  }
-  return null;
+  return toDateLoose(value)?.getTime() ?? null;
 }
 
 /** `startOf` that also understands quarters without a dayjs plugin. */
@@ -145,7 +143,7 @@ function tickLabel(date: Dayjs, scale: TimelineScale): string {
     case 'month':
       return date.format('MMM');
     case 'quarter':
-      return `Q${Math.floor(date.month() / 3) + 1}`;
+      return `Q${quarterOfMonth(date.month())}`;
   }
 }
 

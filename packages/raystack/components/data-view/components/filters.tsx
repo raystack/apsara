@@ -129,6 +129,7 @@ export function Filters<TData>({
         label: field?.label || '',
         options: field?.filterOptions || [],
         selectProps: field?.filterProps?.select,
+        calendarProps: field?.filterProps?.calendar,
         ...filter
       };
     }) || [];
@@ -159,6 +160,7 @@ export function Filters<TData>({
           columnType={filter.filterType}
           options={filter.options}
           selectProps={filter.selectProps}
+          calendarProps={filter.calendarProps}
           className={classNames?.filterChips}
         />
       ))}

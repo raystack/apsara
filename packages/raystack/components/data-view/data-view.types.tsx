@@ -13,6 +13,7 @@ import type {
   FilterTypes,
   FilterValueType
 } from '~/types/filters';
+import type { FilterChipCalendarProps } from '../filter-chip';
 import type { BaseSelectProps } from '../select/select-root';
 
 export type DataViewMode = 'client' | 'server';
@@ -82,6 +83,11 @@ export interface DataViewField<TData = any> {
   defaultFilterValue?: unknown;
   filterProps?: {
     select?: BaseSelectProps;
+    /**
+     * Forwarded to the date filter's `CalendarPreview` for
+     * `filterType="date"` — bounds, format, time zone and the like.
+     */
+    calendar?: FilterChipCalendarProps;
   };
 
   // ordering / grouping / visibility capability

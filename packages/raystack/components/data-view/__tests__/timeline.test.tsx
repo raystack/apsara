@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import dayjs from 'dayjs';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
-
+import { toDateLoose } from '../../calendar-preview/date-adapter';
 // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
 import { DataView } from '../data-view';
 import type {
@@ -50,6 +50,15 @@ describe('toTimestamp', () => {
     expect(toTimestamp(new Date('invalid'))).toBeNull();
     expect(toTimestamp(Number.NaN)).toBeNull();
     expect(toTimestamp({})).toBeNull();
+  });
+
+  // Two loose parsers used to disagree about this; see `toTimestamp`.
+  it('agrees with the filter parser about an epoch in seconds', () => {
+    const seconds = 1741046400;
+    expect(toTimestamp(seconds)).toBe(toDateLoose(seconds)?.getTime());
+    expect(new Date(toTimestamp(seconds) as number).getUTCFullYear()).toBe(
+      2025
+    );
   });
 });
 

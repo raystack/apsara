@@ -1,0 +1,283 @@
+---
+title: CalendarPreview
+description: One subcomposed date component that owns date state and popover state explicitly.
+source: packages/raystack/components/calendar-preview
+tag: new
+---
+
+import {
+  preview,
+  playground,
+  stateDemo,
+  granularityDemo,
+  commitDemo,
+  presetDemo,
+  loadingDemo,
+  fieldDemo,
+} from "./demo.ts";
+
+<Demo data={preview} />
+
+`CalendarPreview` replaces `Calendar`, `DatePicker` and `RangePicker` with a
+single root and dot-notation parts. Every piece of state is owned explicitly —
+selection, visible month, open, granularity — so nothing is private and no part
+needs to reach around another.
+
+It ships alongside the current calendar family; those exports are removed a
+release after this one is documented.
+
+<Demo data={playground} />
+
+## Anatomy
+
+```tsx
+import { CalendarPreview } from '@raystack/apsara'
+
+<CalendarPreview>
+  <CalendarPreview.Trigger>
+    <CalendarPreview.Input />
+  </CalendarPreview.Trigger>
+  <CalendarPreview.Content>
+    <CalendarPreview.GranularityTabs />
+    <CalendarPreview.Nav />
+    <CalendarPreview.Grid />
+    <CalendarPreview.MonthGrid />
+    <CalendarPreview.Footer>
+      <CalendarPreview.Cancel />
+      <CalendarPreview.Apply />
+    </CalendarPreview.Footer>
+  </CalendarPreview.Content>
+</CalendarPreview>
+```
+
+Drop any part you do not need. `Grid` renders for the day granularity and
+`MonthGrid` for the rest, so a picker offering both keeps both in the tree.
+
+## API Reference
+
+### Root
+
+Owns every piece of state and provides it to the parts.
+
+The table below flattens the root props for reading. The exported
+`CalendarPreviewProps` is a discriminated union of `CalendarPreviewSingleProps`,
+`CalendarPreviewRangeProps` and `CalendarPreviewMultipleProps`: `selection`
+narrows `value`, `defaultValue` and `onValueChange` to a single shape, and
+`lock` exists only on the range arm. Type a wrapper against one of those arms,
+or against `CalendarPreviewBaseProps` for the props that do not vary by
+selection — `Omit` over the union collapses it and loses the discriminant.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewProps" />
+
+### Trigger
+
+Anchors the popover. Renders a `div`, never a `<button>`, because it may
+contain a typed input.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewTriggerProps" />
+
+### Content
+
+The portaled surface. Positioning props are passed here directly.
+
+`side='bottom'`, `align='start'`, `sideOffset={4}` and `collisionPadding={3}`
+are plain defaults — pass any of them to replace it. `ref`, `className` and
+`style` land on the popup; everything else lands on the positioner.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewContentProps" />
+
+### Input
+
+The typed single-date field.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewInputProps" />
+
+### RangeInput
+
+Paired start and end fields. Both are typable.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewRangeInputProps" />
+
+### Nav
+
+Caption, a revert-to-default button, and previous / next. Renders for the day
+granularity only — the other granularities scroll rather than page.
+
+The revert button appears only when the root was given a `defaultValue` and the
+current value differs from it; pressing it restores that default. It is absent
+otherwise rather than disabled, because a control that can never do anything is
+noise.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewNavProps" />
+
+### Grid
+
+The day grid.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewGridProps" />
+
+### MonthGrid
+
+Month, quarter, half-year and year selection, as a scrolling list of years.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewMonthGridProps" />
+
+### GranularityTabs
+
+Day, Month, Quarter, Half-year and Year. Renders only when the root offers more
+than one granularity.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewGranularityTabsProps" />
+
+### Presets
+
+Holds `Preset` buttons, as a column beside the grid or a row above it.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewPresetsProps" />
+
+### Preset
+
+One preset. It writes straight into root state, so it needs no callback of its
+own, and marks itself pressed while the current value matches.
+
+It deliberately does not close the popover: under `commit="explicit"` that would
+discard the very edit it just made, and for a range you want to see what was
+applied. Compose `Apply`, or close from `onValueChange`.
+
+Passing `range` to a single picker — or `value` to a range one — fails at render
+rather than on click, so the stack points at the preset.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewPresetProps" />
+
+### Footer
+
+Action row for `Apply` and `Cancel`.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewFooterProps" />
+
+## Examples
+
+### State
+
+Open, visible month, and bounds are all ordinary props. The visible month is
+independent of the value but initialises from it, so a picker holding a date in
+another year opens on that year rather than today.
+
+<Demo data={stateDemo} />
+
+### Granularity
+
+`granularities` lists what the user may switch between; the tabs appear only
+when there is more than one.
+
+<Demo data={granularityDemo} />
+
+`MonthGrid` emits the **first day of the chosen period** — a quarter pick in
+2024 Q3 yields 1 July 2024 — and `onValueChange`'s second argument names the
+granularity that produced it. The pair is what makes the value unambiguous: a
+`Date` alone cannot distinguish 1 June picked as a day from June picked as a
+month.
+
+The typed field follows the active granularity too, reading `Jun 2026`,
+`Q3 2026`, `H1 2026` or `2026` rather than a full date.
+
+It also reads *across* granularities: typing `Q4 2027` into a day field switches
+to Quarter and commits in one go, and a bare `Q4` resolves against the year on
+screen. The active granularity is always tried first, and only granularities the
+picker actually offers are considered — so a day-only picker rejects `Q4` rather
+than switching to a tab that is not there.
+
+### Commit and locking
+
+`commit="explicit"` buffers edits until `Apply`, so a popover can be abandoned
+without the parent seeing intermediate states. `lock` holds one endpoint of a
+range read-only while the other stays pickable.
+
+<Demo data={commitDemo} />
+
+### Presets
+
+Presets write straight into root state and light up while they match.
+
+<Demo data={presetDemo} />
+
+### Loading
+
+`loading` replaces the caption and the grid with a shimmer and disables every
+control. It is one flag rather than two: the old family shimmered five grid rows
+while the chrome stayed live, so the month controls were still operable over
+data that had not arrived.
+
+<Demo data={loadingDemo} />
+
+### Inside a Field
+
+`Input` reads field context, so the label association, `required` and
+`aria-invalid` all wire up by composition. The component renders no error text
+itself — report through `onValidityChange` and let `Field.Error` present it.
+
+<Demo data={fieldDemo} />
+
+## Slots
+
+Every rendered element carries a `data-slot`. The names are public API covered
+by semver, so styling may target them and a rename is a breaking change.
+
+| Slot |
+|---|
+| `calendar-preview-apply` |
+| `calendar-preview-cancel` |
+| `calendar-preview-content` |
+| `calendar-preview-day` |
+| `calendar-preview-day-number` |
+| `calendar-preview-footer` |
+| `calendar-preview-granularity` |
+| `calendar-preview-grid` |
+| `calendar-preview-input` |
+| `calendar-preview-input-end` |
+| `calendar-preview-input-start` |
+| `calendar-preview-meridiem` |
+| `calendar-preview-month-cell` |
+| `calendar-preview-month-grid` |
+| `calendar-preview-month-grid-year` |
+| `calendar-preview-nav` |
+| `calendar-preview-nav-caption` |
+| `calendar-preview-nav-next` |
+| `calendar-preview-nav-previous` |
+| `calendar-preview-nav-undo` |
+| `calendar-preview-positioner` |
+| `calendar-preview-preset` |
+| `calendar-preview-presets` |
+| `calendar-preview-range-inputs` |
+| `calendar-preview-skeleton` |
+| `calendar-preview-table` |
+| `calendar-preview-time-field` |
+| `calendar-preview-trigger` |
+| `calendar-preview-weeks` |
+
+## Accessibility
+
+- The day grid is react-day-picker's, which supplies the grid roles, roving
+  tabindex and arrow-key navigation.
+- `Trigger` renders a non-button element. With a plain trigger — a label, a
+  calendar icon — Base UI supplies the button semantics: `role`, `tabindex`,
+  `aria-haspopup`, `aria-expanded`, and `aria-disabled` rather than a `disabled`
+  attribute.
+- When the trigger contains `Input` or `RangeInput` instead, it drops that
+  button role and its tab stop, because in ARIA a button's children are
+  presentational and the field would not be announced as editable. Tab reaches
+  the field directly, and `ArrowDown` in it opens the calendar.
+- `Content` then declines initial focus on its own, so keystrokes reach the
+  field rather than the grid. Pass `initialFocus` explicitly only to override
+  that.
+- `Escape` in a typed field is two-stage, as in a combobox: the first press
+  reverts the text being edited, the second dismisses the popover.
+- The `Nav` caption is an `aria-live="polite"` region, so changing month is
+  announced.
+- `MonthGrid` cells are buttons with `aria-pressed`, not tabs — the design reuses
+  the standalone tab visual, but tab semantics without tabpanels would be wrong.
+- `readOnly` leaves days legible and focusable while refusing edits; `disabled`
+  removes them from interaction and prevents the popover opening at all.
+- `loading` implies `disabled`, so nothing is operable over data that has not
+  arrived. Each shimmer region carries `aria-busy`, and the shimmer itself is
+  `aria-hidden`.

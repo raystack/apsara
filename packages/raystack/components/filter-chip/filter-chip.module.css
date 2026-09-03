@@ -195,7 +195,20 @@ button.selectValue:hover {
   overflow: hidden;
 }
 
-.dateField {
+/* The invalid-date affordance the old picker drove through
+   `updateError('Invalid date')`. Its rule targeted a hashed
+   `input-error-wrapper` class that no longer exists anywhere, so restoring it
+   verbatim would have been dead CSS; this hangs off the state `.RangeInput` and
+   `.Input` actually report, and pairs with `aria-invalid` on the field so the
+   error is announced rather than only drawn. */
+.dateFieldWrapper[data-error] .dateField [data-slot="input-container"] {
+  border: 1px solid var(--rs-color-border-danger-primary);
+}
+
+/* Reaches Input's container through its public slot rather than a hashed
+   class name — the same thing the old `classNames.container` merge did, but
+   without letting a consumer-supplied object replace the chip's own class. */
+.dateField [data-slot="input-container"] {
   border-radius: 0;
   display: flex;
   justify-content: space-between;
@@ -207,13 +220,13 @@ button.selectValue:hover {
   box-shadow: none;
 }
 
-/* match height of the DatePicker when FilterChip variant is text */
-.chip[data-variant="text"] .dateField {
+/* match the picker's height when the FilterChip variant is text */
+.chip[data-variant="text"] .dateField [data-slot="input-container"] {
   height: var(--rs-space-7);
   min-height: var(--rs-space-7);
 }
 
-.dateField [data-slot="date-picker-input"] {
+.dateField [data-slot="input"] {
   text-align: left;
   padding-left: var(--rs-space-3);
   padding-right: var(--rs-space-3);
@@ -221,12 +234,4 @@ button.selectValue:hover {
 
 .dateField [data-trailing] {
   margin-left: auto;
-}
-
-.dateFieldWrapper [class*="helper-text"] {
-  display: none;
-}
-
-.dateFieldWrapper [class*="input-error-wrapper"] {
-  border: 1px solid var(--rs-color-border-danger-primary);
 }

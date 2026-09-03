@@ -2,11 +2,91 @@
 
 ## Unreleased
 
+### CalendarPreview — a subcomposed replacement for the calendar family
+
+`CalendarPreview` is one root with dot-notation parts, replacing `Calendar`,
+`DatePicker` and `RangePicker`. Every piece of state is owned explicitly —
+selection, visible month, open, granularity — so popover open state is public
+for the first time and Base UI owns dismissal. See
+[CalendarPreview](https://apsara.raystack.io/docs/components/calendar-preview)
+and RFC 005.
+
+Fourteen parts: `Trigger`, `Content`, `Input`, `RangeInput`, `Presets`,
+`Preset`, `GranularityTabs`, `Nav`, `Grid`, `MonthGrid`, `TimeField`, `Footer`,
+`Apply`, `Cancel`.
+
+The old family still ships and is unchanged. It is removed a release after
+this one.
+
+- **Day, month, quarter, half-year and year selection**, switchable through
+  `GranularityTabs`. Non-day granularities emit the first day of the chosen
+  period.
+- **Both range fields are typable.** The old `RangePicker` left them
+  `readOnly`.
+- **`lock="from" | "to"`** holds one endpoint read-only in both the input and
+  the grid, so "fix the start, pick the end" no longer disables the whole
+  picker.
+- **`commit="explicit"`** buffers edits until `Apply`, so a popover can be
+  abandoned without the parent seeing intermediate states.
+- **No `slotProps`.** Every surface is a part, and every part spreads
+  `...props` last.
+- **Presets.** `Presets` and `Preset` write straight into root state and mark
+  themselves pressed while the value matches.
+- **A loading state.** `loading` replaces the caption and the grid with a
+  shimmer and disables every control, rather than leaving live chrome over
+  data that has not arrived.
+- **The popover opens `bottom-start`**, not above the trigger.
+- **A typed trigger is a first-class shape.** With `Input` or `RangeInput`
+  inside `Trigger`, the trigger drops the button role that would make the
+  field presentational to assistive tech, clicking the field no longer toggles
+  the calendar shut, `Content` declines initial focus by itself, `ArrowDown`
+  opens, and `Escape` reverts the draft before it dismisses.
+
+#### Breaking changes
+
+- **`FilterChipCalendarProps` changes shape.** It was a subset of
+  `DatePickerProps`; it is now a subset of `CalendarPreview`'s root props.
+  Props renamed: `dateFormat` → `format`, `onSelect` → `onValueChange`,
+  `calendarProps.startMonth`/`endMonth` → `minDate`/`maxDate`. `slotProps`,
+  `inputProps` and `showCalendarIcon` are gone — compose parts instead. This
+  reaches `DataTable`'s and `DataView`'s `filterProps.calendar`.
+- **`FilterChip`'s date control is now `CalendarPreview`.** Its `data-slot`
+  names change accordingly: `date-picker-input` becomes
+  `calendar-preview-input`. Styling that targeted the old slots must be
+  updated.
+
+#### Dependencies
+
+These ride along with this change rather than in a separate PR, so they are
+named here:
+
+- **`react-day-picker` `^9.6.7` → `^10.0.1`**, a major. Only
+  `calendar-preview-grid.tsx` imports it, but `Calendar`, `DatePicker` and
+  `RangePicker` still ship on it for one more release and now run against v10.
+  The `captionLayout="dropdown"` unmount regression test still passes.
+- **`@base-ui/react` `~1.6.0` → `~1.7.0`** (with `@base-ui/utils` `~0.3.1` →
+  `~0.3.2`), which underlies every interactive component in the package.
+- **`dayjs` `^1.11.20` → `^1.11.23`**, a patch.
+
+#### Other changes
+
+- `DataView` fields gain `filterProps.calendar`, which the 0.49.0 notes
+  already claimed existed but which only `DataTable` had.
+- `DataTable` and `DataView` filter operations no longer register dayjs
+  plugins themselves. Date comparison lives in one adapter, which removes the
+  import-order dependence behind the 0.49.0 keystroke crash.
+- **A date cell holding a numeric Unix timestamp in seconds now filters
+  correctly.** A bare number was read as milliseconds, so an epoch in seconds
+  — the more common serialization — landed in January 1970 and the row
+  compared against that instead of its real date. Numbers under 1e11 in
+  magnitude are now read as seconds. A timestamp arriving as a *string* of
+  digits is unchanged, and still reads as a year.
+
 ### Icons — lucide replaces @radix-ui/react-icons (BREAKING)
 
 Apsara names every icon with a stable key that does not name a library —
 `SearchIcon`, `SortAscendingIcon`, `ClearIcon` — and draws it with lucide.
-The package exports the 31 icons its own components use, and `createIcon`
+The package exports the 32 icons its own components use, and `createIcon`
 is public, so an app builds any other icon the same way. See the
 [migration guide](https://apsara.raystack.io/docs/migrating-to-lucide-icons)
 and [Icons](https://apsara.raystack.io/docs/theme/icons).
@@ -47,7 +127,7 @@ and [Icons](https://apsara.raystack.io/docs/theme/icons).
 
 #### New features
 
-- **31 icons**, from `@raystack/apsara` and from
+- **32 icons**, from `@raystack/apsara` and from
   `@raystack/apsara/icons` — all drawn by lucide, from 30 drawings
   (`ClearIcon` and `ErrorIcon` share one). These are the icons Apsara's
   own components draw: the keys you cannot reach from your own call
@@ -65,7 +145,7 @@ and [Icons](https://apsara.raystack.io/docs/theme/icons).
   replaceability as Apsara's own icons.
 - **`data-icon="<Key>"`** on every icon, so CSS can style one icon
   without a re-render and a test can select it.
-- **New public types**: `IconName` (the union of the 31 keys, so a typo
+- **New public types**: `IconName` (the union of the 32 keys, so a typo
   in an override map is a type error), `IconOptions`, `IconOverrides`,
   `IconComponent`, `IconProps`, `IconProviderProps`, and `IconProvider`
   itself.
