@@ -60,6 +60,27 @@ export interface CalendarPreviewBaseProps {
   defaultMonth?: Date;
   onMonthChange?: (month: Date) => void;
 
+  /**
+   * Selectable range, inclusive at both ends and compared by whole day.
+   *
+   * A `Date` is an instant, so with a `timeZone` set the bound's *day* is the
+   * day that instant falls on **in that zone** — the same clock the values are
+   * compared on. `new Date(2024, 3, 17)` is midnight where the code runs, so
+   * on a UTC server that is 05:30 on the 17th in `Asia/Kolkata` but 20:00 on
+   * the *16th* in `America/New_York`, and the bound moves with it.
+   *
+   * So with a display zone, author bounds on that clock: the instant that is
+   * midnight *there* for a whole-day bound, or the instant that is the time
+   * you mean there. Otherwise a server and a browser in different zones
+   * resolve the same props differently, which is a hydration mismatch. The
+   * same applies to `value` and `defaultMonth`; bounds are called out because
+   * a wrong day there silently removes options.
+   *
+   * A bound at midnight on that clock means the whole of its day, which is
+   * how every part of the component reads it — `.TimeField` included, so a
+   * `maxDate` of the 17th still admits 23:00 on the 17th. A bound that names
+   * a time additionally constrains within its own day.
+   */
   minDate?: Date;
   maxDate?: Date;
   /**
@@ -72,6 +93,12 @@ export interface CalendarPreviewBaseProps {
 
   /** @defaultValue 'DD MMM YYYY' */
   format?: string;
+  /**
+   * IANA zone the calendar reads and writes on. Defaults to the host's.
+   *
+   * Every comparison in the component runs on this clock, so it is also the
+   * clock `minDate`/`maxDate` are resolved against — see the note there.
+   */
   timeZone?: string;
   /** @defaultValue 0 */
   weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;

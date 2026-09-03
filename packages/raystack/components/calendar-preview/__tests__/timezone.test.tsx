@@ -149,15 +149,14 @@ describe('reads do not depend on the host timezone', () => {
   });
 
   /*
-   * `maxDate={new Date(2024, 3, 17)}` is the ordinary way to say "the 17th",
-   * and the adapter promises it allows every time of day on that date. Whether
-   * a bound "has a time of day" was being asked of the *display* zone, where
-   * host midnight is 05:30 — so the bound silently collapsed to "the 17th, but
-   * only until dawn" and `.TimeField` rejected every hour after it while
-   * `.Grid` and `.Input` accepted the whole day.
+   * A whole-day bound is one sitting at midnight on the display clock, and it
+   * allows every time of day on that date — `.TimeField` included, where
+   * reading the midnight literally would forbid every hour of the last day
+   * the picker allows.
    */
   it('reads a bare day bound as the whole day in any display zone', () => {
-    const maxDate = new Date(2024, 3, 17);
+    // Midnight on 17 Apr in Kolkata, as an instant: host-free.
+    const maxDate = new Date(Date.UTC(2024, 3, 16, 18, 30));
     const nineIST = new Date(Date.UTC(2024, 3, 17, 3, 30));
 
     expect(isWithinBounds(nineIST, undefined, maxDate, IST)).toBe(true);
@@ -165,13 +164,23 @@ describe('reads do not depend on the host timezone', () => {
   });
 
   it('still honours a bound that names a real time of day', () => {
-    // Authored with a time, so it constrains within its own day.
-    const maxDate = new Date(2024, 3, 17, 10, 0);
-    const beforeIt = new Date(2024, 3, 17, 9, 0);
-    const afterIt = new Date(2024, 3, 17, 11, 0);
+    // 10:00 on the display clock, so it constrains within its own day.
+    const maxDate = new Date(Date.UTC(2024, 3, 17, 4, 30));
+    const nineIST = new Date(Date.UTC(2024, 3, 17, 3, 30));
+    const elevenIST = new Date(Date.UTC(2024, 3, 17, 5, 30));
 
-    expect(isWithinTimeBounds(beforeIt, undefined, maxDate)).toBe(true);
-    expect(isWithinTimeBounds(afterIt, undefined, maxDate)).toBe(false);
+    expect(isWithinTimeBounds(nineIST, undefined, maxDate, IST)).toBe(true);
+    expect(isWithinTimeBounds(elevenIST, undefined, maxDate, IST)).toBe(false);
+  });
+
+  it('and does the same with no display zone, on the host clock', () => {
+    const maxDate = new Date(2024, 3, 17, 10, 0);
+    expect(
+      isWithinTimeBounds(new Date(2024, 3, 17, 9, 0), undefined, maxDate)
+    ).toBe(true);
+    expect(
+      isWithinTimeBounds(new Date(2024, 3, 17, 11, 0), undefined, maxDate)
+    ).toBe(false);
   });
 
   it('handles a half-hour-offset zone through a transition', () => {
@@ -363,5 +372,50 @@ describe('offset tokens describe the display zone', () => {
         abs % 60
       ).padStart(2, '0')}`
     );
+  });
+});
+
+/*
+ * A `Date` bound is an instant, and with a display zone its *day* is that
+ * instant's day on the display clock. So a bound written with the host-local
+ * constructor resolves differently per host — a server and a browser in
+ * different zones disagree, which is a hydration mismatch — while one written
+ * as an explicit instant resolves identically everywhere.
+ *
+ * That is the documented rule at `minDate`/`maxDate`. Pinned here so it stays
+ * a decision rather than an accident.
+ */
+describe('bounds resolve on the display clock', () => {
+  /** Midnight on 17 Apr in Kolkata. The rule: author on the display clock. */
+  const APRIL_17_IST = new Date(Date.UTC(2024, 3, 16, 18, 30));
+  const LATE_ON_THE_17TH = new Date(Date.UTC(2024, 3, 17, 17, 30));
+
+  it('admits the whole of a midnight bound day, in every host zone', () => {
+    expect(isWithinBounds(LATE_ON_THE_17TH, undefined, APRIL_17_IST, IST)).toBe(
+      true
+    );
+    expect(
+      isWithinTimeBounds(LATE_ON_THE_17TH, undefined, APRIL_17_IST, IST)
+    ).toBe(true);
+  });
+
+  it('compares by whole day, inclusive, on that clock', () => {
+    expect(isWithinBounds(APRIL_17_IST, APRIL_17_IST, undefined, IST)).toBe(
+      true
+    );
+    expect(
+      isWithinBounds(
+        new Date(APRIL_17_IST.getTime() - 1),
+        APRIL_17_IST,
+        undefined,
+        IST
+      )
+    ).toBe(false);
+  });
+
+  it('is past the bound once the display clock rolls over', () => {
+    // 18 Apr 00:30 IST.
+    const justAfter = new Date(Date.UTC(2024, 3, 17, 19, 0));
+    expect(isWithinBounds(justAfter, undefined, APRIL_17_IST, IST)).toBe(false);
   });
 });

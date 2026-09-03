@@ -713,19 +713,33 @@ export function isWithinBounds(
 /**
  * Whether a bound carries a time of day, or is a plain midnight-anchored day.
  *
- * Asked of the host clock, deliberately, and not of `timeZone`. This is a
- * question about how the bound was *written*, not about how it displays:
- * `maxDate={new Date(2024, 3, 17)}` is the ordinary way to say "the 17th", and
- * that constructor produces midnight in the zone the consumer's code runs in.
+ * Asked on the display clock — the same clock every other comparison here
+ * runs on, and the one the bound has to be authored on for any of this to be
+ * host-independent.
  *
- * Asking it in the display zone broke the promise one line down. With the host
- * in UTC and `timeZone="Asia/Kolkata"`, that same `maxDate` is 05:30 IST — not
- * midnight — so it counted as carrying a time, and the bound silently collapsed
- * to "the 17th, but only until 05:30". `.Grid` and `.Input` accepted the whole
- * day while `.TimeField` rejected every hour after dawn.
+ * It used to ask the host clock, on the reasoning that `new Date(2024, 3, 17)`
+ * is how a consumer says "the 17th" and that constructor is host-local. True,
+ * but it does not make the bound host-independent — it only moves which host
+ * gets the right answer. The same props then accepted or rejected the same
+ * instant depending on the machine: with `timeZone="Asia/Kolkata"`, a bound
+ * built as `Date.UTC(2024, 3, 17)` reads as bare midnight on a UTC host and as
+ * 20:00 on the 16th on a New York one, so one admitted the whole day and the
+ * other admitted nothing. Server and browser disagreeing there is a hydration
+ * mismatch.
+ *
+ * On the display clock there is one rule instead, and it is stateable: bounds
+ * are authored on the clock the calendar runs on. With no `timeZone` that is
+ * the host, so the ordinary `new Date(2024, 3, 17)` means what it always did.
+ * Documented at `minDate`/`maxDate`, where a consumer will meet it.
+ *
+ * Only the `maxDate` side of the caller is separately observable: a `minDate`
+ * at midnight on the display clock is at or before every instant of its own
+ * day, so the instant check below can never reject one. The `minDate` call
+ * passes the zone for symmetry — it is right either way, and a reader should
+ * not have to work out which of the two is load-bearing.
  */
-function hasTimeOfDay(date: Date): boolean {
-  const w = wallClock(date);
+function hasTimeOfDay(date: Date, timeZone?: string): boolean {
+  const w = wallClock(date, timeZone);
   return w.hour !== 0 || w.minute !== 0 || w.second !== 0 || w.ms !== 0;
 }
 
@@ -752,10 +766,18 @@ export function isWithinTimeBounds(
 ): boolean {
   if (!isWithinBounds(date, minDate, maxDate, timeZone)) return false;
   const instant = date.getTime();
-  if (minDate && hasTimeOfDay(minDate) && instant < minDate.getTime()) {
+  if (
+    minDate &&
+    hasTimeOfDay(minDate, timeZone) &&
+    instant < minDate.getTime()
+  ) {
     return false;
   }
-  if (maxDate && hasTimeOfDay(maxDate) && instant > maxDate.getTime()) {
+  if (
+    maxDate &&
+    hasTimeOfDay(maxDate, timeZone) &&
+    instant > maxDate.getTime()
+  ) {
     return false;
   }
   return true;
