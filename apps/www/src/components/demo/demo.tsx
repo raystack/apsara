@@ -62,7 +62,7 @@ import { DemoProps } from './types';
 export default function Demo(props: DemoProps) {
   const {
     data,
-    // `...Apsara` carries the 31 icons Apsara publishes, so none of those needs
+    // `...Apsara` carries the 32 icons Apsara publishes, so none of those needs
     // its own entry — and nothing below may repeat one of their keys, because a
     // later key shadows the spread. A demo that needs any other glyph names a
     // lucide component from the block above and sizes it at the call site,
