@@ -14,6 +14,7 @@ import {
   type DayButtonProps,
   DayPicker,
   type DayPickerProps,
+  type MonthCaptionProps,
   type MonthGridProps,
   type RootProps,
   type WeekdayProps
@@ -25,6 +26,11 @@ import {
   useCalendarPreviewContext,
   useCalendarPreviewDaysContext
 } from './calendar-preview-context';
+import {
+  CalendarPreviewNextMonth,
+  CalendarPreviewPrevMonth
+} from './calendar-preview-header';
+import { formatCaptionLabel, formatWeekdayLabel } from './date-adapter';
 
 /*
  * The only file in `calendar-preview/` that imports react-day-picker.
@@ -65,7 +71,12 @@ export interface CalendarPreviewGridProps
   fixedWeeks?: boolean;
   /**
    * Render the days either side of the month.
-   * @defaultValue true
+   *
+   * Off, unlike the current `DatePicker`: reference A ends every grid on the
+   * last day of its month and leaves the leading cells blank. The cells are
+   * still rendered, so the week rows keep their shape — they are just empty.
+   *
+   * @defaultValue false
    */
   showOutsideDays?: boolean;
   /** Render a week-number column. */
@@ -93,7 +104,7 @@ export interface CalendarPreviewGridProps
 
 export function CalendarPreviewGrid({
   fixedWeeks,
-  showOutsideDays = true,
+  showOutsideDays = false,
   showWeekNumber,
   weekStartsOn,
   modifiers,
@@ -140,15 +151,25 @@ export function CalendarPreviewGrid({
     rootProps: props
   };
 
+  const months = days?.numberOfMonths ?? 1;
+
+  /*
+   * One month keeps its caption in `.Header`, above the grid, and leaves the
+   * one react-day-picker renders visually hidden for the table's accessible
+   * name. Several months have no single header to put it in — the caption sits
+   * over its own grid, and the nav splits to the outer edges — so the month
+   * caption becomes the header, and `.Days` renders no `.Header` above.
+   */
   const slots = useMemo(
     () => ({
       Root: CalendarPreviewGridRoot,
       MonthGrid: CalendarPreviewWeeks,
       DayButton: CalendarPreviewDay,
       Weekday: CalendarPreviewWeekday,
+      ...(months > 1 ? { MonthCaption: CalendarPreviewMonthCaption } : {}),
       ...components
     }),
-    [components]
+    [components, months]
   );
 
   const handleSelect = (selected: Date | undefined, triggerDate: Date) => {
@@ -170,7 +191,8 @@ export function CalendarPreviewGrid({
     today,
     hideNavigation: true,
     captionLayout: 'label',
-    numberOfMonths: days?.numberOfMonths ?? 1,
+    numberOfMonths: months,
+    formatters: GRID_FORMATTERS,
     disabled: disabled ? true : isDateUnavailable,
     fixedWeeks,
     showOutsideDays,
@@ -252,6 +274,55 @@ function CalendarPreviewWeeks(props: MonthGridProps) {
           containerClassName={styles['skeleton-rows']}
         />
       </div>
+    </div>
+  );
+}
+
+/**
+ * One month's own header, used only when several months are shown.
+ *
+ * Reference A splits the nav across the whole row: previous sits at the far
+ * left of the first month, next at the far right of the last, and each caption
+ * is centred over its own grid. A spacer holds the place of the button a month
+ * does not carry, so every caption centres on the same axis as its grid rather
+ * than drifting toward the side that has no button. There is no reset here —
+ * the two-month header in the frames does not have one.
+ */
+function CalendarPreviewMonthCaption({
+  calendarMonth,
+  displayIndex,
+  /* Dropped, not merged: the class react-day-picker passes here is the one
+     that hides the caption for the single-month layout, which is exactly what
+     this header must not be. */
+  className: _className,
+  ...props
+}: MonthCaptionProps) {
+  const { timeZone } = useCalendarPreviewContext('CalendarPreview.Grid');
+  const days = useCalendarPreviewDaysContext();
+  const lastIndex = (days?.numberOfMonths ?? 1) - 1;
+
+  return (
+    <div
+      className={styles['month-header']}
+      data-slot='calendar-preview-month-header'
+      {...props}
+    >
+      {displayIndex === 0 ? (
+        <CalendarPreviewPrevMonth />
+      ) : (
+        <span className={styles['nav-spacer']} aria-hidden='true' />
+      )}
+      <span
+        className={cx(styles.caption, styles['month-header-caption'])}
+        data-slot='calendar-preview-caption'
+      >
+        {formatCaptionLabel(calendarMonth.date, timeZone)}
+      </span>
+      {displayIndex === lastIndex ? (
+        <CalendarPreviewNextMonth />
+      ) : (
+        <span className={styles['nav-spacer']} aria-hidden='true' />
+      )}
     </div>
   );
 }
@@ -366,6 +437,13 @@ export function CalendarPreviewWeekday({
 }
 
 CalendarPreviewWeekday.displayName = 'CalendarPreview.Weekday';
+
+/* Three-letter weekday headings, against react-day-picker's two-letter
+ * default. Locale-derived, so a localized calendar gets its own abbreviation
+ * rather than a sliced English one. */
+const GRID_FORMATTERS: DayPickerProps['formatters'] = {
+  formatWeekdayName: date => formatWeekdayLabel(date)
+};
 
 /*
  * The caption is rendered but visually hidden: `.Header` owns the visible one,

@@ -206,9 +206,26 @@ export function formatMonthLabel(date: Date, timeZone?: string): string {
   return format(zoned(date, timeZone), 'MMM yyyy');
 }
 
-/** `'May 2027'`, month spelled in full — the grid header's caption. */
+/**
+ * `'May 2027'` — the grid header's caption.
+ *
+ * Abbreviated, matching reference A, and so identical to
+ * {@link formatMonthLabel} today. They stay separate functions because they
+ * answer different questions — what the grid is showing, versus what a
+ * month-scale value means — and only one of them is the caption.
+ */
 export function formatCaptionLabel(date: Date, timeZone?: string): string {
-  return format(zoned(date, timeZone), 'MMMM yyyy');
+  return format(zoned(date, timeZone), 'MMM yyyy');
+}
+
+/**
+ * `'Sun'` — one weekday heading.
+ *
+ * Three letters, not react-day-picker's two-letter default: reference A's
+ * frames spell them `Sun Mon Tue`, and the day cell is wide enough for it.
+ */
+export function formatWeekdayLabel(date: Date, timeZone?: string): string {
+  return format(zoned(date, timeZone), 'EEE');
 }
 
 /**
@@ -219,6 +236,17 @@ export function formatCaptionLabel(date: Date, timeZone?: string): string {
  */
 export function monthNames(): string[] {
   return MONTH_INDEXES.map(index => format(new Date(2001, index, 1), 'MMMM'));
+}
+
+/**
+ * The twelve month names abbreviated, January first — `'Jan'`, `'Feb'`.
+ *
+ * What the caption's month column shows: the scroller is a narrow column
+ * beside the years, and reference A abbreviates it. {@link monthFromName}
+ * accepts this form too, so the parser still agrees with it.
+ */
+export function monthShortNames(): string[] {
+  return MONTH_INDEXES.map(index => format(new Date(2001, index, 1), 'MMM'));
 }
 
 const MONTH_INDEXES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];

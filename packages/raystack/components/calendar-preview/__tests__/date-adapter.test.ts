@@ -14,6 +14,7 @@ import {
   monthFromName,
   monthNames,
   monthOf,
+  monthShortNames,
   monthStart,
   parseKey,
   shiftMonths,
@@ -209,15 +210,15 @@ describe('label formatters', () => {
     expect(formatMonthLabel(new Date(2027, 8, 1))).toBe('Sep 2027');
   });
 
-  it('formats a caption with the month spelled out', () => {
-    expect(formatCaptionLabel(new Date(2027, 8, 1))).toBe('September 2027');
+  it('formats a caption with the month abbreviated', () => {
+    expect(formatCaptionLabel(new Date(2027, 8, 1))).toBe('Sep 2027');
   });
 
   it('reads the labels in an explicit zone', () => {
     const instant = new Date(Date.UTC(2026, 7, 31, 20, 0));
     expect(formatDayLabel(instant, 'Asia/Tokyo')).toBe('01/09/2026');
     expect(formatMonthLabel(instant, 'Asia/Tokyo')).toBe('Sep 2026');
-    expect(formatCaptionLabel(instant, 'UTC')).toBe('August 2026');
+    expect(formatCaptionLabel(instant, 'UTC')).toBe('Aug 2026');
   });
 });
 
@@ -232,6 +233,23 @@ describe('monthNames', () => {
   /* The caption column and the input parser must never disagree about a name. */
   it('round-trips through monthFromName', () => {
     monthNames().forEach((name, index) => {
+      expect(monthFromName(name)).toBe(index + 1);
+    });
+  });
+});
+
+describe('monthShortNames', () => {
+  it('lists twelve abbreviations, January first', () => {
+    const names = monthShortNames();
+    expect(names).toHaveLength(12);
+    expect(names[0]).toBe('Jan');
+    expect(names[11]).toBe('Dec');
+  });
+
+  /* The caption's month column shows these, so the parser has to take them
+     back — the same contract the full names carry. */
+  it('round-trips through monthFromName', () => {
+    monthShortNames().forEach((name, index) => {
       expect(monthFromName(name)).toBe(index + 1);
     });
   });

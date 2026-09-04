@@ -2,12 +2,13 @@
 
 import { cx } from 'class-variance-authority';
 import type { ComponentProps } from 'react';
-import { Button } from '../button';
+import { UndoIcon } from '~/icons';
+import { IconButton } from '../icon-button';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
 import { dayKey } from './date-adapter';
 
-export type CalendarPreviewResetProps = ComponentProps<typeof Button>;
+export type CalendarPreviewResetProps = ComponentProps<typeof IconButton>;
 
 /**
  * Restores `defaultDate`.
@@ -19,6 +20,10 @@ export type CalendarPreviewResetProps = ComponentProps<typeof Button>;
  * the current value differs from it. `defaultDate` is a separate prop from
  * `defaultValue` precisely so this works under a controlled `value`, which
  * `useControlled` ignores `defaultValue` for.
+ *
+ * Drawn as the undo glyph and grouped with the two nav buttons, which is where
+ * the single-month header in reference A puts it. The two-month header has no
+ * reset at all — see `.Header`.
  */
 export function CalendarPreviewReset({
   className,
@@ -35,21 +40,20 @@ export function CalendarPreviewReset({
   }
 
   return (
-    <Button
-      variant='text'
-      size='small'
-      color='neutral'
-      className={cx(styles.reset, className)}
+    <IconButton
+      size={3}
+      className={cx(styles['nav-button'], styles.reset, className)}
       disabled={disabled || readOnly}
       data-slot='calendar-preview-reset'
+      aria-label='Reset'
       onClick={event => {
         onClick?.(event);
         reset();
       }}
       {...props}
     >
-      {children ?? 'Reset'}
-    </Button>
+      {children ?? <UndoIcon />}
+    </IconButton>
   );
 }
 

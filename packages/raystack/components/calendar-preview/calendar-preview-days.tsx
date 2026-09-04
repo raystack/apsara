@@ -59,9 +59,12 @@ export function CalendarPreviewDays({
         'data-disabled': disabled || undefined,
         'data-readonly': readOnly || undefined,
         'data-busy': busy || undefined,
+        /* One month gets a header above the grid. Several months caption
+           themselves inside it, so a `.Header` here would be a second,
+           redundant row — see `.Grid`'s month caption. */
         children: children ?? (
           <>
-            <CalendarPreviewHeader />
+            {numberOfMonths <= 1 && <CalendarPreviewHeader />}
             <CalendarPreviewGrid />
           </>
         )

@@ -182,11 +182,11 @@ describe('CalendarPreview selection bounds', () => {
 
     fireEvent.click(prev as HTMLElement);
     expect(getSlot(container, 'calendar-preview-caption')).toHaveTextContent(
-      'July 2026'
+      'Jul 2026'
     );
     fireEvent.click(prev as HTMLElement);
     expect(getSlot(container, 'calendar-preview-caption')).toHaveTextContent(
-      'June 2026'
+      'Jun 2026'
     );
   });
 
@@ -201,7 +201,7 @@ describe('CalendarPreview selection bounds', () => {
     fireEvent.click(next as HTMLElement);
     fireEvent.click(next as HTMLElement);
     expect(getSlot(container, 'calendar-preview-caption')).toHaveTextContent(
-      'October 2026'
+      'Oct 2026'
     );
   });
 
@@ -227,7 +227,7 @@ describe('CalendarPreview month navigation', () => {
       getSlot(container, 'calendar-preview-next-month') as HTMLElement
     );
     expect(getSlot(container, 'calendar-preview-caption')).toHaveTextContent(
-      'September 2026'
+      'Sep 2026'
     );
   });
 
@@ -251,7 +251,7 @@ describe('CalendarPreview month navigation', () => {
     );
     expect(onMonthChange).toHaveBeenCalledWith(new Date(2026, 8, 1));
     expect(getSlot(container, 'calendar-preview-caption')).toHaveTextContent(
-      'August 2026'
+      'Aug 2026'
     );
   });
 
@@ -266,18 +266,57 @@ describe('CalendarPreview month navigation', () => {
     fireEvent.click(next);
     fireEvent.click(next);
     expect(getSlot(container, 'calendar-preview-caption')).toHaveTextContent(
-      'March 2026'
+      'Mar 2026'
     );
   });
 
-  it('shows several months side by side and captions the span', () => {
+  it('shows several months side by side, each captioned over its own grid', () => {
     const { container } = renderCalendar(
       <CalendarPreview.Days numberOfMonths={2} />
     );
     expect(getAllSlots(container, 'calendar-preview-table')).toHaveLength(2);
-    expect(getSlot(container, 'calendar-preview-caption')).toHaveTextContent(
-      'August 2026 – September 2026'
+
+    /* Reference A captions each grid rather than the span, so there is one
+       caption per month and no single header row above them. */
+    const captions = getAllSlots(container, 'calendar-preview-caption');
+    expect(captions.map(node => node.textContent)).toEqual([
+      'Aug 2026',
+      'Sep 2026'
+    ]);
+    expect(getSlot(container, 'calendar-preview-header')).toBeNull();
+  });
+
+  it('splits the nav to the outer edges when showing several months', () => {
+    const { container } = renderCalendar(
+      <CalendarPreview.Days numberOfMonths={2} />
     );
+    const [first, second] = getAllSlots(
+      container,
+      'calendar-preview-month-header'
+    );
+
+    /* Previous belongs to the first month, next to the last, and neither
+       month carries a reset — the two-month header in the frames has none. */
+    expect(getSlot(first, 'calendar-preview-prev-month')).not.toBeNull();
+    expect(getSlot(first, 'calendar-preview-next-month')).toBeNull();
+    expect(getSlot(second, 'calendar-preview-prev-month')).toBeNull();
+    expect(getSlot(second, 'calendar-preview-next-month')).not.toBeNull();
+    expect(getSlot(container, 'calendar-preview-reset')).toBeNull();
+  });
+
+  it('navigates both months together from the split nav', () => {
+    const { container } = renderCalendar(
+      <CalendarPreview.Days numberOfMonths={2} />,
+      { defaultDate: new Date(2026, 7, 10) }
+    );
+    fireEvent.click(
+      getSlot(container, 'calendar-preview-next-month') as HTMLElement
+    );
+    expect(
+      getAllSlots(container, 'calendar-preview-caption').map(
+        node => node.textContent
+      )
+    ).toEqual(['Sep 2026', 'Oct 2026']);
   });
 });
 
@@ -365,7 +404,7 @@ describe('CalendarPreview.Reset', () => {
 
     expect(onMonthChange).not.toHaveBeenCalled();
     expect(getSlot(container, 'calendar-preview-caption')).toHaveTextContent(
-      'September 2026'
+      'Sep 2026'
     );
   });
 
@@ -382,7 +421,7 @@ describe('CalendarPreview.Caption', () => {
   it('labels the displayed month', () => {
     const { container } = renderCalendar();
     expect(getSlot(container, 'calendar-preview-caption')).toHaveTextContent(
-      'August 2026'
+      'Aug 2026'
     );
   });
 
@@ -445,11 +484,11 @@ describe('CalendarPreview.Caption', () => {
     const march = getAllSlots(
       document.body,
       'calendar-preview-caption-month'
-    ).find(option => option.textContent === 'March');
+    ).find(option => option.textContent === 'Mar');
     fireEvent.click(march as HTMLElement);
 
     expect(getSlot(container, 'calendar-preview-caption')).toHaveTextContent(
-      'March 2026'
+      'Mar 2026'
     );
     expect(onValueChange).not.toHaveBeenCalled();
   });
@@ -472,7 +511,7 @@ describe('CalendarPreview.Caption', () => {
     fireEvent.click(year as HTMLElement);
 
     expect(getSlot(container, 'calendar-preview-caption')).toHaveTextContent(
-      'August 2030'
+      'Aug 2030'
     );
   });
 
@@ -606,6 +645,15 @@ describe('CalendarPreview.Grid', () => {
     ).not.toBeDisabled();
   });
 
+  it('starts the week on Sunday and spells the weekdays in three letters', () => {
+    const { container } = renderCalendar();
+    expect(
+      getAllSlots(container, 'calendar-preview-weekday').map(
+        node => node.textContent
+      )
+    ).toEqual(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']);
+  });
+
   it('forwards weekStartsOn to the grid', () => {
     const { container } = renderCalendar(
       <CalendarPreview.Days>
@@ -613,7 +661,7 @@ describe('CalendarPreview.Grid', () => {
       </CalendarPreview.Days>
     );
     const first = getAllSlots(container, 'calendar-preview-weekday')[0];
-    expect(first).toHaveTextContent('Mo');
+    expect(first).toHaveTextContent('Mon');
   });
 
   it('lets a consumer wrap the day slot through components', () => {
@@ -947,7 +995,7 @@ describe('useCalendar', () => {
 
     fireEvent.click(screen.getByText('move'));
     expect(getSlot(container, 'calendar-preview-caption')).toHaveTextContent(
-      'October 2026'
+      'Oct 2026'
     );
 
     fireEvent.click(screen.getByText('clear'));

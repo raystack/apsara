@@ -14,7 +14,7 @@ import {
 } from './calendar-preview-context';
 import {
   formatCaptionLabel,
-  monthNames,
+  monthShortNames,
   monthStart,
   shiftMonths
 } from './date-adapter';
@@ -121,9 +121,11 @@ function CaptionDropdown({
         {children ?? label}
       </PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>
+        {/* Anchored to the caption's start edge and overlapping the grid, as
+            in reference A — the grid stays mounted behind it. */}
         <PopoverPrimitive.Positioner
           sideOffset={4}
-          align='center'
+          align='start'
           className={styles['caption-positioner']}
           data-slot='calendar-preview-caption-positioner'
         >
@@ -135,7 +137,7 @@ function CaptionDropdown({
               slot='calendar-preview-caption-months'
               optionSlot='calendar-preview-caption-month'
               label='Month'
-              options={monthNames().map((name, index) => ({
+              options={monthShortNames().map((name, index) => ({
                 key: name,
                 text: name,
                 active: index === activeMonth,

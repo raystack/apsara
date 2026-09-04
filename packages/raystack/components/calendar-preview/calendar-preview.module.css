@@ -32,11 +32,12 @@
   cursor: not-allowed;
 }
 
-/* Takes the space between the two nav buttons so the label reads as centred
-   whether or not the reset is showing. */
+/* Takes the space left of the buttons, so the caption sits against the start
+   edge and the reset and two nav buttons group at the end — the single-month
+   header in reference A. Source order already matches, so nothing reorders. */
 .caption {
   flex: 1;
-  text-align: center;
+  text-align: start;
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
@@ -46,22 +47,27 @@
   -webkit-user-select: none;
 }
 
+/* The caption that opens the scroller is a filled chip, so the affordance
+   reads without an adjacent glyph. `flex: none` undoes `.caption`'s stretch —
+   the chip hugs its label rather than running to the nav buttons. */
 .caption-trigger {
   display: inline-flex;
+  flex: none;
+  margin-inline-end: auto;
   align-items: center;
   justify-content: center;
   gap: var(--rs-space-1);
   padding: var(--rs-space-1) var(--rs-space-3);
   border: none;
   border-radius: var(--rs-radius-2);
-  background: transparent;
+  background: var(--rs-color-background-neutral-secondary);
   color: inherit;
   font: inherit;
   cursor: pointer;
 }
 
 .caption-trigger:hover:not(:disabled) {
-  background: var(--rs-color-background-base-primary-hover);
+  background: var(--rs-color-background-neutral-secondary-hover);
 }
 
 .caption-trigger:focus-visible {
@@ -124,13 +130,39 @@
   outline-offset: var(--rs-focus-ring-offset-inset);
 }
 
+/* Grey, not accent: the scroller marks which month and year are in view, which
+   is a different thing from the selected day the grid fills in accent. */
 .caption-option[data-active] {
-  background: var(--rs-color-background-accent-emphasis);
-  color: var(--rs-color-foreground-base-emphasis);
+  background: var(--rs-color-background-neutral-secondary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .reset {
   flex: none;
+}
+
+/* The per-month header, used only when several months are shown: previous at
+   the far left of the first month, next at the far right of the last, and each
+   caption centred over its own grid. */
+.month-header {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+  min-height: var(--rs-space-9);
+  margin-bottom: var(--rs-space-3);
+}
+
+.month-header-caption {
+  flex: 1;
+  text-align: center;
+}
+
+/* Holds the place of the nav button this month does not carry, so the caption
+   centres on its grid instead of drifting to the buttonless side. */
+.nav-spacer {
+  flex: none;
+  width: var(--rs-space-6);
+  height: var(--rs-space-6);
 }
 
 .grid {

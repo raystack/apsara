@@ -61,6 +61,26 @@ describe('CalendarPreview data-slot contract', () => {
     );
   });
 
+  it('exposes a slot for every element the two-month day view renders', () => {
+    const { container } = renderCalendar(
+      <CalendarPreview.Days numberOfMonths={2} />
+    );
+    expectSlots(container, [
+      'calendar-preview-days',
+      'calendar-preview-month-header',
+      'calendar-preview-prev-month',
+      'calendar-preview-caption',
+      'calendar-preview-next-month',
+      'calendar-preview-grid',
+      'calendar-preview-table',
+      'calendar-preview-weekday',
+      'calendar-preview-day'
+    ]);
+    /* The single-month header is the one slot this layout must not render —
+       each month captions itself instead. */
+    expect(getSlot(container, 'calendar-preview-header')).toBeNull();
+  });
+
   it('exposes the reset slot only when there is something to restore', () => {
     const { container } = renderCalendar(undefined, {
       defaultDate: new Date(2026, 7, 10),
@@ -215,12 +235,25 @@ describe('CalendarPreview state attributes', () => {
     expect(unavailable[unavailable.length - 1]).toHaveTextContent('9');
   });
 
-  it('marks the days that fall outside the displayed month', () => {
+  it('renders no outside days by default', () => {
     const { container } = renderCalendar();
+    /* August 2026 starts on a Saturday, so a grid that showed outside days
+       would open with five of them. Reference A leaves those cells blank. */
     const outside = getAllSlots(container, 'calendar-preview-day').filter(
       cell => cell.hasAttribute('data-outside')
     );
-    /* August 2026 starts on a Saturday, so the grid opens with outside days. */
+    expect(outside).toHaveLength(0);
+  });
+
+  it('marks the days that fall outside the displayed month when asked', () => {
+    const { container } = renderCalendar(
+      <CalendarPreview.Days>
+        <CalendarPreview.Grid showOutsideDays />
+      </CalendarPreview.Days>
+    );
+    const outside = getAllSlots(container, 'calendar-preview-day').filter(
+      cell => cell.hasAttribute('data-outside')
+    );
     expect(outside.length).toBeGreaterThan(0);
     expect(outside[0]).not.toHaveAttribute('data-today');
   });
@@ -262,7 +295,7 @@ describe('CalendarPreview state attributes', () => {
       'calendar-preview-caption-month'
     ).filter(option => option.hasAttribute('data-active'));
     expect(activeMonth).toHaveLength(1);
-    expect(activeMonth[0]).toHaveTextContent('August');
+    expect(activeMonth[0]).toHaveTextContent('Aug');
 
     const activeYear = getAllSlots(
       document.body,

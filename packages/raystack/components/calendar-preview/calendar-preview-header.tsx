@@ -17,8 +17,15 @@ import { shiftMonths } from './date-adapter';
 export type CalendarPreviewHeaderProps = useRender.ComponentProps<'div'>;
 
 /**
- * The row above the grid. Composes the two nav buttons, the caption and the
- * reset when given no children.
+ * The row above the grid: the caption on the left, and the reset and two nav
+ * buttons grouped on the right.
+ *
+ * Source order is the reading and tab order — caption, then undo, previous,
+ * next — so the row needs no CSS reordering to match reference A.
+ *
+ * This is the single-month header. Showing more than one month moves the
+ * caption and the nav into each month's own header, inside `.Grid`, which is
+ * the only place that can interleave them with react-day-picker's columns.
  */
 export function CalendarPreviewHeader({
   className,
@@ -37,9 +44,9 @@ export function CalendarPreviewHeader({
         'data-slot': 'calendar-preview-header',
         children: children ?? (
           <>
-            <CalendarPreviewPrevMonth />
             <CalendarPreviewCaption />
             <CalendarPreviewReset />
+            <CalendarPreviewPrevMonth />
             <CalendarPreviewNextMonth />
           </>
         )
