@@ -21,6 +21,7 @@
  */
 import { TZDate } from '@date-fns/tz';
 import {
+  addMonths,
   endOfMonth,
   endOfQuarter,
   endOfYear,
@@ -57,7 +58,7 @@ const PARSE_REFERENCE = new Date(2000, 0, 1);
  * tooltip/`dateInfo` bug.
  */
 export function dayKey(date: Date, timeZone?: string): DayKey {
-  return format(timeZone ? new TZDate(date, timeZone) : date, DAY_KEY_FORMAT);
+  return format(zoned(date, timeZone), DAY_KEY_FORMAT);
 }
 
 /**
@@ -172,6 +173,58 @@ export function monthFromName(name: string): number | null {
     if (isValid(date)) return date.getMonth() + 1;
   }
   return null;
+}
+
+/**
+ * `date` moved `delta` whole months, landing on the first of the month.
+ *
+ * Normalising to the first keeps repeated navigation from drifting: stepping
+ * forward from 31 January would otherwise clamp to 28 February and stay on the
+ * 28th for every month after it.
+ */
+export function shiftMonths(date: Date, delta: number): Date {
+  return addMonths(startOfMonth(date), delta);
+}
+
+/** The first day of a calendar month. `monthIndex` is 0-11, as on `Date`. */
+export function monthStart(year: number, monthIndex: number): Date {
+  return new Date(year, monthIndex, 1);
+}
+
+/**
+ * `'20/05/2027'` — the default label for a value at day scale.
+ *
+ * Day-first, matching the input format `lib/parse.ts` accepts, so a rendered
+ * value can be typed straight back in.
+ */
+export function formatDayLabel(date: Date, timeZone?: string): string {
+  return format(zoned(date, timeZone), 'dd/MM/yyyy');
+}
+
+/** `'May 2027'` — the default label for a value at month scale. */
+export function formatMonthLabel(date: Date, timeZone?: string): string {
+  return format(zoned(date, timeZone), 'MMM yyyy');
+}
+
+/** `'May 2027'`, month spelled in full — the grid header's caption. */
+export function formatCaptionLabel(date: Date, timeZone?: string): string {
+  return format(zoned(date, timeZone), 'MMMM yyyy');
+}
+
+/**
+ * The twelve month names in full, January first.
+ *
+ * Built from the same locale as {@link monthFromName} reads, so the caption's
+ * month column and the input parser can never disagree about a name.
+ */
+export function monthNames(): string[] {
+  return MONTH_INDEXES.map(index => format(new Date(2001, index, 1), 'MMMM'));
+}
+
+const MONTH_INDEXES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+function zoned(date: Date, timeZone?: string): Date {
+  return timeZone ? new TZDate(date, timeZone) : date;
 }
 
 function parseStrict(value: string): Date {

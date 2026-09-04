@@ -1,0 +1,372 @@
+/* The day view hugs its content — no reserved height, so the surface around it
+   can size itself instead of being padded out to a fixed number. */
+.days {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  padding: var(--rs-space-3);
+  border-radius: var(--rs-radius-4);
+  background: var(--rs-color-background-base-primary);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.days[data-disabled] {
+  pointer-events: none;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+  min-height: var(--rs-space-9);
+  margin-bottom: var(--rs-space-3);
+}
+
+.nav-button {
+  flex: none;
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.nav-button:disabled {
+  color: var(--rs-color-foreground-base-tertiary);
+  cursor: not-allowed;
+}
+
+/* Takes the space between the two nav buttons so the label reads as centred
+   whether or not the reset is showing. */
+.caption {
+  flex: 1;
+  text-align: center;
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+  color: var(--rs-color-foreground-base-primary);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.caption-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--rs-space-1);
+  padding: var(--rs-space-1) var(--rs-space-3);
+  border: none;
+  border-radius: var(--rs-radius-2);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.caption-trigger:hover:not(:disabled) {
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+.caption-trigger:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-inset);
+}
+
+.caption-trigger:disabled {
+  color: var(--rs-color-foreground-base-tertiary);
+  cursor: not-allowed;
+}
+
+.caption-positioner {
+  z-index: 1;
+}
+
+/* Our own scroller, not a Select: two plain columns of buttons in a popup we
+   own, so nothing here portals a listbox the surrounding popover has to
+   recognise as inside itself. */
+.caption-popup {
+  display: flex;
+  gap: var(--rs-space-2);
+  padding: var(--rs-space-2);
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-4);
+  background: var(--rs-color-background-base-primary);
+  box-shadow: var(--rs-shadow-lifted);
+}
+
+.caption-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-1);
+  overflow-y: auto;
+  /* Six rows of the day-cell height; taller lists scroll. */
+  max-height: calc(var(--rs-space-10) * 6);
+}
+
+.caption-option {
+  flex: none;
+  padding: var(--rs-space-2) var(--rs-space-3);
+  border: none;
+  border-radius: var(--rs-radius-2);
+  background: transparent;
+  color: var(--rs-color-foreground-base-primary);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.caption-option:hover {
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+.caption-option:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-inset);
+}
+
+.caption-option[data-active] {
+  background: var(--rs-color-background-accent-emphasis);
+  color: var(--rs-color-foreground-base-emphasis);
+}
+
+.reset {
+  flex: none;
+}
+
+.grid {
+  position: relative;
+}
+
+.months {
+  display: flex;
+  gap: var(--rs-space-4);
+}
+
+.month {
+  display: flex;
+  flex-direction: column;
+}
+
+/* `.Header` owns the visible caption. This one stays in the tree because
+   react-day-picker points each grid's accessible name at the month, and a
+   removed node would take that name with it. */
+.month-caption {
+  position: absolute;
+  /* A hairline box, not a spacing value — the space scale starts at 2px. */
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.caption-label {
+  font: inherit;
+}
+
+.weeks {
+  position: relative;
+}
+
+.week,
+.weekdays {
+  display: flex;
+}
+
+.weekday {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--rs-space-10);
+  height: var(--rs-space-10);
+  color: var(--rs-color-foreground-base-secondary);
+  text-align: center;
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-micro);
+  line-height: var(--rs-line-height-micro);
+  letter-spacing: var(--rs-letter-spacing-micro);
+}
+
+.week-number,
+.week-number-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--rs-space-10);
+  height: var(--rs-space-10);
+  color: var(--rs-color-foreground-base-tertiary);
+  font-size: var(--rs-font-size-micro);
+  line-height: var(--rs-line-height-micro);
+  letter-spacing: var(--rs-letter-spacing-micro);
+}
+
+.day {
+  width: var(--rs-space-10);
+  height: var(--rs-space-10);
+  margin-bottom: var(--rs-space-1);
+  border: 1px solid transparent;
+  border-radius: var(--rs-radius-5);
+  background-color: var(--rs-color-background-base-primary);
+  color: var(--rs-color-foreground-base-primary);
+  text-align: center;
+  font-weight: var(--rs-font-weight-regular);
+  font-size: var(--rs-font-size-micro);
+  line-height: var(--rs-line-height-micro);
+  letter-spacing: var(--rs-letter-spacing-micro);
+}
+
+.day:hover:not(.disabled):not(.outside):not(.selected) {
+  border-color: var(--rs-color-border-accent-emphasis-hover);
+  background-color: transparent;
+}
+
+.selected {
+  background: var(--rs-color-background-accent-emphasis);
+}
+
+.selected .day-button {
+  color: var(--rs-color-foreground-base-emphasis);
+}
+
+.selected .day-button:active {
+  background-color: var(--rs-color-background-accent-emphasis-hover);
+}
+
+.outside {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.disabled {
+  opacity: 0.5;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.day-button {
+  position: relative;
+  display: grid;
+  place-content: center;
+  width: 100%;
+  height: 100%;
+  padding: unset;
+  border: none;
+  border-radius: inherit;
+  background: inherit;
+  color: inherit;
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  cursor: pointer;
+}
+
+.day-button:not([data-unavailable]):not([data-outside]):not(
+    [data-selected]
+  ):active {
+  background-color: var(--rs-color-background-base-primary-hover);
+}
+
+.day-button[data-unavailable] {
+  cursor: not-allowed;
+}
+
+/* Inset ring: day cells pack edge-to-edge in the week row, so a flush or
+   outward ring would collide with the neighbouring day. */
+.day-button:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-inset);
+}
+
+/* Today's dot sits under the number, and rides up when a day carries info. */
+.day-button[data-today]::after {
+  content: "";
+  position: absolute;
+  bottom: var(--rs-space-2);
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--rs-space-2);
+  height: var(--rs-space-2);
+  border-radius: var(--rs-radius-full);
+  background-color: var(--rs-color-background-accent-emphasis);
+}
+
+.day-button[data-today][data-selected]::after {
+  background-color: var(--rs-color-foreground-base-emphasis);
+}
+
+.day-button-with-info[data-today]::after {
+  bottom: var(--rs-space-1);
+}
+
+.day-info {
+  position: absolute;
+  top: calc(-1 * var(--rs-space-1));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  pointer-events: none;
+}
+
+.day-button[data-selected] .day-info,
+.day-button[data-selected] .day-info * {
+  color: var(--rs-color-foreground-base-emphasis);
+}
+
+.day-number {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.skeleton {
+  position: absolute;
+  inset: 0;
+  /* Solid backing so the grid underneath doesn't ghost through mid-fade. */
+  background: var(--rs-color-background-base-primary);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.skeleton[data-visible] {
+  opacity: 1;
+  visibility: visible;
+  /* Block clicks on the day grid underneath while loading. */
+  pointer-events: auto;
+}
+
+.skeleton-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-6);
+  padding-top: var(--rs-space-6);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton {
+    /* Exiting: fade opacity, then flip visibility after the fade. */
+    transition:
+      opacity var(--rs-duration-fast) var(--rs-ease-out),
+      visibility 0s linear var(--rs-duration-fast);
+  }
+
+  .skeleton[data-visible] {
+    /* Entering: visibility flips immediately, opacity fades in. */
+    transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
+  }
+}
+
+.footer {
+  padding: var(--rs-space-3);
+  margin-top: var(--rs-space-2);
+}
