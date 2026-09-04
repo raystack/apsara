@@ -11,19 +11,10 @@ import { dayKey } from './date-adapter';
 export type CalendarPreviewResetProps = ComponentProps<typeof IconButton>;
 
 /**
- * Restores `defaultDate`.
- *
- * A **value** reset, not a view reset: it commits the default day and leaves
- * the visible month where the user left it.
- *
- * Renders only when there is something to restore — `defaultDate` is set and
- * the current value differs from it. `defaultDate` is a separate prop from
- * `defaultValue` precisely so this works under a controlled `value`, which
- * `useControlled` ignores `defaultValue` for.
- *
- * Drawn as the undo glyph and grouped with the two nav buttons, which is where
- * the single-month header in reference A puts it. The two-month header has no
- * reset at all — see `.Header`.
+ * Restores `defaultDate`. A value reset, not a view reset — it leaves the
+ * visible month alone, and renders only when the value differs from the
+ * default. Keyed off `defaultDate` rather than `defaultValue` so it still
+ * shows under a controlled `value`.
  */
 export function CalendarPreviewReset({
   className,

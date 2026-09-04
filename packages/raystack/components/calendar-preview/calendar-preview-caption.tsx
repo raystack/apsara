@@ -19,24 +19,19 @@ import {
   shiftMonths
 } from './date-adapter';
 
-/*
- * The two forms take different props because they are different elements: a
- * plain caption is a `span`, and one that opens the scroller is a `button`.
- */
+/* Two elements, so two prop shapes: a plain caption is a `span`, one that
+   opens the scroller is a `button`. */
 export type CalendarPreviewCaptionProps =
   | ({ dropdown?: false } & useRender.ComponentProps<'span'>)
   | ({ dropdown: true } & useRender.ComponentProps<'button'>);
 
 /**
- * The label above the grid — the displayed month, or the span of months when
- * more than one is shown. Children replace the computed label entirely, so
+ * The label above the grid. Children replace it entirely, so
  * `<CalendarPreview.Caption>Q3 2026</CalendarPreview.Caption>` works.
  *
- * With `dropdown`, it becomes a button that opens a two-column month and year
- * scroller. The scroller is ours: no `Select` is mounted anywhere in this
- * component, which is what keeps the popover-dismissal loop the current family
- * fights from coming back. Picking from it moves the view; it never selects a
- * value.
+ * With `dropdown` it opens our own month and year scroller. No `Select` may be
+ * mounted here — one is what makes the popover dismissal loop return. Picking
+ * moves the view; it never selects a value.
  */
 export function CalendarPreviewCaption(props: CalendarPreviewCaptionProps) {
   return props.dropdown ? (
@@ -48,7 +43,6 @@ export function CalendarPreviewCaption(props: CalendarPreviewCaptionProps) {
 
 CalendarPreviewCaption.displayName = 'CalendarPreview.Caption';
 
-/** The caption text: one month, or the first and last of several. */
 function useCaptionLabel(): ReactNode {
   const { month, timeZone } = useCalendarPreviewContext(
     'CalendarPreview.Caption'
@@ -121,8 +115,6 @@ function CaptionDropdown({
         {children ?? label}
       </PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>
-        {/* Anchored to the caption's start edge and overlapping the grid, as
-            in reference A — the grid stays mounted behind it. */}
         <PopoverPrimitive.Positioner
           sideOffset={4}
           align='start'
@@ -182,9 +174,8 @@ function CaptionColumn({
 }) {
   const activeRef = useRef<HTMLButtonElement>(null);
 
-  /* Bring the current row into view when the scroller opens — a twenty-year
-   * column otherwise arrives scrolled to the wrong end. Optional-called
-   * because jsdom does not implement scrollIntoView. */
+  /* A twenty-year column otherwise opens scrolled to the wrong end. Optional
+     call: jsdom does not implement scrollIntoView. */
   useEffect(() => {
     activeRef.current?.scrollIntoView?.({ block: 'center' });
   }, []);

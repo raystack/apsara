@@ -14,12 +14,24 @@
   pointer-events: none;
 }
 
+/* Inset by the gap a weekday label leaves inside its 40px cell. Aligning the
+   header to the column box instead would sit the caption visibly left of
+   "Sun", because the label is centred in the cell rather than flush to it. */
 .header {
   display: flex;
   align-items: center;
   gap: var(--rs-space-2);
   min-height: var(--rs-space-9);
   margin-bottom: var(--rs-space-3);
+  padding-inline: var(--rs-space-3);
+}
+
+/* The week-number column is a gutter, not a date column, so the caption starts
+   past it — aligned with Sunday rather than with the grid's outer edge. The
+   header cannot read `showWeekNumber`, which is a `.Grid` prop, so it asks the
+   rendered grid instead. */
+.days:has(.week-number-header) .header {
+  padding-inline-start: calc(var(--rs-space-10) + var(--rs-space-3));
 }
 
 .nav-button {
@@ -141,28 +153,30 @@
   flex: none;
 }
 
-/* The per-month header, used only when several months are shown: previous at
-   the far left of the first month, next at the far right of the last, and each
-   caption centred over its own grid. */
+/* Both nav tracks stay reserved whether or not this month draws a button, so
+   the caption centres on its grid rather than on the remaining space. The
+   track width is the size-3 IconButton the nav renders. */
 .month-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: var(--rs-space-6) 1fr var(--rs-space-6);
   align-items: center;
   gap: var(--rs-space-2);
   min-height: var(--rs-space-9);
   margin-bottom: var(--rs-space-3);
+  padding-inline: var(--rs-space-3);
+}
+
+.month-header-prev {
+  grid-column: 1;
 }
 
 .month-header-caption {
-  flex: 1;
+  grid-column: 2;
   text-align: center;
 }
 
-/* Holds the place of the nav button this month does not carry, so the caption
-   centres on its grid instead of drifting to the buttonless side. */
-.nav-spacer {
-  flex: none;
-  width: var(--rs-space-6);
-  height: var(--rs-space-6);
+.month-header-next {
+  grid-column: 3;
 }
 
 .grid {
@@ -203,9 +217,27 @@
   position: relative;
 }
 
+/* The user-agent's 2px border-spacing would ring the grid, leaving the header
+   two pixels wider than the columns it sits above. */
+.weeks table {
+  border-spacing: 0;
+}
+
 .week,
 .weekdays {
   display: flex;
+}
+
+/* Cells size to the border box and drop the user-agent's table-cell padding,
+   so a heading and the days under it are the same 40px column. Content-box
+   would make the bordered day cell 4px wider than its heading, and the two
+   rows would drift a column apart by Saturday. */
+.weekday,
+.day,
+.week-number,
+.week-number-header {
+  box-sizing: border-box;
+  padding: 0;
 }
 
 .weekday {

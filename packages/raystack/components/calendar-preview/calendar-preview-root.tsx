@@ -18,7 +18,6 @@ import {
 } from './date-adapter';
 import { periodOf, type Scale, type ScaleValue } from './lib/scale';
 
-/** How many years either side of today the caption offers by default. */
 const DEFAULT_YEAR_SPAN = 10;
 
 export interface CalendarPreviewProps {
@@ -26,13 +25,7 @@ export interface CalendarPreviewProps {
   value?: Date | null;
   /** The initially selected day (uncontrolled). */
   defaultValue?: Date | null;
-  /**
-   * Called when a day is committed or cleared.
-   *
-   * `details.reason` says what caused it, `details.period` carries both edges
-   * of the period, and `details.toDate()` returns the day acted on even when
-   * `value` is `null`.
-   */
+  /** Called when a day is committed or cleared. */
   onValueChange?: (
     value: Date | null,
     details: CalendarPreviewChangeDetails
@@ -61,11 +54,9 @@ export interface CalendarPreviewProps {
   isDateUnavailable?: (date: Date) => boolean;
 
   /**
-   * The day `.Reset` restores.
-   *
-   * Read even when `value` is controlled — `defaultValue` is ignored once
-   * `value` is passed, so a controlled consumer would otherwise never see
-   * `.Reset` at all.
+   * The day `.Reset` restores. Read even when `value` is controlled, which
+   * `defaultValue` is not — otherwise a controlled consumer never sees
+   * `.Reset`.
    */
   defaultDate?: Date;
 
@@ -100,12 +91,7 @@ export interface CalendarPreviewProps {
   children?: ReactNode;
 }
 
-/**
- * The default value label: `DD/MM/YYYY` at day scale, and the period's own
- * shorthand above it — `MMM YYYY`, `Q# YYYY`, `H# YYYY`, `YYYY`.
- *
- * Exported for its tests; `formatValue` replaces it wholesale.
- */
+/* Exported for its tests; `formatValue` replaces it wholesale. */
 export function defaultFormatValue(
   value: Date | ScaleValue,
   scale: Scale
@@ -158,11 +144,8 @@ export function CalendarPreviewRoot({
     state: 'month'
   });
 
-  /*
-   * Uncontrolled for now: `scale`, `defaultScale` and `onScaleChange` arrive
-   * with the scale switcher. The state lives here from the start so the parts
-   * and `useCalendar()` read it from one place either way.
-   */
+  /* Uncontrolled until the scale switcher lands in PR 5. The state lives here
+     now so the parts and `useCalendar()` read it from one place either way. */
   const [scale, setScaleUnwrapped] = useControlled<Scale>({
     controlled: undefined,
     default: 'day',
@@ -204,11 +187,8 @@ export function CalendarPreviewRoot({
     setValue(defaultDate, 'select', defaultDate);
   }, [defaultDate, setValue]);
 
-  /*
-   * Bounds compare as day-keys, so a `minDate` carrying a time-of-day still
-   * makes its own day selectable — the current family compares instants and
-   * silently disables it.
-   */
+  /* Day-keys, not instants: a `minDate` carrying a time of day still leaves
+     its own day selectable, which the current family gets wrong. */
   const isDateUnavailable = useCallback(
     (date: Date) => {
       const key = dayKey(date, timeZone);
@@ -219,8 +199,8 @@ export function CalendarPreviewRoot({
     [minDate, maxDate, isDateUnavailableProp, timeZone]
   );
 
-  /* Bounds limit selection, not navigation — but a year the user can never
-   * scroll to is a trap, so the default span stretches to cover them. */
+  /* A year the user can never scroll to is a trap, so the span stretches to
+     cover the bounds even though bounds never clamp navigation. */
   const yearRange = useMemo(() => {
     if (yearRangeProp) return yearRangeProp;
     const base = today.getFullYear();

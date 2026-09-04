@@ -16,17 +16,8 @@ import { shiftMonths } from './date-adapter';
 
 export type CalendarPreviewHeaderProps = useRender.ComponentProps<'div'>;
 
-/**
- * The row above the grid: the caption on the left, and the reset and two nav
- * buttons grouped on the right.
- *
- * Source order is the reading and tab order — caption, then undo, previous,
- * next — so the row needs no CSS reordering to match reference A.
- *
- * This is the single-month header. Showing more than one month moves the
- * caption and the nav into each month's own header, inside `.Grid`, which is
- * the only place that can interleave them with react-day-picker's columns.
- */
+/* Single-month only, and source order is tab order, so the row needs no CSS
+   reordering. Several months caption themselves inside `.Grid`. */
 export function CalendarPreviewHeader({
   className,
   children,
@@ -62,12 +53,7 @@ CalendarPreviewHeader.displayName = 'CalendarPreview.Header';
 
 export type CalendarPreviewNavProps = useRender.ComponentProps<'button'>;
 
-/**
- * Steps the view back one month.
- *
- * Never disabled by `minDate` — bounds limit selection, not navigation. It
- * goes inert only while the calendar is disabled or its grid is loading.
- */
+/* Never disabled by `minDate`: bounds limit selection, not navigation. */
 export function CalendarPreviewPrevMonth(props: CalendarPreviewNavProps) {
   return (
     <CalendarPreviewNavButton
@@ -82,7 +68,6 @@ export function CalendarPreviewPrevMonth(props: CalendarPreviewNavProps) {
 
 CalendarPreviewPrevMonth.displayName = 'CalendarPreview.PrevMonth';
 
-/** Steps the view forward one month. Navigation is never clamped by `maxDate`. */
 export function CalendarPreviewNextMonth(props: CalendarPreviewNavProps) {
   return (
     <CalendarPreviewNavButton

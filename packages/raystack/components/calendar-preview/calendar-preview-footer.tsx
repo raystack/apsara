@@ -8,14 +8,8 @@ import styles from './calendar-preview.module.css';
 
 export type CalendarPreviewFooterProps = ComponentProps<typeof Flex>;
 
-/**
- * The row below the calendar.
- *
- * A bare string is wrapped in `Text` so the common case reads as
- * `<CalendarPreview.Footer>Dates are inclusive</CalendarPreview.Footer>`
- * without the caller having to know the type scale; anything else renders as
- * given.
- */
+/* A bare string is wrapped in `Text` so the common case needs no knowledge of
+   the type scale; anything else renders as given. */
 export function CalendarPreviewFooter({
   className,
   children,

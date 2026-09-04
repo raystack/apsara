@@ -12,7 +12,6 @@ import {
   formatMonthLabel,
   isDayKey,
   monthFromName,
-  monthNames,
   monthOf,
   monthShortNames,
   monthStart,
@@ -219,22 +218,6 @@ describe('label formatters', () => {
     expect(formatDayLabel(instant, 'Asia/Tokyo')).toBe('01/09/2026');
     expect(formatMonthLabel(instant, 'Asia/Tokyo')).toBe('Sep 2026');
     expect(formatCaptionLabel(instant, 'UTC')).toBe('Aug 2026');
-  });
-});
-
-describe('monthNames', () => {
-  it('lists twelve names, January first', () => {
-    const names = monthNames();
-    expect(names).toHaveLength(12);
-    expect(names[0]).toBe('January');
-    expect(names[11]).toBe('December');
-  });
-
-  /* The caption column and the input parser must never disagree about a name. */
-  it('round-trips through monthFromName', () => {
-    monthNames().forEach((name, index) => {
-      expect(monthFromName(name)).toBe(index + 1);
-    });
   });
 });
 

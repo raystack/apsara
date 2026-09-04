@@ -21,14 +21,8 @@ export interface CalendarPreviewDaysProps
   numberOfMonths?: number;
 }
 
-/**
- * The day view: a header and a grid. Hugs its content, so the surface around
- * it is never padded out to a fixed height the way the current calendar is.
- *
- * Owns the state the header and the grid share — how many months are shown,
- * and whether the grid is loading — so two day views in one tree cannot
- * disable each other's navigation.
- */
+/* Owns what the header and grid share, so two day views in one tree cannot
+   disable each other's navigation. */
 export function CalendarPreviewDays({
   numberOfMonths = 1,
   className,
@@ -59,9 +53,8 @@ export function CalendarPreviewDays({
         'data-disabled': disabled || undefined,
         'data-readonly': readOnly || undefined,
         'data-busy': busy || undefined,
-        /* One month gets a header above the grid. Several months caption
-           themselves inside it, so a `.Header` here would be a second,
-           redundant row — see `.Grid`'s month caption. */
+        /* Several months caption themselves inside the grid, so a `.Header`
+           here would be a second, redundant row. */
         children: children ?? (
           <>
             {numberOfMonths <= 1 && <CalendarPreviewHeader />}

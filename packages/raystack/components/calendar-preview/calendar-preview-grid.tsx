@@ -32,19 +32,10 @@ import {
 } from './calendar-preview-header';
 import { formatCaptionLabel, formatWeekdayLabel } from './date-adapter';
 
-/*
- * The only file in `calendar-preview/` that imports react-day-picker.
- *
- * RDP earns its place for the day grid alone — roving tabindex, week
- * construction, outside days, locale weekday order. What changes is the
- * boundary: it runs with `hideNavigation` and `captionLayout='label'`, so it
- * never mounts a `Select`, and `mode`, `selected`, `onSelect`, `required`,
- * `month`, `onMonthChange` and `timeZone` come from root context rather than
- * from props. None of them is in `CalendarPreviewGridProps`, so nothing has to
- * be force-overridden after the consumer's spread — `...props` really is last.
- */
-
-/** Props the grid shares with the cells it renders. */
+/* The only file that may import react-day-picker. It runs with
+   `hideNavigation` and `captionLayout='label'` so it never mounts a `Select`,
+   and the selection props come from root context rather than from
+   `CalendarPreviewGridProps` — which is what lets `...props` stay last. */
 interface GridContextValue {
   dateInfo?: (date: Date) => ReactNode;
   tooltipMessages?: (date: Date) => ReactNode;
@@ -91,7 +82,7 @@ export interface CalendarPreviewGridProps
    * Extra content for a day, rendered above the date number.
    *
    * A function, not a record: the record form keyed cells by a formatted
-   * string, which silently missed every day once a `timeZone` shifted the key.
+   * string and silently missed every day once a `timeZone` shifted the key.
    */
   dateInfo?: (date: Date) => ReactNode;
   /** Whether day tooltips are shown at all. @defaultValue false */
@@ -133,8 +124,8 @@ export function CalendarPreviewGrid({
   const days = useCalendarPreviewDaysContext();
   const setBusy = days?.setBusy;
 
-  /* The header sits beside the grid, not inside it, so the loading state has
-   * to travel up to their common parent for navigation to go inert with it. */
+  /* The header is a sibling, so loading has to reach their common parent for
+     navigation to go inert with it. */
   useEffect(() => {
     if (!setBusy) return;
     setBusy(loading);
@@ -153,13 +144,8 @@ export function CalendarPreviewGrid({
 
   const months = days?.numberOfMonths ?? 1;
 
-  /*
-   * One month keeps its caption in `.Header`, above the grid, and leaves the
-   * one react-day-picker renders visually hidden for the table's accessible
-   * name. Several months have no single header to put it in — the caption sits
-   * over its own grid, and the nav splits to the outer edges — so the month
-   * caption becomes the header, and `.Days` renders no `.Header` above.
-   */
+  /* Several months have no single header to caption them, so each month
+     captions itself and `.Days` renders no `.Header` above. */
   const slots = useMemo(
     () => ({
       Root: CalendarPreviewGridRoot,
@@ -177,13 +163,9 @@ export function CalendarPreviewGrid({
     setValue(selected ?? null, selected ? 'select' : 'clear', triggerDate);
   };
 
-  /*
-   * Everything outside the selection arm. `mode`, `required`, `selected` and
-   * `onSelect` stay on the elements below: react-day-picker discriminates its
-   * props union on the literal `required`, which a `boolean` cannot narrow, so
-   * the two arms are written out rather than cast away. The union is contained
-   * here and reaches no consumer.
-   */
+  /* `mode`, `required`, `selected` and `onSelect` stay on the elements below:
+     RDP discriminates its union on the literal `required`, which a `boolean`
+     cannot narrow, so both arms are written out rather than cast away. */
   const base = {
     month,
     onMonthChange: setMonth,
@@ -232,11 +214,8 @@ export function CalendarPreviewGrid({
 
 CalendarPreviewGrid.displayName = 'CalendarPreview.Grid';
 
-/*
- * `render`, `ref` and the consumer's remaining props reach the root here
- * rather than on `<DayPicker>`, which forwards only `className`, `style` and
- * `data-*` to its root element.
- */
+/* `<DayPicker>` forwards only `className`, `style` and `data-*` to its root,
+   so `render`, `ref` and the consumer's props have to land here instead. */
 function CalendarPreviewGridRoot({ rootRef, ...rootProps }: RootProps) {
   const {
     rootRender,
@@ -251,7 +230,6 @@ function CalendarPreviewGridRoot({ rootRef, ...rootProps }: RootProps) {
   });
 }
 
-/** The weeks table, plus the skeleton that covers it while loading. */
 function CalendarPreviewWeeks(props: MonthGridProps) {
   const { loading } = useGridContext('CalendarPreview.Grid');
   return (
@@ -278,28 +256,19 @@ function CalendarPreviewWeeks(props: MonthGridProps) {
   );
 }
 
-/**
- * One month's own header, used only when several months are shown.
- *
- * Reference A splits the nav across the whole row: previous sits at the far
- * left of the first month, next at the far right of the last, and each caption
- * is centred over its own grid. A spacer holds the place of the button a month
- * does not carry, so every caption centres on the same axis as its grid rather
- * than drifting toward the side that has no button. There is no reset here —
- * the two-month header in the frames does not have one.
- */
+/* Three fixed grid columns rather than spacer elements: the empty nav track is
+   still reserved when a month carries no button, so every caption centres on
+   its own grid instead of drifting toward the buttonless side. */
 function CalendarPreviewMonthCaption({
   calendarMonth,
   displayIndex,
-  /* Dropped, not merged: the class react-day-picker passes here is the one
-     that hides the caption for the single-month layout, which is exactly what
-     this header must not be. */
+  /* The class react-day-picker passes here hides the caption, which is what
+     the single-month layout wants and this header must not be. */
   className: _className,
   ...props
 }: MonthCaptionProps) {
   const { timeZone } = useCalendarPreviewContext('CalendarPreview.Grid');
   const days = useCalendarPreviewDaysContext();
-  const lastIndex = (days?.numberOfMonths ?? 1) - 1;
 
   return (
     <div
@@ -307,10 +276,8 @@ function CalendarPreviewMonthCaption({
       data-slot='calendar-preview-month-header'
       {...props}
     >
-      {displayIndex === 0 ? (
-        <CalendarPreviewPrevMonth />
-      ) : (
-        <span className={styles['nav-spacer']} aria-hidden='true' />
+      {displayIndex === 0 && (
+        <CalendarPreviewPrevMonth className={styles['month-header-prev']} />
       )}
       <span
         className={cx(styles.caption, styles['month-header-caption'])}
@@ -318,10 +285,8 @@ function CalendarPreviewMonthCaption({
       >
         {formatCaptionLabel(calendarMonth.date, timeZone)}
       </span>
-      {displayIndex === lastIndex ? (
-        <CalendarPreviewNextMonth />
-      ) : (
-        <span className={styles['nav-spacer']} aria-hidden='true' />
+      {displayIndex === (days?.numberOfMonths ?? 1) - 1 && (
+        <CalendarPreviewNextMonth className={styles['month-header-next']} />
       )}
     </div>
   );
@@ -331,13 +296,8 @@ export interface CalendarPreviewDayProps
   extends DayButtonProps,
     Pick<useRender.ComponentProps<'button'>, 'render' | 'ref'> {}
 
-/**
- * One day cell, bound to react-day-picker's `DayButton` slot.
- *
- * Carries the cell state alongside its slot: `data-selected`, `data-draft`,
- * `data-unavailable`, `data-today`, `data-outside` and `data-scale`. At day
- * scale the draft is the roving-focus cell — arrowed to but not yet entered.
- */
+/* At day scale the draft is the roving-focus cell — arrowed to, not entered.
+   PR 5's scale-switch draft writes the same attribute. */
 export function CalendarPreviewDay({
   day,
   modifiers,
@@ -415,7 +375,6 @@ export interface CalendarPreviewWeekdayProps
   extends WeekdayProps,
     Pick<useRender.ComponentProps<'th'>, 'render' | 'ref'> {}
 
-/** One weekday heading, bound to react-day-picker's `Weekday` slot. */
 export function CalendarPreviewWeekday({
   className,
   render,
@@ -438,18 +397,14 @@ export function CalendarPreviewWeekday({
 
 CalendarPreviewWeekday.displayName = 'CalendarPreview.Weekday';
 
-/* Three-letter weekday headings, against react-day-picker's two-letter
- * default. Locale-derived, so a localized calendar gets its own abbreviation
- * rather than a sliced English one. */
+/* Locale-derived in the adapter, so a localized calendar gets its own
+   abbreviation rather than a sliced English one. */
 const GRID_FORMATTERS: DayPickerProps['formatters'] = {
   formatWeekdayName: date => formatWeekdayLabel(date)
 };
 
-/*
- * The caption is rendered but visually hidden: `.Header` owns the visible one,
- * while react-day-picker keeps labelling each month grid through `aria-label`
- * on the table, so nothing is lost to a screen reader.
- */
+/* month_caption is hidden, not removed: `.Header` owns the visible caption,
+   and RDP still labels each table through it. */
 const GRID_CLASS_NAMES: DayPickerProps['classNames'] = {
   months: styles.months,
   month: styles.month,
