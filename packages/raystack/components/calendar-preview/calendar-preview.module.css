@@ -1,3 +1,11 @@
+/* Hugs its content and stacks its parts, so `.Days` and `.Footer` sit one
+   above the other whatever the surrounding layout does. */
+.root {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+}
+
 /* The day view hugs its content — no reserved height, so the surface around it
    can size itself instead of being padded out to a fixed number. */
 .days {

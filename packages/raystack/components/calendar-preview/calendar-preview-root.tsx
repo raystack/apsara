@@ -1,7 +1,10 @@
 'use client';
 
+import { mergeProps, useRender } from '@base-ui/react';
 import { useControlled } from '@base-ui/utils/useControlled';
-import { type ReactNode, useCallback, useMemo } from 'react';
+import { cx } from 'class-variance-authority';
+import { useCallback, useMemo } from 'react';
+import styles from './calendar-preview.module.css';
 import {
   type CalendarPreviewChangeDetails,
   type CalendarPreviewChangeReason,
@@ -20,7 +23,10 @@ import { periodOf, type Scale, type ScaleValue } from './lib/scale';
 
 const DEFAULT_YEAR_SPAN = 10;
 
-export interface CalendarPreviewProps {
+/* `defaultValue` is omitted because `HTMLAttributes` already declares it as a
+   form value, which is not what it means here. */
+export interface CalendarPreviewProps
+  extends Omit<useRender.ComponentProps<'div'>, 'defaultValue'> {
   /** The selected day (controlled). */
   value?: Date | null;
   /** The initially selected day (uncontrolled). */
@@ -87,8 +93,6 @@ export interface CalendarPreviewProps {
    * @defaultValue false
    */
   readOnly?: boolean;
-
-  children?: ReactNode;
 }
 
 /* Exported for its tests; `formatValue` replaces it wholesale. */
@@ -126,7 +130,11 @@ export function CalendarPreviewRoot({
   clearable = true,
   disabled = false,
   readOnly = false,
-  children
+  className,
+  children,
+  render,
+  ref,
+  ...props
 }: CalendarPreviewProps) {
   const today = useMemo(() => todayProp ?? new Date(), [todayProp]);
 
@@ -249,11 +257,31 @@ export function CalendarPreviewRoot({
     ]
   );
 
+  /* A real element, not a bare provider: `.Days` and `.Footer` are in-flow
+     siblings, and without a box of their own they inherit whatever the
+     surrounding layout does — sitting side by side inside a flex row. */
+  const element = useRender({
+    defaultTagName: 'div',
+    ref,
+    render,
+    props: mergeProps<'div'>(
+      {
+        className: cx(styles.root, className),
+        'data-slot': 'calendar-preview',
+        'data-scale': scale,
+        'data-disabled': disabled || undefined,
+        'data-readonly': readOnly || undefined,
+        children
+      } as useRender.ComponentProps<'div'>,
+      props
+    )
+  });
+
   return (
     <CalendarPreviewProvider
       value={context as CalendarPreviewContextValue<unknown>}
     >
-      {children}
+      {element}
     </CalendarPreviewProvider>
   );
 }

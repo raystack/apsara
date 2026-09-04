@@ -768,6 +768,33 @@ describe('CalendarPreview part contract', () => {
     expect(node).toHaveAttribute('data-mine', 'true');
   });
 
+  it('carries its own slot on the root, and spreads props last', () => {
+    const { container } = render(
+      <CalendarPreview today={TODAY} className='mine' data-mine='true'>
+        <CalendarPreview.Days />
+      </CalendarPreview>
+    );
+    const root = getSlot(container, 'calendar-preview');
+    expect(root).toBeInTheDocument();
+    expect(root).toHaveClass('mine');
+    expect(root).toHaveAttribute('data-mine', 'true');
+    expect(root).toHaveAttribute('data-scale', 'day');
+  });
+
+  /* The root is a box, not a bare provider: without one, `.Days` and `.Footer`
+     inherit the surrounding layout and sit side by side in a flex row. */
+  it('contains the day view and the footer rather than emitting them loose', () => {
+    const { container } = render(
+      <CalendarPreview today={TODAY}>
+        <CalendarPreview.Days />
+        <CalendarPreview.Footer>Dates are inclusive</CalendarPreview.Footer>
+      </CalendarPreview>
+    );
+    const root = getSlot(container, 'calendar-preview') as HTMLElement;
+    expect(getSlot(root, 'calendar-preview-days')?.parentElement).toBe(root);
+    expect(getSlot(root, 'calendar-preview-footer')?.parentElement).toBe(root);
+  });
+
   it('renders .Reset with its slot and the consumer props', () => {
     const { container } = renderCalendar(
       <CalendarPreview.Reset className='mine' data-mine='true' />,

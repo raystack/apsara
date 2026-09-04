@@ -56,24 +56,20 @@ export const compositionDemo = {
     {
       name: 'With footer',
       code: `<CalendarPreview defaultMonth={new Date(2024, 3, 1)}>
-              <Flex direction="column">
-                <CalendarPreview.Days />
-                <CalendarPreview.Footer>Dates are inclusive</CalendarPreview.Footer>
-              </Flex>
+              <CalendarPreview.Days />
+              <CalendarPreview.Footer>Dates are inclusive</CalendarPreview.Footer>
             </CalendarPreview>`
     },
     {
       name: 'Node footer',
       code: `<CalendarPreview defaultMonth={new Date(2024, 3, 1)}>
-              <Flex direction="column">
-                <CalendarPreview.Days />
-                <CalendarPreview.Footer>
-                  <Flex align="center" gap={3}>
-                    <Badge variant="accent">Beta</Badge>
-                    <Text size="small" variant="secondary">Times are UTC</Text>
-                  </Flex>
-                </CalendarPreview.Footer>
-              </Flex>
+              <CalendarPreview.Days />
+              <CalendarPreview.Footer>
+                <Flex align="center" gap={3}>
+                  <Badge variant="accent">Beta</Badge>
+                  <Text size="small" variant="secondary">Times are UTC</Text>
+                </Flex>
+              </CalendarPreview.Footer>
             </CalendarPreview>`
     }
   ]

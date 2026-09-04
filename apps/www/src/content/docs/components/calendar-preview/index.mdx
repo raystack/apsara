@@ -54,7 +54,7 @@ Children override the content a part computes from context, so
 
 ### CalendarPreview
 
-The root. Owns the selected value and the visible month, and provides both to every part.
+The root. Owns the selected value and the visible month, provides both to every part, and renders a column that hugs its content. Also takes `render`, `className` and `ref`.
 
 <auto-type-table path="./props.ts" name="CalendarPreviewProps" />
 
@@ -92,7 +92,7 @@ Restores `defaultDate`. Renders only when there is something to restore.
 
 The row below the calendar. A bare string is wrapped in `Text`; anything else renders as given.
 
-The root renders no element of its own — it is a state owner, not a box — so `.Days` and `.Footer` stack on normal block flow but sit side by side inside a flex row. Give them a container when the surrounding layout is one.
+It needs no container of its own: the root renders a column that hugs its content, so `.Days` and `.Footer` stack whatever the surrounding layout does.
 
 ### useCalendar
 
@@ -112,6 +112,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 
 | Slot | Element |
 |------|---------|
+| `calendar-preview` | The root, a column wrapping the parts |
 | `calendar-preview-days` | The day view surface |
 | `calendar-preview-header` | The header row, single-month layout |
 | `calendar-preview-month-header` | One month's header, when several months are shown |

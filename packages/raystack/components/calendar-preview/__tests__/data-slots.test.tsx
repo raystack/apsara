@@ -19,6 +19,7 @@ describe('CalendarPreview data-slot contract', () => {
   it('exposes a slot for every element the default day view renders', () => {
     const { container } = renderCalendar();
     expectSlots(container, [
+      'calendar-preview',
       'calendar-preview-days',
       'calendar-preview-header',
       'calendar-preview-prev-month',
@@ -39,12 +40,13 @@ describe('CalendarPreview data-slot contract', () => {
     const rendered = new Set(
       Array.from(container.querySelectorAll('[data-slot]'))
         .map(element => element.getAttribute('data-slot') ?? '')
-        .filter(name => name.startsWith('calendar-preview-'))
+        .filter(name => name.startsWith('calendar-preview'))
     );
     /* Fails on a typo or an undocumented addition as loudly as on a rename,
        which is the point: slot names are semver-covered public API. */
     expect([...rendered].sort()).toEqual(
       [
+        'calendar-preview',
         'calendar-preview-day',
         'calendar-preview-day-number',
         'calendar-preview-days',
@@ -66,6 +68,7 @@ describe('CalendarPreview data-slot contract', () => {
       <CalendarPreview.Days numberOfMonths={2} />
     );
     expectSlots(container, [
+      'calendar-preview',
       'calendar-preview-days',
       'calendar-preview-month-header',
       'calendar-preview-prev-month',
