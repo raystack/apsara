@@ -463,3 +463,59 @@
 .input {
   width: 100%;
 }
+
+/* The endpoints are pill-rounded on their outer edges and the days between sit
+   on one continuous band. The track is drawn on the cell rather than the day
+   button so neighbouring cells meet with no seam. */
+.range-middle {
+  background: var(--rs-color-background-neutral-secondary);
+  border-radius: 0;
+}
+
+/* react-day-picker marks every day of the range `selected`, and the single-day
+   rule paints that white for the accent pill. The days on the track are on
+   grey, so they keep the ordinary text colour. */
+.range-middle .day-button {
+  background: transparent;
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.range-start,
+.range-end {
+  background: var(--rs-color-background-neutral-secondary);
+}
+
+/* A half-open range has one endpoint and no band to join, so it keeps the
+   plain selected pill instead of a flat edge. */
+.range-start:not(.range-end) {
+  border-start-start-radius: var(--rs-radius-5);
+  border-end-start-radius: var(--rs-radius-5);
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+
+.range-end:not(.range-start) {
+  border-start-end-radius: var(--rs-radius-5);
+  border-end-end-radius: var(--rs-radius-5);
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+}
+
+.range-start .day-button,
+.range-end .day-button {
+  background: var(--rs-color-background-accent-emphasis);
+  color: var(--rs-color-foreground-base-emphasis);
+  border-radius: var(--rs-radius-5);
+}
+
+.range-start .day-button[data-today]::after,
+.range-end .day-button[data-today]::after {
+  background-color: var(--rs-color-foreground-base-emphasis);
+}
+
+/* Two fields side by side, sharing the trigger's width. */
+.range-fields {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+}

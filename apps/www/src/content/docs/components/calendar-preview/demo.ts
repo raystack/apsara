@@ -309,3 +309,103 @@ export const pickerDemo = {
     }
   ]
 };
+
+export const rangeDemo = {
+  type: 'code',
+  tabs: [
+    {
+      name: 'Basic',
+      code: `<CalendarPreview selection="range" defaultMonth={new Date(2024, 3, 1)}>
+              <CalendarPreview.Trigger>
+                <Flex align="center" gap={3}>
+                  <CalendarPreview.Input field="start" />
+                  <CalendarPreview.Input field="end" />
+                </Flex>
+              </CalendarPreview.Trigger>
+              <CalendarPreview.Content>
+                <CalendarPreview.Days numberOfMonths={2} />
+              </CalendarPreview.Content>
+            </CalendarPreview>`
+    },
+    {
+      name: 'Disabled',
+      code: `<CalendarPreview selection="range" defaultMonth={new Date(2024, 3, 1)} disabled>
+              <CalendarPreview.Trigger>
+                <Flex align="center" gap={3}>
+                  <CalendarPreview.Input field="start" />
+                  <CalendarPreview.Input field="end" />
+                </Flex>
+              </CalendarPreview.Trigger>
+              <CalendarPreview.Content>
+                <CalendarPreview.Days numberOfMonths={2} />
+              </CalendarPreview.Content>
+            </CalendarPreview>`
+    },
+    {
+      name: 'Disabled dates',
+      code: `<CalendarPreview
+              selection="range"
+              defaultMonth={new Date(2024, 3, 1)}
+              minDate={new Date(2024, 3, 10)}
+              isDateUnavailable={date => date.getDay() === 0 || date.getDay() === 6}
+            >
+              <CalendarPreview.Trigger>
+                <Flex align="center" gap={3}>
+                  <CalendarPreview.Input field="start" />
+                  <CalendarPreview.Input field="end" />
+                </Flex>
+              </CalendarPreview.Trigger>
+              <CalendarPreview.Content>
+                <CalendarPreview.Days numberOfMonths={2} />
+              </CalendarPreview.Content>
+            </CalendarPreview>`
+    },
+    {
+      name: 'Without calendar icon',
+      code: `<CalendarPreview selection="range" defaultMonth={new Date(2024, 3, 1)}>
+              <CalendarPreview.Trigger>
+                <Flex align="center" gap={3}>
+                  <CalendarPreview.Input field="start" trailingIcon={null} />
+                  <CalendarPreview.Input field="end" trailingIcon={null} />
+                </Flex>
+              </CalendarPreview.Trigger>
+              <CalendarPreview.Content>
+                <CalendarPreview.Days numberOfMonths={2} />
+              </CalendarPreview.Content>
+            </CalendarPreview>`
+    },
+    {
+      name: 'Read-only start',
+      code: `<CalendarPreview
+              selection="range"
+              defaultMonth={new Date(2024, 3, 1)}
+              defaultValue={{ from: new Date(2024, 3, 10), to: new Date(2024, 3, 20) }}
+            >
+              <CalendarPreview.Trigger>
+                <Flex align="center" gap={3}>
+                  <CalendarPreview.Input field="start" readOnly />
+                  <CalendarPreview.Input field="end" />
+                </Flex>
+              </CalendarPreview.Trigger>
+              <CalendarPreview.Content>
+                <CalendarPreview.Days numberOfMonths={2} />
+              </CalendarPreview.Content>
+            </CalendarPreview>`
+    },
+    {
+      name: 'Custom trigger',
+      code: `<CalendarPreview
+              selection="range"
+              defaultMonth={new Date(2024, 3, 1)}
+              defaultValue={{ from: new Date(2024, 3, 10), to: new Date(2024, 3, 20) }}
+            >
+              <CalendarPreview.Trigger render={<Button variant="outline" />}>
+                10 Apr – 20 Apr
+              </CalendarPreview.Trigger>
+              <CalendarPreview.Content>
+                <CalendarPreview.Days numberOfMonths={2} />
+              </CalendarPreview.Content>
+            </CalendarPreview>`
+    }
+  ]
+};

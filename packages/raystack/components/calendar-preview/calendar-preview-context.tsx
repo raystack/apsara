@@ -14,6 +14,24 @@ export type CalendarPreviewChangeReason =
 
 export type CalendarPreviewOpenChangeDetails = Popover.Root.ChangeEventDetails;
 
+/** Which endpoint a range `.Input` addresses. */
+export type CalendarPreviewField = 'start' | 'end';
+
+/**
+ * A completed range. Neither edge is nullable: a range that is still being
+ * built is a draft, and drafts are never emitted.
+ */
+export interface CalendarPreviewDateRange {
+  from: Date;
+  to: Date;
+}
+
+/** A range mid-build. `to` is absent until the second click lands. */
+export interface CalendarPreviewDraftRange {
+  from: Date;
+  to?: Date;
+}
+
 export interface CalendarPreviewChangeDetails {
   /** What caused the change. */
   reason: CalendarPreviewChangeReason;
@@ -70,6 +88,29 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
   disabled: boolean;
   readOnly: boolean;
   formatValue: (value: Date | ScaleValue, scale: Scale) => string;
+
+  selection: 'single' | 'range';
+  /**
+   * Commits a clicked day. Single scale commits it directly; range runs the
+   * from/to machine, which lives here because completing a range both writes
+   * the value and closes the popover.
+   */
+  selectDay: (date: Date) => void;
+  /**
+   * The range as the grid should draw it — the draft while one is being built,
+   * the committed value otherwise. Never emitted; the track between endpoints
+   * is styled from it.
+   */
+  draft: CalendarPreviewDraftRange | null;
+  /** The endpoint the next click fills. `.Input` reads it to show focus. */
+  activeField: CalendarPreviewField;
+  setActiveField: (field: CalendarPreviewField) => void;
+  /**
+   * Which endpoints a `.Input` has declared read-only, so a grid click cannot
+   * rewrite one. Registered by the inputs, because `readOnly` is their prop.
+   */
+  fieldReadOnly: Record<CalendarPreviewField, boolean>;
+  setFieldReadOnly: (field: CalendarPreviewField, readOnly: boolean) => void;
 }
 
 const CalendarPreviewContext =

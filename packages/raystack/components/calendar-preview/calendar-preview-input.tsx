@@ -1,8 +1,9 @@
 import { cx } from 'class-variance-authority';
-import { type ComponentProps, useRef, useState } from 'react';
+import { type ComponentProps, useEffect, useRef, useState } from 'react';
 import { CalendarIcon } from '~/icons';
 import { Input } from '../input';
 import styles from './calendar-preview.module.css';
+import type { CalendarPreviewField } from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
 import { dayKey, parseKey } from './date-adapter';
 import { parseScaleInput } from './lib/parse';
@@ -16,6 +17,11 @@ export interface CalendarPreviewInputProps
   extends Omit<ComponentProps<typeof Input>, 'value' | 'defaultValue'> {
   /** Called when the typed text starts or stops being a usable date. */
   onValidityChange?: (validity: CalendarPreviewInputValidity) => void;
+  /**
+   * Which endpoint this field addresses, at `selection='range'`. Two inputs,
+   * each addressable — rather than one bag of props per endpoint.
+   */
+  field?: CalendarPreviewField;
 }
 
 const VALID: CalendarPreviewInputValidity = { valid: true };
@@ -28,11 +34,13 @@ const VALID: CalendarPreviewInputValidity = { valid: true };
  * popover, which blurs and therefore commits too.
  */
 export function CalendarPreviewInput({
-  placeholder = 'Select date',
+  field = 'start',
+  placeholder,
   trailingIcon = <CalendarIcon />,
   onValidityChange,
   onKeyDown,
   onBlur,
+  onFocus,
   className,
   readOnly: readOnlyProp,
   ...props
@@ -49,11 +57,27 @@ export function CalendarPreviewInput({
     clearable,
     today,
     disabled,
-    readOnly
+    readOnly,
+    selection,
+    selectDay,
+    draft,
+    activeField,
+    setActiveField,
+    setFieldReadOnly
   } = useCalendarPreviewContext('CalendarPreview.Input');
 
+  const isRange = selection === 'range';
+
+  /* The grid has to know which endpoint refuses a write, and `readOnly` is
+     this input's prop, so it registers rather than the root guessing. */
+  useEffect(() => {
+    if (!isRange) return;
+    setFieldReadOnly(field, Boolean(readOnlyProp));
+    return () => setFieldReadOnly(field, false);
+  }, [isRange, field, readOnlyProp, setFieldReadOnly]);
+
   /* Null means "show the committed value"; a string is the user's draft. */
-  const [draft, setDraft] = useState<string | null>(null);
+  const [text, setText] = useState<string | null>(null);
   const lastReported = useRef<CalendarPreviewInputValidity>(VALID);
 
   const report = (next: CalendarPreviewInputValidity) => {
@@ -88,38 +112,58 @@ export function CalendarPreviewInput({
   };
 
   const commit = () => {
-    if (draft === null) return;
-    const text = draft.trim();
-    if (text === '') {
+    if (text === null) return;
+    const trimmed = text.trim();
+    if (trimmed === '') {
       if (clearable && value) setValue(null, 'clear', today);
-      setDraft(null);
+      setText(null);
       report(VALID);
       return;
     }
-    const resolved = resolve(text);
-    if (resolved instanceof Date) {
-      setValue(resolved, 'input', resolved);
-      setDraft(null);
-      report(VALID);
-    }
+    const resolved = resolve(trimmed);
+    if (!(resolved instanceof Date)) return;
+    /* A typed endpoint goes through the same machine a clicked one does, so
+       the two cannot disagree about what completes a range. */
+    if (isRange) selectDay(resolved);
+    else setValue(resolved, 'input', resolved);
+    setText(null);
+    report(VALID);
   };
 
   const inert = disabled || readOnly || readOnlyProp;
+
+  const endpoint = isRange
+    ? ((field === 'start' ? draft?.from : draft?.to) ?? null)
+    : (value as Date | null);
+  const committedText = endpoint ? formatValue(endpoint, scale) : '';
+  const resolvedPlaceholder =
+    placeholder ??
+    (isRange
+      ? field === 'start'
+        ? 'Select start date'
+        : 'Select end date'
+      : 'Select date');
 
   return (
     <Input
       className={cx(styles.input, className)}
       data-slot='calendar-preview-input'
       data-scale={scale}
-      placeholder={placeholder}
+      placeholder={resolvedPlaceholder}
+      data-field={isRange ? field : undefined}
+      data-active={isRange && activeField === field ? 'true' : undefined}
+      onFocus={event => {
+        onFocus?.(event);
+        if (isRange) setActiveField(field);
+      }}
       trailingIcon={trailingIcon}
       disabled={disabled}
       readOnly={readOnly || readOnlyProp}
       aria-invalid={lastReported.current.valid ? undefined : true}
-      value={draft ?? (value ? formatValue(value, scale) : '')}
+      value={text ?? committedText}
       onValueChange={text => {
         if (inert) return;
-        setDraft(text);
+        setText(text);
         if (text.trim() === '') {
           report(VALID);
           return;
