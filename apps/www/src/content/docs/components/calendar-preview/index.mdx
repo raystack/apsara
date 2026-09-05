@@ -11,6 +11,7 @@ import {
   boundsDemo,
   gridDemo,
   dateInfoDemo,
+  pickerDemo,
 } from "./demo.ts";
 
 <Demo data={preview} />
@@ -88,6 +89,18 @@ Step the view one month. Never disabled by `minDate` or `maxDate` — bounds lim
 
 Restores `defaultDate`. Renders only when there is something to restore.
 
+### CalendarPreview.Trigger
+
+Anchors the popover and owns opening it. Renders the formatted value, or the placeholder, when given no children — wrap an `.Input` in it for a typeable field. Never renders a `button`, so the control inside stays focusable. Takes `render`, `className` and `ref`.
+
+### CalendarPreview.Content
+
+The portaled popover surface. Takes `Popover.Content` props — `side`, `align`, `sideOffset` and the rest — and flips above the trigger on collision.
+
+### CalendarPreview.Input
+
+<auto-type-table path="./props.ts" name="CalendarPreviewInputProps" />
+
 ### CalendarPreview.Footer
 
 The row below the calendar. A bare string is wrapped in `Text`; anything else renders as given.
@@ -113,6 +126,9 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | Slot | Element |
 |------|---------|
 | `calendar-preview` | The root, a column wrapping the parts |
+| `calendar-preview-trigger` | The popover anchor |
+| `calendar-preview-content` | The portaled popover surface |
+| `calendar-preview-input` | The typeable date field |
 | `calendar-preview-days` | The day view surface |
 | `calendar-preview-header` | The header row, single-month layout |
 | `calendar-preview-month-header` | One month's header, when several months are shown |
@@ -185,6 +201,27 @@ Outside days are **off by default**, so a grid ends on the last day of its month
 ### Month and year scroller
 
 `<CalendarPreview.Caption dropdown />` turns the caption into a filled chip that opens two adjacent scrolling columns. It is a plain popover of buttons, not a `Select` — picking from either column moves the view and never selects a value.
+
+### Date picker
+
+The date picker is not a separate export — it is this composition:
+
+```tsx
+<CalendarPreview value={date} onValueChange={setDate}>
+  <CalendarPreview.Trigger>
+    <CalendarPreview.Input />
+  </CalendarPreview.Trigger>
+  <CalendarPreview.Content>
+    <CalendarPreview.Days />
+  </CalendarPreview.Content>
+</CalendarPreview>
+```
+
+The popover opens when the input takes focus. Enter, blur and an outside click all commit — there is no Apply button. Dismissal is Base UI's, so escape and outside press behave like every other popover in the library.
+
+"Without calendar icon" is composition rather than a prop: pass `trailingIcon={null}` to `.Input`.
+
+<Demo data={pickerDemo} />
 
 ## Accessibility
 
