@@ -35,6 +35,8 @@ export interface ParseScaleInputOptions {
 /* Day and month accept 1-2 digits so `5/5/2027` works; the year is pinned at
  * exactly 4 so a two-digit year is rejected rather than read as year 27. */
 const DAY_SLASHED = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+/* The form `formatDayLabel` renders, so a displayed value types back in. */
+const DAY_NAMED = /^(\d{1,2})\s+([A-Za-z]{3,9})\s+(\d{4})$/;
 const DAY_ISO = /^\d{4}-\d{2}-\d{2}$/;
 const MONTH_NAMED = /^([A-Za-z]{3,9})(?:\s+(\d{4}))?$/;
 const QUARTER = /^[Qq]([1-4])(?:\s+(\d{4}))?$/;
@@ -50,6 +52,7 @@ const YEAR = /^(\d{4})$/;
  * | Input | Scale | Notes |
  * |---|---|---|
  * | `20/05/2027`, `5/5/2027` | `day` | `dd/MM/yyyy`, day first |
+ * | `15 Aug 2026`, `15 August 2026` | `day` | what `formatDayLabel` renders |
  * | `2027-05-20` | `day` | the canonical stored form, so it round-trips |
  * | `May 2027`, `September 2027`, `Sep 2027` | `month` | |
  * | `May` | `month` | year inferred |
@@ -87,6 +90,18 @@ export function parseScaleInput(
       Number(slashed[3]),
       Number(slashed[2]),
       Number(slashed[1])
+    );
+    return key === null ? null : { date: key, scale: 'day' };
+  }
+
+  const namedDay = DAY_NAMED.exec(text);
+  if (namedDay) {
+    const month = monthFromName(namedDay[2]);
+    if (month === null) return null;
+    const key = dayKeyFromParts(
+      Number(namedDay[3]),
+      month,
+      Number(namedDay[1])
     );
     return key === null ? null : { date: key, scale: 'day' };
   }

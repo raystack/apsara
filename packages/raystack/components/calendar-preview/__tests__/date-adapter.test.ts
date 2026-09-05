@@ -199,9 +199,9 @@ describe('monthStart', () => {
 });
 
 describe('label formatters', () => {
-  it('formats a day as DD/MM/YYYY', () => {
-    expect(formatDayLabel(new Date(2027, 4, 20))).toBe('20/05/2027');
-    expect(formatDayLabel(new Date(2027, 0, 5))).toBe('05/01/2027');
+  it('formats a day as DD MMM YYYY', () => {
+    expect(formatDayLabel(new Date(2027, 4, 20))).toBe('20 May 2027');
+    expect(formatDayLabel(new Date(2027, 0, 5))).toBe('05 Jan 2027');
   });
 
   it('formats a month in short form', () => {
@@ -215,7 +215,7 @@ describe('label formatters', () => {
 
   it('reads the labels in an explicit zone', () => {
     const instant = new Date(Date.UTC(2026, 7, 31, 20, 0));
-    expect(formatDayLabel(instant, 'Asia/Tokyo')).toBe('01/09/2026');
+    expect(formatDayLabel(instant, 'Asia/Tokyo')).toBe('01 Sep 2026');
     expect(formatMonthLabel(instant, 'Asia/Tokyo')).toBe('Sep 2026');
     expect(formatCaptionLabel(instant, 'UTC')).toBe('Aug 2026');
   });

@@ -131,10 +131,11 @@ export function monthStart(year: number, monthIndex: number): Date {
   return new Date(year, monthIndex, 1);
 }
 
-/* Day-first, matching what `lib/parse.ts` accepts, so a rendered value can be
-   typed straight back in. */
+/* `lib/parse.ts` accepts this form back, so a rendered value can be typed
+   straight in. Day-first and month-named, matching the frames and the shipped
+   picker's `dateFormat`. */
 export function formatDayLabel(date: Date, timeZone?: string): string {
-  return format(zoned(date, timeZone), 'dd/MM/yyyy');
+  return format(zoned(date, timeZone), 'dd MMM yyyy');
 }
 
 /** `'May 2027'` — the default label for a value at month scale. */

@@ -135,7 +135,7 @@ describe('CalendarPreview.Input commit', () => {
   it('emits nothing while typing', () => {
     const onValueChange = vi.fn();
     const { input } = renderPicker({ onValueChange });
-    for (const text of ['2', '20', '20/', '20/0', '20/05', '20/05/2027']) {
+    for (const text of ['2', '20', '20/', '20/0', '20/05', '20 May 2027']) {
       fireEvent.change(input, { target: { value: text } });
     }
     expect(onValueChange).not.toHaveBeenCalled();
@@ -151,7 +151,7 @@ describe('CalendarPreview.Input commit', () => {
   });
 
   it.each([
-    ['20/05/2027', new Date(2027, 4, 20)],
+    ['20 May 2027', new Date(2027, 4, 20)],
     ['5/5/2027', new Date(2027, 4, 5)],
     ['2027-05-20', new Date(2027, 4, 20)]
   ])('accepts %s at day scale', (text, expected) => {
@@ -283,7 +283,7 @@ describe('CalendarPreview.Trigger content', () => {
       </CalendarPreview>
     );
     expect(getSlot(container, 'calendar-preview-trigger')).toHaveTextContent(
-      '20/08/2026'
+      '20 Aug 2026'
     );
   });
 

@@ -147,8 +147,8 @@ describe('CalendarPreview range inputs', () => {
     fireEvent.click(day(document.body, '10'));
     fireEvent.click(day(document.body, '20'));
     const [start, end] = inputs(container);
-    expect(start.value).toBe('10/08/2026');
-    expect(end.value).toBe('20/08/2026');
+    expect(start.value).toBe('10 Aug 2026');
+    expect(end.value).toBe('20 Aug 2026');
   });
 
   /* `lock` is gone: a read-only endpoint is one read-only `.Input`. */

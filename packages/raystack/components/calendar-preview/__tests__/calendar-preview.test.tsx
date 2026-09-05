@@ -914,19 +914,29 @@ describe('CalendarPreview public surface', () => {
   it('exports exactly the parts this phase builds', () => {
     expect(partNames.sort()).toEqual(
       [
+        'Body',
         'Caption',
         'Content',
         'Day',
         'Days',
         'Footer',
         'Grid',
+        'HalfYears',
         'Header',
-        'NextMonth',
-        'PrevMonth',
         'Input',
+        'Label',
+        'Months',
+        'NextMonth',
+        'Panel',
+        'PrevMonth',
+        'Quarters',
         'Reset',
+        'Scale',
+        'Scales',
+        'Separator',
         'Trigger',
-        'Weekday'
+        'Weekday',
+        'Years'
       ].sort()
     );
   });
@@ -945,8 +955,10 @@ describe('CalendarPreview public surface', () => {
 });
 
 describe('defaultFormatValue', () => {
-  it('formats a day as DD/MM/YYYY', () => {
-    expect(defaultFormatValue(new Date(2027, 4, 20), 'day')).toBe('20/05/2027');
+  it('formats a day as DD MMM YYYY', () => {
+    expect(defaultFormatValue(new Date(2027, 4, 20), 'day')).toBe(
+      '20 May 2027'
+    );
   });
 
   it('formats the coarser scales by their own shorthand', () => {
