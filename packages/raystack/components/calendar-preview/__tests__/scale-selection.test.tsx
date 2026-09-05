@@ -203,7 +203,7 @@ describe('CalendarPreview period views mount alone', () => {
    anywhere in the tree. */
 describe('CalendarPreview.Trigger annotation', () => {
   it.each([
-    ['day', '2026-07-02', '02/07/2026'],
+    ['day', '2026-07-02', '02 Jul 2026'],
     ['month', '2026-06-01', 'Jun 2026'],
     ['quarter', '2026-07-01', 'Q3 2026'],
     ['halfYear', '2026-01-01', 'H1 2026'],
@@ -243,7 +243,7 @@ describe('CalendarPreview.Input at scale', () => {
     const { container } = renderBody();
     expect(input(container)).toHaveAttribute(
       'placeholder',
-      'Try: May 2027, Q4, 20/05/2027'
+      'Try: 15 Aug 2026, May 2027, Q4'
     );
   });
 
@@ -275,7 +275,7 @@ describe('CalendarPreview.Input at scale', () => {
     const { container } = renderBody({
       value: { date: '2026-08-20', scale: 'day' }
     });
-    expect(input(container).value).toBe('20/08/2026');
+    expect(input(container).value).toBe('20 Aug 2026');
 
     switchTo(container, 'quarter');
     expect(input(container).value).toBe('Q3 2026');
@@ -286,6 +286,6 @@ describe('CalendarPreview.Input at scale', () => {
         key: 'Escape'
       }
     );
-    expect(input(container).value).toBe('20/08/2026');
+    expect(input(container).value).toBe('20 Aug 2026');
   });
 });

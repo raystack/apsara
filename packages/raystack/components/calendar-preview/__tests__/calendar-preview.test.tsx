@@ -955,8 +955,10 @@ describe('CalendarPreview public surface', () => {
 });
 
 describe('defaultFormatValue', () => {
-  it('formats a day as DD/MM/YYYY', () => {
-    expect(defaultFormatValue(new Date(2027, 4, 20), 'day')).toBe('20/05/2027');
+  it('formats a day as DD MMM YYYY', () => {
+    expect(defaultFormatValue(new Date(2027, 4, 20), 'day')).toBe(
+      '20 May 2027'
+    );
   });
 
   it('formats the coarser scales by their own shorthand', () => {

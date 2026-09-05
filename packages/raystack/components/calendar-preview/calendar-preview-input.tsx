@@ -156,7 +156,7 @@ export function CalendarPreviewInput({
   const resolvedPlaceholder =
     placeholder ??
     (scales.length > 1
-      ? 'Try: May 2027, Q4, 20/05/2027'
+      ? 'Try: 15 Aug 2026, May 2027, Q4'
       : isRange
         ? field === 'start'
           ? 'Select start date'

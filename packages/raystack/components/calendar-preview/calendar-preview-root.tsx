@@ -174,7 +174,7 @@ interface CalendarPreviewSharedProps
 
   /**
    * Renders a value for display.
-   * @defaultValue `DD/MM/YYYY` at day scale
+   * @defaultValue `DD MMM YYYY` at day scale
    */
   formatValue?: (value: Date | ScaleValue, scale: Scale) => string;
   /** Forwarded to the grid. No conversion is done here. */
