@@ -311,7 +311,9 @@ export function CalendarPreviewRoot({
       setValueUnwrapped(next);
       emit?.(next, {
         reason,
-        period: periodOf(occasion, scale),
+        /* The scale that was committed, not the one on screen: typing
+           "Q4 2026" commits a quarter while the view is still on days. */
+        period: periodOf(occasion, isScaleValue(next) ? next.scale : scale),
         toDate: () => occasion
       });
     },

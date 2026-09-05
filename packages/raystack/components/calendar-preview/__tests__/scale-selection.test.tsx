@@ -289,3 +289,41 @@ describe('CalendarPreview.Input at scale', () => {
     expect(input(container).value).toBe('20 Aug 2026');
   });
 });
+
+describe('CalendarPreview change details at scale', () => {
+  const input = (container: HTMLElement) =>
+    getSlot(container, 'calendar-preview-input') as HTMLInputElement;
+
+  it('hands back the produced date through toDate()', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderBody({ onValueChange, trailingValue: true });
+    switchTo(container, 'quarter');
+    fireEvent.click(period(container, 'Q3'));
+    const details = onValueChange.mock.calls[0][1];
+    expect(typeof details.toDate).toBe('function');
+    expect(details.toDate()).toEqual(new Date(2026, 8, 30));
+  });
+
+  it('reports the period of the scale that was committed, not the view', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderBody({ onValueChange });
+    switchTo(container, 'month');
+    fireEvent.click(period(container, 'Aug'));
+    expect(onValueChange.mock.calls[0][1].period).toEqual({
+      start: '2026-08-01',
+      end: '2026-08-31'
+    });
+  });
+
+  /* Typing commits a scale the view has not moved to yet. */
+  it('reports the typed scale period, not the scale still on screen', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderBody({ onValueChange });
+    fireEvent.change(input(container), { target: { value: 'Q4 2026' } });
+    fireEvent.keyDown(input(container), { key: 'Enter' });
+    expect(onValueChange.mock.calls[0][1].period).toEqual({
+      start: '2026-10-01',
+      end: '2026-12-31'
+    });
+  });
+});
