@@ -8,21 +8,21 @@ import { CalendarPreviewPanel } from './calendar-preview-panel';
 import { CalendarPreviewScales } from './calendar-preview-scales';
 import { CalendarPreviewSeparator } from './calendar-preview-separator';
 
-export type CalendarPreviewPickerProps = useRender.ComponentProps<'div'>;
+export type CalendarPreviewBodyProps = useRender.ComponentProps<'div'>;
 
 /**
  * The popup body: label, input, scale switcher and the view for the active
  * scale. The input sits above the switcher, which is where the frames put it.
  */
-export function CalendarPreviewPicker({
+export function CalendarPreviewBody({
   className,
   children,
   render,
   ref,
   ...props
-}: CalendarPreviewPickerProps) {
+}: CalendarPreviewBodyProps) {
   const { scale, dropDraft } = useCalendarPreviewContext(
-    'CalendarPreview.Picker'
+    'CalendarPreview.Body'
   );
 
   return useRender({
@@ -31,8 +31,8 @@ export function CalendarPreviewPicker({
     render,
     props: mergeProps<'div'>(
       {
-        className: cx(styles.picker, className),
-        'data-slot': 'calendar-preview-picker',
+        className: cx(styles.body, className),
+        'data-slot': 'calendar-preview-body',
         'data-scale': scale,
         /* Escape drops the draft on its way to Base UI, which closes on it. */
         onKeyDown: (event: React.KeyboardEvent) => {
@@ -53,4 +53,4 @@ export function CalendarPreviewPicker({
   });
 }
 
-CalendarPreviewPicker.displayName = 'CalendarPreview.Picker';
+CalendarPreviewBody.displayName = 'CalendarPreview.Body';

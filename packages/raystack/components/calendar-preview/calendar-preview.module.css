@@ -520,7 +520,7 @@
   gap: var(--rs-space-3);
 }
 
-.picker {
+.body {
   display: flex;
   flex-direction: column;
   gap: var(--rs-space-3);

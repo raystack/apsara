@@ -1,5 +1,6 @@
 'use client';
 
+import { CalendarPreviewBody } from './calendar-preview-body';
 import { CalendarPreviewCaption } from './calendar-preview-caption';
 import { CalendarPreviewContent } from './calendar-preview-content';
 import { CalendarPreviewDays } from './calendar-preview-days';
@@ -23,7 +24,6 @@ import {
   CalendarPreviewQuarters,
   CalendarPreviewYears
 } from './calendar-preview-periods';
-import { CalendarPreviewPicker } from './calendar-preview-picker';
 import { CalendarPreviewReset } from './calendar-preview-reset';
 import { CalendarPreviewRoot } from './calendar-preview-root';
 import {
@@ -37,7 +37,7 @@ export const CalendarPreview = Object.assign(CalendarPreviewRoot, {
   Trigger: CalendarPreviewTrigger,
   Content: CalendarPreviewContent,
   Input: CalendarPreviewInput,
-  Picker: CalendarPreviewPicker,
+  Body: CalendarPreviewBody,
   Label: CalendarPreviewLabel,
   Scales: CalendarPreviewScales,
   Scale: CalendarPreviewScale,

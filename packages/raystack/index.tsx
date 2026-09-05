@@ -22,6 +22,7 @@ export {
 } from './components/calendar';
 export {
   CalendarPreview,
+  type CalendarPreviewBodyProps,
   type CalendarPreviewCaptionProps,
   type CalendarPreviewChangeDetails,
   type CalendarPreviewChangeReason,

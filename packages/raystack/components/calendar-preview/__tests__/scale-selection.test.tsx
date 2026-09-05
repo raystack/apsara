@@ -7,10 +7,10 @@ import type { Scale } from '../lib/scale';
 const TODAY = new Date(2026, 7, 15);
 const ALL: Scale[] = ['day', 'month', 'quarter', 'halfYear', 'year'];
 
-function renderPicker(props = {}) {
+function renderBody(props = {}) {
   return render(
     <CalendarPreview today={TODAY} scales={ALL} defaultMonth={TODAY} {...props}>
-      <CalendarPreview.Picker />
+      <CalendarPreview.Body />
     </CalendarPreview>
   );
 }
@@ -41,7 +41,7 @@ const switchTo = (container: HTMLElement, scale: Scale) => {
 describe('CalendarPreview scale switching', () => {
   it('emits nothing on a scale switch — it only drafts', () => {
     const onValueChange = vi.fn();
-    const { container } = renderPicker({ onValueChange });
+    const { container } = renderBody({ onValueChange });
     switchTo(container, 'quarter');
     expect(onValueChange).not.toHaveBeenCalled();
     switchTo(container, 'year');
@@ -50,7 +50,7 @@ describe('CalendarPreview scale switching', () => {
 
   it('emits once a period is picked', () => {
     const onValueChange = vi.fn();
-    const { container } = renderPicker({ onValueChange });
+    const { container } = renderBody({ onValueChange });
     switchTo(container, 'quarter');
     fireEvent.click(period(container, 'Q3'));
     expect(onValueChange).toHaveBeenCalledTimes(1);
@@ -62,7 +62,7 @@ describe('CalendarPreview scale switching', () => {
 
   it('reports the scale it moved to', () => {
     const onScaleChange = vi.fn();
-    const { container } = renderPicker({ onScaleChange });
+    const { container } = renderBody({ onScaleChange });
     switchTo(container, 'month');
     expect(onScaleChange).toHaveBeenCalledWith('month');
   });
@@ -82,7 +82,7 @@ describe('CalendarPreview trailingValue', () => {
       [true, trail]
     ] as const) {
       const onValueChange = vi.fn();
-      const { container, unmount } = renderPicker({
+      const { container, unmount } = renderBody({
         onValueChange,
         trailingValue: trailing
       });
@@ -95,7 +95,7 @@ describe('CalendarPreview trailingValue', () => {
 
   it('is month-end correct in a leap February', () => {
     const onValueChange = vi.fn();
-    const { container } = renderPicker({
+    const { container } = renderBody({
       onValueChange,
       trailingValue: true,
       today: new Date(2028, 1, 10),
@@ -123,25 +123,25 @@ describe('CalendarPreview availability differs by field', () => {
     ['quarter', 'Q3'],
     ['month', 'Jul']
   ] as const)('disables %s for a start field and allows it for an end field', (scale, label) => {
-    const start = renderPicker({ ...bounded, trailingValue: false });
+    const start = renderBody({ ...bounded, trailingValue: false });
     switchTo(start.container, scale);
     expect(period(start.container, label)).toBeDisabled();
     start.unmount();
 
-    const end = renderPicker({ ...bounded, trailingValue: true });
+    const end = renderBody({ ...bounded, trailingValue: true });
     switchTo(end.container, scale);
     expect(period(end.container, label)).not.toBeDisabled();
   });
 
   it('disables H1 2026 for an end field, which would emit 30 June', () => {
-    const { container } = renderPicker({ ...bounded, trailingValue: true });
+    const { container } = renderBody({ ...bounded, trailingValue: true });
     switchTo(container, 'halfYear');
     expect(period(container, 'H1')).toBeDisabled();
     expect(period(container, 'H2')).not.toBeDisabled();
   });
 
   it('allows July and Q3 for an end field, because they emit after the bound', () => {
-    const { container } = renderPicker({ ...bounded, trailingValue: true });
+    const { container } = renderBody({ ...bounded, trailingValue: true });
     switchTo(container, 'month');
     expect(period(container, 'Jul')).not.toBeDisabled();
     switchTo(container, 'quarter');
@@ -149,7 +149,7 @@ describe('CalendarPreview availability differs by field', () => {
   });
 
   it('shows out-of-bounds periods rather than hiding them', () => {
-    const { container } = renderPicker({
+    const { container } = renderBody({
       maxDate: new Date(2026, 7, 31),
       today: TODAY
     });
@@ -163,14 +163,14 @@ describe('CalendarPreview.Scales', () => {
   it('renders nothing when only one scale is offered', () => {
     const { container } = render(
       <CalendarPreview today={TODAY} scales='day'>
-        <CalendarPreview.Picker />
+        <CalendarPreview.Body />
       </CalendarPreview>
     );
     expect(getSlot(container, 'calendar-preview-scales')).toBeNull();
   });
 
   it('renders one chip per offered scale', () => {
-    const { container } = renderPicker();
+    const { container } = renderBody();
     expect(getAllSlots(container, 'calendar-preview-scale')).toHaveLength(5);
   });
 });
@@ -192,7 +192,7 @@ describe('CalendarPreview period views mount alone', () => {
   });
 
   it('gates on the active scale, so the others stay unmounted', () => {
-    const { container } = renderPicker({ defaultScale: 'quarter' });
+    const { container } = renderBody({ defaultScale: 'quarter' });
     expect(getSlot(container, 'calendar-preview-quarters')).toBeInTheDocument();
     expect(getSlot(container, 'calendar-preview-months')).toBeNull();
     expect(getSlot(container, 'calendar-preview-grid')).toBeNull();
@@ -240,7 +240,7 @@ describe('CalendarPreview.Input at scale', () => {
     getSlot(container, 'calendar-preview-input') as HTMLInputElement;
 
   it('advertises the formats it accepts', () => {
-    const { container } = renderPicker();
+    const { container } = renderBody();
     expect(input(container)).toHaveAttribute(
       'placeholder',
       'Try: May 2027, Q4, 20/05/2027'
@@ -250,7 +250,7 @@ describe('CalendarPreview.Input at scale', () => {
   it('moves the scale to match what was typed', () => {
     const onValueChange = vi.fn();
     const onScaleChange = vi.fn();
-    const { container } = renderPicker({ onValueChange, onScaleChange });
+    const { container } = renderBody({ onValueChange, onScaleChange });
     fireEvent.change(input(container), { target: { value: 'Q4 2026' } });
     fireEvent.keyDown(input(container), { key: 'Enter' });
     expect(onValueChange.mock.calls[0][0]).toEqual({
@@ -262,7 +262,7 @@ describe('CalendarPreview.Input at scale', () => {
   it('refuses a scale this root does not offer', () => {
     const { container } = render(
       <CalendarPreview today={TODAY} scales={['day', 'month']}>
-        <CalendarPreview.Picker />
+        <CalendarPreview.Body />
       </CalendarPreview>
     );
     fireEvent.change(input(container), { target: { value: 'Q4 2026' } });
@@ -272,7 +272,7 @@ describe('CalendarPreview.Input at scale', () => {
   });
 
   it('drops the draft on Escape and falls back to the value', () => {
-    const { container } = renderPicker({
+    const { container } = renderBody({
       value: { date: '2026-08-20', scale: 'day' }
     });
     expect(input(container).value).toBe('20/08/2026');
@@ -281,7 +281,7 @@ describe('CalendarPreview.Input at scale', () => {
     expect(input(container).value).toBe('Q3 2026');
 
     fireEvent.keyDown(
-      getSlot(container, 'calendar-preview-picker') as HTMLElement,
+      getSlot(container, 'calendar-preview-body') as HTMLElement,
       {
         key: 'Escape'
       }
