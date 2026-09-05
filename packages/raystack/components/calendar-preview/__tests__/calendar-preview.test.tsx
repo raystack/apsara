@@ -916,6 +916,7 @@ describe('CalendarPreview public surface', () => {
       [
         'Caption',
         'Content',
+        'HalfYears',
         'Day',
         'Days',
         'Footer',
@@ -924,9 +925,18 @@ describe('CalendarPreview public surface', () => {
         'NextMonth',
         'PrevMonth',
         'Input',
+        'Label',
+        'Months',
+        'Panel',
+        'Picker',
+        'Quarters',
         'Reset',
+        'Scale',
+        'Scales',
+        'Separator',
         'Trigger',
-        'Weekday'
+        'Weekday',
+        'Years'
       ].sort()
     );
   });

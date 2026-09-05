@@ -89,6 +89,24 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
   readOnly: boolean;
   formatValue: (value: Date | ScaleValue, scale: Scale) => string;
 
+  /** Every scale the switcher offers. One entry hides `.Scales`. */
+  scales: readonly Scale[];
+  /** Whether a period emits its last day rather than its first. */
+  trailingValue: boolean;
+  /**
+   * The pending value after a scale switch or a keystroke. Never emitted — a
+   * cell click or Enter commits it, Escape drops it.
+   */
+  scaleDraft: ScaleValue | null;
+  /** Moves the view and sets the draft. Emits nothing. */
+  switchScale: (scale: Scale) => void;
+  /** Commits a period at `scale`, honouring `trailingValue`. */
+  selectPeriod: (date: Date | string, scale: Scale) => void;
+  /** Drops the draft; the input falls back to `value`. */
+  dropDraft: () => void;
+  /** Whether the period containing `date` can be selected at `scale`. */
+  isPeriodAvailable: (date: Date | string, scale: Scale) => boolean;
+
   selection: 'single' | 'range';
   /**
    * Commits a clicked day. Single scale commits it directly; range runs the

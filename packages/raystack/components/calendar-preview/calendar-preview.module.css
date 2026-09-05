@@ -519,3 +519,90 @@
   align-items: center;
   gap: var(--rs-space-3);
 }
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-3);
+  padding: var(--rs-space-3);
+  width: max-content;
+}
+
+.label {
+  color: var(--rs-color-foreground-base-secondary);
+  font-size: var(--rs-font-size-micro);
+  line-height: var(--rs-line-height-micro);
+  letter-spacing: var(--rs-letter-spacing-micro);
+}
+
+.separator {
+  height: 1px;
+  background: var(--rs-color-border-base-primary);
+}
+
+.scales {
+  display: flex;
+}
+
+/* The day view hugs; every period list is a fixed box that scrolls as one, so
+   the year headings scroll with their cells rather than pinning. */
+.panel[data-scale="day"] {
+  display: block;
+}
+
+.periods {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-4);
+  height: calc(var(--rs-space-10) * 8);
+  overflow-y: auto;
+}
+
+.period-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-2);
+}
+
+.period-year {
+  color: var(--rs-color-foreground-base-secondary);
+  font-size: var(--rs-font-size-micro);
+  line-height: var(--rs-line-height-micro);
+  letter-spacing: var(--rs-letter-spacing-micro);
+}
+
+.period-cells {
+  display: grid;
+  grid-template-columns: repeat(var(--rs-period-columns), 1fr);
+  gap: var(--rs-space-2);
+}
+
+.period {
+  padding: var(--rs-space-2) var(--rs-space-3);
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-2);
+  background: transparent;
+  color: var(--rs-color-foreground-base-primary);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  cursor: pointer;
+}
+
+.period:hover:not(:disabled) {
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+.period:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-inset);
+}
+
+.period[data-selected] {
+  background: var(--rs-color-background-neutral-secondary);
+}
+
+.period[data-unavailable] {
+  color: var(--rs-color-foreground-base-tertiary);
+  cursor: not-allowed;
+}
