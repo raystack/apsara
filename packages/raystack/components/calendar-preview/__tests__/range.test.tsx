@@ -209,6 +209,30 @@ describe('CalendarPreview range auto-close', () => {
     expect(onOpenChange).toHaveBeenLastCalledWith(false, expect.anything());
   });
 
+  /* Completing a range hands focus back to the trigger, and an unguarded
+     focus handler reopens the popover on the way out. jsdom does not restore
+     focus the way a browser does, so this asserts the guard rather than the
+     symptom: the close must be the last thing that happens. */
+  it('does not reopen on the focus that follows an auto-close', () => {
+    const onOpenChange = vi.fn();
+    const { container } = renderRange({ onOpenChange }, picker);
+    const [start] = getAllSlots(
+      container,
+      'calendar-preview-input'
+    ) as HTMLElement[];
+    fireEvent.focus(start);
+
+    fireEvent.click(day(document.body, '10'));
+    fireEvent.click(day(document.body, '20'));
+    expect(isOpen()).toBe(false);
+
+    /* The browser returns focus to the trigger here. */
+    fireEvent.focus(start);
+    expect(isOpen()).toBe(false);
+    const calls = onOpenChange.mock.calls;
+    expect(calls[calls.length - 1][0]).toBe(false);
+  });
+
   /* Completing a range asks to close; a consumer holding `open` open wins. */
   it('does not fight a controlled open', () => {
     const onOpenChange = vi.fn();

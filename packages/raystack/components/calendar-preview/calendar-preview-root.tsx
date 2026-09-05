@@ -260,10 +260,11 @@ export function CalendarPreviewRoot({
     state: 'open'
   });
 
-  /* Escape and a press on the trigger both leave focus on the trigger, so the
-     focus event that follows would immediately undo the close. Recording the
-     reason lets `.Trigger` swallow exactly that one focus — the same rule
-     floating-ui's own `useFocus` applies. */
+  /* Escape, a press on the trigger, and completing a range all leave focus on
+     the trigger, so the focus event that follows would immediately undo the
+     close. Recording the reason lets `.Trigger` swallow exactly that one focus
+     — the rule floating-ui's own `useFocus` applies, plus `closePress`, which
+     is ours because auto-closing on completion is. */
   const focusOpenBlocked = useRef(false);
 
   const setOpen = useCallback(
@@ -271,7 +272,8 @@ export function CalendarPreviewRoot({
       if (
         !next &&
         (details.reason === REASONS.escapeKey ||
-          details.reason === REASONS.triggerPress)
+          details.reason === REASONS.triggerPress ||
+          details.reason === REASONS.closePress)
       ) {
         focusOpenBlocked.current = true;
       }
@@ -351,7 +353,7 @@ export function CalendarPreviewRoot({
       setValue({ from, to: date }, 'select', date);
       setOpen(
         false,
-        createChangeEventDetails(REASONS.itemPress, undefined, undefined)
+        createChangeEventDetails(REASONS.closePress, undefined, undefined)
       );
     },
     [
