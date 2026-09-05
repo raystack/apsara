@@ -915,6 +915,7 @@ describe('CalendarPreview public surface', () => {
     expect(partNames.sort()).toEqual(
       [
         'Caption',
+        'Content',
         'Day',
         'Days',
         'Footer',
@@ -922,7 +923,9 @@ describe('CalendarPreview public surface', () => {
         'Header',
         'NextMonth',
         'PrevMonth',
+        'Input',
         'Reset',
+        'Trigger',
         'Weekday'
       ].sort()
     );

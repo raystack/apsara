@@ -1,5 +1,6 @@
 'use client';
 
+import type { Popover } from '@base-ui/react';
 import { createContext, type ReactNode, useContext } from 'react';
 import type { DayKey } from './date-adapter';
 import type { Scale, ScaleValue } from './lib/scale';
@@ -10,6 +11,8 @@ export type CalendarPreviewChangeReason =
   | 'input'
   | 'clear'
   | 'scale';
+
+export type CalendarPreviewOpenChangeDetails = Popover.Root.ChangeEventDetails;
 
 export interface CalendarPreviewChangeDetails {
   /** What caused the change. */
@@ -33,6 +36,19 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
     reason: CalendarPreviewChangeReason,
     occasion: Date
   ) => void;
+  /** Whether the popover is open. Always `false` for an inline calendar. */
+  open: boolean;
+  /**
+   * Base UI's own details, forwarded rather than re-declared, so `reason` stays
+   * the typed union Base UI narrows on.
+   */
+  setOpen: (open: boolean, details: CalendarPreviewOpenChangeDetails) => void;
+  /**
+   * Whether `.Trigger` must swallow the next focus-open, because the close it
+   * would undo was an Escape or a press on the trigger itself. Reads and
+   * clears. Tracks the last close reason, never the open state.
+   */
+  shouldIgnoreFocusOpen: () => boolean;
   /** Read even when `value` is controlled. */
   defaultDate: Date | undefined;
   /** A value reset — it never moves the view. */
@@ -44,6 +60,10 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
   scale: Scale;
   setScale: (scale: Scale) => void;
   isDateUnavailable: (date: Date) => boolean;
+  /* Separate from `isDateUnavailable`, which folds them together: `.Input`
+     reports which of the two rejected a typed date. */
+  minDate: Date | undefined;
+  maxDate: Date | undefined;
   today: Date;
   timeZone: string | undefined;
   clearable: boolean;

@@ -442,3 +442,24 @@
   padding: var(--rs-space-3);
   margin-top: var(--rs-space-2);
 }
+
+/* The trigger is a plain box: it wraps `.Input`, which draws its own field. */
+.trigger {
+  display: inline-flex;
+  align-items: center;
+}
+
+.trigger[data-disabled] {
+  cursor: not-allowed;
+}
+
+/* Wider than the trigger and centred on it, per the frames. `.Days` brings its
+   own padding, so the surface adds none. */
+.content {
+  padding: 0;
+  width: max-content;
+}
+
+.input {
+  width: 100%;
+}

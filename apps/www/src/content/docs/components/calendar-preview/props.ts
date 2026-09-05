@@ -142,3 +142,30 @@ export interface CalendarPreviewGridProps {
   /** Cover the grid with a skeleton and stop navigation. */
   loading?: boolean;
 }
+
+export interface CalendarPreviewInputProps {
+  /**
+   * Placeholder shown when there is no value.
+   * @default "Select date"
+   */
+  placeholder?: string;
+
+  /**
+   * Icon at the end of the field. Pass `null` for a picker with no calendar
+   * glyph — that variant is composition, not a prop.
+   * @default <CalendarIcon />
+   */
+  trailingIcon?: ReactNode;
+
+  /**
+   * Called when the typed text starts or stops being a usable date.
+   * @example onValidityChange={({ valid, reason }) => setError(reason)}
+   */
+  onValidityChange?: (validity: {
+    valid: boolean;
+    reason?: 'unparseable' | 'out-of-bounds' | 'unavailable';
+  }) => void;
+
+  /** Read and navigable, but not typeable. */
+  readOnly?: boolean;
+}
