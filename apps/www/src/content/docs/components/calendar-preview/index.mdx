@@ -12,6 +12,7 @@ import {
   gridDemo,
   dateInfoDemo,
   pickerDemo,
+  rangeDemo,
 } from "./demo.ts";
 
 <Demo data={preview} />
@@ -222,6 +223,39 @@ The popover opens when the input takes focus. Enter, blur and an outside click a
 "Without calendar icon" is composition rather than a prop: pass `trailingIcon={null}` to `.Input`.
 
 <Demo data={pickerDemo} />
+
+### Range selection
+
+`selection="range"` turns clicks into endpoints. Give each `.Input` a `field`:
+
+```tsx
+<CalendarPreview selection="range" value={range} onValueChange={setRange}>
+  <CalendarPreview.Trigger>
+    <CalendarPreview.Input field="start" />
+    <CalendarPreview.Input field="end" />
+  </CalendarPreview.Trigger>
+  <CalendarPreview.Content>
+    <CalendarPreview.Days numberOfMonths={2} />
+  </CalendarPreview.Content>
+</CalendarPreview>
+```
+
+**`onValueChange` fires on a complete range or not at all.** `to` is not nullable, so there is no partial `{ from?, to? }` to gate on. The half-built range stays internal — the grid styles the track from it, but nothing is emitted until the second endpoint lands.
+
+The click machine:
+
+| State | A click does |
+|---|---|
+| Nothing selected | sets `from`, moves focus to the end field |
+| `from` only, later day | completes the range, emits, closes the popover |
+| `from` only, earlier day | that day becomes the new `from` |
+| Complete range | restarts — the new day is `from`, and the value stays at the previous range until the new one completes |
+
+Completing asks the popover to close through `onOpenChange`, so a consumer holding `open` open is not fought.
+
+Instead of a `lock` prop, mark one endpoint's `.Input` as `readOnly` — the grid will not rewrite it. **A read-only endpoint with no value makes the range unsatisfiable:** the free endpoint sets, the range never completes, and nothing emits. Give a read-only endpoint a value.
+
+<Demo data={rangeDemo} />
 
 ## Accessibility
 
