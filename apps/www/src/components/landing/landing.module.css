@@ -676,16 +676,17 @@
 }
 /* Some components set a fixed width and size their box from the content, so
    a stretched child could poke past the cell. Pin them to the cell instead. */
-.specimenBody[data-align="stretch"] > * {
+.specimenBody[data-align="stretch"] > *,
+.specimenBody[data-fit] > * > * {
   width: auto;
   max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
 }
-.rowLoose {
+.row.rowLoose {
   gap: var(--rs-space-6);
 }
-.stackLoose {
+.stack.stackLoose {
   gap: var(--rs-space-7);
 }
 .row {

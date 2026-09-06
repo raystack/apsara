@@ -56,6 +56,8 @@ type SpecimenProps = {
   slug: string;
   wide?: boolean;
   align?: 'center' | 'stretch';
+  /** Also pin grandchildren to the cell, for components wrapped in a shell. */
+  fit?: boolean;
   children: ReactNode;
 };
 
@@ -65,6 +67,7 @@ function Specimen({
   slug,
   wide,
   align = 'center',
+  fit,
   children
 }: SpecimenProps) {
   return (
@@ -80,7 +83,11 @@ function Specimen({
           <ArrowUpRight size={12} strokeWidth={1.5} />
         </Link>
       </div>
-      <div className={styles.specimenBody} data-align={align}>
+      <div
+        className={styles.specimenBody}
+        data-align={align}
+        data-fit={fit || undefined}
+      >
         {children}
       </div>
     </div>
@@ -440,29 +447,30 @@ export default function Specimens() {
           <div className={`${styles.stack} ${styles.stackLoose}`}>
             <div className={styles.row}>
               <AvatarGroup max={4}>
-              <Avatar size={5} fallback='HL' color='indigo' radius='full' />
-              <Avatar size={5} fallback='ME' color='orange' radius='full' />
-              <Avatar size={5} fallback='NF' color='mint' radius='full' />
-              <Avatar size={5} fallback='OS' color='sky' radius='full' />
-              <Avatar size={5} fallback='PC' color='purple' radius='full' />
-              <Avatar size={5} fallback='QR' color='gold' radius='full' />
-            </AvatarGroup>
-          </div>
-          <div className={styles.row}>
-            <Avatar size={5} fallback='RS' variant='solid' color='indigo' />
-            <Avatar size={5} fallback='RS' variant='soft' color='crimson' />
-            <Indicator variant='danger' label='3'>
-              <IconButton size={4} aria-label='Inbox'>
-                <Bell size={16} strokeWidth={1.5} />
-              </IconButton>
-            </Indicator>
-            <Indicator variant='success'>
-              <Avatar size={5} fallback='ON' color='grass' radius='full' />
-            </Indicator>
+                <Avatar size={5} fallback='HL' color='indigo' radius='full' />
+                <Avatar size={5} fallback='ME' color='orange' radius='full' />
+                <Avatar size={5} fallback='NF' color='mint' radius='full' />
+                <Avatar size={5} fallback='OS' color='sky' radius='full' />
+                <Avatar size={5} fallback='PC' color='purple' radius='full' />
+                <Avatar size={5} fallback='QR' color='gold' radius='full' />
+              </AvatarGroup>
+            </div>
+            <div className={`${styles.row} ${styles.rowLoose}`}>
+              <Avatar size={5} fallback='RS' variant='solid' color='indigo' />
+              <Avatar size={5} fallback='RS' variant='soft' color='crimson' />
+              <Indicator variant='danger' label='3'>
+                <IconButton size={4} aria-label='Inbox'>
+                  <Bell size={16} strokeWidth={1.5} />
+                </IconButton>
+              </Indicator>
+              <Indicator variant='success'>
+                <Avatar size={5} fallback='ON' color='grass' radius='full' />
+              </Indicator>
+            </div>
           </div>
         </Specimen>
 
-        <Specimen index={12} name='Callout' slug='callout' align='stretch'>
+        <Specimen index={12} name='Callout' slug='callout' align='stretch' fit>
           <Callout type='accent'>
             Tokens follow the theme. Swap the accent below and watch this one.
           </Callout>
