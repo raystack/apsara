@@ -1,4 +1,15 @@
 /*
+  The ground the shell sits on. It only shows past the shell's outer rules on a
+  display wide enough for the cap to bite, where it separates the page from the
+  space around it. Scoped to the docs rather than set on body, which the
+  marketing pages share.
+*/
+.surround {
+  flex: 1;
+  background: var(--rs-color-background-base-secondary);
+}
+
+/*
   The shell fills the window up to `--docs-shell-max`, then centers itself.
   Without the cap the sidebar and the table of contents stay pinned to the
   screen edges on a wide display, leaving the text column marooned between two
@@ -10,6 +21,8 @@
 */
 .container {
   --docs-shell-max: 1440px;
+
+  background: var(--rs-color-background-base-primary);
 
   display: flex;
   flex-direction: row;
