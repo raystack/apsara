@@ -1,0 +1,75 @@
+/*
+  Docs typeset — local to apps/www. Never imported by the package.
+
+  Apsara's `Headline` scale (t1-t4) is tuned for product surfaces: four sizes
+  inside 12px of each other, which leaves a section heading and the entries
+  under it reading as the same rank. Documentation needs a wider spread at the
+  top and a tighter one at the bottom, so the docs own their own scale here
+  rather than bending the core tokens that every product depends on.
+
+  Tracking follows Inter's dynamic metric — `a + b*e^(c*size)` with a = -0.0223,
+  b = 0.185, c = -0.1745 — the curve Apsara already uses for body text.
+
+  Sizes stay in px because the values are optical choices, not a modular scale.
+*/
+
+:root {
+  /* Page title — one per page, the only thing at this size. */
+  --docs-title-size: 48px;
+  --docs-title-leading: 52px;
+  --docs-title-tracking: -0.022em;
+  --docs-title-weight: var(--rs-font-weight-medium);
+
+  /* Section (h2). Space above it carries the separation, so the type only has
+     to label — it does not need to grow to do that job. */
+  --docs-section-size: 24px;
+  --docs-section-leading: 30px;
+  --docs-section-tracking: -0.019em;
+  --docs-section-weight: var(--rs-font-weight-medium);
+
+  /* Entry (h3). A full step below its section, not a nudge. */
+  --docs-entry-size: 18px;
+  --docs-entry-leading: 26px;
+  --docs-entry-tracking: -0.014em;
+  --docs-entry-weight: var(--rs-font-weight-medium);
+
+  /* Sub-entry (h4). Only ever an API sub-type under its parent part. */
+  --docs-subentry-size: var(--rs-font-size-large);
+  --docs-subentry-leading: var(--rs-line-height-large);
+  --docs-subentry-tracking: var(--rs-letter-spacing-large);
+  --docs-subentry-weight: var(--rs-font-weight-medium);
+
+  /* Prose. Looser leading than the product default — this is read, not scanned. */
+  --docs-body-size: var(--rs-font-size-large);
+  --docs-body-leading: var(--rs-line-height-large);
+  --docs-body-tracking: var(--rs-letter-spacing-large);
+
+  /* Lede — the frontmatter description under the title. */
+  --docs-lede-size: 18px;
+  --docs-lede-leading: 28px;
+  --docs-lede-tracking: -0.014em;
+
+  /* Label layer. Mono, uppercase, tracked out. This is what stops headings
+     being pressed into service as labels (eyebrows, part names, panel chrome). */
+  --docs-label-size: 11px;
+  --docs-label-leading: 16px;
+  --docs-label-tracking: 0.12em;
+  --docs-label-weight: var(--rs-font-weight-medium);
+
+  /* Caption — table footnotes, muted asides. */
+  --docs-caption-size: 13px;
+  --docs-caption-leading: 19px;
+  --docs-caption-tracking: 0em;
+
+  --rs-line-height-mono-small: 20px;
+
+  --rs-font-mono:
+    var(--docs-font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--rs-font-mono);
+}
