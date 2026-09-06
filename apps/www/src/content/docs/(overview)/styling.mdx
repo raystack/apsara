@@ -5,7 +5,7 @@ description: How to style and customize Apsara components in your application.
 
 Apsara uses vanilla CSS with CSS custom properties (tokens) for all styling. There is no runtime CSS-in-JS — styles are static, scoped, and predictable. This guide covers the recommended ways to customize components and build your own styled elements.
 
-## Using Design Tokens
+## Using design tokens
 
 Design tokens are CSS custom properties that adapt automatically to the active theme. Always use tokens instead of hard-coded values — this ensures your UI stays consistent and responds to light/dark mode changes.
 
@@ -23,7 +23,7 @@ Design tokens are CSS custom properties that adapt automatically to the active t
 
 See the [Theme](/docs/theme/overview) section for the complete token reference.
 
-## Customizing Components
+## Customizing components
 
 ### With className
 
@@ -44,7 +44,7 @@ import { Button } from "@raystack/apsara";
 }
 ```
 
-### With style Prop
+### With style prop
 
 For one-off adjustments, use the inline `style` prop:
 
@@ -54,7 +54,7 @@ For one-off adjustments, use the inline `style` prop:
 </Flex>
 ```
 
-### With Data Attributes
+### With data attributes
 
 Apsara components built on [Base UI](https://base-ui.com/) expose data attributes that reflect component state. Use these for state-driven styling without JavaScript:
 
@@ -122,7 +122,7 @@ Combine them freely:
 
 Slots also make reliable selectors for tests (`querySelector('[data-slot="search-clear-button"]')`) instead of reaching for hashed CSS-module classes.
 
-#### Styling based on what a component contains
+### Styling based on what a component contains
 
 Because every part carries its own slot, a parent can change its own styling based on which children are present — no prop needed to signal it. CSS's `:has()` reaches into descendants:
 
@@ -156,7 +156,7 @@ This is the same technique as the state-based selectors above (`data-[state=open
 
 Coverage: every Apsara component exposes `data-slot` on every element it renders. Each component's docs page lists its slot names.
 
-## Theming with Data Attributes
+## Theming with data attributes
 
 The `Theme` component sets data attributes on the root `<html>` element. Use these to conditionally style elements based on the active theme:
 
@@ -181,11 +181,11 @@ Available theme attributes:
 | `data-accent-color` | `indigo`, `orange`, `mint` |
 | `data-gray-color` | `gray`, `mauve`, `slate`, `sage` |
 
-## Writing Component Styles
+## Writing component styles
 
 When building custom components in your application, follow these patterns used internally by Apsara:
 
-### Use CSS Modules for Scoping
+### Use CSS modules for scoping
 
 CSS Modules prevent class name collisions and keep styles co-located with components:
 
@@ -221,7 +221,7 @@ export function StatusCard({ status, children }) {
 }
 ```
 
-### Use CVA for Variant Management
+### Use CVA for variant management
 
 Apsara uses [class-variance-authority](https://cva.style/) (CVA) to manage component variants with type safety. This is recommended for components with multiple visual variations:
 
@@ -255,7 +255,7 @@ export function Tag({ size, color, className, children }: TagProps) {
 
 CVA handles merging the base class, variant classes, and any custom `className` passed by consumers.
 
-## Best Practices
+## Best practices
 
 **Use semantic tokens, not primitives.** Prefer `--rs-color-foreground-base-primary` over `--rs-neutral-12`. Semantic tokens automatically adapt across themes; primitives do not carry semantic meaning.
 

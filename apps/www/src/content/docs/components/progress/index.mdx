@@ -27,6 +27,38 @@ import { Progress } from '@raystack/apsara'
 </Progress>
 ```
 
+## Usage
+
+### Variant
+
+`linear` draws a bar, `circular` a ring. Leave `value` unset for an indeterminate state when you cannot report real progress.
+
+<Demo data={variantDemo} />
+
+### Direct usage
+
+The simplest way to use the progress. When no children are provided, it renders the track automatically.
+
+<Demo data={directUsageDemo} />
+
+### Customization
+
+Customize the track for both variants. For linear, use `height` on the track. For circular, use `width`/`height` on the track to control the overall size and `--rs-progress-track-size` to control the stroke thickness.
+
+<Demo data={customizationDemo} />
+
+### Animated
+
+Use controlled `value` to animate the progress indicator.
+
+<Demo data={animatedDemo} />
+
+### With labels
+
+Compose with `Progress.Label` and `Progress.Value` for additional context.
+
+<Demo data={withLabelsDemo} />
+
 ## API Reference
 
 ### Root
@@ -65,38 +97,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `progress-track` | The track (an `<svg>` in the circular variant) |
 | `progress-track-circle` | The background circle (circular variant only) |
 | `progress-indicator` | The filled indicator (a `<circle>` in the circular variant) |
-
-## Examples
-
-### Variant
-
-The progress supports `linear` and `circular` variants.
-
-<Demo data={variantDemo} />
-
-### Direct Usage
-
-The simplest way to use the progress. When no children are provided, it renders the track automatically.
-
-<Demo data={directUsageDemo} />
-
-### Customization
-
-Customize the track for both variants. For linear, use `height` on the track. For circular, use `width`/`height` on the track to control the overall size and `--rs-progress-track-size` to control the stroke thickness.
-
-<Demo data={customizationDemo} />
-
-### Animated
-
-Use controlled `value` to animate the progress indicator.
-
-<Demo data={animatedDemo} />
-
-### With Labels
-
-Compose with `Progress.Label` and `Progress.Value` for additional context.
-
-<Demo data={withLabelsDemo} />
 
 ## Accessibility
 

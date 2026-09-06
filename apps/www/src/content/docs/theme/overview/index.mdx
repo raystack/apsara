@@ -80,53 +80,7 @@ Tokens follow two naming patterns:
 - [Typography](/docs/theme/typography) — font families, sizes, weights, and line heights
 - [Effects](/docs/theme/effects) — shadows and blur for depth and elevation
 
-## API Reference
-
-### Theme
-
-The `Theme` component wraps your application and manages theme state. It handles persisting the user's preference to localStorage, syncing with system preferences, and injecting the appropriate CSS variables into the document.
-
-<auto-type-table path="./props.ts" name="ThemeProps" />
-
-### useTheme
-
-The `useTheme` hook provides access to the current theme state and methods to change it. Use this to build theme toggles, read the resolved theme for conditional rendering, or sync with external systems.
-
-```tsx
-import { useTheme } from "@raystack/apsara";
-
-function ThemeToggle() {
-  const { theme, setTheme, resolvedTheme } = useTheme();
-
-  return (
-    <button onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
-      Toggle theme
-    </button>
-  );
-}
-```
-
-The hook accepts an optional options object to target a specific scope by its `storageKey` (see [Targeting a specific scope](#targeting-a-specific-scope)):
-
-<auto-type-table path="./props.ts" name="UseThemeOptions" />
-
-And returns:
-
-<auto-type-table path="./props.ts" name="UseThemeProps" />
-
-### ThemeSwitcher
-
-A ready-made icon button that toggles between light and dark. It calls `useTheme` internally, so it must render inside a `Theme` provider. The button is a native `<button>` with a descriptive `aria-label` ("Switch to light theme" / "Switch to dark theme"), so it works with keyboards and screen readers out of the box.
-
-<Demo data={switcherDemo} />
-
-The `size` prop sets the button's width and height in pixels:
-
-<Demo data={switcherSizeDemo} />
-
-<auto-type-table path="./props.ts" name="ThemeSwitcherProps" />
-
-## Framework Integration
+## Framework integration
 
 **HTML Attributes** — `Theme` sets data attributes on the document element for CSS targeting:
 - `data-theme` — current color scheme (`light` | `dark`)
@@ -153,7 +107,7 @@ export default function RootLayout({ children }) {
 
 The `suppressHydrationWarning` is required because the theme script modifies the HTML element before React hydrates.
 
-## Scoped Theming
+## Scoped theming
 
 Themes are not limited to the document root. Any element with a `data-theme` attribute creates an isolated theme scope — descendants resolve every design token from the nearest scoped ancestor. This enables theme preview cards, split-screen comparisons, and dark sidebars in light apps without any extra plumbing.
 
@@ -354,6 +308,8 @@ function PageThemeButton() {
 
 ### Cheat sheet
 
+Every nesting case in one table.
+
 | What you want | What to pass on the nested `Theme` |
 |---|---|
 | Section is purely styled, no own state | Don't nest. There's nothing to scope. |
@@ -363,7 +319,55 @@ function PageThemeButton() {
 | Section persists its own theme across reloads | `storageKey="some-key"` (+ optional `defaultTheme`) |
 | Flip the page theme from inside a scope | `useTheme({ storageKey: "theme" }).setTheme(…)` |
 
-### When to reach for a nested provider vs. the bare attribute
+### Nested provider vs. bare attribute
 
 - Use the **bare `data-theme` attribute** when you're already rendering a custom element and don't want another wrapper. The CSS handles everything — components inside will theme correctly.
 - Use a **nested `Theme`** when you want typed props (`forcedTheme`, `accentColor`, etc.), automatic inheritance of unspecified fields, and `useTheme()` integration.
+
+## API Reference
+
+The provider, the hook, and the ready-made switcher.
+
+### Theme
+
+The `Theme` component wraps your application and manages theme state. It handles persisting the user's preference to localStorage, syncing with system preferences, and injecting the appropriate CSS variables into the document.
+
+<auto-type-table path="./props.ts" name="ThemeProps" />
+
+### useTheme
+
+The `useTheme` hook provides access to the current theme state and methods to change it. Use this to build theme toggles, read the resolved theme for conditional rendering, or sync with external systems.
+
+```tsx
+import { useTheme } from "@raystack/apsara";
+
+function ThemeToggle() {
+  const { theme, setTheme, resolvedTheme } = useTheme();
+
+  return (
+    <button onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
+      Toggle theme
+    </button>
+  );
+}
+```
+
+The hook accepts an optional options object to target a specific scope by its `storageKey` (see [Targeting a specific scope](#targeting-a-specific-scope)):
+
+<auto-type-table path="./props.ts" name="UseThemeOptions" />
+
+And returns:
+
+<auto-type-table path="./props.ts" name="UseThemeProps" />
+
+### ThemeSwitcher
+
+A ready-made icon button that toggles between light and dark. It calls `useTheme` internally, so it must render inside a `Theme` provider. The button is a native `<button>` with a descriptive `aria-label` ("Switch to light theme" / "Switch to dark theme"), so it works with keyboards and screen readers out of the box.
+
+<Demo data={switcherDemo} />
+
+The `size` prop sets the button's width and height in pixels:
+
+<Demo data={switcherSizeDemo} />
+
+<auto-type-table path="./props.ts" name="ThemeSwitcherProps" />

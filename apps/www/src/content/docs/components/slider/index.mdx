@@ -20,6 +20,26 @@ import { Slider, SliderValue } from '@raystack/apsara'
 </Slider>
 ```
 
+## Usage
+
+### Variant
+
+`single` (the default) gives one thumb and a value. `range` gives two thumbs and a `[min, max]` tuple.
+
+<Demo data={variantDemo} />
+
+### Thumb size
+
+Different thumb sizes for various use cases and visual preferences.
+
+<Demo data={thumbSizeDemo} />
+
+### Controlled
+
+A controlled slider that maintains and updates its state through React's useState hook.
+
+<Demo data={controlDemo} />
+
 ## API Reference
 
 ### Root
@@ -48,24 +68,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `slider-thumb-grip-line` | Each grip line (large thumb only) |
 | `slider-label` | The thumb label (when `label`) |
 | `slider-value` | The `Slider.Value` output element |
-
-## Examples
-
-### Variant
-
-<Demo data={variantDemo} />
-
-### Controlled Usage
-
-A controlled slider that maintains and updates its state through React's useState hook.
-
-<Demo data={controlDemo} />
-
-### Thumb Size
-
-Different thumb sizes for various use cases and visual preferences.
-
-<Demo data={thumbSizeDemo} />
 
 ## Accessibility
 

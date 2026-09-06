@@ -25,6 +25,40 @@ import { Callout } from '@raystack/apsara'
 <Callout />
 ```
 
+## Usage
+
+### Type
+
+Type carries the meaning: `grey` for neutral information, and the semantic types for success, warning, danger, and accent. Pick the type from what the message means, not from the colour you want.
+
+<Demo data={typeDemo} />
+
+### Outline
+
+`solid` (the default) fills the callout. `outline` draws a border instead — quieter, for a page that already has several filled surfaces.
+
+<Demo data={outlineDemo} />
+
+### High contrast
+
+`highContrast` deepens the text and background so the callout holds up against a busy or coloured page.
+
+<Demo data={highContrastDemo} />
+
+### Dismissible
+
+Set `dismissible` and pass `onDismiss` to add a close button. Use it for messages the reader can act on and clear, not for errors that still need fixing.
+consumer controls removal (the callout stays mounted); when it is omitted, the
+callout hides itself.
+
+<Demo data={dismissibleDemo} />
+
+### With action
+
+The Callout component can include an action button:
+
+<Demo data={actionDemo} />
+
 ## API Reference
 
 Renders a highlighted message block for tips, warnings, or information.
@@ -47,40 +81,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `callout-actions` | Wrapper `<div>` for the action and dismiss button |
 | `callout-action` | Wrapper around the action (when an action is provided) |
 | `callout-dismiss` | The dismiss (close) button (when `dismissible`) |
-
-## Examples
-
-### Type
-
-The Callout component offers different type options. You can customize the visual style using the `type` prop:
-
-<Demo data={typeDemo} />
-
-### Outline
-
-The Callout component can be rendered with or without an outline border:
-
-<Demo data={outlineDemo} />
-
-### High Contrast
-
-The Callout component supports high contrast mode for better visibility:
-
-<Demo data={highContrastDemo} />
-
-### Dismissible
-
-The Callout component can be made dismissible. When `onDismiss` is provided, the
-consumer controls removal (the callout stays mounted); when it is omitted, the
-callout hides itself.
-
-<Demo data={dismissibleDemo} />
-
-### With Action
-
-The Callout component can include an action button:
-
-<Demo data={actionDemo} />
 
 ## Accessibility
 

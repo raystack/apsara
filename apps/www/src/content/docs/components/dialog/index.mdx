@@ -30,6 +30,38 @@ import { Dialog } from '@raystack/apsara'
 </Dialog>
 ```
 
+## Usage
+
+### Controlled Dialog
+
+Pass `open` with `onOpenChange` to own the state — needed when the dialog must close on something other than a click, such as a save completing.
+
+<Demo data={controlledDemo} />
+
+### Custom width and overlay
+
+Example with custom width and overlay styling.
+
+<Demo data={customDemo} />
+
+### With header and body
+
+`Dialog.Header` carries the title and the close control; `Dialog.Body` holds the content. Leave the footer out when the dialog only presents information and closing is the only action.
+
+<Demo data={onlyHeaderDemo} />
+
+### With body and footer
+
+Skip the header when the body opens with its own heading. `Dialog.Footer` pins the actions to the bottom edge, separated from content that scrolls.
+
+<Demo data={onlyFooterDemo} />
+
+### Nested dialogs
+
+You can nest dialogs within one another. When a nested dialog opens, the parent dialog automatically scales down and becomes slightly transparent. The nested dialog's backdrop won't be rendered, allowing you to see the parent dialog behind it.
+
+<Demo data={nestedDemo} />
+
 ## API Reference
 
 ### Root
@@ -101,38 +133,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `dialog-description` | The `Dialog.Description` element |
 | `dialog-footer` | The `Dialog.Footer` row |
 | `dialog-close` | The built-in close button (when `showCloseButton`) |
-
-## Examples
-
-### Controlled Dialog
-
-Example of a controlled dialog with custom state management.
-
-<Demo data={controlledDemo} />
-
-### Custom Width and Overlay
-
-Example with custom width and overlay styling.
-
-<Demo data={customDemo} />
-
-### With Header and Body
-
-Example with header and body.
-
-<Demo data={onlyHeaderDemo} />
-
-### With Body and Footer
-
-Example with header and body.
-
-<Demo data={onlyFooterDemo} />
-
-### Nested Dialogs
-
-You can nest dialogs within one another. When a nested dialog opens, the parent dialog automatically scales down and becomes slightly transparent. The nested dialog's backdrop won't be rendered, allowing you to see the parent dialog behind it.
-
-<Demo data={nestedDemo} />
 
 ## Accessibility
 

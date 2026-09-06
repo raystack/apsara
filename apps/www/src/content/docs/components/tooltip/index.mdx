@@ -20,6 +20,44 @@ import { Tooltip } from "@raystack/apsara";
 </Tooltip.Provider>
 ```
 
+## Usage
+
+### Side
+
+The Tooltip Content component can be positioned in different directions using the `side` prop:
+
+<Demo data={sideDemo} />
+
+### Align
+
+The Tooltip Content component can be aligned in different directions using the `align` prop:
+
+<Demo data={alignDemo} />
+
+### Custom Content
+
+Tooltips can contain custom content using ReactNode:
+
+<Demo data={customDemo} />
+
+### With Provider
+
+`TooltipProvider` sets delay and skip-delay for every tooltip beneath it, so a group of controls opens with one consistent rhythm rather than each tooltip timing itself.
+
+<Demo data={providerDemo} />
+
+### Track cursor
+
+Use `trackCursorAxis` prop on the Root component to make the tooltip follow the cursor:
+
+<Demo data={trackCursorDemo} />
+
+### With arrow
+
+Show the arrow by setting `showArrow={true}` on the Content component:
+
+<Demo data={arrowDemo} />
+
 ## API Reference
 
 ### Root
@@ -57,44 +95,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `tooltip-content` | The tooltip popup |
 | `tooltip-text` | Text wrapper (when children is a string) |
 | `tooltip-arrow` | The arrow (when `showArrow`) |
-
-## Examples
-
-### Side
-
-The Tooltip Content component can be positioned in different directions using the `side` prop:
-
-<Demo data={sideDemo} />
-
-### Align
-
-The Tooltip Content component can be aligned in different directions using the `align` prop:
-
-<Demo data={alignDemo} />
-
-### Custom Content
-
-Tooltips can contain custom content using ReactNode:
-
-<Demo data={customDemo} />
-
-### With Provider
-
-The TooltipProvider component can be used to provide a global configuration for all tooltips in your application.
-
-<Demo data={providerDemo} />
-
-### Track Cursor
-
-Use `trackCursorAxis` prop on the Root component to make the tooltip follow the cursor:
-
-<Demo data={trackCursorDemo} />
-
-### With Arrow
-
-Show the arrow by setting `showArrow={true}` on the Content component:
-
-<Demo data={arrowDemo} />
 
 ## Accessibility
 

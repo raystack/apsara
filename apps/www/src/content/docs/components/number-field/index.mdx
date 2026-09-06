@@ -38,6 +38,46 @@ import { NumberField } from "@raystack/apsara";
 </NumberField>
 ```
 
+## Usage
+
+### Basic
+
+A standalone number field with default controls.
+
+<Demo data={basicDemo} />
+
+### Min / max
+
+`min` and `max` clamp the value. The stepper buttons disable at each end rather than letting the field go out of range.
+
+<Demo data={minMaxDemo} />
+
+### Step
+
+`step` sets how much the arrows and Arrow Up / Arrow Down move the value. Match it to the precision the field actually needs.
+
+<Demo data={stepDemo} />
+
+### Disabled
+
+`disabled` stops interaction and removes the field from the tab order, stepper buttons included.
+
+<Demo data={disabledDemo} />
+
+### Composed with ScrubArea
+
+Full control with scrub area for drag-to-adjust interaction.
+
+<Demo data={composedDemo} />
+
+### Formatted
+
+Number field with currency formatting, powered by `Intl.NumberFormat` internally.
+
+`format` sets what to format (currency, decimals); `locale` sets how it's written. Pin `locale` when the output should be stable across different users. 
+
+<Demo data={formatDemo} />
+
 ## API Reference
 
 ### Root
@@ -93,46 +133,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `number-field-scrub-area-label` | The label inside the scrub area |
 | `number-field-scrub-area-cursor` | The virtual cursor (while scrubbing) |
 | `number-field-scrub-area-cursor-icon` | The default cursor icon (while scrubbing) |
-
-## Examples
-
-### Basic
-
-A standalone number field with default controls.
-
-<Demo data={basicDemo} />
-
-### Min / Max
-
-Number field constrained to a range.
-
-<Demo data={minMaxDemo} />
-
-### Step
-
-Number field with a custom step amount.
-
-<Demo data={stepDemo} />
-
-### Disabled
-
-Number field in disabled state.
-
-<Demo data={disabledDemo} />
-
-### Composed with ScrubArea
-
-Full control with scrub area for drag-to-adjust interaction.
-
-<Demo data={composedDemo} />
-
-### Formatted
-
-Number field with currency formatting, powered by `Intl.NumberFormat` internally.
-
-`format` sets what to format (currency, decimals); `locale` sets how it's written. Pin `locale` when the output should be stable across different users. 
-
-<Demo data={formatDemo} />
 
 ## Accessibility
 

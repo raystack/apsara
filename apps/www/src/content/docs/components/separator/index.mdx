@@ -18,6 +18,26 @@ import { Separator } from '@raystack/apsara'
 <Separator />
 ```
 
+## Usage
+
+### Orientation
+
+`horizontal` (the default) draws a full-width rule between stacked content. `vertical` draws a rule between items in a row, and needs a parent with a set height to draw against.
+
+<Demo data={orientationDemo} />
+
+### Size
+
+`size` sets how far the rule runs across its container: `small` a short accent, `half` halfway, `full` (the default) edge to edge.
+
+<Demo data={sizeDemo} />
+
+### Color
+
+Three weights of line. `primary` is the default; drop to `secondary` or `tertiary` where the rule should separate without drawing attention.
+
+<Demo data={colorDemo} />
+
 ## API Reference
 
 Renders a visual divider between content sections.
@@ -31,26 +51,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | Slot | Element |
 |------|---------|
 | `separator` | The separator element |
-
-## Examples
-
-### Color
-
-The Separator component supports three colors.
-
-<Demo data={colorDemo} />
-
-### Size
-
-The Separator component supports three sizes.
-
-<Demo data={sizeDemo} />
-
-### Orientation
-
-Separator can be rendered in both horizontal and vertical orientations.
-
-<Demo data={orientationDemo} />
 
 ## Accessibility
 

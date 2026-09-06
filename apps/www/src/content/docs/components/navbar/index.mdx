@@ -30,6 +30,32 @@ import { Navbar } from "@raystack/apsara";
 </Navbar>
 ```
 
+## Usage
+
+### Sticky navigation
+
+A sticky navbar stays pinned while the page scrolls. Use it when navigation has to stay reachable on long pages.
+
+<Demo data={stickyDemo} />
+
+### Section layouts
+
+Start, Center, and End are independent — use any combination. The three-column grid keeps Center optically centred even when Start and End differ in width.
+
+<Demo data={sectionsDemo} />
+
+### Hide on scroll
+
+Set `hideOnScroll` to hide the navbar when the user scrolls down and show it when they scroll up. It works with both window scroll and scroll containers (e.g. ScrollArea). The navbar slides out of view with a transition. The slide animation is only visible when the navbar is sticky (or fixed); without it, the navbar simply scrolls away with the content.
+
+<Demo data={hideOnScrollDemo} />
+
+### Labelling sections
+
+Pass `aria-label` to the navbar or to any individual section. Do it when a page has more than one navigation landmark, so screen-reader users can tell them apart.
+
+<Demo data={accessibilityDemo} />
+
 ## API Reference
 
 ### Root
@@ -67,32 +93,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `navbar-start` | `Navbar.Start` section |
 | `navbar-center` | `Navbar.Center` section |
 | `navbar-end` | `Navbar.End` section |
-
-## Examples
-
-### Sticky Navigation
-
-The Navbar can be made sticky to remain visible at the top of the viewport when scrolling.
-
-<Demo data={stickyDemo} />
-
-### Section Layouts
-
-You can use any combination of Start, Center, and End. The navbar uses a 3-column grid so each section renders in its own space; the center remains absolutely centered.
-
-<Demo data={sectionsDemo} />
-
-### Hide on scroll
-
-Set `hideOnScroll` to hide the navbar when the user scrolls down and show it when they scroll up. It works with both window scroll and scroll containers (e.g. ScrollArea). The navbar slides out of view with a transition. The slide animation is only visible when the navbar is sticky (or fixed); without it, the navbar simply scrolls away with the content.
-
-<Demo data={hideOnScrollDemo} />
-
-### Accessibility
-
-The Navbar supports custom ARIA labels for better screen reader support. You can provide descriptive labels for the entire navbar or individual sections.
-
-<Demo data={accessibilityDemo} />
 
 ## Accessibility
 

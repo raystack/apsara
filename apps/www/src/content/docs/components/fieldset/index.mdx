@@ -47,6 +47,32 @@ import { Fieldset, Field, Input } from "@raystack/apsara";
 </Fieldset>
 ```
 
+## Usage
+
+### Basic Fieldset
+
+A fieldset grouping related fields with a legend.
+
+<Demo data={basicDemo} />
+
+### Sub-component API
+
+Using `Fieldset.Legend` for custom legend styling.
+
+<Demo data={subComponentDemo} />
+
+### Disabled Fieldset
+
+All fields within a disabled fieldset are disabled.
+
+<Demo data={disabledDemo} />
+
+### Nested fieldsets
+
+Fieldsets can be nested to create logical groupings.
+
+<Demo data={nestedDemo} />
+
 ## API Reference
 
 ### Root
@@ -69,32 +95,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 |------|---------|
 | `fieldset` | The root `<fieldset>` element |
 | `fieldset-legend` | The legend (when a legend is set) |
-
-## Examples
-
-### Basic Fieldset
-
-A fieldset grouping related fields with a legend.
-
-<Demo data={basicDemo} />
-
-### Sub-component API
-
-Using `Fieldset.Legend` for custom legend styling.
-
-<Demo data={subComponentDemo} />
-
-### Disabled Fieldset
-
-All fields within a disabled fieldset are disabled.
-
-<Demo data={disabledDemo} />
-
-### Nested Fieldsets
-
-Fieldsets can be nested to create logical groupings.
-
-<Demo data={nestedDemo} />
 
 ## Accessibility
 

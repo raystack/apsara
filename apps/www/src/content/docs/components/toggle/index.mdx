@@ -29,6 +29,38 @@ Use `Toggle.Group` to manage a set of toggles with shared state:
 </Toggle.Group>
 ```
 
+## Usage
+
+### Group
+
+Use `Toggle.Group` for exclusive or multi-select toggle sets. By default, only one toggle can be pressed at a time.
+
+<Demo data={groupDemo} />
+
+### Multiple selection
+
+Set `multiple` on the group to allow more than one toggle to be pressed simultaneously.
+
+<Demo data={multipleDemo} />
+
+### Size
+
+Four steps, 1 through 4, matching the icon button scale so toggles and buttons line up in the same toolbar.
+
+<Demo data={sizeDemo} />
+
+### Controlled
+
+Pass `pressed` with `onPressedChange` to own the state — needed when the toggle reflects something stored elsewhere.
+
+<Demo data={controlledDemo} />
+
+### Disabled
+
+Disable individual toggles or the entire group.
+
+<Demo data={disabledDemo} />
+
 ## API Reference
 
 ### Root
@@ -52,38 +84,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `toggle` | The toggle button itself |
 | `toggle-content` | The `<span>` wrapping the toggle's children |
 | `toggle-group` | The `Toggle.Group` container |
-
-## Examples
-
-### Group
-
-Use `Toggle.Group` for exclusive or multi-select toggle sets. By default, only one toggle can be pressed at a time.
-
-<Demo data={groupDemo} />
-
-### Multiple Selection
-
-Set `multiple` on the group to allow more than one toggle to be pressed simultaneously.
-
-<Demo data={multipleDemo} />
-
-### Size
-
-The toggle supports four sizes matching the icon button sizes.
-
-<Demo data={sizeDemo} />
-
-### Controlled
-
-Control the pressed state programmatically.
-
-<Demo data={controlledDemo} />
-
-### Disabled
-
-Disable individual toggles or the entire group.
-
-<Demo data={disabledDemo} />
 
 ## Accessibility
 

@@ -210,56 +210,6 @@ provider to reach into it.
   it is worth knowing when you read an import list.
 </Callout>
 
-## API Reference
-
-### Theme props
-
-<auto-type-table path="./props.ts" name="ThemeIconProps" />
-
-### IconOptions
-
-<auto-type-table path="./props.ts" name="IconOptions" />
-
-### IconProvider
-
-`<Theme>` mounts this for you. Use it directly only if you want icon overrides
-without a theme scope. It takes the two halves of `IconOptions` as flat props.
-
-<auto-type-table path="./props.ts" name="IconProviderProps" />
-
-### createIcon
-
-```tsx
-function createIcon(name: string, Default: IconComponent): IconComponent;
-```
-
-Wraps a component as an Apsara icon: base props below the call site,
-`data-icon="<name>"`, and the provider `props`. `name` is any string —
-`IconName` covers only what Apsara ships, and only those keys can be replaced
-through `<Theme icons>`.
-
-### Types
-
-`IconProps` is `Omit<SVGProps<SVGSVGElement>, 'children'>`: every SVG attribute
-React accepts, minus `children`. In practice you pass `width`, `height`,
-`strokeWidth`, `className`, `style` or `color` — see [base props](#base-props).
-
-`IconComponent` is `ComponentType<IconProps>`, so any component with those props
-can stand in for an icon. `IconOverrides` is
-`Partial<Record<IconName, IconComponent>>`, and `IconName` is the union of the 31
-keys, so a typo in an override map is a type error.
-
-```tsx
-import { createIcon } from '@raystack/apsara';
-import type {
-  IconComponent,
-  IconName,
-  IconOptions,
-  IconOverrides,
-  IconProps
-} from '@raystack/apsara';
-```
-
 ## Server components
 
 The icons are client components, and an icon map is an object of functions. A
@@ -321,3 +271,59 @@ files that already import components, where a second import line buys nothing.
 CommonJS cannot tree-shake at all, so there the difference is unconditional:
 `require('@raystack/apsara')` loads every component module, while
 `require('@raystack/apsara/icons')` loads the icons and nothing else.
+
+## API Reference
+
+The types and components behind icon overrides. `createIcon` and the `Theme` icons prop are the two you touch directly.
+
+### Theme props
+
+The `icons` prop on `Theme`.
+
+<auto-type-table path="./props.ts" name="ThemeIconProps" />
+
+### IconOptions
+
+The object `icons` accepts — `components` replaces drawings by key, `props` applies to every icon.
+
+<auto-type-table path="./props.ts" name="IconOptions" />
+
+### IconProvider
+
+`<Theme>` mounts this for you. Use it directly only if you want icon overrides
+without a theme scope. It takes the two halves of `IconOptions` as flat props.
+
+<auto-type-table path="./props.ts" name="IconProviderProps" />
+
+### createIcon
+
+```tsx
+function createIcon(name: string, Default: IconComponent): IconComponent;
+```
+
+Wraps a component as an Apsara icon: base props below the call site,
+`data-icon="<name>"`, and the provider `props`. `name` is any string —
+`IconName` covers only what Apsara ships, and only those keys can be replaced
+through `<Theme icons>`.
+
+### Types
+
+`IconProps` is `Omit<SVGProps<SVGSVGElement>, 'children'>`: every SVG attribute
+React accepts, minus `children`. In practice you pass `width`, `height`,
+`strokeWidth`, `className`, `style` or `color` — see [base props](#base-props).
+
+`IconComponent` is `ComponentType<IconProps>`, so any component with those props
+can stand in for an icon. `IconOverrides` is
+`Partial<Record<IconName, IconComponent>>`, and `IconName` is the union of the 31
+keys, so a typo in an override map is a type error.
+
+```tsx
+import { createIcon } from '@raystack/apsara';
+import type {
+  IconComponent,
+  IconName,
+  IconOptions,
+  IconOverrides,
+  IconProps
+} from '@raystack/apsara';
+```

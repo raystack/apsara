@@ -27,6 +27,50 @@ import { Text } from '@raystack/apsara'
 <Text />
 ```
 
+## Usage
+
+### Variant
+
+Seven semantic colours. `primary` is the default; drop to `secondary` or `tertiary` for supporting text, and use `success`, `danger`, `warning` or `accent` to carry meaning.
+
+<Demo data={variantDemo} />
+
+### Size
+
+Five steps from `micro` to `large`. `regular` is the default and matches body copy.
+
+<Demo data={sizeDemo} />
+
+### Weight
+
+Two weights. `regular` is the default; `medium` lifts a line without making it a heading.
+
+<Demo data={weightDemo} />
+
+### Transform
+
+`capitalize`, `uppercase`, or `lowercase`, applied in CSS so the underlying text stays intact for copy and search.
+
+<Demo data={transformDemo} />
+
+### Line clamp
+
+`lineClamp` truncates to a set number of lines (1–5) with an ellipsis. The text still exists in the DOM, so it stays selectable and searchable.
+
+<Demo data={lineClampDemo} />
+
+### Align
+
+`start` (the default), `center`, `end`, or `justify`. These are logical values, so they follow text direction rather than physical left and right.
+
+<Demo data={alignDemo} />
+
+### Style
+
+`underline`, `strikeThrough`, and `italic` are independent booleans, so they combine.
+
+<Demo data={styleDemo} />
+
 ## API Reference
 
 Use the `render` prop to change the rendered element or provide a custom render function.
@@ -40,36 +84,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | Slot | Element |
 |------|---------|
 | `text` | The text element (`<span>` by default, or the element supplied via `render`) |
-
-## Examples
-
-### Variant
-
-<Demo data={variantDemo} />
-
-### Size
-
-<Demo data={sizeDemo} />
-
-### Weight
-
-<Demo data={weightDemo} />
-
-### Transform
-
-<Demo data={transformDemo} />
-
-### Line Clamp
-
-<Demo data={lineClampDemo} />
-
-### Align
-
-<Demo data={alignDemo} />
-
-### Style
-
-<Demo data={styleDemo} />
 
 ## Accessibility
 

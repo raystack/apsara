@@ -18,6 +18,26 @@ import { Switch } from "@raystack/apsara";
 <Switch />
 ```
 
+## Usage
+
+### Size
+
+Two sizes. `large` is the default; use `small` inside table rows, toolbars, and settings lists where the control sits beside dense text.
+
+<Demo data={sizeDemo} />
+
+### State
+
+A switch can be on, off, or disabled. Use `defaultChecked` for the starting position when you don't need to read the value back.
+
+<Demo data={stateDemo} />
+
+### Controlled
+
+Pass `checked` with `onCheckedChange` to own the state yourself — needed when the value lives in a form, syncs to a server, or drives something else on the page.
+
+<Demo data={controlDemo} />
+
 ## API Reference
 
 Renders a toggleable switch input.
@@ -32,26 +52,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 |------|---------|
 | `switch` | The switch control itself |
 | `switch-thumb` | The sliding thumb |
-
-## Examples
-
-### State
-
-The Switch component supports various states to handle different interaction scenarios.
-
-<Demo data={stateDemo} />
-
-### Size Variants
-
-The Switch component comes in two sizes: large (default) and small.
-
-<Demo data={sizeDemo} />
-
-### Controlled Usage
-
-Use the Switch component in a controlled manner to manage its state externally.
-
-<Demo data={controlDemo} />
 
 ## Accessibility
 

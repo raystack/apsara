@@ -30,6 +30,38 @@ import { Tabs } from "@raystack/apsara";
 </Tabs>
 ```
 
+## Usage
+
+### Basic usage
+
+A tab list with panels. Set `defaultValue` to the tab that should open first.
+
+<Demo data={basicDemo} />
+
+### With leading icons
+
+Pass `leadingIcon` on a trigger to place an icon before its label.
+
+<Demo data={iconsDemo} />
+
+### Disabled tab
+
+Set `disabled` on a trigger to keep a tab visible but unreachable.
+
+<Demo data={disabledDemo} />
+
+### Variants
+
+Three treatments. `segmented` groups the tabs in a track, `standalone` gives them an underline, and `plain` strips the chrome for dense layouts.
+
+<Demo data={variantsDemo} />
+
+### Sizes
+
+Three sizes. `medium` is the default; use `small` in toolbars and panels.
+
+<Demo data={sizesDemo} />
+
 ## API Reference
 
 ### Root
@@ -68,28 +100,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `tabs-tab` | `Tabs.Tab` button |
 | `tabs-tab-icon` | A tab's leading icon (when `leadingIcon` is set) |
 | `tabs-content` | `Tabs.Content` panel |
-
-## Examples
-
-### Basic Usage
-
-<Demo data={basicDemo} />
-
-### With Leading Icons
-
-<Demo data={iconsDemo} />
-
-### Disabled Tab
-
-<Demo data={disabledDemo} />
-
-### Variants
-
-<Demo data={variantsDemo} />
-
-### Sizes
-
-<Demo data={sizesDemo} />
 
 ## Accessibility
 

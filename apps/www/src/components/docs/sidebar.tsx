@@ -25,19 +25,30 @@ function renderNode(node: Node, pathname: string): ReactNode {
     node.children &&
     node.children.length > 0
   ) {
+    // One component documented across several pages. Two things keep it from
+    // disturbing the flat component list it sits in: the index renders as
+    // "Overview" (the group label already names the component, so repeating it
+    // reads as a duplicate row), and the group only opens while the reader is
+    // inside it. `isInside` is folded into the key so entering or leaving the
+    // section remounts the group at the right default, while leaving the
+    // reader free to toggle it by hand once they're there.
+    const isInside = isActiveUrl(node.index.url, pathname);
     return (
       <Sidebar.Group
         label={node.name as string}
-        key={node?.$id}
+        key={`${node?.$id}-${isInside}`}
         leadingIcon={node?.icon}
+        collapsible
+        defaultOpen={isInside}
         classNames={{
           items: styles.items,
           label: styles.label
         }}
       >
-        {/* Render index item first */}
-        {renderNode(node.index, pathname)}
-        {/* Recursively render all children */}
+        <SidebarItem
+          item={{ ...node.index, name: 'Overview' }}
+          pathname={pathname}
+        />
         {node.children.map(child => renderNode(child, pathname))}
       </Sidebar.Group>
     );

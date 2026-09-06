@@ -1,0 +1,154 @@
+---
+title: List
+description: DataView's table and list renderer — two presentations behind one component, with virtualization, grouping, and row selection.
+source: packages/raystack/components/data-view
+---
+
+import {
+  tablePreview,
+  listPreview,
+  virtualizedPreview,
+  groupingPreview,
+  virtualizedGroupingPreview,
+  loadingPreview,
+  rowSelectionPreview,
+} from "./demo.ts";
+
+<Demo data={tablePreview} />
+
+## Overview
+
+`DataView.List` draws the row model as a grid. It ships two presentations behind one renderer — `variant="table"` for column headers and aligned tracks, `variant="list"` for card-style rows — and both read the same [fields, filters, and display properties](/docs/components/dataview) declared on the root.
+
+## Anatomy
+
+```tsx
+import { DataView, DataViewListColumn } from "@raystack/apsara";
+
+<DataView data={data} fields={fields} defaultSort={defaultSort}>
+  <DataView.Toolbar>
+    <DataView.Search />
+    <DataView.Filters />
+    <DataView.DisplayControls />
+  </DataView.Toolbar>
+
+  <DataView.List variant="table" columns={columns} />
+</DataView>
+```
+
+## Usage
+
+### Variant
+
+`variant="table"` is the default: a header row, aligned column tracks, and real table semantics. `variant="list"` drops the header and renders card-style rows — the default `1fr` middle column with `auto` end columns gives you the familiar justify-between layout.
+
+<Demo data={listPreview} />
+
+### Columns
+
+`columns` is the presentation half of the [fields and columns split](/docs/components/dataview#fields-and-columns). Each entry maps an `accessorKey` to a `width` and a `cell` renderer.
+
+```tsx
+const columns: DataViewListColumn<Person>[] = [
+  { accessorKey: "name",  width: "1fr",  cell: ({ row }) => <Text>{row.original.name}</Text> },
+  { accessorKey: "team",  width: "auto", cell: ({ row }) => <Badge>{row.original.team}</Badge> },
+];
+```
+
+An accessor with no matching entry in the root's `fields` is an **unmanaged display column**. `DataView.List` always renders it, it never appears in Display Properties, and it can't be filtered, sorted, or grouped. Checkboxes, row actions, and drag handles all work this way.
+
+### Virtualization
+
+For large datasets, pass `virtualized`. The parent must have a fixed height — only the rows in view are rendered. Rows auto-measure after paint, so variable-height content (avatars, wrapped text, badges) just works. `estimatedRowHeight` is an optional hint used only until the first measurement.
+
+<Demo data={virtualizedPreview} />
+
+### Grouping
+
+Group rows by any `groupable` field. `stickyGroupHeader` pins the active group label directly under the column headers while you scroll past that group's rows. Pick a different field from `DisplayControls` → Grouping at runtime — the wire format stays `group_by: string[]`.
+
+<Demo data={groupingPreview} />
+
+In virtualized mode, a single sticky-anchor element swaps its content as the user scrolls past each group's offset. The natural group header at the active offset is hidden so the anchor doesn't double-render the label, and the lookup uses binary search plus `requestAnimationFrame` so the cost stays flat regardless of group count.
+
+<Demo data={virtualizedGroupingPreview} />
+
+### Loading
+
+While `isLoading` is `true`, `DataView.List` renders `loadingRowCount` skeleton rows at the tail. Behaviour is identical in virtualized and non-virtualized mode, and during initial load (skeletons fill the row pane) as well as during paginated load-more (skeletons render below the last loaded row).
+
+<Demo data={loadingPreview} />
+
+In [server mode](/docs/components/dataview#server-mode), infinite scroll triggers via a single sentinel and an `IntersectionObserver` — there are no scroll-distance knobs to tune. While `isLoading` is true the sentinel is suppressed so your `onLoadMore` isn't fired again during a fetch.
+
+### Row selection
+
+DataView doesn't ship a selection toolbar, but the underlying TanStack table instance is exposed via `useDataView()`, so you own the affordance: add a checkbox column to the renderer and float a [`FloatingActions`](/docs/components/floating-actions) bar over the view while rows are selected.
+
+<Demo data={rowSelectionPreview} />
+
+**Pass `getRowId` whenever the data can change under you.** Without it, selection falls back to positional keys (`'0'`, `'1'`, and `'<group>.<index>'` inside a group section). Those come from the `data` array rather than the visible order, so client-side sort, filter, and search are safe — a static dataset needs nothing. What they can't survive is the identity behind a position changing: a refetch or server-mode sort returning rows in a new order moves the selection to whatever now sits at that index, and switching Grouping on or off re-keys the rows and drops the selection.
+
+**Selection state lives on the table instance.** Read it with `table.getSelectedRowModel()`, clear it with `table.resetRowSelection()`, and mirror it outside the tree with `onRowSelectionChange` on the root if you need it there.
+
+**The TanStack [row selection API](https://tanstack.com/table/v8/docs/guide/row-selection) works as documented** — `row.getIsSelected()`, `row.toggleSelected()`, `row.getIsSomeSelected()`, `table.getIsAllRowsSelected()`, `getIsSomeRowsSelected()`, `toggleAllRowsSelected()`, `setRowSelection()`, `resetRowSelection()`. The header helpers are computed over the **filtered** rows, so select-all tracks what the user can actually see rather than the whole dataset.
+
+**Don't use the two handler getters from that guide.** `row.getToggleSelectedHandler()` and `table.getToggleAllRowsSelectedHandler()` are adapters for a native `<input type="checkbox" onChange>` and read `event.target.checked`. Apsara's [`Checkbox`](/docs/components/checkbox) reports a boolean through `onCheckedChange`, so the table-level getter throws on `undefined.checked` and the row-level one only works via its "no value means invert" fallback. Call `toggleSelected` and `toggleAllRowsSelected` with the boolean instead.
+
+**Positioning the actions bar.** `FloatingActions` defaults to `variant="floating"` (`position: fixed`, bottom-center), so no positioning CSS is needed at the call site. To scope the bar to the view instead of the viewport, give an ancestor `transform`, `filter`, or `contain: paint` so it becomes the containing block for `position: fixed`. Add `padding-bottom` via `classNames.root` if rows would otherwise sit behind the bar.
+
+**Stop propagation in the checkbox's `onClick`** when the root has an `onRowClick`, otherwise ticking a checkbox also activates the row.
+
+**Grouping works alongside selection.** Group header rows are keyed in their own id space and are not selectable — `rowSelection` holds one key per data row, and select-all covers the visible data rows without also flagging the bands. Read the count off `getSelectedRowModel().flatRows` rather than `.rows`: the latter only walks selected *top-level* rows, which is empty while grouping puts every data row one level down.
+
+## API Reference
+
+### DataView.List
+
+<auto-type-table path="./props.ts" name="DataViewListProps" />
+
+### Column
+
+<auto-type-table path="./props.ts" name="DataViewListColumn" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot). Toolbar, filter, and display-control slots are on the [DataView](/docs/components/dataview#slots) page.
+
+| Slot | Element |
+|------|---------|
+| `data-view-list` | Scroll container |
+| `data-view-list-grid` | The grid carrying the table/list role |
+| `data-view-list-header` | Header row group |
+| `data-view-list-header-row` | Header row |
+| `data-view-list-header-cell` | Header cell |
+| `data-view-list-body` | Row container |
+| `data-view-list-row` | Data row |
+| `data-view-list-cell` | Cell (data and loader rows) |
+| `data-view-list-group-header` | Group header (incl. the sticky anchor) |
+| `data-view-list-loader-row` | Skeleton row while `isLoading` |
+| `data-view-list-sentinel` | Infinite-scroll sentinel |
+
+Header cells, body cells, and loader cells also carry `data-column="{accessorKey}"`, so a single column can be targeted without a per-column `classNames` entry:
+
+```css
+/* Right-align every cell in the "amount" column, header included */
+[data-slot="data-view-list-cell"][data-column="amount"],
+[data-slot="data-view-list-header-cell"][data-column="amount"] {
+  text-align: right;
+}
+```
+
+## Accessibility
+
+- `variant="table"` renders real table semantics: `role="table"` on the grid
+  with `rowgroup`, `row`, `columnheader`, and `cell` on its parts.
+  `variant="list"` uses `role="list"` with `listitem` rows instead.
+- When `onRowClick` is set, each row gets `tabIndex={0}` and activates with
+  Enter or Space, matching a native button. Rows keep their structural role
+  (`row` or `listitem`) so cells stay associated with their row, and key
+  presses bubbling up from interactive children are ignored so they don't also
+  trigger row activation.
+- Skeleton loader rows are marked `aria-busy="true"`; the infinite-scroll
+  sentinel and the duplicate sticky group-header anchor are `aria-hidden` so
+  screen readers don't announce them.

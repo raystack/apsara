@@ -26,6 +26,38 @@ import { Meter } from '@raystack/apsara'
 </Meter>
 ```
 
+## Usage
+
+### Variant
+
+`linear` draws a bar, `circular` a ring. Both read the same `value`, `min`, and `max`, so the variant is purely how it looks.
+
+<Demo data={variantDemo} />
+
+### Direct usage
+
+The simplest way to use the meter. When no children are provided, it renders the track automatically.
+
+<Demo data={directUsageDemo} />
+
+### Customization
+
+Customize the track for both variants. For linear, use `height` on the track. For circular, use `width`/`height` on the track to control the overall size and `--rs-meter-track-size` to control the stroke thickness.
+
+<Demo data={customizationDemo} />
+
+### With labels
+
+Compose with `Meter.Label` and `Meter.Value` for additional context.
+
+<Demo data={withLabelsDemo} />
+
+### Custom range
+
+Use `min` and `max` to define custom value ranges.
+
+<Demo data={customRangeDemo} />
+
 ## API Reference
 
 ### Root
@@ -64,38 +96,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `meter-track` | The track (an `<svg>` in the circular variant) |
 | `meter-track-circle` | The background circle (circular variant only) |
 | `meter-indicator` | The filled indicator (a `<circle>` in the circular variant) |
-
-## Examples
-
-### Variant
-
-The meter supports `linear` and `circular` variants.
-
-<Demo data={variantDemo} />
-
-### Direct Usage
-
-The simplest way to use the meter. When no children are provided, it renders the track automatically.
-
-<Demo data={directUsageDemo} />
-
-### Customization
-
-Customize the track for both variants. For linear, use `height` on the track. For circular, use `width`/`height` on the track to control the overall size and `--rs-meter-track-size` to control the stroke thickness.
-
-<Demo data={customizationDemo} />
-
-### With Labels
-
-Compose with `Meter.Label` and `Meter.Value` for additional context.
-
-<Demo data={withLabelsDemo} />
-
-### Custom Range
-
-Use `min` and `max` to define custom value ranges.
-
-<Demo data={customRangeDemo} />
 
 ## Accessibility
 

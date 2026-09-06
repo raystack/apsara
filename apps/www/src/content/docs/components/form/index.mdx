@@ -34,29 +34,53 @@ import { Form, Field, Input, Button } from "@raystack/apsara";
 </Form>
 ```
 
-## API Reference
+## Usage
 
-<auto-type-table path="./props.ts" name="FormProps" />
+### Basic form
 
-### Slots
+`Form` wires submit handling and validation to the fields inside it. Everything below builds on this shape.
 
-Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+<Demo data={basicDemo} />
 
-| Slot | Element |
-|------|---------|
-| `form` | The root `<form>` element |
+### With fields
 
-## Error Handling
+Form with multiple fields using the Field component.
 
-Form supports two approaches to displaying errors, depending on how you build your form.
+<Demo data={withFieldsDemo} />
 
-### Props API (Simple)
+### Wrap interactive controls in Field
+
+Components like **Switch** and **Checkbox** internally register with the Form validation system. They **must** be placed inside a `<Field>` when used within a `<Form>`, even if you don't need a label or error message. Without a Field wrapper, they use a shared default context that interferes with form submission.
+
+```tsx
+{/* Correct */}
+<Field label="Notifications">
+  <Switch checked={value} onCheckedChange={onChange} />
+</Field>
+
+{/* Incorrect - breaks Form validation */}
+<Switch checked={value} onCheckedChange={onChange} />
+```
+
+### Validation modes
+
+Control when validation occurs: `onSubmit` (default), `onBlur`, or `onChange`.
+
+<Demo data={validationModesDemo} />
+
+### Choosing a validation approach
+
+Form provides built-in constraint validation using native HTML attributes (`required`, `type`, `pattern`, etc.) with `Field.Control` and `Field.Error match="..."`. This is the simplest approach when you don't need a form library.
+
+When using React Hook Form or similar, use the **props API** instead: pass `error={errors.field?.message}` to Field and let the library handle validation. Both approaches work with `<Form>`.
+
+### Errors with the props API
 
 Pass error strings directly to the Field `error` prop. This works well with custom validation logic or external form libraries like React Hook Form.
 
 <Demo data={propsApiErrorDemo} />
 
-### Sub-component API (Constraint Validation)
+### Errors with the sub-component API
 
 Use `Field.Control` with native HTML validation attributes and `Field.Error` with `match` to show specific messages for each constraint. The Form handles validation automatically on submit.
 
@@ -76,37 +100,17 @@ Available `match` values correspond to the browser [ValidityState](https://devel
 
 <Demo data={constraintValidationDemo} />
 
-### Custom Validation
+### Custom validation
 
 Use the `validate` prop on Field to run custom logic. Return an error string to fail, or `null` to pass. The error renders via `Field.Error match="customError"`.
 
 <Demo data={customValidationDemo} />
 
-### Server-Side Errors
+### Server-side errors
 
 Pass server validation errors to the Form `errors` prop. Keys must match the `name` prop on each Field. Errors clear automatically when the user modifies the corresponding field.
 
 <Demo data={serverErrorsDemo} />
-
-## Examples
-
-### Basic Form
-
-A simple form with submit handling.
-
-<Demo data={basicDemo} />
-
-### With Fields
-
-Form with multiple fields using the Field component.
-
-<Demo data={withFieldsDemo} />
-
-### Validation Modes
-
-Control when validation occurs: `onSubmit` (default), `onBlur`, or `onChange`.
-
-<Demo data={validationModesDemo} />
 
 ### React Hook Form
 
@@ -114,27 +118,17 @@ Use `register()` for text inputs and `Controller` for custom controls. Pass `err
 
 <Demo data={rhfDemo} />
 
-## Important Notes
+## API Reference
 
-### Wrap interactive controls in Field
+<auto-type-table path="./props.ts" name="FormProps" />
 
-Components like **Switch** and **Checkbox** internally register with the Form validation system. They **must** be placed inside a `<Field>` when used within a `<Form>`, even if you don't need a label or error message. Without a Field wrapper, they use a shared default context that interferes with form submission.
+### Slots
 
-```tsx
-{/* Correct */}
-<Field label="Notifications">
-  <Switch checked={value} onCheckedChange={onChange} />
-</Field>
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
 
-{/* Incorrect - breaks Form validation */}
-<Switch checked={value} onCheckedChange={onChange} />
-```
-
-### Constraint validation vs. external validation
-
-Form provides built-in constraint validation using native HTML attributes (`required`, `type`, `pattern`, etc.) with `Field.Control` and `Field.Error match="..."`. This is the simplest approach when you don't need a form library.
-
-When using React Hook Form or similar, use the **props API** instead: pass `error={errors.field?.message}` to Field and let the library handle validation. Both approaches work with `<Form>`.
+| Slot | Element |
+|------|---------|
+| `form` | The root `<form>` element |
 
 ## Accessibility
 

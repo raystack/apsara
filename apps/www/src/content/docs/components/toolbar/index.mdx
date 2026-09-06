@@ -28,6 +28,32 @@ import { Toolbar } from '@raystack/apsara'
 </Toolbar>
 ```
 
+## Usage
+
+### Grouped
+
+Use `Toolbar.Group` to group related buttons.
+
+<Demo data={groupDemo} />
+
+### Vertical
+
+Use the `orientation` prop to render the toolbar vertically.
+
+<Demo data={verticalDemo} />
+
+### Composition
+
+Use the `render` prop to compose with other components.
+
+<Demo data={compositionDemo} />
+
+### Disabled
+
+Disable all toolbar items by setting `disabled` on the root.
+
+<Demo data={disabledDemo} />
+
 ## API Reference
 
 ### Root
@@ -76,32 +102,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `toolbar-button` | `Toolbar.Button` |
 | `toolbar-group` | `Toolbar.Group` wrapper |
 | `toolbar-separator` | `Toolbar.Separator` |
-
-## Examples
-
-### Grouped
-
-Use `Toolbar.Group` to group related buttons.
-
-<Demo data={groupDemo} />
-
-### Vertical
-
-Use the `orientation` prop to render the toolbar vertically.
-
-<Demo data={verticalDemo} />
-
-### Composition
-
-Use the `render` prop to compose with other components.
-
-<Demo data={compositionDemo} />
-
-### Disabled
-
-Disable all toolbar items by setting `disabled` on the root.
-
-<Demo data={disabledDemo} />
 
 ## Accessibility
 

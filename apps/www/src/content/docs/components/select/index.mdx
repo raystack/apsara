@@ -36,6 +36,54 @@ import { Select } from "@raystack/apsara";
 </Select>
 ```
 
+## Usage
+
+### Basic Select
+
+A trigger and a list of items. `Select.Value` renders the current selection in the trigger.
+
+<Demo data={basicDemo} />
+
+### Icon
+
+You can pass `leadingIcon` prop to Select.Item to include items
+
+<Demo data={iconDemo} />
+
+### Size
+
+Two sizes. `medium` is the default; `small` fits toolbars and table filters.
+
+<Demo data={sizeDemo} />
+
+### Variant
+
+`outline` (the default) draws a bordered control. `text` removes the border for use inside a toolbar or beside other text.
+
+<Demo data={variantDemo} />
+
+### With Separator
+
+`Select.Separator` draws a rule between groups of items.
+
+<Demo data={separatorDemo} />
+
+### Multiple selection
+
+To enable multiple selection, pass the `multiple` prop to the Select root element.
+
+When multiple selection is enabled, the value, onValueChange, and defaultValue will be an array of strings.
+
+<Demo data={multipleDemo} />
+
+### Autocomplete
+
+To enable autocomplete, pass the `autocomplete` prop to the Select root element.
+
+By default, only select items are filtered using a simple match. For more advanced control, set `autocompleteMode="manual"` and implement your own custom filtering logic.
+
+<Demo data={autocompleteDemo} />
+
 ## API Reference
 
 ### Root
@@ -105,46 +153,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `select-item` | An individual option row |
 | `select-item-icon` | Leading icon on an item (when set) |
 | `select-item-text` | The text label of an item |
-
-## Examples
-
-### Basic Select
-
-<Demo data={basicDemo} />
-
-### Icon
-
-You can pass `leadingIcon` prop to Select.Item to include items
-
-<Demo data={iconDemo} />
-
-### Size
-
-<Demo data={sizeDemo} />
-
-### Variant
-
-<Demo data={variantDemo} />
-
-### With Separator
-
-<Demo data={separatorDemo} />
-
-### Multiple Selection
-
-To enable multiple selection, pass the `multiple` prop to the Select root element.
-
-When multiple selection is enabled, the value, onValueChange, and defaultValue will be an array of strings.
-
-<Demo data={multipleDemo} />
-
-### Autocomplete
-
-To enable autocomplete, pass the `autocomplete` prop to the Select root element.
-
-By default, only select items are filtered using a simple match. For more advanced control, set `autocompleteMode="manual"` and implement your own custom filtering logic.
-
-<Demo data={autocompleteDemo} />
 
 ## Accessibility
 

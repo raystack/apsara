@@ -27,6 +27,20 @@ import { Drawer } from "@raystack/apsara";
 </Drawer>
 ```
 
+## Usage
+
+### Basic
+
+A drawer slides in from the edge named by `side` and traps focus while open.
+
+<Demo data={basicDemo} />
+
+### Positioning
+
+The Drawer can slide in from different sides of the screen. Swipe-to-dismiss is automatically configured based on the `side` prop.
+
+<Demo data={positionDemo} />
+
 ## API Reference
 
 ### Root
@@ -79,18 +93,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `drawer-body` | The `Drawer.Body` container |
 | `drawer-footer` | The `Drawer.Footer` container |
 
-## Examples
-
-### Basic
-
-<Demo data={basicDemo} />
-
-### Positioning
-
-The Drawer can slide in from different sides of the screen. Swipe-to-dismiss is automatically configured based on the `side` prop.
-
-<Demo data={positionDemo} />
-
 ## Accessibility
 
 - Uses `role="dialog"` with `aria-modal="true"`.
@@ -102,4 +104,3 @@ The Drawer can slide in from different sides of the screen. Swipe-to-dismiss is 
   prop for localisation or context-specific copy (e.g. `"Close settings"`).
 - Respects motion preferences: drawer slide motion is enabled only when
   `prefers-reduced-motion: no-preference`.
-

@@ -16,6 +16,14 @@ import {
 
 <Demo data={playground} />
 
+## Overview
+
+Both scrollbars are always rendered and appear only when content overflows, so a
+container never jumps as content grows. The scrollbar widens from 4px to 6px on hover, a
+corner element is added automatically when both axes are visible, and scrolling chains to
+the parent page once you reach a boundary. Use the `type` prop to control when scrollbars
+appear.
+
 ## Anatomy
 
 Import and assemble the component:
@@ -25,6 +33,32 @@ import { ScrollArea } from "@raystack/apsara";
 
 <ScrollArea />
 ```
+
+## Usage
+
+### Vertical scrolling
+
+A basic vertical scroll area with a list of items. The scrollbar automatically appears when content overflows vertically.
+
+<Demo data={verticalDemo} />
+
+### Horizontal scrolling
+
+A horizontal scroll area for wide content like tables or card grids. The scrollbar automatically appears when content overflows horizontally.
+
+<Demo data={horizontalDemo} />
+
+### Both scrollbars
+
+When content overflows both vertically and horizontally, both scrollbars appear automatically along with the corner element.
+
+<Demo data={bothScrollbarsDemo} />
+
+### Scrollbar type
+
+Control when the scrollbar appears using the `type` prop.
+
+<Demo data={typeDemo} />
 
 ## API Reference
 
@@ -44,41 +78,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `scroll-area-scrollbar` | A scrollbar track (one per axis) |
 | `scroll-area-thumb` | The draggable thumb inside a scrollbar |
 | `scroll-area-corner` | The corner between scrollbars (when both axes overflow) |
-
-## Examples
-
-### Vertical Scrolling
-
-A basic vertical scroll area with a list of items. The scrollbar automatically appears when content overflows vertically.
-
-<Demo data={verticalDemo} />
-
-### Horizontal Scrolling
-
-A horizontal scroll area for wide content like tables or card grids. The scrollbar automatically appears when content overflows horizontally.
-
-<Demo data={horizontalDemo} />
-
-### Both Scrollbars
-
-When content overflows both vertically and horizontally, both scrollbars appear automatically along with the corner element.
-
-<Demo data={bothScrollbarsDemo} />
-
-### Scrollbar Type
-
-Control when the scrollbar appears using the `type` prop.
-
-<Demo data={typeDemo} />
-
-## Features
-
-- **Automatic Scrollbars**: Both vertical and horizontal scrollbars are always rendered and automatically shown when content overflows
-- **Smooth Scrolling**: Custom scrollbar with smooth transitions
-- **Hover Effects**: Scrollbar expands from 4px to 6px on hover
-- **Auto Corner**: Corner element is automatically added when both scrollbars are visible
-- **Scroll Chaining**: Scroll continues to parent page when reaching container boundaries
-- **Customizable Visibility**: Control when scrollbars appear using the `type` prop
 
 ## Accessibility
 

@@ -22,6 +22,20 @@ import { Container } from '@raystack/apsara'
 <Container />
 ```
 
+## Usage
+
+### Size
+
+The `size` prop caps the container's max-width. The default is `none`, which lets content span the full width of the parent.
+
+<Demo data={sizeDemo} />
+
+### Align
+
+The `align` prop positions the container within its parent — left, center, or right. Default is `center`.
+
+<Demo data={alignDemo} />
+
 ## API Reference
 
 Renders a centered content wrapper with max-width constraints.
@@ -35,20 +49,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | Slot | Element |
 |------|---------|
 | `container` | The container `<div>` |
-
-## Examples
-
-### Size
-
-The `size` prop caps the container's max-width. The default is `none`, which lets content span the full width of the parent.
-
-<Demo data={sizeDemo} />
-
-### Align
-
-The `align` prop positions the container within its parent — left, center, or right. Default is `center`.
-
-<Demo data={alignDemo} />
 
 ## Accessibility
 

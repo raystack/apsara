@@ -20,6 +20,20 @@ import { SidePanel } from "@raystack/apsara";
 </SidePanel>
 ```
 
+## Usage
+
+### Basic usage
+
+A panel with a header and content. `side` puts it on the `left` or `right` of the layout.
+
+<Demo data={basicDemo} />
+
+### Position
+
+`left` or `right`. Match it to the side the panel relates to, so it opens next to the content it acts on.
+
+<Demo data={positionDemo} />
+
 ## API Reference
 
 ### Root
@@ -50,18 +64,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `side-panel-actions` | Header actions group |
 | `side-panel-description` | Header description text (when `description` is set) |
 | `side-panel-section` | `SidePanel.Section` container |
-
-## Examples
-
-### Basic Usage
-
-<Demo data={basicDemo} />
-
-### Position
-
-The SidePanel can be positioned on either the left or right side of the screen.
-
-<Demo data={positionDemo} />
 
 ## Accessibility
 
