@@ -21,8 +21,8 @@ import {
 
 This page covers what every renderer shares. The renderers have their own pages:
 
-- **[List](/docs/components/dataview/list)** — table and list presentations.
-- **[Timeline](/docs/components/dataview/timeline)** — cards on a continuous time axis.
+- **[List](/docs/dataview/list)** — table and list presentations.
+- **[Timeline](/docs/dataview/timeline)** — cards on a continuous time axis.
 
 `DataView.Custom` is the escape hatch for everything else — cards, kanban, gallery — and is covered below.
 
@@ -193,7 +193,7 @@ Grouping stays `group_by: string[]` on the wire in both modes. To group by somet
 />
 ```
 
-Fetching itself is renderer-shaped. [List](/docs/components/dataview/list#loading) pages through an infinite-scroll sentinel; [Timeline](/docs/components/dataview/timeline#loading-by-visible-range) fetches by visible time window instead.
+Fetching itself is renderer-shaped. [List](/docs/dataview/list#loading) pages through an infinite-scroll sentinel; [Timeline](/docs/dataview/timeline#loading-by-visible-range) fetches by visible time window instead.
 
 ## API Reference
 
@@ -249,7 +249,7 @@ A context-driven "Clear Filters" affordance for the empty state. Place it as a s
 
 ### Slots
 
-Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot). Filter chips inside `DataView.Filters` expose the [FilterChip slots](/docs/components/filter-chip#slots); `DataView.Search` exposes the [Search slots](/docs/components/search#slots). Renderer slots live on the [List](/docs/components/dataview/list#slots) and [Timeline](/docs/components/dataview/timeline#slots) pages.
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot). Filter chips inside `DataView.Filters` expose the [FilterChip slots](/docs/components/filter-chip#slots); `DataView.Search` exposes the [Search slots](/docs/components/search#slots). Renderer slots live on the [List](/docs/dataview/list#slots) and [Timeline](/docs/dataview/timeline#slots) pages.
 
 **Toolbar and filters**
 
@@ -294,5 +294,5 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
   interactive children (buttons, links in cells) are ignored so they don't also
   trigger row activation.
 - Renderer-specific semantics are documented on the
-  [List](/docs/components/dataview/list#accessibility) and
-  [Timeline](/docs/components/dataview/timeline#accessibility) pages.
+  [List](/docs/dataview/list#accessibility) and
+  [Timeline](/docs/dataview/timeline#accessibility) pages.

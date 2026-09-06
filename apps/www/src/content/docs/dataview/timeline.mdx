@@ -151,7 +151,7 @@ Leave the Ordering control visible for both.
 
 Under the default `auto` packing the sort has no visible effect at all — lanes are assigned by dense chronological first-fit — so there, hide the control with `<DataView.DisplayControls hideOrdering />`, or leave `sortable` off the timeline's per-view `fields`.
 
-In [server mode](/docs/components/dataview#server-mode) the sort is the backend's to apply: rows arrive already ordered and `one-per-sort-value` takes lane order from that row order, first value seen first. A backend that ignores the `sort` in `onTableQueryChange` therefore produces lanes in whatever order it returned rows, with nothing logged to say so. The lane *membership* is still correct, only the ranking is arbitrary.
+In [server mode](/docs/dataview#server-mode) the sort is the backend's to apply: rows arrive already ordered and `one-per-sort-value` takes lane order from that row order, first value seen first. A backend that ignores the `sort` in `onTableQueryChange` therefore produces lanes in whatever order it returned rows, with nothing logged to say so. The lane *membership* is still correct, only the ranking is arbitrary.
 
 ### Scale and axis
 
@@ -206,7 +206,7 @@ Without it, nothing is culled vertically. Every lane in the domain stays mounted
 
 ### Loading by visible range
 
-Offset pagination doesn't fit a 2-D time canvas — the natural unit of fetching is the **visible window**. So unlike List, a timeline backed by an API usually stays in **client mode** and fetches through `onVisibleRangeChange` rather than switching to [server mode](/docs/components/dataview#server-mode).
+Offset pagination doesn't fit a 2-D time canvas — the natural unit of fetching is the **visible window**. So unlike List, a timeline backed by an API usually stays in **client mode** and fetches through `onVisibleRangeChange` rather than switching to [server mode](/docs/dataview#server-mode).
 
 1. Fix the coordinate space with an explicit `range` so the scrollbar stays stable while rows stream in.
 2. On `onVisibleRangeChange`, widen the window by a prefetch pad and fetch rows **overlapping** it (`start <= to AND end >= from`). A containment filter drops cards straddling the window edges.
@@ -264,7 +264,7 @@ The imperative handle received through `actionsRef`.
 
 ### Slots
 
-Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot). Toolbar, filter, and display-control slots are on the [DataView](/docs/components/dataview#slots) page.
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot). Toolbar, filter, and display-control slots are on the [DataView](/docs/dataview#slots) page.
 
 | Slot | Element |
 |------|---------|
