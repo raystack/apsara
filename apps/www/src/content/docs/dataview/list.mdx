@@ -18,7 +18,7 @@ import {
 
 ## Overview
 
-`DataView.List` draws the row model as a grid. It ships two presentations behind one renderer — `variant="table"` for column headers and aligned tracks, `variant="list"` for card-style rows — and both read the same [fields, filters, and display properties](/docs/components/dataview) declared on the root.
+`DataView.List` draws the row model as a grid. It ships two presentations behind one renderer — `variant="table"` for column headers and aligned tracks, `variant="list"` for card-style rows — and both read the same [fields, filters, and display properties](/docs/dataview) declared on the root.
 
 ## Anatomy
 
@@ -46,7 +46,7 @@ import { DataView, DataViewListColumn } from "@raystack/apsara";
 
 ### Columns
 
-`columns` is the presentation half of the [fields and columns split](/docs/components/dataview#fields-and-columns). Each entry maps an `accessorKey` to a `width` and a `cell` renderer.
+`columns` is the presentation half of the [fields and columns split](/docs/dataview#fields-and-columns). Each entry maps an `accessorKey` to a `width` and a `cell` renderer.
 
 ```tsx
 const columns: DataViewListColumn<Person>[] = [
@@ -79,7 +79,7 @@ While `isLoading` is `true`, `DataView.List` renders `loadingRowCount` skeleton 
 
 <Demo data={loadingPreview} />
 
-In [server mode](/docs/components/dataview#server-mode), infinite scroll triggers via a single sentinel and an `IntersectionObserver` — there are no scroll-distance knobs to tune. While `isLoading` is true the sentinel is suppressed so your `onLoadMore` isn't fired again during a fetch.
+In [server mode](/docs/dataview#server-mode), infinite scroll triggers via a single sentinel and an `IntersectionObserver` — there are no scroll-distance knobs to tune. While `isLoading` is true the sentinel is suppressed so your `onLoadMore` isn't fired again during a fetch.
 
 ### Row selection
 
@@ -107,7 +107,7 @@ DataView doesn't ship a selection toolbar, but the underlying TanStack table ins
 
 ### Slots
 
-Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot). Toolbar, filter, and display-control slots are on the [DataView](/docs/components/dataview#slots) page.
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot). Toolbar, filter, and display-control slots are on the [DataView](/docs/dataview#slots) page.
 
 | Slot | Element |
 |------|---------|
