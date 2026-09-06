@@ -28,26 +28,26 @@
   --docs-section-weight: var(--rs-font-weight-medium);
 
   /* Entry (h3). A full step below its section, not a nudge. */
-  --docs-entry-size: 16px;
-  --docs-entry-leading: 24px;
-  --docs-entry-tracking: -0.011em;
+  --docs-entry-size: 18px;
+  --docs-entry-leading: 26px;
+  --docs-entry-tracking: -0.014em;
   --docs-entry-weight: var(--rs-font-weight-medium);
 
   /* Sub-entry (h4). Only ever an API sub-type under its parent part. */
-  --docs-subentry-size: 14px;
-  --docs-subentry-leading: 20px;
-  --docs-subentry-tracking: -0.006em;
+  --docs-subentry-size: var(--rs-font-size-large);
+  --docs-subentry-leading: var(--rs-line-height-large);
+  --docs-subentry-tracking: var(--rs-letter-spacing-large);
   --docs-subentry-weight: var(--rs-font-weight-medium);
 
   /* Prose. Looser leading than the product default — this is read, not scanned. */
-  --docs-body-size: 14px;
-  --docs-body-leading: 23px;
-  --docs-body-tracking: -0.006em;
+  --docs-body-size: var(--rs-font-size-large);
+  --docs-body-leading: var(--rs-line-height-large);
+  --docs-body-tracking: var(--rs-letter-spacing-large);
 
   /* Lede — the frontmatter description under the title. */
-  --docs-lede-size: 16px;
-  --docs-lede-leading: 27px;
-  --docs-lede-tracking: -0.011em;
+  --docs-lede-size: 18px;
+  --docs-lede-leading: 28px;
+  --docs-lede-tracking: -0.014em;
 
   /* Label layer. Mono, uppercase, tracked out. This is what stops headings
      being pressed into service as labels (eyebrows, part names, panel chrome). */
