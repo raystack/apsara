@@ -64,28 +64,8 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
               <DocsFooter url={page.url} />
             </Flex>
           </Flex>
-          <aside
-            style={{
-              width: '300px',
-              height: 'calc(100vh - 50px)',
-              position: 'sticky',
-              top: '50px',
-              padding: '40px 0',
-              paddingRight: 'var(--rs-space-7)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <div
-              style={{
-                width: '100%',
-                height: '70vh'
-              }}
-            >
-              <TableOfContents headings={page.data.toc} />
-            </div>
+          <aside className={styles.toc}>
+            <TableOfContents headings={page.data.toc} />
           </aside>
         </Flex>
       </Flex>

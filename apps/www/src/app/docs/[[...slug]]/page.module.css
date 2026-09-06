@@ -38,3 +38,18 @@
   letter-spacing: var(--docs-lede-tracking);
   max-width: 42rem;
 }
+
+/*
+  The rail sits beside the article and stays put while it scrolls. It owns a
+  fixed width so the text column keeps the same measure on every page,
+  regardless of how many headings a page has.
+*/
+.toc {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  width: 224px;
+  height: calc(100vh - 50px);
+  position: sticky;
+  top: 50px;
+}

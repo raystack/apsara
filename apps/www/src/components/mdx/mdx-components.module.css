@@ -30,6 +30,8 @@
   color: var(--rs-color-foreground-base-primary);
   font-family: var(--rs-font-body);
   text-wrap: balance;
+  /* Clears the 50px sticky navbar when a heading is jumped to by anchor. */
+  scroll-margin-top: var(--rs-space-13);
 }
 
 .prose-h1 {
