@@ -40,15 +40,16 @@
 }
 
 /*
-  The rail sits beside the article and stays put while it scrolls. It owns a
-  fixed width so the text column keeps the same measure on every page,
-  regardless of how many headings a page has.
+  The rail sits beside the article and stays put while it scrolls. Its width
+  matches the sidebar's, so the article sits in the middle of equal gutters,
+  and it is fixed so the text keeps the same measure on every page regardless
+  of how many headings that page has.
 */
 .toc {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  width: 224px;
+  width: 240px;
   height: calc(100vh - 50px);
   position: sticky;
   top: 50px;
