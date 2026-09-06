@@ -58,6 +58,7 @@
   align-items: center;
   font-family: var(--rs-font-mono);
   font-size: var(--rs-font-size-mono-small);
+  line-height: var(--rs-line-height-mono-small);
   color: var(--rs-color-foreground-base-primary);
   text-transform: capitalize;
   opacity: 0;
@@ -129,6 +130,7 @@
   transform: translateY(-50%);
   font-family: var(--rs-font-mono);
   font-size: var(--rs-font-size-mono-small);
+  line-height: var(--rs-line-height-mono-small);
   color: var(--rs-color-cobalt-600, #0066cc);
   transition: opacity 300ms;
 }

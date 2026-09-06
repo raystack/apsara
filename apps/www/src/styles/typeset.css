@@ -1,16 +1,14 @@
 /*
   Docs typeset — local to apps/www. Never imported by the package.
 
-  Apsara's `Headline` scale (t1–t4) is tuned for product surfaces: four sizes
+  Apsara's `Headline` scale (t1-t4) is tuned for product surfaces: four sizes
   inside 12px of each other, which leaves a section heading and the entries
   under it reading as the same rank. Documentation needs a wider spread at the
   top and a tighter one at the bottom, so the docs own their own scale here
   rather than bending the core tokens that every product depends on.
 
-  Tracking follows Inter's published dynamic metric — `a + b·e^(c·size)` with
-  a = -0.0223, b = 0.185, c = -0.1745 — the same curve Apsara already uses for
-  body text (14px → -0.006em). The core heading tokens sit looser than the
-  curve asks for; these do not.
+  Tracking follows Inter's dynamic metric — `a + b*e^(c*size)` with a = -0.0223,
+  b = 0.185, c = -0.1745 — the curve Apsara already uses for body text.
 
   Sizes stay in px because the values are optical choices, not a modular scale.
 */
@@ -22,8 +20,8 @@
   --docs-title-tracking: -0.022em;
   --docs-title-weight: var(--rs-font-weight-medium);
 
-  /* Section (h2). A hairline rule above it carries the separation, so the
-     type only has to label — it does not need to grow to do that job. */
+  /* Section (h2). Space above it carries the separation, so the type only has
+     to label — it does not need to grow to do that job. */
   --docs-section-size: 24px;
   --docs-section-leading: 30px;
   --docs-section-tracking: -0.019em;
@@ -62,4 +60,16 @@
   --docs-caption-size: 13px;
   --docs-caption-leading: 19px;
   --docs-caption-tracking: 0em;
+
+  --rs-line-height-mono-small: 20px;
+
+  --rs-font-mono:
+    var(--docs-font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--rs-font-mono);
 }

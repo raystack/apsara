@@ -17,12 +17,9 @@
   font-family: var(--rs-font-mono);
   font-size: var(--rs-font-size-mono-small);
   letter-spacing: var(--rs-letter-spacing-mono-small);
-  line-height: var(--rs-line-height-mono-small);
+  line-height: inherit;
   color: var(--rs-color-foreground-base-primary);
 }
-
-/* Headings carry the docs typeset (src/styles/typeset.css) rather than
-   Apsara's Headline scale, which is tuned for product surfaces. */
 
 .prose-h1,
 .prose-h2,
@@ -43,9 +40,6 @@
   font-weight: var(--docs-title-weight);
 }
 
-/* Space does the separating. Without a rule the gap has to read as a break on
-   its own, so it is larger than the h3 step above — and continuous, where the
-   48 + 24 either side of a rule would have been split in two. */
 .prose-h2 {
   margin-top: var(--rs-space-13);
   font-size: var(--docs-section-size);

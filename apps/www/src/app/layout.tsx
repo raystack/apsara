@@ -1,5 +1,5 @@
 import { NextProvider } from 'fumadocs-core/framework/next';
-import { Inter } from 'next/font/google';
+import { Geist_Mono, Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
 import { ThemeProvider } from '@/components/theme';
 import '@/styles.css';
@@ -13,9 +13,19 @@ const inter = Inter({
   subsets: ['latin']
 });
 
+const geistMono = Geist_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--docs-font-mono'
+});
+
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <html lang='en' className={inter.className} suppressHydrationWarning>
+    <html
+      lang='en'
+      className={`${inter.className} ${geistMono.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <link rel='icon' href='/assets/logo.svg' sizes='any' />
       </head>

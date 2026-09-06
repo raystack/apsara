@@ -15,11 +15,6 @@
   letter-spacing: var(--docs-body-tracking);
 }
 
-/*
-  Demos render real Apsara components, so they must show the product's own
-  type, not the docs typeset. Prose leading is looser than the product default
-  and would otherwise be inherited straight into every specimen.
-*/
 :global(.prose) [data-demo] {
   font-size: var(--rs-font-size-regular);
   line-height: var(--rs-line-height-regular);
