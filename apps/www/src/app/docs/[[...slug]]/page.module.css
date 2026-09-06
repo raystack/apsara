@@ -38,3 +38,26 @@
   letter-spacing: var(--docs-lede-tracking);
   max-width: 42rem;
 }
+
+/*
+  The rail sits beside the article and stays put while it scrolls. Its width
+  matches the sidebar's, so the article sits in the middle of equal gutters,
+  and it is fixed so the text keeps the same measure on every page regardless
+  of how many headings that page has.
+*/
+.toc {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  height: calc(100vh - 50px);
+  position: sticky;
+  top: 50px;
+  /*
+    The rail's inner edge, matching the one on the sidebar. It starts below the
+    navbar rather than at the top of the screen, because above that line the
+    navbar is one strip running the width of the article — there is nothing
+    there for the rule to divide.
+  */
+  border-left: 0.5px solid var(--rs-color-border-base-primary);
+}
