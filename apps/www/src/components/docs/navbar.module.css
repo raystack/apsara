@@ -9,13 +9,10 @@
   height: 50px;
   box-sizing: border-box;
   backdrop-filter: blur(1px);
-  background: #fcfcfce6;
+  background: color-mix(in srgb, var(--docs-bg-shell) 90%, transparent);
   z-index: var(--rs-z-index-portal);
 }
 
-[data-theme="dark"] .navbar {
-  background: #111111e6;
-}
 .left {
   display: flex;
   align-items: center;

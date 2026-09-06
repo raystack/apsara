@@ -14,10 +14,10 @@
 */
 
 :root {
-  /* Page title — one per page, the only thing at this size. */
-  --docs-title-size: 48px;
-  --docs-title-leading: 52px;
-  --docs-title-tracking: -0.022em;
+  /* Page title — one per page, on the top step of Apsara's heading scale. */
+  --docs-title-size: var(--rs-font-size-t4);
+  --docs-title-leading: var(--rs-line-height-t4);
+  --docs-title-tracking: var(--rs-letter-spacing-t4);
   --docs-title-weight: var(--rs-font-weight-medium);
 
   /* Section (h2). Space above it carries the separation, so the type only has
@@ -44,10 +44,11 @@
   --docs-body-leading: var(--rs-line-height-large);
   --docs-body-tracking: var(--rs-letter-spacing-large);
 
-  /* Lede — the frontmatter description under the title. */
-  --docs-lede-size: 18px;
-  --docs-lede-leading: 28px;
-  --docs-lede-tracking: -0.014em;
+  /* Lede — the frontmatter description under the title. Reads at body size:
+     it is the first thing you read, not a size class of its own. */
+  --docs-lede-size: var(--rs-font-size-large);
+  --docs-lede-leading: var(--rs-line-height-large);
+  --docs-lede-tracking: var(--rs-letter-spacing-large);
 
   /* Label layer. Mono, uppercase, tracked out. This is what stops headings
      being pressed into service as labels (eyebrows, part names, panel chrome). */

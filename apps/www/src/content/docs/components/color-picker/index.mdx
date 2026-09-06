@@ -32,6 +32,8 @@ import { ColorPicker } from '@raystack/apsara'
 
 ## Usage
 
+The picker is composed from an area pad, sliders and an input, so you can drop in the whole thing or keep only the parts you need.
+
 ### Basic usage
 
 An uncontrolled picker. Pass `defaultValue` for the starting color and read changes from `onValueChange`.
@@ -62,6 +64,8 @@ The `ColorPicker` can be embedded within a `Popover` component to create a more 
 <Demo data={popoverDemo} />
 
 ## API Reference
+
+The pad and sliders compose inside a root. `formatColor` turns a value into a string yourself.
 
 ### Root
 

@@ -1,6 +1,16 @@
+/* The article and the contents rail, side by side under the page nav. */
+.body {
+  width: 100%;
+}
+
+/* Centers the article inside whatever space the rail leaves. */
+.column {
+  width: 100%;
+}
+
 .content {
   max-width: 806px;
-  padding: var(--rs-space-15) var(--rs-space-7);
+  padding: var(--rs-space-13) var(--rs-space-7) var(--rs-space-15);
   width: 100%;
   gap: var(--rs-space-12);
   min-height: calc(100vh - 50px);
@@ -36,7 +46,6 @@
   font-size: var(--docs-lede-size);
   line-height: var(--docs-lede-leading);
   letter-spacing: var(--docs-lede-tracking);
-  max-width: 42rem;
 }
 
 /*
@@ -59,5 +68,5 @@
     navbar is one strip running the width of the article — there is nothing
     there for the rule to divide.
   */
-  border-left: 0.5px solid var(--rs-color-border-base-primary);
+  border-left: var(--docs-rule);
 }

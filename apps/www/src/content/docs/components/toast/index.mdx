@@ -26,6 +26,8 @@ toastManager.add({ title: 'Hello!', type: 'success' })
 
 ## Usage
 
+Toasts are dispatched from code rather than rendered inline. A provider holds them; a manager adds them.
+
 ### Basic Toast
 
 Call `toastManager.add()` with a message. The toast appears in the provider's region and dismisses itself after `timeout`.
@@ -81,6 +83,8 @@ Use `useToastManager()` inside a component to dispatch toasts and/or read the re
 <Demo data={hookDemo} />
 
 ## API Reference
+
+The provider that renders toasts, and the manager APIs that add them — from a module, or from inside a component.
 
 ### Toast.Provider
 

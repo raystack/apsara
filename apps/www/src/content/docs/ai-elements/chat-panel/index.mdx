@@ -1,5 +1,5 @@
 ---
-title: ChatPanel
+title: Chat Panel
 description: A dockable, floating, minimizable window frame for chat — an inline sidebar that pops out to a draggable, resizable window or collapses to a corner bubble.
 source: packages/raystack/components/chat-panel
 tag: new
@@ -55,6 +55,8 @@ near the layout root: an ancestor with `transform`, `filter` or
 `backdrop-filter` would break fixed positioning.
 
 ## Usage
+
+How the panel behaves is set on the root: the way it moves between modes, who owns the current mode, and what a drag or a resize is allowed to do.
 
 ### Mode transitions
 
@@ -137,6 +139,8 @@ across sessions:
 ```
 
 ## API Reference
+
+The frame wraps a header, a content area and the minimized bubble. Header actions are a slot, so an app adds its own controls beside the ready-made mode triggers.
 
 ### Root
 

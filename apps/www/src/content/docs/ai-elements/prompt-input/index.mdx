@@ -1,5 +1,5 @@
 ---
-title: PromptInput
+title: Prompt Input
 description: A composer for AI chat and standalone "Ask anything" boxes — auto-growing input, inline @-mention chips, toolbar slots, and a status-aware submit button.
 source: packages/raystack/components/prompt-input
 tag: new
@@ -36,6 +36,8 @@ request. Pass the lifecycle in through `status` and react to `onSubmit` /
 anything else.
 
 ## Usage
+
+The composer is a form with a swappable input. Start with the value format — it decides which input you want and what you get back on submit.
 
 ### Value format
 
@@ -187,6 +189,8 @@ all use that same rule, so they always agree:
   including the space added after a chip. Chips are never trimmed.
 
 ## API Reference
+
+The form wraps one of two inputs, `Textarea` or `Editor`, with the header, footer and submit around it.
 
 ### Root
 

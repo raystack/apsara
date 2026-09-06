@@ -31,6 +31,8 @@ import { Accordion } from '@raystack/apsara'
 
 ## Usage
 
+Start with how many sections may be open at once, then decide whether you own that state.
+
 ### Single vs multiple
 
 `single` (the default) closes the open item when another opens. `multiple` lets any number stay open at once.
@@ -56,6 +58,8 @@ The accordion content can contain any React elements, allowing for rich layouts 
 <Demo data={customContentDemo} />
 
 ## API Reference
+
+Items live in a root, and each pairs a trigger with a content panel.
 
 ### Root
 

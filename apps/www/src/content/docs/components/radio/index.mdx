@@ -25,6 +25,8 @@ import { Radio } from "@raystack/apsara";
 
 ## Usage
 
+Radios always live in a group. The group owns the value; the radios are the options.
+
 ### Size
 
 Two sizes. `large` is the default; `small` fits dense lists. Set `size` on `Radio.Root` and every item follows.
@@ -62,6 +64,8 @@ Pass `value` with `onValueChange` on `Radio.Group` to own the selection — need
 <Demo data={controlledDemo} />
 
 ## API Reference
+
+The group that holds the value, and the radio itself.
 
 ### Group
 

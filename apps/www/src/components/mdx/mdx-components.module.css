@@ -1,7 +1,7 @@
 .code-block-content {
-  border-radius: var(--rs-radius-2);
+  border-radius: var(--docs-surface-radius);
   border: 1px solid var(--rs-color-border-base-primary);
-  background: var(--rs-color-background-base-secondary);
+  background: var(--docs-bg-surface);
 }
 .code-block-content-code {
   padding-left: var(--rs-space-3);
@@ -13,7 +13,7 @@
   border-radius: var(--rs-radius-2);
   border: 1px solid var(--rs-color-border-base-primary);
   padding: var(--rs-space-1) var(--rs-space-2);
-  background: var(--rs-color-background-base-secondary);
+  background: var(--docs-bg-surface);
   font-family: var(--rs-font-mono);
   font-size: var(--rs-font-size-mono-small);
   letter-spacing: var(--rs-letter-spacing-mono-small);
@@ -102,9 +102,10 @@
 
 /* Markdown table styles */
 .prose-table {
+  background: var(--docs-bg-surface);
   width: 100%;
-  border: 0.5px solid var(--rs-color-border-base-primary);
-  border-radius: var(--rs-radius-2);
+  border: var(--docs-rule);
+  border-radius: var(--docs-surface-radius);
   overflow: hidden;
   margin: var(--rs-space-5) 0;
   border-collapse: separate;
@@ -112,7 +113,7 @@
 }
 
 .prose-table thead {
-  background: var(--rs-color-background-base-secondary);
+  background: var(--docs-bg-surface-header);
 }
 
 .prose-table th {
@@ -123,7 +124,7 @@
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
   color: var(--rs-color-foreground-base-primary);
-  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+  border-bottom: var(--docs-rule);
 }
 
 .prose-table td {
@@ -131,7 +132,7 @@
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   color: var(--rs-color-foreground-base-secondary);
-  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+  border-bottom: var(--docs-rule);
 }
 
 .prose-table tbody tr:last-child td {

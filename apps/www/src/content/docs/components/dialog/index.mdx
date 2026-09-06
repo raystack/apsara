@@ -32,6 +32,8 @@ import { Dialog } from '@raystack/apsara'
 
 ## Usage
 
+A dialog is a trigger and a content shell. Which regions of that shell you fill is up to you.
+
 ### Controlled Dialog
 
 Pass `open` with `onOpenChange` to own the state — needed when the dialog must close on something other than a click, such as a save completing.
@@ -63,6 +65,8 @@ You can nest dialogs within one another. When a nested dialog opens, the parent 
 <Demo data={nestedDemo} />
 
 ## API Reference
+
+A trigger and a content shell split into header, body and footer, each of them optional.
 
 ### Root
 

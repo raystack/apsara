@@ -37,6 +37,8 @@ The `Menubar` component wraps multiple `Menu` instances. Menu triggers are autom
 
 ## Usage
 
+A menubar is a row of menus sharing one keyboard focus, so most of its behaviour comes from [Menu](/docs/components/menu) itself.
+
 ### Vertical
 
 Use the `orientation` prop to render a vertical menubar.
@@ -50,6 +52,8 @@ Use the `autocomplete` prop on `Menu` to enable search filtering within a menuba
 <Demo data={autocompleteDemo} />
 
 ## API Reference
+
+Just the bar itself — the menus inside are plain `Menu`s.
 
 ### Root
 

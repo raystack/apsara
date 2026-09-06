@@ -1,5 +1,5 @@
 ---
-title: PreviewCard
+title: Preview Card
 description: A popup that appears when a link is hovered, showing a preview for sighted users.
 source: packages/raystack/components/preview-card
 ---
@@ -27,6 +27,8 @@ import { PreviewCard } from "@raystack/apsara";
 
 ## Usage
 
+A preview card opens on hover after a short delay. The props below cover how it looks and where it lands.
+
 ### With arrow
 
 Display an arrow pointing to the trigger element.
@@ -52,6 +54,8 @@ Pass `open` with `onOpenChange` to own the state. Use it when the card has to st
 <Demo data={controlledDemo} />
 
 ## API Reference
+
+A trigger and its content, with `Viewport` for cards whose contents change size.
 
 ### Root
 

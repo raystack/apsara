@@ -40,6 +40,8 @@ import { CodeBlock } from '@raystack/apsara'
 
 ## Usage
 
+The block is assembled from parts, so a bare snippet and one with a header, a language switcher and a copy button all use the same root.
+
 ### Basic usage
 
 The most basic usage using `CodeBlock` with `CodeBlock.Code` for displaying code content with a floating copy button.
@@ -80,6 +82,8 @@ The `CodeBlock.CopyButton` component offers two placement options:
 <Demo data={copyButtonDemo} />
 
 ## API Reference
+
+The code sits in a root. Everything else — label, language select, copy button, collapse trigger — is optional header furniture.
 
 ### Root
 
