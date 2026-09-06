@@ -18,6 +18,14 @@ import { AnnouncementBar } from '@raystack/apsara'
 <AnnouncementBar />
 ```
 
+## Usage
+
+### Variant
+
+Variants convey the tone of the announcement. Default is `normal`; use `error` for urgent notices and `gradient` for promotional messages.
+
+<Demo data={variantsDemo} />
+
 ## API Reference
 
 Renders a dismissible banner for announcements and alerts.
@@ -36,14 +44,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `announcement-bar-action` | The action `<button>` (when `actionLabel` or `actionIcon` is set) |
 | `announcement-bar-action-label` | The action button's text label |
 | `announcement-bar-action-icon` | Wrapper around the action icon (when `actionIcon` is set) |
-
-## Examples
-
-### Variant
-
-Variants convey the tone of the announcement. Default is `normal`; use `error` for urgent notices and `gradient` for promotional messages.
-
-<Demo data={variantsDemo} />
 
 ## Accessibility
 

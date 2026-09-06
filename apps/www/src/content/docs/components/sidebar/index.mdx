@@ -46,6 +46,118 @@ import { Sidebar } from "@raystack/apsara";
 </Sidebar>
 ```
 
+## Usage
+
+### Position
+
+`left` (the default) or `right`. Put it on the right only when the main content is the thing people arrive for and navigation is secondary.
+
+<Demo data={positionDemo} />
+
+### Variants
+
+Use `variant` to switch the Sidebar surface style:
+
+- `plain` (default): regular surface with side border
+- `floating`: lifted surface with shadow
+- `inset`: transparent surface without border or shadow
+
+<Demo data={variantDemo} />
+
+### Collapsed appearance
+
+Use `collapsible` to choose what the collapsed state looks like. Expanding
+works the same in both modes: the sidebar opens in place and pushes content.
+
+- `"icon"` (default): collapses to an icon rail.
+- `"hidden"`: collapses to a thin strip with no visible content.
+- `"none"`: the sidebar cannot be collapsed at all.
+
+For a responsive layout, drive it from your own breakpoint check:
+
+```tsx
+<Sidebar collapsible={isMobile ? 'hidden' : 'icon'} />
+```
+
+When `collapsible="hidden"` is closed, the strip is just wide enough for the resize handle — reopen by clicking it, or place a `Sidebar.Trigger` as a direct child of `<Sidebar>` (not inside `Header`/`Main`/`Footer`, which are hidden along with everything else) for a clearer affordance, as in the "Hidden" tab below.
+
+<Demo data={collapsedAppearanceDemo} />
+
+### State
+
+The sidebar expands and collapses, animating between the two. Collapsed keeps icons visible so the navigation stays usable at a glance.
+
+<Demo data={stateDemo} />
+
+### Non-collapsible
+
+Set `collapsible="none"` to hide the resize handle and prevent the sidebar from being collapsed or expanded.
+
+<Demo data={collapsibleDemo} />
+
+### Peek on hover
+
+Set `peekOnHover` to temporarily reveal a collapsed sidebar as an overlay
+above the content while the user hovers it, without pushing the content or
+changing the real `open` state — similar to VS Code's auto-hide sidebar.
+Moving the mouse away reverts it; clicking the resize handle or a
+`Sidebar.Trigger` pins it open for real (which does push content, like a
+normal open). Clicking a `Sidebar.Item` just navigates, like normal — it
+doesn't change the open state.
+
+It works with either collapsed appearance. With `"hidden"` there's no icon rail —
+hover the thin strip at the edge to reveal the sidebar, as in the "Hidden"
+tab below.
+
+The peek starts after a short delay (100ms) so it doesn't trigger when the
+mouse just passes over the sidebar. Use `peekDelay` to change it.
+
+<Demo data={peekOnHoverDemo} />
+
+### Custom tooltip message
+
+Item tooltips show the item label when collapsed. Override the message when the label alone is not enough out of context.
+
+<Demo data={tooltipDemo} />
+
+### Hide item tooltips when collapsed
+
+Set `hideItemTooltips` to disable the tooltips the Sidebar adds to navigation items — the label tooltip when collapsed, and the full-text tooltip on clipped labels when expanded. Useful when you show your own tooltips or want a cleaner collapsed state.
+
+<Demo data={hideTooltipDemo} />
+
+### Group with icon
+
+Pass `leadingIcon` to `Sidebar.Group` to render an icon next to the section label.
+
+<Demo data={groupIconDemo} />
+
+### Collapsible group
+
+Enable `collapsible` on `Sidebar.Group` to render the group as an accordion whose items can be shown or hidden. You can also pass `trailingIcon` for section-level actions. Use `defaultOpen` to set the initial expanded state of an uncontrolled group.
+
+Note: this is different from `collapsible` on the Sidebar root, which controls whether the whole sidebar can be collapsed.
+
+<Demo data={collapsibleGroupDemo} />
+
+### Controlled group
+
+Use `open` together with `onOpenChange` on `Sidebar.Group` to control the group's expanded state from outside the component.
+
+<Demo data={controlledGroupDemo} />
+
+### Trigger button
+
+Place `Sidebar.Trigger` anywhere inside the Sidebar (typically `Sidebar.Header`) to add a visible toggle button next to the edge handle. No `open`/`onOpenChange` wiring is required.
+
+<Demo data={triggerDemo} />
+
+### More
+
+Use `Sidebar.More` when you want to keep a section compact and move secondary items into a menu.
+
+<Demo data={moreDemo} />
+
 ## API Reference
 
 ### Root
@@ -159,122 +271,6 @@ Add `data-collapse-hidden` to any element inside the Sidebar to hide it automati
   <span data-collapse-hidden>Extra label, hidden when collapsed</span>
 </Sidebar.Header>
 ```
-
-## Examples
-
-### Position
-
-The Sidebar can be positioned on either the left or right side of the screen.
-
-<Demo data={positionDemo} />
-
-### Variants
-
-Use `variant` to switch the Sidebar surface style:
-
-- `plain` (default): regular surface with side border
-- `floating`: lifted surface with shadow
-- `inset`: transparent surface without border or shadow
-
-<Demo data={variantDemo} />
-
-### State
-
-The Sidebar supports expanded and collapsed states with smooth transitions.
-
-The `data-collapse-hidden` attribute can be used to conditionally hide elements when the sidebar is collapsed.
-
-<Demo data={stateDemo} />
-
-### Collapsed appearance
-
-Use `collapsible` to choose what the collapsed state looks like. Expanding
-works the same in both modes: the sidebar opens in place and pushes content.
-
-- `"icon"` (default): collapses to an icon rail.
-- `"hidden"`: collapses to a thin strip with no visible content.
-- `"none"`: the sidebar cannot be collapsed at all.
-
-For a responsive layout, drive it from your own breakpoint check:
-
-```tsx
-<Sidebar collapsible={isMobile ? 'hidden' : 'icon'} />
-```
-
-When `collapsible="hidden"` is closed, the strip is just wide enough for the resize handle — reopen by clicking it, or place a `Sidebar.Trigger` as a direct child of `<Sidebar>` (not inside `Header`/`Main`/`Footer`, which are hidden along with everything else) for a clearer affordance, as in the "Hidden" tab below.
-
-<Demo data={collapsedAppearanceDemo} />
-
-### Peek on hover
-
-Set `peekOnHover` to temporarily reveal a collapsed sidebar as an overlay
-above the content while the user hovers it, without pushing the content or
-changing the real `open` state — similar to VS Code's auto-hide sidebar.
-Moving the mouse away reverts it; clicking the resize handle or a
-`Sidebar.Trigger` pins it open for real (which does push content, like a
-normal open). Clicking a `Sidebar.Item` just navigates, like normal — it
-doesn't change the open state.
-
-It works with either collapsed appearance. With `"hidden"` there's no icon rail —
-hover the thin strip at the edge to reveal the sidebar, as in the "Hidden"
-tab below.
-
-The peek starts after a short delay (100ms) so it doesn't trigger when the
-mouse just passes over the sidebar. Use `peekDelay` to change it.
-
-<Demo data={peekOnHoverDemo} />
-
-### Custom Tooltip Message
-
-You can customize the tooltip message that appears when hovering over the collapse/expand handle using the `collapseTooltip` prop.
-
-You can use Sidebar as a controlled component to conditionally render different tooltip messages.
-
-<Demo data={tooltipDemo} />
-
-### Non-collapsible
-
-Set `collapsible="none"` to hide the resize handle and prevent the sidebar from being collapsed or expanded.
-
-<Demo data={collapsibleDemo} />
-
-### Hide item tooltips when collapsed
-
-Set `hideItemTooltips` to disable the tooltips the Sidebar adds to navigation items — the label tooltip when collapsed, and the full-text tooltip on clipped labels when expanded. Useful when you show your own tooltips or want a cleaner collapsed state.
-
-<Demo data={hideTooltipDemo} />
-
-### Group with icon
-
-Pass `leadingIcon` to `Sidebar.Group` to render an icon next to the section label.
-
-<Demo data={groupIconDemo} />
-
-### Collapsible Group
-
-Enable `collapsible` on `Sidebar.Group` to render the group as an accordion whose items can be shown or hidden. You can also pass `trailingIcon` for section-level actions. Use `defaultOpen` to set the initial expanded state of an uncontrolled group.
-
-Note: this is different from `collapsible` on the Sidebar root, which controls whether the whole sidebar can be collapsed.
-
-<Demo data={collapsibleGroupDemo} />
-
-### Controlled Group
-
-Use `open` together with `onOpenChange` on `Sidebar.Group` to control the group's expanded state from outside the component.
-
-<Demo data={controlledGroupDemo} />
-
-### Trigger button
-
-Place `Sidebar.Trigger` anywhere inside the Sidebar (typically `Sidebar.Header`) to add a visible toggle button next to the edge handle. No `open`/`onOpenChange` wiring is required.
-
-<Demo data={triggerDemo} />
-
-### More
-
-Use `Sidebar.More` when you want to keep a section compact and move secondary items into a menu.
-
-<Demo data={moreDemo} />
 
 ## Accessibility
 

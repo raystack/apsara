@@ -20,7 +20,7 @@ Shadow tokens create elevation and depth, helping users understand the layering 
   ]}
 />
 
-## Blur Effects
+## Blur effects
 
 Blur tokens are used for backdrop effects and creating depth through transparency.
 
@@ -35,6 +35,8 @@ Blur tokens are used for backdrop effects and creating depth through transparenc
 />
 
 ## Usage
+
+Shadow and blur tokens compose with the colour tokens. Reach for a named shadow rather than a hand-rolled `box-shadow` so elevation stays consistent across surfaces.
 
 ```css
 /* Dashboard widget with hover interaction */
@@ -98,7 +100,7 @@ Blur tokens are used for backdrop effects and creating depth through transparenc
 }
 ```
 
-## Best Practices
+## Best practices
 
 - **Use shadows sparingly** - Too many shadows can make interfaces feel cluttered
 - **Match elevation to importance** - Higher elevation shadows for more prominent elements

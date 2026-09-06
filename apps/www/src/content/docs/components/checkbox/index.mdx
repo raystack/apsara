@@ -28,47 +28,17 @@ Use `Checkbox.Group` to manage shared state across multiple checkboxes:
 </Checkbox.Group>
 ```
 
-## API Reference
-
-### Root
-
-Renders a toggleable checkbox input.
-
-<auto-type-table path="./props.ts" name="CheckboxProps" />
-
-### Group
-
-Groups multiple checkboxes and manages their shared checked state via a `string[]` value.
-
-<auto-type-table path="./props.ts" name="CheckboxGroupProps" />
-
-### Slots
-
-Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
-
-| Slot | Element |
-|------|---------|
-| `checkbox` | The checkbox control itself |
-| `checkbox-indicator` | The indicator inside the control |
-| `checkbox-icon` | The check or indeterminate icon (when checked or indeterminate) |
-| `checkbox-group` | The `Checkbox.Group` container |
-
-## Examples
+## Usage
 
 ### States
 
-The Checkbox component supports multiple states to represent different selection conditions:
-
-- Unchecked: Default state
-- Checked: Selected state
-- Indeterminate: Partial selection state
-- Disabled: Disabled state
+A checkbox can be checked, unchecked, or `indeterminate` — the third state for a parent whose children are only partly selected.
 
 <Demo data={statesExamples} />
 
-### Size Variants
+### Size variants
 
-The Checkbox component comes in two sizes: `large` (default) and `small`.
+Two sizes. `large` is the default; `small` fits table rows and dense lists.
 
 <Demo data={sizeExamples} />
 
@@ -95,6 +65,31 @@ Disable the entire group to prevent user interaction.
 Use a parent checkbox with `allValues` to toggle all items at once.
 
 <Demo data={parentDemo} />
+
+## API Reference
+
+### Root
+
+Renders a toggleable checkbox input.
+
+<auto-type-table path="./props.ts" name="CheckboxProps" />
+
+### Group
+
+Groups multiple checkboxes and manages their shared checked state via a `string[]` value.
+
+<auto-type-table path="./props.ts" name="CheckboxGroupProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `checkbox` | The checkbox control itself |
+| `checkbox-indicator` | The indicator inside the control |
+| `checkbox-icon` | The check or indeterminate icon (when checked or indeterminate) |
+| `checkbox-group` | The `Checkbox.Group` container |
 
 ## Accessibility
 

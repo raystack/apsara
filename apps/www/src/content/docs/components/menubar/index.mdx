@@ -36,6 +36,20 @@ import { Menu, Menubar } from '@raystack/apsara'
 
 The `Menubar` component wraps multiple `Menu` instances. Menu triggers are automatically styled when inside a Menubar. If you pass a `render` prop to `Menu.Trigger`, the default menubar trigger styling is skipped, allowing full custom rendering.
 
+## Usage
+
+### Vertical
+
+Use the `orientation` prop to render a vertical menubar.
+
+<Demo data={verticalDemo} />
+
+### Autocomplete
+
+Use the `autocomplete` prop on `Menu` to enable search filtering within a menubar menu.
+
+<Demo data={autocompleteDemo} />
+
 ## API Reference
 
 ### Root
@@ -51,20 +65,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | Slot | Element |
 |------|---------|
 | `menubar` | The root element |
-
-## Examples
-
-### Vertical
-
-Use the `orientation` prop to render a vertical menubar.
-
-<Demo data={verticalDemo} />
-
-### Autocomplete
-
-Use the `autocomplete` prop on `Menu` to enable search filtering within a menubar menu.
-
-<Demo data={autocompleteDemo} />
 
 ## Accessibility
 

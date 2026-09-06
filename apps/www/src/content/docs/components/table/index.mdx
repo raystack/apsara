@@ -29,6 +29,14 @@ import { Table } from "@raystack/apsara";
 </Table>
 ```
 
+## Usage
+
+### Basic usage
+
+Compose a table from its parts: `Header` and `Body` wrap `Row`s, with `Head` for column titles and `Cell` for each value. Table renders static markup — for sorting, filtering, or pagination, use [DataView](/docs/components/dataview).
+
+<Demo data={basicDemo} />
+
 ## API Reference
 
 ### Root
@@ -83,14 +91,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `table-cell` | `<td>` |
 | `table-section-header` | `SectionHeader`'s row |
 | `table-section-header-cell` | `SectionHeader`'s cell |
-
-## Examples
-
-### Basic Usage
-
-Compose a table from its parts: `Header` and `Body` wrap `Row`s, with `Head` for column titles and `Cell` for each value. Table renders static markup — for sorting, filtering, or pagination, use [DataView](/docs/components/dataview).
-
-<Demo data={basicDemo} />
 
 ## Accessibility
 

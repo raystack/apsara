@@ -25,6 +25,14 @@ import { Grid } from "@raystack/apsara";
 </Grid>
 ```
 
+## Usage
+
+### Basic usage
+
+A 2×2 grid defined with numeric `rows` and `columns`. Plain children and `Grid.Item` wrappers can be mixed freely — both flow into cells in order.
+
+<Demo data={basicDemo} />
+
 ## API Reference
 
 ### Root
@@ -47,14 +55,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 |------|---------|
 | `grid` | The grid container (or the element supplied via `render`) |
 | `grid-item` | Each `Grid.Item` element |
-
-## Examples
-
-### Basic Usage
-
-A 2×2 grid defined with numeric `rows` and `columns`. Plain children and `Grid.Item` wrappers can be mixed freely — both flow into cells in order.
-
-<Demo data={basicDemo} />
 
 ## Accessibility
 

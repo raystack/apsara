@@ -28,6 +28,21 @@ Built on `Collapsible`. Drive `streaming` from your transport; everything
 here is presentational and works anywhere — inside a
 [Message](/docs/ai-elements/message) body, a `Chat` scroller, or on its own.
 
+## Usage
+
+### Streaming
+
+Drive `streaming` from your transport; the trigger label and open state
+follow along.
+
+<Demo data={streamingDemo} />
+
+### Custom trigger label
+
+Replace the default trigger text when "Reasoning" is not the right word for what the model is doing.
+
+<Demo data={customTriggerDemo} />
+
 ## API Reference
 
 ### Reasoning
@@ -52,19 +67,6 @@ The collapsible panel holding the steps.
 A labelled row with optional indented detail.
 
 <auto-type-table path="./props.ts" name="ReasoningStepProps" />
-
-## Examples
-
-### Streaming
-
-Drive `streaming` from your transport; the trigger label and open state
-follow along.
-
-<Demo data={streamingDemo} />
-
-### Custom trigger label
-
-<Demo data={customTriggerDemo} />
 
 ## Accessibility
 

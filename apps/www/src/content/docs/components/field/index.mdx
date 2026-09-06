@@ -54,6 +54,68 @@ import { Field } from "@raystack/apsara";
 </Field>
 ```
 
+## Usage
+
+### With Input
+
+Use Field to add label, description, and error to an Input.
+
+<Demo data={withInputDemo} />
+
+### With TextArea
+
+Field wraps a TextArea the same way it wraps an Input — the label, description, and error all wire up through the same context.
+
+<Demo data={withTextAreaDemo} />
+
+### With Select
+
+Base UI-based components like Select auto-connect with Field for accessibility.
+
+<Demo data={withSelectDemo} />
+
+### Error state
+
+Pass an error string to show the error message and set the field to invalid state. The description is hidden while an error is shown.
+
+<Demo data={errorDemo} />
+
+### Constraint validation errors
+
+Use `Field.Control` with native attributes and multiple `Field.Error` elements to show targeted messages for each validation constraint.
+
+<Demo data={constraintErrorsDemo} />
+
+### Custom validation
+
+Use the `validate` prop to run custom logic. Return an error string to fail, or `null` to pass. The error renders via `Field.Error match="customError"`.
+
+<Demo data={customValidateDemo} />
+
+### Description
+
+Displays additional context below the control.
+
+<Demo data={descriptionDemo} />
+
+### Required Field
+
+Shows a required indicator next to the label.
+
+<Demo data={requiredDemo} />
+
+### Optional Field
+
+Set `required={false}` to show an "(optional)" indicator next to the label.
+
+<Demo data={optionalDemo} />
+
+### Sub-component API
+
+Use sub-components for built-in constraint validation with custom error matching.
+
+<Demo data={subComponentDemo} />
+
 ## API Reference
 
 ### Root
@@ -112,68 +174,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `field-helper` | Wrapper around the description and error (simple API, when either is set) |
 | `field-description` | The description text (when set) |
 | `field-error` | The error message (when the field is invalid) |
-
-## Examples
-
-### With Input
-
-Use Field to add label, description, and error to an Input.
-
-<Demo data={withInputDemo} />
-
-### With TextArea
-
-Field works with TextArea the same way.
-
-<Demo data={withTextAreaDemo} />
-
-### With Select
-
-Base UI-based components like Select auto-connect with Field for accessibility.
-
-<Demo data={withSelectDemo} />
-
-### Error State
-
-Pass an error string to show the error message and set the field to invalid state. The description is hidden while an error is shown.
-
-<Demo data={errorDemo} />
-
-### Constraint Validation Errors
-
-Use `Field.Control` with native attributes and multiple `Field.Error` elements to show targeted messages for each validation constraint.
-
-<Demo data={constraintErrorsDemo} />
-
-### Custom Validation
-
-Use the `validate` prop to run custom logic. Return an error string to fail, or `null` to pass. The error renders via `Field.Error match="customError"`.
-
-<Demo data={customValidateDemo} />
-
-### Description
-
-Displays additional context below the control.
-
-<Demo data={descriptionDemo} />
-
-### Required Field
-
-Shows a required indicator next to the label.
-
-<Demo data={requiredDemo} />
-
-### Optional Field
-
-Set `required={false}` to show an "(optional)" indicator next to the label.
-
-<Demo data={optionalDemo} />
-
-### Sub-component API
-
-Use sub-components for built-in constraint validation with custom error matching.
-
-<Demo data={subComponentDemo} />
 
 ## Accessibility
 

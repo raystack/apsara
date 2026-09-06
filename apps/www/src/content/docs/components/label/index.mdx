@@ -18,6 +18,21 @@ import { Label } from '@raystack/apsara'
 <Label htmlFor="email">Email</Label>
 ```
 
+## Usage
+
+### Inline with a control
+
+Use `Flex` to place a label next to a Radio or Checkbox.
+
+<Demo data={inlineDemo} />
+
+### Optional indicator
+
+Pass `required={false}` to display an `(optional)` indicator next to the label.
+Override the text via `optionalText`.
+
+<Demo data={optionalDemo} />
+
 ## API Reference
 
 Renders a text label for form elements. Outside of a `Field`, use `Label` to
@@ -37,21 +52,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 |------|---------|
 | `label` | The `<label>` element |
 | `label-indicator` | The optional/required indicator text (when `required={false}`, or `required` with `requiredText`) |
-
-## Examples
-
-### Inline with a control
-
-Use `Flex` to place a label next to a Radio or Checkbox.
-
-<Demo data={inlineDemo} />
-
-### Optional indicator
-
-Pass `required={false}` to display an `(optional)` indicator next to the label.
-Override the text via `optionalText`.
-
-<Demo data={optionalDemo} />
 
 ## Accessibility
 

@@ -35,6 +35,157 @@ request. Pass the lifecycle in through `status` and react to `onSubmit` /
 `onStop` — it works with the AI SDK's `useChat`, a custom SSE client, or
 anything else.
 
+## Usage
+
+### Value format
+
+A chip is written as `@[label](type:id)`, using whatever character the trigger
+is:
+
+```
+check @[DataTable](component:data-table) with @[Maya Chen](user:u1)
+```
+
+`value`, `defaultValue` and the first argument of `onValueChange` all use this
+format, so the obvious controlled wiring keeps chips intact:
+
+```tsx
+const [value, setValue] = useState('');
+<PromptInput value={value} onValueChange={setValue} />
+```
+
+Save this string as the user's draft. A few details:
+
+- `]`, `)` and `\` in a label are escaped with `\`, as are `:`, `)` and `\` in
+  a type or id.
+- A line break is written as `\n`.
+- Anything that does not parse stays as plain text — nothing throws, nothing
+  is dropped.
+- Only `value` and `defaultValue` are parsed. Text you type or paste that
+  happens to look like `@[…](…)` stays as-is.
+- Icons and `data` cannot be saved in a string, so restoring a draft needs
+  `resolveMentions` — see [Restoring a draft](#restoring-a-draft).
+
+### Everything the Editor can do
+
+One composer with all of it turned on: a restored draft, a mention menu with
+icons, a badge, a disabled row and sections, a length cap, buttons that drive
+it from code, and a live readout of what you'd get on submit.
+
+<Demo data={editorCapabilitiesDemo} />
+
+Things worth trying in it:
+
+- **Chips behave like one character.** Backspace deletes a whole chip, arrow
+  keys step past it, and clicking one selects it.
+- **Undo and redo** with Cmd/Ctrl+Z and Cmd/Ctrl+Shift+Z. Inserting a chip
+  undoes in one step.
+- **Copy a chip and paste it back** — it comes back as a chip, id intact.
+  Paste it into a plain text field and you get `@Maya Chen`.
+- **Paste formatted text** from a doc or a webpage and it arrives as plain
+  text. The editor has no bold, headings or lists to paste into.
+- **Shift+Enter** adds a line break; Enter sends.
+- **The length cap** counts a chip as its label and applies to pasted text
+  too, so you can't paste past it.
+- **Multi-word search:** type `@maya ch` — the space keeps searching. Keep
+  typing past the point where nothing matches and the menu gives up and leaves
+  your text alone.
+- **Escape** closes the menu and leaves what you typed as plain text. Delete a
+  character and it comes back.
+
+### Mentions
+
+Typing `@` opens a menu at the cursor. Picking an item drops a chip into the
+text, followed by a space. The chip deletes in one press, arrow keys step over
+it, and a message that is nothing but a chip still sends.
+
+The chip itself shows the item's icon and label — not the `@`. The trigger is
+kept in the text you get on submit (`@Maya Chen`), where the mention boundary
+has to survive being read by a model.
+
+Sections appear in the order their `group` first shows up in your data, so you
+control the order by ordering `items`. Items without a `group` come first, and
+a section with no matches disappears.
+
+<Demo data={mentionsDemo} />
+
+### Async mentions and restoring a draft
+
+`onSearch` runs about 150 ms after the user stops typing and gets an
+`AbortSignal` you can pass to `fetch`. Out-of-date responses are ignored,
+loading rows show while a request is out, and a failed request shows the empty
+state.
+
+A query can contain spaces so multi-word names stay searchable. Once a query
+with a space stops matching anything, the menu closes and the text is left
+alone.
+
+### Restoring a draft
+
+A chip loaded from `defaultValue` starts with just its label, since a saved
+string can't carry an icon or `data`. Pass `resolveMentions` to look those up
+and fill them in — it also refreshes the label if the entity was renamed.
+Lookups are batched and cached. If one fails or comes back empty, the chip
+simply stays label-only; it is never removed.
+
+<Demo data={mentionsAsyncDemo} />
+
+### Inserting a mention from code
+
+`actionsRef` gives you `focus`, `clear`, `getValue` and `insertMention`.
+`insertMention` inserts at the cursor, or at the end if the editor isn't
+focused. `ref` still points at the `<form>`.
+
+<Demo data={insertMentionDemo} />
+
+### Attachments in the header
+
+Attachment previews are presentational (`Chat.Attachment`); file picking,
+drag-drop and uploads belong to your app.
+
+<Demo data={attachmentsDemo} />
+
+### Status
+
+`status` reflects the request lifecycle your app manages:
+
+- **`idle`** — the resting state; the submit button shows the send arrow and
+  disables itself while the composer is empty.
+- **`submitted`** — the request is sent but nothing has streamed back yet;
+  the button shows a spinner, Enter/submit is blocked, and clicking calls
+  `onStop`.
+- **`streaming`** — tokens are arriving; the button flips to a stop square
+  that calls `onStop`, and submit stays blocked.
+- **`error`** — the request failed; the composer returns to a submittable
+  state (send arrow) so the user can retry. Render your error message
+  outside the composer.
+
+<Demo data={statusDemo} />
+
+### Controlled value
+
+Control `value` to sync the draft elsewhere — persistence, slash-command
+menus, mention pickers.
+
+<Demo data={controlledDemo} />
+
+### Disabled
+
+`disabled` stops typing and submitting while a request is in flight, without clearing what the user already wrote.
+
+<Demo data={disabledDemo} />
+
+### When the composer counts as empty
+
+A composer counts as empty when it has no chips and its text is only
+whitespace. The submit button, the `data-empty` attribute and the placeholder
+all use that same rule, so they always agree:
+
+- A message that is only a chip is not empty and sends.
+- Whitespace on its own is empty.
+- Leading and trailing whitespace is trimmed off the submitted message,
+  including the space added after a chip. Chips are never trimmed.
+
 ## API Reference
 
 ### Root
@@ -116,155 +267,6 @@ composer is empty, shows a spinner while `status="submitted"`, and flips to a
 stop square that calls `onStop` while `status="streaming"`.
 
 <auto-type-table path="./props.ts" name="PromptInputSubmitProps" />
-
-## Value format
-
-A chip is written as `@[label](type:id)`, using whatever character the trigger
-is:
-
-```
-check @[DataTable](component:data-table) with @[Maya Chen](user:u1)
-```
-
-`value`, `defaultValue` and the first argument of `onValueChange` all use this
-format, so the obvious controlled wiring keeps chips intact:
-
-```tsx
-const [value, setValue] = useState('');
-<PromptInput value={value} onValueChange={setValue} />
-```
-
-Save this string as the user's draft. A few details:
-
-- `]`, `)` and `\` in a label are escaped with `\`, as are `:`, `)` and `\` in
-  a type or id.
-- A line break is written as `\n`.
-- Anything that does not parse stays as plain text — nothing throws, nothing
-  is dropped.
-- Only `value` and `defaultValue` are parsed. Text you type or paste that
-  happens to look like `@[…](…)` stays as-is.
-- Icons and `data` cannot be saved in a string, so restoring a draft needs
-  `resolveMentions` — see [Restoring a draft](#restoring-a-draft).
-
-## Examples
-
-### Everything the Editor can do
-
-One composer with all of it turned on: a restored draft, a mention menu with
-icons, a badge, a disabled row and sections, a length cap, buttons that drive
-it from code, and a live readout of what you'd get on submit.
-
-<Demo data={editorCapabilitiesDemo} />
-
-Things worth trying in it:
-
-- **Chips behave like one character.** Backspace deletes a whole chip, arrow
-  keys step past it, and clicking one selects it.
-- **Undo and redo** with Cmd/Ctrl+Z and Cmd/Ctrl+Shift+Z. Inserting a chip
-  undoes in one step.
-- **Copy a chip and paste it back** — it comes back as a chip, id intact.
-  Paste it into a plain text field and you get `@Maya Chen`.
-- **Paste formatted text** from a doc or a webpage and it arrives as plain
-  text. The editor has no bold, headings or lists to paste into.
-- **Shift+Enter** adds a line break; Enter sends.
-- **The length cap** counts a chip as its label and applies to pasted text
-  too, so you can't paste past it.
-- **Multi-word search:** type `@maya ch` — the space keeps searching. Keep
-  typing past the point where nothing matches and the menu gives up and leaves
-  your text alone.
-- **Escape** closes the menu and leaves what you typed as plain text. Delete a
-  character and it comes back.
-
-### Mentions
-
-Typing `@` opens a menu at the cursor. Picking an item drops a chip into the
-text, followed by a space. The chip deletes in one press, arrow keys step over
-it, and a message that is nothing but a chip still sends.
-
-The chip itself shows the item's icon and label — not the `@`. The trigger is
-kept in the text you get on submit (`@Maya Chen`), where the mention boundary
-has to survive being read by a model.
-
-Sections appear in the order their `group` first shows up in your data, so you
-control the order by ordering `items`. Items without a `group` come first, and
-a section with no matches disappears.
-
-<Demo data={mentionsDemo} />
-
-### Async mentions and restoring a draft
-
-`onSearch` runs about 150 ms after the user stops typing and gets an
-`AbortSignal` you can pass to `fetch`. Out-of-date responses are ignored,
-loading rows show while a request is out, and a failed request shows the empty
-state.
-
-A query can contain spaces so multi-word names stay searchable. Once a query
-with a space stops matching anything, the menu closes and the text is left
-alone.
-
-#### Restoring a draft
-
-A chip loaded from `defaultValue` starts with just its label, since a saved
-string can't carry an icon or `data`. Pass `resolveMentions` to look those up
-and fill them in — it also refreshes the label if the entity was renamed.
-Lookups are batched and cached. If one fails or comes back empty, the chip
-simply stays label-only; it is never removed.
-
-<Demo data={mentionsAsyncDemo} />
-
-### Inserting a mention from code
-
-`actionsRef` gives you `focus`, `clear`, `getValue` and `insertMention`.
-`insertMention` inserts at the cursor, or at the end if the editor isn't
-focused. `ref` still points at the `<form>`.
-
-<Demo data={insertMentionDemo} />
-
-### Attachments in the header
-
-Attachment previews are presentational (`Chat.Attachment`); file picking,
-drag-drop and uploads belong to your app.
-
-<Demo data={attachmentsDemo} />
-
-### Status
-
-`status` reflects the request lifecycle your app manages:
-
-- **`idle`** — the resting state; the submit button shows the send arrow and
-  disables itself while the composer is empty.
-- **`submitted`** — the request is sent but nothing has streamed back yet;
-  the button shows a spinner, Enter/submit is blocked, and clicking calls
-  `onStop`.
-- **`streaming`** — tokens are arriving; the button flips to a stop square
-  that calls `onStop`, and submit stays blocked.
-- **`error`** — the request failed; the composer returns to a submittable
-  state (send arrow) so the user can retry. Render your error message
-  outside the composer.
-
-<Demo data={statusDemo} />
-
-### Controlled value
-
-Control `value` to sync the draft elsewhere — persistence, slash-command
-menus, mention pickers.
-
-<Demo data={controlledDemo} />
-
-### Disabled
-
-<Demo data={disabledDemo} />
-
-## When is the composer empty?
-
-A composer counts as empty when it has no chips and its text is only
-whitespace. The submit button, the `data-empty` attribute and the placeholder
-all use that same rule, so they always agree:
-
-- A message that is only a chip is not empty and sends.
-- Whitespace on its own is empty.
-- Leading and trailing whitespace is trimmed off the submitted message,
-  including the space added after a chip. Chips are never trimmed.
 
 ## Accessibility
 

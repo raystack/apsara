@@ -31,6 +31,42 @@ import { ContextMenu } from '@raystack/apsara'
 </ContextMenu>
 ```
 
+## Usage
+
+### Basic usage
+
+A simple context menu with basic functionality. Right-click the trigger area to open.
+
+<Demo data={basicDemo} />
+
+### With icons
+
+You can add icons to the menu items. Supports both leading and trailing icons.
+
+<Demo data={iconsDemo} />
+
+### With groups and labels
+
+Organize related menu items into sections with descriptive headers.
+
+<Demo data={customDemo} />
+
+### Submenu
+
+Use `ContextMenu.Submenu`, `ContextMenu.SubmenuTrigger`, and `ContextMenu.SubmenuContent` to create nested menus with multiple levels.
+
+<Demo data={submenuDemo} />
+
+### Autocomplete
+
+To enable autocomplete, pass the `autocomplete` prop to the ContextMenu root element. Each menu instance will manage its own autocomplete behavior.
+
+By default (`autocompleteMode="auto"`), items are automatically filtered as the user types. The filter matches against the item's `value` prop or its `children` text content.
+
+For submenus, you can independently enable autocomplete by passing `autocomplete` to `ContextMenu.Submenu`.
+
+<Demo data={autocompleteDemo} />
+
 ## API Reference
 
 The ContextMenu component is composed of several parts, each with their own props.
@@ -126,42 +162,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `menu-subtrigger` | `ContextMenu.SubmenuTrigger` (shared with `Menu`'s internals) |
 | `menu-cell-leading-icon` | Leading icon inside an item or submenu trigger (when provided; shared with `Menu`'s internals) |
 | `menu-cell-trailing-icon` | Trailing icon inside an item or submenu trigger (when provided; shared with `Menu`'s internals) |
-
-## Examples
-
-### Basic Usage
-
-A simple context menu with basic functionality. Right-click the trigger area to open.
-
-<Demo data={basicDemo} />
-
-### With Icons
-
-You can add icons to the menu items. Supports both leading and trailing icons.
-
-<Demo data={iconsDemo} />
-
-### With Groups and Labels
-
-Organize related menu items into sections with descriptive headers.
-
-<Demo data={customDemo} />
-
-### Submenu
-
-Use `ContextMenu.Submenu`, `ContextMenu.SubmenuTrigger`, and `ContextMenu.SubmenuContent` to create nested menus with multiple levels.
-
-<Demo data={submenuDemo} />
-
-### Autocomplete
-
-To enable autocomplete, pass the `autocomplete` prop to the ContextMenu root element. Each menu instance will manage its own autocomplete behavior.
-
-By default (`autocompleteMode="auto"`), items are automatically filtered as the user types. The filter matches against the item's `value` prop or its `children` text content.
-
-For submenus, you can independently enable autocomplete by passing `autocomplete` to `ContextMenu.Submenu`.
-
-<Demo data={autocompleteDemo} />
 
 ## Accessibility
 

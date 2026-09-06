@@ -21,6 +21,38 @@ import { Radio } from "@raystack/apsara";
 </Radio.Group>
 ```
 
+## Usage
+
+### Size
+
+Two sizes. `large` is the default; `small` fits dense lists. Set `size` on `Radio.Root` and every item follows.
+
+<Demo data={sizeDemo} />
+
+### Orientation
+
+`vertical` (the default) stacks the options, which scans faster for more than three. `horizontal` suits short binary choices in a row.
+
+<Demo data={orientationDemo} />
+
+### With labels
+
+Radio buttons should always be accompanied by labels for accessibility and usability.
+
+<Demo data={labelDemo} />
+
+### State
+
+Radio buttons support different states to indicate interactivity and selection.
+
+<Demo data={stateDemo} />
+
+### Form example
+
+Radio buttons can be used in forms with proper validation and submission handling.
+
+<Demo data={formDemo} />
+
 ## API Reference
 
 ### Group
@@ -44,38 +76,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `radio-group` | The `Radio.Group` container |
 | `radio` | The radio button itself |
 | `radio-indicator` | The indicator inside the radio button |
-
-## Examples
-
-### State
-
-Radio buttons support different states to indicate interactivity and selection.
-
-<Demo data={stateDemo} />
-
-### Size Variants
-
-The Radio component comes in two sizes: large (default) and small. Set `size` on `Radio.Group` to apply it to every item, or set it on an individual `Radio` to override the group value.
-
-<Demo data={sizeDemo} />
-
-### Orientation
-
-The Radio.Group supports vertical (default) and horizontal orientation to control the layout direction of its items.
-
-<Demo data={orientationDemo} />
-
-### With Labels
-
-Radio buttons should always be accompanied by labels for accessibility and usability.
-
-<Demo data={labelDemo} />
-
-### Form Example
-
-Radio buttons can be used in forms with proper validation and submission handling.
-
-<Demo data={formDemo} />
 
 ## Accessibility
 

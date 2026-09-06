@@ -24,6 +24,26 @@ import { PreviewCard } from "@raystack/apsara";
 </PreviewCard>
 ```
 
+## Usage
+
+### With arrow
+
+Display an arrow pointing to the trigger element.
+
+<Demo data={arrowDemo} />
+
+### Content transitions
+
+When multiple triggers share one card via `createHandle`, wrap content in `Viewport` to animate transitions between them. Content slides in from the direction of the newly hovered trigger.
+
+<Demo data={contentTransitionsDemo} />
+
+### Positioning
+
+Control the position of the preview card relative to its trigger.
+
+<Demo data={positionDemo} />
+
 ## API Reference
 
 ### Root
@@ -60,26 +80,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `preview-card-content` | The preview card popup |
 | `preview-card-viewport` | The `PreviewCard.Viewport` wrapper |
 | `preview-card-arrow` | The arrow (when `showArrow`) |
-
-## Examples
-
-### With Arrow
-
-Display an arrow pointing to the trigger element.
-
-<Demo data={arrowDemo} />
-
-### Content Transitions
-
-When multiple triggers share one card via `createHandle`, wrap content in `Viewport` to animate transitions between them. Content slides in from the direction of the newly hovered trigger.
-
-<Demo data={contentTransitionsDemo} />
-
-### Positioning
-
-Control the position of the preview card relative to its trigger.
-
-<Demo data={positionDemo} />
 
 ## Accessibility
 

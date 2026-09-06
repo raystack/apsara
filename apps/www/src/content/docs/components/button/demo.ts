@@ -53,7 +53,7 @@ export const colorsDemo = {
       name: 'Solid',
       code: `
       <Flex gap={9}>
-        <Button color="success">Accent</Button>
+        <Button color="accent">Accent</Button>
         <Button color="danger">Danger</Button>
         <Button color="neutral">Neutral</Button>
         <Button color="success">Success</Button>
@@ -63,7 +63,7 @@ export const colorsDemo = {
       name: 'Outline',
       code: `
       <Flex gap={9}>
-        <Button variant="outline" color="success">Accent</Button>
+        <Button variant="outline" color="accent">Accent</Button>
         <Button variant="outline" color="danger">Danger</Button>
         <Button variant="outline" color="neutral">Neutral</Button>
         <Button variant="outline" color="success">Success</Button>
@@ -73,7 +73,7 @@ export const colorsDemo = {
       name: 'Ghost',
       code: `
       <Flex gap={9}>
-        <Button variant="ghost" color="success">Accent</Button>
+        <Button variant="ghost" color="accent">Accent</Button>
         <Button variant="ghost" color="danger">Danger</Button>
         <Button variant="ghost" color="neutral">Neutral</Button>
         <Button variant="ghost" color="success">Success</Button>
@@ -83,7 +83,7 @@ export const colorsDemo = {
       name: 'Text',
       code: `
       <Flex gap={9}>
-        <Button variant="text" color="success">Accent</Button>
+        <Button variant="text" color="accent">Accent</Button>
         <Button variant="text" color="danger">Danger</Button>
         <Button variant="text" color="neutral">Neutral</Button>
         <Button variant="text" color="success">Success</Button>
@@ -122,5 +122,13 @@ export const iconsDemo = {
     <Button variant="solid" color="accent" leadingIcon={<>I</>}>With leading icon</Button>
     <Button variant="solid" color="accent" trailingIcon={<>O</>}>With trailing icon</Button>
     <Button variant="solid" color="accent" leadingIcon={<>I</>} trailingIcon={<>O</>}>With both icons</Button>
+  </Flex>`
+};
+
+export const renderDemo = {
+  type: 'code',
+  code: `<Flex gap={9} align="center">
+    <Button render={<a href="/docs/components/link" />}>Rendered as a link</Button>
+    <Button variant="outline" render={<a href="/docs/components/link" />}>Outline link</Button>
   </Flex>`
 };

@@ -55,6 +55,21 @@ composed by your app — no markdown dependency enters the design system.
 Consumers own messages, streaming and sending; everything here is
 presentational.
 
+## Usage
+
+### Attachments
+
+`Chat.Attachment` renders a file alongside a message. Attachments sit inside the message item, so they scroll and anchor with it.
+
+<Demo data={attachmentDemo} />
+
+### Streaming and turn anchoring
+
+Send a message: it anchors near the top while the reply streams below, and
+the "↓ Latest" pill returns you to the live edge after scrolling up.
+
+<Demo data={streamingDemo} />
+
 ## API Reference
 
 ### Chat
@@ -117,19 +132,6 @@ A presentational attachment preview card for `PromptInput.Header` or message
 bodies. File picking, drag-drop and validation belong to your app.
 
 <auto-type-table path="./props.ts" name="ChatAttachmentProps" />
-
-## Examples
-
-### Attachments
-
-<Demo data={attachmentDemo} />
-
-### Streaming and turn anchoring
-
-Send a message: it anchors near the top while the reply streams below, and
-the "↓ Latest" pill returns you to the live edge after scrolling up.
-
-<Demo data={streamingDemo} />
 
 ## Accessibility
 

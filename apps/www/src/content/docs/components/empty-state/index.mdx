@@ -23,6 +23,14 @@ import { Bell } from 'lucide-react'
 <EmptyState icon={<Bell size={16} strokeWidth={1.5} />} heading="No notifications" />
 ```
 
+## Usage
+
+### Variants
+
+`empty1` (the default) centers everything and stacks the actions vertically — suited to panels, tables, and lists. `empty2` left-aligns the content, uses a larger icon, and places both actions in a row — suited to full-page states.
+
+<Demo data={variantsDemo} />
+
 ## API Reference
 
 Renders a placeholder for empty content areas.
@@ -42,14 +50,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `empty-state-heading` | The heading text (when `heading` is set) |
 | `empty-state-subheading` | The subheading text (when `subHeading` is set) |
 | `empty-state-actions` | Wrapper around the action buttons (`empty2` variant only) |
-
-## Examples
-
-### Variants
-
-`empty1` (the default) centers everything and stacks the actions vertically — suited to panels, tables, and lists. `empty2` left-aligns the content, uses a larger icon, and places both actions in a row — suited to full-page states.
-
-<Demo data={variantsDemo} />
 
 ## Accessibility
 
