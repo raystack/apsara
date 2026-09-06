@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/theme';
 import '@/styles.css';
 import '@raystack/apsara/normalize.css';
 import '@raystack/apsara/style.css';
+import '@/styles/typeset.css';
 import { ThemeProvider as NextThemeProvider } from 'next-themes';
 import styles from './layout.module.css';
 

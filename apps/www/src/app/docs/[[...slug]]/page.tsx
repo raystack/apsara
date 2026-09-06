@@ -1,4 +1,4 @@
-import { Flex, Headline, Text } from '@raystack/apsara';
+import { Flex } from '@raystack/apsara';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -48,10 +48,8 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
             >
               <Flex direction='column' gap={6}>
                 <Flex direction='column' gap={3}>
-                  <Headline size='t4'>{page.data.title}</Headline>
-                  <Text size='regular' variant='secondary'>
-                    {page.data.description}
-                  </Text>
+                  <h1 className={styles['page-title']}>{page.data.title}</h1>
+                  <p className={styles['page-lede']}>{page.data.description}</p>
                 </Flex>
                 <Flex direction='column' className='prose'>
                   <MDX

@@ -36,17 +36,17 @@
   margin-bottom: 0;
 }
 .heading {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: var(--docs-entry-size);
+  font-weight: var(--rs-font-weight-medium);
   margin-bottom: 16px;
 }
 .sectionTitle {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: var(--docs-lede-size);
+  font-weight: var(--rs-font-weight-medium);
   margin-bottom: 8px;
 }
 .section p {
-  font-size: 14px;
+  font-size: var(--rs-font-size-regular);
 }
 
 .radioGroup {
@@ -62,6 +62,6 @@
 }
 
 .radioLabel {
-  font-size: 14px;
+  font-size: var(--rs-font-size-regular);
   color: var(--gray-700);
 }

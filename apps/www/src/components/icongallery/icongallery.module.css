@@ -60,13 +60,13 @@
 }
 
 .label {
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
   color: var(--rs-color-foreground-base-tertiary);
 }
 
 .value {
   min-width: 32px;
-  font-size: 13px;
+  font-size: var(--docs-caption-size);
   color: var(--rs-color-foreground-base-primary);
   font-variant-numeric: tabular-nums;
 }
@@ -88,8 +88,8 @@
 }
 
 .hex {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 12px;
+  font-family: var(--rs-font-mono);
+  font-size: var(--rs-font-size-small);
   color: var(--rs-color-foreground-base-primary);
 }
 

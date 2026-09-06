@@ -9,8 +9,37 @@
 :global(.prose) {
   gap: var(--rs-space-3);
   color: var(--rs-color-foreground-base-secondary);
-  font-size: var(--rs-font-size-regular);
+  font-size: var(--docs-body-size);
   font-weight: var(--rs-font-weight-regular);
+  line-height: var(--docs-body-leading);
+  letter-spacing: var(--docs-body-tracking);
+}
+
+/*
+  Demos render real Apsara components, so they must show the product's own
+  type, not the docs typeset. Prose leading is looser than the product default
+  and would otherwise be inherited straight into every specimen.
+*/
+:global(.prose) [data-demo] {
+  font-size: var(--rs-font-size-regular);
   line-height: var(--rs-line-height-regular);
   letter-spacing: var(--rs-letter-spacing-regular);
+}
+
+.page-title {
+  color: var(--rs-color-foreground-base-primary);
+  font-family: var(--rs-font-body);
+  font-size: var(--docs-title-size);
+  line-height: var(--docs-title-leading);
+  letter-spacing: var(--docs-title-tracking);
+  font-weight: var(--docs-title-weight);
+  text-wrap: balance;
+}
+
+.page-lede {
+  color: var(--rs-color-foreground-base-secondary);
+  font-size: var(--docs-lede-size);
+  line-height: var(--docs-lede-leading);
+  letter-spacing: var(--docs-lede-tracking);
+  max-width: 42rem;
 }
