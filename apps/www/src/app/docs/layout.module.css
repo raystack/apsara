@@ -1,8 +1,41 @@
+/*
+  The shell fills the window up to `--docs-shell-max`, then centers itself.
+  Without the cap the sidebar and the table of contents stay pinned to the
+  screen edges on a wide display, leaving the text column marooned between two
+  large empty gaps.
+
+  `width` is set explicitly because body is a flex container: a bare
+  `margin-inline: auto` would disable the default stretch and leave the shell
+  shrink-to-fitting, which caps the width by accident rather than by intent.
+*/
 .container {
+  --docs-shell-max: 1440px;
+
   display: flex;
   flex-direction: row;
   position: relative;
+  width: 100%;
+  max-width: var(--docs-shell-max);
+  margin-inline: auto;
 }
+
+/*
+  The bar across the top of the page is drawn once, here, rather than as a
+  border on the navbar and the sidebar header. Those two sit inside the centered
+  shell, so their borders stop at its edges; this one is fixed to the viewport
+  and runs the full width behind them.
+*/
+.container::before {
+  content: "";
+  position: fixed;
+  top: 50px;
+  left: 0;
+  right: 0;
+  border-top: 0.5px solid var(--rs-color-border-base-primary);
+  z-index: var(--rs-z-index-portal);
+  pointer-events: none;
+}
+
 .sidebar {
   height: 100vh;
   position: sticky;
