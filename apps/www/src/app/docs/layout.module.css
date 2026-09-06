@@ -17,6 +17,13 @@
   width: 100%;
   max-width: var(--docs-shell-max);
   margin-inline: auto;
+  /*
+    The outer edges of the shell, matching the rule between the sidebar and the
+    article. They run the height of the page, so the layout reads as a panel
+    rather than as content that ran out of room. Drawn here rather than on the
+    sidebar and the contents rail so both sides cannot drift apart.
+  */
+  border-inline: 0.5px solid var(--rs-color-border-base-primary);
 }
 
 /*
