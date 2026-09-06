@@ -32,6 +32,8 @@ import { AlertDialog } from '@raystack/apsara'
 
 ## Usage
 
+An alert dialog cannot be dismissed by clicking away, so the work is deciding who owns its open state and what each of the two answers does.
+
 ### Controlled
 
 Pass `open` with `onOpenChange` to own the state — needed when something other than the trigger has to close the dialog, such as a request completing.
@@ -57,6 +59,8 @@ You can nest alert dialogs for multi-step confirmation flows. When a nested aler
 <Demo data={nestedDemo} />
 
 ## API Reference
+
+A trigger and a content shell split into header, body and footer.
 
 ### Root
 

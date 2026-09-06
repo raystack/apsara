@@ -60,6 +60,8 @@ presentational.
 
 ## Usage
 
+Two things sit on top of plain layout: what to render for a file the user attached, and how the scroller behaves while a reply streams in.
+
 ### Attachments
 
 `Chat.Attachment` renders a file alongside a message. Attachments sit inside the message item, so they scroll and anchor with it.
@@ -74,6 +76,8 @@ the "↓ Latest" pill returns you to the live edge after scrolling up.
 <Demo data={streamingDemo} />
 
 ## API Reference
+
+The scroller and the parts that register with it. Every child goes through `Chat.Item`; the rest are optional.
 
 ### Chat
 

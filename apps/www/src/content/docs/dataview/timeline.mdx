@@ -41,6 +41,8 @@ import { DataView, TimelineActions } from "@raystack/apsara";
 
 ## Usage
 
+Horizontal position is always time. Everything below is about the vertical axis and what fills it.
+
 ### Cards
 
 The Timeline owns **positioning** — the time scale (date to x, span to width, using real timestamps so variable-length months don't distort placement), lane packing, the sticky two-tier axis, and scrolling. You own the **card**: `renderCard(row, context)` draws everything visual, the same split as `DataView.List`'s `columns[].cell`.
@@ -241,6 +243,8 @@ Start with `isLoading={true}` and fire an initial fetch on mount. With no data a
 Keep the row model **cumulative**. The domain is stable, so previously fetched cards stay mounted and scrolling back is instant. Scroll position is anchored by *time*, not pixels: if the domain shifts — a `range` extension, rows prepended by a fetch — the date under the viewport's left edge stays put instead of the content jumping.
 
 ## API Reference
+
+The renderer, the context each card is rendered with, and the marker and action shapes.
 
 ### DataView.Timeline
 

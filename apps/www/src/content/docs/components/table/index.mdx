@@ -34,6 +34,8 @@ import { Table } from "@raystack/apsara";
 
 ## Usage
 
+Rows and cells are composed by hand, so a table is whatever markup you give it. Two things go beyond that: rows that respond to a click, and headers that span every column.
+
 ### Basic usage
 
 Compose a table from its parts: `Header` and `Body` wrap `Row`s, with `Head` for column titles and `Cell` for each value. Table renders static markup — for sorting, filtering, or pagination, use [DataView](/docs/dataview).
@@ -53,6 +55,8 @@ Set `interactive` on a `Row` to make it respond to hover and keyboard focus. Pai
 <Demo data={sectionDemo} />
 
 ## API Reference
+
+A root split into a header and a body, with rows, cells, and a full-width section header.
 
 ### Root
 

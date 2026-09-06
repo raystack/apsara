@@ -38,6 +38,8 @@ import { DataView, DataViewListColumn } from "@raystack/apsara";
 
 ## Usage
 
+One renderer, two presentations. `variant` decides which; everything else applies to both.
+
 ### Variant
 
 `variant="table"` is the default: a header row, aligned column tracks, and real table semantics. `variant="list"` drops the header and renders card-style rows — the default `1fr` middle column with `auto` end columns gives you the familiar justify-between layout.
@@ -96,6 +98,8 @@ DataView doesn't ship a selection toolbar, but the underlying TanStack table ins
 - **Grouping works alongside selection.** Group header rows are keyed in their own id space and are not selectable, so `rowSelection` holds one key per data row and select-all covers the visible data rows without flagging the bands. Read the count off `getSelectedRowModel().flatRows`, not `.rows` — the latter only walks selected *top-level* rows, which is empty while grouping puts every data row one level down.
 
 ## API Reference
+
+The renderer, and its column shape.
 
 ### DataView.List
 

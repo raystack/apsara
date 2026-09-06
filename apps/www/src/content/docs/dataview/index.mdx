@@ -57,6 +57,8 @@ import {
 
 ## Usage
 
+Everything on this page applies to every renderer. Read it in order: fields and columns come first because the rest of the query model builds on them.
+
 ### Fields and columns
 
 `fields` is renderer-agnostic metadata declared **once on the root** — filter capability, sort capability, group capability, visibility, group-header presentation. Cell and header renderers live on the **renderer's** column spec instead, such as `DataView.List`'s `columns`.
@@ -196,6 +198,8 @@ Grouping stays `group_by: string[]` on the wire in both modes. To group by somet
 Fetching itself is renderer-shaped. [List](/docs/dataview/list#loading) pages through an infinite-scroll sentinel; [Timeline](/docs/dataview/timeline#loading-by-visible-range) fetches by visible time window instead.
 
 ## API Reference
+
+The root and the shapes it takes — fields, sort and query — followed by the sibling components that read them from context.
 
 ### Root
 
