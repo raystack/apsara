@@ -4,7 +4,9 @@ description: A banner that displays a short site-wide message with an optional a
 source: packages/raystack/components/announcement-bar
 ---
 
-import { playground, variantsDemo } from "./demo.ts";
+import { playground, variantsDemo,
+  actionDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -25,6 +27,12 @@ import { AnnouncementBar } from '@raystack/apsara'
 Variants convey the tone of the announcement. Default is `normal`; use `error` for urgent notices and `gradient` for promotional messages.
 
 <Demo data={variantsDemo} />
+
+### Icon and action
+
+`leadingIcon` marks the kind of notice, and `actionLabel` turns the bar into a link. Give the action a verb that says where it goes — the bar is easy to ignore, so the label carries the click.
+
+<Demo data={actionDemo} />
 
 ## API Reference
 

@@ -81,7 +81,7 @@ If you change the size and want to keep a 1px stroke, scale the stroke with it �
 `strokeWidth={24 / size}`.
 
 All three are standard SVG attributes, so any icon library accepts them. A
-library that draws solid shapes simply ignores `stroke-width`.
+library that draws solid shapes ignores `stroke-width`.
 
 ### Size
 
@@ -196,10 +196,9 @@ import { RocketIcon } from '@/icons';
 You get the base props, `data-icon`, and one file to edit if you ever change
 icon library.
 
-The `props` half of `<Theme icons>` reaches your icons too, since they read the
-same context. The `components` half is typed to the keys Apsara ships — to
-change one of your own, edit the file above. You own it, so you do not need a
-provider to reach into it.
+Your icons read the same context, so the `props` half of `<Theme icons>` reaches
+them too. The `components` half only accepts the keys Apsara ships — to change
+one of your own, edit the file above.
 
 <Callout type="grey">
   lucide exports several aliases per icon — `Search`, `SearchIcon` and
@@ -260,17 +259,18 @@ import { SearchIcon } from '@raystack/apsara/icons';
 import { SearchIcon } from '@raystack/apsara';
 ```
 
-`@raystack/apsara/icons` reaches no component module at all, so one icon costs
-one icon whatever the bundler does. The package root re-exports every component
-alongside the icons; Apsara sets `"sideEffects": false` so a bundler that honours
-that flag strips them and the two paths come out identical, but a bundler that
-does not honour it keeps them all. So the subpath is the safer default:
-identical in the good case, and far cheaper in the bad one. Use the root in
-files that already import components, where a second import line buys nothing.
+|  | `@raystack/apsara/icons` | `@raystack/apsara` |
+|---|---|---|
+| Bundler honours `sideEffects` | one icon costs one icon | the same |
+| Bundler ignores it | one icon costs one icon | pulls in every component |
+| CommonJS `require` | loads the icons only | loads every component module |
 
-CommonJS cannot tree-shake at all, so there the difference is unconditional:
-`require('@raystack/apsara')` loads every component module, while
-`require('@raystack/apsara/icons')` loads the icons and nothing else.
+The subpath reaches no component module at all, so it costs the same in every
+case. The root re-exports every component alongside the icons and relies on
+`"sideEffects": false` to have them stripped.
+
+Prefer the subpath by default. Use the root in files that already import
+components, where a second import line buys nothing.
 
 ## API Reference
 

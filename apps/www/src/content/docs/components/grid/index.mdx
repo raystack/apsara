@@ -4,13 +4,22 @@ description: A layout primitive for CSS grid — define columns, rows, template 
 source: packages/raystack/components/grid
 ---
 
-import { playground,  basicDemo } from "./demo.ts";
+import { playground,  basicDemo,
+  spanDemo,
+  areasDemo,
+  alignmentDemo,
+  autoFlowDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
 ## Overview
 
-`Grid` is a `div` with `display: grid`, exposing CSS grid through props: `columns` and `rows` (a number becomes `repeat(n, 1fr)`, a string passes through as-is), `templateAreas`, `autoFlow`, `gap`/`columnGap`/`rowGap`, and the alignment props. Reach for it when a layout runs in two dimensions at once — dashboards, card grids, page shells with named areas. For a single row or column, [Flex](/docs/components/flex) is the simpler tool. Children can be any elements; wrap one in `Grid.Item` only when it needs its own placement or styling.
+`Grid` is a `div` with `display: grid`, exposing CSS grid through props: `columns` and `rows` (a number becomes `repeat(n, 1fr)`, a string passes through as-is), `templateAreas`, `autoFlow`, `gap`/`columnGap`/`rowGap`, and the alignment props.
+
+Reach for it when a layout runs in two dimensions at once — dashboards, card grids, page shells with named areas. For a single row or column, [Flex](/docs/components/flex) is the simpler tool.
+
+Children can be any elements. Wrap one in `Grid.Item` only when it needs its own placement or styling.
 
 ## Anatomy
 
@@ -29,9 +38,35 @@ import { Grid } from "@raystack/apsara";
 
 ### Basic usage
 
-A 2×2 grid defined with numeric `rows` and `columns`. Plain children and `Grid.Item` wrappers can be mixed freely — both flow into cells in order.
+A 2×2 grid defined with numeric `rows` and `columns`. Plain children and `Grid.Item` wrappers mix freely — both flow into cells in order.
+
+Reach for Grid when the layout is two-dimensional: rows *and* columns that have to line up with each other. For a single row or column, [Flex](/docs/components/flex) is simpler and needs no track definitions.
 
 <Demo data={basicDemo} />
+
+### Spanning cells
+
+`colSpan` and `rowSpan` let one item cover several tracks. Use them for the header and sidebar of a layout, where the shape of the page is the point rather than the order of the children.
+
+<Demo data={spanDemo} />
+
+### Template areas
+
+`templateAreas` names regions and `area` places an item into one. Worth it when the layout has more than three or four regions — the names document the intent, and moving a region means editing one string rather than every child.
+
+<Demo data={areasDemo} />
+
+### Alignment
+
+`justifyItems` and `alignItems` position every item inside its own cell. `justifySelf` and `alignSelf` override that for one item.
+
+<Demo data={alignmentDemo} />
+
+### Automatic tracks
+
+With no `rows` or `columns`, `autoFlow` decides which way items fill and `autoColumns` / `autoRows` size the tracks it creates. Use this when the number of items is not known ahead of time.
+
+<Demo data={autoFlowDemo} />
 
 ## API Reference
 

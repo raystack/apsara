@@ -4,7 +4,9 @@ description: A popup that displays information related to an element when it rec
 source: packages/raystack/components/tooltip
 ---
 
-import { playground, sideDemo, alignDemo, customDemo, providerDemo, trackCursorDemo, arrowDemo } from "./demo.ts";
+import { playground, sideDemo, alignDemo, customDemo, providerDemo, trackCursorDemo, arrowDemo,
+  controlledDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -57,6 +59,12 @@ Use `trackCursorAxis` prop on the Root component to make the tooltip follow the 
 Show the arrow by setting `showArrow={true}` on the Content component:
 
 <Demo data={arrowDemo} />
+
+### Controlled
+
+Pass `open` with `onOpenChange` to own the state. Use it to show a tooltip from somewhere other than hover — a first-run hint, or a validation message tied to a field.
+
+<Demo data={controlledDemo} />
 
 ## API Reference
 

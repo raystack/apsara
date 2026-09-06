@@ -176,11 +176,11 @@ In client mode `DataView` derives everything locally: filter predicates, sort, g
 </DataView>
 ```
 
-`onTableQueryChange` hands you the full [query object](#query) every time any part of it changes — a filter chip, a sort, a grouping choice, a keystroke in search. Translate it to your API's parameters and refetch.
+- **`onTableQueryChange`** hands you the full [query object](#query) whenever any part of it changes — a filter chip, a sort, a grouping choice, a keystroke in search. Translate it to your API's parameters and refetch.
+- **`totalRowCount`** is what the "hidden by filters" footer counts against. Without it the footer can't tell how many rows your filters excluded, since the client only ever sees the current page.
+- **Grouping** still comes from the root's `groupData`, so section order, labels, and counts match across renderers.
 
-`totalRowCount` is what the "hidden by filters" footer counts against. Without it the footer can't tell how many rows your filters excluded, since the client only ever sees the current page.
-
-Group order, labels, and counts still come from the root's `groupData` output, so sections match across renderers without a mode-specific path. Sorting is the one place a silent mismatch is possible: rows arrive in whatever order your backend returned them, so a backend that ignores the `sort` it was handed produces a correctly filtered view in an arbitrary order, with nothing logged to say so.
+Sorting is the one place a silent mismatch is possible. Rows render in whatever order your backend returned them, so a backend that ignores the `sort` it was handed produces a correctly filtered view in an arbitrary order, with nothing logged to say so.
 
 Grouping stays `group_by: string[]` on the wire in both modes. To group by something that isn't a raw accessor — "by week of `created_at`", "by first letter" — supply a resolver on the root. The resolved key is what lands in `query.group_by`, so your backend receives a stable string it can switch on, and the same code works unchanged in client mode.
 

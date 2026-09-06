@@ -4,7 +4,10 @@ description: A responsive table component to show structured data.
 source: packages/raystack/components/table
 ---
 
-import { preview, basicDemo } from "./demo.ts";
+import { preview, basicDemo,
+  interactiveDemo,
+  sectionDemo,
+} from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -36,6 +39,18 @@ import { Table } from "@raystack/apsara";
 Compose a table from its parts: `Header` and `Body` wrap `Row`s, with `Head` for column titles and `Cell` for each value. Table renders static markup — for sorting, filtering, or pagination, use [DataView](/docs/components/dataview).
 
 <Demo data={basicDemo} />
+
+### Interactive rows
+
+Set `interactive` on a `Row` to make it respond to hover and keyboard focus. Pair it with `onClick` when the whole row opens something — the row becomes the target, so people don't have to hit a link inside a cell.
+
+<Demo data={interactiveDemo} />
+
+### Section headers
+
+`Table.SectionHeader` groups rows under a label that spans the table. Set `colSpan` to the number of columns so the label stretches the full width.
+
+<Demo data={sectionDemo} />
 
 ## API Reference
 

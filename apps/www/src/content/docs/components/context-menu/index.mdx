@@ -12,6 +12,7 @@ import {
   customDemo,
   submenuDemo,
   autocompleteDemo,
+  controlledDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -59,13 +60,18 @@ Use `ContextMenu.Submenu`, `ContextMenu.SubmenuTrigger`, and `ContextMenu.Submen
 
 ### Autocomplete
 
-To enable autocomplete, pass the `autocomplete` prop to the ContextMenu root element. Each menu instance will manage its own autocomplete behavior.
+Pass `autocomplete` to the ContextMenu root. Each menu manages its own autocomplete state.
 
-By default (`autocompleteMode="auto"`), items are automatically filtered as the user types. The filter matches against the item's `value` prop or its `children` text content.
-
-For submenus, you can independently enable autocomplete by passing `autocomplete` to `ContextMenu.Submenu`.
+- **`autocompleteMode="auto"`** is the default. Items filter as the user types, matched against each item's `value` prop or its children text.
+- **Submenus** opt in separately: pass `autocomplete` to `ContextMenu.Submenu`.
 
 <Demo data={autocompleteDemo} />
+
+### Controlled
+
+Pass `open` with `onOpenChange` to own the state — needed when the menu has to close on something other than a selection, or when only one menu may be open at a time.
+
+<Demo data={controlledDemo} />
 
 ## API Reference
 

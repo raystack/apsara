@@ -126,7 +126,7 @@ The `promise(promise, options)` method drives a toast through the resolve/reject
 
 ### useToastManager()
 
-Hook for dispatching toasts from inside a component tree wrapped by `<Toast.Provider>`. Returns the same methods as `createToastManager()` — including first-class `leadingIcon` support — plus a reactive `toasts` array reflecting the currently-displayed toasts.
+Hook for dispatching toasts from inside a component tree wrapped by `<Toast.Provider>`. Returns the same methods as `createToastManager()`, including built-in `leadingIcon` support, plus a reactive `toasts` array reflecting the toasts on screen.
 
 ```tsx
 import { useToastManager } from '@raystack/apsara'

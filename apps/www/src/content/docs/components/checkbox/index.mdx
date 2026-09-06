@@ -4,7 +4,9 @@ description: Checkbox is a user interface control that enables users to toggle b
 source: packages/raystack/components/checkbox
 ---
 
-import { playground, statesExamples, sizeExamples, groupDemo, groupHorizontalDemo, groupDisabledDemo, parentDemo } from "./demo.ts";
+import { playground, statesExamples, sizeExamples, groupDemo, groupHorizontalDemo, groupDisabledDemo, parentDemo,
+  controlledDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -30,17 +32,23 @@ Use `Checkbox.Group` to manage shared state across multiple checkboxes:
 
 ## Usage
 
+### Size variants
+
+Two sizes. `large` is the default; `small` fits table rows and dense lists.
+
+<Demo data={sizeExamples} />
+
 ### States
 
 A checkbox can be checked, unchecked, or `indeterminate` — the third state for a parent whose children are only partly selected.
 
 <Demo data={statesExamples} />
 
-### Size variants
+### Controlled
 
-Two sizes. `large` is the default; `small` fits table rows and dense lists.
+Pass `checked` with `onCheckedChange` to own the state — needed when the value lives in a form, gates another control, or has to be read back on submit.
 
-<Demo data={sizeExamples} />
+<Demo data={controlledDemo} />
 
 ### Group
 

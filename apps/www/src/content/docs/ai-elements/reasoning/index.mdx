@@ -5,7 +5,9 @@ source: packages/raystack/components/reasoning
 tag: new
 ---
 
-import { preview, streamingDemo, customTriggerDemo } from "./demo.ts";
+import { preview, streamingDemo, customTriggerDemo,
+  controlledDemo,
+} from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -43,6 +45,12 @@ Replace the default trigger text when "Reasoning" is not the right word for what
 
 <Demo data={customTriggerDemo} />
 
+### Controlled
+
+Pass `open` with `onOpenChange` to own the panel — needed when reasoning should expand automatically while the model streams and collapse once it finishes.
+
+<Demo data={controlledDemo} />
+
 ## API Reference
 
 ### Reasoning
@@ -67,6 +75,22 @@ The collapsible panel holding the steps.
 A labelled row with optional indented detail.
 
 <auto-type-table path="./props.ts" name="ReasoningStepProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `reasoning` | Root container |
+| `reasoning-trigger` | The button that expands and collapses the panel |
+| `reasoning-chevron` | Chevron inside the trigger |
+| `reasoning-label-streaming` | Trigger label while the model is still reasoning |
+| `reasoning-panel` | The collapsible panel |
+| `reasoning-body` | Content inside the panel |
+| `reasoning-step` | One reasoning step |
+| `reasoning-step-label` | That step's label |
+| `reasoning-step-body` | That step's content |
 
 ## Accessibility
 

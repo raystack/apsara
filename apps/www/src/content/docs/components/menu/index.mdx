@@ -13,6 +13,7 @@ import {
   submenuDemo,
   autocompleteDemo,
   linearDemo,
+  controlledDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -60,13 +61,11 @@ Use `Menu.Submenu`, `Menu.SubmenuTrigger`, and `Menu.SubmenuContent` to create n
 
 ### Autocomplete
 
-To enable autocomplete, pass the `autocomplete` prop to the Menu root element. Each menu instance will manage its own autocomplete behavior.
+Pass `autocomplete` to the Menu root. Each menu manages its own autocomplete state.
 
-By default (`autocompleteMode="auto"`), items are automatically filtered as the user types. The filter matches against the item's `value` prop or its `children` text content.
-
-For submenus, you can independently enable autocomplete by passing `autocomplete` to `Menu.Submenu`.
-
-For more advanced control, set `autocompleteMode="manual"` and implement your own custom filtering logic using the `onInputValueChange` callback.
+- **`autocompleteMode="auto"`** is the default. Items filter as the user types, matched against each item's `value` prop or its children text.
+- **`autocompleteMode="manual"`** leaves filtering to you — do it in `onInputValueChange`.
+- **Submenus** opt in separately: pass `autocomplete` to `Menu.Submenu`.
 
 <Demo data={autocompleteDemo} />
 
@@ -77,6 +76,12 @@ This is a Linear-inspired menu component that supports custom filtering and disp
 To closely replicate Linear-style filtering, the filtering logic should include result ranking. Using a utility like [match-sorter](https://www.npmjs.com/package/match-sorter) can help achieve this by sorting filtered results based on relevance.
 
 <Demo data={linearDemo} />
+
+### Controlled
+
+Pass `open` with `onOpenChange` to own the state — needed when a keyboard shortcut or another control has to open the menu.
+
+<Demo data={controlledDemo} />
 
 ## API Reference
 

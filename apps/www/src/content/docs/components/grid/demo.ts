@@ -65,3 +65,49 @@ export const basicDemo = {
   <Grid.Item>6</Grid.Item>
 </Grid>`
 };
+
+export const spanDemo = {
+  type: 'code',
+  code: `
+<Grid columns={3} gap={3}>
+  <Grid.Item colSpan={3} style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>Header — colSpan 3</Grid.Item>
+  <Grid.Item rowSpan={2} style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>Sidebar — rowSpan 2</Grid.Item>
+  <Grid.Item colSpan={2} style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>Main</Grid.Item>
+  <Grid.Item colSpan={2} style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>Below main</Grid.Item>
+</Grid>`
+};
+
+export const areasDemo = {
+  type: 'code',
+  code: `
+<Grid
+  columns="140px 1fr"
+  gap={3}
+  templateAreas={["nav header", "nav main", "nav footer"]}>
+  <Grid.Item area="nav" style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>nav</Grid.Item>
+  <Grid.Item area="header" style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>header</Grid.Item>
+  <Grid.Item area="main" style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>main</Grid.Item>
+  <Grid.Item area="footer" style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>footer</Grid.Item>
+</Grid>`
+};
+
+export const alignmentDemo = {
+  type: 'code',
+  code: `
+<Grid columns={3} gap={3} rows="80px" alignItems="center" justifyItems="center">
+  <Grid.Item style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>centered</Grid.Item>
+  <Grid.Item alignSelf="start" style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>alignSelf start</Grid.Item>
+  <Grid.Item alignSelf="end" style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>alignSelf end</Grid.Item>
+</Grid>`
+};
+
+export const autoFlowDemo = {
+  type: 'code',
+  code: `
+<Grid autoFlow="column" autoColumns="minmax(90px, 1fr)" gap={3}>
+  <Grid.Item style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>1</Grid.Item>
+  <Grid.Item style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>2</Grid.Item>
+  <Grid.Item style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>3</Grid.Item>
+  <Grid.Item style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>4</Grid.Item>
+</Grid>`
+};

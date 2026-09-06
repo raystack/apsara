@@ -164,3 +164,21 @@ export const arrowDemo = {
     <Tooltip.Content showArrow>Tooltip with arrow</Tooltip.Content>
   </Tooltip>`
 };
+
+export const controlledDemo = {
+  type: 'code',
+  code: `
+function ControlledTooltip() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <Flex align="center" gap={5}>
+      <Tooltip open={open} onOpenChange={setOpen}>
+        <Tooltip.Trigger render={<Button variant="outline" />}>Hover or toggle</Tooltip.Trigger>
+        <Tooltip.Content>Shown while open is true</Tooltip.Content>
+      </Tooltip>
+      <Button size="small" onClick={() => setOpen(o => !o)}>Toggle</Button>
+    </Flex>
+  );
+}`
+};

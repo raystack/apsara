@@ -87,6 +87,20 @@ The message surface.
 
 <auto-type-table path="./props.ts" name="MessageBubbleProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `message` | A single message row |
+| `message-group` | Wrapper around consecutive messages from one sender |
+| `message-avatar` | The sender avatar |
+| `message-header` | Row above the bubble — sender name and timestamp |
+| `message-content` | The bubble holding the message body |
+| `message-actions` | Action row revealed on the message |
+| `message-footer` | Row below the bubble |
+
 ## Accessibility
 
 - `Message.Actions` reveal on hover **and** on focus-within, and stay visible

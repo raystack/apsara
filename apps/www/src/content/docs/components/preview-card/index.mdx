@@ -5,7 +5,9 @@ source: packages/raystack/components/preview-card
 tag: new
 ---
 
-import { playground, arrowDemo, positionDemo, contentTransitionsDemo } from "./demo.ts";
+import { playground, arrowDemo, positionDemo, contentTransitionsDemo,
+  controlledDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -43,6 +45,12 @@ When multiple triggers share one card via `createHandle`, wrap content in `Viewp
 Control the position of the preview card relative to its trigger.
 
 <Demo data={positionDemo} />
+
+### Controlled
+
+Pass `open` with `onOpenChange` to own the state. Use it when the card has to stay open while the reader interacts with it, rather than closing on pointer-out.
+
+<Demo data={controlledDemo} />
 
 ## API Reference
 
