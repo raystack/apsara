@@ -52,4 +52,11 @@
   height: calc(100vh - 50px);
   position: sticky;
   top: 50px;
+  /*
+    The rail's inner edge, matching the one on the sidebar. It starts below the
+    navbar rather than at the top of the screen, because above that line the
+    navbar is one strip running the width of the article — there is nothing
+    there for the rule to divide.
+  */
+  border-left: 0.5px solid var(--rs-color-border-base-primary);
 }
