@@ -4,7 +4,9 @@ description: A panel that slides in from the edge of the screen with swipe-to-di
 source: packages/raystack/components/drawer
 ---
 
-import { playground, basicDemo, positionDemo } from "./demo.ts";
+import { playground, basicDemo, positionDemo,
+  controlledDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -40,6 +42,12 @@ A drawer slides in from the edge named by `side` and traps focus while open.
 The Drawer can slide in from different sides of the screen. Swipe-to-dismiss is automatically configured based on the `side` prop.
 
 <Demo data={positionDemo} />
+
+### Controlled
+
+Pass `open` with `onOpenChange` to own the state — needed when the drawer has to open from elsewhere on the page, or stay open until a save completes.
+
+<Demo data={controlledDemo} />
 
 ## API Reference
 

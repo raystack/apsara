@@ -126,7 +126,7 @@ A chip loaded from `defaultValue` starts with just its label, since a saved
 string can't carry an icon or `data`. Pass `resolveMentions` to look those up
 and fill them in — it also refreshes the label if the entity was renamed.
 Lookups are batched and cached. If one fails or comes back empty, the chip
-simply stays label-only; it is never removed.
+stays label-only; it is never removed.
 
 <Demo data={mentionsAsyncDemo} />
 
@@ -190,12 +190,15 @@ all use that same rule, so they always agree:
 
 ### Root
 
-The `<form>` that holds the value and submit semantics. The whole frame reads
-as one field: clicking its empty space — the header and footer padding, or the
-gap between their controls — focuses the input, while anything you put in those
-slots still handles its own clicks. Whichever input part you render registers
-itself on mount; pass `inputRef` if you render your own input instead. An
-`onMouseDown` that calls `preventDefault()` opts out.
+The `<form>` that holds the value and submit semantics.
+
+The whole frame reads as one field. Clicking its empty space — the header and
+footer padding, or the gap between their controls — focuses the input, while
+anything you put in those slots still handles its own clicks. Whichever input
+part you render registers itself on mount.
+
+Pass `inputRef` if you render your own input. To opt a region out, give it an
+`onMouseDown` that calls `preventDefault()`.
 
 <auto-type-table path="./props.ts" name="PromptInputProps" />
 
@@ -220,15 +223,18 @@ The input to use when you want `@`-mention chips. Use it *instead of*
 `Textarea`, not alongside it.
 
 It behaves like `Textarea` — Enter submits, Shift+Enter adds a newline, same
-placeholder and same growth — and adds undo/redo plus the mention menu.
+placeholder and same growth — and adds undo/redo plus the mention menu. Its line
+height is taller, so a chip fits on one line without changing the composer's
+height as chips come and go.
 
-Its line height is taller than `Textarea`'s, so a chip fits inside one line
-without changing the composer's height as chips come and go. A single-row
-`Editor` is a few pixels taller than a single-row `Textarea`.
+A few `Textarea` props work differently here:
 
-A few `Textarea` props work differently here. `readOnly` becomes `disabled`,
-`onChange` becomes `onValueChange` on the root, `rows` becomes CSS
-`min-height`, and its `ref` is an `HTMLDivElement`.
+| On `Textarea` | On `Editor` |
+|---|---|
+| `readOnly` | `disabled` |
+| `onChange` | `onValueChange`, on the root |
+| `rows` | CSS `min-height` |
+| `ref` to an `HTMLTextAreaElement` | `ref` to an `HTMLDivElement` |
 
 <auto-type-table path="./props.ts" name="PromptInputEditorProps" />
 
@@ -267,6 +273,18 @@ composer is empty, shows a spinner while `status="submitted"`, and flips to a
 stop square that calls `onStop` while `status="streaming"`.
 
 <auto-type-table path="./props.ts" name="PromptInputSubmitProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `prompt-input` | Root container |
+| `prompt-input-header` | Row above the textarea — attachments and context |
+| `prompt-input-textarea` | The editable composer |
+| `prompt-input-footer` | Row below the textarea |
+| `prompt-input-submit` | The send button |
 
 ## Accessibility
 

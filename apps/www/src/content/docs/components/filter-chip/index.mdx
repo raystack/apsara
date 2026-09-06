@@ -4,7 +4,9 @@ description: A compact, interactive element for filtering data with various inpu
 source: packages/raystack/components/filter-chip
 ---
 
-import { playground, inputDemo, autocompleteDemo, calendarPropsDemo, iconDemo, actionDemo, operationsDemo } from "./demo.ts";
+import { playground, inputDemo, autocompleteDemo, calendarPropsDemo, iconDemo, actionDemo, operationsDemo,
+  controlledDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -59,6 +61,12 @@ FilterChip supports custom filter operations through the `operations` prop. When
 - If no operations are specified, default operations are used based on the column type
 
 <Demo data={operationsDemo} />
+
+### Controlled
+
+Pass `value` with `onValueChange` to own the filter — needed when the chip drives a query and the value has to survive a refetch or a shared URL.
+
+<Demo data={controlledDemo} />
 
 ## API Reference
 

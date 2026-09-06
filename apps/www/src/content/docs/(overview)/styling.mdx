@@ -7,7 +7,7 @@ Apsara uses vanilla CSS with CSS custom properties (tokens) for all styling. The
 
 ## Using design tokens
 
-Design tokens are CSS custom properties that adapt automatically to the active theme. Always use tokens instead of hard-coded values — this ensures your UI stays consistent and responds to light/dark mode changes.
+Design tokens are CSS custom properties that adapt automatically to the active theme. Always use tokens instead of hard-coded values, so the UI stays consistent and follows light and dark mode.
 
 ```css
 .card {
@@ -257,12 +257,8 @@ CVA handles merging the base class, variant classes, and any custom `className` 
 
 ## Best practices
 
-**Use semantic tokens, not primitives.** Prefer `--rs-color-foreground-base-primary` over `--rs-neutral-12`. Semantic tokens automatically adapt across themes; primitives do not carry semantic meaning.
-
-**Avoid hard-coded colors.** Every color value should come from a token. This guarantees proper light/dark mode support and visual consistency.
-
-**Use spacing tokens for layout.** Consistent spacing creates visual rhythm. Use `--rs-space-*` tokens for padding, margin, and gap values.
-
-**Keep specificity low.** Use single class selectors. Avoid `!important` and deeply nested selectors that are hard to override.
-
-**Co-locate styles with components.** Place `.module.css` files next to their component files. This makes it easy to find and maintain styles.
+- **Use semantic tokens, not primitives.** Prefer `--rs-color-foreground-base-primary` over `--rs-neutral-12`. Semantic tokens automatically adapt across themes; primitives do not carry semantic meaning.
+- **Avoid hard-coded colors.** Every color value should come from a token. This guarantees proper light/dark mode support and visual consistency.
+- **Use spacing tokens for layout.** Consistent spacing creates visual rhythm. Use `--rs-space-*` tokens for padding, margin, and gap values.
+- **Keep specificity low.** Use single class selectors. Avoid `!important` and deeply nested selectors that are hard to override.
+- **Co-locate styles with components.** Place `.module.css` files next to their component files. This makes it easy to find and maintain styles.

@@ -5,7 +5,7 @@ description: Understanding the Apsara theming system and the Theme component.
 
 import { switcherDemo, switcherSizeDemo } from "./demo.ts";
 
-Apsara provides a theming system built on CSS custom properties (tokens). Tokens are semantic variables that automatically resolve to appropriate values based on the active theme—so your UI adapts seamlessly when users switch between light and dark modes or when you change accent colors, without any code changes.
+Apsara's theming is built on CSS custom properties, called tokens. A token is a semantic variable that resolves to the right value for the active theme, so the UI follows along when someone switches between light and dark or you change the accent color. No code changes needed.
 
 ## Installation
 
@@ -113,7 +113,7 @@ Themes are not limited to the document root. Any element with a `data-theme` att
 
 ### Bare attribute
 
-Because scoping is implemented in CSS, you can opt in by simply setting the attribute on any element:
+Scoping is implemented in CSS, so setting the attribute on any element opts in:
 
 ```tsx
 <html data-theme="dark">
@@ -141,7 +141,7 @@ import { Theme } from "@raystack/apsara";
 </Theme>
 ```
 
-When `Theme` is rendered inside another `Theme`, it switches to scope mode: it writes `data-theme` (and optionally `data-accent-color`, `data-gray-color`, `data-style`) onto a wrapper `<div>` rather than the document root. The outer provider's state remains the source of truth for `useTheme()`.
+When `Theme` is rendered inside another `Theme`, it switches to scope mode: it writes `data-theme` (and optionally `data-accent-color`, `data-gray-color`, `data-style`) onto a wrapper `<div>` rather than the document root. `useTheme()` still reports the outer provider's state.
 
 ### Inheritance rules
 

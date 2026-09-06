@@ -10,7 +10,8 @@ import {
   iconsDemo,
   disabledDemo,
   variantsDemo,
-  sizesDemo
+  sizesDemo,
+  controlledDemo,
 } from "./demo.ts";
 
 <Demo data={preview} />
@@ -38,6 +39,18 @@ A tab list with panels. Set `defaultValue` to the tab that should open first.
 
 <Demo data={basicDemo} />
 
+### Variants
+
+Three treatments. `segmented` groups the tabs in a track, `standalone` gives them an underline, and `plain` strips the chrome for dense layouts.
+
+<Demo data={variantsDemo} />
+
+### Sizes
+
+Three sizes. `medium` is the default; use `small` in toolbars and panels.
+
+<Demo data={sizesDemo} />
+
 ### With leading icons
 
 Pass `leadingIcon` on a trigger to place an icon before its label.
@@ -50,17 +63,11 @@ Set `disabled` on a trigger to keep a tab visible but unreachable.
 
 <Demo data={disabledDemo} />
 
-### Variants
+### Controlled
 
-Three treatments. `segmented` groups the tabs in a track, `standalone` gives them an underline, and `plain` strips the chrome for dense layouts.
+Pass `value` with `onValueChange` to own the active tab — needed when something outside the tab list has to switch panels, or when the tab is part of the URL.
 
-<Demo data={variantsDemo} />
-
-### Sizes
-
-Three sizes. `medium` is the default; use `small` in toolbars and panels.
-
-<Demo data={sizesDemo} />
+<Demo data={controlledDemo} />
 
 ## API Reference
 

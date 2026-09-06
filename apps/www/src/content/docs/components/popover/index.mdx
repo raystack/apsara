@@ -4,7 +4,9 @@ description: Displays rich content in a portal, triggered by a button.
 source: packages/raystack/components/popover
 ---
 
-import { playground, alignDemo, positionDemo } from "./demo.ts";
+import { playground, alignDemo, positionDemo,
+  controlledDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -34,6 +36,12 @@ Control the position and alignment of your popover relative to its trigger.
 Customize how the popover aligns with its trigger.
 
 <Demo data={alignDemo} />
+
+### Controlled
+
+Pass `open` with `onOpenChange` to own the state — needed when something other than the trigger has to close the popover, such as applying a filter.
+
+<Demo data={controlledDemo} />
 
 ## API Reference
 

@@ -13,6 +13,7 @@ import {
   disabledDemo,
   composedDemo,
   formatDemo,
+  controlledDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -77,6 +78,12 @@ Number field with currency formatting, powered by `Intl.NumberFormat` internally
 `format` sets what to format (currency, decimals); `locale` sets how it's written. Pin `locale` when the output should be stable across different users. 
 
 <Demo data={formatDemo} />
+
+### Controlled
+
+Pass `value` with `onValueChange` to own the number — needed when the value feeds a calculation, a query, or another field.
+
+<Demo data={controlledDemo} />
 
 ## API Reference
 

@@ -11,6 +11,7 @@ import {
   calendarDemo,
   calendarBehaviorDemo,
   dateInfoDemo,
+  controlledDemo,
 } from "./demo.ts";
 
 <Demo data={preview} />
@@ -66,6 +67,12 @@ Selects a date range across two inputs. The grid uses a state machine that branc
 Single-date selection with a typable input. The popover opens on focus; pressing Enter, blurring, or clicking outside commits the value and fires `onSelect`.
 
 <Demo data={datePickerDemo} />
+
+### Controlled
+
+Pass `selected` with `onSelect` to own the date — needed when the value comes from a form or has to be set from elsewhere, like a Today button.
+
+<Demo data={controlledDemo} />
 
 ## API Reference
 

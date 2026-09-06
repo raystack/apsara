@@ -211,3 +211,25 @@ export const sizesDemo = {
     }
   ]
 };
+
+export const controlledDemo = {
+  type: 'code',
+  code: `
+function ControlledTabs() {
+  const [tab, setTab] = React.useState('overview');
+
+  return (
+    <Flex direction="column" gap={5} style={{ width: '100%' }}>
+      <Tabs value={tab} onValueChange={setTab}>
+        <Tabs.List>
+          <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+          <Tabs.Trigger value="usage">Usage</Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content value="overview">Overview panel</Tabs.Content>
+        <Tabs.Content value="usage">Usage panel</Tabs.Content>
+      </Tabs>
+      <Button size="small" onClick={() => setTab('usage')}>Go to Usage</Button>
+    </Flex>
+  );
+}`
+};
