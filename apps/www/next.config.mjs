@@ -37,6 +37,12 @@ const config = {
         destination: '/docs',
         permanent: true
       },
+      // The lucide migration page became a section of the Upgrading page.
+      {
+        source: '/docs/migrating-to-lucide-icons',
+        destination: '/docs/upgrading',
+        permanent: true
+      },
       // DataView moved out of Components into its own section.
       {
         source: '/docs/components/dataview',

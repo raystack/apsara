@@ -1,16 +1,22 @@
 ---
-title: Migrating to lucide icons
-description: What changes when Apsara replaces @radix-ui/react-icons with lucide, and how to keep the old appearance.
+title: Upgrading
+description: Breaking changes in each Apsara release, and the steps to move your app.
 ---
 
+One section per release, newest first, with only the changes that need action
+from you. The full record of every release — features and fixes included — is
+on [GitHub releases](https://github.com/raystack/apsara/releases).
+
+## 1.6 — lucide replaces the radix icons
+
 Apsara used to draw its icons with [`@radix-ui/react-icons`](https://www.radix-ui.com/icons).
-It now draws them with [lucide](https://lucide.dev), behind stable keys you can
-replace one at a time.
+Since 1.6 it draws them with [lucide](https://lucide.dev), behind stable keys
+you can replace one at a time.
 
-This is a breaking release: some icons look different, `lucide-react` is a new
-peer dependency, and the names `@raystack/apsara/icons` exports have changed.
+Some icons look different, `lucide-react` is a new peer dependency, and the
+names `@raystack/apsara/icons` exports have changed.
 
-## 1. Install the peer dependency
+### 1. Install the peer dependency
 
 ```bash
 npm install lucide-react
@@ -25,7 +31,7 @@ rather than pinning the whole library.
   imports from it, keep it in your own `dependencies`.
 </Callout>
 
-## 2. Rename what you imported from `@raystack/apsara/icons`
+### 2. Rename what you imported from `@raystack/apsara/icons`
 
 That path used to export raw in-house SVG components. It now exports the 31
 icons Apsara's components draw, as replaceable icon components. Twelve of the old
@@ -70,7 +76,7 @@ export const BellIcon = createIcon('BellIcon', Bell);
 
 See [Building your own icons](/docs/theme/icons#building-your-own-icons).
 
-## 3. Check the icons that changed shape
+### 3. Check the icons that changed shape
 
 These are inside Apsara's own components, so they change without you touching a
 call site. Everything else is the same glyph in a different drawing style.
@@ -96,7 +102,7 @@ Two more are worth a look, though the glyph is nearly the same:
 - `Search`'s clear button and `Toast`'s error status draw `CircleX` in place of
   radix `CrossCircledIcon`.
 
-## 4. Expect a 1px size change in some places
+### 4. Expect a 1px size change in some places
 
 Every Apsara icon renders at **16×16** with `strokeWidth={1.5}`, which draws the
 1px stroke of the design because lucide's viewBox is 24 units wide. The radix
@@ -115,7 +121,7 @@ To change the size or the stroke of every icon at once, use the `props` half of
 <Theme icons={{ props: { width: 20, height: 20, strokeWidth: 1.25 } }}>
 ```
 
-## 5. If you want the radix appearance back
+### 5. If you want the radix appearance back
 
 Apsara ships no radix preset, so register the radix icons yourself at `<Theme>`.
 Keep `@radix-ui/react-icons` in your own dependencies and copy this map:
@@ -196,7 +202,7 @@ Three keys are not in the map, because radix has no equivalent: `FilterIcon`,
 You do not have to take the whole map. A partial map changes only the keys it
 names.
 
-## 6. Register from a client component
+### 6. Register from a client component
 
 An override map is an object of functions, and a function cannot cross the
 boundary from a React Server Component to a Client Component. If your `<Theme>`
@@ -205,7 +211,35 @@ marked `'use client'`, as shown above.
 
 This applies to any runtime icon override.
 
-## Next
-
 See [Icons](/docs/theme/icons) for the full set, the override API, and what each
 key draws.
+
+## 1.0 — Base UI replaces Radix and Ariakit
+
+Apsara 1.0 rebuilds every component on [Base UI](https://base-ui.com) in place
+of Radix UI, Ariakit, sonner and cmdk. It is the largest migration Apsara has
+had, and it has a dedicated guide: the
+[v1 migration guide](https://github.com/raystack/apsara/blob/main/docs/V1-migration.md)
+walks through every component with before-and-after examples. The headlines:
+
+- **React 19 is required.** The peer range narrows from `^18 || ^19` to `^19`.
+- **`asChild` becomes `render`.** The Radix composition pattern is gone across
+  every trigger and primitive; children move onto the wrapper.
+- **Callbacks gain a second argument.** `onValueChange`, `onOpenChange` and
+  `onCheckedChange` now receive an `eventDetails` object after the value.
+- **Data attributes and CSS variables change.** `data-state="open"` becomes
+  `data-open`, and the `--radix-*` variables become Base UI names such as
+  `--anchor-width`. Custom CSS that targets Apsara internals needs updating.
+- **Form controls compose with `Field`.** `InputField` becomes `Input`, and
+  labels, descriptions and errors move to the new `Field` wrapper.
+- **Components are renamed.** `DropdownMenu` becomes `Menu` and `Sheet` becomes
+  `Drawer`, each with prop renames of its own.
+- **The pickers change contract.** `DatePicker` and `RangePicker` gain
+  `slotProps`, start unselected instead of defaulting to today, and require a
+  real `Date` (or `undefined`) as `value`.
+- **Layout scales go numeric.** `Flex` and `Grid` take `gap={1}` through
+  `gap={17}` in place of the named sizes, and `Headline` sizes become
+  `t1`–`t4`.
+
+If you are coming from 0.x, work through the full guide in order — the
+cross-cutting changes first, then your components one by one.
