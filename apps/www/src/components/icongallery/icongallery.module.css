@@ -26,7 +26,7 @@
   top: 50px;
   z-index: 1;
   padding: var(--rs-space-5) 0 var(--rs-space-3);
-  background-color: var(--rs-color-background-base-primary);
+  background-color: var(--docs-bg-shell);
 }
 
 .toolbar {
@@ -35,7 +35,7 @@
   align-items: center;
   gap: var(--rs-space-3);
   padding: var(--rs-space-3);
-  background-color: var(--rs-color-background-base-secondary);
+  background-color: var(--docs-bg-shell);
   border: 1px solid var(--rs-color-border-base-primary);
   border-radius: 14px;
 }
@@ -49,7 +49,7 @@
   align-items: center;
   height: 40px;
   padding: 0 var(--rs-space-4);
-  background-color: var(--rs-color-background-base-primary);
+  background-color: var(--docs-bg-surface);
   border: 1px solid var(--rs-color-border-base-primary);
   border-radius: 10px;
 }

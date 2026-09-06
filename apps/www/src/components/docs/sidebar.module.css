@@ -1,9 +1,13 @@
 .sidebar {
   padding: 0;
   border-right-width: 0.5px !important;
+  /* The component grounds itself on primary; in the docs that is the color
+     of a surface, not of the page. */
+  background: var(--docs-bg-shell);
 }
 .header {
   height: 50px;
+  background: var(--docs-bg-shell);
   padding: 0 var(--rs-space-5);
   border-radius: 0;
   margin-bottom: 0;
@@ -23,6 +27,34 @@
 }
 .itemText {
   overflow: visible;
+}
+/* Plain links: primary text in every state, no grounds — weight alone marks
+   hover and the current page. */
+.main .item {
+  color: var(--rs-color-foreground-base-primary);
+}
+.main .item:hover,
+.main .item:active:not([data-disabled="true"]),
+.main .item[data-active="true"] {
+  background: transparent;
+}
+/* The component's text span sets its own medium weight and primary color;
+   undo both so the span follows the states set on the link above. */
+.main .item .itemText {
+  font-weight: var(--rs-font-weight-regular);
+  color: inherit;
+}
+.main .item:hover .itemText,
+.main .item:focus-visible .itemText,
+.main .item[data-active="true"] .itemText {
+  font-weight: var(--rs-font-weight-medium);
+}
+/* The component marks keyboard focus with a background; with grounds gone,
+   a ring carries it instead. */
+.main .item:focus-visible {
+  background: transparent;
+  outline: var(--rs-focus-ring);
+  outline-offset: -1px;
 }
 .indicator {
   width: 5px;

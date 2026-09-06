@@ -91,6 +91,7 @@ function SidebarItem({ item, pathname }: { item: Item; pathname: string }) {
       render={<Link href={item.url} />}
       active={isActiveUrl(item.url, pathname, false)}
       classNames={{
+        root: styles.item,
         text: styles.itemText
       }}
     >
