@@ -1,6 +1,6 @@
 ---
 title: Reasoning
-description: Collapsible "thinking" section for AI responses — auto-opens while streaming, auto-collapses on completion, with labelled steps.
+description: Collapsible "thinking" section for AI responses. Auto-opens while streaming, auto-collapses on completion, with labelled steps.
 source: packages/raystack/components/reasoning
 tag: new
 ---
@@ -27,7 +27,7 @@ import { Reasoning } from '@raystack/apsara'
 ```
 
 Built on `Collapsible`. Drive `streaming` from your transport; everything
-here is presentational and works anywhere — inside a
+here is presentational and works anywhere, whether inside a
 [Message](/docs/ai-elements/message) body, a `Chat` scroller, or on its own.
 
 ## Usage
@@ -49,7 +49,7 @@ Replace the default trigger text when "Reasoning" is not the right word for what
 
 ### Controlled
 
-Pass `open` with `onOpenChange` to own the panel — needed when reasoning should expand automatically while the model streams and collapse once it finishes.
+Pass `open` with `onOpenChange` to own the panel. Do this when reasoning should expand automatically while the model streams and collapse once it finishes.
 
 <Demo data={controlledDemo} />
 
@@ -62,7 +62,7 @@ The trigger toggles the content. `Step` renders a single line of thinking.
 <auto-type-table path="./props.ts" name="ReasoningProps" />
 
 The open state auto-follows `streaming` (open while `true`, collapsed once it
-flips back) until the user toggles the panel manually — from then on it's
+flips back) until the user toggles the panel manually. From then on it's
 theirs.
 
 ### Reasoning.Trigger

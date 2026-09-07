@@ -84,7 +84,7 @@ Use `useToastManager()` inside a component to dispatch toasts and/or read the re
 
 ## API Reference
 
-The provider that renders toasts, and the manager APIs that add them — from a module, or from inside a component.
+The provider that renders toasts, and the manager APIs that add them, from a module or from inside a component.
 
 ### Toast.Provider
 
@@ -94,7 +94,7 @@ Renders the toast viewport and manages the toast lifecycle. Place once at the ro
 
 ### toastManager.add(options)
 
-Creates a new toast and returns its unique ID. The `toastManager` can be imported and used anywhere — including outside React components (e.g., API interceptors, utility functions).
+Creates a new toast and returns its unique ID. The `toastManager` can be imported and used anywhere, including outside React components (e.g., API interceptors, utility functions).
 
 <auto-type-table path="./props.ts" name="ToastManagerAddOptions" />
 
@@ -118,7 +118,7 @@ The returned object exposes the four manager methods:
 
 #### Update options
 
-The `update(id, options)` method accepts a partial of the toast — every field optional, used to patch an existing toast in place.
+The `update(id, options)` method accepts a partial of the toast, with every field optional, used to patch an existing toast in place.
 
 <auto-type-table path="./props.ts" name="ToastManagerUpdateOptions" />
 

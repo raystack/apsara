@@ -1,6 +1,6 @@
 ---
 title: Chat
-description: The conversation scroller — live-edge following, turn anchoring, prepend preservation and visibility tracking, plus separators and attachments.
+description: The conversation scroller. Live-edge following, turn anchoring, prepend preservation and visibility tracking, plus separators and attachments.
 source: packages/raystack/components/chat
 tag: new
 ---
@@ -49,7 +49,7 @@ import { Chat, Message, PromptInput, Reasoning } from '@raystack/apsara'
 elements/message) and [Reasoning](/docs/ai-elements/reasoning), composed as
 children.
 
-`Chat.Item` is the bridge — a neutral wrapper that registers whatever it wraps
+`Chat.Item` is the bridge, a neutral wrapper that registers whatever it wraps
 with the scroller, whether that is a message, a separator, or a tool-call
 card.
 
@@ -101,7 +101,7 @@ Imperative commands are available through `actionsRef`:
 The per-item behavior unit. It registers its element with the enclosing
 `Chat.Messages` for visibility tracking and `scrollToMessage`, marks the turn
 anchor, and applies `content-visibility: auto` containment so offscreen items
-skip layout and paint. It wraps anything — it has no opinion about what a
+skip layout and paint. It wraps anything and has no opinion about what a
 message looks like.
 
 <auto-type-table path="./props.ts" name="ChatItemProps" />
@@ -123,14 +123,14 @@ messages viewport and pads the sides and bottom.
 
 ### useChatMessages
 
-Hook for components rendered inside `Chat.Messages` — active-turn indicators,
+Hook for components rendered inside `Chat.Messages`: active-turn indicators,
 jump-to-message navigation, custom scroll buttons.
 
 <auto-type-table path="./props.ts" name="UseChatMessagesReturn" />
 
 ### Chat.Separator
 
-A centered label between hairlines — "Today 1:52 AM". Purely presentational;
+A centered label between hairlines, such as "Today 1:52 AM". Purely presentational;
 format dates however your app does.
 
 ### Chat.Attachment

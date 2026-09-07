@@ -13,7 +13,7 @@ export interface ChatAttachmentProps
   extends Omit<ComponentProps<'div'>, 'title'> {
   /** File name or main label. */
   title?: ReactNode;
-  /** Secondary line — file size, type, or the error message. */
+  /** Secondary line: file size, type, or the error message. */
   description?: ReactNode;
   /**
    * Content of the leading media square. Defaults to a file icon, or a

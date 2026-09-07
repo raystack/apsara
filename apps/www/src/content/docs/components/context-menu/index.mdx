@@ -70,7 +70,7 @@ Pass `autocomplete` to the ContextMenu root. Each menu manages its own autocompl
 
 ### Controlled
 
-Pass `open` with `onOpenChange` to own the state — needed when the menu has to close on something other than a selection, or when only one menu may be open at a time.
+Pass `open` with `onOpenChange` to own the state. Do this when the menu has to close on something other than a selection, or when only one menu may be open at a time.
 
 <Demo data={controlledDemo} />
 
@@ -181,6 +181,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
   ArrowRight/ArrowLeft open and close submenus.
 - With `autocomplete`, the popup becomes a `role="dialog"` containing a search
   input, items render as `role="option"`, and focus stays in the input while
-  arrow keys move the highlight — Escape first closes an open submenu.
+  arrow keys move the highlight, and Escape first closes an open submenu.
 - `ContextMenu.Label` must be wrapped in `ContextMenu.Group` so the group is
   labelled via `aria-labelledby`.

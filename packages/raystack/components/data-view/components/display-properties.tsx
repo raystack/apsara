@@ -9,7 +9,7 @@ import { useDataView } from '../hooks/useDataView';
 /**
  * Reads visibility from context's single global `columnVisibility` map (RFC §
  * "Unified Column Visibility via DisplayAccess"). Renderers honour the same
- * state — columnar via TanStack column hides, free-form via `DisplayAccess`.
+ * state: columnar via TanStack column hides, free-form via `DisplayAccess`.
  */
 export function DisplayProperties<TData>({
   fields

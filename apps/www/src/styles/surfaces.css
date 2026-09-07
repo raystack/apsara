@@ -1,5 +1,5 @@
 /*
-  Docs surfaces — local to apps/www, like the typeset. Never imported by the
+  Docs surfaces, local to apps/www, like the typeset. Never imported by the
   package.
 
   The docs page is three grounds nested inside one another. Naming them here
@@ -8,8 +8,8 @@
 
     outside   the space past the shell's outer rules, on a display wide
               enough for the width cap to bite
-    shell     the page itself — sidebar, article, contents rail, page nav
-    surface   the things that sit on the page — demos, code blocks, tables
+    shell     the page itself: sidebar, article, contents rail, page nav
+    surface   the things that sit on the page: demos, code blocks, tables
 
   `outside` and `shell` resolve to the same color today. They are separate
   tokens because they are separate jobs, and splitting them later is a one-line
@@ -26,7 +26,7 @@
   --docs-bg-shell: var(--rs-color-background-base-secondary);
   --docs-bg-surface: var(--rs-color-background-base-primary);
 
-  /* A band inside a surface — the head of a table. One step back from the
+  /* A band inside a surface, such as the head of a table. One step back from the
      surface it sits on, which lands it on the same color as the shell. */
   --docs-bg-surface-header: var(--rs-color-background-base-secondary);
 

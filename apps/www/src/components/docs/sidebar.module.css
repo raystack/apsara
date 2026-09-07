@@ -28,7 +28,7 @@
 .itemText {
   overflow: visible;
 }
-/* Plain links: primary text in every state, no grounds — weight alone marks
+/* Plain links: primary text in every state, no grounds. Weight alone marks
    hover and the current page. */
 .main .item {
   color: var(--rs-color-foreground-base-primary);

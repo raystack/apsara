@@ -202,7 +202,7 @@
  * Gradient + outline (no high contrast): keep the gradient fill and add a
  * translucent border tinted to the gradient's warm endpoint. Intended behavior.
  * The border is a one-off literal (no token) because the gradient itself is
- * untokenized — keep the two in sync if the gradient stops ever change.
+ * untokenized, so keep the two in sync if the gradient stops ever change.
  */
 .callout-outline.callout-gradient {
   background: radial-gradient(
@@ -217,7 +217,7 @@
 /*
  * High contrast gradient should match normal high contrast.
  * Figma defines only one gradient variant (no outline/high-contrast states), so
- * in high contrast — both on its own and combined with outline — we intentionally
+ * in high contrast, both on its own and combined with outline, we intentionally
  * drop the gradient for the solid "normal" high-contrast surface. A gradient
  * callout in high-contrast mode therefore reads identically to a normal one.
  */

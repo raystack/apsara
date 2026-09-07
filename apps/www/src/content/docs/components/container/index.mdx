@@ -34,7 +34,7 @@ The `size` prop caps the container's max-width. The default is `none`, which let
 
 ### Align
 
-The `align` prop positions the container within its parent — left, center, or right. Default is `center`.
+The `align` prop positions the container within its parent: left, center, or right. Default is `center`.
 
 <Demo data={alignDemo} />
 
@@ -58,6 +58,6 @@ The Container component is designed with accessibility in mind:
 
 - Applies `role="region"` automatically when an `aria-label` or
   `aria-labelledby` is provided, exposing the container as a landmark.
-- Without a label, no role is applied — Container stays a generic `<div>`
+- Without a label, no role is applied, and Container stays a generic `<div>`
   to avoid emitting unlabeled regions that clutter assistive-tech output.
 - Pass `role` explicitly to override (e.g. `role="main"`).

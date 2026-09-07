@@ -4,7 +4,7 @@
 
 import figma from 'figma';
 
-// State is a VARIANT — Disabled maps to the `disabled` prop; Hover is
+// State is a VARIANT. Disabled maps to the `disabled` prop; Hover is
 // visual-only and intentionally unmapped (renderProp omits undefined).
 const disabled = figma.selectedInstance.getEnum('State', {
   Disabled: true

@@ -18,9 +18,9 @@ const trailingIcon = instance.getBoolean('Trailing Icon', {
   false: undefined
 });
 
-// Label BOOLEAN — the code `label` prop is required; render placeholder text.
+// Label BOOLEAN. The code `label` prop is required; render placeholder text.
 // State (Default/Hover) and Type (Expanded/Collapsed) are visual / parent-driven
-// — no matching Sidebar.Group props, intentionally not mapped.
+// No matching Sidebar.Group props, so intentionally not mapped.
 
 export default {
   id: 'Sidebar.Group',

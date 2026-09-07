@@ -80,7 +80,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 
 The Link component follows accessibility best practices:
 
-- Renders a native `<a>` by default — no explicit `role="link"` is set
+- Renders a native `<a>` by default, and no explicit `role="link"` is set
   because the native element already provides it. If you swap the element
   via `render` to something non-anchor (e.g. `<button>`), it will be
   announced according to that element's own semantics.

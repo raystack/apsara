@@ -15,7 +15,7 @@ import { playground, basicDemo,
 
 ## Overview
 
-`Flex` is the workhorse layout primitive: a `div` with `display: flex` and props for `direction`, `align`, `justify`, `wrap`, and `gap`, so you rarely write flexbox CSS by hand. By default it lays children out in a row (`direction="row"`, `align="stretch"`, `justify="start"`, `wrap="noWrap"`). Reach for it whenever you're stacking or spacing things along one axis — toolbars, form rows, sidebars. For two-dimensional layouts use [Grid](/docs/components/grid), and for a page-width wrapper use [Container](/docs/components/container).
+`Flex` is the workhorse layout primitive: a `div` with `display: flex` and props for `direction`, `align`, `justify`, `wrap`, and `gap`, so you rarely write flexbox CSS by hand. By default it lays children out in a row (`direction="row"`, `align="stretch"`, `justify="start"`, `wrap="noWrap"`). Reach for it whenever you're stacking or spacing things along one axis: toolbars, form rows, sidebars. For two-dimensional layouts use [Grid](/docs/components/grid), and for a page-width wrapper use [Container](/docs/components/container).
 
 ## Anatomy
 
@@ -33,7 +33,7 @@ import { Flex } from "@raystack/apsara";
 
 ### Nesting
 
-Nest Flex containers to compose a layout: here an outer row — the default direction — holds two columns, each spaced with `gap`.
+Nest Flex containers to compose a layout: here an outer row, the default direction, holds two columns, each spaced with `gap`.
 
 <Demo data={basicDemo} />
 
@@ -51,7 +51,7 @@ Nest Flex containers to compose a layout: here an outer row — the default dire
 
 ### Align
 
-`align` positions children on the cross axis. `center` is what pulls a row of mixed heights — an icon, a label, a button — onto one optical line. `baseline` aligns their text instead.
+`align` positions children on the cross axis. `center` is what pulls a row of mixed heights, such as an icon, a label and a button, onto one optical line. `baseline` aligns their text instead.
 
 <Demo data={alignDemo} />
 
@@ -77,7 +77,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 
 ## Accessibility
 
-- Renders a plain `<div>` and adds no roles or ARIA attributes — purely
+- Renders a plain `<div>` and adds no roles or ARIA attributes, and is purely
   visual layout with no semantic meaning.
 - Screen readers read children in DOM order, so `rowReverse` and
   `columnReverse` change only the visual order. Don't rely on them to

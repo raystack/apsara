@@ -1,6 +1,6 @@
 ---
 title: Grid
-description: A layout primitive for CSS grid — define columns, rows, template areas, and gaps with props instead of stylesheet rules.
+description: A layout primitive for CSS grid. Define columns, rows, template areas, and gaps with props instead of stylesheet rules.
 source: packages/raystack/components/grid
 ---
 
@@ -17,7 +17,7 @@ import { playground,  basicDemo,
 
 `Grid` is a `div` with `display: grid`, exposing CSS grid through props: `columns` and `rows` (a number becomes `repeat(n, 1fr)`, a string passes through as-is), `templateAreas`, `autoFlow`, `gap`/`columnGap`/`rowGap`, and the alignment props.
 
-Reach for it when a layout runs in two dimensions at once — dashboards, card grids, page shells with named areas. For a single row or column, [Flex](/docs/components/flex) is the simpler tool.
+Reach for it when a layout runs in two dimensions at once: dashboards, card grids, page shells with named areas. For a single row or column, [Flex](/docs/components/flex) is the simpler tool.
 
 Children can be any elements. Wrap one in `Grid.Item` only when it needs its own placement or styling.
 
@@ -36,11 +36,11 @@ import { Grid } from "@raystack/apsara";
 
 ## Usage
 
-Define the tracks on the root, then place children into them — by span, by named area, or by letting the grid flow them automatically.
+Define the tracks on the root, then place children into them: by span, by named area, or by letting the grid flow them automatically.
 
 ### Basic usage
 
-A 2×2 grid defined with numeric `rows` and `columns`. Plain children and `Grid.Item` wrappers mix freely — both flow into cells in order.
+A 2×2 grid defined with numeric `rows` and `columns`. Plain children and `Grid.Item` wrappers mix freely, and both flow into cells in order.
 
 Reach for Grid when the layout is two-dimensional: rows *and* columns that have to line up with each other. For a single row or column, [Flex](/docs/components/flex) is simpler and needs no track definitions.
 
@@ -54,7 +54,7 @@ Reach for Grid when the layout is two-dimensional: rows *and* columns that have 
 
 ### Template areas
 
-`templateAreas` names regions and `area` places an item into one. Worth it when the layout has more than three or four regions — the names document the intent, and moving a region means editing one string rather than every child.
+`templateAreas` names regions and `area` places an item into one. Worth it when the layout has more than three or four regions, since the names document the intent, and moving a region means editing one string rather than every child.
 
 <Demo data={areasDemo} />
 
@@ -97,7 +97,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 
 ## Accessibility
 
-- Renders a plain `<div>` and adds no roles or ARIA attributes — CSS grid
+- Renders a plain `<div>` and adds no roles or ARIA attributes, so CSS grid
   is purely visual layout.
 - Screen readers read children in DOM order. Explicit placement,
   `templateAreas`, and `dense` auto-flow can make the visual order differ

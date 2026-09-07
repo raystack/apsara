@@ -18,7 +18,7 @@ import styles from './icongallery.module.css';
 // the size, stroke and colour controls apply to all of them.
 //
 // The grid itself is plain elements: the icons are what the page documents, so
-// their surroundings should not compete with them. The toolbar does use Apsara —
+// their surroundings should not compete with them. The toolbar does use Apsara,
 // the colour popover is our ColorPicker, and the names come from our Tooltip.
 
 type IconEntry = {
@@ -151,7 +151,7 @@ export function IconGallery() {
           <Popover>
             <Popover.Trigger className={styles.color}>
               {/* Unset falls back to `currentColor` in CSS, which is what the
-                  icons themselves inherit — so the swatch stays honest. */}
+                  icons themselves inherit, so the swatch stays honest. */}
               <span
                 className={styles.swatch}
                 style={color ? { background: color } : undefined}
@@ -184,7 +184,7 @@ export function IconGallery() {
             aria-label='Reset to the Apsara defaults'
           >
             {/* lucide direct, because a reset arrow is not a key the set
-                publishes — so it needs the size and stroke Apsara's icons get
+                publishes, so it needs the size and stroke Apsara's icons get
                 for free. */}
             <RotateCcw size={16} strokeWidth={1.5} />
           </button>

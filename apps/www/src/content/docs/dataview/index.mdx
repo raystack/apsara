@@ -1,6 +1,6 @@
 ---
 title: DataView
-description: A unified data primitive whose query state drives swappable renderers. List, timeline, custom — one filter/sort/group/search model.
+description: A unified data primitive whose query state drives swappable renderers. List, timeline, custom, all on one filter/sort/group/search model.
 source: packages/raystack/components/data-view
 ---
 
@@ -17,14 +17,14 @@ import {
 
 ## Overview
 
-`DataView` owns the data layer — query state (filters, sort, group, search), client or server mode, and row model derivation. It doesn't draw anything itself. You pick the renderer that does, and the same `<DataView>` can host a table, a list, or a free-form view, switchable at runtime without losing query state.
+`DataView` owns the data layer: query state (filters, sort, group, search), client or server mode, and row model derivation. It doesn't draw anything itself. You pick the renderer that does, and the same `<DataView>` can host a table, a list, or a free-form view, switchable at runtime without losing query state.
 
 This page covers what every renderer shares. The renderers have their own pages:
 
-- **[List](/docs/dataview/list)** — table and list presentations.
-- **[Timeline](/docs/dataview/timeline)** — cards on a continuous time axis.
+- **[List](/docs/dataview/list)**: table and list presentations.
+- **[Timeline](/docs/dataview/timeline)**: cards on a continuous time axis.
 
-`DataView.Custom` is the escape hatch for everything else — cards, kanban, gallery — and is covered below.
+`DataView.Custom` is the escape hatch for everything else, such as cards, kanban and gallery, and is covered below.
 
 ## Anatomy
 
@@ -61,7 +61,7 @@ Everything on this page applies to every renderer. Read it in order: fields and 
 
 ### Fields and columns
 
-`fields` is renderer-agnostic metadata declared **once on the root** — filter capability, sort capability, group capability, visibility, group-header presentation. Cell and header renderers live on the **renderer's** column spec instead, such as `DataView.List`'s `columns`.
+`fields` is renderer-agnostic metadata declared **once on the root**: filter capability, sort capability, group capability, visibility, and group-header presentation. Cell and header renderers live on the **renderer's** column spec instead, such as `DataView.List`'s `columns`.
 
 ```ts
 const fields: DataViewField<Person>[] = [
@@ -81,7 +81,7 @@ The split is what lets one set of filters, sorts, and toggles drive every render
 
 ### Search
 
-`DataView.Search` writes the input to `query.search`, which feeds TanStack's `globalFilter` — rows are filtered across every field as the user types. Drop it into the toolbar wherever you want it; in client mode no extra wiring is needed. Type a name, email, or team below to filter the rows.
+`DataView.Search` writes the input to `query.search`, which feeds TanStack's `globalFilter`, so rows are filtered across every field as the user types. Drop it into the toolbar wherever you want it; in client mode no extra wiring is needed. Type a name, email, or team below to filter the rows.
 
 <Demo data={searchPreview} />
 
@@ -89,7 +89,7 @@ By default search auto-disables in the zero state (no data and no active query) 
 
 ### Display properties
 
-Column visibility is a **single global map** on context. `DataView.List` honours it for free — TanStack column visibility hides the grid track. For free-form renderers, wrap fields in `DataView.DisplayAccess`:
+Column visibility is a **single global map** on context. `DataView.List` honours it for free, since TanStack column visibility hides the grid track. For free-form renderers, wrap fields in `DataView.DisplayAccess`:
 
 ```tsx
 <DataView.DisplayAccess accessorKey="email">
@@ -103,8 +103,8 @@ Column visibility is a **single global map** on context. `DataView.List` honours
 
 Empty and zero are computed once on context (`isEmptyState`, `isZeroState`) and exposed as sibling components.
 
-- **Zero state** — no data, no active query. The first-use surface. The toolbar is hidden automatically.
-- **Empty state** — no rows visible because filters, search, or sort exclude them all. The toolbar stays visible so the user can correct it.
+- **Zero state**: no data, no active query. The first-use surface. The toolbar is hidden automatically.
+- **Empty state**: no rows visible because filters, search, or sort exclude them all. The toolbar stays visible so the user can correct it.
 
 ```tsx
 <DataView.EmptyState>
@@ -116,7 +116,7 @@ Empty and zero are computed once on context (`isEmptyState`, `isZeroState`) and 
 <DataView.ClearFilters />
 ```
 
-Renderers return `null` when `!hasData` — the siblings render the messaging.
+Renderers return `null` when `!hasData`, and the siblings render the messaging.
 
 <Demo data={emptyZeroPreview} />
 
@@ -136,13 +136,13 @@ When rows are hidden by filters, `DataView.List` automatically renders a flat fo
 
 ### Multi-view
 
-Pass `views` and give each renderer a `name`. `DataView.DisplayControls` hosts the view switcher at the top of its popover automatically — give each view an optional `leadingIcon` to show alongside its label. Query state (filters, sort, search, visibility) persists across switches.
+Pass `views` and give each renderer a `name`. `DataView.DisplayControls` hosts the view switcher at the top of its popover automatically. Give each view an optional `leadingIcon` to show alongside its label. Query state (filters, sort, search, visibility) persists across switches.
 
 <Demo data={multiViewPreview} />
 
 ### Per-view fields
 
-Each renderer accepts an optional `fields` prop. It **fully replaces** the root `fields` for that view's active session — filter chips, sort menu, and Display Properties reflect the override while the view is active. The common pattern is to spread the root fields and tweak the few that differ.
+Each renderer accepts an optional `fields` prop. It **fully replaces** the root `fields` for that view's active session, so filter chips, sort menu, and Display Properties reflect the override while the view is active. The common pattern is to spread the root fields and tweak the few that differ.
 
 <Demo data={perViewFieldsPreview} />
 
@@ -178,13 +178,13 @@ In client mode `DataView` derives everything locally: filter predicates, sort, g
 </DataView>
 ```
 
-- **`onTableQueryChange`** hands you the full [query object](#query) whenever any part of it changes — a filter chip, a sort, a grouping choice, a keystroke in search. Translate it to your API's parameters and refetch.
+- **`onTableQueryChange`** hands you the full [query object](#query) whenever any part of it changes: a filter chip, a sort, a grouping choice, a keystroke in search. Translate it to your API's parameters and refetch.
 - **`totalRowCount`** is what the "hidden by filters" footer counts against. Without it the footer can't tell how many rows your filters excluded, since the client only ever sees the current page.
 - **Grouping** still comes from the root's `groupData`, so section order, labels, and counts match across renderers.
 
 Sorting is the one place a silent mismatch is possible. Rows render in whatever order your backend returned them, so a backend that ignores the `sort` it was handed produces a correctly filtered view in an arbitrary order, with nothing logged to say so.
 
-Grouping stays `group_by: string[]` on the wire in both modes. To group by something that isn't a raw accessor — "by week of `created_at`", "by first letter" — supply a resolver on the root. The resolved key is what lands in `query.group_by`, so your backend receives a stable string it can switch on, and the same code works unchanged in client mode.
+Grouping stays `group_by: string[]` on the wire in both modes. To group by something that isn't a raw accessor, such as "by week of `created_at`" or "by first letter", supply a resolver on the root. The resolved key is what lands in `query.group_by`, so your backend receives a stable string it can switch on, and the same code works unchanged in client mode.
 
 ```tsx
 <DataView
