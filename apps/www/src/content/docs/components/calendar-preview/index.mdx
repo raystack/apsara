@@ -13,6 +13,8 @@ import {
   dateInfoDemo,
   pickerDemo,
   rangeDemo,
+  scaleDemo,
+  scalePairDemo,
 } from "./demo.ts";
 
 <Demo data={preview} />
@@ -102,6 +104,26 @@ The portaled popover surface. Takes `Popover.Content` props — `side`, `align`,
 
 <auto-type-table path="./props.ts" name="CalendarPreviewInputProps" />
 
+### CalendarPreview.Body
+
+The popup body: label, input, scale switcher and the view for the active scale. Renders all four when given no children. Takes `render`, `className` and `ref`.
+
+### CalendarPreview.Scales / CalendarPreview.Scale
+
+The scale switcher, built on Apsara `Tabs`. **Renders nothing when only one scale is offered**, so a plain day calendar never grows a one-tab row. `.Scale` is only needed to relabel or reorder.
+
+### CalendarPreview.Panel
+
+The view container. Mounts all five views; each gates on the active scale itself, so `.Quarters` can be mounted alone with no day grid in the tree.
+
+### CalendarPreview.Months / .Quarters / .HalfYears / .Years
+
+Year-grouped period lists at 3, 4, 2 and 1 columns. Each is one continuous 320px scroll area with the year numbers as headings inside it, opening on the active year.
+
+### CalendarPreview.Label / CalendarPreview.Separator
+
+The field label above the input, and the rule between the switcher and the view.
+
 ### CalendarPreview.Footer
 
 The row below the calendar. A bare string is wrapped in `Text`; anything else renders as given.
@@ -151,6 +173,16 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `calendar-preview-day-number` | The day number inside a day button |
 | `calendar-preview-day-info` | Content above the number (when `dateInfo` resolves) |
 | `calendar-preview-day-tooltip` | The tooltip shown on hover |
+| `calendar-preview-body` | The popup body |
+| `calendar-preview-label` | The field label |
+| `calendar-preview-scales` | The scale switcher |
+| `calendar-preview-scale` | One scale chip |
+| `calendar-preview-separator` | The rule below the switcher |
+| `calendar-preview-panel` | The view container |
+| `calendar-preview-months` / `-quarters` / `-half-years` / `-years` | One period list |
+| `calendar-preview-period-group` | One year's block inside a period list |
+| `calendar-preview-period-year` | The year heading |
+| `calendar-preview-period` | One period cell |
 | `calendar-preview-footer` | The footer row |
 | `calendar-preview-footer-text` | The `Text` wrapping a string footer |
 
@@ -256,6 +288,60 @@ Completing asks the popover to close through `onOpenChange`, so a consumer holdi
 Instead of a `lock` prop, mark one endpoint's `.Input` as `readOnly` — the grid will not rewrite it. **A read-only endpoint with no value makes the range unsatisfiable:** the free endpoint sets, the range never completes, and nothing emits. Give a read-only endpoint a value.
 
 <Demo data={rangeDemo} />
+
+### Scale-aware selection
+
+Pass `scales` to select at granularities coarser than a day. A single value hides the switcher; anything more shows it.
+
+```tsx
+<CalendarPreview scales={['day', 'month', 'quarter', 'halfYear', 'year']}>
+  <CalendarPreview.Trigger placeholder="Add start date" />
+  <CalendarPreview.Content>
+    <CalendarPreview.Body />
+  </CalendarPreview.Content>
+</CalendarPreview>
+```
+
+<Demo data={scaleDemo} />
+
+#### The value carries its scale
+
+A `Date` cannot say whether it means "August 2026" or "1 August 2026", so beyond day scale the value is a `ScaleValue`:
+
+```ts
+interface ScaleValue { date: 'YYYY-MM-DD'; scale: Scale }
+```
+
+| `scales` | `value` |
+|---|---|
+| omitted, or `'day'` | `Date` — unchanged |
+| any other scale, or any array | `ScaleValue` |
+
+`date` is stored as `YYYY-MM-DD` because lexicographic order is chronological order, which is what lets bounds compare without parsing. **It is never what you see** — every trigger, input and annotation renders through `formatValue`, which is `DD MMM YYYY` at day scale and the period's own shorthand above it. `onValueChange`'s details carry `toDate()` if you want a `Date`.
+
+#### Switching scale drafts, it does not emit
+
+Moving between scales moves the view and sets a draft. Nothing is emitted until a cell is clicked or Enter is pressed; Escape drops the draft and restores the input from `value`.
+
+#### trailingValue picks the edge
+
+A period has two edges, and which one a field means depends on the field. `trailingValue` emits the period's **last** day rather than its first — "July 2026" becomes `2026-07-31` instead of `2026-07-01`. It changes the value, not the formatting, and it is month-end correct: February 2028 trailing is `2028-02-29`.
+
+That also decides availability, which tests **the date a period would produce**. Bounded at 15 July 2026:
+
+| Period | A start field emits | An end field emits | Start | End |
+|---|---|---|---|---|
+| H1 2026 | 1 Jan | 30 Jun | disabled | disabled |
+| July 2026 | 1 Jul | 31 Jul | disabled | available |
+| Q3 2026 | 1 Jul | 30 Sep | disabled | available |
+
+Every one of those periods starts before the bound. Only the produced date separates them.
+
+#### A start/end pair is two roots
+
+Not `selection="range"`. Each end has its own `scales` and `trailingValue`, and they can hold different scales — "1 Aug 2026 → Q3 2026" is not expressible as one range value. The consumer owns the pair and any `from <= to` check.
+
+<Demo data={scalePairDemo} />
 
 ## Accessibility
 

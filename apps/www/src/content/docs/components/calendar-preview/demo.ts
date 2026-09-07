@@ -409,3 +409,92 @@ export const rangeDemo = {
     }
   ]
 };
+
+export const scaleDemo = {
+  type: 'code',
+  tabs: [
+    {
+      name: 'Inline',
+      code: `<CalendarPreview
+              scales={['day', 'month', 'quarter', 'halfYear', 'year']}
+              defaultMonth={new Date(2026, 7, 1)}
+              defaultScale="quarter"
+            >
+              <CalendarPreview.Body />
+            </CalendarPreview>`
+    },
+    {
+      name: 'Day scale',
+      code: `<CalendarPreview
+              scales={['day', 'month', 'quarter', 'halfYear', 'year']}
+              defaultMonth={new Date(2026, 7, 1)}
+            >
+              <CalendarPreview.Body />
+            </CalendarPreview>`
+    },
+    {
+      name: 'In a popover',
+      code: `<CalendarPreview
+              scales={['day', 'month', 'quarter', 'halfYear', 'year']}
+              defaultMonth={new Date(2026, 7, 1)}
+            >
+              <CalendarPreview.Trigger placeholder="Add start date" />
+              <CalendarPreview.Content>
+                <CalendarPreview.Body />
+              </CalendarPreview.Content>
+            </CalendarPreview>`
+    },
+    {
+      name: 'Periods only',
+      code: `<CalendarPreview scales={['month', 'quarter', 'year']} defaultScale="month">
+              <CalendarPreview.Body />
+            </CalendarPreview>`
+    },
+    {
+      name: 'One view alone',
+      code: `<CalendarPreview scales="quarter" defaultMonth={new Date(2026, 7, 1)}>
+              <CalendarPreview.Quarters />
+            </CalendarPreview>`
+    },
+    {
+      name: 'Bounded',
+      code: `<CalendarPreview
+              scales={['month', 'quarter', 'halfYear']}
+              defaultScale="quarter"
+              trailingValue
+              minDate={new Date(2026, 6, 15)}
+            >
+              <CalendarPreview.Body />
+            </CalendarPreview>`
+    }
+  ]
+};
+
+export const scalePairDemo = {
+  type: 'code',
+  code: `<Flex align="center" gap={3}>
+      <CalendarPreview
+        scales={['day', 'month', 'quarter', 'halfYear', 'year']}
+        defaultValue={{ date: '2026-08-01', scale: 'day' }}
+      >
+        <CalendarPreview.Trigger placeholder="Add start date" />
+        <CalendarPreview.Content>
+          <CalendarPreview.Body />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+
+      <Text size="small" variant="secondary">→</Text>
+
+      <CalendarPreview
+        scales={['day', 'month', 'quarter', 'halfYear', 'year']}
+        trailingValue
+        minDate={new Date(2026, 7, 1)}
+        defaultValue={{ date: '2026-09-30', scale: 'quarter' }}
+      >
+        <CalendarPreview.Trigger placeholder="Add end date" />
+        <CalendarPreview.Content>
+          <CalendarPreview.Body />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    </Flex>`
+};
