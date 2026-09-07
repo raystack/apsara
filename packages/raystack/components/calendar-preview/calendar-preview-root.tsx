@@ -452,15 +452,19 @@ export function CalendarPreviewRoot({
      what the user is looking at, so the input and the views read it. */
   const switchScale = useCallback(
     (next: Scale) => {
+      /* Falls back to the month on screen, not to today: a consumer opening on
+         2030, or a user who navigated there, must not be thrown back to this
+         year by switching scale. `month` already resolves to today when
+         nothing else set it. */
       const anchor = scaleValue ?? {
-        date: dayKey(today, timeZone),
+        date: dayKey(month, timeZone),
         scale
       };
       setScaleDraft(convertScale(anchor, next, trailingValue));
       setMonth(parseKey(convertScale(anchor, next, false).date));
       setScale(next);
     },
-    [scaleValue, today, timeZone, scale, trailingValue, setMonth, setScale]
+    [scaleValue, month, timeZone, scale, trailingValue, setMonth, setScale]
   );
 
   const selectPeriod = useCallback(

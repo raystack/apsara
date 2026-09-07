@@ -327,3 +327,64 @@ describe('CalendarPreview change details at scale', () => {
     });
   });
 });
+
+describe('CalendarPreview scale anchors on the visible month', () => {
+  /* The day grid is showing 2030; switching scale must land there, not on
+     whatever year today happens to be. */
+  it('drafts from the view month rather than today', () => {
+    const onValueChange = vi.fn();
+    const { container } = render(
+      <CalendarPreview
+        today={TODAY}
+        scales={ALL}
+        defaultMonth={new Date(2030, 0, 1)}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Body />
+      </CalendarPreview>
+    );
+    switchTo(container, 'quarter');
+    fireEvent.click(period(container, 'Q1', 2030));
+    expect(onValueChange.mock.calls[0][0]).toEqual({
+      date: '2030-01-01',
+      scale: 'quarter'
+    });
+  });
+
+  it('opens the period list on the view month year', () => {
+    const { container } = render(
+      <CalendarPreview
+        today={TODAY}
+        scales={ALL}
+        defaultMonth={new Date(2030, 0, 1)}
+      >
+        <CalendarPreview.Body />
+      </CalendarPreview>
+    );
+    switchTo(container, 'month');
+    /* Both years exist in the list; the point is which one is anchored. */
+    expect(period(container, 'Jan', 2030)).toBeInTheDocument();
+    expect(period(container, 'Jan', 2026)).toBeInTheDocument();
+  });
+
+  it('still follows the value when there is one', () => {
+    const onValueChange = vi.fn();
+    const { container } = render(
+      <CalendarPreview
+        today={TODAY}
+        scales={ALL}
+        defaultMonth={new Date(2030, 0, 1)}
+        value={{ date: '2027-05-20', scale: 'day' }}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Body />
+      </CalendarPreview>
+    );
+    switchTo(container, 'quarter');
+    fireEvent.click(period(container, 'Q2', 2027));
+    expect(onValueChange.mock.calls[0][0]).toEqual({
+      date: '2027-04-01',
+      scale: 'quarter'
+    });
+  });
+});

@@ -71,7 +71,7 @@ function PeriodView({
     selectPeriod,
     isPeriodAvailable,
     trailingValue,
-    today,
+    month,
     timeZone,
     disabled,
     readOnly
@@ -89,7 +89,7 @@ function PeriodView({
     scaleDraft?.date ??
       (value && !(value instanceof Date) && 'date' in value
         ? (value as { date: string }).date
-        : dayKey(today, timeZone))
+        : dayKey(month, timeZone))
   );
 
   const selectedKey =
@@ -98,12 +98,29 @@ function PeriodView({
       ? (value as { date: string }).date
       : null);
 
-  /* A twenty-year list otherwise opens on its first year. Optional-called
-     because jsdom does not implement scrollIntoView. */
+  /*
+   * A twenty-year list otherwise opens on its first year, twenty scrolls from
+   * the one the user means.
+   *
+   * Runs when the view becomes active, not on mount: every view is mounted at
+   * once and hooks still run while one returns null, so a mount effect fires
+   * with an empty ref and never fires again when the view appears.
+   *
+   * Scrolls the container rather than calling `scrollIntoView`, which walks
+   * every scrollable ancestor and would move the popover with it.
+   */
   const activeRef = useRef<HTMLDivElement>(null);
+  const isActive = scale === viewScale;
   useEffect(() => {
-    activeRef.current?.scrollIntoView?.({ block: 'start' });
-  }, []);
+    if (!isActive) return;
+    const group = activeRef.current;
+    const list = group?.parentElement;
+    /* The ref lags a render behind `activeYear`, so scrolling to a group that
+       is no longer the active one would land on the previous year. */
+    if (!group || !list || group.dataset.year !== String(activeYear)) return;
+    list.scrollTop +=
+      group.getBoundingClientRect().top - list.getBoundingClientRect().top;
+  }, [isActive, activeYear]);
 
   const element = useRender({
     defaultTagName: 'div',
@@ -122,6 +139,7 @@ function PeriodView({
                 ref={year === activeYear ? activeRef : undefined}
                 className={styles['period-group']}
                 data-slot='calendar-preview-period-group'
+                data-year={year}
               >
                 <div
                   className={styles['period-year']}
@@ -176,7 +194,7 @@ function PeriodView({
 
   /* Sibling views all mount; each gates on the active scale, so `.Quarters`
      can stand alone with no day grid in the tree. */
-  return scale === viewScale ? element : null;
+  return isActive ? element : null;
 }
 
 export function CalendarPreviewMonths(props: CalendarPreviewPeriodViewProps) {
