@@ -40,7 +40,9 @@ import {
  */
 export type DayKey = string;
 
-const DAY_KEY_FORMAT = 'yyyy-MM-dd';
+/* `uuuu`, not `yyyy`: `yyyy` is year-of-era, so JS year 0 formats as `'0001'`
+ * and collides with year 1. `uuuu` is the astronomical year and round-trips. */
+const DAY_KEY_FORMAT = 'uuuu-MM-dd';
 const DAY_KEY_SHAPE = /^\d{4}-\d{2}-\d{2}$/;
 
 /* A fixed reference for `parse`; every token in DAY_KEY_FORMAT is supplied by
@@ -57,7 +59,12 @@ const PARSE_REFERENCE = new Date(2000, 0, 1);
  * tooltip/`dateInfo` bug.
  */
 export function dayKey(date: Date, timeZone?: string): DayKey {
-  return format(timeZone ? new TZDate(date, timeZone) : date, DAY_KEY_FORMAT);
+  const calendarDate = timeZone ? new TZDate(date, timeZone) : date;
+  const key = format(calendarDate, DAY_KEY_FORMAT);
+  if (!DAY_KEY_SHAPE.test(key)) {
+    throw new RangeError(`Day is outside the supported range: ${key}`);
+  }
+  return key;
 }
 
 /**
