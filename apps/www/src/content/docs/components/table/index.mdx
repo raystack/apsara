@@ -4,7 +4,10 @@ description: A responsive table component to show structured data.
 source: packages/raystack/components/table
 ---
 
-import { preview, basicDemo } from "./demo.ts";
+import { preview, basicDemo,
+  interactiveDemo,
+  sectionDemo,
+} from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -29,7 +32,31 @@ import { Table } from "@raystack/apsara";
 </Table>
 ```
 
+## Usage
+
+Rows and cells are composed by hand, so a table is whatever markup you give it. Two things go beyond that: rows that respond to a click, and headers that span every column.
+
+### Basic usage
+
+Compose a table from its parts: `Header` and `Body` wrap `Row`s, with `Head` for column titles and `Cell` for each value. Table renders static markup — for sorting, filtering, or pagination, use [DataView](/docs/dataview).
+
+<Demo data={basicDemo} />
+
+### Interactive rows
+
+Set `interactive` on a `Row` to make it respond to hover and keyboard focus. Pair it with `onClick` when the whole row opens something — the row becomes the target, so people don't have to hit a link inside a cell.
+
+<Demo data={interactiveDemo} />
+
+### Section headers
+
+`Table.SectionHeader` groups rows under a label that spans the table. Set `colSpan` to the number of columns so the label stretches the full width.
+
+<Demo data={sectionDemo} />
+
 ## API Reference
+
+Header and body, with rows, cells, and a full-width section header.
 
 ### Root
 
@@ -83,14 +110,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `table-cell` | `<td>` |
 | `table-section-header` | `SectionHeader`'s row |
 | `table-section-header-cell` | `SectionHeader`'s cell |
-
-## Examples
-
-### Basic Usage
-
-Compose a table from its parts: `Header` and `Body` wrap `Row`s, with `Head` for column titles and `Cell` for each value. Table renders static markup — for sorting, filtering, or pagination, use [DataView](/docs/components/dataview).
-
-<Demo data={basicDemo} />
 
 ## Accessibility
 

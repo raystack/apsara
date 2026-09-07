@@ -2,7 +2,6 @@
 title: Combobox
 description: An input field with an attached dropdown that allows users to search and select from a list of options.
 source: packages/raystack/components/combobox
-tag: new
 ---
 
 import {
@@ -30,7 +29,49 @@ import { Combobox } from "@raystack/apsara";
 </Combobox>
 ```
 
+## Usage
+
+A combobox filters its list as the user types. The props below cover what the list holds, how many items can be picked, and who owns the value.
+
+### Basic
+
+A simple combobox with search filtering built in. Type to filter options.
+
+<Demo data={basicDemo} />
+
+### With icons
+
+You can pass the `leadingIcon` prop to `Combobox.Item` to display icons before item text.
+
+<Demo data={iconDemo} />
+
+### With Field
+
+Wrap the Combobox with [Field](/docs/components/field) to add a label, description, and error handling.
+
+<Demo data={withFieldDemo} />
+
+### Groups and separators
+
+Organize items into groups with labels and visual separators. Groups and labels are automatically hidden when the user is searching.
+
+<Demo data={groupDemo} />
+
+### Multiple selection
+
+Pass the `multiple` prop to enable multi-select. Selected values appear as chips in the input. Items display checkboxes in multiple mode.
+
+<Demo data={multipleDemo} />
+
+### Controlled
+
+Use `value` and `onValueChange` for controlled behavior.
+
+<Demo data={controlledDemo} />
+
 ## API Reference
+
+Root and input first, then the parts that make up the popup list.
 
 ### Root Props
 
@@ -94,44 +135,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `combobox-item` | A selectable option row |
 | `combobox-item-text` | The text label inside an item (when its children is a string) |
 | `combobox-item-icon` | The leading icon inside an item (when `leadingIcon` is set) |
-
-## Examples
-
-### Basic
-
-A simple combobox with search filtering built in. Type to filter options.
-
-<Demo data={basicDemo} />
-
-### With Icons
-
-You can pass the `leadingIcon` prop to `Combobox.Item` to display icons before item text.
-
-<Demo data={iconDemo} />
-
-### With Field
-
-Wrap the Combobox with [Field](/docs/components/field) to add a label, description, and error handling.
-
-<Demo data={withFieldDemo} />
-
-### Groups and Separators
-
-Organize items into groups with labels and visual separators. Groups and labels are automatically hidden when the user is searching.
-
-<Demo data={groupDemo} />
-
-### Multiple Selection
-
-Pass the `multiple` prop to enable multi-select. Selected values appear as chips in the input. Items display checkboxes in multiple mode.
-
-<Demo data={multipleDemo} />
-
-### Controlled
-
-Use `value` and `onValueChange` for controlled behavior.
-
-<Demo data={controlledDemo} />
 
 ## Accessibility
 

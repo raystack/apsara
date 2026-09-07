@@ -1,6 +1,16 @@
+/* The article and the contents rail, side by side under the page nav. */
+.body {
+  width: 100%;
+}
+
+/* Centers the article inside whatever space the rail leaves. */
+.column {
+  width: 100%;
+}
+
 .content {
   max-width: 806px;
-  padding: var(--rs-space-15) var(--rs-space-7);
+  padding: var(--rs-space-13) var(--rs-space-7) var(--rs-space-15);
   width: 100%;
   gap: var(--rs-space-12);
   min-height: calc(100vh - 50px);
@@ -9,8 +19,54 @@
 :global(.prose) {
   gap: var(--rs-space-3);
   color: var(--rs-color-foreground-base-secondary);
-  font-size: var(--rs-font-size-regular);
+  font-size: var(--docs-body-size);
   font-weight: var(--rs-font-weight-regular);
+  line-height: var(--docs-body-leading);
+  letter-spacing: var(--docs-body-tracking);
+}
+
+:global(.prose) [data-demo] {
+  font-size: var(--rs-font-size-regular);
   line-height: var(--rs-line-height-regular);
   letter-spacing: var(--rs-letter-spacing-regular);
+}
+
+.page-title {
+  color: var(--rs-color-foreground-base-primary);
+  font-family: var(--rs-font-body);
+  font-size: var(--docs-title-size);
+  line-height: var(--docs-title-leading);
+  letter-spacing: var(--docs-title-tracking);
+  font-weight: var(--docs-title-weight);
+  text-wrap: balance;
+}
+
+.page-lede {
+  color: var(--rs-color-foreground-base-secondary);
+  font-size: var(--docs-lede-size);
+  line-height: var(--docs-lede-leading);
+  letter-spacing: var(--docs-lede-tracking);
+}
+
+/*
+  The rail sits beside the article and stays put while it scrolls. Its width
+  matches the sidebar's, so the article sits in the middle of equal gutters,
+  and it is fixed so the text keeps the same measure on every page regardless
+  of how many headings that page has.
+*/
+.toc {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  height: calc(100vh - 50px);
+  position: sticky;
+  top: 50px;
+  /*
+    The rail's inner edge, matching the one on the sidebar. It starts below the
+    navbar rather than at the top of the screen, because above that line the
+    navbar is one strip running the width of the article — there is nothing
+    there for the rule to divide.
+  */
+  border-left: var(--docs-rule);
 }

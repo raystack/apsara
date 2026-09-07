@@ -2,7 +2,6 @@
 title: OTP Field
 description: A one-time password input split into individual character slots with automatic focus management.
 source: packages/raystack/components/otp-field
-tag: new
 ---
 
 import {
@@ -38,37 +37,9 @@ import { OTPField } from "@raystack/apsara";
 </OTPField>
 ```
 
-## API Reference
+## Usage
 
-### Root
-
-Groups all parts of the field and manages their state.
-
-<auto-type-table path="./props.ts" name="OTPFieldProps" />
-
-### Input
-
-An individual character slot. Render one per slot (typically using `Array.from`).
-
-<auto-type-table path="./props.ts" name="OTPFieldInputProps" />
-
-### Separator
-
-A visual separator between slot groups, styled to fit between OTP slots.
-
-<auto-type-table path="./props.ts" name="OTPFieldSeparatorProps" />
-
-### Slots
-
-Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
-
-| Slot | Element |
-|------|---------|
-| `otp-field` | The root container |
-| `otp-field-input` | Each `OTPField.Input` slot |
-| `otp-field-separator` | The `OTPField.Separator` element |
-
-## Examples
+The field splits a code into slots and moves focus as the user types. The props below cover what a slot accepts and what happens once the last one fills.
 
 ### With separator
 
@@ -90,7 +61,7 @@ Use `validationType` to accept letters, digits, or both. Defaults to `"numeric"`
 
 ### Disabled
 
-Set `disabled` to prevent interaction.
+`disabled` stops interaction across every slot at once, not just the focused one.
 
 <Demo data={disabledDemo} />
 
@@ -123,6 +94,38 @@ Provide `normalizeValue` to restrict input to a custom set of characters. It com
 Compose with `Field` to get an associated label and description.
 
 <Demo data={withFieldDemo} />
+
+## API Reference
+
+The inputs, with an optional separator between groups.
+
+### Root
+
+Groups all parts of the field and manages their state.
+
+<auto-type-table path="./props.ts" name="OTPFieldProps" />
+
+### Input
+
+An individual character slot. Render one per slot (typically using `Array.from`).
+
+<auto-type-table path="./props.ts" name="OTPFieldInputProps" />
+
+### Separator
+
+A visual separator between slot groups, styled to fit between OTP slots.
+
+<auto-type-table path="./props.ts" name="OTPFieldSeparatorProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `otp-field` | The root container |
+| `otp-field-input` | Each `OTPField.Input` slot |
+| `otp-field-separator` | The `OTPField.Separator` element |
 
 ## Accessibility
 

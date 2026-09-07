@@ -1,144 +1,70 @@
-.container {
-  position: relative;
-  z-index: 10;
-  height: 100%;
-}
-
-.inner {
-  position: absolute;
-  inset: 0;
-}
-
-.tickContainer {
-  position: absolute;
-  right: 0;
-  display: grid;
-  width: 6rem;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.tickLine {
-  height: 1px;
-  width: 0.5rem;
-  transition: all 100ms;
-}
-
-.tickLineBefore {
-  background-color: var(--rs-color-background-neutral-tertiary);
-}
-
-.tickLineAfter {
-  background-color: var(--rs-color-background-neutral-tertiary);
-}
-
-.tickContainer:hover .tickLine {
-  width: 1rem;
-}
-
-.tickClickable {
-  position: absolute;
-  inset-inline: 0;
-  height: 0.5rem;
-  cursor: pointer;
-}
-
-.headingContainer {
-  transition: transform 150ms;
-}
-
-.headingContainer:hover {
-  transform: translateX(-0.125rem);
-}
-
-.headingLabel {
-  position: absolute;
+/*
+  A flat list of the page's headings, indented by heading level. Sizes come from
+  the docs typeset: the eyebrow uses the label layer (mono, uppercase, tracked
+  out) and the links use the caption size, so the rail reads as chrome rather
+  than competing with the prose beside it.
+*/
+.rail {
   display: flex;
-  height: 0.75rem;
-  align-items: center;
-  font-family: var(--rs-font-mono);
-  font-size: 0.75rem;
-  color: var(--rs-color-foreground-base-primary);
-  text-transform: capitalize;
-  opacity: 0;
-  transition: opacity 300ms;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  padding-block: var(--rs-space-9);
+  padding-left: var(--rs-space-7);
+  padding-right: var(--rs-space-5);
+  overscroll-behavior: contain;
+  scrollbar-width: none;
 }
-.headingLink {
-  color: var(--rs-color-foreground-base-primary);
-  text-align: right;
-  font-family: var(--rs-font-body);
-  font-size: var(--rs-font-size-mini);
-  font-style: normal;
-  font-weight: var(--rs-font-weight-regular);
-  line-height: var(--rs-line-height-mini);
-  letter-spacing: var(--rs-letter-spacing-mini);
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.eyebrow {
+  padding-bottom: var(--rs-space-3);
+  color: var(--rs-color-foreground-base-tertiary);
+  font-family: var(--rs-font-mono);
+  font-size: var(--docs-label-size);
+  line-height: var(--docs-label-leading);
+  letter-spacing: var(--docs-label-tracking);
+  font-weight: var(--docs-label-weight);
+  text-transform: uppercase;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  display: block;
+  padding-block: var(--rs-space-2);
+  color: var(--rs-color-foreground-base-secondary);
+  font-size: var(--docs-caption-size);
+  line-height: var(--docs-caption-leading);
+  letter-spacing: var(--docs-caption-tracking);
   text-decoration: none;
+  text-wrap: pretty;
 }
 
-.container:hover .headingLabel {
-  opacity: 1;
+/* Entries sit under their section, sub-entries under those. */
+.link[data-depth="3"] {
+  padding-left: var(--rs-space-4);
 }
 
-@media (max-width: 640px) {
-  .headingLabel {
-    opacity: 1;
-  }
+.link[data-depth="4"] {
+  padding-left: var(--rs-space-7);
 }
 
-.headingLink {
-  cursor: pointer;
+.link:hover {
+  color: var(--rs-color-foreground-base-primary);
 }
 
-.headingLink:hover {
-  color: var(--rs-color-cobalt-600, #0066cc);
-}
-
-.connectingLine {
-  position: absolute;
-  right: 0;
-  height: 1px;
-  background-color: var(--rs-color-background-neutral-emphasis);
-}
-
-.scrollMarkerContainer {
-  position: absolute;
-  right: 0;
-  z-index: 20;
-  transition: opacity 300ms;
-  pointer-events: none;
-}
-
-.scrollMarkerContainerReady {
-  opacity: 1;
-}
-
-.scrollMarkerContainerNotReady {
-  opacity: 0;
-}
-
-.scrollMarkerLine {
-  height: 1px;
-  width: 1rem;
-  background-color: var(--rs-color-cobalt-600, #0066cc);
-}
-
-.scrollMarkerText {
-  position: absolute;
-  top: 0;
-  left: -2.5rem;
-  transform: translateY(-50%);
-  font-family: var(--rs-font-mono);
-  font-size: 0.75rem;
-  color: var(--rs-color-cobalt-600, #0066cc);
-  transition: opacity 300ms;
-}
-
-.container:hover .scrollMarkerText {
-  opacity: 0;
-}
-
-@media (max-width: 640px) {
-  .scrollMarkerText {
-    opacity: 0;
-  }
+.linkActive {
+  color: var(--rs-color-foreground-base-primary);
 }

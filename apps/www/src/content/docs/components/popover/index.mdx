@@ -4,7 +4,9 @@ description: Displays rich content in a portal, triggered by a button.
 source: packages/raystack/components/popover
 ---
 
-import { playground, alignDemo, positionDemo } from "./demo.ts";
+import { playground, alignDemo, positionDemo,
+  controlledDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -21,7 +23,31 @@ import { Popover } from "@raystack/apsara";
 </Popover>
 ```
 
+## Usage
+
+A popover anchors to its trigger. Where it lands is `side` and `align`; when it opens can be yours.
+
+### Positioning
+
+Control the position and alignment of your popover relative to its trigger.
+
+<Demo data={positionDemo} />
+
+### Alignment
+
+Customize how the popover aligns with its trigger.
+
+<Demo data={alignDemo} />
+
+### Controlled
+
+Pass `open` with `onOpenChange` to own the state — needed when something other than the trigger has to close the popover, such as applying a filter.
+
+<Demo data={controlledDemo} />
+
 ## API Reference
+
+A trigger, and the content it opens.
 
 ### Root
 
@@ -49,20 +75,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 |------|---------|
 | `popover-positioner` | Positioner that places the popup |
 | `popover-content` | The popover popup |
-
-## Examples
-
-### Positioning
-
-Control the position and alignment of your popover relative to its trigger.
-
-<Demo data={positionDemo} />
-
-### Alignment
-
-Customize how the popover aligns with its trigger.
-
-<Demo data={alignDemo} />
 
 ## Accessibility
 

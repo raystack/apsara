@@ -4,7 +4,9 @@ description: A component for displaying information in a key-value pair list for
 source: packages/raystack/components/list
 ---
 
-import { basicDemo, preview } from "./demo.ts";
+import { basicDemo, preview,
+  alignDemo,
+} from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -24,7 +26,25 @@ import { List } from "@raystack/apsara";
 </List>
 ```
 
+## Usage
+
+A list is rows of label and value. The only real choice is how those two columns line up.
+
+### Basic usage
+
+A `Header` labels the group, then each `Item` pairs a `Label` with its `Value`. Give the labels a shared `min-width` so the values line up in a column.
+
+<Demo data={basicDemo} />
+
+### Aligning rows
+
+`align` on an `Item` controls how the label sits against its value. `center` suits one-line values; switch to `start` when the value wraps, so the label stays level with the first line rather than floating in the middle.
+
+<Demo data={alignDemo} />
+
 ## API Reference
+
+Each item holds an aligned label and value, with an optional header above them.
 
 ### Root
 
@@ -68,14 +88,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `list-item` | An individual list row (`<li>`) |
 | `list-label` | The `<span>` holding the key text of an item |
 | `list-value` | The `<span>` holding the value text of an item |
-
-## Examples
-
-### Basic Usage
-
-A `Header` labels the group, then each `Item` pairs a `Label` with its `Value`. Give the labels a shared `min-width` so the values line up in a column.
-
-<Demo data={basicDemo} />
 
 ## Accessibility
 

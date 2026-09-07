@@ -22,6 +22,28 @@ import { Headline } from '@raystack/apsara'
 <Headline />
 ```
 
+## Usage
+
+Beyond the heading level, three props: how heavy the text is, where it sits, and what happens when it runs out of room.
+
+### Weight
+
+Two weights. `medium` is the default; use `regular` where a headline sits close to body text and shouldn't shout.
+
+<Demo data={weightDemo} />
+
+### Alignment
+
+`align` sets the text alignment inside the heading's box. Default is `left`.
+
+<Demo data={alignDemo} />
+
+### Truncation
+
+Set `truncate` to clip a headline to a single line with an ellipsis when it overflows its container.
+
+<Demo data={truncateDemo} />
+
 ## API Reference
 
 Renders a heading element with configurable size and weight. Use the `render` prop to change the heading level or provide a custom render function.
@@ -35,26 +57,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | Slot | Element |
 |------|---------|
 | `headline` | The heading element (`<h2>` by default, or the element supplied via `render`) |
-
-## Examples
-
-### Alignment
-
-The `align` prop sets the text alignment within the heading's box. Default is `left`.
-
-<Demo data={alignDemo} />
-
-### Weight
-
-Headlines come in two weights. Default is `medium`; use `regular` for a lighter look.
-
-<Demo data={weightDemo} />
-
-### Truncation
-
-Set `truncate` to clip a headline to a single line with an ellipsis when it overflows its container.
-
-<Demo data={truncateDemo} />
 
 ## Accessibility
 

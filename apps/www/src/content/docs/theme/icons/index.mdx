@@ -81,7 +81,7 @@ If you change the size and want to keep a 1px stroke, scale the stroke with it �
 `strokeWidth={24 / size}`.
 
 All three are standard SVG attributes, so any icon library accepts them. A
-library that draws solid shapes simply ignores `stroke-width`.
+library that draws solid shapes ignores `stroke-width`.
 
 ### Size
 
@@ -196,10 +196,9 @@ import { RocketIcon } from '@/icons';
 You get the base props, `data-icon`, and one file to edit if you ever change
 icon library.
 
-The `props` half of `<Theme icons>` reaches your icons too, since they read the
-same context. The `components` half is typed to the keys Apsara ships — to
-change one of your own, edit the file above. You own it, so you do not need a
-provider to reach into it.
+Your icons read the same context, so the `props` half of `<Theme icons>` reaches
+them too. The `components` half only accepts the keys Apsara ships — to change
+one of your own, edit the file above.
 
 <Callout type="grey">
   lucide exports several aliases per icon — `Search`, `SearchIcon` and
@@ -209,56 +208,6 @@ provider to reach into it.
   name. Importing both in a file is a compile error rather than a silent bug, but
   it is worth knowing when you read an import list.
 </Callout>
-
-## API Reference
-
-### Theme props
-
-<auto-type-table path="./props.ts" name="ThemeIconProps" />
-
-### IconOptions
-
-<auto-type-table path="./props.ts" name="IconOptions" />
-
-### IconProvider
-
-`<Theme>` mounts this for you. Use it directly only if you want icon overrides
-without a theme scope. It takes the two halves of `IconOptions` as flat props.
-
-<auto-type-table path="./props.ts" name="IconProviderProps" />
-
-### createIcon
-
-```tsx
-function createIcon(name: string, Default: IconComponent): IconComponent;
-```
-
-Wraps a component as an Apsara icon: base props below the call site,
-`data-icon="<name>"`, and the provider `props`. `name` is any string —
-`IconName` covers only what Apsara ships, and only those keys can be replaced
-through `<Theme icons>`.
-
-### Types
-
-`IconProps` is `Omit<SVGProps<SVGSVGElement>, 'children'>`: every SVG attribute
-React accepts, minus `children`. In practice you pass `width`, `height`,
-`strokeWidth`, `className`, `style` or `color` — see [base props](#base-props).
-
-`IconComponent` is `ComponentType<IconProps>`, so any component with those props
-can stand in for an icon. `IconOverrides` is
-`Partial<Record<IconName, IconComponent>>`, and `IconName` is the union of the 31
-keys, so a typo in an override map is a type error.
-
-```tsx
-import { createIcon } from '@raystack/apsara';
-import type {
-  IconComponent,
-  IconName,
-  IconOptions,
-  IconOverrides,
-  IconProps
-} from '@raystack/apsara';
-```
 
 ## Server components
 
@@ -310,14 +259,71 @@ import { SearchIcon } from '@raystack/apsara/icons';
 import { SearchIcon } from '@raystack/apsara';
 ```
 
-`@raystack/apsara/icons` reaches no component module at all, so one icon costs
-one icon whatever the bundler does. The package root re-exports every component
-alongside the icons; Apsara sets `"sideEffects": false` so a bundler that honours
-that flag strips them and the two paths come out identical, but a bundler that
-does not honour it keeps them all. So the subpath is the safer default:
-identical in the good case, and far cheaper in the bad one. Use the root in
-files that already import components, where a second import line buys nothing.
+|  | `@raystack/apsara/icons` | `@raystack/apsara` |
+|---|---|---|
+| Bundler honours `sideEffects` | one icon costs one icon | the same |
+| Bundler ignores it | one icon costs one icon | pulls in every component |
+| CommonJS `require` | loads the icons only | loads every component module |
 
-CommonJS cannot tree-shake at all, so there the difference is unconditional:
-`require('@raystack/apsara')` loads every component module, while
-`require('@raystack/apsara/icons')` loads the icons and nothing else.
+The subpath reaches no component module at all, so it costs the same in every
+case. The root re-exports every component alongside the icons and relies on
+`"sideEffects": false` to have them stripped.
+
+Prefer the subpath by default. Use the root in files that already import
+components, where a second import line buys nothing.
+
+## API Reference
+
+The types and components behind icon overrides. `createIcon` and the `Theme` icons prop are the two you touch directly.
+
+### Theme props
+
+The `icons` prop on `Theme`.
+
+<auto-type-table path="./props.ts" name="ThemeIconProps" />
+
+### IconOptions
+
+The object `icons` accepts — `components` replaces drawings by key, `props` applies to every icon.
+
+<auto-type-table path="./props.ts" name="IconOptions" />
+
+### IconProvider
+
+`<Theme>` mounts this for you. Use it directly only if you want icon overrides
+without a theme scope. It takes the two halves of `IconOptions` as flat props.
+
+<auto-type-table path="./props.ts" name="IconProviderProps" />
+
+### createIcon
+
+```tsx
+function createIcon(name: string, Default: IconComponent): IconComponent;
+```
+
+Wraps a component as an Apsara icon: base props below the call site,
+`data-icon="<name>"`, and the provider `props`. `name` is any string —
+`IconName` covers only what Apsara ships, and only those keys can be replaced
+through `<Theme icons>`.
+
+### Types
+
+`IconProps` is `Omit<SVGProps<SVGSVGElement>, 'children'>`: every SVG attribute
+React accepts, minus `children`. In practice you pass `width`, `height`,
+`strokeWidth`, `className`, `style` or `color` — see [base props](#base-props).
+
+`IconComponent` is `ComponentType<IconProps>`, so any component with those props
+can stand in for an icon. `IconOverrides` is
+`Partial<Record<IconName, IconComponent>>`, and `IconName` is the union of the 31
+keys, so a typo in an override map is a type error.
+
+```tsx
+import { createIcon } from '@raystack/apsara';
+import type {
+  IconComponent,
+  IconName,
+  IconOptions,
+  IconOverrides,
+  IconProps
+} from '@raystack/apsara';
+```

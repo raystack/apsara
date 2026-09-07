@@ -3,7 +3,7 @@ title: Effects
 description: Overview of shadow and blur effect tokens in Apsara.
 ---
 
-Effects add depth and visual hierarchy to your interface through shadows and blur. These tokens are calibrated to work consistently across light and dark themes—shadows automatically adjust their intensity and color to maintain appropriate contrast in each mode. Using effect tokens ensures your custom surfaces and overlays integrate naturally with the rest of your interface.
+Shadows and blur add depth. Effect tokens are tuned for both themes — shadow intensity and color shift so contrast holds in light and dark. Custom surfaces and overlays built on them sit naturally beside the rest of the interface.
 
 ## Shadows
 
@@ -20,7 +20,7 @@ Shadow tokens create elevation and depth, helping users understand the layering 
   ]}
 />
 
-## Blur Effects
+## Blur effects
 
 Blur tokens are used for backdrop effects and creating depth through transparency.
 
@@ -35,6 +35,8 @@ Blur tokens are used for backdrop effects and creating depth through transparenc
 />
 
 ## Usage
+
+Shadow and blur tokens compose with the color tokens. Reach for a named shadow rather than a hand-rolled `box-shadow` so elevation stays consistent across surfaces.
 
 ```css
 /* Dashboard widget with hover interaction */
@@ -98,7 +100,7 @@ Blur tokens are used for backdrop effects and creating depth through transparenc
 }
 ```
 
-## Best Practices
+## Best practices
 
 - **Use shadows sparingly** - Too many shadows can make interfaces feel cluttered
 - **Match elevation to importance** - Higher elevation shadows for more prominent elements

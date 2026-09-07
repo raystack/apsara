@@ -34,7 +34,63 @@ import { Breadcrumb } from '@raystack/apsara'
 </Breadcrumb>
 ```
 
+## Usage
+
+A trail is a root wrapping items. The props below change how it looks and how it copes when the path is longer than the space it has.
+
+### Size
+
+Two sizes. Use the smaller one when the trail sits in a toolbar rather than above a page title.
+
+<Demo data={sizeDemo} />
+
+### Separator
+
+Customize the separator between breadcrumb items using the `separator` prop.
+
+<Demo data={separatorDemo} />
+
+### Ellipsis
+
+Use the `Breadcrumb.Ellipsis` component to truncate the breadcrumb trail when you need to display a large number of items in a limited space.
+
+<Demo data={ellipsisDemo} />
+
+### Icons
+
+Breadcrumb items can include icons via `leadingIcon` (before the label) or `trailingIcon` (after the label), either alongside text or as standalone elements.
+
+<Demo data={iconsDemo} />
+
+### Dropdown
+
+Breadcrumb items can include dropdown menus for additional navigation options. Specify them with the `dropdownItems` prop: each entry is the same props as `<Menu.Item>` (e.g. `children` for the label, `onClick`, `disabled`, `render` for a link such as `<a href="…" />`, etc.). You can also pass `key` for stable list keys.
+
+**Note:** When `dropdownItems` is provided, the `render` and `href` props are ignored.
+
+<Demo data={dropdownDemo} />
+<Demo data={dropdownLinksDemo} />
+
+### Render
+
+Use the `render` prop to render the breadcrumb item as a custom component. Pass a JSX element (e.g. `render={<NextLink />}`) and we will replace the default `<a>` while merging props. By default, items render as `a` tags.
+
+```tsx
+// Correct: set href on the item (it will be forwarded into the rendered element)
+<Breadcrumb.Item href="/" render={<NextLink />}>Home</Breadcrumb.Item>
+```
+
+<Demo data={asDemo} />
+
+### Disabled
+
+Use the `disabled` prop for non-clickable, visually muted items—for example, loading states or segments the user does not have access to. Disabled items render as a span with `aria-disabled="true"` and do not navigate.
+
+<Demo data={disabledDemo} />
+
 ## API Reference
+
+Items sit in a root, divided by `Separator`, with `Ellipsis` standing in for a collapsed middle.
 
 ### Root
 
@@ -96,58 +152,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `breadcrumb-dropdown-item` | An entry in the dropdown menu |
 | `breadcrumb-separator` | `Breadcrumb.Separator` |
 | `breadcrumb-ellipsis` | `Breadcrumb.Ellipsis` |
-
-## Examples
-
-### Size
-
-The Breadcrumb component supports different sizes to accommodate various design requirements. Specify the size using the `size` prop.
-
-<Demo data={sizeDemo} />
-
-### Separator
-
-Customize the separator between breadcrumb items using the `separator` prop.
-
-<Demo data={separatorDemo} />
-
-### Ellipsis
-
-Use the `Breadcrumb.Ellipsis` component to truncate the breadcrumb trail when you need to display a large number of items in a limited space.
-
-<Demo data={ellipsisDemo} />
-
-### Icons
-
-Breadcrumb items can include icons via `leadingIcon` (before the label) or `trailingIcon` (after the label), either alongside text or as standalone elements.
-
-<Demo data={iconsDemo} />
-
-### Dropdown
-
-Breadcrumb items can include dropdown menus for additional navigation options. Specify them with the `dropdownItems` prop: each entry is the same props as `<Menu.Item>` (e.g. `children` for the label, `onClick`, `disabled`, `render` for a link such as `<a href="…" />`, etc.). You can also pass `key` for stable list keys.
-
-**Note:** When `dropdownItems` is provided, the `render` and `href` props are ignored.
-
-<Demo data={dropdownDemo} />
-<Demo data={dropdownLinksDemo} />
-
-### Render
-
-Use the `render` prop to render the breadcrumb item as a custom component. Pass a JSX element (e.g. `render={<NextLink />}`) and we will replace the default `<a>` while merging props. By default, items render as `a` tags.
-
-```tsx
-// Correct: set href on the item (it will be forwarded into the rendered element)
-<Breadcrumb.Item href="/" render={<NextLink />}>Home</Breadcrumb.Item>
-```
-
-<Demo data={asDemo} />
-
-### Disabled
-
-Use the `disabled` prop for non-clickable, visually muted items—for example, loading states or segments the user does not have access to. Disabled items render as a span with `aria-disabled="true"` and do not navigate.
-
-<Demo data={disabledDemo} />
 
 ## Accessibility
 

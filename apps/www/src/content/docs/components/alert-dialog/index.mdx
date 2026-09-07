@@ -1,8 +1,7 @@
 ---
-title: AlertDialog
+title: Alert Dialog
 description: A modal dialog that interrupts the user with important content and expects a response. Unlike Dialog, it does not close on outside click, requiring explicit user action.
 source: packages/raystack/components/alert-dialog
-tag: new
 ---
 
 import { playground, controlledDemo, menuDemo, discardDemo, nestedDemo } from "./demo.ts";
@@ -31,7 +30,37 @@ import { AlertDialog } from '@raystack/apsara'
 </AlertDialog>
 ```
 
+## Usage
+
+An alert dialog cannot be dismissed by clicking away, so the work is deciding who owns its open state and what each of the two answers does.
+
+### Controlled
+
+Pass `open` with `onOpenChange` to own the state — needed when something other than the trigger has to close the dialog, such as a request completing.
+
+<Demo data={controlledDemo} />
+
+### Composing with Menu
+
+Open an alert dialog from a menu item. Since the trigger is outside the `AlertDialog.Root`, use the controlled `open` / `onOpenChange` props.
+
+<Demo data={menuDemo} />
+
+### Discard changes
+
+A common pattern for confirming destructive navigation. Both actions use `AlertDialog.Close` to dismiss the dialog.
+
+<Demo data={discardDemo} />
+
+### Nested alert dialogs
+
+You can nest alert dialogs for multi-step confirmation flows. When a nested alert dialog opens, the parent dialog automatically scales down and becomes slightly transparent.
+
+<Demo data={nestedDemo} />
+
 ## API Reference
+
+A trigger and a content shell split into header, body and footer.
 
 ### Root
 
@@ -95,32 +124,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `alert-dialog-body` | The `AlertDialog.Body` container |
 | `alert-dialog-description` | The `AlertDialog.Description` element |
 | `alert-dialog-footer` | The `AlertDialog.Footer` row |
-
-## Examples
-
-### Controlled
-
-Example of a controlled alert dialog with custom state management.
-
-<Demo data={controlledDemo} />
-
-### Composing with Menu
-
-Open an alert dialog from a menu item. Since the trigger is outside the `AlertDialog.Root`, use the controlled `open` / `onOpenChange` props.
-
-<Demo data={menuDemo} />
-
-### Discard Changes
-
-A common pattern for confirming destructive navigation. Both actions use `AlertDialog.Close` to dismiss the dialog.
-
-<Demo data={discardDemo} />
-
-### Nested Alert Dialogs
-
-You can nest alert dialogs for multi-step confirmation flows. When a nested alert dialog opens, the parent dialog automatically scales down and becomes slightly transparent.
-
-<Demo data={nestedDemo} />
 
 ## Accessibility
 

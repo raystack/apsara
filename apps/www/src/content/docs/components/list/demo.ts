@@ -34,3 +34,21 @@ export const basicDemo = {
 </List>;
   `
 };
+
+export const alignDemo = {
+  type: 'code',
+  code: `
+<List>
+  <List.Header>Deployment</List.Header>
+  <List.Item align="center">
+    <List.Label style={{ minWidth: "96px" }}>Status</List.Label>
+    <List.Value>Succeeded</List.Value>
+  </List.Item>
+  <List.Item align="start">
+    <List.Label style={{ minWidth: "96px" }}>Notes</List.Label>
+    <List.Value>
+      Rolled out to three regions. Two nodes were drained and replaced during the rollout.
+    </List.Value>
+  </List.Item>
+</List>`
+};

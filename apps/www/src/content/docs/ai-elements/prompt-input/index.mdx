@@ -1,5 +1,5 @@
 ---
-title: PromptInput
+title: Prompt Input
 description: A composer for AI chat and standalone "Ask anything" boxes — auto-growing input, inline @-mention chips, toolbar slots, and a status-aware submit button.
 source: packages/raystack/components/prompt-input
 tag: new
@@ -35,89 +35,11 @@ request. Pass the lifecycle in through `status` and react to `onSubmit` /
 `onStop` — it works with the AI SDK's `useChat`, a custom SSE client, or
 anything else.
 
-## API Reference
+## Usage
 
-### Root
+The composer is a form with a swappable input. Start with the value format — it decides which input you want and what you get back on submit.
 
-The `<form>` that holds the value and submit semantics. The whole frame reads
-as one field: clicking its empty space — the header and footer padding, or the
-gap between their controls — focuses the input, while anything you put in those
-slots still handles its own clicks. Whichever input part you render registers
-itself on mount; pass `inputRef` if you render your own input instead. An
-`onMouseDown` that calls `preventDefault()` opts out.
-
-<auto-type-table path="./props.ts" name="PromptInputProps" />
-
-`onSubmit` gives you a message object rather than a plain string, so mentions
-arrive with their ids and your own `data` next to the text:
-
-<auto-type-table path="./props.ts" name="PromptInputMessage" />
-
-<auto-type-table path="./props.ts" name="PromptInputMention" />
-
-### Textarea
-
-The text field, built on `TextArea variant="borderless"`. It grows with its
-content up to a max-height cap (override with
-`--prompt-input-textarea-max-height`), then scrolls.
-
-<auto-type-table path="./props.ts" name="PromptInputTextareaProps" />
-
-### Editor
-
-The input to use when you want `@`-mention chips. Use it *instead of*
-`Textarea`, not alongside it.
-
-It behaves like `Textarea` — Enter submits, Shift+Enter adds a newline, same
-placeholder and same growth — and adds undo/redo plus the mention menu.
-
-Its line height is taller than `Textarea`'s, so a chip fits inside one line
-without changing the composer's height as chips come and go. A single-row
-`Editor` is a few pixels taller than a single-row `Textarea`.
-
-A few `Textarea` props work differently here. `readOnly` becomes `disabled`,
-`onChange` becomes `onValueChange` on the root, `rows` becomes CSS
-`min-height`, and its `ref` is an `HTMLDivElement`.
-
-<auto-type-table path="./props.ts" name="PromptInputEditorProps" />
-
-### Mentions
-
-Sets up a trigger character and its data. It renders nothing on its own and
-needs `PromptInput.Editor` — next to a `Textarea` it does nothing and warns in
-development.
-
-Pass `items` for a list you already have, or `onSearch` to fetch results as the
-user types. `onSearch` wins if you pass both.
-
-<auto-type-table path="./props.ts" name="PromptInputMentionsProps" />
-
-<auto-type-table path="./props.ts" name="PromptInputMentionItem" />
-
-Each item sets its own `type`, so one `@` menu can mix kinds — the demo below
-has a page, components and users. You get `type` back on submit.
-
-### Header
-
-A slot row above the input, usually for `Chat.Attachment` previews. Hidden
-while empty.
-
-### Footer
-
-The bottom toolbar row. Hidden while empty. Toolbar controls — attach, skills,
-model pickers and similar — are composed from regular Apsara components
-(`Button`, `IconButton`, `Select`, …); give them `type="button"` so they don't
-submit the form.
-
-### Submit
-
-The trailing send button. It renders ↑ when idle, disables itself while the
-composer is empty, shows a spinner while `status="submitted"`, and flips to a
-stop square that calls `onStop` while `status="streaming"`.
-
-<auto-type-table path="./props.ts" name="PromptInputSubmitProps" />
-
-## Value format
+### Value format
 
 A chip is written as `@[label](type:id)`, using whatever character the trigger
 is:
@@ -145,8 +67,6 @@ Save this string as the user's draft. A few details:
   happens to look like `@[…](…)` stays as-is.
 - Icons and `data` cannot be saved in a string, so restoring a draft needs
   `resolveMentions` — see [Restoring a draft](#restoring-a-draft).
-
-## Examples
 
 ### Everything the Editor can do
 
@@ -202,13 +122,13 @@ A query can contain spaces so multi-word names stay searchable. Once a query
 with a space stops matching anything, the menu closes and the text is left
 alone.
 
-#### Restoring a draft
+### Restoring a draft
 
 A chip loaded from `defaultValue` starts with just its label, since a saved
 string can't carry an icon or `data`. Pass `resolveMentions` to look those up
 and fill them in — it also refreshes the label if the entity was renamed.
 Lookups are batched and cached. If one fails or comes back empty, the chip
-simply stays label-only; it is never removed.
+stays label-only; it is never removed.
 
 <Demo data={mentionsAsyncDemo} />
 
@@ -253,9 +173,11 @@ menus, mention pickers.
 
 ### Disabled
 
+`disabled` stops typing and submitting while a request is in flight, without clearing what the user already wrote.
+
 <Demo data={disabledDemo} />
 
-## When is the composer empty?
+### When the composer counts as empty
 
 A composer counts as empty when it has no chips and its text is only
 whitespace. The submit button, the `data-empty` attribute and the placeholder
@@ -265,6 +187,108 @@ all use that same rule, so they always agree:
 - Whitespace on its own is empty.
 - Leading and trailing whitespace is trimmed off the submitted message,
   including the space added after a chip. Chips are never trimmed.
+
+## API Reference
+
+The form wraps one of two inputs, `Textarea` or `Editor`, with the header, footer and submit around it.
+
+### Root
+
+The `<form>` that holds the value and submit semantics.
+
+The whole frame reads as one field. Clicking its empty space — the header and
+footer padding, or the gap between their controls — focuses the input, while
+anything you put in those slots still handles its own clicks. Whichever input
+part you render registers itself on mount.
+
+Pass `inputRef` if you render your own input. To opt a region out, give it an
+`onMouseDown` that calls `preventDefault()`.
+
+<auto-type-table path="./props.ts" name="PromptInputProps" />
+
+`onSubmit` gives you a message object rather than a plain string, so mentions
+arrive with their ids and your own `data` next to the text:
+
+<auto-type-table path="./props.ts" name="PromptInputMessage" />
+
+<auto-type-table path="./props.ts" name="PromptInputMention" />
+
+### Textarea
+
+The text field, built on `TextArea variant="borderless"`. It grows with its
+content up to a max-height cap (override with
+`--prompt-input-textarea-max-height`), then scrolls.
+
+<auto-type-table path="./props.ts" name="PromptInputTextareaProps" />
+
+### Editor
+
+The input to use when you want `@`-mention chips. Use it *instead of*
+`Textarea`, not alongside it.
+
+It behaves like `Textarea` — Enter submits, Shift+Enter adds a newline, same
+placeholder and same growth — and adds undo/redo plus the mention menu. Its line
+height is taller, so a chip fits on one line without changing the composer's
+height as chips come and go.
+
+A few `Textarea` props work differently here:
+
+| On `Textarea` | On `Editor` |
+|---|---|
+| `readOnly` | `disabled` |
+| `onChange` | `onValueChange`, on the root |
+| `rows` | CSS `min-height` |
+| `ref` to an `HTMLTextAreaElement` | `ref` to an `HTMLDivElement` |
+
+<auto-type-table path="./props.ts" name="PromptInputEditorProps" />
+
+### Mentions
+
+Sets up a trigger character and its data. It renders nothing on its own and
+needs `PromptInput.Editor` — next to a `Textarea` it does nothing and warns in
+development.
+
+Pass `items` for a list you already have, or `onSearch` to fetch results as the
+user types. `onSearch` wins if you pass both.
+
+<auto-type-table path="./props.ts" name="PromptInputMentionsProps" />
+
+<auto-type-table path="./props.ts" name="PromptInputMentionItem" />
+
+Each item sets its own `type`, so one `@` menu can mix kinds — the demo below
+has a page, components and users. You get `type` back on submit.
+
+### Header
+
+A slot row above the input, usually for `Chat.Attachment` previews. Hidden
+while empty.
+
+### Footer
+
+The bottom toolbar row. Hidden while empty. Toolbar controls — attach, skills,
+model pickers and similar — are composed from regular Apsara components
+(`Button`, `IconButton`, `Select`, …); give them `type="button"` so they don't
+submit the form.
+
+### Submit
+
+The trailing send button. It renders ↑ when idle, disables itself while the
+composer is empty, shows a spinner while `status="submitted"`, and flips to a
+stop square that calls `onStop` while `status="streaming"`.
+
+<auto-type-table path="./props.ts" name="PromptInputSubmitProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `prompt-input` | Root container |
+| `prompt-input-header` | Row above the textarea — attachments and context |
+| `prompt-input-textarea` | The editable composer |
+| `prompt-input-footer` | Row below the textarea |
+| `prompt-input-submit` | The send button |
 
 ## Accessibility
 

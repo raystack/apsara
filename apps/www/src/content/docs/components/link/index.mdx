@@ -24,31 +24,19 @@ import { Link } from "@raystack/apsara";
 <Link />
 ```
 
-## API Reference
+## Usage
 
-The Link is built over [Text](/docs/components/text#text-props) and accepts all it's props
-
-<auto-type-table path="./props.ts" name="LinkProps" />
-
-### Slots
-
-Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
-
-| Slot | Element |
-|------|---------|
-| `link` | The anchor element (or the element supplied via `render`) |
-
-## Examples
+A styled anchor. The props set how it looks; `render` swaps the element underneath for a router link.
 
 ### Variant
 
-Choose from different variants.
+Link inherits Text's variants, so a link takes the same semantic colors as the copy around it.
 
 <Demo data={variantDemo} />
 
 ### Size
 
-The Link component supports 10 different sizes.
+Link inherits Text's size scale, so a link matches the text it sits in without extra styling.
 
 <Demo data={sizeDemo} />
 
@@ -73,6 +61,20 @@ import { Link as RouterLink } from "react-router-dom";
 
 <Link render={<RouterLink to="/about" />}>About</Link>
 ```
+
+## API Reference
+
+The Link is built over [Text](/docs/components/text#api-reference) and accepts all it's props
+
+<auto-type-table path="./props.ts" name="LinkProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `link` | The anchor element (or the element supplied via `render`) |
 
 ## Accessibility
 

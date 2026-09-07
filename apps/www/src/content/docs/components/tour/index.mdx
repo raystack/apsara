@@ -41,89 +41,9 @@ To compose the card yourself, pass the parts as children:
 </Tour>
 ```
 
-## API Reference
+## Usage
 
-### Tour
-
-The root. Holds the steps and the open/index state, resolves targets, emits
-events, and owns the actions. Renders a context provider — its children default
-to `<Tour.Overlay />` and `<Tour.Content />`.
-
-<auto-type-table path="./props.ts" name="TourProps" />
-
-### Step
-
-Each entry in the `steps` array.
-
-<auto-type-table path="./props.ts" name="TourStep" />
-
-### Tour.Content
-
-The card. Accepts positioning defaults and either static children, a render
-function, or the default layout.
-
-<auto-type-table path="./props.ts" name="TourContentProps" />
-
-### Tour.Overlay
-
-The dimmed backdrop with a spotlight cutout over the target.
-
-<auto-type-table path="./props.ts" name="TourOverlayProps" />
-
-### Tour.Progress
-
-Renders the step counter, e.g. "2 of 5".
-
-<auto-type-table path="./props.ts" name="TourProgressProps" />
-
-### Tour.Title / Tour.Description
-
-Give the card its accessible name and description, falling back to the step's
-`title` and `content`.
-
-### Tour.Next / Tour.Prev / Tour.Skip / Tour.Close
-
-Navigation buttons. Each runs your `onClick` first, then its action
-(`next`, `prev`, `skip`, `stop`). `Tour.Next` finishes the tour past the last
-step.
-
-### Actions
-
-`start`, `next`, `prev`, `go`, `skip`, and `stop`. Reach them through
-`actionsRef`, or anywhere inside `<Tour>` with the `useTour()` hook. `start` is
-the only action that runs while the tour is closed.
-
-<auto-type-table path="./props.ts" name="TourActions" />
-
-### Events
-
-Every lifecycle moment is reported to `onEvent`.
-
-<auto-type-table path="./props.ts" name="TourEvent" />
-
-### Slots
-
-Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
-
-| Slot | Element |
-|------|---------|
-| `tour-overlay` | `Tour.Overlay` root |
-| `tour-spotlight` | The cut-out spotlight highlight |
-| `tour-spotlight-cover` | The dimmed cover around the spotlight (when a target is resolved) |
-| `tour-overlay-hit` | Click-blocking hit-test strips around the spotlight |
-| `tour-positioner` | Positioning wrapper around the content popup |
-| `tour-content` | `Tour.Content` popup |
-| `tour-arrow` | The pointing arrow (when `showArrow` and not detached) |
-| `tour-step-content` | Wrapper around the active step's card content |
-| `tour-title` | `Tour.Title` |
-| `tour-description` | `Tour.Description` |
-| `tour-progress` | `Tour.Progress` |
-| `tour-next` | `Tour.Next` button |
-| `tour-prev` | `Tour.Prev` button (rendered from the second step onward in the default layout) |
-| `tour-skip` | `Tour.Skip` button |
-| `tour-close` | `Tour.Close` button |
-
-## Examples
+A tour is an array of steps, each pointing at a real element. The props below cover who drives the sequence and what the card looks like.
 
 ### Controlled with imperative controls
 
@@ -214,6 +134,90 @@ which suits walkthroughs whose consecutive targets sit close together.
 ```
 
 Both collapse to instant swaps under `prefers-reduced-motion: reduce`.
+
+## API Reference
+
+The tour and its step shape, then the card parts to compose when the default card is not enough.
+
+### Tour
+
+The root. Holds the steps and the open/index state, resolves targets, emits
+events, and owns the actions. Renders a context provider — its children default
+to `<Tour.Overlay />` and `<Tour.Content />`.
+
+<auto-type-table path="./props.ts" name="TourProps" />
+
+### Step
+
+Each entry in the `steps` array.
+
+<auto-type-table path="./props.ts" name="TourStep" />
+
+### Tour.Content
+
+The card. Accepts positioning defaults and either static children, a render
+function, or the default layout.
+
+<auto-type-table path="./props.ts" name="TourContentProps" />
+
+### Tour.Overlay
+
+The dimmed backdrop with a spotlight cutout over the target.
+
+<auto-type-table path="./props.ts" name="TourOverlayProps" />
+
+### Tour.Progress
+
+Renders the step counter, e.g. "2 of 5".
+
+<auto-type-table path="./props.ts" name="TourProgressProps" />
+
+### Tour.Title / Tour.Description
+
+Give the card its accessible name and description, falling back to the step's
+`title` and `content`.
+
+### Tour.Next / Tour.Prev / Tour.Skip / Tour.Close
+
+Navigation buttons. Each runs your `onClick` first, then its action
+(`next`, `prev`, `skip`, `stop`). `Tour.Next` finishes the tour past the last
+step.
+
+### Actions
+
+`start`, `next`, `prev`, `go`, `skip`, and `stop`. Reach them through
+`actionsRef`, or anywhere inside `<Tour>` with the `useTour()` hook. `start` is
+the only action that runs while the tour is closed.
+
+<auto-type-table path="./props.ts" name="TourActions" />
+
+### Events
+
+Every lifecycle moment is reported to `onEvent`.
+
+<auto-type-table path="./props.ts" name="TourEvent" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `tour-overlay` | `Tour.Overlay` root |
+| `tour-spotlight` | The cut-out spotlight highlight |
+| `tour-spotlight-cover` | The dimmed cover around the spotlight (when a target is resolved) |
+| `tour-overlay-hit` | Click-blocking hit-test strips around the spotlight |
+| `tour-positioner` | Positioning wrapper around the content popup |
+| `tour-content` | `Tour.Content` popup |
+| `tour-arrow` | The pointing arrow (when `showArrow` and not detached) |
+| `tour-step-content` | Wrapper around the active step's card content |
+| `tour-title` | `Tour.Title` |
+| `tour-description` | `Tour.Description` |
+| `tour-progress` | `Tour.Progress` |
+| `tour-next` | `Tour.Next` button |
+| `tour-prev` | `Tour.Prev` button (rendered from the second step onward in the default layout) |
+| `tour-skip` | `Tour.Skip` button |
+| `tour-close` | `Tour.Close` button |
 
 ## Accessibility
 

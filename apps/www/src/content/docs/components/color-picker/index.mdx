@@ -30,7 +30,42 @@ import { ColorPicker } from '@raystack/apsara'
 </ColorPicker>
 ```
 
+## Usage
+
+The picker is composed from an area pad, sliders and an input, so you can drop in the whole thing or keep only the parts you need.
+
+### Basic usage
+
+An uncontrolled picker. Pass `defaultValue` for the starting color and read changes from `onValueChange`.
+
+<Demo data={basicDemo} />
+
+### Copy to clipboard
+
+Pass the `copyable` prop on `ColorPicker.Input` to render a copy-to-clipboard button in the input's trailing slot. The button copies the formatted color string in the active mode (e.g. `#FF0000`, `rgb(...)`, or `oklch(...)`) and shows a brief confirmation icon after a successful copy.
+
+<Demo data={copyableDemo} />
+
+### OKLCH mode
+
+The picker stores color internally in OKLCH. What the controls show depends on the mode:
+
+- **`hex`, `rgb`, `hsl`** — the area pad is the familiar HSL saturation × brightness square and the hue slider runs in HSL hue. The picker behaves like a traditional color picker and only emits colors the chosen format can represent.
+- **`oklch`** — the pad becomes a chroma × lightness plane covering the full P3 gamut, and the hue slider runs in OKLCH hue, where equal steps are equal perceptual changes.
+
+To start in OKLCH, pass an `oklch(...)` string as `defaultValue` and set `defaultMode='oklch'`.
+
+<Demo data={oklchDemo} />
+
+### Popover integration
+
+The `ColorPicker` can be embedded within a `Popover` component to create a more interactive and space-efficient color selection experience.
+
+<Demo data={popoverDemo} />
+
 ## API Reference
+
+The pad and sliders compose inside a root. `formatColor` turns a value into a string yourself.
 
 ### Root
 
@@ -80,32 +115,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `color-picker-input` | The read-only color value input |
 | `color-picker-mode` | The mode select trigger |
 | `color-picker-mode-content` | The mode select dropdown content (when open) |
-
-## Examples
-
-### Basic Usage
-
-<Demo data={basicDemo} />
-
-### Copy to Clipboard
-
-Pass the `copyable` prop on `ColorPicker.Input` to render a copy-to-clipboard button in the input's trailing slot. The button copies the formatted color string in the active mode (e.g. `#FF0000`, `rgb(...)`, or `oklch(...)`) and shows a brief confirmation icon after a successful copy.
-
-<Demo data={copyableDemo} />
-
-### OKLCH Mode
-
-The picker stores color internally in OKLCH. In `hex`, `rgb`, and `hsl` modes the area pad is the familiar HSL saturation × brightness square and the hue slider runs in HSL hue — so the picker behaves like a traditional color picker and only emits colors representable in the chosen format. Pass an `oklch(...)` string as `defaultValue` and set `defaultMode='oklch'` to switch to a chroma × lightness plane covering the full P3 gamut; the hue slider then runs in OKLCH hue, where equal steps correspond to equal perceptual changes.
-
-<Demo data={oklchDemo} />
-
-### Popover Integration
-
-The `ColorPicker` can be embedded within a `Popover` component to create a more interactive and space-efficient color selection experience.
-
-<Demo data={popoverDemo} />
-
-## Utilities
 
 ### formatColor
 

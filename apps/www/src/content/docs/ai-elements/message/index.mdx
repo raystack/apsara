@@ -30,32 +30,9 @@ anywhere: inside a `Chat` scroller, a comment thread, or a standalone
 transcript. Scroll behavior (visibility tracking, turn anchoring) belongs to
 [Chat](/docs/ai-elements/chat) — wrap a message in `Chat.Item` to opt in.
 
-## API Reference
+## Usage
 
-### Message
-
-One message. `align` drives which side everything sits on.
-
-<auto-type-table path="./props.ts" name="MessageProps" />
-
-Sub-parts are layout slots: `Message.Avatar` (bottom-aligned beside the
-message), `Message.Header` (sender line), `Message.Content` (the body
-column), `Message.Footer` (timestamp line) and `Message.Actions`
-(hover-revealed controls beside the bubble; always visible on touch devices).
-
-### Message.Group
-
-A flex column that pulls consecutive messages from the same sender closer
-together. Render the avatar and footer once — typically on the group's last
-message.
-
-### Message.Bubble
-
-The message surface.
-
-<auto-type-table path="./props.ts" name="MessageBubbleProps" />
-
-## Examples
+A message is composed from parts. What follows covers those parts, how consecutive turns group together, and the bubble treatments.
 
 ### Message anatomy
 
@@ -86,6 +63,47 @@ conventional treatment for assistant replies: the reader's own messages keep a
 bubble, the assistant's read as page content.
 
 <Demo data={ghostDemo} />
+
+## API Reference
+
+A message, a group of them, and the bubble a message body sits in.
+
+### Message
+
+One message. `align` drives which side everything sits on.
+
+<auto-type-table path="./props.ts" name="MessageProps" />
+
+Sub-parts are layout slots: `Message.Avatar` (bottom-aligned beside the
+message), `Message.Header` (sender line), `Message.Content` (the body
+column), `Message.Footer` (timestamp line) and `Message.Actions`
+(hover-revealed controls beside the bubble; always visible on touch devices).
+
+### Message.Group
+
+A flex column that pulls consecutive messages from the same sender closer
+together. Render the avatar and footer once — typically on the group's last
+message.
+
+### Message.Bubble
+
+The message surface.
+
+<auto-type-table path="./props.ts" name="MessageBubbleProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `message` | A single message row |
+| `message-group` | Wrapper around consecutive messages from one sender |
+| `message-avatar` | The sender avatar |
+| `message-header` | Row above the bubble — sender name and timestamp |
+| `message-content` | The bubble holding the message body |
+| `message-actions` | Action row revealed on the message |
+| `message-footer` | Row below the bubble |
 
 ## Accessibility
 

@@ -1,11 +1,12 @@
 ---
-title: PreviewCard
+title: Preview Card
 description: A popup that appears when a link is hovered, showing a preview for sighted users.
 source: packages/raystack/components/preview-card
-tag: new
 ---
 
-import { playground, arrowDemo, positionDemo, contentTransitionsDemo } from "./demo.ts";
+import { playground, arrowDemo, positionDemo, contentTransitionsDemo,
+  controlledDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -24,7 +25,37 @@ import { PreviewCard } from "@raystack/apsara";
 </PreviewCard>
 ```
 
+## Usage
+
+A preview card opens on hover after a short delay. The props below cover how it looks and where it lands.
+
+### With arrow
+
+Display an arrow pointing to the trigger element.
+
+<Demo data={arrowDemo} />
+
+### Content transitions
+
+When multiple triggers share one card via `createHandle`, wrap content in `Viewport` to animate transitions between them. Content slides in from the direction of the newly hovered trigger.
+
+<Demo data={contentTransitionsDemo} />
+
+### Positioning
+
+Control the position of the preview card relative to its trigger.
+
+<Demo data={positionDemo} />
+
+### Controlled
+
+Pass `open` with `onOpenChange` to own the state. Use it when the card has to stay open while the reader interacts with it, rather than closing on pointer-out.
+
+<Demo data={controlledDemo} />
+
 ## API Reference
+
+A trigger and its content, with `Viewport` for cards whose contents change size.
 
 ### Root
 
@@ -60,26 +91,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `preview-card-content` | The preview card popup |
 | `preview-card-viewport` | The `PreviewCard.Viewport` wrapper |
 | `preview-card-arrow` | The arrow (when `showArrow`) |
-
-## Examples
-
-### With Arrow
-
-Display an arrow pointing to the trigger element.
-
-<Demo data={arrowDemo} />
-
-### Content Transitions
-
-When multiple triggers share one card via `createHandle`, wrap content in `Viewport` to animate transitions between them. Content slides in from the direction of the newly hovered trigger.
-
-<Demo data={contentTransitionsDemo} />
-
-### Positioning
-
-Control the position of the preview card relative to its trigger.
-
-<Demo data={positionDemo} />
 
 ## Accessibility
 

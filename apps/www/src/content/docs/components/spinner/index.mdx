@@ -18,6 +18,26 @@ import { Spinner } from "@raystack/apsara";
 <Spinner />
 ```
 
+## Usage
+
+How big the spinner is, and what color it turns.
+
+### Size
+
+Six steps, 1 through 6. Pick the one that matches the text or control it sits beside.
+
+The Spinner component offers different size options. You can customize the size of the spinner using the `size` prop. The available size options are:
+
+<Demo data={sizeDemo} />
+
+### Color
+
+`default` inherits `currentColor`, so the spinner takes the color of the text around it. The other five carry meaning — `accent`, `danger`, `success`, `attention`, `neutral`.
+
+The Spinner component offers 6 color values. `default` prop sets the color to `currentColor` mainly helpful if we want to render the Spinner inside another component like Button. Spinner (with color="default") inherits the foreground color of button text.
+
+<Demo data={colorDemo} />
+
 ## API Reference
 
 Renders a loading spinner animation.
@@ -32,20 +52,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 |------|---------|
 | `spinner` | The root element |
 | `spinner-pole` | Each of the eight spinner poles |
-
-## Examples
-
-### Size
-
-The Spinner component offers different size options. You can customize the size of the spinner using the `size` prop. The available size options are:
-
-<Demo data={sizeDemo} />
-
-### Color
-
-The Spinner component offers 6 color values. `default` prop sets the color to `currentColor` mainly helpful if we want to render the Spinner inside another component like Button. Spinner (with color="default") inherits the foreground color of button text.
-
-<Demo data={colorDemo} />
 
 ## Accessibility
 
