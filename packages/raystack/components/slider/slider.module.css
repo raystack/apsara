@@ -64,7 +64,7 @@
   position: relative;
   background-color: var(--rs-color-background-base-primary);
   border: 0.5px solid var(--rs-color-border-base-tertiary);
-  border-radius: var(--rs-radius-2);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
   box-shadow: var(--rs-shadow-soft);
   display: flex;
   align-items: center;
@@ -76,7 +76,7 @@
   width: 1px;
   height: 6px;
   background-color: var(--rs-color-border-base-tertiary);
-  border-radius: var(--rs-radius-1);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-1));
 }
 
 .thumbSmall {
@@ -118,7 +118,7 @@
   color: var(--rs-color-foreground-base-primary);
   background-color: var(--rs-color-background-base-primary);
   border: 0.5px solid var(--rs-color-border-base-primary);
-  border-radius: var(--rs-radius-2);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
   transform: translateX(-50%);
   white-space: nowrap;
   box-shadow: var(--rs-shadow-soft);

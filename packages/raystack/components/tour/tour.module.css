@@ -83,9 +83,11 @@
   min-width: 16rem;
   max-width: 20rem;
   padding: var(--rs-space-5);
-  background-color: var(--rs-color-background-base-primary);
+  background-color: var(--rs-color-panel);
+  backdrop-filter: var(--rs-panel-backdrop-filter);
   border: 1px solid var(--rs-color-border-base-primary);
-  border-radius: var(--rs-radius-3);
+  --rs-radius-step: 6px;
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-3));
   box-shadow: var(--rs-shadow-soft);
   color: var(--rs-color-foreground-base-primary);
   font-size: var(--rs-font-size-small);

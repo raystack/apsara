@@ -23,7 +23,7 @@
 }
 
 /* Light Theme Colors */
-[data-theme="light"] {
+:where([data-theme="light"]) {
   /* Neutral Colors */
   --rs-neutral-1: var(--rs-gray-1);
   --rs-neutral-2: var(--rs-gray-2);
@@ -159,7 +159,7 @@
 }
 
 /* Dark Theme Colors */
-[data-theme="dark"] {
+:where([data-theme="dark"]) {
   /* Neutral Colors */
   --rs-neutral-1: var(--rs-gray-1);
   --rs-neutral-2: var(--rs-gray-2);

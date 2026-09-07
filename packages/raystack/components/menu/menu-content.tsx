@@ -6,6 +6,12 @@ import {
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { KeyboardEvent, useCallback, useRef } from 'react';
+import {
+  type PortalContainer,
+  useThemeInjection
+} from '../theme-preview/portal';
+import { radiusClass } from '../theme-preview/radius';
+import type { Radius } from '../theme-preview/settings';
 import styles from './menu.module.css';
 import { useMenuContext } from './menu-root';
 import {
@@ -22,6 +28,10 @@ export interface MenuContentProps
     >,
     MenuPrimitive.Popup.Props {
   searchPlaceholder?: string;
+  /** Portals into this element instead of `document.body`. */
+  container?: PortalContainer;
+  /** Corner radius for this menu only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 export function MenuContent({
@@ -35,6 +45,8 @@ export function MenuContent({
   sideOffset = 4,
   align = 'start',
   onFocus,
+  container,
+  radius,
   ...positionerProps
 }: MenuContentProps) {
   const {
@@ -97,8 +109,10 @@ export function MenuContent({
     item.dispatchEvent(new PointerEvent('pointerout', { bubbles: true }));
   }, []);
 
+  const theme = useThemeInjection();
+
   return (
-    <MenuPrimitive.Portal>
+    <MenuPrimitive.Portal container={container}>
       <MenuPrimitive.Positioner
         data-slot='menu-positioner'
         className={styles.positioner}
@@ -108,10 +122,13 @@ export function MenuContent({
       >
         <MenuPrimitive.Popup
           ref={ref}
+          {...theme}
           data-slot='menu-content'
           className={cx(
             styles.content,
             autocomplete && styles.comboboxContainer,
+            theme?.className,
+            radiusClass(radius),
             className
           )}
           style={style}

@@ -1,19 +1,27 @@
-:root {
-    --rs-space-1: 2px;
-    --rs-space-2: 4px;
-    --rs-space-3: 8px;
-    --rs-space-4: 12px;
-    --rs-space-5: 16px;
-    --rs-space-6: 20px;
-    --rs-space-7: 24px;
-    --rs-space-8: 28px;
-    --rs-space-9: 32px;
-    --rs-space-10: 40px;
-    --rs-space-11: 48px;
-    --rs-space-12: 56px;
-    --rs-space-13: 64px;
-    --rs-space-14: 72px;
-    --rs-space-15: 80px;
-    --rs-space-16: 96px;
-    --rs-space-17: 120px;
+/*
+ * On the theme selector rather than `:root` so a scope can change it, which is
+ * what makes `scaling` possible. The declaration must match the theme element
+ * itself rather than be inherited: custom properties substitute at
+ * computed-value time, so an inherited `--rs-space-1` would already have
+ * resolved against the ancestor's `--rs-scaling`. `:root` is kept for the
+ * previous provider, which writes to `<html>`.
+ */
+:where(:root, [data-theme]) {
+  --rs-space-1: calc(2px * var(--rs-scaling, 1));
+  --rs-space-2: calc(4px * var(--rs-scaling, 1));
+  --rs-space-3: calc(8px * var(--rs-scaling, 1));
+  --rs-space-4: calc(12px * var(--rs-scaling, 1));
+  --rs-space-5: calc(16px * var(--rs-scaling, 1));
+  --rs-space-6: calc(20px * var(--rs-scaling, 1));
+  --rs-space-7: calc(24px * var(--rs-scaling, 1));
+  --rs-space-8: calc(28px * var(--rs-scaling, 1));
+  --rs-space-9: calc(32px * var(--rs-scaling, 1));
+  --rs-space-10: calc(40px * var(--rs-scaling, 1));
+  --rs-space-11: calc(48px * var(--rs-scaling, 1));
+  --rs-space-12: calc(56px * var(--rs-scaling, 1));
+  --rs-space-13: calc(64px * var(--rs-scaling, 1));
+  --rs-space-14: calc(72px * var(--rs-scaling, 1));
+  --rs-space-15: calc(80px * var(--rs-scaling, 1));
+  --rs-space-16: calc(96px * var(--rs-scaling, 1));
+  --rs-space-17: calc(120px * var(--rs-scaling, 1));
 }

@@ -2,6 +2,12 @@
 
 import { Dialog as DialogPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import {
+  type PortalContainer,
+  useThemeInjection
+} from '../theme-preview/portal';
+import { radiusClass } from '../theme-preview/radius';
+import type { Radius } from '../theme-preview/settings';
 import styles from './dialog.module.css';
 import { CloseButton } from './dialog-misc';
 
@@ -13,6 +19,10 @@ export interface DialogContentProps extends DialogPrimitive.Popup.Props {
    * `@default` true
    */
   showNestedAnimation?: boolean;
+  /** Portals into this element instead of `document.body`. */
+  container?: PortalContainer;
+  /** Corner radius for this dialog only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 export function DialogContent({
@@ -21,10 +31,13 @@ export function DialogContent({
   showCloseButton = true,
   overlay,
   showNestedAnimation = true,
+  container,
+  radius,
   ...props
 }: DialogContentProps) {
+  const theme = useThemeInjection();
   return (
-    <DialogPrimitive.Portal>
+    <DialogPrimitive.Portal container={container}>
       <DialogPrimitive.Backdrop
         data-slot='dialog-backdrop'
         {...overlay}
@@ -39,9 +52,12 @@ export function DialogContent({
         data-slot='dialog-viewport'
       >
         <DialogPrimitive.Popup
+          {...theme}
           className={cx(
             styles.dialogContent,
             showNestedAnimation && styles.showNestedAnimation,
+            theme?.className,
+            radiusClass(radius),
             className
           )}
           data-slot='dialog-content'

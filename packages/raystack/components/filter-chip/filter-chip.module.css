@@ -5,7 +5,7 @@
   letter-spacing: var(--rs-letter-spacing-small);
   height: var(--rs-space-7);
   background: var(--rs-color-background-base-primary);
-  border-radius: var(--rs-radius-2);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
   text-wrap: nowrap;
   /* Hug content, but cap at the parent and shrink under it. `min-width: 0`
    * is required: `min-content` would let the value leak in and beat the cap. */

@@ -1,0 +1,4 @@
+/* Internal partial, kept only for the `data-style="traditional"` pairing on the
+   previous `Theme` provider. These two imports go with it. */
+@import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500&display=swap");

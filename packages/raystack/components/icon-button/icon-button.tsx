@@ -1,10 +1,12 @@
 import { cva, VariantProps } from 'class-variance-authority';
 import { ComponentProps } from 'react';
 import { Flex } from '../flex';
+import { radiusVariants } from '../theme-preview/radius';
 import styles from './icon-button.module.css';
 
 const iconButton = cva(styles.iconButton, {
   variants: {
+    ...radiusVariants,
     size: {
       1: styles['iconButton-size-1'],
       2: styles['iconButton-size-2'],
@@ -31,6 +33,7 @@ export interface IconButtonProps
 export function IconButton({
   className,
   size,
+  radius,
   disabled,
   children,
   'aria-label': ariaLabel,
@@ -39,7 +42,7 @@ export function IconButton({
 }: IconButtonProps) {
   return (
     <button
-      className={iconButton({ size, className })}
+      className={iconButton({ size, radius, className })}
       disabled={disabled}
       type='button'
       aria-label={ariaLabel}

@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: var(--rs-z-index-portal);
-  background-color: var(--rs-color-overlay-black-a5);
+  background-color: var(--rs-color-overlay);
   opacity: calc(1 - var(--drawer-swipe-progress, 0));
   transition: opacity var(--rs-duration-drawer) var(--rs-ease-drawer);
 }
@@ -55,7 +55,8 @@
 .drawerPopup {
   box-sizing: border-box;
   padding: var(--rs-space-3);
-  background-color: var(--rs-color-background-base-primary);
+  background-color: var(--rs-color-panel);
+  backdrop-filter: var(--rs-panel-backdrop-filter);
   color: var(--rs-color-foreground-base-primary);
   overflow-y: auto;
   overscroll-behavior: contain;

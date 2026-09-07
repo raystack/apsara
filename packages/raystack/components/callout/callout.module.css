@@ -3,7 +3,8 @@
   width: 400px;
   max-width: 100%;
   padding: var(--rs-space-3);
-  border-radius: var(--rs-radius-2);
+  --rs-radius-step: 4px;
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
   font-style: normal;
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);

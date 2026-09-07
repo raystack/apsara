@@ -1,4 +1,7 @@
 .image {
+  /* Base step for the shared `radius` override; `medium` reproduces the
+     previous `--rs-radius-3`. */
+  --rs-radius-step: 6px;
   display: block;
   max-width: 100%;
   height: auto;
@@ -18,22 +21,6 @@
 
 .image-fill {
   object-fit: fill;
-}
-
-.image-radius-none {
-  border-radius: 0;
-}
-
-.image-radius-small {
-  border-radius: var(--rs-radius-2);
-}
-
-.image-radius-medium {
-  border-radius: var(--rs-radius-3);
-}
-
-.image-radius-full {
-  border-radius: var(--rs-radius-full);
 }
 
 /* Load fade: hidden only after JS confirms an in-flight load, so SSR/no-JS

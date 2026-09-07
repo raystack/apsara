@@ -4,12 +4,10 @@
  * All variables must be used from colors.css file only.
  */
 
-/* The bare `[data-theme]` selectors below make the default-gray scale apply to
- * scoped sections that set only `data-theme` (without an explicit
- * `data-gray-color`). The `[data-gray-color='X'][data-theme='dark']` rules for
- * non-default grays still win on specificity when both attributes are set. */
-[data-gray-color="gray"],
-[data-theme="light"] {
+/* The bare `[data-theme]` selectors make the default-gray scale apply to scoped
+ * sections that set no explicit `data-gray-color`. Every rule carries zero
+ * specificity, so the non-default ramps win by being declared later. */
+:where([data-gray-color="gray"], [data-theme="light"]) {
   --rs-gray-1: oklch(0.9911 0 0);
   --rs-gray-2: oklch(0.9821 0 0);
   --rs-gray-3: oklch(0.9551 0 0);
@@ -24,8 +22,7 @@
   --rs-gray-12: oklch(0.2435 0 0);
 }
 
-[data-gray-color="gray"][data-theme="dark"],
-[data-theme="dark"] {
+:where([data-gray-color="gray"][data-theme="dark"], [data-theme="dark"]) {
   --rs-gray-1: oklch(0.1776 0 0);
   --rs-gray-2: oklch(0.2134 0 0);
   --rs-gray-3: oklch(0.252 0 0);
@@ -40,7 +37,7 @@
   --rs-gray-12: oklch(0.9491 0 0);
 }
 
-[data-gray-color="mauve"] {
+:where([data-gray-color="mauve"]) {
   --rs-gray-1: oklch(0.9921 0.0017 325.59);
   --rs-gray-2: oklch(0.9834 0.0028 308.43);
   --rs-gray-3: oklch(0.9556 0.0062 317.75);
@@ -55,7 +52,7 @@
   --rs-gray-12: oklch(0.2445 0.0134 298.46);
 }
 
-[data-gray-color="mauve"][data-theme="dark"] {
+:where([data-gray-color="mauve"][data-theme="dark"]) {
   --rs-gray-1: oklch(0.1797 0.0043 308.19);
   --rs-gray-2: oklch(0.2154 0.0041 308.25);
   --rs-gray-3: oklch(0.2543 0.0057 301.13);
@@ -70,7 +67,7 @@
   --rs-gray-12: oklch(0.9497 0.0027 286.35);
 }
 
-[data-gray-color="slate"] {
+:where([data-gray-color="slate"]) {
   --rs-gray-1: oklch(0.9913 0.0013 286.38);
   --rs-gray-2: oklch(0.9827 0.0026 286.35);
   --rs-gray-3: oklch(0.956 0.004 286.32);
@@ -85,7 +82,7 @@
   --rs-gray-12: oklch(0.2411 0.0097 248.23);
 }
 
-[data-gray-color="slate"][data-theme="dark"] {
+:where([data-gray-color="slate"][data-theme="dark"]) {
   --rs-gray-1: oklch(0.1785 0.0041 285.98);
   --rs-gray-2: oklch(0.2132 0.0042 264.48);
   --rs-gray-3: oklch(0.2521 0.0058 271.18);
@@ -100,7 +97,7 @@
   --rs-gray-12: oklch(0.9489 0.0029 264.54);
 }
 
-[data-gray-color="sage"] {
+:where([data-gray-color="sage"]) {
   --rs-gray-1: oklch(0.9923 0.0025 165.08);
   --rs-gray-2: oklch(0.9803 0.0025 165.08);
   --rs-gray-3: oklch(0.9556 0.0035 174.48);
@@ -115,7 +112,7 @@
   --rs-gray-12: oklch(0.2396 0.0117 167.56);
 }
 
-[data-gray-color="sage"][data-theme="dark"] {
+:where([data-gray-color="sage"][data-theme="dark"]) {
   --rs-gray-1: oklch(0.1795 0.0038 164.58);
   --rs-gray-2: oklch(0.2108 0.0036 164.68);
   --rs-gray-3: oklch(0.2495 0.0035 164.77);

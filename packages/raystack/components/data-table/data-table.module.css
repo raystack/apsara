@@ -15,7 +15,7 @@
   padding: 0px;
   min-width: 320px;
   max-width: 352px;
-  border-radius: var(--rs-radius-3);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-3));
 }
 
 .display-popover-properties-container {
@@ -71,7 +71,7 @@
   margin: var(--rs-space-6) auto var(--rs-space-9);
   padding: var(--rs-space-3) var(--rs-space-4);
   border: 0.5px solid var(--rs-color-border-base-primary);
-  border-radius: var(--rs-radius-2);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
 }
 
 .filterSummaryCount {

@@ -2,6 +2,12 @@
 
 import { PreviewCard as PreviewCardPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import {
+  type PortalContainer,
+  useThemeInjection
+} from '../theme-preview/portal';
+import { radiusClass } from '../theme-preview/radius';
+import type { Radius } from '../theme-preview/settings';
 import styles from './preview-card.module.css';
 
 export interface PreviewCardContentProps
@@ -15,6 +21,10 @@ export interface PreviewCardContentProps
    * @default false
    */
   showArrow?: boolean;
+  /** Portals into this element instead of `document.body`. */
+  container?: PortalContainer;
+  /** Corner radius for this card only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 function PreviewCardContent({
@@ -24,10 +34,13 @@ function PreviewCardContent({
   showArrow = false,
   style,
   render,
+  container,
+  radius,
   ...positionerProps
 }: PreviewCardContentProps) {
+  const theme = useThemeInjection();
   return (
-    <PreviewCardPrimitive.Portal>
+    <PreviewCardPrimitive.Portal container={container}>
       <PreviewCardPrimitive.Positioner
         sideOffset={showArrow ? 10 : 4}
         collisionPadding={3}
@@ -37,7 +50,13 @@ function PreviewCardContent({
       >
         <PreviewCardPrimitive.Popup
           ref={ref}
-          className={cx(styles.popup, className)}
+          {...theme}
+          className={cx(
+            styles.popup,
+            theme?.className,
+            radiusClass(radius),
+            className
+          )}
           style={style}
           render={render}
           data-slot='preview-card-content'

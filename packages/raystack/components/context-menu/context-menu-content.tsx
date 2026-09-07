@@ -14,6 +14,12 @@ import {
   isElementSubMenuTrigger,
   KEYCODES
 } from '../menu/utils';
+import {
+  type PortalContainer,
+  useThemeInjection
+} from '../theme-preview/portal';
+import { radiusClass } from '../theme-preview/radius';
+import type { Radius } from '../theme-preview/settings';
 
 export interface ContextMenuContentProps
   extends Omit<
@@ -22,6 +28,10 @@ export interface ContextMenuContentProps
     >,
     ContextMenuPrimitive.Popup.Props {
   searchPlaceholder?: string;
+  /** Portals into this element instead of `document.body`. */
+  container?: PortalContainer;
+  /** Corner radius for this menu only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 export const ContextMenuContent = ({
@@ -35,6 +45,8 @@ export const ContextMenuContent = ({
   sideOffset = 4,
   align = 'start',
   onFocus,
+  container,
+  radius,
   ...positionerProps
 }: ContextMenuContentProps) => {
   const {
@@ -97,8 +109,10 @@ export const ContextMenuContent = ({
     item.dispatchEvent(new PointerEvent('pointerout', { bubbles: true }));
   }, []);
 
+  const theme = useThemeInjection();
+
   return (
-    <ContextMenuPrimitive.Portal>
+    <ContextMenuPrimitive.Portal container={container}>
       <ContextMenuPrimitive.Positioner
         data-slot='context-menu-positioner'
         className={cx(styles.positioner)}
@@ -108,10 +122,13 @@ export const ContextMenuContent = ({
       >
         <ContextMenuPrimitive.Popup
           ref={ref}
+          {...theme}
           data-slot='context-menu-content'
           className={cx(
             styles.content,
             autocomplete && styles.comboboxContainer,
+            theme?.className,
+            radiusClass(radius),
             className
           )}
           style={style}

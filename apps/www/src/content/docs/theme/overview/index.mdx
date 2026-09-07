@@ -7,6 +7,14 @@ import { switcherDemo, switcherSizeDemo } from "./demo.ts";
 
 Apsara's theming is built on CSS custom properties, called tokens. A token is a semantic variable that resolves to the right value for the active theme, so the UI follows along when someone switches between light and dark or you change the accent color. No code changes needed.
 
+<Callout type="grey">
+  This page documents the original `Theme` component, which continues to ship
+  unchanged. New applications should use
+  [`ThemePreview`](/docs/theme/preview) — it server-renders, allows more than
+  one provider per page, works inside portals, and adds radius, scaling, panel
+  background and reduced-motion settings. It includes a migration guide.
+</Callout>
+
 ## Installation
 
 Wrap your application with the `Theme` component:

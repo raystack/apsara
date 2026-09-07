@@ -5,7 +5,8 @@
   align-items: center;
   width: 100%;
   position: relative;
-  border-radius: var(--rs-radius-2);
+  --rs-radius-step: 4px;
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
   border: 0.5px solid var(--rs-color-border-base-tertiary);
   background: var(--rs-color-background-base-primary);
   transition: var(--rs-transition-interactive);
@@ -168,7 +169,7 @@
 .chip-overflow {
   color: var(--rs-color-foreground-base-primary);
   font-size: var(--rs-font-size-small);
-  border-radius: var(--rs-radius-2);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
 }
 
 .prefix,
@@ -184,7 +185,7 @@
   padding: 0 var(--rs-space-2);
   pointer-events: none;
   background: var(--rs-color-background-neutral-secondary);
-  border-radius: var(--rs-radius-2);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
   white-space: nowrap;
   height: auto;
 }
