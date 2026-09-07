@@ -1,4 +1,5 @@
 import { mergeProps, useRender } from '@base-ui/react';
+import { CSSProperties } from 'react';
 import { AlignType } from './types';
 
 type GridItemProps = useRender.ComponentProps<'div'> & {
@@ -28,18 +29,23 @@ export function GridItem({
   ref,
   ...props
 }: GridItemProps) {
-  const gridItemStyle = {
-    gridArea: area,
-    gridColumnStart: colStart,
-    gridColumnEnd: colEnd,
-    gridRowStart: rowStart,
-    gridRowEnd: rowEnd,
-    gridColumn: colSpan ? `span ${colSpan}` : undefined,
-    gridRow: rowSpan ? `span ${rowSpan}` : undefined,
-    justifySelf,
-    alignSelf,
-    ...style
-  };
+  // `gridArea` is a shorthand. React writes `undefined` entries as an empty
+  // value, and clearing any grid longhand after it also clears the shorthand,
+  // so only the properties that were actually set are passed through.
+  const gridItemStyle = Object.fromEntries(
+    Object.entries({
+      gridArea: area,
+      gridColumnStart: colStart,
+      gridColumnEnd: colEnd,
+      gridRowStart: rowStart,
+      gridRowEnd: rowEnd,
+      gridColumn: colSpan ? `span ${colSpan}` : undefined,
+      gridRow: rowSpan ? `span ${rowSpan}` : undefined,
+      justifySelf,
+      alignSelf,
+      ...style
+    }).filter(([, value]) => value !== undefined)
+  ) as CSSProperties;
 
   const gridItemProps = { 'data-slot': 'grid-item', style: gridItemStyle };
 
