@@ -32,7 +32,7 @@ const NO_ITEMS: PromptInputMentionItem[] = [];
  * Re-renders whatever reads the registry when a config or an item lands.
  * `useSyncExternalStore` rather than a subscribe-and-bump effect, because
  * `Mentions` registers its trigger from an effect that runs *before* a later
- * sibling `Editor` gets to subscribe — the store re-reads its snapshot after
+ * sibling `Editor` gets to subscribe, and the store re-reads its snapshot after
  * subscribing, so that first registration is never missed.
  */
 export function useMentionRegistryVersion(
@@ -77,7 +77,7 @@ export function toGroups(items: PromptInputMentionItem[]): SuggestionGroup[] {
   return groups;
 }
 
-/** Sync data filtering — match-sorter on the label, best matches first. */
+/** Sync data filtering: match-sorter on the label, best matches first. */
 export function filterItems(
   items: PromptInputMentionItem[],
   query: string
@@ -293,7 +293,7 @@ export function useMentionMenu({
 
   // The last rect the caret actually had. Selecting an item takes the query
   // range out of the document in the same breath as it closes the menu, but the
-  // popup is still animating out and the positioner keeps measuring — without
+  // popup is still animating out and the positioner keeps measuring. Without
   // something to hand back, it would read a zero rect and the closing menu
   // would jump to the top-left corner of the viewport and flicker there.
   const lastRectRef = useRef<DOMRect | null>(null);
@@ -343,7 +343,7 @@ export function useMentionMenu({
       const consume = () => {
         event.preventDefault();
         // Enter must not reach the form and Escape must not reach ChatPanel,
-        // Dialog or Drawer — either would destroy the draft.
+        // Dialog or Drawer, either of which would destroy the draft.
         event.stopPropagation();
       };
 
@@ -402,7 +402,7 @@ export function useMentionMenu({
 /**
  * `icon`, `trailing` and `data` cannot survive serialization, so a chip parsed
  * from `defaultValue` starts label-only and fills in when the consumer's
- * `resolveMentions` resolves — the same progressive enhancement `Select.Value`
+ * `resolveMentions` resolves, the same progressive enhancement `Select.Value`
  * uses when it falls back to the raw value until an item registers. A rejection
  * or a missing item leaves the chip label-only; it is never an error state and
  * the chip is never removed.

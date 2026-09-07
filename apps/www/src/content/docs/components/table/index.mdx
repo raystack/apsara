@@ -38,13 +38,13 @@ Rows and cells are composed by hand, so a table is whatever markup you give it. 
 
 ### Basic usage
 
-Compose a table from its parts: `Header` and `Body` wrap `Row`s, with `Head` for column titles and `Cell` for each value. Table renders static markup — for sorting, filtering, or pagination, use [DataView](/docs/dataview).
+Compose a table from its parts: `Header` and `Body` wrap `Row`s, with `Head` for column titles and `Cell` for each value. Table renders static markup. For sorting, filtering, or pagination, use [DataView](/docs/dataview).
 
 <Demo data={basicDemo} />
 
 ### Interactive rows
 
-Set `interactive` on a `Row` to make it respond to hover and keyboard focus. Pair it with `onClick` when the whole row opens something — the row becomes the target, so people don't have to hit a link inside a cell.
+Set `interactive` on a `Row` to make it respond to hover and keyboard focus. Pair it with `onClick` when the whole row opens something. The row becomes the target, so people don't have to hit a link inside a cell.
 
 <Demo data={interactiveDemo} />
 
@@ -114,7 +114,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 ## Accessibility
 
 - Uses semantic `table`, `thead`, `tbody`, `tr`, `th`, and `td` elements.
-- `Table.Head` applies `scope="col"` by default — override to `"row"`,
+- `Table.Head` applies `scope="col"` by default. Override it to `"row"`,
   `"colgroup"`, or `"rowgroup"` for non-standard layouts. `SectionHeader`
   uses `scope="colgroup"`.
 - Supports `aria-label` and `aria-labelledby` for table identification.

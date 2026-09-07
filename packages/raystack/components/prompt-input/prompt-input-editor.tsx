@@ -41,7 +41,7 @@ export interface PromptInputEditorProps
   /** Disables just the editor. Inherits the root `disabled` by default. */
   disabled?: boolean;
   /**
-   * Cap on the derived plain text — a chip counts as its label. Enforced by a
+   * Cap on the derived plain text, where a chip counts as its label. Enforced by a
    * transaction filter, so paste and IME are covered, not just keystrokes.
    */
   maxLength?: number;
@@ -53,9 +53,9 @@ export interface PromptInputEditorProps
 }
 
 /**
- * The ProseMirror sibling to `PromptInput.Textarea`: same outward contract —
+ * The ProseMirror sibling to `PromptInput.Textarea`: the same outward contract,
  * Enter submits, Shift+Enter breaks, placeholder, auto-grow, `disabled`, frame
- * focus — on a contentEditable that can host inline mention chips.
+ * focus, on a contentEditable that can host inline mention chips.
  */
 export function PromptInputEditor({
   className,
@@ -161,7 +161,7 @@ export function PromptInputEditor({
   // `--anchor-width`; it takes the composer's width instead, re-measured as the
   // panel resizes. Deliberately a passive effect rather than a layout one: the
   // frame is this part's ancestor, and React attaches an ancestor's ref *after*
-  // running a descendant's layout effects — measuring there would read a null
+  // running a descendant's layout effects, and measuring there would read a null
   // frame once and never look again.
   const frameRef = context.frameRef;
   useEffect(() => {

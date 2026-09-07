@@ -65,7 +65,7 @@
   /*
     The rail's inner edge, matching the one on the sidebar. It starts below the
     navbar rather than at the top of the screen, because above that line the
-    navbar is one strip running the width of the article — there is nothing
+    navbar is one strip running the width of the article, and there is nothing
     there for the rule to divide.
   */
   border-left: var(--docs-rule);

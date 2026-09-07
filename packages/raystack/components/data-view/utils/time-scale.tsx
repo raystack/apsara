@@ -22,7 +22,7 @@ export const TIMELINE_DEFAULT_UNIT_WIDTH: Record<TimelineScale, number> = {
   quarter: 140
 };
 
-/** Minimum px between rendered tick labels — denser ticks skip labels. */
+/** Minimum px between rendered tick labels. Denser ticks skip labels. */
 const TICK_LABEL_MIN_SPACE = 28;
 
 /** Coerce a consumer-provided date (Date | epoch ms | parseable string) to ms. */
@@ -64,7 +64,7 @@ export interface TimelineTimeScale {
   totalWidth: number;
   /** Time (ms) → x offset (px) from the canvas left edge. */
   x: (time: number) => number;
-  /** Inverse of `x` — px offset → time (ms). */
+  /** Inverse of `x`: px offset → time (ms). */
   timeAt: (px: number) => number;
 }
 
@@ -101,7 +101,7 @@ export function createTimeScale(params: {
     padUnits + 1
   );
   // Viewport fill: bulk-add the estimated deficit in one step, then correct
-  // for calendar drift (short months, DST days) — at most a few iterations.
+  // for calendar drift (short months, DST days), at most a few iterations.
   const deficitPx = minWidth - (end.valueOf() - t0) * pxPerMs;
   if (deficitPx > 0) {
     end = addUnits(end, scale, Math.ceil(deficitPx / unitWidth));
@@ -126,7 +126,7 @@ export interface TimelineTick {
   label: string;
   /** False when labels are thinned out at dense zoom levels. */
   showLabel: boolean;
-  /** Sequential unit index from the domain start — drives interval thinning. */
+  /** Sequential unit index from the domain start. Drives interval thinning. */
   index: number;
 }
 
@@ -152,7 +152,7 @@ function tickLabel(date: Dayjs, scale: TimelineScale): string {
 /**
  * Generates the two-tier axis: minor ticks at `scale` granularity and major
  * bands one level up (months over day/week ticks, years over month/quarter
- * ticks). The first band — and any band starting a new year — carries the
+ * ticks). The first band, and any band starting a new year, carries the
  * year in its label ("Jan 2025", then "Feb").
  *
  * `labelEvery` labels every Nth unit, counted from the domain start. The
@@ -160,7 +160,7 @@ function tickLabel(date: Dayjs, scale: TimelineScale): string {
  * applies, so a too-dense request degrades instead of overlapping.
  *
  * Cost note: this materializes one tick per `scale` unit across the whole
- * domain on every rebuild — `virtualized` culls what renders, not what gets
+ * domain on every rebuild, since `virtualized` culls what renders, not what gets
  * built here. Fine at the intended densities (weeks/months, a few years of
  * days); a `day` scale over a decade-wide `range` allocates ~3.6k ticks per
  * rebuild and would need windowed generation instead.

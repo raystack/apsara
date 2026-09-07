@@ -31,7 +31,7 @@ import { Navbar } from "@raystack/apsara";
 
 ## Usage
 
-The bar has three regions — start, center and end. The props below cover how it behaves as the page scrolls.
+The bar has three regions: start, center and end. The props below cover how it behaves as the page scrolls.
 
 ### Sticky navigation
 
@@ -41,7 +41,7 @@ A sticky navbar stays pinned while the page scrolls. Use it when navigation has 
 
 ### Section layouts
 
-Start, Center, and End are independent — use any combination. The three-column grid keeps Center optically centred even when Start and End differ in width.
+Start, Center, and End are independent, so use any combination. The three-column grid keeps Center optically centred even when Start and End differ in width.
 
 <Demo data={sectionsDemo} />
 
@@ -75,7 +75,7 @@ The start section is a container that accepts Flex props (`align`, `gap`, `direc
 
 ### Center
 
-The center section sits in the middle of the navbar in a fixed position—it stays absolutely centered regardless of the width of Start or End content. The navbar uses a 3-column grid (Start | Center | End) so the center does not shift when left or right content changes. It accepts Flex props and section props.
+The center section sits in the middle of the navbar in a fixed position, so it stays absolutely centered regardless of the width of Start or End content. The navbar uses a 3-column grid (Start | Center | End) so the center does not shift when left or right content changes. It accepts Flex props and section props.
 
 <auto-type-table path="./props.ts" name="NavbarCenterProps" />
 

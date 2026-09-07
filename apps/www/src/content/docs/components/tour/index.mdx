@@ -1,6 +1,6 @@
 ---
 title: Tour
-description: Guided product walkthroughs — a sequence of cards that point at real elements, spotlight them, and let people move on, go back, or leave.
+description: Guided product walkthroughs. A sequence of cards that point at real elements, spotlight them, and let people move on, go back, or leave.
 source: packages/raystack/components/tour
 tag: new
 ---
@@ -72,7 +72,7 @@ const [index, setIndex] = useState(0);
 
 ### Custom card with a render function
 
-Leave out `Tour.Next` and advance from app code when the user does something —
+Leave out `Tour.Next` and advance from app code when the user does something. This is
 useful for action-gated steps (draw a shape, open a panel).
 
 ```tsx
@@ -104,8 +104,8 @@ useEffect(() => {
 A target can be a CSS selector, an element, a React ref, or a function. Targets
 that mount after the tour starts are awaited automatically; if one never
 appears within `targetTimeout` the tour skips it (or stops, per
-`targetNotFound`). If a target unmounts mid-step — its dialog closes, its route
-changes — the tour recovers instead of leaving a broken overlay.
+`targetNotFound`). If a target unmounts mid-step, because its dialog closes or its route
+changes, the tour recovers instead of leaving a broken overlay.
 
 ```tsx
 const steps = [
@@ -118,7 +118,7 @@ const steps = [
 
 ### Motion between steps
 
-The dimmed backdrop stays put for the whole tour — it never flashes away
+The dimmed backdrop stays put for the whole tour and never flashes away
 between steps. Only the spotlight cutout animates: it fades shut (dimming the
 old target), repositions while covered, and fades back open once the next
 target has scrolled into view and settled, so the hole never slides across the
@@ -142,7 +142,7 @@ The tour and its step shape, then the card parts to compose when the default car
 ### Tour
 
 The root. Holds the steps and the open/index state, resolves targets, emits
-events, and owns the actions. Renders a context provider — its children default
+events, and owns the actions. Renders a context provider whose children default
 to `<Tour.Overlay />` and `<Tour.Content />`.
 
 <auto-type-table path="./props.ts" name="TourProps" />
@@ -229,6 +229,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 - Escape ends the tour. Outside clicks and focus moves do not, so a step can keep
   focus on the element it highlights.
 - The tour is non-modal (`modal={false}`); it does not trap focus or lock scroll.
-- Motion — the spotlight cutout's fade, the card fade or glide, and scroll-into-view —
+- Motion, meaning the spotlight cutout's fade, the card fade or glide, and scroll-into-view,
   is enabled only when `prefers-reduced-motion: no-preference`; otherwise steps swap
   instantly.

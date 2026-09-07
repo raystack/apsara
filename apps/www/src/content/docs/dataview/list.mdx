@@ -1,6 +1,6 @@
 ---
 title: List
-description: DataView's table and list renderer — two presentations behind one component, with virtualization, grouping, and row selection.
+description: DataView's table and list renderer. Two presentations behind one component, with virtualization, grouping, and row selection.
 source: packages/raystack/components/data-view
 ---
 
@@ -18,7 +18,7 @@ import {
 
 ## Overview
 
-`DataView.List` draws the row model as a grid. It ships two presentations behind one renderer — `variant="table"` for column headers and aligned tracks, `variant="list"` for card-style rows — and both read the same [fields, filters, and display properties](/docs/dataview) declared on the root.
+`DataView.List` draws the row model as a grid. It ships two presentations behind one renderer, `variant="table"` for column headers and aligned tracks and `variant="list"` for card-style rows, and both read the same [fields, filters, and display properties](/docs/dataview) declared on the root.
 
 ## Anatomy
 
@@ -42,7 +42,7 @@ One renderer, two presentations. `variant` decides which; everything else applie
 
 ### Variant
 
-`variant="table"` is the default: a header row, aligned column tracks, and real table semantics. `variant="list"` drops the header and renders card-style rows — the default `1fr` middle column with `auto` end columns gives you the familiar justify-between layout.
+`variant="table"` is the default: a header row, aligned column tracks, and real table semantics. `variant="list"` drops the header and renders card-style rows, where the default `1fr` middle column with `auto` end columns gives you the familiar justify-between layout.
 
 <Demo data={listPreview} />
 
@@ -61,13 +61,13 @@ An accessor with no matching entry in the root's `fields` is an **unmanaged disp
 
 ### Virtualization
 
-For large datasets, pass `virtualized`. The parent must have a fixed height — only the rows in view are rendered. Rows auto-measure after paint, so variable-height content (avatars, wrapped text, badges) just works. `estimatedRowHeight` is an optional hint used only until the first measurement.
+For large datasets, pass `virtualized`. The parent must have a fixed height, and only the rows in view are rendered. Rows auto-measure after paint, so variable-height content (avatars, wrapped text, badges) just works. `estimatedRowHeight` is an optional hint used only until the first measurement.
 
 <Demo data={virtualizedPreview} />
 
 ### Grouping
 
-Group rows by any `groupable` field. `stickyGroupHeader` pins the active group label directly under the column headers while you scroll past that group's rows. Pick a different field from `DisplayControls` → Grouping at runtime — the wire format stays `group_by: string[]`.
+Group rows by any `groupable` field. `stickyGroupHeader` pins the active group label directly under the column headers while you scroll past that group's rows. Pick a different field from `DisplayControls` → Grouping at runtime, and the wire format stays `group_by: string[]`.
 
 <Demo data={groupingPreview} />
 
@@ -81,7 +81,7 @@ While `isLoading` is `true`, `DataView.List` renders `loadingRowCount` skeleton 
 
 <Demo data={loadingPreview} />
 
-In [server mode](/docs/dataview#server-mode), infinite scroll triggers via a single sentinel and an `IntersectionObserver` — there are no scroll-distance knobs to tune. While `isLoading` is true the sentinel is suppressed so your `onLoadMore` isn't fired again during a fetch.
+In [server mode](/docs/dataview#server-mode), infinite scroll triggers via a single sentinel and an `IntersectionObserver`, so there are no scroll-distance knobs to tune. While `isLoading` is true the sentinel is suppressed so your `onLoadMore` isn't fired again during a fetch.
 
 ### Row selection
 
@@ -91,11 +91,11 @@ DataView doesn't ship a selection toolbar, but the underlying TanStack table ins
 
 - **Pass `getRowId` whenever the data can change under you.** Without it, selection falls back to positional keys (`'0'`, `'1'`, and `'<group>.<index>'` inside a group section). Those keys come from the `data` array rather than the visible order, so client-side sort, filter, and search are safe, and a static dataset needs nothing. What they can't survive is the identity behind a position changing: a refetch or a server-mode sort returning rows in a new order moves the selection to whatever now sits at that index, and toggling Grouping re-keys the rows and drops it.
 - **Selection state lives on the table instance.** Read it with `table.getSelectedRowModel()`, clear it with `table.resetRowSelection()`, and mirror it outside the tree with `onRowSelectionChange` on the root.
-- **The TanStack [row selection API](https://tanstack.com/table/v8/docs/guide/row-selection) works as documented** — `row.getIsSelected()`, `row.toggleSelected()`, `row.getIsSomeSelected()`, `table.getIsAllRowsSelected()`, `getIsSomeRowsSelected()`, `toggleAllRowsSelected()`, `setRowSelection()`, `resetRowSelection()`. The header helpers are computed over the **filtered** rows, so select-all tracks what the user can see rather than the whole dataset.
+- **The TanStack [row selection API](https://tanstack.com/table/v8/docs/guide/row-selection) works as documented**: `row.getIsSelected()`, `row.toggleSelected()`, `row.getIsSomeSelected()`, `table.getIsAllRowsSelected()`, `getIsSomeRowsSelected()`, `toggleAllRowsSelected()`, `setRowSelection()`, `resetRowSelection()`. The header helpers are computed over the **filtered** rows, so select-all tracks what the user can see rather than the whole dataset.
 - **Skip the two handler getters from that guide.** `row.getToggleSelectedHandler()` and `table.getToggleAllRowsSelectedHandler()` adapt a native `<input type="checkbox" onChange>` and read `event.target.checked`. Apsara's [`Checkbox`](/docs/components/checkbox) reports a boolean through `onCheckedChange`, so the table-level getter throws on `undefined.checked` and the row-level one only works through its "no value means invert" fallback. Call `toggleSelected` and `toggleAllRowsSelected` with the boolean instead.
-- **Position the bar through `FloatingActions`.** It defaults to `variant="floating"` — `position: fixed`, bottom-center — so the call site needs no positioning CSS. To scope the bar to the view instead of the viewport, give an ancestor `transform`, `filter`, or `contain: paint` so it becomes the containing block. Add `padding-bottom` via `classNames.root` if rows would otherwise sit behind it.
+- **Position the bar through `FloatingActions`.** It defaults to `variant="floating"`, meaning `position: fixed` and bottom-center, so the call site needs no positioning CSS. To scope the bar to the view instead of the viewport, give an ancestor `transform`, `filter`, or `contain: paint` so it becomes the containing block. Add `padding-bottom` via `classNames.root` if rows would otherwise sit behind it.
 - **Stop propagation in the checkbox's `onClick`** when the root has an `onRowClick`, otherwise ticking a checkbox also activates the row.
-- **Grouping works alongside selection.** Group header rows are keyed in their own id space and are not selectable, so `rowSelection` holds one key per data row and select-all covers the visible data rows without flagging the bands. Read the count off `getSelectedRowModel().flatRows`, not `.rows` — the latter only walks selected *top-level* rows, which is empty while grouping puts every data row one level down.
+- **Grouping works alongside selection.** Group header rows are keyed in their own id space and are not selectable, so `rowSelection` holds one key per data row and select-all covers the visible data rows without flagging the bands. Read the count off `getSelectedRowModel().flatRows`, not `.rows`, since the latter only walks selected *top-level* rows, which is empty while grouping puts every data row one level down.
 
 ## API Reference
 

@@ -22,11 +22,11 @@ import { FilterChip } from "@raystack/apsara";
 
 ## Usage
 
-The input type decides what the chip edits — text, a number, a date, or a list of options — and everything else follows from it.
+The input type decides what the chip edits: text, a number, a date, or a list of options. Everything else follows from it.
 
 ### Input types
 
-FilterChip supports five input types — `select`, `multiselect`, `date`, `string`, and `number` — to handle various filtering needs. `multiselect` takes a `string[]` value and summarizes two or more selections as "N selected".
+FilterChip supports five input types, `select`, `multiselect`, `date`, `string`, and `number`, to handle various filtering needs. `multiselect` takes a `string[]` value and summarizes two or more selections as "N selected".
 
 <Demo data={inputDemo} />
 
@@ -38,7 +38,7 @@ Use `selectProps` to enable autocomplete search on select and multiselect filter
 
 ### Date with calendarProps
 
-Use `calendarProps` to forward DatePicker options — `dateFormat`, `timeZone`, `slotProps.calendar`, etc. — to the chip's date control. `value`, `onSelect`, and `defaultValue` are owned by `FilterChip`, and `children` is excluded so the chip's input trigger isn't replaced.
+Use `calendarProps` to forward DatePicker options such as `dateFormat`, `timeZone` and `slotProps.calendar` to the chip's date control. `value`, `onSelect`, and `defaultValue` are owned by `FilterChip`, and `children` is excluded so the chip's input trigger isn't replaced.
 
 <Demo data={calendarPropsDemo} />
 
@@ -66,7 +66,7 @@ FilterChip supports custom filter operations through the `operations` prop. When
 
 ### Controlled
 
-Pass `value` with `onValueChange` to own the filter — needed when the chip drives a query and the value has to survive a refetch or a shared URL.
+Pass `value` with `onValueChange` to own the filter. Do this when the chip drives a query and the value has to survive a refetch or a shared URL.
 
 <Demo data={controlledDemo} />
 

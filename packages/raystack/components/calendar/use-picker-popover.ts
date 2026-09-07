@@ -25,7 +25,7 @@ export interface UsePickerPopoverReturn {
    * readOnly inputs) should engage on open via `useEffect`.
    */
   engage: () => void;
-  // Programmatic close — does NOT fire `onOutsideClick`.
+  // Programmatic close. Does NOT fire `onOutsideClick`.
   disengage: () => void;
 }
 
@@ -40,7 +40,7 @@ export interface UsePickerPopoverReturn {
  * renders Selects inside the popover; their portals look "outside" to a naive
  * dismiss handler. The hook carves that out via `markDropdownOpen`.
  *
- * `onOpenChange` reads `isOpen` via ref so its identity stays stable —
+ * `onOpenChange` reads `isOpen` via ref so its identity stays stable,
  * Base UI's store subscriber re-binds on identity change, which caused an
  * updateStoreInstance loop on mount.
  */
@@ -56,7 +56,7 @@ export function usePickerPopover({
   const isEngagedRef = useRef(false);
 
   /*
-   * True while the Calendar's year/month dropdown is open — its clicks
+   * True while the Calendar's year/month dropdown is open, whose clicks
    * are not "outside".
    */
   const isDropdownOpenRef = useRef(false);
@@ -125,7 +125,7 @@ export function usePickerPopover({
         return;
       }
       // Not yet engaged. If the user tab'd straight to an outside element,
-      // close immediately — otherwise keyboard users get stuck with the
+      // close immediately, since otherwise keyboard users get stuck with the
       // popover open until they mouse-click somewhere.
       if (el && isElementOutside(el)) {
         onOutsideClickRef.current();
@@ -149,10 +149,10 @@ export function usePickerPopover({
      * Base UI's `Popover.Trigger` wires `useClick`, which *toggles* the popover
      * on every trigger click. The input's `onFocus` already opens the picker, so
      * a single click both opens (focus) and then toggles back closed
-     * (trigger-press) — the popover flickers shut on the first click and only
+     * (trigger-press), so the popover flickers shut on the first click and only
      * sticks open on the second. Ignore trigger-press *closes*: opening stays
      * owned by focus (and trigger-press open), while closing is owned by our
-     * outside-click / blur / Enter / day-select logic — plus Base UI's own
+     * outside-click / blur / Enter / day-select logic, plus Base UI's own
      * Escape/outside-press, which still flow through below.
      */
     if (reason === 'trigger-press' && open === false) return;

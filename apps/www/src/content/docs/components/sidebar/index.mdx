@@ -48,7 +48,7 @@ import { Sidebar } from "@raystack/apsara";
 
 ## Usage
 
-Most of a sidebar's behaviour is about collapsing — what it looks like collapsed, who controls it, and how the user gets it back.
+Most of a sidebar's behaviour is about collapsing: what it looks like collapsed, who controls it, and how the user gets it back.
 
 ### Position
 
@@ -81,7 +81,7 @@ For a responsive layout, drive it from your own breakpoint check:
 <Sidebar collapsible={isMobile ? 'hidden' : 'icon'} />
 ```
 
-When `collapsible="hidden"` is closed, the strip is just wide enough for the resize handle — reopen by clicking it, or place a `Sidebar.Trigger` as a direct child of `<Sidebar>` (not inside `Header`/`Main`/`Footer`, which are hidden along with everything else) for a clearer affordance, as in the "Hidden" tab below.
+When `collapsible="hidden"` is closed, the strip is just wide enough for the resize handle. Reopen by clicking it, or place a `Sidebar.Trigger` as a direct child of `<Sidebar>` (not inside `Header`/`Main`/`Footer`, which are hidden along with everything else) for a clearer affordance, as in the "Hidden" tab below.
 
 <Demo data={collapsedAppearanceDemo} />
 
@@ -109,7 +109,7 @@ content instead of pushing it, and the real `open` state never changes.
 - **A `Sidebar.Item`** just navigates, leaving the open state alone.
 
 It works with either collapsed appearance. With `"hidden"` there is no icon rail,
-so hover the thin strip at the edge instead — the "Hidden" tab below shows this.
+so hover the thin strip at the edge instead, as the "Hidden" tab below shows.
 
 The peek waits 100ms so it does not fire when the mouse only passes over.
 Change that with `peekDelay`.
@@ -124,7 +124,7 @@ Item tooltips show the item label when collapsed. Override the message when the 
 
 ### Hide item tooltips when collapsed
 
-Set `hideItemTooltips` to disable the tooltips the Sidebar adds to navigation items — the label tooltip when collapsed, and the full-text tooltip on clipped labels when expanded. Useful when you show your own tooltips or want a cleaner collapsed state.
+Set `hideItemTooltips` to disable the tooltips the Sidebar adds to navigation items: the label tooltip when collapsed, and the full-text tooltip on clipped labels when expanded. Useful when you show your own tooltips or want a cleaner collapsed state.
 
 <Demo data={hideTooltipDemo} />
 
@@ -196,7 +196,7 @@ The footer section is a container that accepts all `div` props. It's commonly us
 
 A button that toggles the sidebar open/closed. It works whether the Sidebar is controlled or uncontrolled, so you can drop it into a header without wiring up any state yourself. It accepts all `IconButton` props (e.g. `size`) plus the ones below.
 
-*Note: disabled automatically when the Sidebar has `collapsible="none"`. If you use `collapsible="hidden"`, don't place `Sidebar.Trigger` inside `Sidebar.Header`/`Main`/`Footer` — those sections are hidden along with the rest of the collapsed content, taking the trigger with them. Render it as a direct child of `<Sidebar>` instead, or drive `open`/`onOpenChange` yourself with a toggle button that lives outside `<Sidebar>` entirely (e.g. in your app's top bar).*
+*Note: disabled automatically when the Sidebar has `collapsible="none"`. If you use `collapsible="hidden"`, don't place `Sidebar.Trigger` inside `Sidebar.Header`/`Main`/`Footer`, because those sections are hidden along with the rest of the collapsed content, taking the trigger with them. Render it as a direct child of `<Sidebar>` instead, or drive `open`/`onOpenChange` yourself with a toggle button that lives outside `<Sidebar>` entirely (e.g. in your app's top bar).*
 
 <auto-type-table path="./props.ts" name="SidebarTriggerProps" />
 
@@ -240,13 +240,13 @@ A hook that reads the sidebar state from context. Use it in custom header, foote
 
 It returns:
 
-- `isCollapsed` — `true` when the sidebar is collapsed (accounts for `peekOnHover`: `false` while peeking)
-- `isPeeking` — `true` while a collapsed sidebar is being temporarily revealed via `peekOnHover`
-- `open` — `true` when the sidebar is expanded
-- `setOpen(open)` — expand or collapse the sidebar
-- `collapsible` — mirrors the `collapsible` prop: `"icon"`, `"hidden"`, or `"none"` (`"none"` means it cannot be collapsed)
-- `position` — `"left"` or `"right"`
-- `hideItemTooltips` — whether the tooltips the Sidebar adds to items are disabled
+- `isCollapsed`: `true` when the sidebar is collapsed (accounts for `peekOnHover`: `false` while peeking)
+- `isPeeking`: `true` while a collapsed sidebar is being temporarily revealed via `peekOnHover`
+- `open`: `true` when the sidebar is expanded
+- `setOpen(open)`: expand or collapse the sidebar
+- `collapsible`: mirrors the `collapsible` prop: `"icon"`, `"hidden"`, or `"none"` (`"none"` means it cannot be collapsed)
+- `position`: `"left"` or `"right"`
+- `hideItemTooltips`: whether the tooltips the Sidebar adds to items are disabled
 
 ```tsx
 import { Sidebar, useSidebar } from "@raystack/apsara";
@@ -280,7 +280,7 @@ Add `data-collapse-hidden` to any element inside the Sidebar to hide it automati
 
 The Sidebar implements the following accessibility features:
 
-- **Reduced motion** — Sidebar collapse/expand motion is enabled only when `prefers-reduced-motion: no-preference`.
+- **Reduced motion**: Sidebar collapse/expand motion is enabled only when `prefers-reduced-motion: no-preference`.
 - Proper ARIA roles and attributes
 
   - `role="navigation"` for the main sidebar
@@ -305,4 +305,4 @@ The Sidebar implements the following accessibility features:
   - Clear state indicators
 
 - Known limitations
-  - `peekOnHover` is mouse-only; there's no keyboard/focus equivalent that reveals the preview. Keyboard and screen reader users still get each item's full label via the existing per-item tooltip on focus, so no content is unreachable — they just don't get the hover preview shortcut.
+  - `peekOnHover` is mouse-only; there's no keyboard/focus equivalent that reveals the preview. Keyboard and screen reader users still get each item's full label via the existing per-item tooltip on focus, so no content is unreachable; they only miss the hover preview shortcut.

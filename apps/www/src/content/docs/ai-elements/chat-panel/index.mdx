@@ -1,6 +1,6 @@
 ---
 title: Chat Panel
-description: A dockable, floating, minimizable window frame for chat — an inline sidebar that pops out to a draggable, resizable window or collapses to a corner bubble.
+description: A dockable, floating, minimizable window frame for chat. An inline sidebar that pops out to a draggable, resizable window or collapses to a corner bubble.
 source: packages/raystack/components/chat-panel
 tag: new
 ---
@@ -31,23 +31,23 @@ import { ChatPanel } from '@raystack/apsara'
 </Flex>
 ```
 
-The panel mounts **once** in your layout and switches between modes in place —
+The panel mounts **once** in your layout and switches between modes in place:
 no portal, no remount, so chat state (scroll position, focus, streams) survives
 every transition:
 
-- **`docked`** — an in-flow sidebar (a flex sibling, like `SidePanel`) that
+- **`docked`**: an in-flow sidebar (a flex sibling, like `SidePanel`) that
   squeezes the main content rather than covering it.
-- **`floating`** — the same element switched to `position: fixed`. Drag it by
+- **`floating`**: the same element switched to `position: fixed`. Drag it by
   the header, resize it from any edge or corner.
   - Drag is clamped to the viewport, or to a container via `dragBoundary`.
     Turn it off with `draggable={false}`.
   - Constrain the resize axes with `resize`. Resizing only shrinks the window
-    below its starting size — pass a larger `maxSize` to let it grow.
-- **`minimized`** — the frame collapses to `ChatPanel.Trigger`, a fixed corner
+    below its starting size, so pass a larger `maxSize` to let it grow.
+- **`minimized`**: the frame collapses to `ChatPanel.Trigger`, a fixed corner
   bubble, and clicking it restores the previous mode. Render no trigger and
   minimized shows nothing, so your app can supply its own affordance.
 
-There is deliberately no close (×) — header actions are slottable, so apps
+There is deliberately no close (×), because header actions are slottable, so apps
 add their own controls next to the ready-made mode triggers.
 
 Because floating and minimized rely on `position: fixed`, mount the panel
@@ -74,7 +74,7 @@ that is.
 
 Both ease with `--rs-ease-out`, so the panel settles into place rather than
 starting from a standstill. Both are skipped under
-`prefers-reduced-motion: reduce`, and neither runs on first paint — a mode has
+`prefers-reduced-motion: reduce`, and neither runs on first paint. A mode has
 to have changed for there to be a transition.
 
 Dragging is exempt. A drag writes an inline `transform`, and only the separate
@@ -84,7 +84,7 @@ pointer and ending a drag never replays the transition.
 ### Controlled mode
 
 Control `mode` to persist it, or to open the panel from your own UI. The
-floating window here is fixed to the browser viewport — pop it out and drag
+floating window here is fixed to the browser viewport, so pop it out and drag
 its header.
 
 <Demo data={controlledDemo} />
@@ -148,7 +148,7 @@ The frame wraps a header, a content area and the minimized bubble. Header action
 
 ### Header
 
-The title bar. In floating mode it is the drag handle — pointer drags on it
+The title bar. In floating mode it is the drag handle, and pointer drags on it
 move the window (interactive children like buttons are excluded, as is
 anything marked `data-chat-panel-no-drag`).
 
@@ -176,13 +176,13 @@ also accept a render function receiving `{ floating }` for per-state icons:
 
 ### Content
 
-The body wrapper — a flex column that gives `Chat.Messages` its bounded
+The body wrapper, a flex column that gives `Chat.Messages` its bounded
 height.
 
 ### Trigger
 
 The minimized-state corner bubble. Children replace the default `CoPilotIcon`,
-and `draggable` lets the bubble be dragged around the viewport — a completed
+and `draggable` lets the bubble be dragged around the viewport. A completed
 drag never triggers the restore click.
 
 <auto-type-table path="./props.ts" name="ChatPanelTriggerProps" />

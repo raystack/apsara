@@ -31,7 +31,7 @@ You pay only for the icons you import. A build that shows three icons ships
 three icons, not all 31.
 
 The package root exports the same components, so
-`import { SearchIcon } from '@raystack/apsara'` works too — it is the natural
+`import { SearchIcon } from '@raystack/apsara'` works too, and it is the natural
 choice in a file that already imports Apsara components. See
 [which path to import from](#which-path-to-import-from) for the difference.
 
@@ -41,7 +41,7 @@ choice in a file that already imports Apsara components. See
 
 Need an icon that is not here? `createIcon` is public, so
 [build your own](#building-your-own-icons) and it behaves like the ones above.
-lucide draws over 1,700 icons and your app can reach all of them — Apsara
+lucide draws over 1,700 icons and your app can reach all of them. Apsara
 exports these 31 because they are the ones inside its components, which you
 cannot reach any other way.
 
@@ -63,7 +63,7 @@ the drawing behind them is a choice rather than a shape you asked for:
 | `CoPilotIcon` | lucide `Sparkles` |
 
 A key is yours to rely on; the drawing behind it can change in a release. So
-prefer the key that says the job — `SortDescendingIcon` — over one that repeats
+prefer the key that says the job, such as `SortDescendingIcon`, over one that repeats
 lucide's own vocabulary.
 
 Two keys can share a drawing. `ErrorIcon` and `ClearIcon` are both `CircleX`, so
@@ -77,7 +77,7 @@ Every icon renders with `width={16} height={16} strokeWidth={1.5}`. The rendered
 stroke is `strokeWidth × size ÷ 24`, because lucide draws in a 24-unit viewBox.
 So the default draws a 1px stroke at 16px.
 
-If you change the size and want to keep a 1px stroke, scale the stroke with it —
+If you change the size and want to keep a 1px stroke, scale the stroke with it:
 `strokeWidth={24 / size}`.
 
 All three are standard SVG attributes, so any icon library accepts them. A
@@ -136,7 +136,7 @@ const icons = {
 </Theme>
 ```
 
-Apsara then uses your component everywhere that icon appears — inside its own
+Apsara then uses your component everywhere that icon appears, including inside its own
 components too. The map is partial: a key you do not name keeps its default, so
 you never have to supply a complete set.
 
@@ -152,7 +152,7 @@ still win.
 
 <Demo data={globalPropsDemo} />
 
-Prefer `data-icon` and CSS when a style rule is enough — `props` flows through
+Prefer `data-icon` and CSS when a style rule is enough. `props` flows through
 React and re-renders the icons, and CSS does not.
 
 ### Nesting
@@ -169,7 +169,7 @@ Overrides are resolved at runtime, so a bundler cannot know which defaults to
 drop.
 
 Replacing all 31 costs about 3.6 kB gzipped of lucide that never draws. The cost
-is flat — it does not grow as you override more. If you want the default gone
+is flat and does not grow as you override more. If you want the default gone
 from the bundle entirely, import your own icon at the call site instead of
 overriding it.
 
@@ -179,7 +179,7 @@ overriding it.
 that does:
 
 ```tsx
-// src/icons.ts — the app's single place for icons
+// src/icons.ts: the app's single place for icons
 import { createIcon } from '@raystack/apsara/icons';
 import { Rocket, Trash2 } from 'lucide-react';
 
@@ -197,11 +197,11 @@ You get the base props, `data-icon`, and one file to edit if you ever change
 icon library.
 
 Your icons read the same context, so the `props` half of `<Theme icons>` reaches
-them too. The `components` half only accepts the keys Apsara ships — to change
+them too. The `components` half only accepts the keys Apsara ships. To change
 one of your own, edit the file above.
 
 <Callout type="grey">
-  lucide exports several aliases per icon — `Search`, `SearchIcon` and
+  lucide exports several aliases per icon, so `Search`, `SearchIcon` and
   `LucideSearch` are the same drawing. Apsara's names collide with the middle
   flavour, so `import { SearchIcon } from 'lucide-react'` and `import
   { SearchIcon } from '@raystack/apsara/icons'` are different components with one
@@ -244,8 +244,8 @@ export default function Layout({ children }) {
 }
 ```
 
-Resolution is a pure function of the context and the props — no `localStorage`,
-no `window`, no effect — so the server markup and the client markup are
+Resolution is a pure function of the context and the props, with no `localStorage`,
+no `window` and no effect, so the server markup and the client markup are
 identical. There is no hydration mismatch and no flash of the wrong icon.
 
 ## Which path to import from
@@ -284,7 +284,7 @@ The `icons` prop on `Theme`.
 
 ### IconOptions
 
-The object `icons` accepts — `components` replaces drawings by key, `props` applies to every icon.
+The object `icons` accepts. `components` replaces drawings by key, and `props` applies to every icon.
 
 <auto-type-table path="./props.ts" name="IconOptions" />
 
@@ -302,7 +302,7 @@ function createIcon(name: string, Default: IconComponent): IconComponent;
 ```
 
 Wraps a component as an Apsara icon: base props below the call site,
-`data-icon="<name>"`, and the provider `props`. `name` is any string —
+`data-icon="<name>"`, and the provider `props`. `name` is any string, while
 `IconName` covers only what Apsara ships, and only those keys can be replaced
 through `<Theme icons>`.
 
@@ -310,7 +310,7 @@ through `<Theme icons>`.
 
 `IconProps` is `Omit<SVGProps<SVGSVGElement>, 'children'>`: every SVG attribute
 React accepts, minus `children`. In practice you pass `width`, `height`,
-`strokeWidth`, `className`, `style` or `color` — see [base props](#base-props).
+`strokeWidth`, `className`, `style` or `color`. See [base props](#base-props).
 
 `IconComponent` is `ComponentType<IconProps>`, so any component with those props
 can stand in for an icon. `IconOverrides` is

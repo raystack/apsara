@@ -12,8 +12,8 @@ const separator = instance.getBoolean('Seperator', {
   false: undefined
 });
 
-// State (Default / Active / Filled / Placeholder) is purely visual — no matching
-// code prop on OTPField — intentionally not mapped.
+// State (Default / Active / Filled / Placeholder) is purely visual, with no matching
+// code prop on OTPField, so it is intentionally not mapped.
 
 export default {
   id: 'OTPField',

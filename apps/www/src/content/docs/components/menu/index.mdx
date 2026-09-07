@@ -65,7 +65,7 @@ Use `Menu.Submenu`, `Menu.SubmenuTrigger`, and `Menu.SubmenuContent` to create n
 Pass `autocomplete` to the Menu root. Each menu manages its own autocomplete state.
 
 - **`autocompleteMode="auto"`** is the default. Items filter as the user types, matched against each item's `value` prop or its children text.
-- **`autocompleteMode="manual"`** leaves filtering to you — do it in `onInputValueChange`.
+- **`autocompleteMode="manual"`** leaves filtering to you. Do it in `onInputValueChange`.
 - **Submenus** opt in separately: pass `autocomplete` to `Menu.Submenu`.
 
 <Demo data={autocompleteDemo} />
@@ -80,7 +80,7 @@ To closely replicate Linear-style filtering, the filtering logic should include 
 
 ### Controlled
 
-Pass `open` with `onOpenChange` to own the state — needed when a keyboard shortcut or another control has to open the menu.
+Pass `open` with `onOpenChange` to own the state. Do this when a keyboard shortcut or another control has to open the menu.
 
 <Demo data={controlledDemo} />
 
@@ -195,7 +195,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
   open and close submenus.
 - With `autocomplete`, the popup becomes a `role="dialog"` containing a search
   input, items render as `role="option"`, and focus stays in the input while
-  arrow keys move the highlight — ArrowRight or Enter opens a highlighted
+  arrow keys move the highlight, and ArrowRight or Enter opens a highlighted
   submenu, and Escape first closes an open submenu.
 - `Menu.Label` must be wrapped in `Menu.Group` so the group is labelled via
   `aria-labelledby`.
