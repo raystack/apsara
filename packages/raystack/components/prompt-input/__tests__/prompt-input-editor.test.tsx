@@ -7,7 +7,7 @@ import type { PromptInputActions } from '../prompt-input-root';
 
 /**
  * The editor host. ProseMirror owns its subtree, so tests reach it the way a
- * user does — through events on this element — rather than through React.
+ * user does, through events on this element, rather than through React.
  */
 function editorOf(container: HTMLElement): HTMLElement {
   const node = container.querySelector('[role="textbox"]');
@@ -429,8 +429,8 @@ describe('PromptInput.Editor', () => {
       );
       const editor = editorOf(container);
 
-      // The derived text is "@Button" — exactly 7 characters counting the
-      // trigger the chip does not render — so nothing more fits.
+      // The derived text is "@Button", exactly 7 characters counting the
+      // trigger the chip does not render, so nothing more fits.
       type(editor, '!');
       expect(editor.textContent).toBe('Button');
     });
@@ -446,7 +446,7 @@ describe('PromptInput.Editor', () => {
     });
 
     it('allows an edit that shrinks an already over-long document', () => {
-      // Over the cap from the start — a restored draft, or a lowered cap. The
+      // Over the cap from the start, whether a restored draft or a lowered cap. The
       // filter has to let it shrink or the composer would be frozen.
       const { container } = render(
         <PromptInput defaultValue='abcdefgh@[Button](component:button)'>

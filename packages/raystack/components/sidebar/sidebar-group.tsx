@@ -23,7 +23,7 @@ export interface SidebarNavigationGroupProps extends ComponentProps<'section'> {
   onOpenChange?: (open: boolean) => void;
   leadingIcon?: ReactNode;
   trailingIcon?: ReactNode;
-  /** @deprecated Every key here has an equivalent `[data-slot]` — see the Slots table in the Sidebar docs. */
+  /** @deprecated Every key here has an equivalent `[data-slot]`. See the Slots table in the Sidebar docs. */
   classNames?: {
     /** @deprecated Use `[data-slot="sidebar-group-header"]` instead. */
     header?: string;

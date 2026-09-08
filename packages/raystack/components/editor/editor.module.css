@@ -1,11 +1,11 @@
 /* The editing host. A contentEditable div grows with its content natively, so
-   there is no `field-sizing` here — that property applies to form controls. */
+   there is no `field-sizing` here, since that property applies to form controls. */
 .editor {
   /* One line box has to be tall enough to hold a whole chip, or inserting one
      would grow the composer and nudge the page under it. The small font's own
      16px line box is shorter than a chip's icon and trailing slots, so the
      editor pairs the small font with the regular line height and sizes the chip
-     to match — the line box is then the same height whatever a line holds. */
+     to match, so the line box is the same height whatever a line holds. */
   --editor-line-height: var(--rs-line-height-regular);
 
   box-sizing: border-box;
@@ -28,12 +28,12 @@
   margin: 0;
 }
 
-/* prosemirror-view ships a stylesheet the editor deliberately does not load —
+/* prosemirror-view ships a stylesheet the editor deliberately does not load,
    it brings its own type, layout and selection treatment. Two of those rules
    are load-bearing rather than cosmetic, so they are mirrored here. */
 
 /* ProseMirror appends a zero-size placeholder <img> after a paragraph that ends
-   in a `contentEditable="false"` node — a chip — so the browser can draw a
+   in a `contentEditable="false"` node, a chip, so the browser can draw a
    caret past it. An app-level `img { display: block }` reset (Tailwind's
    preflight carries one) turns that placeholder into a block box, which reads
    as a phantom empty line under the chip and swallows a Backspace. */
@@ -53,7 +53,7 @@
   background: transparent;
 }
 
-/* Read from the same emptiness predicate as `data-empty` — a ProseMirror-empty
+/* Read from the same emptiness predicate as `data-empty`, a ProseMirror-empty
    paragraph still holds a trailing <br>, so `:empty` would never match. */
 .placeholder::before {
   content: attr(data-placeholder);
@@ -71,7 +71,7 @@
 }
 
 /* Chip. Chip's tokens on the editor's own type scale, so the line box does not
-   jump, and inert — removal is editing-only, so there is no hover or active
+   jump, and inert, since removal is editing-only, so there is no hover or active
    treatment to advertise a press that does nothing. */
 .mention {
   display: inline-flex;
@@ -126,7 +126,7 @@
   height: var(--rs-space-4);
 }
 
-/* NodeSelection — clicking a chip selects it as one unit. */
+/* NodeSelection: clicking a chip selects it as one unit. */
 .mention[data-selected] {
   outline: var(--rs-focus-ring);
   outline-offset: 1px;

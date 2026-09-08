@@ -38,7 +38,7 @@ export function PromptInputTextarea({
 
   // A plain textarea reports the same shape `Editor` does, so Root's callbacks
   // have one signature either way: markup *is* text and there are never any
-  // mentions — a literal `@[x](y:z)` typed in here stays literal.
+  // mentions, so a literal `@[x](y:z)` typed in here stays literal.
   const api = useMemo<PromptInputInputApi>(
     () => ({
       focus: () => nodeRef.current?.focus(),

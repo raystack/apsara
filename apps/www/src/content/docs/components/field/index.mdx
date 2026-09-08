@@ -65,7 +65,7 @@ Use Field to add label, description, and error to an Input.
 
 ### With TextArea
 
-Field wraps a TextArea the same way it wraps an Input — the label, description, and error all wire up through the same context.
+Field wraps a TextArea the same way it wraps an Input, so the label, description, and error all wire up through the same context.
 
 <Demo data={withTextAreaDemo} />
 
@@ -145,12 +145,12 @@ An error message displayed when validation fails. Renders a `<div>` element.
 
 The `match` prop controls when the error is shown:
 
-- **`match="valueMissing"`** — shown when a `required` field is empty
-- **`match="typeMismatch"`** — shown when `type="email"` or `type="url"` value is invalid
-- **`match="patternMismatch"`** — shown when value doesn't match the `pattern` regex
-- **`match="tooShort"` / `match="tooLong"`** — shown for `minLength` / `maxLength` violations
-- **`match="rangeUnderflow"` / `match="rangeOverflow"`** — shown for `min` / `max` violations
-- **`match="customError"`** — shown when the Field's `validate` prop returns an error
+- **`match="valueMissing"`**: shown when a `required` field is empty
+- **`match="typeMismatch"`**: shown when `type="email"` or `type="url"` value is invalid
+- **`match="patternMismatch"`**: shown when value doesn't match the `pattern` regex
+- **`match="tooShort"` / `match="tooLong"`**: shown for `minLength` / `maxLength` violations
+- **`match="rangeUnderflow"` / `match="rangeOverflow"`**: shown for `min` / `max` violations
+- **`match="customError"`**: shown when the Field's `validate` prop returns an error
 
 <auto-type-table path="./props.ts" name="FieldErrorProps" />
 

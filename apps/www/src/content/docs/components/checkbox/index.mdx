@@ -32,7 +32,7 @@ Use `Checkbox.Group` to manage shared state across multiple checkboxes:
 
 ## Usage
 
-A checkbox on its own, then in a group — where a parent can both reflect and drive the children beneath it.
+A checkbox on its own, then in a group, where a parent can both reflect and drive the children beneath it.
 
 ### Size variants
 
@@ -42,13 +42,13 @@ Two sizes. `large` is the default; `small` fits table rows and dense lists.
 
 ### States
 
-A checkbox can be checked, unchecked, or `indeterminate` — the third state for a parent whose children are only partly selected.
+A checkbox can be checked, unchecked, or `indeterminate`, the third state for a parent whose children are only partly selected.
 
 <Demo data={statesExamples} />
 
 ### Controlled
 
-Pass `checked` with `onCheckedChange` to own the state — needed when the value lives in a form, gates another control, or has to be read back on submit.
+Pass `checked` with `onCheckedChange` to own the state. Do this when the value lives in a form, gates another control, or has to be read back on submit.
 
 <Demo data={controlledDemo} />
 

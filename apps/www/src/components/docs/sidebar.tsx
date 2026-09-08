@@ -26,7 +26,7 @@ function renderNode(node: Node, pathname: string): ReactNode {
     node.children.length > 0
   ) {
     // A section documented across several pages. It renders like every other
-    // section — always open — with the index page listed first under its own
+    // section, always open, with the index page listed first under its own
     // title.
     return (
       <Sidebar.Group

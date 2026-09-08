@@ -3,7 +3,7 @@ title: Styling
 description: How to style and customize Apsara components in your application.
 ---
 
-Apsara uses vanilla CSS with CSS custom properties (tokens) for all styling. There is no runtime CSS-in-JS — styles are static, scoped, and predictable. This guide covers the recommended ways to customize components and build your own styled elements.
+Apsara uses vanilla CSS with CSS custom properties (tokens) for all styling. There is no runtime CSS-in-JS, so styles are static, scoped, and predictable. This guide covers the recommended ways to customize components and build your own styled elements.
 
 ## Using design tokens
 
@@ -86,7 +86,7 @@ Common data attributes include `data-open`, `data-closed`, `data-active`, `data-
 
 ### With data-slot
 
-Every part a component renders carries a `data-slot` attribute — a stable, public identifier for that element. Use it to style inner parts that have no `className` prop of their own, without depending on Apsara's internal (hashed) class names:
+Every part a component renders carries a `data-slot` attribute, a stable public identifier for that element. Use it to style inner parts that have no `className` prop of their own, without depending on Apsara's internal (hashed) class names:
 
 ```css
 /* Tint the remove button inside every filter chip */
@@ -111,7 +111,7 @@ Slot names follow one convention:
 - Subparts extend the prefix: `data-view-filter-summary-clear`.
 - The same part keeps the same name everywhere it appears (loader cells in `DataView.List` reuse `data-view-list-cell`).
 
-Slot names are covered by semver — renaming or removing one is a breaking change, so selectors written against them are safe to keep. This is different from state attributes like `data-open` above: state attributes tell you *how* an element currently is, `data-slot` tells you *what* it is.
+Slot names are covered by semver, so renaming or removing one is a breaking change, so selectors written against them are safe to keep. This is different from state attributes like `data-open` above: state attributes tell you *how* an element currently is, `data-slot` tells you *what* it is.
 
 Combine them freely:
 
@@ -126,7 +126,7 @@ Slots also make reliable selectors for tests (`querySelector('[data-slot="search
 
 ### Styling based on what a component contains
 
-Because every part carries its own slot, a parent can change its own styling based on which children are present — no prop needed to signal it. CSS's `:has()` reaches into descendants:
+Because every part carries its own slot, a parent can change its own styling based on which children are present, with no prop needed to signal it. CSS's `:has()` reaches into descendants:
 
 ```css
 /* A filter bar that's tighter when it has no chips yet */
@@ -154,7 +154,7 @@ With Tailwind's arbitrary variants, the same thing reads as a utility class inst
 </Dialog.Footer>
 ```
 
-This is the same technique as the state-based selectors above (`data-[state=open]:...`) — `data-slot` just gives you a target that's stable across releases instead of one tied to internal markup.
+This is the same technique as the state-based selectors above (`data-[state=open]:...`), except that `data-slot` gives you a target that's stable across releases instead of one tied to internal markup.
 
 Coverage: every Apsara component exposes `data-slot` on every element it renders. Each component's docs page lists its slot names.
 

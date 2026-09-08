@@ -30,7 +30,7 @@
   padding: 0 var(--rs-space-2);
 }
 
-/* Flat items (no groups) — apply section-like vertical padding & gap. */
+/* Flat items (no groups): apply section-like vertical padding & gap. */
 .list:not(:has(.group)) {
   padding: var(--rs-space-3) var(--rs-space-2);
   gap: var(--rs-space-1);

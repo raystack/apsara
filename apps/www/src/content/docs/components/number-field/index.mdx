@@ -24,10 +24,10 @@ Import and use the component standalone or composed:
 ```tsx
 import { NumberField } from "@raystack/apsara";
 
-{/* Standalone — renders decrement, input, and increment internally */}
+{/* Standalone: renders decrement, input, and increment internally */}
 <NumberField defaultValue={0} />
 
-{/* Composed — full control over sub-components */}
+{/* Composed: full control over sub-components */}
 <NumberField defaultValue={0}>
   <NumberField.ScrubArea label="Amount" />
   <NumberField.Group>
@@ -82,7 +82,7 @@ Number field with currency formatting, powered by `Intl.NumberFormat` internally
 
 ### Controlled
 
-Pass `value` with `onValueChange` to own the number — needed when the value feeds a calculation, a query, or another field.
+Pass `value` with `onValueChange` to own the number. Do this when the value feeds a calculation, a query, or another field.
 
 <Demo data={controlledDemo} />
 

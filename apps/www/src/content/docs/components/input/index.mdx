@@ -58,7 +58,7 @@ Input comes in two sizes: small (24px) and large (32px).
 
 ### With prefix and suffix
 
-Prefix and suffix sit inside the field for fixed units and protocols — a currency symbol, `https://`, `@`. They are decoration, not part of the value.
+Prefix and suffix sit inside the field for fixed units and protocols: a currency symbol, `https://`, `@`. They are decoration, not part of the value.
 
 <Demo data={prefixDemo} />
 
@@ -85,7 +85,7 @@ chips?: Array<{ label: string; onRemove?: () => void }>;
 maxChipsVisible?: number;  // defaults to 2   
 ```
 
-This is purely a presentation layer — it does not manage chip state. The wrapper component owns the array and decides when items are added or removed.
+This is purely a presentation layer and does not manage chip state. The wrapper component owns the array and decides when items are added or removed.
 
 The example below 
   appends a chip on `Enter`, removes one when its dismiss button is clicked.
@@ -100,7 +100,7 @@ Use Field to add label, description, and error handling.
 
 ### Controlled
 
-Use `onValueChange` for a callback that receives only the new string value, or `onChange` for the full React change event. Both fire on every keystroke — pick whichever fits your needs.
+Use `onValueChange` for a callback that receives only the new string value, or `onChange` for the full React change event. Both fire on every keystroke, so pick whichever fits your needs.
 
 <Demo data={onValueChangeDemo} />
 

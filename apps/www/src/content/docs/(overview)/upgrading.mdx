@@ -4,10 +4,10 @@ description: Breaking changes in each Apsara release, and the steps to move your
 ---
 
 One section per release, newest first, with only the changes that need action
-from you. The full record of every release — features and fixes included — is
+from you. The full record of every release, features and fixes included, is
 on [GitHub releases](https://github.com/raystack/apsara/releases).
 
-## 1.6 — lucide replaces the radix icons
+## 1.6: lucide replaces the radix icons
 
 Apsara used to draw its icons with [`@radix-ui/react-icons`](https://www.radix-ui.com/icons).
 Since 1.6 it draws them with [lucide](https://lucide.dev), behind stable keys
@@ -22,7 +22,7 @@ names `@raystack/apsara/icons` exports have changed.
 npm install lucide-react
 ```
 
-The range is wide — `>=0.500.0 <1.0.0` — so your app picks the version. If a
+The range is wide, `>=0.500.0 <1.0.0`, so your app picks the version. If a
 lucide release changes a drawing you care about, replace that one icon (step 5)
 rather than pinning the whole library.
 
@@ -59,12 +59,12 @@ names are gone.
 
 Two names survive, both with a new drawing:
 
-- `CoPilotIcon` — lucide `Sparkles` in place of the in-house solid sparkle.
-- `FilterIcon` — lucide `ListFilter` in place of the in-house solid funnel.
+- `CoPilotIcon`: lucide `Sparkles` in place of the in-house solid sparkle.
+- `FilterIcon`: lucide `ListFilter` in place of the in-house solid funnel.
 
 A raw lucide component draws 24×24 at `strokeWidth={2}`, so set
 `size={16} strokeWidth={1.5}` at the call site to match the Apsara icons beside
-it — or wrap it once with `createIcon`, which applies those for you:
+it, or wrap it once with `createIcon`, which applies those for you:
 
 ```tsx
 // src/icons.ts
@@ -109,9 +109,9 @@ Every Apsara icon renders at **16×16** with `strokeWidth={1.5}`, which draws th
 icons were intrinsically 15×15.
 
 - A call site that set no size grows from 15px to 16px.
-- A call site that set a CSS class is unaffected — CSS beats an SVG presentation
+- A call site that set a CSS class is unaffected, since CSS beats an SVG presentation
   attribute.
-- A call site that set `width`/`height` explicitly is unaffected — your props are
+- A call site that set `width`/`height` explicitly is unaffected, since your props are
   applied after Apsara's base values.
 
 To change the size or the stroke of every icon at once, use the `props` half of
@@ -214,7 +214,7 @@ This applies to any runtime icon override.
 See [Icons](/docs/theme/icons) for the full set, the override API, and what each
 key draws.
 
-## 1.0 — Base UI replaces Radix and Ariakit
+## 1.0: Base UI replaces Radix and Ariakit
 
 Apsara 1.0 rebuilds every component on [Base UI](https://base-ui.com) in place
 of Radix UI, Ariakit, sonner and cmdk. It is the largest migration Apsara has
@@ -241,5 +241,5 @@ walks through every component with before-and-after examples. The headlines:
   `gap={17}` in place of the named sizes, and `Headline` sizes become
   `t1`–`t4`.
 
-If you are coming from 0.x, work through the full guide in order — the
+If you are coming from 0.x, work through the full guide in order: the
 cross-cutting changes first, then your components one by one.

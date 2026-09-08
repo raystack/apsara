@@ -16,7 +16,7 @@ export interface SuggestionState {
   query: string;
   /** Document position of the trigger character. */
   from: number;
-  /** Document position of the caret — the end of the query. */
+  /** Document position of the caret, at the end of the query. */
   to: number;
 }
 
@@ -36,7 +36,7 @@ export interface SuggestionPluginOptions {
   onStateChange: (state: SuggestionState | null) => void;
   /**
    * Called for every keydown while a query is active. Return true to consume
-   * the key — the handler owns `preventDefault` and `stopPropagation`.
+   * the key, and the handler owns `preventDefault` and `stopPropagation`.
    */
   onKeyDown: (event: KeyboardEvent, state: SuggestionState) => boolean;
 }
@@ -60,7 +60,7 @@ function isBoundary(char: string): boolean {
 
 /**
  * Looks backwards from the caret for a trigger at a word boundary. Stops at
- * whitespace, so only a single-word query can *start* a menu — a query that
+ * whitespace, so only a single-word query can *start* a menu. A query that
  * already contains a space is carried forward by the active state instead.
  */
 function detect(
@@ -100,7 +100,7 @@ function detect(
 
 /**
  * Carries an active query across a transaction. Returns null when the query
- * can no longer be extended — the trigger was deleted, the caret left the
+ * can no longer be extended, because the trigger was deleted, the caret left the
  * range, or a chip or line break landed inside it.
  */
 function carry(

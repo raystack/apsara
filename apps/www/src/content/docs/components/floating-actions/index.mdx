@@ -29,7 +29,7 @@ The bar floats above the view and holds actions for whatever is selected. Appear
 
 ### Variant
 
-`floating` (default) renders with `position: fixed` anchored to the viewport via `side` and `align` — use it when the bar should follow the user as the page scrolls (bulk-selection toolbars, contextual action trays). `inline` opts out of viewport positioning so the bar flows with surrounding content.
+`floating` (default) renders with `position: fixed` anchored to the viewport via `side` and `align`. Use it when the bar should follow the user as the page scrolls (bulk-selection toolbars, contextual action trays). `inline` opts out of viewport positioning so the bar flows with surrounding content.
 
 <Demo data={variantsDemo} />
 
@@ -65,13 +65,13 @@ Use `FloatingActions.Group` to cluster related items so they navigate as one uni
 
 ### Scrolling context
 
-The floating variant stays pinned to the viewport (or the nearest containing block) while content scrolls beneath it — the canonical use case for a bulk-selection bar over a long list or table.
+The floating variant stays pinned to the viewport (or the nearest containing block) while content scrolls beneath it, the canonical use case for a bulk-selection bar over a long list or table.
 
 <Demo data={scrollingDemo} />
 
 ### Use with DataView
 
-For the row-selection pattern — rendering this bar over a `DataView` and wiring it to selected rows — see [DataView.List → Row selection](/docs/dataview/list#row-selection).
+For the row-selection pattern, meaning this bar over a `DataView` wired to selected rows, see [DataView.List → Row selection](/docs/dataview/list#row-selection).
 
 ## API Reference
 

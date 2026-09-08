@@ -56,11 +56,11 @@ You can display custom components above each date using the `dateInfo` prop. The
 
 Selects a date range across two inputs. The grid uses a state machine that branches on the current `from` / `to`:
 
-- **Empty** — first click sets `from` and advances focus to the end input.
-- **Only `from` set** — clicking a later date completes the range and closes the popover; clicking an earlier date resets `from`.
-- **Both set** — clicking again restarts: the new date becomes `from`, `to` clears.
+- **Empty**: first click sets `from` and advances focus to the end input.
+- **Only `from` set**: clicking a later date completes the range and closes the popover; clicking an earlier date resets `from`.
+- **Both set**: clicking again restarts: the new date becomes `from`, `to` clears.
 
-`onSelect` fires on every step (the shape is `{ from?: Date; to?: Date }` — partial during interaction). Gate on `range.to` if you only want the completed-range event.
+`onSelect` fires on every step (the shape is `{ from?: Date; to?: Date }`, partial during interaction). Gate on `range.to` if you only want the completed-range event.
 
 <Demo data={rangePickerDemo} />
 
@@ -72,7 +72,7 @@ Single-date selection with a typable input. The popover opens on focus; pressing
 
 ### Controlled
 
-Pass `selected` with `onSelect` to own the date — needed when the value comes from a form or has to be set from elsewhere, like a Today button.
+Pass `selected` with `onSelect` to own the date. This is needed when the value comes from a form or has to be set from elsewhere, like a Today button.
 
 <Demo data={controlledDemo} />
 
@@ -88,13 +88,13 @@ Renders a standalone calendar for date selection.
 
 ### RangePicker
 
-The RangePicker exposes its slots — `startInput`, `endInput`, `calendar`, `popover` — through the `slotProps` prop.
+The RangePicker exposes its `startInput`, `endInput`, `calendar` and `popover` slots through the `slotProps` prop.
 
 <auto-type-table path="./props.ts" name="RangePickerProps" />
 
 ### DatePicker
 
-The DatePicker exposes its slots — `input`, `calendar`, `popover` — through the `slotProps` prop.
+The DatePicker exposes its `input`, `calendar` and `popover` slots through the `slotProps` prop.
 
 <auto-type-table path="./props.ts" name="DatePickerProps" />
 

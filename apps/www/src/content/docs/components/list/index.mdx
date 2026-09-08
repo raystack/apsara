@@ -96,7 +96,7 @@ The List component implements proper ARIA attributes for accessibility:
 - List renders a `<ul>` with explicit `role="list"`. The role is kept
   even though the element is native, because Safari/VoiceOver drop the
   implicit list role when `list-style: none` is applied.
-- List relies on the native `<li>` semantics for items — no redundant
+- List relies on the native `<li>` semantics for items, with no redundant
   `role="listitem"` is set.
 - No generic default `aria-label` is added. Pass `aria-label` when the
   list needs an accessible name distinct from surrounding context.

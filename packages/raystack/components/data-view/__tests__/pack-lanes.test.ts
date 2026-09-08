@@ -6,8 +6,8 @@ import { digest, randomItems } from './helpers';
  * `packLanes` is greedy first-fit interval scheduling: items are visited in
  * ascending x and dropped into the lowest-numbered lane free at that point.
  *
- * It has two implementations behind one signature — a direct lane scan below 64
- * items, an O(n) sweep at or above it — so most of these are differentials
+ * It has two implementations behind one signature: a direct lane scan below 64
+ * items, and an O(n) sweep at or above it, so most of these are differentials
  * against the scan. The scan is the specification: it is the pre-rewrite
  * implementation, transcribed, and lane assignment is visible output (a card's
  * lane is its vertical position, and `context.laneIndex` is public API through
@@ -17,7 +17,7 @@ import { digest, randomItems } from './helpers';
 const SWEEP_MIN_ITEMS = 64;
 const DEFAULT_GAP_PX = 8;
 
-/** First-fit by scanning every lane end — the pre-rewrite implementation. */
+/** First-fit by scanning every lane end, the pre-rewrite implementation. */
 function packByScanReference(
   items: { x: number; width: number }[],
   gapPx = DEFAULT_GAP_PX
@@ -43,7 +43,7 @@ function packByScanReference(
 /* ─────────────────── characterisation: lane assignment ───────────────────
    Goldens pinning `packLanes` output at sizes too large to hand-write. They
    were recorded from the implementation before the O(n) rewrite, so a digest
-   mismatch means lane assignment moved — which is a visible change.
+   mismatch means lane assignment moved, which is a visible change.
 
    Digests rather than 500-element literals: the arrays are only ever compared,
    never read, and an unreadable wall of numbers hides what the test is for. */
@@ -70,7 +70,7 @@ describe('packLanes (characterisation)', () => {
   });
 
   it('pins lane assignment when every item overlaps every other', () => {
-    // No lane is ever reusable, so lane count tracks item count — the shape
+    // No lane is ever reusable, so lane count tracks item count, and the shape
     // that makes the lane scan quadratic.
     const items = Array.from({ length: 400 }, (_, i) => ({
       x: i,
@@ -101,7 +101,7 @@ describe('packLanes (characterisation)', () => {
 
   it('pins lane assignment across the gap boundary', () => {
     // Alternates releases landing exactly on the gap boundary (reusable) with
-    // ones a pixel short (not) — the comparison most at risk from a rewrite.
+    // ones a pixel short (not), the comparison most at risk from a rewrite.
     const items = Array.from({ length: 300 }, (_, i) => ({
       x: i * 108 + (i % 2),
       width: 100
@@ -268,8 +268,8 @@ describe('packLanes', () => {
   });
 
   it('survives non-finite geometry without losing a card', () => {
-    // Non-finite geometry shouldn't reach here — x and width come from the
-    // time scale — but a NaN must not throw or drop an item, which would leave
+    // Non-finite geometry shouldn't reach here, since x and width come from the
+    // time scale, but a NaN must not throw or drop an item, which would leave
     // a card unplaced on the canvas. The assignment itself is not pinned: NaN
     // comparisons are false in both directions, so "first fit" has no meaning
     // for those items and the two implementations are free to disagree.
@@ -331,7 +331,7 @@ describe('packLanesBySortValue', () => {
     });
   });
 
-  it("orders buckets first-seen — the caller's order", () => {
+  it("orders buckets first-seen, in the caller's order", () => {
     const items = [item('Low', 0), item('High', 0), item('Medium', 0)];
     expect(packLanesBySortValue(items).lanes).toEqual([0, 1, 2]);
     // Same values, caller-sorted differently → lanes follow the new order.

@@ -16,7 +16,7 @@ import { useDataView } from '../hooks/useDataView';
 import { buildAxis, createTimeScale, toTimestamp } from '../utils/time-scale';
 
 beforeAll(() => {
-  // jsdom doesn't implement ResizeObserver — the timeline observes its scroll
+  // jsdom doesn't implement ResizeObserver, and the timeline observes its scroll
   // container when viewport tracking is enabled.
   // biome-ignore lint/suspicious/noExplicitAny: jsdom lacks ResizeObserver
   (global as any).ResizeObserver =
@@ -96,7 +96,7 @@ describe('createTimeScale', () => {
   });
 
   it('reaches minWidth on calendar scales with uneven unit lengths', () => {
-    // Months render at (actual ms × pxPerMs), not exactly unitWidth — the
+    // Months render at (actual ms × pxPerMs), not exactly unitWidth, so the
     // fill must land at or past minWidth despite short months.
     const ts = createTimeScale({
       minTime: dayjs('2025-01-15').valueOf(),
@@ -391,7 +391,7 @@ describe('DataView.Timeline', () => {
   it('exposes the scroll region as a focusable, labelled region', () => {
     renderTimeline();
     const region = screen.getByRole('region', { name: 'Timeline' });
-    // Focusable so keyboard users can scroll the pane with arrow keys —
+    // Focusable so keyboard users can scroll the pane with arrow keys,
     // drag-to-pan is pointer-only.
     expect(region.tabIndex).toBe(0);
   });
@@ -409,7 +409,7 @@ describe('DataView.Timeline', () => {
     // lane 0 at laneGap 16, lane 1 at 16 + 66 + 16.
     expect(screen.getByTestId('card-o1').parentElement!.style.top).toBe('16px');
     expect(screen.getByTestId('card-o3').parentElement!.style.top).toBe('98px');
-    // Height is content-driven — the wrapper never hard-sizes the card.
+    // Height is content-driven, and the wrapper never hard-sizes the card.
     expect(screen.getByTestId('card-o1').parentElement!.style.height).toBe('');
   });
 
@@ -603,7 +603,7 @@ describe('DataView.Timeline', () => {
   });
 
   it('extends the domain so the grid fills a container wider than the data span', () => {
-    // jsdom's clientWidth is 0 by default — pretend the scroll container is
+    // jsdom's clientWidth is 0 by default, so pretend the scroll container is
     // 1000px wide. The explicit range renders 620px, so the domain end
     // extends Feb 1 → Feb 20 and ticks run Jan 1 … Feb 20 = 51 gridlines.
     vi.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(1000);
@@ -664,13 +664,13 @@ describe('DataView.Timeline', () => {
     expect(root.scrollTop).toBe(20);
     expect(root.dataset.dragging).toBe('true');
 
-    // Hold still past the stale window, then release — no glide.
+    // Hold still past the stale window, then release, with no glide.
     await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 100));
     });
     fireEvent.pointerUp(root, { pointerId: 1 });
     expect(root.dataset.dragging).toBeUndefined();
-    // Released — further movement no longer pans.
+    // Released, so further movement no longer pans.
     fireEvent.pointerMove(root, { pointerId: 1, clientX: 100, clientY: 0 });
     await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 50));
@@ -689,7 +689,7 @@ describe('DataView.Timeline', () => {
       clientY: 100
     });
     fireEvent.pointerMove(root, { pointerId: 1, clientX: 250, clientY: 100 });
-    // Release mid-motion — the pan keeps scrolling and decays.
+    // Release mid-motion: the pan keeps scrolling and decays.
     fireEvent.pointerUp(root, { pointerId: 1 });
     expect(root.scrollLeft).toBe(50);
     await act(async () => {
@@ -709,7 +709,7 @@ describe('DataView.Timeline', () => {
   it('does not start a pan from a card or from touch pointers', () => {
     const { container } = renderTimeline();
     const root = container.firstElementChild as HTMLElement;
-    // Press on a card (row-click territory) — no pan.
+    // Press on a card (row-click territory), so no pan.
     fireEvent.pointerDown(screen.getByTestId('card-o1'), {
       pointerType: 'mouse',
       button: 0,
@@ -720,7 +720,7 @@ describe('DataView.Timeline', () => {
     fireEvent.pointerMove(root, { pointerId: 1, clientX: 200, clientY: 100 });
     expect(root.scrollLeft).toBe(0);
 
-    // Touch pans natively — the drag handler must not hijack it.
+    // Touch pans natively, so the drag handler must not hijack it.
     fireEvent.pointerDown(root, {
       pointerType: 'touch',
       button: 0,
@@ -757,7 +757,7 @@ describe('DataView.Timeline', () => {
     // Viewport's left edge sits at Jan 11 (200px / 20px-per-day from Jan 1).
     root.scrollLeft = 200;
 
-    // Extend the range a month to the left — t0 moves to Dec 1.
+    // Extend the range a month to the left, so t0 moves to Dec 1.
     rerender(
       <DataView<Order>
         data={orders}
@@ -849,7 +849,7 @@ describe('DataView.Timeline', () => {
     expect(from.getTime()).toBe(dayjs('2025-01-06').valueOf());
 
     // Sub-pixel drift (scroll anchoring's float round-trip, device-pixel
-    // quantization of scrollLeft) is noise, not a scroll — no re-fire.
+    // quantization of scrollLeft) is noise, not a scroll, so no re-fire.
     root.scrollLeft = 100.4;
     await act(async () => {
       fireEvent.scroll(root);
@@ -998,7 +998,7 @@ describe('DataView.Timeline', () => {
     expect(screen.queryByTestId('card-o1')).toBeNull();
 
     rerender(makeUI('gantt'));
-    // The DOM is recreated at scroll 0 — the stashed position must come back
+    // The DOM is recreated at scroll 0, so the stashed position must come back
     // instead of stranding the user at the domain start.
     const newRoot = container.firstElementChild as HTMLElement;
     expect(screen.getByTestId('card-o1')).toBeInTheDocument();
@@ -1086,7 +1086,7 @@ describe('DataView.Timeline (characterisation)', () => {
 
   it('keeps chronological DOM order under one-per-row packing', () => {
     // Lanes follow row-model order here, so DOM order and lane order disagree
-    // — worth pinning separately from the packed case above.
+    // Worth pinning separately from the packed case above.
     renderTimeline({ lanePacking: 'one-per-row' });
     expect(cardIds()).toEqual(['o1', 'o3', 'o2']);
     expect(screen.getByTestId('card-o2').dataset.lane).toBe('1');
@@ -1096,7 +1096,7 @@ describe('DataView.Timeline (characterisation)', () => {
   it('falls back to the overscan floor with no measurable viewport', () => {
     // jsdom reports a zero-size client box, as does SSR. Overscan collapses to
     // its 200px floor, so the window is [-200, 200] horizontally and unbounded
-    // vertically — o2 at x=220 falls outside, o1 and o3 don't.
+    // vertically: o2 at x=220 falls outside, o1 and o3 don't.
     renderTimeline({ virtualized: true });
     expect(cardIds()).toEqual(['o1', 'o3']);
   });
@@ -1106,7 +1106,7 @@ describe('DataView.Timeline (characterisation)', () => {
     // this same setup re-stacks lane 1 to 122px on the measured 90px height
     // (see "re-stacks lanes to the tallest measured card height"). Virtualized,
     // a culled card never mounts and so never measures, so honouring
-    // measurements would resize lanes under the user mid-scroll — lanes hold
+    // measurements would resize lanes under the user mid-scroll, so lanes hold
     // the estimate instead, putting lane 1 back at 16 + 66 + 16.
     vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockImplementation(
       function (this: HTMLElement) {
@@ -1157,7 +1157,7 @@ describe('DataView.Timeline (characterisation)', () => {
 /* ─────────────────── characterisation: axis chrome ───────────────────────
    Counts of the non-card furniture: tick labels, month bands, marker badges
    and lines, group slots. Cards and gridlines already cull; the rest is what
-   Phase 2 changes, so these pin where it stands first — unvirtualized, where
+   Phase 2 changes, so these pin where it stands first, unvirtualized, where
    nothing may move, and virtualized, where it should. */
 
 describe('DataView.Timeline chrome (characterisation)', () => {
@@ -1264,7 +1264,7 @@ describe('DataView.Timeline chrome (characterisation)', () => {
 
 /* ──────────────────────────── virtualization ─────────────────────────────
    `virtualized` culls on both axes. Vertical culling needs a pane height and
-   jsdom does no layout, so these stub the scroll container's client box — with
+   jsdom does no layout, so these stub the scroll container's client box, with
    the deliberate exception of the last test, covering the unmeasured fallback.
    Lane pitch under virtualization is fixed: estimatedRowHeight (66) + laneGap
    (16) = 82, lane 0 starting at 16. */
@@ -1289,7 +1289,7 @@ function stubPane({ width = 600, height = 200 } = {}) {
 }
 
 describe('DataView.Timeline virtualization', () => {
-  /** One lane per row, every card at the same x — isolates vertical culling. */
+  /** One lane per row, every card at the same x, which isolates vertical culling. */
   const stackedOrders: Order[] = Array.from({ length: 12 }, (_, i) => ({
     id: `r${String(i + 1).padStart(2, '0')}`,
     title: String(i + 1).padStart(2, '0'),
@@ -1385,7 +1385,7 @@ describe('DataView.Timeline virtualization', () => {
       await new Promise(resolve => setTimeout(resolve, 30));
     });
     // Window [2100, 3300]. Culling searches by x, which is ordered, while
-    // width isn't — so each lane widens its left bound by its own widest card
+    // width isn't, so each lane widens its left bound by its own widest card
     // and then re-checks the right edge exactly.
     expect(screen.getByTestId('card-wide')).toBeInTheDocument(); // 2000 → 2600
     expect(screen.queryByTestId('card-narrow')).toBeNull(); // 2000 → 2020
@@ -1393,7 +1393,7 @@ describe('DataView.Timeline virtualization', () => {
 
   it('skips vertical culling when the pane reports no height', () => {
     // No stub: jsdom leaves clientHeight 0, as does SSR. A zero height would
-    // otherwise cull to a sliver of lanes — horizontal culling carries on.
+    // otherwise cull to a sliver of lanes, and horizontal culling carries on.
     renderTimeline(
       { virtualized: true, lanePacking: 'one-per-row' },
       stackedOrders
@@ -1405,7 +1405,7 @@ describe('DataView.Timeline virtualization', () => {
 /* ───────────────────────────── ordering contract ─────────────────────────
    Sort can't move a card horizontally (x is locked to time), so it only shows
    up where vertical order is free: `lanePacking="one-per-row"`. `auto` packing
-   stays purely chronological — these two tests are the regression guard. */
+   stays purely chronological, and these two tests are the regression guard. */
 
 describe('DataView.Timeline ordering', () => {
   const laneOf = (id: string) =>
@@ -1501,7 +1501,7 @@ const bands = (container: HTMLElement) =>
 describe('DataView.Timeline grouping', () => {
   it('renders one band per group, in row-model order, with label and count', () => {
     const { container } = renderGrouped();
-    // First-occurrence order from `groupData` — the same order List renders.
+    // First-occurrence order from `groupData`, the same order List renders.
     expect(bands(container).map(band => band.textContent)).toEqual([
       'Eng2',
       'Design1'
@@ -1559,7 +1559,7 @@ describe('DataView.Timeline grouping', () => {
 
   it('keeps a card in its own section when it starts under another group', () => {
     renderGrouped();
-    // Same x as a1 (80px) — proves packing never leaks across sections.
+    // Same x as a1 (80px), which proves packing never leaks across sections.
     expect(screen.getByTestId('card-b1').parentElement!.style.left).toBe(
       '80px'
     );
@@ -1604,7 +1604,7 @@ describe('DataView.Timeline grouping', () => {
     const { container } = renderGrouped({}, [
       ...groupedOrders,
       // A third Eng row outside the range: culled from the canvas, but the
-      // badge still reports `GroupedData.count` — same as List.
+      // badge still reports `GroupedData.count`, the same as List.
       {
         id: 'a3',
         title: 'A3',
@@ -1730,7 +1730,7 @@ describe('DataView.Timeline actionsRef', () => {
       behavior: 'auto'
     });
     expect(root.scrollLeft).toBe(596);
-    // Clamped to t0 (x 0) — the inset yields to the scroll floor.
+    // Clamped to t0 (x 0), so the inset yields to the scroll floor.
     actionsRef.current!.scrollTo('1999-01-01', {
       align: 'start',
       behavior: 'auto'
@@ -1794,7 +1794,7 @@ describe('DataView.Timeline actionsRef', () => {
 describe('DataView.Timeline sort-value lanes', () => {
   // Jan 5 → 80px, Jan 6 → 100px (overlaps Jan 5's span), Jan 12 → 220px (clear).
   // `rank` is the numeric ranking of `priority`, for sorts that need High before
-  // Medium before Low — alphabetically that order is impossible.
+  // Medium before Low, which alphabetically is impossible.
   const tasks: Order[] = [
     {
       id: 't1',
@@ -1884,7 +1884,7 @@ describe('DataView.Timeline sort-value lanes', () => {
   });
 
   it('relanes when the sort field changes', () => {
-    // Sorting by title instead lanes by title — every value distinct, so one
+    // Sorting by title instead lanes by title, where every value is distinct, so one
     // lane per row, in title order.
     renderSortValueLanes(undefined, tasks, {
       sort: { name: 'title', order: 'asc' }
@@ -2114,7 +2114,7 @@ describe('DataView.Timeline sort-value lanes', () => {
 
   it('lanes by a dotted accessorKey the way the sort reads it', () => {
     // TanStack treats a dotted key as a path, so the lane value has to come
-    // through the row — `original['meta.rank']` would be undefined for every
+    // through the row, since `original['meta.rank']` would be undefined for every
     // row and pile them all onto the no-value lane.
     renderSortValueLanes(
       undefined,

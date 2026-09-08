@@ -27,7 +27,7 @@ const DEFAULT_OVERSCAN = 8;
  * content settles correctly.
  *
  * When `enabled` is false the hook still calls `useVirtualizer` (so hook order
- * stays stable) but reports `count: 0` and surfaces empty values — the
+ * stays stable) but reports `count: 0` and surfaces empty values, so the
  * consumer renders rows in natural flow instead.
  */
 export function useVirtualRows<TRow>({
