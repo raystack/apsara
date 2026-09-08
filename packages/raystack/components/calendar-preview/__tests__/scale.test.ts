@@ -2,12 +2,12 @@ import { describe, expect, it } from 'vitest';
 
 import {
   anchorOf,
+  type CalendarPreviewScale,
   convertScale,
   isAvailable,
   isScale,
   periodOf,
-  SCALES,
-  type Scale
+  SCALES
 } from '../lib/scale';
 
 const LEADING = false;
@@ -148,14 +148,14 @@ describe('convertScale — every direction', () => {
    * cell is the period of the target scale containing that anchor, read at the
    * stated edge.
    */
-  const leading: Record<Scale, string> = {
+  const leading: Record<CalendarPreviewScale, string> = {
     day: '2026-08-15',
     month: '2026-08-01',
     quarter: '2026-07-01',
     halfYear: '2026-07-01',
     year: '2026-01-01'
   };
-  const trailing: Record<Scale, string> = {
+  const trailing: Record<CalendarPreviewScale, string> = {
     day: '2026-08-15',
     month: '2026-08-31',
     quarter: '2026-09-30',

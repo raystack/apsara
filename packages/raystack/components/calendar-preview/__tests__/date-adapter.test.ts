@@ -41,10 +41,12 @@ describe('dayKey', () => {
     expect(dayKey(instant, 'America/New_York')).toBe('2026-08-31');
   });
 
-  /* `new Date(0, 0, 1)` means 1900, so the far years are built by setFullYear. */
+  /* `Date.UTC(0, 0, 1)` means 1900, so the far years are set explicitly. Built
+     in UTC, not local: at +14 a local-midnight year 10000 is year 9999 in UTC,
+     and the five-digit case below then has nothing to throw about. */
   const atYear = (year: number): Date => {
-    const date = new Date(2000, 0, 1);
-    date.setFullYear(year, 0, 1);
+    const date = new Date(Date.UTC(2000, 0, 1));
+    date.setUTCFullYear(year, 0, 1);
     return date;
   };
 

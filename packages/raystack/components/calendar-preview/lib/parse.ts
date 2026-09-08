@@ -1,5 +1,5 @@
 /*
- * Turning a typed string into a `ScaleValue` — pure functions, no React, no UI.
+ * Turning a typed string into a `CalendarPreviewScaleValue` — pure functions, no React, no UI.
  *
  * Recognition is deliberately narrow: every accepted shape is pinned by a
  * regular expression before any date maths runs, so a near-miss is rejected
@@ -8,7 +8,7 @@
  * Anything unrecognised returns `null` and the caller keeps its previous value.
  */
 import { dayKeyFromParts, isDayKey, monthFromName } from '../date-adapter';
-import { anchorOf, periodOf, type ScaleValue } from './scale';
+import { anchorOf, type CalendarPreviewScaleValue, periodOf } from './scale';
 
 export interface ParseScaleInputOptions {
   /**
@@ -66,7 +66,7 @@ const YEAR = /^(\d{4})$/;
 export function parseScaleInput(
   input: string,
   options: ParseScaleInputOptions = {}
-): ScaleValue | null {
+): CalendarPreviewScaleValue | null {
   const { referenceDate, trailing = false } = options;
   const text = input.trim().replace(/\s+/g, ' ');
   if (text === '') return null;
@@ -122,9 +122,9 @@ function yearFrom(matched: string | undefined, reference?: Date): number {
 function at(
   year: number,
   month: number,
-  scale: ScaleValue['scale'],
+  scale: CalendarPreviewScaleValue['scale'],
   trailing: boolean
-): ScaleValue | null {
+): CalendarPreviewScaleValue | null {
   const inside = dayKeyFromParts(year, month, 1);
   if (inside === null) return null;
   return { date: anchorOf(periodOf(inside, scale), trailing), scale };

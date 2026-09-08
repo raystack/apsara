@@ -2,13 +2,14 @@
 
 import { createContext, type ReactNode, useContext } from 'react';
 import type { DayKey } from './date-adapter';
-import type { Scale, ScaleValue } from './lib/scale';
+import type { CalendarPreviewScale } from './lib/scale';
 
 /** What caused a value to change. */
 export type CalendarPreviewChangeReason =
   | 'select'
   | 'input'
   | 'clear'
+  | 'reset'
   | 'scale';
 
 export interface CalendarPreviewChangeDetails {
@@ -23,7 +24,7 @@ export interface CalendarPreviewChangeDetails {
   toDate: () => Date;
 }
 
-/* Generic so a later phase's scale-aware arms carry a `ScaleValue` without a
+/* Generic so a later phase's scale-aware arms carry a `CalendarPreviewScaleValue` without a
    second context: stored as `unknown`, cast once at the hook boundary. */
 export interface CalendarPreviewContextValue<Value = Date | null> {
   value: Value;
@@ -41,15 +42,14 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
   /** Never clamped by `minDate` / `maxDate`. */
   setMonth: (month: Date) => void;
   yearRange: { from: number; to: number };
-  scale: Scale;
-  setScale: (scale: Scale) => void;
+  scale: CalendarPreviewScale;
+  setScale: (scale: CalendarPreviewScale) => void;
   isDateUnavailable: (date: Date) => boolean;
   today: Date;
   timeZone: string | undefined;
   clearable: boolean;
   disabled: boolean;
   readOnly: boolean;
-  formatValue: (value: Date | ScaleValue, scale: Scale) => string;
 }
 
 const CalendarPreviewContext =

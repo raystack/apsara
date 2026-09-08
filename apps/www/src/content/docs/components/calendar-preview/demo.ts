@@ -1,5 +1,51 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
+import { getPropsString } from '@/lib/utils';
+
+/* The grid props drive the playground rather than the root's, because they
+   are what visibly changes: the root's state props need a value to show. */
+export const getCode = (props: ComponentPropsType) => {
+  return `<CalendarPreview defaultMonth={new Date(2024, 3, 1)}>
+              <CalendarPreview.Days>
+                <CalendarPreview.Header>
+                  <CalendarPreview.Caption />
+                  <CalendarPreview.PrevMonth />
+                  <CalendarPreview.NextMonth />
+                </CalendarPreview.Header>
+                <CalendarPreview.Grid${getPropsString(props)} />
+              </CalendarPreview.Days>
+            </CalendarPreview>`;
+};
+
+export const playground = {
+  type: 'playground',
+  controls: {
+    fixedWeeks: {
+      type: 'checkbox',
+      defaultValue: true
+    },
+    showOutsideDays: {
+      type: 'checkbox',
+      defaultValue: false
+    },
+    showWeekNumber: {
+      type: 'checkbox',
+      defaultValue: false
+    },
+    loading: {
+      type: 'checkbox',
+      defaultValue: false
+    },
+    weekStartsOn: {
+      type: 'select',
+      options: [0, 1, 2, 3, 4, 5, 6],
+      defaultValue: 0
+    }
+  },
+  getCode
+};
+
 export const preview = {
   type: 'code',
   tabs: [

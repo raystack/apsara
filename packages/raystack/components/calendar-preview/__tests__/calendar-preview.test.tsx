@@ -277,8 +277,13 @@ describe('CalendarPreview month navigation', () => {
     expect(getAllSlots(container, 'calendar-preview-table')).toHaveLength(2);
 
     /* Reference A captions each grid rather than the span, so there is one
-       caption per month and no single header row above them. */
-    const captions = getAllSlots(container, 'calendar-preview-caption');
+       caption per month and no single header row above them. Its own slot,
+       not `calendar-preview-caption`: this element is not the `.Caption`
+       part, and sharing the name matched two tag types at once. */
+    const captions = getAllSlots(
+      container,
+      'calendar-preview-month-header-caption'
+    );
     expect(captions.map(node => node.textContent)).toEqual([
       'Aug 2026',
       'Sep 2026'
@@ -313,7 +318,7 @@ describe('CalendarPreview month navigation', () => {
       getSlot(container, 'calendar-preview-next-month') as HTMLElement
     );
     expect(
-      getAllSlots(container, 'calendar-preview-caption').map(
+      getAllSlots(container, 'calendar-preview-month-header-caption').map(
         node => node.textContent
       )
     ).toEqual(['Sep 2026', 'Oct 2026']);
@@ -328,12 +333,19 @@ describe('CalendarPreview.Reset', () => {
     expect(getSlot(container, 'calendar-preview-reset')).toBeNull();
   });
 
-  it('does not render when the value already equals the defaultDate', () => {
+  /* Stays mounted with nothing to restore, rather than unmounting: removing
+     the focused element sends focus to `<body>`, and removing a `flex: none`
+     child re-flows the nav buttons sideways. */
+  it('stays mounted but disabled when the value equals the defaultDate', () => {
     const { container } = renderCalendar(undefined, {
       defaultDate: new Date(2026, 7, 20),
       defaultValue: new Date(2026, 7, 20)
     });
-    expect(getSlot(container, 'calendar-preview-reset')).toBeNull();
+
+    const reset = getSlot(container, 'calendar-preview-reset');
+    expect(reset).toBeInTheDocument();
+    expect(reset).toBeDisabled();
+    expect(reset).toHaveAttribute('data-restored');
   });
 
   it('renders once the value differs from the defaultDate', () => {
@@ -365,8 +377,28 @@ describe('CalendarPreview.Reset', () => {
 
     expect(onValueChange.mock.calls[0][0]).toEqual(new Date(2026, 7, 20));
     expect(dayCell(container, '20')).toHaveAttribute('data-selected');
-    /* Gone again, because there is no longer anything to restore. */
-    expect(getSlot(container, 'calendar-preview-reset')).toBeNull();
+    /* Still there, now disabled -- there is nothing left to restore. */
+    const reset = getSlot(container, 'calendar-preview-reset');
+    expect(reset).toBeInTheDocument();
+    expect(reset).toBeDisabled();
+  });
+
+  /* The reason the button stays mounted: it is usually the focused element
+     when it is activated, and unmounting it strands focus on `<body>`. */
+  it('keeps focus on itself after restoring the default', () => {
+    const { container } = renderCalendar(undefined, {
+      defaultDate: new Date(2026, 7, 20),
+      defaultValue: new Date(2026, 7, 10)
+    });
+
+    const reset = getSlot(container, 'calendar-preview-reset') as HTMLElement;
+    reset.focus();
+    expect(document.activeElement).toBe(reset);
+
+    fireEvent.click(reset);
+
+    expect(document.activeElement).toBe(reset);
+    expect(document.activeElement).not.toBe(document.body);
   });
 
   /* `defaultValue` is ignored by `useControlled` once `value` is passed, which
@@ -463,9 +495,10 @@ describe('CalendarPreview.Caption', () => {
     expect(document.body.querySelectorAll('select')).toHaveLength(0);
     expect(screen.queryAllByRole('combobox')).toHaveLength(0);
     expect(screen.queryAllByRole('listbox')).toHaveLength(0);
-    expect(
-      document.body.querySelectorAll('[data-slot^="select"]')
-    ).toHaveLength(0);
+    /* By role rather than by another component's private slot prefix: the
+       three role assertions above already say "no Select mounted", and a
+       prefix match would break on any unrelated rename in `select/`. */
+    expect(screen.queryAllByRole('option')).toHaveLength(0);
   });
 
   it('moves the view when a month is picked, without selecting anything', () => {
@@ -571,8 +604,21 @@ describe('CalendarPreview.Grid', () => {
   it('mounts no Select and no navigation of its own', () => {
     const { container } = renderCalendar();
     expect(container.querySelectorAll('select')).toHaveLength(0);
-    expect(container.querySelectorAll('.rdp-nav')).toHaveLength(0);
     expect(screen.queryByLabelText('Choose the Month')).toBeNull();
+
+    /* By role and label rather than react-day-picker's `.rdp-nav` class: a
+       rename upstream would make a class assertion pass vacuously while a
+       real nav bar rendered. The two chevrons `.Header` owns are ours, and
+       are matched by slot. */
+    const ours = new Set([
+      getSlot(container, 'calendar-preview-prev-month'),
+      getSlot(container, 'calendar-preview-next-month')
+    ]);
+    const strays = screen
+      .queryAllByRole('button', { name: /previous month|next month/i })
+      .filter(button => !ours.has(button));
+    expect(strays).toHaveLength(0);
+    expect(container.querySelectorAll('nav')).toHaveLength(0);
   });
 
   it('keeps the month accessible to a screen reader without a second caption', () => {
@@ -583,6 +629,26 @@ describe('CalendarPreview.Grid', () => {
       expect.stringContaining('August')
     );
     expect(getSlot(container, 'calendar-preview-caption')).toBeInTheDocument();
+  });
+
+  /* Each month names itself, and names only itself. The month header holds
+     the two nav buttons, so a name derived from that subtree would read as
+     "Previous month August 2026 Next month" -- which is what an
+     `aria-labelledby` pointed at the header would produce. */
+  it('names each month grid without absorbing the nav button labels', () => {
+    const { container } = renderCalendar(
+      <CalendarPreview.Days numberOfMonths={2} />
+    );
+
+    const grids = Array.from(container.querySelectorAll('[role="grid"]'));
+    expect(grids).toHaveLength(2);
+    expect(grids[0]).toHaveAttribute('aria-label', 'August 2026');
+    expect(grids[1]).toHaveAttribute('aria-label', 'September 2026');
+
+    for (const grid of grids) {
+      expect(grid).not.toHaveAttribute('aria-labelledby');
+      expect(grid.getAttribute('aria-label')).not.toMatch(/month/i);
+    }
   });
 
   it('renders dateInfo above the date number', () => {
@@ -938,6 +1004,382 @@ describe('CalendarPreview public surface', () => {
         `CalendarPreview.${name}`
       );
     }
+  });
+});
+
+describe('inertness', () => {
+  /* The guard lives in the root's `setValue`, so every path inherits it --
+     the grid's own click handler no longer carries one. */
+  function Setter({ day }: { day: Date }) {
+    const { setValue } = useCalendar();
+    return (
+      <button type='button' onClick={() => setValue(day)}>
+        set
+      </button>
+    );
+  }
+
+  it.each([
+    'readOnly',
+    'disabled'
+  ] as const)('ignores useCalendar().setValue when %s', flag => {
+    const onValueChange = vi.fn();
+    const { container } = renderCalendar(
+      <>
+        <CalendarPreview.Days />
+        <Setter day={new Date(2026, 7, 20)} />
+      </>,
+      { [flag]: true, onValueChange }
+    );
+
+    fireEvent.click(screen.getByText('set'));
+
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(dayCell(container, '20')).not.toHaveAttribute('data-selected');
+  });
+
+  /* `.Reset` carries its own `disabled` attribute, so the button is inert
+     before the root guard is reached. Both layers are asserted: the attribute
+     here, and the guard underneath it by the `setValue` cases above -- which
+     is the path a custom reset part would take. */
+  it.each([
+    'readOnly',
+    'disabled'
+  ] as const)('renders .Reset disabled and commits nothing when %s', flag => {
+    const onValueChange = vi.fn();
+    const { container } = renderCalendar(
+      <>
+        <CalendarPreview.Header>
+          <CalendarPreview.Reset />
+        </CalendarPreview.Header>
+        <CalendarPreview.Days />
+      </>,
+      {
+        [flag]: true,
+        defaultDate: new Date(2026, 7, 9),
+        defaultValue: new Date(2026, 7, 20),
+        onValueChange
+      }
+    );
+
+    const reset = getSlot(container, 'calendar-preview-reset');
+    expect(reset).toBeInTheDocument();
+    expect(reset).toBeDisabled();
+
+    fireEvent.click(reset as HTMLElement);
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it('still commits when neither flag is set', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderCalendar(
+      <>
+        <CalendarPreview.Days />
+        <Setter day={new Date(2026, 7, 20)} />
+      </>,
+      { onValueChange }
+    );
+
+    fireEvent.click(screen.getByText('set'));
+
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+    expect(dayCell(container, '20')).toHaveAttribute('data-selected');
+  });
+});
+
+describe('CalendarPreview.Grid children', () => {
+  /* `.Day` and `.Weekday` are `components` overrides, not children. A stray
+     child used to ride `...props` into the day-picker root and blank the
+     grid, which is what the docs Anatomy snippet told readers to write. */
+  it('renders the day grid even when given children', () => {
+    const { container } = renderCalendar(
+      <CalendarPreview.Days>
+        <CalendarPreview.Grid>HIJACKED</CalendarPreview.Grid>
+      </CalendarPreview.Days>
+    );
+
+    expect(container).not.toHaveTextContent('HIJACKED');
+    expect(getAllSlots(container, 'calendar-preview-day').length).toBe(31);
+    expect(dayCell(container, '15')).toHaveAttribute('data-today');
+  });
+});
+
+describe('change reasons', () => {
+  function Clearer() {
+    const { setValue } = useCalendar();
+    return (
+      <button type='button' onClick={() => setValue(null)}>
+        clear
+      </button>
+    );
+  }
+
+  it("reports a restore as 'reset', not as a pick", () => {
+    const onValueChange = vi.fn();
+    const { container } = renderCalendar(
+      <>
+        <CalendarPreview.Header>
+          <CalendarPreview.Reset />
+        </CalendarPreview.Header>
+        <CalendarPreview.Days />
+      </>,
+      {
+        defaultDate: new Date(2026, 7, 20),
+        defaultValue: new Date(2026, 7, 10),
+        onValueChange
+      }
+    );
+
+    fireEvent.click(
+      getSlot(container, 'calendar-preview-reset') as HTMLElement
+    );
+
+    expect(onValueChange.mock.calls[0][1].reason).toBe('reset');
+  });
+
+  it("reports a click as 'select'", () => {
+    const onValueChange = vi.fn();
+    const { container } = renderCalendar(undefined, { onValueChange });
+
+    fireEvent.click(dayCell(container, '20'));
+
+    expect(onValueChange.mock.calls[0][1].reason).toBe('select');
+  });
+
+  /* `toDate()` is documented as "the day acted on -- never null, even when
+     `value` is". Clearing through the hook used to report today, a day
+     nobody touched. */
+  it("reports a hook clear as 'clear', carrying the day cleared", () => {
+    const onValueChange = vi.fn();
+    renderCalendar(
+      <>
+        <CalendarPreview.Days />
+        <Clearer />
+      </>,
+      { defaultValue: new Date(2026, 7, 10), onValueChange }
+    );
+
+    fireEvent.click(screen.getByText('clear'));
+
+    const [value, details] = onValueChange.mock.calls[0];
+    expect(value).toBeNull();
+    expect(details.reason).toBe('clear');
+    expect(details.toDate()).toEqual(new Date(2026, 7, 10));
+  });
+});
+
+describe('keyboard navigation', () => {
+  /* `index.mdx` claims "Arrow keys move between days" and nothing tested it.
+     The behaviour is react-day-picker's roving tabindex, which is exactly why
+     it is worth pinning: it is the contract the grid boundary is buying. */
+  function focused(): string | null {
+    const active = document.activeElement;
+    return (
+      active?.querySelector('[data-slot="calendar-preview-day-number"]')
+        ?.textContent ?? null
+    );
+  }
+
+  /* `.focus()` alone sets `document.activeElement` but does not reach React's
+     `onFocus` under jsdom, so react-day-picker never registers a focus target
+     and every arrow key is a no-op. Both are needed. */
+  function focusDay(container: HTMLElement, day: string): HTMLElement {
+    const cell = dayCell(container, day);
+    cell.focus();
+    fireEvent.focus(cell);
+    return cell;
+  }
+
+  it.each([
+    ['ArrowRight', '16'],
+    ['ArrowLeft', '14'],
+    ['ArrowDown', '22'],
+    ['ArrowUp', '8']
+  ])('moves the focused day on %s', (key, expected) => {
+    const { container } = renderCalendar();
+    const start = focusDay(container, '15');
+
+    fireEvent.keyDown(start, { key });
+
+    expect(focused()).toBe(expected);
+  });
+
+  /* August 2026 starts on a Saturday, so the 19th is a Wednesday: Home lands
+     on Sunday the 16th and End on Saturday the 22nd. */
+  it('moves to the start and end of the week on Home and End', () => {
+    const { container } = renderCalendar();
+    const start = focusDay(container, '19');
+
+    fireEvent.keyDown(start, { key: 'Home' });
+    expect(focused()).toBe('16');
+
+    fireEvent.keyDown(document.activeElement as HTMLElement, { key: 'End' });
+    expect(focused()).toBe('22');
+  });
+
+  it('commits the focused day on Enter', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderCalendar(undefined, { onValueChange });
+    const day = focusDay(container, '20');
+
+    fireEvent.keyDown(day, { key: 'Enter' });
+    fireEvent.click(day);
+
+    expect(onValueChange).toHaveBeenCalled();
+    expect(dayCell(container, '20')).toHaveAttribute('data-selected');
+  });
+
+  it('keeps exactly one day in the tab order', () => {
+    const { container } = renderCalendar();
+    const tabbable = getAllSlots(container, 'calendar-preview-day').filter(
+      cell => cell.getAttribute('tabindex') === '0'
+    );
+
+    expect(tabbable).toHaveLength(1);
+  });
+
+  /* Read-only stays navigable -- that is the whole difference from disabled,
+     and the reason the days carry `aria-disabled` rather than `disabled`. */
+  it('still moves between days when readOnly', () => {
+    const { container } = renderCalendar(undefined, { readOnly: true });
+    const start = focusDay(container, '15');
+
+    fireEvent.keyDown(start, { key: 'ArrowRight' });
+
+    expect(focused()).toBe('16');
+    /* Focus really moved, rather than only the draft marker. */
+    expect(document.activeElement).toBe(dayCell(container, '16'));
+    expect(dayCell(container, '15')).toHaveAttribute('aria-disabled', 'true');
+    expect(dayCell(container, '15')).not.toBeDisabled();
+  });
+});
+
+describe('the month the calendar opens on', () => {
+  /* `defaultMonth`'s documented default is "the month of `value`, else
+     `today`", and every branch of that chain is exercised here -- the render
+     helper passes `defaultMonth` explicitly, so none of it was covered. */
+  function caption(container: HTMLElement): string {
+    return getSlot(container, 'calendar-preview-caption')?.textContent ?? '';
+  }
+
+  it('prefers an explicit defaultMonth over everything else', () => {
+    const { container } = render(
+      <CalendarPreview
+        today={TODAY}
+        defaultMonth={new Date(2027, 2, 1)}
+        value={new Date(2027, 10, 9)}
+      >
+        <CalendarPreview.Days />
+      </CalendarPreview>
+    );
+    expect(caption(container)).toContain('Mar 2027');
+  });
+
+  it('falls back to the month of a controlled value', () => {
+    const { container } = render(
+      <CalendarPreview today={TODAY} value={new Date(2027, 2, 9)}>
+        <CalendarPreview.Days />
+      </CalendarPreview>
+    );
+    expect(caption(container)).toContain('Mar 2027');
+  });
+
+  it('falls back to the month of an uncontrolled defaultValue', () => {
+    const { container } = render(
+      <CalendarPreview today={TODAY} defaultValue={new Date(2027, 2, 9)}>
+        <CalendarPreview.Days />
+      </CalendarPreview>
+    );
+    expect(caption(container)).toContain('Mar 2027');
+  });
+
+  it('falls back to today when there is no value at all', () => {
+    const { container } = render(
+      <CalendarPreview today={TODAY}>
+        <CalendarPreview.Days />
+      </CalendarPreview>
+    );
+    expect(caption(container)).toContain('Aug 2026');
+  });
+});
+
+describe('timeZone', () => {
+  /*
+   * RFC 005 pins the contract: `timeZone` is forwarded to the grid and this
+   * family does no conversion of its own. `Date` props are therefore
+   * instants, and the calendar shows the day each instant falls on in the
+   * given zone -- so a `defaultMonth` built from local fields can land in the
+   * neighbouring month at a far offset. These tests pin that, and pin the
+   * change details, which used to be keyed in the ambient zone instead.
+   */
+  const NOON_UTC = new Date(Date.UTC(2026, 7, 15, 12));
+  const AUGUST_UTC = new Date(Date.UTC(2026, 7, 1, 12));
+
+  it.each([
+    ['Pacific/Kiritimati', '16'],
+    ['Pacific/Niue', '15'],
+    ['UTC', '15']
+  ])('marks today by the day the instant falls on in %s', (zone, day) => {
+    const { container } = renderCalendar(<CalendarPreview.Days />, {
+      today: NOON_UTC,
+      defaultMonth: AUGUST_UTC,
+      timeZone: zone
+    });
+
+    expect(dayCell(container, day)).toHaveAttribute('data-today');
+  });
+
+  it.each([
+    'Pacific/Kiritimati',
+    'Pacific/Niue',
+    'UTC'
+  ])('opens on the month the instant falls in, in %s', zone => {
+    const { container } = renderCalendar(<CalendarPreview.Days />, {
+      today: NOON_UTC,
+      defaultMonth: AUGUST_UTC,
+      timeZone: zone
+    });
+
+    const caption = getSlot(container, 'calendar-preview-caption');
+    expect(caption?.textContent).toContain('Aug 2026');
+  });
+
+  /* The click path keys correctly even unzoned, because RDP hands back a
+     date already shifted into the zone. The path that needs the fix is a
+     commit of a plain instant, where nothing has shifted it yet. */
+  function Setter({ day }: { day: Date }) {
+    const { setValue } = useCalendar();
+    return (
+      <button type='button' onClick={() => setValue(day)}>
+        set
+      </button>
+    );
+  }
+
+  it.each([
+    ['Pacific/Kiritimati', '2026-08-21'],
+    ['Pacific/Niue', '2026-08-20'],
+    ['UTC', '2026-08-20']
+  ])('keys the change period in the calendar zone, not the ambient one (%s)', (zone, expected) => {
+    const onValueChange = vi.fn();
+    renderCalendar(
+      <>
+        <CalendarPreview.Days />
+        <Setter day={new Date(Date.UTC(2026, 7, 20, 23, 30))} />
+      </>,
+      {
+        today: NOON_UTC,
+        defaultMonth: AUGUST_UTC,
+        timeZone: zone,
+        onValueChange
+      }
+    );
+
+    fireEvent.click(screen.getByText('set'));
+
+    const [, details] = onValueChange.mock.calls[0];
+    expect(details.period.start).toBe(expected);
+    expect(details.period.end).toBe(expected);
   });
 });
 
