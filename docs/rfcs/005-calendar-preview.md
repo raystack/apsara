@@ -340,6 +340,17 @@ Verified against the npm registry and `pnpm-lock.yaml` on 3 September 2026.
 - `@base-ui/react` 1.7.0 pins `@base-ui/utils` at exactly 0.3.2, so bumping Base UI moves utils with it
 - Neither 1.6.0 nor 1.7.0 exports a date primitive; both ship `./internals/temporal` plus date-fns and Luxon adapters, and `date-adapter.ts` is shaped to that surface — adopting theirs later is a one-file swap, not a third rewrite
 
+> **Note — deviation, phase 0.** The table above is the pre-upgrade baseline as
+> approved. The upgrade has since landed in the phase 0 PR rather than "before
+> phase 2": `react-day-picker` `~10.0.1`, `@base-ui/react` `~1.7.0`,
+> `@base-ui/utils` `~0.3.2`, `dayjs` `^1.11.23`, plus `date-fns` `^4.1.0` and
+> `@date-fns/tz` `^1.5.0` added as direct dependencies for `date-adapter.ts`.
+> Taking the major at phase 0 means phase 1 writes the `.Day`/`.Weekday` slot
+> names against 10 once instead of writing them against 9 and rechecking; those
+> slot names are verified when `.Grid` is built, since no part imports RDP
+> before then. Both findings above still hold — the `mode`/`required` union is
+> unchanged, and v10 drops `date-fns-jalali` and the 16 deprecated v8-era props.
+
 ## Breaking Changes
 
 Accepted, with no shim. Slot map and prop-by-prop migration: [Appendix A](#appendix-a--implementation-reference).
