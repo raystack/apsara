@@ -20,7 +20,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
  * readout counts what is actually in the DOM and times the frames the browser
  * spends while scrolling, which is the number jsdom cannot produce.
  *
- * Toggle `virtualized` off at 10k to see the difference — and expect the tab
+ * Toggle `virtualized` off at 10k to see the difference, and expect the tab
  * to struggle, which is the point.
  */
 
@@ -46,13 +46,13 @@ const isoDay = (ms: number) => new Date(ms).toISOString().slice(0, 10);
 /**
  * Hoisted so the reference is stable. The timeline memoizes its resolved
  * markers on this prop, and an inline literal would invalidate that memo on
- * every commit — churn this page would then report as its own frame cost.
+ * every commit, churn this page would then report as its own frame cost.
  */
 const MARKERS: TimelineMarker[] = [
   { date: '2025-07-01', label: 'H2', variant: 'accent' }
 ];
 
-/** Seeded LCG — the same row count always renders the same canvas. */
+/** Seeded LCG, so the same row count always renders the same canvas. */
 function seededRandom(seed: number) {
   let state = seed;
   return () => {
@@ -141,7 +141,7 @@ interface Stats {
   /**
    * Height of a single gridline. These are pinned `top: 0; bottom: 0`, so
    * unclamped they are as tall as the whole canvas and their rasterization
-   * cost tracks the domain rather than the viewport — the dominant scroll cost
+   * cost tracks the domain rather than the viewport, the dominant scroll cost
    * before the clamp landed. Worth watching directly: it should stay near the
    * pane height, not the canvas height.
    */
@@ -150,7 +150,7 @@ interface Stats {
 
 /**
  * Worst frame over the last second of scrolling. A mean would hide exactly
- * what matters — one 200ms frame is a visible stall no average survives.
+ * what matters: one 200ms frame is a visible stall no average survives.
  *
  * Takes the element rather than a ref: the pane is found by query after the
  * timeline paints, and assigning a ref does not re-run an effect, so a
@@ -228,8 +228,8 @@ export default function TimelineStressPage() {
   );
 
   /**
-   * The card memo compares `renderCard` by identity, so an inline arrow — what
-   * a consumer writes by default — makes every mounted card re-render on every
+   * The card memo compares `renderCard` by identity, so an inline arrow, which
+   * a consumer writes by default, makes every mounted card re-render on every
    * commit. This toggle isolates that cost from the canvas's own.
    */
   const memoizedRenderCard = useCallback(
@@ -243,7 +243,7 @@ export default function TimelineStressPage() {
   // a stale canvas would otherwise linger under the new settings.
   const runKey = `${rowCount}-${domainDays}-${virtualized}-${onePerRow}-${grouped}`;
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: `runKey` isn't read here — it's the remount signal, and re-running on it is the point.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `runKey` isn't read here; it's the remount signal, and re-running on it is the point.
   useEffect(() => {
     const start = performance.now();
     // After paint, so the number covers layout of what actually mounted.
@@ -273,7 +273,7 @@ export default function TimelineStressPage() {
       });
     });
     return () => cancelAnimationFrame(id);
-    // Re-measure whenever the run changes — `runKey` also remounts the view.
+    // Re-measure whenever the run changes, since `runKey` also remounts the view.
   }, [runKey]);
 
   const stat = (label: string, value: string | number) => (

@@ -136,7 +136,7 @@ describe('Callout', () => {
 
       fireEvent.click(screen.getByRole('button', { name: 'Dismiss message' }));
 
-      // Consumer owns removal — the callout must not hide itself.
+      // Consumer owns removal, and the callout must not hide itself.
       expect(screen.getByText('Controlled message')).toBeInTheDocument();
     });
 

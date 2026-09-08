@@ -4,7 +4,7 @@
  * All variables must be used from colors.css file only.
  */
 
-/* Smooth theme switch transition — applies regardless of which theme is active */
+/* Smooth theme switch transition. Applies regardless of which theme is active */
 [data-theme="light"],
 [data-theme="dark"] {
   transition:

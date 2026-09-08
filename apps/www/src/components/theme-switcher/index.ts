@@ -1,4 +1,1 @@
-import ThemeToggle from './theme-toggle';
-
-export { default } from './theme-switcher';
-export { ThemeToggle };
+export { default as ThemeToggle } from './theme-toggle';

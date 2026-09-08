@@ -24,7 +24,7 @@ export default function DemoPreview({
   return (
     <LiveProvider code={activeCode} scope={scope} disabled>
       <div className={styles.container} data-demo>
-        {tabs && (
+        {tabs && tabs.length > 1 && (
           <div className={styles.tabs}>
             {tabs.map((tab, index) => (
               <button
@@ -46,20 +46,22 @@ export default function DemoPreview({
 
         {Array.isArray(codePreview) ? (
           <div className={styles.codeTabGroup}>
-            <div className={styles.tabs}>
-              {codePreview.map((tab, index) => (
-                <button
-                  key={tab.label}
-                  className={cx(
-                    styles.tab,
-                    index === activeCodePreviewTab && styles.activeTab
-                  )}
-                  onClick={() => setActiveCodePreviewTab(index)}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+            {codePreview.length > 1 && (
+              <div className={styles.tabs}>
+                {codePreview.map((tab, index) => (
+                  <button
+                    key={tab.label}
+                    className={cx(
+                      styles.tab,
+                      index === activeCodePreviewTab && styles.activeTab
+                    )}
+                    onClick={() => setActiveCodePreviewTab(index)}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            )}
             <Editor
               code={codePreview[activeCodePreviewTab].code}
               key={activeCodePreviewTab}

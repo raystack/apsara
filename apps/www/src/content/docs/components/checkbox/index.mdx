@@ -4,7 +4,9 @@ description: Checkbox is a user interface control that enables users to toggle b
 source: packages/raystack/components/checkbox
 ---
 
-import { playground, statesExamples, sizeExamples, groupDemo, groupHorizontalDemo, groupDisabledDemo, parentDemo } from "./demo.ts";
+import { playground, statesExamples, sizeExamples, groupDemo, groupHorizontalDemo, groupDisabledDemo, parentDemo,
+  controlledDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -28,49 +30,27 @@ Use `Checkbox.Group` to manage shared state across multiple checkboxes:
 </Checkbox.Group>
 ```
 
-## API Reference
+## Usage
 
-### Root
+A checkbox on its own, then in a group, where a parent can both reflect and drive the children beneath it.
 
-Renders a toggleable checkbox input.
+### Size variants
 
-<auto-type-table path="./props.ts" name="CheckboxProps" />
+Two sizes. `large` is the default; `small` fits table rows and dense lists.
 
-### Group
-
-Groups multiple checkboxes and manages their shared checked state via a `string[]` value.
-
-<auto-type-table path="./props.ts" name="CheckboxGroupProps" />
-
-### Slots
-
-Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
-
-| Slot | Element |
-|------|---------|
-| `checkbox` | The checkbox control itself |
-| `checkbox-indicator` | The indicator inside the control |
-| `checkbox-icon` | The check or indeterminate icon (when checked or indeterminate) |
-| `checkbox-group` | The `Checkbox.Group` container |
-
-## Examples
+<Demo data={sizeExamples} />
 
 ### States
 
-The Checkbox component supports multiple states to represent different selection conditions:
-
-- Unchecked: Default state
-- Checked: Selected state
-- Indeterminate: Partial selection state
-- Disabled: Disabled state
+A checkbox can be checked, unchecked, or `indeterminate`, the third state for a parent whose children are only partly selected.
 
 <Demo data={statesExamples} />
 
-### Size Variants
+### Controlled
 
-The Checkbox component comes in two sizes: `large` (default) and `small`.
+Pass `checked` with `onCheckedChange` to own the state. Do this when the value lives in a form, gates another control, or has to be read back on submit.
 
-<Demo data={sizeExamples} />
+<Demo data={controlledDemo} />
 
 ### Group
 
@@ -95,6 +75,33 @@ Disable the entire group to prevent user interaction.
 Use a parent checkbox with `allValues` to toggle all items at once.
 
 <Demo data={parentDemo} />
+
+## API Reference
+
+The checkbox, and the group that coordinates several.
+
+### Root
+
+Renders a toggleable checkbox input.
+
+<auto-type-table path="./props.ts" name="CheckboxProps" />
+
+### Group
+
+Groups multiple checkboxes and manages their shared checked state via a `string[]` value.
+
+<auto-type-table path="./props.ts" name="CheckboxGroupProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `checkbox` | The checkbox control itself |
+| `checkbox-indicator` | The indicator inside the control |
+| `checkbox-icon` | The check or indeterminate icon (when checked or indeterminate) |
+| `checkbox-group` | The `Checkbox.Group` container |
 
 ## Accessibility
 

@@ -132,7 +132,7 @@ describe('Image', () => {
       fireEvent.error(img);
       expect(img.src).toContain('/fallback.jpg');
 
-      // The fallback itself fails to load — must not re-assign it again.
+      // The fallback itself fails to load, so it must not be re-assigned.
       fireEvent.error(img);
       expect(img.src).toContain('/fallback.jpg');
     });

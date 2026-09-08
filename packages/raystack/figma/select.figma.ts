@@ -22,7 +22,7 @@ const leadingIcon = instance.getBoolean('Icon', {
 });
 
 // Chevron / Avatar / Label BOOLEANs and Filled / Hover VARIANTs are visual-only
-// (the chevron is always rendered by Select.Trigger; Filled/Hover are states) —
+// (the chevron is always rendered by Select.Trigger; Filled/Hover are states),
 // no matching code props, intentionally not mapped.
 
 export default {

@@ -15,7 +15,7 @@
   }
 
   /* Press dims at the snappy press tier; releasing eases back at the base
-     (fast) tier above — quick press, gentle release. */
+     (fast) tier above: quick press, gentle release. */
   .link:active {
     transition: opacity var(--rs-duration-press) var(--rs-ease-out);
   }

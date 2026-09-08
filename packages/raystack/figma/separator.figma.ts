@@ -5,7 +5,7 @@
 import figma from 'figma';
 
 // Figma "Divider" exposes only the `Outerspace` VARIANT (Small/None), which
-// controls the surrounding margin/spacing — there is no corresponding public
+// controls the surrounding margin/spacing, and there is no corresponding public
 // prop on the code Separator (its `size` controls line length, not spacing),
 // so no prop is emitted.
 

@@ -169,3 +169,25 @@ export const positionDemo = {
     }
   ]
 };
+
+export const controlledDemo = {
+  type: 'code',
+  code: `
+function ControlledPreviewCard() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <Flex direction="column" align="center" gap={5}>
+      <PreviewCard open={open} onOpenChange={setOpen}>
+        <PreviewCard.Trigger href="#">Apsara</PreviewCard.Trigger>
+        <PreviewCard.Content>
+          <Text size="small">A React component library.</Text>
+        </PreviewCard.Content>
+      </PreviewCard>
+      <Button size="small" variant="outline" onClick={() => setOpen(o => !o)}>
+        Toggle from outside
+      </Button>
+    </Flex>
+  );
+}`
+};

@@ -98,12 +98,12 @@ export interface ThemeProviderProps {
   /**
    * The icons inside Apsara's components, and the props applied to every icon.
    *
-   * `components` replaces a drawing by key — `{ ErrorIcon: MyError }`. A partial
+   * `components` replaces a drawing by key, as in `{ ErrorIcon: MyError }`. A partial
    * map changes only the keys it names, and a nested `<Theme icons={…}>` layers
    * on top of an outer one, per key.
    *
    * `props` applies to every icon built by `createIcon`, the consumer's own
-   * included — `{ strokeWidth: 2 }`. The props at the call site still win.
+   * included, as in `{ strokeWidth: 2 }`. The props at the call site still win.
    * Prefer the `data-icon` attribute and CSS where a style rule is enough,
    * because CSS re-renders nothing.
    *

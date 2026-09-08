@@ -19,7 +19,9 @@ import {
    strings — no library call, and no drift by timezone. */
 export type DayKey = string;
 
-const DAY_KEY_FORMAT = 'yyyy-MM-dd';
+/* `uuuu`, not `yyyy`: `yyyy` is year-of-era, so JS year 0 formats as `'0001'`
+ * and collides with year 1. `uuuu` is the astronomical year and round-trips. */
+const DAY_KEY_FORMAT = 'uuuu-MM-dd';
 const DAY_KEY_SHAPE = /^\d{4}-\d{2}-\d{2}$/;
 
 /* Every token in DAY_KEY_FORMAT comes from the input, so no field is ever
@@ -29,7 +31,11 @@ const PARSE_REFERENCE = new Date(2000, 0, 1);
 /* Passing `timeZone` is what keeps a grid rendered in that zone from keying
    its cells a day off — the current family's tooltip/`dateInfo` bug. */
 export function dayKey(date: Date, timeZone?: string): DayKey {
-  return format(zoned(date, timeZone), DAY_KEY_FORMAT);
+  const key = format(zoned(date, timeZone), DAY_KEY_FORMAT);
+  if (!DAY_KEY_SHAPE.test(key)) {
+    throw new RangeError(`Day is outside the supported range: ${key}`);
+  }
+  return key;
 }
 
 /* Not for ordering two days: an epoch carries a time and an offset, so two

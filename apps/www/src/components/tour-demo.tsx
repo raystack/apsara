@@ -82,7 +82,7 @@ export default function TourDemo() {
         </Text>
         <Text size='small' variant='secondary'>
           Four steps: a centered welcome, then the search box, analytics, and
-          notifications — each anchored and spotlighted.
+          notifications, each anchored and spotlighted.
         </Text>
         <Button onClick={() => actionsRef.current?.start()}>
           <Rocket size={16} strokeWidth={1.5} /> Start tour

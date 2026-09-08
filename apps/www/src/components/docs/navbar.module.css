@@ -3,27 +3,16 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--rs-space-4) var(--rs-space-7);
-  backdrop-filter: blur(1px);
-  position: relative;
-  width: 100%;
-  box-sizing: border-box;
   position: sticky;
   top: 0;
-  backdrop-filter: blur(1px);
-  border-bottom: 0.5px solid var(--rs-color-border-base-primary, #e8e8e8);
-  position: relative;
   width: 100%;
-  box-sizing: border-box;
-  position: sticky;
-  top: 0;
-  z-index: var(--rs-z-index-portal);
   height: 50px;
-  background: #fcfcfce6;
+  box-sizing: border-box;
+  backdrop-filter: blur(1px);
+  background: color-mix(in srgb, var(--docs-bg-shell) 90%, transparent);
+  z-index: var(--rs-z-index-portal);
 }
 
-[data-theme="dark"] .navbar {
-  background: #111111e6;
-}
 .left {
   display: flex;
   align-items: center;

@@ -26,7 +26,7 @@ interface AddFilterProps<TData> {
   appliedFiltersSet: Set<string>;
   onAddFilter: (field: DataViewField<TData>) => void;
   children?: Trigger<TData>;
-  /** Applied to the default trigger only — a custom `trigger`/`children` owns its own className. */
+  /** Applied to the default trigger only. A custom `trigger`/`children` owns its own className. */
   className?: string;
 }
 

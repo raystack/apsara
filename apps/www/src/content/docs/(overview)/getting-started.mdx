@@ -36,6 +36,8 @@ pnpm add https://pkg.pr.new/raystack/apsara/@raystack/apsara@<pr-number>
 
 ## Setup
 
+Three steps, in order. The styles and the provider are needed once, at the root of the app.
+
 ### 1. Import styles
 
 Add the CSS import at the root of your application, before any component renders:
@@ -84,7 +86,9 @@ function Example() {
 }
 ```
 
-## Framework Setup
+## Framework setup
+
+Where the two setup steps go depends on the framework.
 
 ### Next.js (App Router)
 
@@ -131,9 +135,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 );
 ```
 
-## Optional: Normalize CSS
+## Optional: normalize CSS
 
-Apsara includes an optional normalize stylesheet that ensures consistent rendering across browsers while preserving useful defaults:
+Apsara includes an optional normalize stylesheet that keeps rendering consistent across browsers while preserving useful defaults:
 
 ```ts
 import "@raystack/apsara/normalize.css";
@@ -142,7 +146,7 @@ import "@raystack/apsara/style.css";
 
 Import it before the main stylesheet if you choose to use it.
 
-## Importing Icons
+## Importing icons
 
 Apsara exports a set of icons that can be imported separately:
 
@@ -153,7 +157,7 @@ import { SearchIcon, XIcon } from "@raystack/apsara/icons";
 <Button leadingIcon={<SearchIcon />}>Search</Button>
 ```
 
-## Importing Hooks
+## Importing hooks
 
 Utility hooks such as `useCopyToClipboard`, `useDebouncedState`, and `useMouse` are available from a dedicated export:
 
@@ -184,8 +188,8 @@ function ThemeToggle() {
 }
 ```
 
-## Next Steps
+## Next steps
 
-- [Theme Overview](/docs/theme/overview) — Configure colors, spacing, and style variants
-- [Button](/docs/components/button) — Start with a common component
-- [DataView](/docs/components/dataview) — Build data-rich interfaces
+- [Theme Overview](/docs/theme/overview): configure colors, spacing, and style variants
+- [Button](/docs/components/button): start with a common component
+- [DataView](/docs/dataview): build data-rich interfaces

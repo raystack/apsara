@@ -4,7 +4,7 @@
 
 import figma from 'figma';
 
-// State (Collapsed/Hover/Expanded) is visual-only — the Accordion root exposes no
+// State (Collapsed/Hover/Expanded) is visual-only, and the Accordion root exposes no
 // matching prop, so it is not mapped. A composed example uses the public sub-component API.
 
 export default {

@@ -42,8 +42,8 @@ type SearchItems = {
 };
 
 /* Map known page slugs to icons; everything else falls back to a generic one. */
-// Section glyphs. None of these is an icon Apsara publishes — the set holds
-// only what Apsara's own components draw — so they come from lucide directly
+// Section glyphs. None of these is an icon Apsara publishes. The set holds
+// only what Apsara's own components draw, so they come from lucide directly
 // and are sized at the call site.
 const PAGE_ICONS: Record<string, typeof BookOpen> = {
   docs: BookOpen,
@@ -156,7 +156,7 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
 
   const items = !isSearching ? defaultItems : searchResults;
 
-  /* The `items` prop opts Command out of built-in filtering/unwrapping —
+  /* The `items` prop opts Command out of built-in filtering/unwrapping,
      results are pre-filtered by fumadocs and the grouped layout stays intact. */
   const itemValues = useMemo(
     () =>
@@ -233,7 +233,7 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
                 <EmptyState
                   variant='empty1'
                   heading='No result found'
-                  subHeading='The keyword you’re searching for isn’t in the document—try using a different term.'
+                  subHeading='The keyword you’re searching for isn’t in the document. Try a different term.'
                   icon={<WarningIcon />}
                 />
               )}

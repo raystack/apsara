@@ -28,7 +28,7 @@ const cells = instance
   .findConnectedInstances(node => node.name === 'dropdown cell', {
     traverseInstances: true
   })
-  // findConnectedInstances returns reverse document order — flip to top-to-bottom.
+  // findConnectedInstances returns reverse document order, so flip to top-to-bottom.
   .reverse()
   .flatMap(cell =>
     cell && cell.type === 'INSTANCE' ? cell.executeTemplate().example : []

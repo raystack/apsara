@@ -75,7 +75,7 @@ export function TourContent({
   );
 
   const spotlightClicks = step?.spotlightClicks ?? false;
-  // biome-ignore lint/correctness/useExhaustiveDependencies: `index` is intentional — re-running on step change is how the card refocuses.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `index` is intentional, and re-running on step change is how the card refocuses.
   useEffect(() => {
     if (!popoverOpen || !visible || spotlightClicks) return;
     popupRef.current?.focus({ preventScroll: true });
@@ -99,7 +99,7 @@ export function TourContent({
       modal={false}
       onOpenChange={(nextOpen, eventDetails) => {
         if (nextOpen) return;
-        // Tours are persistent — only Escape dismisses, not outside press/focus.
+        // Tours are persistent: only Escape dismisses, not outside press/focus.
         if (eventDetails.reason === 'escape-key') actions.stop();
       }}
     >

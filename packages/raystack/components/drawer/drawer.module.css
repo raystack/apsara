@@ -139,7 +139,7 @@
   height: 100%;
 }
 
-/* Positioning only — IconButton supplies the chrome, states and focus ring. */
+/* Positioning only. IconButton supplies the chrome, states and focus ring. */
 .close {
   position: absolute;
   top: var(--rs-space-3);

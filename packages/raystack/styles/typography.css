@@ -35,7 +35,7 @@
   --rs-line-height-regular: 20px;
   --rs-line-height-large: 24px;
 
-  /* Body Letter spacing — tuned for Inter, which is spaced generously already.
+  /* Body letter spacing, tuned for Inter, which is spaced generously already.
      Near-zero at small sizes, slightly negative as size grows. em-based so it
      scales with font-size. */
   --rs-letter-spacing-micro: 0.01em;

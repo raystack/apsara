@@ -185,7 +185,7 @@ describe('FilterChip', () => {
     });
 
     it('forwards calendarProps to the underlying DatePicker', () => {
-      // dateFormat is the easiest forwarded prop to observe — the formatted
+      // dateFormat is the easiest forwarded prop to observe, since the formatted
       // string in the input changes when it lands on DatePicker.
       render(
         <FilterChip

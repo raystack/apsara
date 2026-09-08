@@ -30,7 +30,42 @@ import { ColorPicker } from '@raystack/apsara'
 </ColorPicker>
 ```
 
+## Usage
+
+The picker is composed from an area pad, sliders and an input, so you can drop in the whole thing or keep only the parts you need.
+
+### Basic usage
+
+An uncontrolled picker. Pass `defaultValue` for the starting color and read changes from `onValueChange`.
+
+<Demo data={basicDemo} />
+
+### Copy to clipboard
+
+Pass the `copyable` prop on `ColorPicker.Input` to render a copy-to-clipboard button in the input's trailing slot. The button copies the formatted color string in the active mode (e.g. `#FF0000`, `rgb(...)`, or `oklch(...)`) and shows a brief confirmation icon after a successful copy.
+
+<Demo data={copyableDemo} />
+
+### OKLCH mode
+
+The picker stores color internally in OKLCH. What the controls show depends on the mode:
+
+- **`hex`, `rgb`, `hsl`**: the area pad is the familiar HSL saturation × brightness square and the hue slider runs in HSL hue. The picker behaves like a traditional color picker and only emits colors the chosen format can represent.
+- **`oklch`**: the pad becomes a chroma × lightness plane covering the full P3 gamut, and the hue slider runs in OKLCH hue, where equal steps are equal perceptual changes.
+
+To start in OKLCH, pass an `oklch(...)` string as `defaultValue` and set `defaultMode='oklch'`.
+
+<Demo data={oklchDemo} />
+
+### Popover integration
+
+The `ColorPicker` can be embedded within a `Popover` component to create a more interactive and space-efficient color selection experience.
+
+<Demo data={popoverDemo} />
+
 ## API Reference
+
+The pad and sliders compose inside a root. `formatColor` turns a value into a string yourself.
 
 ### Root
 
@@ -81,35 +116,9 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `color-picker-mode` | The mode select trigger |
 | `color-picker-mode-content` | The mode select dropdown content (when open) |
 
-## Examples
-
-### Basic Usage
-
-<Demo data={basicDemo} />
-
-### Copy to Clipboard
-
-Pass the `copyable` prop on `ColorPicker.Input` to render a copy-to-clipboard button in the input's trailing slot. The button copies the formatted color string in the active mode (e.g. `#FF0000`, `rgb(...)`, or `oklch(...)`) and shows a brief confirmation icon after a successful copy.
-
-<Demo data={copyableDemo} />
-
-### OKLCH Mode
-
-The picker stores color internally in OKLCH. In `hex`, `rgb`, and `hsl` modes the area pad is the familiar HSL saturation × brightness square and the hue slider runs in HSL hue — so the picker behaves like a traditional color picker and only emits colors representable in the chosen format. Pass an `oklch(...)` string as `defaultValue` and set `defaultMode='oklch'` to switch to a chroma × lightness plane covering the full P3 gamut; the hue slider then runs in OKLCH hue, where equal steps correspond to equal perceptual changes.
-
-<Demo data={oklchDemo} />
-
-### Popover Integration
-
-The `ColorPicker` can be embedded within a `Popover` component to create a more interactive and space-efficient color selection experience.
-
-<Demo data={popoverDemo} />
-
-## Utilities
-
 ### formatColor
 
-Converts any CSS color string to the requested format. Useful when consuming apsara color tokens (which are authored in OKLCH) from APIs that need a specific format — chart libraries, SVG attributes, canvas fills, design exports, and similar.
+Converts any CSS color string to the requested format. Useful when consuming apsara color tokens (which are authored in OKLCH) from APIs that need a specific format: chart libraries, SVG attributes, canvas fills, design exports, and similar.
 
 ```tsx
 import { formatColor } from '@raystack/apsara'
@@ -126,9 +135,9 @@ formatColor('not a color', 'hex')                  // null
 
 - Accepts any CSS color string: `oklch()`, `rgb()`/`rgba()`, `hsl()`/`hsla()`, hex, named colors, `transparent`.
 - For `hex`, `rgb`, and `hsl` outputs, wide-gamut OKLCH inputs are gamut-mapped into sRGB by **reducing chroma while preserving lightness and hue**, so the returned string is the closest sRGB representation rather than a per-channel-clipped one (which would distort hue).
-- For `oklch` output, the full color is preserved — OKLCH can express the wide gamut natively. Output matches the design system's token format (4-decimal L/C, 2-decimal H, hue pinned to 0 when achromatic).
+- For `oklch` output, the full color is preserved, since OKLCH can express the wide gamut natively. Output matches the design system's token format (4-decimal L/C, 2-decimal H, hue pinned to 0 when achromatic).
 - Hex is uppercase; uses 8-digit form (`#rrggbbaa`) when alpha < 1. Translucent rgb/hsl/oklch produce `rgba()` / `hsla()` / `oklch(... / A)`.
-- Returns `null` for unparseable input rather than throwing — safe to call on user-supplied strings.
+- Returns `null` for unparseable input rather than throwing, so it is safe to call on user-supplied strings.
 
 **Signature**
 

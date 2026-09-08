@@ -39,7 +39,7 @@ export const ColorPickerHue = ({
       className={cx(styles.sliderRoot, className)}
       max={360}
       onValueChange={value => handleValueChange(value as number)}
-      // OKLCH hue is perceptually uniform — sub-degree precision is meaningful
+      // OKLCH hue is perceptually uniform, so sub-degree precision is meaningful
       // when fine-tuning a tone. HSL hue keeps the classic 1° granularity.
       step={isOklch ? 0.1 : 1}
       value={value}
