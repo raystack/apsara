@@ -48,7 +48,6 @@ export const SCALES: readonly Scale[] = [
   'year'
 ];
 
-/** Whether `value` is one of the five scales. */
 export function isScale(value: string): value is Scale {
   return (SCALES as readonly string[]).includes(value);
 }
@@ -94,18 +93,12 @@ export function anchorOf(period: Period, trailing: boolean): DayKey {
 }
 
 /**
- * Re-read a value at a different scale.
- *
- * One rule, every direction: take the value's date as the anchor, find the
- * period of the target scale that contains it, and emit that period's edge per
- * `trailing`.
+ * Re-read a value at a different scale: take its date as the anchor, find the
+ * period of the target scale containing it, emit that period's edge.
  *
  * Converting outward is lossy and does not undo. `2026-08-15` at `'day'`
- * becomes `2026-01-01` at `'year'` when leading, and converting that back to
- * `'day'` yields `2026-01-01`, not the original — the anchor is all that
- * survives. Converting to the scale a value already carries is idempotent for
- * any value sitting on its own period's edge, which is what every function
- * here emits.
+ * becomes `2026-01-01` at `'year'` when leading, and back at `'day'` stays
+ * `2026-01-01` — the anchor is all that survives.
  */
 export function convertScale(
   value: ScaleValue,
@@ -125,8 +118,8 @@ export function convertScale(
  * (emits 30 Sep) are available while H1 2026 (emits 30 Jun) is not. The two
  * rules coincide whenever `trailing` is false.
  *
- * `min` and `max` are inclusive; either may be omitted for an open bound. They
- * limit selection only — navigation is never clamped.
+ * `min` and `max` are inclusive and limit selection only — navigation is
+ * never clamped.
  */
 export function isAvailable(
   value: Date | DayKey,

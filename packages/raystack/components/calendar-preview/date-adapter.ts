@@ -63,8 +63,7 @@ export function parseKey(key: DayKey): Date {
 }
 
 /* `month` is 1-12. Validates against the real calendar, so 31 April is
-   rejected rather than rolled forward the way `new Date` would. The year
-   bound is what a four-digit key holds, so this and isDayKey always agree. */
+   rejected rather than rolled forward the way `new Date` would. */
 export function dayKeyFromParts(
   year: number,
   month: number,
@@ -76,37 +75,30 @@ export function dayKeyFromParts(
   return isDayKey(key) ? key : null;
 }
 
-/** The first day of the month containing `key`. */
 export function startOfMonthKey(key: DayKey): DayKey {
   return dayKey(startOfMonth(parseKey(key)));
 }
 
-/** The last day of the month containing `key`. */
 export function endOfMonthKey(key: DayKey): DayKey {
   return dayKey(endOfMonth(parseKey(key)));
 }
 
-/** The first day of the calendar quarter containing `key`. */
 export function startOfQuarterKey(key: DayKey): DayKey {
   return dayKey(startOfQuarter(parseKey(key)));
 }
 
-/** The last day of the calendar quarter containing `key`. */
 export function endOfQuarterKey(key: DayKey): DayKey {
   return dayKey(endOfQuarter(parseKey(key)));
 }
 
-/** The first day of the year containing `key`. */
 export function startOfYearKey(key: DayKey): DayKey {
   return dayKey(startOfYear(parseKey(key)));
 }
 
-/** The last day of the year containing `key`. */
 export function endOfYearKey(key: DayKey): DayKey {
   return dayKey(endOfYear(parseKey(key)));
 }
 
-/** The calendar year of `key`. */
 export function yearOf(key: DayKey): number {
   return Number(key.slice(0, 4));
 }
@@ -116,8 +108,7 @@ export function monthOf(key: DayKey): number {
   return Number(key.slice(5, 7));
 }
 
-/* Accepts both the full and three-letter forms. A localized picker passes a
-   locale through here rather than growing a second lookup elsewhere. */
+/* Accepts both the full and three-letter forms. */
 export function monthFromName(name: string): number | null {
   for (const pattern of ['MMMM', 'MMM']) {
     const date = parse(name, pattern, PARSE_REFERENCE);
@@ -143,7 +134,6 @@ export function formatDayLabel(date: Date, timeZone?: string): string {
   return format(zoned(date, timeZone), 'dd/MM/yyyy');
 }
 
-/** `'May 2027'` — the default label for a value at month scale. */
 export function formatMonthLabel(date: Date, timeZone?: string): string {
   return format(zoned(date, timeZone), 'MMM yyyy');
 }
