@@ -146,6 +146,17 @@ export const resetDemo = {
             </CalendarPreview>`
     },
     {
+      name: 'Range',
+      code: `<CalendarPreview
+              selection="range"
+              defaultMonth={new Date(2024, 3, 1)}
+              defaultDate={{ from: new Date(2024, 3, 10), to: new Date(2024, 3, 20) }}
+              defaultValue={{ from: new Date(2024, 3, 3), to: new Date(2024, 3, 7) }}
+            >
+              <CalendarPreview.Days />
+            </CalendarPreview>`
+    },
+    {
       name: 'Clear the selection',
       code: `<CalendarPreview
               defaultMonth={new Date(2024, 3, 1)}
@@ -353,6 +364,21 @@ export const pickerDemo = {
             </Field>`
     },
     {
+      name: 'Reset',
+      code: `<CalendarPreview
+              defaultMonth={new Date(2024, 3, 1)}
+              defaultDate={new Date(2024, 3, 17)}
+              defaultValue={new Date(2024, 3, 24)}
+            >
+              <CalendarPreview.Trigger>
+                <CalendarPreview.Input />
+              </CalendarPreview.Trigger>
+              <CalendarPreview.Content>
+                <CalendarPreview.Days />
+              </CalendarPreview.Content>
+            </CalendarPreview>`
+    },
+    {
       name: 'Invalid input',
       code: `
 function CalendarPreviewInvalidExample() {
@@ -502,6 +528,25 @@ export const rangeDemo = {
               </CalendarPreview.Trigger>
               <CalendarPreview.Content>
                 <CalendarPreview.Days numberOfMonths={2} />
+              </CalendarPreview.Content>
+            </CalendarPreview>`
+    },
+    {
+      name: 'Reset',
+      code: `<CalendarPreview
+              selection="range"
+              defaultMonth={new Date(2024, 3, 1)}
+              defaultDate={{ from: new Date(2024, 3, 10), to: new Date(2024, 3, 20) }}
+              defaultValue={{ from: new Date(2024, 3, 3), to: new Date(2024, 3, 7) }}
+            >
+              <CalendarPreview.Trigger>
+                <Flex align="center" gap={3}>
+                  <CalendarPreview.Input field="start" />
+                  <CalendarPreview.Input field="end" />
+                </Flex>
+              </CalendarPreview.Trigger>
+              <CalendarPreview.Content>
+                <CalendarPreview.Days />
               </CalendarPreview.Content>
             </CalendarPreview>`
     },

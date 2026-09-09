@@ -276,12 +276,41 @@ describe('CalendarPreview range parts that read the value', () => {
     ).not.toThrow();
   });
 
-  it('hides .Reset at range selection, where a single-day default cannot restore', () => {
+  it('restores a range defaultDate, and disables itself once restored', () => {
+    const onValueChange = vi.fn();
+    const RESTORED = { from: new Date(2026, 7, 3), to: new Date(2026, 7, 7) };
     const { container } = renderRange({
       defaultValue: RANGE,
-      defaultDate: RANGE.from
+      defaultDate: RESTORED,
+      onValueChange
     });
-    expect(getSlot(container, 'calendar-preview-reset')).toBeNull();
+    const reset = getSlot(container, 'calendar-preview-reset') as HTMLElement;
+    expect(reset).not.toBeNull();
+    expect(reset).not.toBeDisabled();
+    fireEvent.click(reset);
+    expect(onValueChange).toHaveBeenCalledWith(
+      RESTORED,
+      expect.objectContaining({ reason: 'reset' })
+    );
+  });
+
+  it('starts restored when the value already equals the range default', () => {
+    const { container } = renderRange({
+      defaultValue: RANGE,
+      defaultDate: RANGE
+    });
+    const reset = getSlot(container, 'calendar-preview-reset') as HTMLElement;
+    expect(reset).toBeDisabled();
+    expect(reset).toHaveAttribute('data-restored');
+  });
+
+  /* Both edges have to match — a shared start is not a restored range. */
+  it('is not restored when only one edge matches the default', () => {
+    const { container } = renderRange({
+      defaultValue: RANGE,
+      defaultDate: { from: RANGE.from, to: new Date(2026, 7, 25) }
+    });
+    expect(getSlot(container, 'calendar-preview-reset')).not.toBeDisabled();
   });
 
   /* Clearing is shape-agnostic, so a `null` default keeps working. */

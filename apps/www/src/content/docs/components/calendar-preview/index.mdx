@@ -213,7 +213,16 @@ Each part renders a default; children replace it.
 
 ### Reset
 
-`.Reset` restores `defaultDate` and **leaves the visible month alone** — it is a value reset, not a view reset. It renders only when `defaultDate` is set *and* the current value differs from it, so the button disappears once there is nothing to restore.
+`.Reset` restores `defaultDate` and **leaves the visible month alone** — it is a value reset, not a view reset. It renders whenever `defaultDate` is set, and goes disabled once there is nothing left to restore rather than unmounting: removing the focused element would strand a keyboard user, and dropping a child from the header would shift both nav buttons sideways every time the value crossed the default.
+
+`defaultDate` follows the selection. At `selection="range"` it takes a range, and both edges have to match before the button counts as restored:
+
+```tsx
+<CalendarPreview
+  selection="range"
+  defaultDate={{ from: new Date(2024, 3, 10), to: new Date(2024, 3, 20) }}
+>
+```
 
 `defaultDate` is a separate prop from `defaultValue` because `defaultValue` is ignored once `value` is passed. Keying the reset off its own prop is what makes it work for a controlled calendar.
 

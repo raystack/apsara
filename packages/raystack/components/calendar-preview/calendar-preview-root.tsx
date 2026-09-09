@@ -63,6 +63,15 @@ interface CalendarPreviewSingleProps {
     value: Date | null,
     details: CalendarPreviewChangeDetails
   ) => void;
+  /**
+   * The day `.Reset` restores. Read even when `value` is controlled, which
+   * `defaultValue` is not — otherwise a controlled consumer never sees
+   * `.Reset`.
+   *
+   * `null` is a default of *nothing selected*, so `.Reset` clears. Omitting
+   * the prop is different: the part then has no job and does not render.
+   */
+  defaultDate?: Date | null;
 }
 
 interface CalendarPreviewRangeProps {
@@ -79,6 +88,15 @@ interface CalendarPreviewRangeProps {
     value: CalendarPreviewDateRange | null,
     details: CalendarPreviewChangeDetails
   ) => void;
+  /**
+   * The range `.Reset` restores. Read even when `value` is controlled, which
+   * `defaultValue` is not — otherwise a controlled consumer never sees
+   * `.Reset`.
+   *
+   * `null` is a default of *nothing selected*, so `.Reset` clears. Omitting
+   * the prop is different: the part then has no job and does not render.
+   */
+  defaultDate?: CalendarPreviewDateRange | null;
 }
 
 export type CalendarPreviewProps = (
@@ -120,16 +138,6 @@ interface CalendarPreviewSharedProps
   maxDate?: Date;
   /** Reject individual days. Applied on top of `minDate` / `maxDate`. */
   isDateUnavailable?: (date: Date) => boolean;
-
-  /**
-   * The day `.Reset` restores. Read even when `value` is controlled, which
-   * `defaultValue` is not — otherwise a controlled consumer never sees
-   * `.Reset`.
-   *
-   * `null` is a default of *nothing selected*, so `.Reset` clears. Omitting
-   * the prop is different: the part then has no job and does not render.
-   */
-  defaultDate?: Date | null;
 
   /**
    * Renders a value for display.
@@ -451,11 +459,9 @@ export function CalendarPreviewRoot({
       setValue(null, 'clear', monthAnchor(value) ?? today);
       return;
     }
-    /* No range-shaped default exists, so restoring one would hand a range
-       consumer a bare `Date`. `.Reset` hides itself for the same reason. */
-    if (selection === 'range') return;
-    setValue(defaultDate, 'reset', defaultDate);
-  }, [defaultDate, value, setValue, today, selection]);
+    /* `occasion` is one day, so a restored range reports the day it starts on. */
+    setValue(defaultDate, 'reset', monthAnchor(defaultDate) ?? today);
+  }, [defaultDate, value, setValue, today]);
 
   /* Day-keys, not instants: a `minDate` carrying a time of day still leaves
      its own day selectable, which the current family gets wrong. */

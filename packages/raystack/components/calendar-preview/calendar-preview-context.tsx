@@ -73,7 +73,7 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
    */
   shouldIgnoreFocusOpen: () => boolean;
   /** Read even when `value` is controlled. */
-  defaultDate: Date | null | undefined;
+  defaultDate: Date | CalendarPreviewDateRange | null | undefined;
   /** A value reset — it never moves the view. */
   reset: () => void;
   month: Date;
