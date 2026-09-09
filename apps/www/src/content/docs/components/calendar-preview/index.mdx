@@ -263,6 +263,65 @@ The popover opens when the input takes focus. Enter, blur and an outside click a
 
 <Demo data={pickerDemo} />
 
+### Invalid typed dates
+
+Typing is checked on every keystroke, and a date that fails is **never committed** — `onValueChange`
+does not fire and the previous value stands.
+
+`.Input` marks itself `aria-invalid` and `data-invalid`, and `data-invalid` is what
+[Input](/docs/components/input) paints its error border from, so the field turns red on its own with
+nothing wired up.
+
+`onValidityChange` carries a ready-to-render `message`, so a message under the field is one line —
+it is `undefined` while valid, which is exactly what [Field](/docs/components/field)'s `error` wants:
+
+```tsx
+<Field label="Start date" error={error}>
+  <CalendarPreview>
+    <CalendarPreview.Trigger>
+      <CalendarPreview.Input onValidityChange={({ message }) => setError(message)} />
+    </CalendarPreview.Trigger>
+    <CalendarPreview.Content>
+      <CalendarPreview.Days />
+    </CalendarPreview.Content>
+  </CalendarPreview>
+</Field>
+```
+
+The default is a flat **"Invalid input"** for every reason. It stays deliberately vague because only
+you know the field's bounds — the component cannot say *which* dates would be accepted without
+inventing wording it has no basis for.
+
+Override it with `errorMessages`, per reason. Anything left out keeps the default, so wording one
+reason does not mean restating the rest:
+
+```tsx
+<CalendarPreview.Input
+  errorMessages={{
+    unparseable: 'Use DD/MM/YYYY, like 15/04/2024',
+    'out-of-bounds': 'Pick a date in April 2024'
+  }}
+  onValidityChange={({ message }) => setError(message)}
+/>
+```
+
+The reason is also on the payload if you would rather branch on it yourself:
+
+| `reason` | Means |
+|----------|-------|
+| `unparseable` | The text is not a date the input could read at all |
+| `out-of-bounds` | A real date, outside `minDate` / `maxDate` |
+| `unavailable` | A real date in range that `isDateUnavailable` rejected |
+
+It fires only when validity *changes*, not on every keystroke, so it is safe to drive state with.
+
+<Callout type="warn" title="A failed commit keeps the text">
+  Blurring or pressing Enter on a date that does not resolve leaves the typed text in the field
+  rather than discarding what was typed. The field stays marked invalid, but it now shows something
+  other than the committed value — so read the value from `onValueChange`, never from the input's
+  text.
+</Callout>
+
 ## Migrating from Calendar
 
 `CalendarPreview` is not a drop-in replacement. Two props keep their names and change
