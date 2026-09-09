@@ -172,7 +172,7 @@
   letter-spacing: var(--rs-letter-spacing-small);
 }
 
-/* Static up/down caret — the pop-up-button affordance ("pick a value").
+/* Static up/down caret, the pop-up-button affordance ("pick a value").
    It does not rotate on open; the menu appearing is the feedback. */
 .triggerIcon {
   width: var(--rs-space-5);

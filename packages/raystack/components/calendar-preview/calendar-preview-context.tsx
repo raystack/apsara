@@ -3,13 +3,17 @@
 import type { Popover } from '@base-ui/react';
 import { createContext, type ReactNode, useContext } from 'react';
 import type { DayKey } from './date-adapter';
-import type { Scale, ScaleValue } from './lib/scale';
+import type {
+  CalendarPreviewScale,
+  CalendarPreviewScaleValue
+} from './lib/scale';
 
 /** What caused a value to change. */
 export type CalendarPreviewChangeReason =
   | 'select'
   | 'input'
   | 'clear'
+  | 'reset'
   | 'scale';
 
 export type CalendarPreviewOpenChangeDetails = Popover.Root.ChangeEventDetails;
@@ -26,8 +30,9 @@ export interface CalendarPreviewChangeDetails {
   toDate: () => Date;
 }
 
-/* Generic so a later phase's scale-aware arms carry a `ScaleValue` without a
-   second context: stored as `unknown`, cast once at the hook boundary. */
+/* Generic so a later phase's scale-aware arms carry a
+   `CalendarPreviewScaleValue` without a second context: stored as `unknown`,
+   cast once at the hook boundary. */
 export interface CalendarPreviewContextValue<Value = Date | null> {
   value: Value;
   /** `occasion` is the day acted on, which a cleared `value` cannot carry. */
@@ -50,15 +55,15 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
    */
   shouldIgnoreFocusOpen: () => boolean;
   /** Read even when `value` is controlled. */
-  defaultDate: Date | undefined;
+  defaultDate: Date | null | undefined;
   /** A value reset — it never moves the view. */
   reset: () => void;
   month: Date;
   /** Never clamped by `minDate` / `maxDate`. */
   setMonth: (month: Date) => void;
   yearRange: { from: number; to: number };
-  scale: Scale;
-  setScale: (scale: Scale) => void;
+  scale: CalendarPreviewScale;
+  setScale: (scale: CalendarPreviewScale) => void;
   isDateUnavailable: (date: Date) => boolean;
   /* Separate from `isDateUnavailable`, which folds them together: `.Input`
      reports which of the two rejected a typed date. */
@@ -69,7 +74,10 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
   clearable: boolean;
   disabled: boolean;
   readOnly: boolean;
-  formatValue: (value: Date | ScaleValue, scale: Scale) => string;
+  formatValue: (
+    value: Date | CalendarPreviewScaleValue,
+    scale: CalendarPreviewScale
+  ) => string;
 }
 
 const CalendarPreviewContext =

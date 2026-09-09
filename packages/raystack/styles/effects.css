@@ -50,7 +50,7 @@
   --rs-focus-ring-shadow: 0 0 0 1px var(--rs-color-border-accent-emphasis);
 
   /* Ring offset: rings sit flush (0) by default. A control adds one of these
-       in its own :focus-visible rule when it needs to — accent-filled controls
+       in its own :focus-visible rule when it needs to, since accent-filled controls
        push the ring out so it clears the same-colour fill; controls in a
        clipped container pull it in so the ring isn't cut off. The -border
        variant pulls in just 1px so the ring hugs a bordered control instead

@@ -1,5 +1,5 @@
 ---
-title: TextArea
+title: Text Area
 description: A multi-line text input field with size and variant options.
 source: packages/raystack/components/text-area
 ---
@@ -37,6 +37,52 @@ import { Field, TextArea } from "@raystack/apsara";
 </Field>
 ```
 
+## Usage
+
+A multi-line input. Set its size and starting height, then decide who owns the value.
+
+### Basic usage
+
+A multi-line text input. It grows with `rows` rather than with content, so set a height that fits the answer you expect.
+
+<Demo data={basicDemo} />
+
+### Size
+
+TextArea comes in two sizes: `large` (default) and `small`.
+
+<Demo data={sizeDemo} />
+
+### Visual variants
+
+TextArea supports `default` and `borderless` visual variants.
+
+<Demo data={variantDemo} />
+
+### Custom rows
+
+TextArea defaults to 3 visible rows. Use the `rows` prop to adjust.
+
+<Demo data={rowsDemo} />
+
+### With Field
+
+Use Field to add label, description, and error handling.
+
+<Demo data={withFieldDemo} />
+
+### Controlled
+
+Pass `value` with `onChange` to own the state, the same contract as a native textarea.
+
+<Demo data={controlledDemo} />
+
+### Using `onValueChange`
+
+`onValueChange` is a convenience callback that fires alongside `onChange` and receives just the new string value. Use it when you don't need the full React change event.
+
+<Demo data={onValueChangeDemo} />
+
 ## API Reference
 
 Renders a multi-line text input. For label, description, and error support, use with [Field](/docs/components/field).
@@ -50,50 +96,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | Slot | Element |
 |------|---------|
 | `text-area` | The `<textarea>` element itself |
-
-## Examples
-
-### Basic Usage
-
-A basic TextArea with a placeholder.
-
-<Demo data={basicDemo} />
-
-### With Field
-
-Use Field to add label, description, and error handling.
-
-<Demo data={withFieldDemo} />
-
-### Controlled Usage
-
-Example of TextArea in controlled mode.
-
-<Demo data={controlledDemo} />
-
-### Using `onValueChange`
-
-`onValueChange` is a convenience callback that fires alongside `onChange` and receives just the new string value. Use it when you don't need the full React change event.
-
-<Demo data={onValueChangeDemo} />
-
-### Size Variants
-
-TextArea comes in two sizes: `large` (default) and `small`.
-
-<Demo data={sizeDemo} />
-
-### Visual Variants
-
-TextArea supports `default` and `borderless` visual variants.
-
-<Demo data={variantDemo} />
-
-### Custom Rows
-
-TextArea defaults to 3 visible rows. Use the `rows` prop to adjust.
-
-<Demo data={rowsDemo} />
 
 ## Accessibility
 

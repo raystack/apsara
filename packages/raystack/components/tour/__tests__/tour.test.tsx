@@ -201,7 +201,7 @@ describe('Tour', () => {
       );
     };
     render(<LateMount />);
-    // Nothing shows while the target is missing — no blank overlay, no card.
+    // Nothing shows while the target is missing: no blank overlay, no card.
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(document.querySelector('[data-status]')).not.toBeInTheDocument();
     fireEvent.click(screen.getByText('mount'));
@@ -280,7 +280,7 @@ describe('Tour', () => {
     );
     // The target disappears while its step is active.
     fireEvent.click(screen.getByText('hide'));
-    // The tour must not strand a broken card on the gone target — it advances.
+    // The tour must not strand a broken card on the gone target; it advances.
     await waitFor(() =>
       expect(screen.getByText('Fallback step')).toBeInTheDocument()
     );
@@ -328,7 +328,7 @@ describe('Tour', () => {
 
     // Resume onto the now-missing target.
     fireEvent.click(screen.getByText('resume'));
-    // No card and — crucially — no orphaned dimmed overlay while waiting.
+    // No card and, crucially, no orphaned dimmed overlay while waiting.
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(document.querySelector('[data-status]')).not.toBeInTheDocument();
     // It resolves cleanly by ending the tour (single step, target gone).
@@ -621,7 +621,7 @@ describe('Tour', () => {
       expect(el).toBeInTheDocument();
       return el as HTMLElement;
     });
-    // The spotlight always cross-fades — it never carries the transition flag,
+    // The spotlight always cross-fades and never carries the transition flag,
     // which is a popover-only concern. Once the target is in view and its rect
     // settles, the dim enters and the cutout opens.
     expect(overlay).not.toHaveAttribute('data-transition');
@@ -644,7 +644,7 @@ describe('Tour', () => {
     // Move affects the popover: it stays visible and glides.
     expect(popup).toHaveAttribute('data-transition', 'move');
     expect(popup).toHaveAttribute('data-visible', 'true');
-    // The spotlight still cross-fades regardless of the mode — no transition
+    // The spotlight still cross-fades regardless of the mode, with no transition
     // flag on the overlay, and its cutout opens once the target settles.
     const overlay = document.querySelector('[data-status]');
     expect(overlay).not.toHaveAttribute('data-transition');

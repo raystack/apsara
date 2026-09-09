@@ -36,7 +36,7 @@ const chip = cva(styles.chip, {
 export type FilterChipValue = string | string[] | number | Date;
 
 /**
- * Coerce a `FilterChipValue` to the `Date` the DatePicker expects — filter
+ * Coerce a `FilterChipValue` to the `Date` the DatePicker expects, since filter
  * state hydrated from a serialized query arrives as a string or epoch number.
  * Unparseable values leave the field unselected.
  */
@@ -113,7 +113,7 @@ export const FilterChip = ({
   const [operation, setOperation] = useState<FilterOperation | undefined>(
     computedOperations?.[0]
   );
-  // `??` not `||` — a falsy option value like `0` is a real selection.
+  // `??` not `||`, since a falsy option value like `0` is a real selection.
   const [filterValue, setFilterValue] = useState<any>(value ?? '');
 
   const showOnRemove = typeof onRemove === 'function';

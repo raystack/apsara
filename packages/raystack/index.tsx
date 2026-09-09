@@ -33,9 +33,9 @@ export {
   type CalendarPreviewNavProps,
   type CalendarPreviewProps,
   type CalendarPreviewResetProps,
+  type CalendarPreviewScale,
+  type CalendarPreviewScaleValue,
   type CalendarPreviewWeekdayProps,
-  type Scale,
-  type ScaleValue,
   type UseCalendarReturn,
   useCalendar
 } from './components/calendar-preview';

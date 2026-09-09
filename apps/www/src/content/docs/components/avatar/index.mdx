@@ -2,7 +2,6 @@
 title: Avatar
 description: An image element with a fallback for representing the user.
 source: packages/raystack/components/avatar
-tag: new
 ---
 
 import {
@@ -32,7 +31,49 @@ import { Avatar, AvatarGroup, getAvatarColor } from '@raystack/apsara'
 </AvatarGroup>
 ```
 
+## Usage
+
+The props below cover the shape and size of an avatar, and what it shows when there is no picture to display.
+
+### Variant
+
+Choose between soft and solid variants to control the visual weight and emphasis of the avatar in your interface.
+
+<Demo data={variantDemo} />
+
+### Size
+
+`size` is a number in pixels rather than a named scale, so an avatar can match whatever line height or row it sits in.
+
+<Demo data={sizesDemo} />
+
+### Color
+
+Avatar comes with a range of predefined colors including both base and extended color options to match your design system.
+
+<Demo data={colorsDemo} />
+
+### Radius
+
+Choose between small and full border radius styles to match your design preferences.
+
+<Demo data={radiusDemo} />
+
+### With Image
+
+Avatar can display user images with graceful fallback to initials when images fail to load or aren't available.
+
+<Demo data={imageDemo} />
+
+### With generated colors
+
+use `getAvatarColor` utility to generate colors based on a string.
+
+<Demo data={generatedColorDemo} />
+
 ## API Reference
+
+The avatar, plus a group for stacking several together.
 
 ### Avatar
 
@@ -57,44 +98,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `avatar-fallback` | The fallback shown before the image loads or on error |
 | `avatar-group` | The root `<div>` of an `AvatarGroup` |
 | `avatar-group-item` | Wrapper around each avatar in the group, including the overflow avatar |
-
-## Examples
-
-### Variant
-
-Choose between soft and solid variants to control the visual weight and emphasis of the avatar in your interface.
-
-<Demo data={variantDemo} />
-
-### Size
-
-The Avatar component supports 13 different sizes to accommodate various layout requirements and design needs.
-
-<Demo data={sizesDemo} />
-
-### Color
-
-Avatar comes with a range of predefined colors including both base and extended color options to match your design system.
-
-<Demo data={colorsDemo} />
-
-### Radius
-
-Choose between small and full border radius styles to match your design preferences.
-
-<Demo data={radiusDemo} />
-
-### With Image
-
-Avatar can display user images with graceful fallback to initials when images fail to load or aren't available.
-
-<Demo data={imageDemo} />
-
-### With Generated Colors
-
-use `getAvatarColor` utility to generate colors based on a string.
-
-<Demo data={generatedColorDemo} />
 
 ## Accessibility
 

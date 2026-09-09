@@ -25,6 +25,43 @@ import { Chip } from "@raystack/apsara";
 <Chip />
 ```
 
+## Usage
+
+Appearance first, meaning variant, size and color, then the two things a chip can carry: icons and a dismiss action.
+
+### Variant
+
+Choose between outline and filled variants to match your design needs.
+
+<Demo data={variantsDemo} />
+
+### Size
+
+Two sizes. `large` is the default; `small` fits inside inputs and table cells.
+
+- `small`: Compact size with less padding
+- `large`: More spacious with increased padding
+
+<Demo data={sizesDemo} />
+
+### Color
+
+Choose between neutral and accent styles to control the visual emphasis.
+
+<Demo data={colorDemo} />
+
+### With icons
+
+Chips can include leading and trailing icons to provide additional context or actions.
+
+<Demo data={iconsDemo} />
+
+### Dismissible
+
+Chips can be made dismissible by adding the isDismissible prop and an onDismiss handler.
+
+<Demo data={dismissableDemo} />
+
 ## API Reference
 
 Renders a compact element for tags, labels, or attributes.
@@ -43,41 +80,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `chip-dismiss` | The dismiss button (when `isDismissible`) |
 | `chip-dismiss-icon` | The dismiss icon (when `isDismissible`) |
 
-## Examples
-
-### Variant
-
-Choose between outline and filled variants to match your design needs.
-
-<Demo data={variantsDemo} />
-
-### Size
-
-The Chip component comes in two sizes:
-
-- `small`: Compact size with less padding
-- `large`: More spacious with increased padding
-
-<Demo data={sizesDemo} />
-
-### Color
-
-Choose between neutral and accent styles to control the visual emphasis.
-
-<Demo data={colorDemo} />
-
-### With Icons
-
-Chips can include leading and trailing icons to provide additional context or actions.
-
-<Demo data={iconsDemo} />
-
-### Dismissible
-
-Chips can be made dismissible by adding the isDismissible prop and an onDismiss handler.
-
-<Demo data={dismissableDemo} />
-
 ## Accessibility
 
 The Chip component has some accessibility features:
@@ -86,4 +88,4 @@ The Chip component has some accessibility features:
 - Includes proper ARIA roles and labels
 - Provides keyboard navigation support
 - Makes decorative elements hidden from screen readers
-- Ensures proper contrast ratios in all variants and states
+- Keeps contrast ratios correct in all variants and states

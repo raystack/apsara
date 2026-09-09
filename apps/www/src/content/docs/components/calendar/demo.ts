@@ -241,3 +241,23 @@ export const dateInfoDemo = {
     }
   ]
 };
+
+export const controlledDemo = {
+  type: 'code',
+  code: `
+function ControlledCalendar() {
+  const [date, setDate] = React.useState(new Date());
+
+  return (
+    <Flex direction="column" align="center" gap={5}>
+      <Calendar mode="single" selected={date} onSelect={setDate} />
+      <Flex align="center" gap={4}>
+        <Text size="small" variant="secondary">
+          {date ? dayjs(date).format('D MMM YYYY') : 'nothing selected'}
+        </Text>
+        <Button size="small" variant="outline" onClick={() => setDate(new Date())}>Today</Button>
+      </Flex>
+    </Flex>
+  );
+}`
+};

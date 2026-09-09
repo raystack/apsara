@@ -2,7 +2,6 @@
 title: Combobox
 description: An input field with an attached dropdown that allows users to search and select from a list of options.
 source: packages/raystack/components/combobox
-tag: new
 ---
 
 import {
@@ -30,7 +29,49 @@ import { Combobox } from "@raystack/apsara";
 </Combobox>
 ```
 
+## Usage
+
+A combobox filters its list as the user types. The props below cover what the list holds, how many items can be picked, and who owns the value.
+
+### Basic
+
+A simple combobox with search filtering built in. Type to filter options.
+
+<Demo data={basicDemo} />
+
+### With icons
+
+You can pass the `leadingIcon` prop to `Combobox.Item` to display icons before item text.
+
+<Demo data={iconDemo} />
+
+### With Field
+
+Wrap the Combobox with [Field](/docs/components/field) to add a label, description, and error handling.
+
+<Demo data={withFieldDemo} />
+
+### Groups and separators
+
+Organize items into groups with labels and visual separators. Groups and labels are automatically hidden when the user is searching.
+
+<Demo data={groupDemo} />
+
+### Multiple selection
+
+Pass the `multiple` prop to enable multi-select. Selected values appear as chips in the input. Items display checkboxes in multiple mode.
+
+<Demo data={multipleDemo} />
+
+### Controlled
+
+Use `value` and `onValueChange` for controlled behavior.
+
+<Demo data={controlledDemo} />
+
 ## API Reference
+
+Root and input first, then the parts that make up the popup list.
 
 ### Root Props
 
@@ -95,44 +136,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `combobox-item-text` | The text label inside an item (when its children is a string) |
 | `combobox-item-icon` | The leading icon inside an item (when `leadingIcon` is set) |
 
-## Examples
-
-### Basic
-
-A simple combobox with search filtering built in. Type to filter options.
-
-<Demo data={basicDemo} />
-
-### With Icons
-
-You can pass the `leadingIcon` prop to `Combobox.Item` to display icons before item text.
-
-<Demo data={iconDemo} />
-
-### With Field
-
-Wrap the Combobox with [Field](/docs/components/field) to add a label, description, and error handling.
-
-<Demo data={withFieldDemo} />
-
-### Groups and Separators
-
-Organize items into groups with labels and visual separators. Groups and labels are automatically hidden when the user is searching.
-
-<Demo data={groupDemo} />
-
-### Multiple Selection
-
-Pass the `multiple` prop to enable multi-select. Selected values appear as chips in the input. Items display checkboxes in multiple mode.
-
-<Demo data={multipleDemo} />
-
-### Controlled
-
-Use `value` and `onValueChange` for controlled behavior.
-
-<Demo data={controlledDemo} />
-
 ## Accessibility
 
 - Follows the [WAI-ARIA Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)
@@ -140,11 +143,11 @@ Use `value` and `onValueChange` for controlled behavior.
   is a `role="combobox"` with `aria-expanded` and `aria-controls`, the popup list
   is a `listbox`, and each item is an `option` with `aria-selected`.
 - Arrow keys move the highlight through visible options, Enter selects the
-  highlighted option, and Escape closes the popup — focus stays in the input
+  highlighted option, and Escape closes the popup, and focus stays in the input
   the whole time, so typing to filter never loses the user's place.
 - In multiple mode, each item renders a checkbox that mirrors its selected
   state, and selected values appear in the input as removable chips.
 - Group labels use Base UI's `Combobox.GroupLabel`, which links the label to
-  its group via `aria-labelledby` — wrap `Combobox.Label` in `Combobox.Group`.
+  its group via `aria-labelledby`, so wrap `Combobox.Label` in `Combobox.Group`.
 - Wrap the Combobox with [Field](/docs/components/field) to associate a
   visible label, description, and error message with the input.

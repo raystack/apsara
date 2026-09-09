@@ -1,0 +1,41 @@
+/*
+  Docs surfaces, local to apps/www, like the typeset. Never imported by the
+  package.
+
+  The docs page is three grounds nested inside one another. Naming them here
+  means a rule can say which ground it is painting rather than reaching for an
+  Apsara color and leaving the reader to work out why:
+
+    outside   the space past the shell's outer rules, on a display wide
+              enough for the width cap to bite
+    shell     the page itself: sidebar, article, contents rail, page nav
+    surface   the things that sit on the page: demos, code blocks, tables
+
+  `outside` and `shell` resolve to the same color today. They are separate
+  tokens because they are separate jobs, and splitting them later is a one-line
+  change here rather than a hunt through eight stylesheets.
+
+  Apsara only ships two neutral grounds, so a third distinct step would have to
+  come from `--rs-color-background-base-primary-hover`, which is a hover state
+  rather than a ground. That is the reason the two match rather than an
+  oversight.
+*/
+
+:root {
+  --docs-bg-outside: var(--rs-color-background-base-secondary);
+  --docs-bg-shell: var(--rs-color-background-base-secondary);
+  --docs-bg-surface: var(--rs-color-background-base-primary);
+
+  /* A band inside a surface, such as the head of a table. One step back from the
+     surface it sits on, which lands it on the same color as the shell. */
+  --docs-bg-surface-header: var(--rs-color-background-base-secondary);
+
+  /* Every edge in the docs chrome is the same hairline: the shell's outer
+     edges, the rules either side of the article, and the border round each
+     surface. */
+  --docs-rule-color: var(--rs-color-border-base-primary);
+  --docs-rule: 0.5px solid var(--docs-rule-color);
+
+  /* Corner radius shared by every raised surface, so they round together. */
+  --docs-surface-radius: var(--rs-radius-3);
+}

@@ -78,9 +78,9 @@ describe('createIcon, for a key Apsara does not ship', () => {
 
     // `components` is typed to the keys Apsara ships, so naming a key it does
     // not ship is a type error, not a silent no-op. `tsc --noEmit` is what
-    // asserts this line — if the key ever became assignable, the unused
+    // asserts this line. If the key ever became assignable, the unused
     // `@ts-expect-error` would itself fail the type check.
-    // @ts-expect-error — RocketIcon is not one of Apsara's keys.
+    // @ts-expect-error RocketIcon is not one of Apsara's keys.
     const overrides: IconOverrides = { RocketIcon: Override };
 
     render(

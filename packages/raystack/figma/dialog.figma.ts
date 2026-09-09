@@ -24,7 +24,7 @@ const footer = instance.getBoolean('Footer', {
   false: ''
 });
 
-// `content` is a SLOT — interpolate the nested sections, with a placeholder fallback.
+// `content` is a SLOT, so interpolate the nested sections, with a placeholder fallback.
 const content = instance.getSlot('content') ?? 'Dialog content';
 
 export default {

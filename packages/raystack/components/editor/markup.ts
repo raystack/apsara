@@ -13,7 +13,7 @@ import {
 } from './schema';
 
 export interface EditorDocDetails {
-  /** Round-trippable markup — `"check @[DataTable](component:data-table)"`. */
+  /** Round-trippable markup, as in `"check @[DataTable](component:data-table)"`. */
   markup: string;
   /** Plain text with each label inlined behind its trigger. */
   text: string;
@@ -82,7 +82,7 @@ function readMention(source: string, start: number): MentionMatch | null {
   return { attrs: { id, label, type, trigger }, next: index + 1 };
 }
 
-/** Inline content for a plain string — newlines become hard breaks. */
+/** Inline content for a plain string, where newlines become hard breaks. */
 export function inlineFragmentFromText(text: string): Fragment {
   const nodes: PMNode[] = [];
   const lines = text.split('\n');
@@ -95,7 +95,7 @@ export function inlineFragmentFromText(text: string): Fragment {
 
 /**
  * Parses the markup dialect into a document. Called only for `value` /
- * `defaultValue` — never for typed or pasted input, so ordinary prose that
+ * `defaultValue`, never for typed or pasted input, so ordinary prose that
  * happens to contain `@[…](…)` stays literal while it is being written.
  */
 export function docFromMarkup(markup: string): PMNode {

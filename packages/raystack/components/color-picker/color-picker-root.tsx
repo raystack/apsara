@@ -84,7 +84,7 @@ export const ColorPickerRoot = ({
     }),
     [providedColor, internalColor]
   );
-  // clampToSrgb wraps culori's clampChroma, which is iterative — memoize so
+  // clampToSrgb wraps culori's clampChroma, which is iterative, so memoize
   // it doesn't re-run on unrelated re-renders during a drag.
   const display = useMemo(
     () => (mode === 'oklch' ? rawColor : clampToSrgb(rawColor)),
@@ -121,7 +121,7 @@ export const ColorPickerRoot = ({
   );
 
   // Memoize the context value so consumers (Area, Hue, Alpha, Input, Mode) only
-  // re-render when a slice they read actually changes — without this, every
+  // re-render when a slice they read actually changes. Without this, every
   // pointermove during a drag would broadcast a fresh object identity to all
   // subcomponents.
   const contextValue = useMemo<ColorPickerContextValue>(

@@ -3,13 +3,13 @@ title: Radius
 description: Overview of the border radius scale and style variants in Apsara.
 ---
 
-Border radius tokens control the roundness of corners throughout your interface. These tokens automatically adjust based on the active style variant—modern style uses sharp, minimal radii while traditional style uses softer, more rounded corners. By using radius tokens instead of fixed values, your custom components will seamlessly adapt when the style changes.
+Border radius tokens control how round corners are across the interface. They adjust to the active style variant: modern uses sharp, minimal radii, traditional uses softer ones. Reach for a token instead of a fixed value and your own components follow along when the style changes.
 
-## Radius Scale
+## Radius scale
 
 The radius scale provides 7 tokens for different levels of roundness, from subtle to fully circular.
 
-### Modern Style (Default)
+### Modern style (default)
 
 <TokenTable
   type="radius"
@@ -24,7 +24,7 @@ The radius scale provides 7 tokens for different levels of roundness, from subtl
   ]}
 />
 
-### Traditional Style
+### Traditional style
 
 When using `data-style="traditional"`, the radius values increase for a softer, more rounded appearance.
 
@@ -42,6 +42,8 @@ When using `data-style="traditional"`, the radius values increase for a softer, 
 />
 
 ## Usage
+
+Radius tokens follow the active `style` variant, so a rule written once renders sharper under `modern` and softer under `traditional`.
 
 ```css
 /* Dashboard widget container */
@@ -110,7 +112,7 @@ When using `data-style="traditional"`, the radius values increase for a softer, 
 }
 ```
 
-## Enabling Style Variants
+## Enabling style variants
 
 To switch between modern and traditional styles, set the `data-style` attribute on your root element:
 
@@ -122,7 +124,7 @@ To switch between modern and traditional styles, set the `data-style` attribute 
 <html data-style="traditional">
 ```
 
-## Best Practices
+## Best practices
 
 - **Be consistent** - Use the same radius token for similar elements throughout your application
 - **Match element size** - Use smaller radius values for smaller elements, larger values for containers

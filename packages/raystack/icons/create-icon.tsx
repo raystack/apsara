@@ -79,7 +79,7 @@ export function IconProvider({
   const stableProps = useStable(props);
 
   // Layer on the parent, so a nested provider changes only the keys it names
-  // and inherits the rest — the way `Scoped` layers theme tokens. Only supplied
+  // and inherits the rest, the way `Scoped` layers theme tokens. Only supplied
   // maps are merged, never the defaults, so an icon nobody overrides stays
   // absent from the context and removable by a bundler.
   const value = useMemo(
@@ -109,7 +109,7 @@ IconProvider.displayName = 'IconProvider';
  * ```
  *
  * `name` is any string. `IconName` covers the keys Apsara ships, so those are
- * the ones `<Theme icons>` can replace with types on your side — but every icon
+ * the ones `<Theme icons>` can replace with types on your side, but every icon
  * built here reads the same context, so its `props` reach yours too.
  *
  * Resolution: the override from the context, then `Default`.
@@ -125,7 +125,7 @@ export function createIcon(name: string, Default: IconComponent) {
     return (
       // `strokeWidth` counts units of the icon's own viewBox, and lucide draws
       // in a 24-unit box, so the rendered stroke is `strokeWidth * width / 24`.
-      // The design draws a 1px stroke in a 16px frame, which is 1.5 here — not
+      // The design draws a 1px stroke in a 16px frame, which is 1.5 here, not
       // 1, which would render a 0.67px stroke.
       <Resolved
         width={16}

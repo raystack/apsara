@@ -1,8 +1,8 @@
 .container {
   display: flex;
   flex-direction: column;
-  border: 0.5px solid var(--rs-color-border-base-primary);
-  border-radius: var(--rs-radius-2);
+  border: var(--docs-rule);
+  border-radius: var(--docs-surface-radius);
   overflow: hidden;
   margin: var(--rs-space-5) 0;
 }
@@ -13,8 +13,8 @@
   gap: var(--rs-space-4);
   height: 36px;
   padding: 0 var(--rs-space-4);
-  background: var(--rs-color-background-base-secondary);
-  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+  background: var(--docs-bg-surface);
+  border-bottom: var(--docs-rule);
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
@@ -61,7 +61,7 @@
   align-items: center;
   gap: var(--rs-space-4);
   padding: var(--rs-space-3) var(--rs-space-4);
-  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+  border-bottom: var(--docs-rule);
   transition: background-color 0.15s ease;
 }
 
@@ -179,10 +179,12 @@
   flex-shrink: 0;
 }
 
+/* Not docs chrome: this tile exists to show a shadow against Apsara's own base
+   background, so it stays on the Apsara token rather than a --docs-* one. */
 .shadowPreview {
   width: 20px;
   height: 20px;
-  background: var(--rs-color-background-base-secondary);
+  background: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-2);
   flex-shrink: 0;
 }

@@ -4,7 +4,7 @@
 
 import figma from 'figma';
 
-// PreviewCard has no Figma component properties — compose a minimal realistic
+// PreviewCard has no Figma component properties, so compose a minimal realistic
 // example using the public sub-components (Trigger / Content).
 
 export default {

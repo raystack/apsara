@@ -2,7 +2,6 @@
 title: Menu
 description: Displays a menu to the user, such as a set of actions or functions, triggered by a button.
 source: packages/raystack/components/menu
-tag: new
 ---
 
 import {
@@ -13,6 +12,7 @@ import {
   submenuDemo,
   autocompleteDemo,
   linearDemo,
+  controlledDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -31,6 +31,58 @@ import { Menu } from '@raystack/apsara'
   </Menu.Content>
 </Menu>
 ```
+
+## Usage
+
+Beyond the plain case, items can carry icons, sit in groups, nest into submenus, and narrow down as someone types.
+
+### Basic usage
+
+A trigger and a list of items. The menu opens on click and closes on select, Escape, or an outside click.
+
+<Demo data={basicDemo} />
+
+### With icons
+
+You can add icons to the menu items. Supports both leading and trailing icons.
+
+<Demo data={iconsDemo} />
+
+### With groups and labels
+
+Organize related menu items into sections with descriptive headers.
+
+<Demo data={customDemo} />
+
+### Submenu
+
+Use `Menu.Submenu`, `Menu.SubmenuTrigger`, and `Menu.SubmenuContent` to create nested menus with multiple levels.
+
+<Demo data={submenuDemo} />
+
+### Autocomplete
+
+Pass `autocomplete` to the Menu root. Each menu manages its own autocomplete state.
+
+- **`autocompleteMode="auto"`** is the default. Items filter as the user types, matched against each item's `value` prop or its children text.
+- **`autocompleteMode="manual"`** leaves filtering to you. Do it in `onInputValueChange`.
+- **Submenus** opt in separately: pass `autocomplete` to `Menu.Submenu`.
+
+<Demo data={autocompleteDemo} />
+
+### Linear inspired Menu
+
+This is a Linear-inspired menu component that supports custom filtering and displays nested options. Users can search through all nested items using a single input field.
+
+To closely replicate Linear-style filtering, the filtering logic should include result ranking. Using a utility like [match-sorter](https://www.npmjs.com/package/match-sorter) can help achieve this by sorting filtered results based on relevance.
+
+<Demo data={linearDemo} />
+
+### Controlled
+
+Pass `open` with `onOpenChange` to own the state. Do this when a keyboard shortcut or another control has to open the menu.
+
+<Demo data={controlledDemo} />
 
 ## API Reference
 
@@ -132,52 +184,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `menu-empty-state` | `Menu.EmptyState` |
 | `menu-subtrigger` | `Menu.SubmenuTrigger` |
 
-## Examples
-
-### Basic Usage
-
-A simple menu with basic functionality.
-
-<Demo data={basicDemo} />
-
-### With Icons
-
-You can add icons to the menu items. Supports both leading and trailing icons.
-
-<Demo data={iconsDemo} />
-
-### With Groups and Labels
-
-Organize related menu items into sections with descriptive headers.
-
-<Demo data={customDemo} />
-
-### Submenu
-
-Use `Menu.Submenu`, `Menu.SubmenuTrigger`, and `Menu.SubmenuContent` to create nested menus with multiple levels.
-
-<Demo data={submenuDemo} />
-
-### Autocomplete
-
-To enable autocomplete, pass the `autocomplete` prop to the Menu root element. Each menu instance will manage its own autocomplete behavior.
-
-By default (`autocompleteMode="auto"`), items are automatically filtered as the user types. The filter matches against the item's `value` prop or its `children` text content.
-
-For submenus, you can independently enable autocomplete by passing `autocomplete` to `Menu.Submenu`.
-
-For more advanced control, set `autocompleteMode="manual"` and implement your own custom filtering logic using the `onInputValueChange` callback.
-
-<Demo data={autocompleteDemo} />
-
-### Linear inspired Menu
-
-This is a Linear-inspired menu component that supports custom filtering and displays nested options. Users can search through all nested items using a single input field.
-
-To closely replicate Linear-style filtering, the filtering logic should include result ranking. Using a utility like [match-sorter](https://www.npmjs.com/package/match-sorter) can help achieve this by sorting filtered results based on relevance.
-
-<Demo data={linearDemo} />
-
 ## Accessibility
 
 - Built on [Base UI Menu](https://base-ui.com/react/components/menu), following
@@ -189,7 +195,7 @@ To closely replicate Linear-style filtering, the filtering logic should include 
   open and close submenus.
 - With `autocomplete`, the popup becomes a `role="dialog"` containing a search
   input, items render as `role="option"`, and focus stays in the input while
-  arrow keys move the highlight — ArrowRight or Enter opens a highlighted
+  arrow keys move the highlight, and ArrowRight or Enter opens a highlighted
   submenu, and Escape first closes an open submenu.
 - `Menu.Label` must be wrapped in `Menu.Group` so the group is labelled via
   `aria-labelledby`.

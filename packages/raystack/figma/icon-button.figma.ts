@@ -9,7 +9,7 @@ const size = figma.selectedInstance.getEnum('Size', {
   '3': 3,
   '4': 4
 });
-// State Hover/Active are visual-only — only Disabled maps to a code prop.
+// State Hover/Active are visual-only, and only Disabled maps to a code prop.
 const disabled = figma.selectedInstance.getEnum('State', {
   Disabled: true
 });

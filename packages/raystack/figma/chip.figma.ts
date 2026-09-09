@@ -13,9 +13,9 @@ const size = figma.selectedInstance.getEnum('Size', {
 const color = figma.selectedInstance.getEnum('Style', {
   Accent: 'accent'
 });
-// State (Default/Hover/Active) is visual-only — no code counterpart, intentionally unmapped.
+// State (Default/Hover/Active) is visual-only, with no code counterpart, so it is intentionally unmapped.
 // children, dismiss and the leading/trailing icons live on the nested
-// ".chip_structure" instance (guarded — findInstance returns an ErrorHandle
+// ".chip_structure" instance (guarded, since findInstance returns an ErrorHandle
 // when absent).
 const structure = (function () {
   const nested = figma.selectedInstance.findInstance('.chip_structure');

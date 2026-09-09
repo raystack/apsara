@@ -8,7 +8,7 @@ export const metadata = {
  * Bare examples landing page.
  *
  * `/examples` is a manual-QA harness for trying Apsara components in a
- * full-page context — the kind of thing the small doc demos can't show.
+ * full-page context, the kind of thing the small doc demos can't show.
  * It is not linked from the public site.
  *
  * To add an example, drop a new route folder next to this file, e.g.

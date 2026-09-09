@@ -1,16 +1,20 @@
 ---
 title: Empty State
-description: A placeholder for views with nothing to show yet — pairs an icon and message with optional actions to help users take the next step.
+description: A placeholder for views with nothing to show yet. It pairs an icon and message with optional actions to help users take the next step.
 source: packages/raystack/components/empty-state
 ---
 
-import { playground, variantsDemo } from "./demo.ts";
+import { playground, variantsDemo,
+  actionsDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
 ## Overview
 
-`EmptyState` fills a view that has no content yet — an empty inbox, zero search results, a feature that needs setup. It pairs a required `icon` with an optional `heading`, `subHeading`, and up to two action slots (`primaryAction`, `secondaryAction`) so users always have a next step. Use the default `empty1` variant for compact, centered placeholders inside panels and lists, and `empty2` for full-page states with left-aligned content and a side-by-side action row.
+`EmptyState` fills a view that has no content yet: an empty inbox, zero search results, a feature that needs setup. It pairs a required `icon` with an optional `heading`, `subHeading`, and up to two action slots (`primaryAction`, `secondaryAction`) so users always have a next step.
+
+Use `empty1`, the default, for compact centered placeholders inside panels and lists. Use `empty2` for full-page states, which left-align the content and put the actions in a side-by-side row.
 
 ## Anatomy
 
@@ -22,6 +26,22 @@ import { Bell } from 'lucide-react'
 
 <EmptyState icon={<Bell size={16} strokeWidth={1.5} />} heading="No notifications" />
 ```
+
+## Usage
+
+Pick the variant that suits the space, then fill in the icon, the message and up to two actions.
+
+### Variants
+
+`empty1` (the default) centers everything and stacks the actions vertically, which suits panels, tables, and lists. `empty2` left-aligns the content, uses a larger icon, and places both actions in a row, which suits full-page states.
+
+<Demo data={variantsDemo} />
+
+### Icon, headings and actions
+
+`heading` states what is missing, `subHeading` says what to do about it. `primaryAction` is the way out; add `secondaryAction` only when there is a genuine second path, since two equal buttons make the choice harder.
+
+<Demo data={actionsDemo} />
 
 ## API Reference
 
@@ -43,14 +63,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `empty-state-subheading` | The subheading text (when `subHeading` is set) |
 | `empty-state-actions` | Wrapper around the action buttons (`empty2` variant only) |
 
-## Examples
-
-### Variants
-
-`empty1` (the default) centers everything and stacks the actions vertically — suited to panels, tables, and lists. `empty2` left-aligns the content, uses a larger icon, and places both actions in a row — suited to full-page states.
-
-<Demo data={variantsDemo} />
-
 ## Accessibility
 
 - The heading and subheading render as styled `Text` spans, not real
@@ -59,5 +71,5 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
   (e.g. `heading={<h2>…</h2>}`) to keep the outline intact.
 - The icon is decorative by default. If it carries meaning on its own,
   give it an accessible name; otherwise mark it `aria-hidden`.
-- Actions are whatever you pass in — use real `Button`s so keyboard and
+- Actions are whatever you pass in, so use real `Button`s and keyboard and
   screen reader users can reach them.

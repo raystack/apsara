@@ -23,7 +23,7 @@ interface DisplayControlsProps {
 }
 
 /**
- * `DataView.DisplayControls` — the popover housing the view switcher, Ordering,
+ * `DataView.DisplayControls`, the popover housing the view switcher, Ordering,
  * Grouping, Display Properties (column visibility), and Reset. The view switcher
  * appears at the top whenever `views.length > 1`. Each section can be hidden
  * individually via `hideViewSwitcher` / `hideOrdering` / `hideGrouping` /

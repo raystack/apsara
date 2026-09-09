@@ -8,7 +8,7 @@ Apsara names every icon with a stable key that does not name a library —
 `SearchIcon`, `SortAscendingIcon`, `ClearIcon` — and draws it with lucide.
 The package exports the 31 icons its own components use, and `createIcon`
 is public, so an app builds any other icon the same way. See the
-[migration guide](https://apsara.raystack.io/docs/migrating-to-lucide-icons)
+[upgrade guide](https://apsara.raystack.io/docs/upgrading)
 and [Icons](https://apsara.raystack.io/docs/theme/icons).
 
 #### Breaking changes

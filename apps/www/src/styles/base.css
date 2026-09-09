@@ -1,0 +1,21 @@
+/*
+  Global element rules for the docs: the few things that sit outside a CSS
+  module and outside the token layers in `typeset.css` and `surfaces.css`.
+
+  Kept deliberately short. Apsara's `normalize.css` already handles the usual
+  resets, so anything that only repeats it belongs there, not here.
+*/
+
+/*
+  A long unbroken token in a table cell, such as a slot name or a union type, would
+  otherwise push the column past the table's width and scroll the page
+  sideways. Scoped to prose tables so ordinary code blocks, which scroll
+  inside their own box, are untouched.
+
+  The selector matches any depth: MDX wraps each table in a container, so the
+  table is not a direct child of `.prose`.
+*/
+.prose table td code {
+  white-space: pre-wrap;
+  word-break: break-word;
+}

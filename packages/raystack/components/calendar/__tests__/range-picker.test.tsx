@@ -270,7 +270,7 @@ describe('RangePicker', () => {
       /*
        * Popover should have closed -> Calendar unmounted. A tight call-count
        * assertion would be brittle (React's final commit may queue more);
-       * instead assert data-active returned to 'from' — only the B2 close
+       * instead assert data-active returned to 'from', since only the B2 close
        * path does that.
        */
       const callsAfter = calendarCalls.list.length;
@@ -399,7 +399,7 @@ describe('RangePicker', () => {
      * Partial-disable (one input disabled, the other enabled) also gates
      * the popover. Without this, the enabled input's click would open the
      * shared popover and the calendar's range state machine would happily
-     * rewrite the "disabled" field through the grid — defeating the
+     * rewrite the "disabled" field through the grid, defeating the
      * disabled intent. Consumers who need to fix one side and pick the
      * other should constrain the calendar via `calendarProps`.
      */
