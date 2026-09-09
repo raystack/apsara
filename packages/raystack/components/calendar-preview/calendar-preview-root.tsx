@@ -1,14 +1,16 @@
 'use client';
 
-import { mergeProps, useRender } from '@base-ui/react';
+import { mergeProps, Popover, useRender } from '@base-ui/react';
+import { REASONS } from '@base-ui/react/internals/reasons';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import styles from './calendar-preview.module.css';
 import {
   type CalendarPreviewChangeDetails,
   type CalendarPreviewChangeReason,
   type CalendarPreviewContextValue,
+  type CalendarPreviewOpenChangeDetails,
   CalendarPreviewProvider
 } from './calendar-preview-context';
 import {
@@ -39,6 +41,16 @@ export interface CalendarPreviewProps
   onValueChange?: (
     value: Date | null,
     details: CalendarPreviewChangeDetails
+  ) => void;
+
+  /** Whether the popover is open (controlled). Ignored by an inline calendar. */
+  open?: boolean;
+  /** @defaultValue false */
+  defaultOpen?: boolean;
+  /** Base UI's typed details, forwarded unchanged. */
+  onOpenChange?: (
+    open: boolean,
+    details: CalendarPreviewOpenChangeDetails
   ) => void;
 
   /** The first month the grid displays (controlled). */
@@ -72,6 +84,15 @@ export interface CalendarPreviewProps
    * the prop is different: the part then has no job and does not render.
    */
   defaultDate?: Date | null;
+
+  /**
+   * Renders a value for display.
+   * @defaultValue `DD/MM/YYYY` at day scale
+   */
+  formatValue?: (
+    value: Date | CalendarPreviewScaleValue,
+    scale: CalendarPreviewScale
+  ) => string;
 
   /**
    * The zone the grid reads days in. Forwarded to the grid; this family does
@@ -113,9 +134,7 @@ export interface CalendarPreviewProps
   readOnly?: boolean;
 }
 
-/* The formatter phase 5's value-rendering parts will use. Not yet reachable
-   from a prop: a `formatValue` override ships with the part that calls it, so
-   the two arrive together rather than the prop shipping inert. */
+/* Exported for its tests; `formatValue` replaces it wholesale. */
 export function defaultFormatValue(
   value: Date | CalendarPreviewScaleValue,
   scale: CalendarPreviewScale
@@ -136,6 +155,9 @@ export function CalendarPreviewRoot({
   value: valueProp,
   defaultValue = null,
   onValueChange,
+  open: openProp,
+  defaultOpen = false,
+  onOpenChange,
   month: monthProp,
   defaultMonth,
   onMonthChange,
@@ -144,6 +166,7 @@ export function CalendarPreviewRoot({
   maxDate,
   isDateUnavailable: isDateUnavailableProp,
   defaultDate,
+  formatValue = defaultFormatValue,
   timeZone,
   today: todayProp,
   clearable = true,
@@ -213,6 +236,40 @@ export function CalendarPreviewRoot({
     [setValueUnwrapped, onValueChange, scale, timeZone, readOnly, disabled]
   );
 
+  const [open, setOpenUnwrapped] = useControlled<boolean>({
+    controlled: openProp,
+    default: defaultOpen,
+    name: 'CalendarPreview',
+    state: 'open'
+  });
+
+  /* Escape and a press on the trigger both leave focus on the trigger, so the
+     focus event that follows would immediately undo the close. Recording the
+     reason lets `.Trigger` swallow exactly that one focus — the same rule
+     floating-ui's own `useFocus` applies. */
+  const focusOpenBlocked = useRef(false);
+
+  const setOpen = useCallback(
+    (next: boolean, details: CalendarPreviewOpenChangeDetails) => {
+      if (
+        !next &&
+        (details.reason === REASONS.escapeKey ||
+          details.reason === REASONS.triggerPress)
+      ) {
+        focusOpenBlocked.current = true;
+      }
+      setOpenUnwrapped(next);
+      onOpenChange?.(next, details);
+    },
+    [setOpenUnwrapped, onOpenChange]
+  );
+
+  const shouldIgnoreFocusOpen = useCallback(() => {
+    if (!focusOpenBlocked.current) return false;
+    focusOpenBlocked.current = false;
+    return true;
+  }, []);
+
   const setScale = useCallback(
     (next: CalendarPreviewScale) => setScaleUnwrapped(next),
     [setScaleUnwrapped]
@@ -259,6 +316,9 @@ export function CalendarPreviewRoot({
     () => ({
       value,
       setValue,
+      open,
+      setOpen,
+      shouldIgnoreFocusOpen,
       defaultDate,
       reset,
       month,
@@ -267,15 +327,21 @@ export function CalendarPreviewRoot({
       scale,
       setScale,
       isDateUnavailable,
+      minDate,
+      maxDate,
       today,
       timeZone,
       clearable,
       disabled,
-      readOnly
+      readOnly,
+      formatValue
     }),
     [
       value,
       setValue,
+      open,
+      setOpen,
+      shouldIgnoreFocusOpen,
       defaultDate,
       reset,
       month,
@@ -284,11 +350,14 @@ export function CalendarPreviewRoot({
       scale,
       setScale,
       isDateUnavailable,
+      minDate,
+      maxDate,
       today,
       timeZone,
       clearable,
       disabled,
-      readOnly
+      readOnly,
+      formatValue
     ]
   );
 
@@ -312,11 +381,15 @@ export function CalendarPreviewRoot({
     )
   });
 
+  /* Base UI owns dismissal — outside press, escape and focus-out all come from
+     `Popover.Root`, which is why no file here has an outside-click listener. */
   return (
     <CalendarPreviewProvider
       value={context as CalendarPreviewContextValue<unknown>}
     >
-      {element}
+      <Popover.Root open={open} onOpenChange={setOpen}>
+        {element}
+      </Popover.Root>
     </CalendarPreviewProvider>
   );
 }
