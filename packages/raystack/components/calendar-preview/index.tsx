@@ -4,6 +4,9 @@ export type { CalendarPreviewContentProps } from './calendar-preview-content';
 export type {
   CalendarPreviewChangeDetails,
   CalendarPreviewChangeReason,
+  CalendarPreviewDateRange,
+  CalendarPreviewDraftRange,
+  CalendarPreviewField,
   CalendarPreviewOpenChangeDetails
 } from './calendar-preview-context';
 export type { CalendarPreviewDaysProps } from './calendar-preview-days';

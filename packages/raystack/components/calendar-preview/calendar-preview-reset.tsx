@@ -6,12 +6,14 @@ import { UndoIcon } from '~/icons';
 import { IconButton } from '../icon-button';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
+import type { CalendarPreviewValue } from './calendar-preview-root';
 import { dayKey } from './date-adapter';
 
 export type CalendarPreviewResetProps = ComponentProps<typeof IconButton>;
 
 /**
- * Restores `defaultDate`, or clears the selection when it is `null`. A value
+ * Restores `defaultDate` — a day, or a range at range selection — or clears
+ * the selection when it is `null`. A value
  * reset, not a view reset — it leaves the
  * visible month alone. Keyed off `defaultDate` rather than `defaultValue` so
  * it still shows under a controlled `value`.
@@ -29,17 +31,25 @@ export function CalendarPreviewReset({
   ...props
 }: CalendarPreviewResetProps) {
   const { value, defaultDate, reset, disabled, readOnly, timeZone } =
-    useCalendarPreviewContext('CalendarPreview.Reset');
+    useCalendarPreviewContext<CalendarPreviewValue>('CalendarPreview.Reset');
 
   /* No `defaultDate` means the part has no job at all, which is a different
      thing from having nothing to restore right now — `null` is a default. */
   if (defaultDate === undefined) return null;
 
+  const sameDay = (a: Date, b: Date) =>
+    dayKey(a, timeZone) === dayKey(b, timeZone);
+
+  /* Both edges have to match: a shared start is not a restored range. */
   const restored =
     defaultDate === null
       ? value == null
       : value != null &&
-        dayKey(value, timeZone) === dayKey(defaultDate, timeZone);
+        (defaultDate instanceof Date
+          ? value instanceof Date && sameDay(value, defaultDate)
+          : !(value instanceof Date) &&
+            sameDay(value.from, defaultDate.from) &&
+            sameDay(value.to, defaultDate.to));
 
   return (
     <IconButton

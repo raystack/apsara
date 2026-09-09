@@ -57,9 +57,10 @@ export interface CalendarPreviewProps {
   /**
    * The day `.Reset` restores. Read even when `value` is controlled, which
    * `defaultValue` is not. `null` is a default of nothing selected, so
-   * `.Reset` clears; omitting the prop renders no button at all.
+   * `.Reset` clears; omitting the prop renders no button at all. Takes a
+   * range at `selection="range"`.
    */
-  defaultDate?: Date | null;
+  defaultDate?: Date | { from: Date; to: Date } | null;
 
   /**
    * The zone the grid reads days in. Forwarded to the grid; the component does
@@ -242,17 +243,20 @@ export interface CalendarPreviewInputProps {
    */
   onValidityChange?: (validity: {
     valid: boolean;
-    reason?: 'unparseable' | 'out-of-bounds' | 'unavailable';
+    reason?: 'unparseable' | 'out-of-bounds' | 'unavailable' | 'out-of-order';
     message?: string;
   }) => void;
 
   /**
    * Replaces the message for one or more reasons; anything left out keeps the
    * default.
-   * @default "Invalid input" for every reason
+   * @default "Invalid input", except out-of-order, which words itself
    */
   errorMessages?: Partial<
-    Record<'unparseable' | 'out-of-bounds' | 'unavailable', string>
+    Record<
+      'unparseable' | 'out-of-bounds' | 'unavailable' | 'out-of-order',
+      string
+    >
   >;
 
   /** Read and navigable, but not typeable. */
