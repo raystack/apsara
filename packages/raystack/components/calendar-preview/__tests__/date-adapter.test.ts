@@ -7,10 +7,16 @@ import {
   endOfQuarterKey,
   endOfYearKey,
   epoch,
+  formatCaptionLabel,
+  formatDayLabel,
+  formatMonthLabel,
   isDayKey,
   monthFromName,
   monthOf,
+  monthShortNames,
+  monthStart,
   parseKey,
+  shiftMonths,
   startOfMonthKey,
   startOfQuarterKey,
   startOfYearKey,
@@ -35,10 +41,12 @@ describe('dayKey', () => {
     expect(dayKey(instant, 'America/New_York')).toBe('2026-08-31');
   });
 
-  /* `new Date(0, 0, 1)` means 1900, so the far years are built by setFullYear. */
+  /* `Date.UTC(0, 0, 1)` means 1900, so the far years are set explicitly. Built
+     in UTC, not local: at +14 a local-midnight year 10000 is year 9999 in UTC,
+     and the five-digit case below then has nothing to throw about. */
   const atYear = (year: number): Date => {
-    const date = new Date(2000, 0, 1);
-    date.setFullYear(year, 0, 1);
+    const date = new Date(Date.UTC(2000, 0, 1));
+    date.setUTCFullYear(year, 0, 1);
     return date;
   };
 
@@ -185,5 +193,72 @@ describe('monthFromName', () => {
 
   it.each(['', 'Sept', 'Mayy', 'Foo', '05'])('rejects %j', name => {
     expect(monthFromName(name)).toBeNull();
+  });
+});
+
+describe('shiftMonths', () => {
+  it('moves whole months and lands on the first', () => {
+    expect(dayKey(shiftMonths(new Date(2026, 7, 15), 1))).toBe('2026-09-01');
+    expect(dayKey(shiftMonths(new Date(2026, 7, 15), -1))).toBe('2026-07-01');
+    expect(dayKey(shiftMonths(new Date(2026, 7, 15), 0))).toBe('2026-08-01');
+  });
+
+  it('crosses a year boundary in both directions', () => {
+    expect(dayKey(shiftMonths(new Date(2026, 11, 10), 1))).toBe('2027-01-01');
+    expect(dayKey(shiftMonths(new Date(2026, 0, 10), -1))).toBe('2025-12-01');
+  });
+
+  /* Stepping from the 31st would otherwise clamp to the 28th and stay there. */
+  it('does not drift when stepping repeatedly from a long month', () => {
+    let month = new Date(2026, 0, 31);
+    for (let step = 0; step < 3; step += 1) month = shiftMonths(month, 1);
+    expect(dayKey(month)).toBe('2026-04-01');
+  });
+});
+
+describe('monthStart', () => {
+  it('builds the first of a month from a 0-indexed month', () => {
+    expect(dayKey(monthStart(2026, 0))).toBe('2026-01-01');
+    expect(dayKey(monthStart(2026, 11))).toBe('2026-12-01');
+  });
+});
+
+describe('label formatters', () => {
+  it('formats a day as DD/MM/YYYY', () => {
+    expect(formatDayLabel(new Date(2027, 4, 20))).toBe('20/05/2027');
+    expect(formatDayLabel(new Date(2027, 0, 5))).toBe('05/01/2027');
+  });
+
+  it('formats a month in short form', () => {
+    expect(formatMonthLabel(new Date(2027, 4, 20))).toBe('May 2027');
+    expect(formatMonthLabel(new Date(2027, 8, 1))).toBe('Sep 2027');
+  });
+
+  it('formats a caption with the month abbreviated', () => {
+    expect(formatCaptionLabel(new Date(2027, 8, 1))).toBe('Sep 2027');
+  });
+
+  it('reads the labels in an explicit zone', () => {
+    const instant = new Date(Date.UTC(2026, 7, 31, 20, 0));
+    expect(formatDayLabel(instant, 'Asia/Tokyo')).toBe('01/09/2026');
+    expect(formatMonthLabel(instant, 'Asia/Tokyo')).toBe('Sep 2026');
+    expect(formatCaptionLabel(instant, 'UTC')).toBe('Aug 2026');
+  });
+});
+
+describe('monthShortNames', () => {
+  it('lists twelve abbreviations, January first', () => {
+    const names = monthShortNames();
+    expect(names).toHaveLength(12);
+    expect(names[0]).toBe('Jan');
+    expect(names[11]).toBe('Dec');
+  });
+
+  /* The caption's month column shows these, so the parser has to take them
+     back — the same contract the full names carry. */
+  it('round-trips through monthFromName', () => {
+    monthShortNames().forEach((name, index) => {
+      expect(monthFromName(name)).toBe(index + 1);
+    });
   });
 });

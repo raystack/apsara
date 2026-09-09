@@ -1,0 +1,290 @@
+---
+title: Calendar Preview
+description: A subcomposed calendar that owns its selection and view state.
+source: packages/raystack/components/calendar-preview
+---
+
+import {
+  preview,
+  playground,
+  compositionDemo,
+  resetDemo,
+  boundsDemo,
+  gridDemo,
+  dateInfoDemo,
+} from "./demo.ts";
+
+<Demo data={preview} />
+
+<Callout type="warn" title="Preview — not yet covered by semver">
+  Later RFC 005 phases may still reshape props, slots and `useCalendar()`'s
+  return, so pin an exact version if you adopt it now. `Calendar` and
+  `DatePicker` remain the supported choice.
+</Callout>
+
+## Playground
+
+<Demo data={playground} />
+
+## Anatomy
+
+Every part renders its own default, so composition is opt-in depth:
+
+```tsx
+import { CalendarPreview } from '@raystack/apsara'
+
+<CalendarPreview>
+  <CalendarPreview.Days />
+</CalendarPreview>
+```
+
+Expanded, the day view is a header and a grid:
+
+```tsx
+<CalendarPreview>
+  <CalendarPreview.Days>
+    <CalendarPreview.Header>
+      <CalendarPreview.Caption />
+      <CalendarPreview.Reset />
+      <CalendarPreview.PrevMonth />
+      <CalendarPreview.NextMonth />
+    </CalendarPreview.Header>
+    <CalendarPreview.Grid />
+  </CalendarPreview.Days>
+  <CalendarPreview.Footer />
+</CalendarPreview>
+```
+
+`.Grid` renders the day cells itself and takes no children. `.Day` and `.Weekday` are
+not written inside it — they are overrides, passed through `components`:
+
+```tsx
+<CalendarPreview.Grid components={{ DayButton: MyDay, Weekday: MyWeekday }} />
+```
+
+Children override the content a part computes from context, so
+`<CalendarPreview.Caption>Q3 2024</CalendarPreview.Caption>` replaces the month label.
+
+## API Reference
+
+### CalendarPreview
+
+The root. Owns the selected value and the visible month, provides both to every part, and renders a column that hugs its content. Also takes `render`, `className` and `ref`.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewProps" />
+
+### CalendarPreview.Days
+
+The day view — a header and a grid. Hugs its content rather than reserving a fixed height.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewDaysProps" />
+
+### CalendarPreview.Caption
+
+The month label above the grid, and optionally the trigger for the month and year scroller.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewCaptionProps" />
+
+### CalendarPreview.Grid
+
+The day grid. Layout and per-day data live here rather than on the root, so a calendar with two grids can configure them independently.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewGridProps" />
+
+### CalendarPreview.Header
+
+The row above the grid. Composes `.Caption`, `.Reset`, `.PrevMonth` and `.NextMonth` when given no children. Takes `render`, `className` and `ref`.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewHeaderProps" />
+
+### CalendarPreview.PrevMonth / CalendarPreview.NextMonth
+
+Step the view one month. Never disabled by `minDate` or `maxDate` — bounds limit selection, not navigation.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewNavProps" />
+
+### CalendarPreview.Reset
+
+Restores `defaultDate`, reporting `reason: 'reset'`. Rendered whenever `defaultDate`
+is set, and disabled once the value already equals it — it stays mounted rather than
+disappearing, so activating it does not send focus to the page body or shift the nav
+buttons sideways. It carries `data-restored` while there is nothing to restore.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewResetProps" />
+
+### CalendarPreview.Footer
+
+The row below the calendar. A bare string is wrapped in `Text`; anything else renders as given.
+
+It needs no container of its own: the root renders a column that hugs its content, so `.Days` and `.Footer` stack whatever the surrounding layout does.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewFooterProps" />
+
+### useCalendar
+
+Reads the enclosing root's state, for building parts the library does not ship. Deliberately narrow:
+
+```tsx
+import { useCalendar } from '@raystack/apsara'
+
+const { value, setValue, scale, month, setMonth, isDateUnavailable } = useCalendar()
+```
+
+Calling it outside a `CalendarPreview` throws, naming the part that asked. `scale` is
+read-only for now — the setter arrives with the scale switcher in a later phase.
+
+`setValue(null)` clears the selection and reports `reason: 'clear'`, carrying the day
+that was cleared as `details.toDate()`.
+
+<auto-type-table path="./props.ts" name="UseCalendarReturn" />
+<auto-type-table path="./props.ts" name="CalendarPreviewChangeDetails" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `calendar-preview` | The root, a column wrapping the parts |
+| `calendar-preview-days` | The day view surface |
+| `calendar-preview-header` | The header row, single-month layout |
+| `calendar-preview-month-header` | One month's header, when several months are shown |
+| `calendar-preview-caption` | The month label, single-month layout |
+| `calendar-preview-month-header-caption` | One month's label, when several months are shown |
+| `calendar-preview-caption-positioner` | The scroller's positioning wrapper |
+| `calendar-preview-caption-popup` | The month and year scroller (when `dropdown` is open) |
+| `calendar-preview-caption-months` | The month column of the scroller |
+| `calendar-preview-caption-month` | One month in the scroller |
+| `calendar-preview-caption-years` | The year column of the scroller |
+| `calendar-preview-caption-year` | One year in the scroller |
+| `calendar-preview-reset` | The reset button |
+| `calendar-preview-prev-month` | The previous-month button |
+| `calendar-preview-next-month` | The next-month button |
+| `calendar-preview-grid` | The grid root |
+| `calendar-preview-weeks` | Wrapper around the table and its skeleton |
+| `calendar-preview-table` | The `<table>` that holds the days |
+| `calendar-preview-skeleton` | The loading skeleton shown over the grid |
+| `calendar-preview-weekday` | One weekday heading |
+| `calendar-preview-week-number` | One week-number cell (when `showWeekNumber`) |
+| `calendar-preview-week-number-header` | The week-number column heading |
+| `calendar-preview-day-trigger` | The tooltip trigger wrapping each day button |
+| `calendar-preview-day` | The `<button>` for a single day |
+| `calendar-preview-day-number` | The day number inside a day button |
+| `calendar-preview-day-info` | Content above the number (when `dateInfo` resolves) |
+| `calendar-preview-day-tooltip` | The tooltip shown on hover |
+| `calendar-preview-footer` | The footer row |
+| `calendar-preview-footer-text` | The `Text` wrapping a string footer |
+
+Day cells also carry their state, so a stylesheet can target it without a class:
+
+| Attribute | Set when |
+|------|------|
+| `data-selected` | The day is the committed value |
+| `data-draft` | The day has roving focus but is not committed |
+| `data-unavailable` | The day is out of bounds or rejected by `isDateUnavailable` |
+| `data-today` | The day is `today` |
+| `data-outside` | The day belongs to an adjacent month |
+| `data-scale` | The granularity the value is committed at |
+
+## Examples
+
+### Composition
+
+Each part renders a default; children replace it.
+
+<Demo data={compositionDemo} />
+
+### Reset
+
+`.Reset` restores `defaultDate` and **leaves the visible month alone** — it is a value reset, not a view reset. It renders only when `defaultDate` is set *and* the current value differs from it, so the button disappears once there is nothing to restore.
+
+`defaultDate` is a separate prop from `defaultValue` because `defaultValue` is ignored once `value` is passed. Keying the reset off its own prop is what makes it work for a controlled calendar.
+
+`defaultDate={null}` is a default of **nothing selected**, so the button clears the day and reports `reason: 'clear'`. Omitting the prop is the different case: the part has no job and renders nothing.
+
+<Demo data={resetDemo} />
+
+### Selection bounds
+
+`minDate`, `maxDate` and `isDateUnavailable` disable cells. **None of them clamps navigation** — the chevrons and the scroller still reach any month. Bounds compare whole calendar days, so a `minDate` carrying a time of day still leaves its own day selectable.
+
+<Demo data={boundsDemo} />
+
+### Grid layout
+
+Outside days are **off by default**, so a grid ends on the last day of its month with the leading cells blank.
+
+<Demo data={gridDemo} />
+
+### Date information and tooltips
+
+`dateInfo` and `tooltipMessages` are functions of the date, not records keyed by a formatted string. `dateInfo` content renders above the day number; today's dot sits below it, so the two never collide.
+
+<Demo data={dateInfoDemo} />
+
+### Month and year scroller
+
+`<CalendarPreview.Caption dropdown />` turns the caption into a filled chip that opens two adjacent scrolling columns. It is a plain popover of buttons, not a `Select` — picking from either column moves the view and never selects a value.
+
+## Migrating from Calendar
+
+`CalendarPreview` is not a drop-in replacement. Two props keep their names and change
+their meaning, so they are the ones to check first — neither produces a type error in
+every case, and both fail quietly.
+
+| Prop | On `Calendar` | On `CalendarPreview` |
+|------|---------------|----------------------|
+| `disabled` | A day matcher — `disabled={{ before: today }}` blocks those days | A boolean that makes the **whole calendar** inert. Use `isDateUnavailable` or `minDate` / `maxDate` for days |
+| `showOutsideDays` | Defaults to `true` | Defaults to `false` |
+
+The rest are renames. Most follow the repo's conventions (`onValueChange`, `loading`, a
+boolean `disabled`), which is why the names moved rather than the behaviour:
+
+| `Calendar` | `CalendarPreview` |
+|-----------|-------------------|
+| `selected` | `value` |
+| `onSelect` | `onValueChange` |
+| `startMonth` / `endMonth` | `minDate` / `maxDate` |
+| `disabled` (matcher) | `isDateUnavailable` |
+| `loadingData` | `loading` |
+| `dateFormat` | `formatValue` *(not yet shipped — see the callout above)* |
+| `required` | `clearable` (inverted) |
+| `footer` prop | `<CalendarPreview.Footer>` part |
+| `captionLayout="dropdown"` | `<CalendarPreview.Caption dropdown />` |
+
+Two things have **no replacement** yet: the record forms of `dateInfo` and
+`tooltipMessages` (both are functions here), and the `classNames` escape hatch — style
+through the `data-slot` attributes in the table above instead.
+
+Slot names changed too, so a stylesheet written against `Calendar` needs a second set of
+selectors rather than an edit:
+
+| `Calendar` slot | `CalendarPreview` slot |
+|-----------------|------------------------|
+| `calendar-grid-table` | `calendar-preview-table` |
+| `calendar-grid-skeleton` | `calendar-preview-skeleton` |
+| `calendar-month-grid` | `calendar-preview-weeks` |
+| `calendar-nav-previous` | `calendar-preview-prev-month` |
+
+## Performance
+
+`dateInfo`, `tooltipMessages` and `isDateUnavailable` are functions rather than records,
+so the grid cannot tell a changed rule from a re-created one. Passing an inline arrow
+re-renders every day cell on every render of the surrounding component. Wrap them in
+`useCallback`, or hoist them out of the component, whenever the calendar is inside
+anything that re-renders often.
+
+## Localization
+
+English only for now. There is no `locale` prop: month and weekday names come from
+date-fns' default `en-US`, and the nav, reset and caption labels are hardcoded strings.
+`timeZone` is unaffected — a calendar can render in any zone, in English. Localization
+is tracked against RFC 005 rather than patched in per-part.
+
+## Accessibility
+
+- Arrow keys move between days; the focused cell carries `data-draft` until it is committed
+- `readOnly` is conveyed with `aria-readonly` on the grid and `aria-disabled` on each day, and the grid stays focusable and arrow-navigable — unlike `disabled`
+- Each grid is labelled with its month, so the caption is not the only announcement
+- Nav buttons carry `aria-label`, and the scroller's columns are labelled groups
+- Selected and unavailable days are announced through their native button state

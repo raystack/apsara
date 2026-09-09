@@ -1,6 +1,6 @@
 'use client';
 
-// The 31 icons Apsara's own components draw: the one place that pairs a key
+// The 32 icons Apsara's own components draw: the one place that pairs a key
 // with a drawing. A key names the job or the glyph, never the library, so
 // changing icon library is an edit to this file and nothing else.
 //
@@ -38,6 +38,7 @@ import {
   Sun,
   Table,
   TriangleAlert,
+  Undo2,
   X
 } from 'lucide-react';
 import { createIcon } from './create-icon';
@@ -102,6 +103,8 @@ export const StopIcon = /*#__PURE__*/ createIcon('StopIcon', Square);
 export const SuccessIcon = /*#__PURE__*/ createIcon('SuccessIcon', CircleCheck);
 export const SunIcon = /*#__PURE__*/ createIcon('SunIcon', Sun);
 export const TableIcon = /*#__PURE__*/ createIcon('TableIcon', Table);
+/** Restores a value to its default — the calendar's reset. */
+export const UndoIcon = /*#__PURE__*/ createIcon('UndoIcon', Undo2);
 export const WarningIcon = /*#__PURE__*/ createIcon(
   'WarningIcon',
   TriangleAlert
