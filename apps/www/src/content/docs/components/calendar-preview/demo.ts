@@ -91,7 +91,8 @@ export const compositionDemo = {
       code: `<CalendarPreview defaultMonth={new Date(2024, 6, 1)}>
               <CalendarPreview.Days>
                 <CalendarPreview.Header>
-                  <CalendarPreview.Caption>Q3 2024</CalendarPreview.Caption>
+                  <CalendarPreview.Caption>Delivery date</CalendarPreview.Caption>
+                  <CalendarPreview.Caption />
                   <CalendarPreview.PrevMonth />
                   <CalendarPreview.NextMonth />
                 </CalendarPreview.Header>
@@ -140,6 +141,16 @@ export const resetDemo = {
               defaultMonth={new Date(2024, 3, 1)}
               defaultDate={new Date(2024, 3, 17)}
               defaultValue={new Date(2024, 3, 17)}
+            >
+              <CalendarPreview.Days />
+            </CalendarPreview>`
+    },
+    {
+      name: 'Clear the selection',
+      code: `<CalendarPreview
+              defaultMonth={new Date(2024, 3, 1)}
+              defaultDate={null}
+              defaultValue={new Date(2024, 3, 24)}
             >
               <CalendarPreview.Days />
             </CalendarPreview>`

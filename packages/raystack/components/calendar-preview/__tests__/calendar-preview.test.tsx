@@ -363,6 +363,51 @@ describe('CalendarPreview.Reset', () => {
     expect(getSlot(container, 'calendar-preview-reset')).toBeInTheDocument();
   });
 
+  /* `defaultDate={null}` is a default of "nothing selected", which is what
+     makes a reset-to-empty reachable: a falsy default used to mean the part
+     had no job. */
+  it('clears the selection when the defaultDate is null', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderCalendar(undefined, {
+      defaultDate: null,
+      defaultValue: new Date(2026, 7, 10),
+      onValueChange
+    });
+
+    fireEvent.click(
+      getSlot(container, 'calendar-preview-reset') as HTMLElement
+    );
+
+    expect(onValueChange.mock.calls[0][0]).toBeNull();
+    expect(dayCell(container, '10')).not.toHaveAttribute('data-selected');
+  });
+
+  it('reports a null-default clear as a clear of the day it cleared', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderCalendar(undefined, {
+      defaultDate: null,
+      defaultValue: new Date(2026, 7, 10),
+      onValueChange
+    });
+
+    fireEvent.click(
+      getSlot(container, 'calendar-preview-reset') as HTMLElement
+    );
+
+    const details = onValueChange.mock.calls[0][1];
+    expect(details.reason).toBe('clear');
+    expect(details.toDate()).toEqual(new Date(2026, 7, 10));
+  });
+
+  it('is disabled under a null defaultDate while nothing is selected', () => {
+    const { container } = renderCalendar(undefined, { defaultDate: null });
+
+    const reset = getSlot(container, 'calendar-preview-reset');
+    expect(reset).toBeInTheDocument();
+    expect(reset).toBeDisabled();
+    expect(reset).toHaveAttribute('data-restored');
+  });
+
   it('restores the defaultDate on click', () => {
     const onValueChange = vi.fn();
     const { container } = renderCalendar(undefined, {

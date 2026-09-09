@@ -56,9 +56,10 @@ export interface CalendarPreviewProps {
 
   /**
    * The day `.Reset` restores. Read even when `value` is controlled, which
-   * `defaultValue` is not.
+   * `defaultValue` is not. `null` is a default of nothing selected, so
+   * `.Reset` clears; omitting the prop renders no button at all.
    */
-  defaultDate?: Date;
+  defaultDate?: Date | null;
 
   /**
    * The zone the grid reads days in. Forwarded to the grid; the component does

@@ -17,11 +17,9 @@ import {
 <Demo data={preview} />
 
 <Callout type="warn" title="Preview — not yet covered by semver">
-  This component ships ahead of the rest of its family, and its API is still
-  moving: RFC 005 plans a scale switcher and an input part for later phases,
-  and both may reshape props, slots and `useCalendar()`'s return. Treat every
-  name here as unstable until the family lands, and pin an exact version if
-  you adopt it now. `Calendar` and `DatePicker` remain the supported choice.
+  Later RFC 005 phases may still reshape props, slots and `useCalendar()`'s
+  return, so pin an exact version if you adopt it now. `Calendar` and
+  `DatePicker` remain the supported choice.
 </Callout>
 
 ## Playground
@@ -201,6 +199,8 @@ Each part renders a default; children replace it.
 `.Reset` restores `defaultDate` and **leaves the visible month alone** — it is a value reset, not a view reset. It renders only when `defaultDate` is set *and* the current value differs from it, so the button disappears once there is nothing to restore.
 
 `defaultDate` is a separate prop from `defaultValue` because `defaultValue` is ignored once `value` is passed. Keying the reset off its own prop is what makes it work for a controlled calendar.
+
+`defaultDate={null}` is a default of **nothing selected**, so the button clears the day and reports `reason: 'clear'`. Omitting the prop is the different case: the part has no job and renders nothing.
 
 <Demo data={resetDemo} />
 

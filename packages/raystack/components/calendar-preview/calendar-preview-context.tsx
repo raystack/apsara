@@ -35,7 +35,7 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
     occasion: Date
   ) => void;
   /** Read even when `value` is controlled. */
-  defaultDate: Date | undefined;
+  defaultDate: Date | null | undefined;
   /** A value reset — it never moves the view. */
   reset: () => void;
   month: Date;

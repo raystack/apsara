@@ -11,7 +11,8 @@ import { dayKey } from './date-adapter';
 export type CalendarPreviewResetProps = ComponentProps<typeof IconButton>;
 
 /**
- * Restores `defaultDate`. A value reset, not a view reset — it leaves the
+ * Restores `defaultDate`, or clears the selection when it is `null`. A value
+ * reset, not a view reset — it leaves the
  * visible month alone. Keyed off `defaultDate` rather than `defaultValue` so
  * it still shows under a controlled `value`.
  *
@@ -31,13 +32,14 @@ export function CalendarPreviewReset({
     useCalendarPreviewContext('CalendarPreview.Reset');
 
   /* No `defaultDate` means the part has no job at all, which is a different
-     thing from having nothing to restore right now. */
-  if (!defaultDate) return null;
+     thing from having nothing to restore right now — `null` is a default. */
+  if (defaultDate === undefined) return null;
 
   const restored =
-    value !== null &&
-    value !== undefined &&
-    dayKey(value, timeZone) === dayKey(defaultDate, timeZone);
+    defaultDate === null
+      ? value == null
+      : value != null &&
+        dayKey(value, timeZone) === dayKey(defaultDate, timeZone);
 
   return (
     <IconButton

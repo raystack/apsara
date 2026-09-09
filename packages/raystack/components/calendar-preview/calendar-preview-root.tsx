@@ -67,8 +67,11 @@ export interface CalendarPreviewProps
    * The day `.Reset` restores. Read even when `value` is controlled, which
    * `defaultValue` is not — otherwise a controlled consumer never sees
    * `.Reset`.
+   *
+   * `null` is a default of *nothing selected*, so `.Reset` clears. Omitting
+   * the prop is different: the part then has no job and does not render.
    */
-  defaultDate?: Date;
+  defaultDate?: Date | null;
 
   /**
    * The zone the grid reads days in. Forwarded to the grid; this family does
@@ -218,9 +221,16 @@ export function CalendarPreviewRoot({
   /* `'reset'`, not `'select'`: restoring the default is not a pick, and a
      consumer that logs or validates on selection needs to tell them apart. */
   const reset = useCallback(() => {
-    if (!defaultDate) return;
+    if (defaultDate === undefined) return;
+    /* A `null` default clears, and reports the day it cleared: `'reset'` would
+       claim a day was restored when none was. */
+    if (defaultDate === null) {
+      if (value == null) return;
+      setValue(null, 'clear', value);
+      return;
+    }
     setValue(defaultDate, 'reset', defaultDate);
-  }, [defaultDate, setValue]);
+  }, [defaultDate, value, setValue]);
 
   /* Day-keys, not instants: a `minDate` carrying a time of day still leaves
      its own day selectable, which the current family gets wrong. */
