@@ -243,3 +243,125 @@ describe('CalendarPreview range auto-close', () => {
     expect(onOpenChange).toHaveBeenLastCalledWith(false, expect.anything());
   });
 });
+
+describe('CalendarPreview range parts that read the value', () => {
+  const RANGE = { from: new Date(2026, 7, 10), to: new Date(2026, 7, 20) };
+
+  const typeAndCommit = (input: HTMLInputElement, text: string) => {
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: text } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+  };
+
+  const inputs = (container: HTMLElement) =>
+    getAllSlots(container, 'calendar-preview-input') as HTMLInputElement[];
+
+  const picker = (
+    <>
+      <CalendarPreview.Trigger>
+        <CalendarPreview.Input field='start' />
+        <CalendarPreview.Input field='end' />
+      </CalendarPreview.Trigger>
+      <CalendarPreview.Content>
+        <CalendarPreview.Days />
+      </CalendarPreview.Content>
+    </>
+  );
+
+  /* `.Days` renders `.Header` renders `.Reset`, so this is the default
+     composition — it threw on `dayKey(range)` before the shape guard. */
+  it('renders the default composition with a range value and a defaultDate', () => {
+    expect(() =>
+      renderRange({ defaultValue: RANGE, defaultDate: RANGE.from })
+    ).not.toThrow();
+  });
+
+  it('hides .Reset at range selection, where a single-day default cannot restore', () => {
+    const { container } = renderRange({
+      defaultValue: RANGE,
+      defaultDate: RANGE.from
+    });
+    expect(getSlot(container, 'calendar-preview-reset')).toBeNull();
+  });
+
+  /* Clearing is shape-agnostic, so a `null` default keeps working. */
+  it('keeps .Reset for a null defaultDate, and clears the range', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderRange({
+      defaultValue: RANGE,
+      defaultDate: null,
+      onValueChange
+    });
+    const reset = getSlot(container, 'calendar-preview-reset');
+    expect(reset).not.toBeNull();
+    fireEvent.click(reset as HTMLElement);
+    expect(onValueChange).toHaveBeenCalledWith(null, expect.anything());
+  });
+
+  it('labels a childless .Trigger with both endpoints', () => {
+    const { container } = renderRange(
+      { defaultValue: RANGE },
+      <CalendarPreview.Trigger />
+    );
+    const trigger = getSlot(container, 'calendar-preview-trigger');
+    expect(trigger?.textContent).toContain('10/08/2026');
+    expect(trigger?.textContent).toContain('20/08/2026');
+  });
+
+  it('edits the end without disturbing the start', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderRange(
+      { defaultValue: RANGE, onValueChange },
+      picker
+    );
+    const [start, end] = inputs(container);
+    typeAndCommit(end, '25/08/2026');
+    expect(start.value).toBe('10/08/2026');
+    expect(end.value).toBe('25/08/2026');
+    expect(onValueChange).toHaveBeenCalledWith(
+      { from: RANGE.from, to: new Date(2026, 7, 25) },
+      expect.objectContaining({ reason: 'input' })
+    );
+  });
+
+  it('edits the start without disturbing the end', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderRange(
+      { defaultValue: RANGE, onValueChange },
+      picker
+    );
+    const [start, end] = inputs(container);
+    typeAndCommit(start, '05/08/2026');
+    expect(start.value).toBe('05/08/2026');
+    expect(end.value).toBe('20/08/2026');
+    expect(onValueChange).toHaveBeenCalledWith(
+      { from: new Date(2026, 7, 5), to: RANGE.to },
+      expect.objectContaining({ reason: 'input' })
+    );
+  });
+
+  it('restarts, and emits nothing, when a typed end crosses the start', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderRange(
+      { defaultValue: RANGE, onValueChange },
+      picker
+    );
+    const [, end] = inputs(container);
+    typeAndCommit(end, '01/08/2026');
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it('refuses a typed endpoint the consumer marked read-only', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderRange(
+      { defaultValue: RANGE, onValueChange },
+      <CalendarPreview.Trigger>
+        <CalendarPreview.Input field='start' readOnly />
+        <CalendarPreview.Input field='end' />
+      </CalendarPreview.Trigger>
+    );
+    const [start] = inputs(container);
+    typeAndCommit(start, '05/08/2026');
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+});

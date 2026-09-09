@@ -48,7 +48,7 @@ function monthAnchor(
 
 /* `defaultValue` is omitted because `HTMLAttributes` already declares it as a
    form value, which is not what it means here. */
-type CalendarPreviewValue = Date | CalendarPreviewDateRange | null;
+export type CalendarPreviewValue = Date | CalendarPreviewDateRange | null;
 
 /* Selection arms are discriminated on `selection`, so a single-day consumer
    keeps a `Date | null` callback and a range consumer gets a range that has
@@ -413,6 +413,31 @@ export function CalendarPreviewRoot({
     ]
   );
 
+  /* A click means "the next endpoint"; typing into a field means that field,
+     so a typed date cannot go through `selectDay`. Falls back to the committed
+     value when there is no draft, so editing one edge keeps the other. */
+  const setEndpoint = useCallback(
+    (field: CalendarPreviewField, date: Date) => {
+      if (readOnly || disabled || fieldReadOnly[field]) return;
+
+      const base = draft ?? (isRange(value) ? value : null);
+      const from = field === 'start' ? date : base?.from;
+      const to = field === 'end' ? date : base?.to;
+
+      /* An ordered pair completes. Anything else — one edge still missing, or
+         a typed day that crossed its partner — restarts from that day. */
+      if (from && to && dayKey(from, timeZone) <= dayKey(to, timeZone)) {
+        setDraft(null);
+        setActiveField('start');
+        setValue({ from, to }, 'input', date);
+        return;
+      }
+      setDraft({ from: date });
+      setActiveField('end');
+    },
+    [value, draft, fieldReadOnly, timeZone, readOnly, disabled, setValue]
+  );
+
   /* `'reset'`, not `'select'`: restoring the default is not a pick, and a
      consumer that logs or validates on selection needs to tell them apart. */
   const reset = useCallback(() => {
@@ -426,8 +451,11 @@ export function CalendarPreviewRoot({
       setValue(null, 'clear', monthAnchor(value) ?? today);
       return;
     }
+    /* No range-shaped default exists, so restoring one would hand a range
+       consumer a bare `Date`. `.Reset` hides itself for the same reason. */
+    if (selection === 'range') return;
     setValue(defaultDate, 'reset', defaultDate);
-  }, [defaultDate, value, setValue, today]);
+  }, [defaultDate, value, setValue, today, selection]);
 
   /* Day-keys, not instants: a `minDate` carrying a time of day still leaves
      its own day selectable, which the current family gets wrong. */
@@ -458,6 +486,7 @@ export function CalendarPreviewRoot({
       setValue,
       selection,
       selectDay,
+      setEndpoint,
       draft: draft ?? (isRange(value) ? value : null),
       activeField,
       setActiveField,
@@ -488,6 +517,7 @@ export function CalendarPreviewRoot({
       setValue,
       selection,
       selectDay,
+      setEndpoint,
       draft,
       activeField,
       fieldReadOnly,

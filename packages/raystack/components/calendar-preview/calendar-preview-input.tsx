@@ -81,7 +81,7 @@ export function CalendarPreviewInput({
     disabled,
     readOnly,
     selection,
-    selectDay,
+    setEndpoint,
     draft,
     activeField,
     setActiveField,
@@ -160,9 +160,9 @@ export function CalendarPreviewInput({
     }
     const resolved = resolve(trimmed);
     if (!(resolved instanceof Date)) return;
-    /* A typed endpoint goes through the same machine a clicked one does, so
-       the two cannot disagree about what completes a range. */
-    if (isRange) selectDay(resolved);
+    /* Addressed to this field, not to "the next endpoint" — a click means the
+       latter, but typing into the end of a settled range means the former. */
+    if (isRange) setEndpoint(field, resolved);
     else setValue(resolved, 'input', resolved);
     setText(null);
     report(VALID);

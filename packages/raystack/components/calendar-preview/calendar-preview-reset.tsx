@@ -28,12 +28,16 @@ export function CalendarPreviewReset({
   onClick,
   ...props
 }: CalendarPreviewResetProps) {
-  const { value, defaultDate, reset, disabled, readOnly, timeZone } =
+  const { value, defaultDate, reset, disabled, readOnly, timeZone, selection } =
     useCalendarPreviewContext('CalendarPreview.Reset');
 
   /* No `defaultDate` means the part has no job at all, which is a different
      thing from having nothing to restore right now — `null` is a default. */
   if (defaultDate === undefined) return null;
+
+  /* A single-day default cannot describe a range, and comparing the two shapes
+     below would format the range as a date and throw. `null` still clears. */
+  if (selection === 'range' && defaultDate !== null) return null;
 
   const restored =
     defaultDate === null

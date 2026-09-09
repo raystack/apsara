@@ -104,6 +104,8 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
    * the value and closes the popover.
    */
   selectDay: (date: Date) => void;
+  /** Writes one named endpoint, for a typed `.Input`. */
+  setEndpoint: (field: CalendarPreviewField, date: Date) => void;
   /**
    * The range as the grid should draw it — the draft while one is being built,
    * the committed value otherwise. Never emitted; the track between endpoints
