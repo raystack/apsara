@@ -29,7 +29,37 @@ import { Accordion } from '@raystack/apsara'
 </Accordion>
 ```
 
+## Usage
+
+Start with how many sections may be open at once, then decide whether you own that state.
+
+### Single vs multiple
+
+`single` (the default) closes the open item when another opens. `multiple` lets any number stay open at once.
+
+<Demo data={typeDemo} />
+
+### Controlled
+
+Pass `value` with `onValueChange` to own which item is open. Do this when something outside the accordion has to open or close a section.
+
+<Demo data={controlledDemo} />
+
+### Disabled items
+
+Individual accordion items can be disabled using the `disabled` prop.
+
+<Demo data={disabledDemo} />
+
+### Custom Content
+
+The accordion content can contain any React elements, allowing for rich layouts and complex content.
+
+<Demo data={customContentDemo} />
+
 ## API Reference
+
+Items live in a root, and each pairs a trigger with a content panel.
 
 ### Root
 
@@ -68,35 +98,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `accordion-trigger-icon` | The chevron icon inside the trigger |
 | `accordion-content` | The collapsible panel for an item |
 | `accordion-content-body` | The padded `<div>` that holds the panel content |
-
-## Examples
-
-### Single vs Multiple
-
-The Accordion component supports two modes:
-
-- **Single** (default): Only one item can be open at a time. Set `multiple={false}` or omit the prop.
-- **Multiple**: Multiple items can be open simultaneously. Set `multiple={true}`.
-
-<Demo data={typeDemo} />
-
-### Controlled
-
-You can control the accordion's state by providing `value` and `onValueChange` props.
-
-<Demo data={controlledDemo} />
-
-### Disabled Items
-
-Individual accordion items can be disabled using the `disabled` prop.
-
-<Demo data={disabledDemo} />
-
-### Custom Content
-
-The accordion content can contain any React elements, allowing for rich layouts and complex content.
-
-<Demo data={customContentDemo} />
 
 ## Accessibility
 

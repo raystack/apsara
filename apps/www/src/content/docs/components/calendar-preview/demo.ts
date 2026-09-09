@@ -1,5 +1,51 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
+import { getPropsString } from '@/lib/utils';
+
+/* The grid props drive the playground rather than the root's, because they
+   are what visibly changes: the root's state props need a value to show. */
+export const getCode = (props: ComponentPropsType) => {
+  return `<CalendarPreview defaultMonth={new Date(2024, 3, 1)}>
+              <CalendarPreview.Days>
+                <CalendarPreview.Header>
+                  <CalendarPreview.Caption />
+                  <CalendarPreview.PrevMonth />
+                  <CalendarPreview.NextMonth />
+                </CalendarPreview.Header>
+                <CalendarPreview.Grid${getPropsString(props)} />
+              </CalendarPreview.Days>
+            </CalendarPreview>`;
+};
+
+export const playground = {
+  type: 'playground',
+  controls: {
+    fixedWeeks: {
+      type: 'checkbox',
+      defaultValue: true
+    },
+    showOutsideDays: {
+      type: 'checkbox',
+      defaultValue: false
+    },
+    showWeekNumber: {
+      type: 'checkbox',
+      defaultValue: false
+    },
+    loading: {
+      type: 'checkbox',
+      defaultValue: false
+    },
+    weekStartsOn: {
+      type: 'select',
+      options: [0, 1, 2, 3, 4, 5, 6],
+      defaultValue: 0
+    }
+  },
+  getCode
+};
+
 export const preview = {
   type: 'code',
   tabs: [
@@ -45,7 +91,8 @@ export const compositionDemo = {
       code: `<CalendarPreview defaultMonth={new Date(2024, 6, 1)}>
               <CalendarPreview.Days>
                 <CalendarPreview.Header>
-                  <CalendarPreview.Caption>Q3 2024</CalendarPreview.Caption>
+                  <CalendarPreview.Caption>Delivery date</CalendarPreview.Caption>
+                  <CalendarPreview.Caption />
                   <CalendarPreview.PrevMonth />
                   <CalendarPreview.NextMonth />
                 </CalendarPreview.Header>
@@ -94,6 +141,16 @@ export const resetDemo = {
               defaultMonth={new Date(2024, 3, 1)}
               defaultDate={new Date(2024, 3, 17)}
               defaultValue={new Date(2024, 3, 17)}
+            >
+              <CalendarPreview.Days />
+            </CalendarPreview>`
+    },
+    {
+      name: 'Clear the selection',
+      code: `<CalendarPreview
+              defaultMonth={new Date(2024, 3, 1)}
+              defaultDate={null}
+              defaultValue={new Date(2024, 3, 24)}
             >
               <CalendarPreview.Days />
             </CalendarPreview>`
@@ -294,6 +351,62 @@ export const pickerDemo = {
                 </CalendarPreview.Content>
               </CalendarPreview>
             </Field>`
+    },
+    {
+      name: 'Invalid input',
+      code: `
+function CalendarPreviewInvalidExample() {
+  const [defaultError, setDefaultError] = React.useState();
+  const [customError, setCustomError] = React.useState();
+
+  const bounds = {
+    defaultMonth: new Date(2024, 3, 1),
+    minDate: new Date(2024, 3, 1),
+    maxDate: new Date(2024, 3, 30)
+  };
+
+  return (
+    <Flex direction="column" gap={7} style={{ maxWidth: 260 }}>
+      <Field
+        label="Start date"
+        description="Type something that is not a date in April 2024"
+        error={defaultError}
+      >
+        <CalendarPreview {...bounds}>
+          <CalendarPreview.Trigger>
+            <CalendarPreview.Input
+              onValidityChange={({ message }) => setDefaultError(message)}
+            />
+          </CalendarPreview.Trigger>
+          <CalendarPreview.Content>
+            <CalendarPreview.Days />
+          </CalendarPreview.Content>
+        </CalendarPreview>
+      </Field>
+
+      <Field
+        label="End date"
+        description="The same failures, worded with errorMessages"
+        error={customError}
+      >
+        <CalendarPreview {...bounds}>
+          <CalendarPreview.Trigger>
+            <CalendarPreview.Input
+              errorMessages={{
+                unparseable: 'Use DD/MM/YYYY, like 15/04/2024',
+                'out-of-bounds': 'Pick a date in April 2024'
+              }}
+              onValidityChange={({ message }) => setCustomError(message)}
+            />
+          </CalendarPreview.Trigger>
+          <CalendarPreview.Content>
+            <CalendarPreview.Days />
+          </CalendarPreview.Content>
+        </CalendarPreview>
+      </Field>
+    </Flex>
+  );
+}`
     },
     {
       name: 'Custom trigger',

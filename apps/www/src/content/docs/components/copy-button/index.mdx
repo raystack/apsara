@@ -22,6 +22,22 @@ import { CopyButton } from "@raystack/apsara";
 <CopyButton />
 ```
 
+## Usage
+
+The button handles the copy and the confirmation itself. Only its size and state are yours to set.
+
+### Size
+
+Like IconButton, CopyButton supports sizes 1 through 4. Default is `2`.
+
+<Demo data={sizesDemo} />
+
+### States
+
+CopyButton inherits all IconButton states. A disabled button ignores clicks and never triggers a copy.
+
+<Demo data={stateDemo} />
+
 ## API Reference
 
 The CopyButton component extends IconButton props and accepts the following additional props
@@ -41,20 +57,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `copy-button-copy-icon` | The copy icon |
 | `copy-button-check-icon` | The check icon shown after copying |
 | `copy-button-status` | Visually hidden live region announcing "Copied" |
-
-## Examples
-
-### Size
-
-Like IconButton, CopyButton supports sizes 1 through 4. Default is `2`.
-
-<Demo data={sizesDemo} />
-
-### States
-
-CopyButton inherits all IconButton states. A disabled button ignores clicks and never triggers a copy.
-
-<Demo data={stateDemo} />
 
 ## Accessibility
 

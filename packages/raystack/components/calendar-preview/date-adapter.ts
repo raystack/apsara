@@ -19,7 +19,9 @@ import {
    strings — no library call, and no drift by timezone. */
 export type DayKey = string;
 
-const DAY_KEY_FORMAT = 'yyyy-MM-dd';
+/* `uuuu`, not `yyyy`: `yyyy` is year-of-era, so JS year 0 formats as `'0001'`
+ * and collides with year 1. `uuuu` is the astronomical year and round-trips. */
+const DAY_KEY_FORMAT = 'uuuu-MM-dd';
 const DAY_KEY_SHAPE = /^\d{4}-\d{2}-\d{2}$/;
 
 /* Every token in DAY_KEY_FORMAT comes from the input, so no field is ever
@@ -29,7 +31,11 @@ const PARSE_REFERENCE = new Date(2000, 0, 1);
 /* Passing `timeZone` is what keeps a grid rendered in that zone from keying
    its cells a day off — the current family's tooltip/`dateInfo` bug. */
 export function dayKey(date: Date, timeZone?: string): DayKey {
-  return format(zoned(date, timeZone), DAY_KEY_FORMAT);
+  const key = format(zoned(date, timeZone), DAY_KEY_FORMAT);
+  if (!DAY_KEY_SHAPE.test(key)) {
+    throw new RangeError(`Day is outside the supported range: ${key}`);
+  }
+  return key;
 }
 
 /* Not for ordering two days: an epoch carries a time and an offset, so two
@@ -57,8 +63,7 @@ export function parseKey(key: DayKey): Date {
 }
 
 /* `month` is 1-12. Validates against the real calendar, so 31 April is
-   rejected rather than rolled forward the way `new Date` would. The year
-   bound is what a four-digit key holds, so this and isDayKey always agree. */
+   rejected rather than rolled forward the way `new Date` would. */
 export function dayKeyFromParts(
   year: number,
   month: number,
@@ -70,37 +75,30 @@ export function dayKeyFromParts(
   return isDayKey(key) ? key : null;
 }
 
-/** The first day of the month containing `key`. */
 export function startOfMonthKey(key: DayKey): DayKey {
   return dayKey(startOfMonth(parseKey(key)));
 }
 
-/** The last day of the month containing `key`. */
 export function endOfMonthKey(key: DayKey): DayKey {
   return dayKey(endOfMonth(parseKey(key)));
 }
 
-/** The first day of the calendar quarter containing `key`. */
 export function startOfQuarterKey(key: DayKey): DayKey {
   return dayKey(startOfQuarter(parseKey(key)));
 }
 
-/** The last day of the calendar quarter containing `key`. */
 export function endOfQuarterKey(key: DayKey): DayKey {
   return dayKey(endOfQuarter(parseKey(key)));
 }
 
-/** The first day of the year containing `key`. */
 export function startOfYearKey(key: DayKey): DayKey {
   return dayKey(startOfYear(parseKey(key)));
 }
 
-/** The last day of the year containing `key`. */
 export function endOfYearKey(key: DayKey): DayKey {
   return dayKey(endOfYear(parseKey(key)));
 }
 
-/** The calendar year of `key`. */
 export function yearOf(key: DayKey): number {
   return Number(key.slice(0, 4));
 }
@@ -110,8 +108,7 @@ export function monthOf(key: DayKey): number {
   return Number(key.slice(5, 7));
 }
 
-/* Accepts both the full and three-letter forms. A localized picker passes a
-   locale through here rather than growing a second lookup elsewhere. */
+/* Accepts both the full and three-letter forms. */
 export function monthFromName(name: string): number | null {
   for (const pattern of ['MMMM', 'MMM']) {
     const date = parse(name, pattern, PARSE_REFERENCE);
@@ -137,7 +134,6 @@ export function formatDayLabel(date: Date, timeZone?: string): string {
   return format(zoned(date, timeZone), 'dd/MM/yyyy');
 }
 
-/** `'May 2027'` — the default label for a value at month scale. */
 export function formatMonthLabel(date: Date, timeZone?: string): string {
   return format(zoned(date, timeZone), 'MMM yyyy');
 }

@@ -319,6 +319,15 @@
   visibility: hidden;
 }
 
+/* Sits between the cell and the button, so it has to pass the cell's box
+   through: `.day-button` inherits its radius and sizes against it. */
+.day-trigger {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
 .day-button {
   position: relative;
   display: grid;
@@ -347,11 +356,14 @@
   cursor: not-allowed;
 }
 
-/* Inset ring: day cells pack edge-to-edge in the week row, so a flush or
-   outward ring would collide with the neighbouring day. */
+/* The same border hover paints, so the two rings match. An outline on the
+   button cannot: its radius grows outward and misses the arc by a pixel. */
+.day:has(.day-button:focus-visible) {
+  border-color: var(--rs-color-border-accent-emphasis);
+}
+
 .day-button:focus-visible {
-  outline: var(--rs-focus-ring);
-  outline-offset: var(--rs-focus-ring-offset-inset);
+  outline: none;
 }
 
 /* Today's dot sits under the number, and rides up when a day carries info. */
@@ -454,10 +466,13 @@
 }
 
 /* Wider than the trigger and centred on it, per the frames. `.Days` brings its
-   own padding, so the surface adds none. */
+   own padding, so the surface adds none — and it opts out of the shared
+   popover's `max-width: 18rem`, sized for text at 288px against the 296px
+   seven 40px columns need, which cropped Saturday flush to the border. */
 .content {
   padding: 0;
   width: max-content;
+  max-width: none;
 }
 
 .input {

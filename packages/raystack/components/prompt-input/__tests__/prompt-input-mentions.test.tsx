@@ -182,8 +182,8 @@ describe('PromptInput.Mentions', () => {
       expect(screen.getByText('Users')).toBeInTheDocument();
     });
 
-    // Only a single-word query can *open* the menu — the backward scan stops at
-    // whitespace — so a multi-word query is carried forward by the active state,
+    // Only a single-word query can *open* the menu, since the backward scan stops at
+    // whitespace, so a multi-word query is carried forward by the active state,
     // exactly as it is when a user types the space.
     it('keeps a multi-word query filterable', async () => {
       const { container } = render(<Composer />);
@@ -676,7 +676,7 @@ describe('PromptInput.Mentions', () => {
       });
       expect(onSearch).not.toHaveBeenCalled();
 
-      // New inline `mentions` object, same data — the config must not churn.
+      // New inline `mentions` object, same data, so the config must not churn.
       rerender(
         <Composer status='error' mentions={{ items: undefined, onSearch }} />
       );
@@ -707,7 +707,7 @@ describe('PromptInput.Mentions', () => {
         />
       );
 
-      // Label-only until it resolves — never a skeleton, never an error state.
+      // Label-only until it resolves, never a skeleton and never an error state.
       expect(container.querySelector('[data-mention]')?.textContent).toBe(
         'DataTable'
       );

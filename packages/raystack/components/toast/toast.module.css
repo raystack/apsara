@@ -253,7 +253,7 @@
 }
 
 /* Type-based leading icon colors. The toast itself stays visually neutral
-   across all types — only the leading icon changes color per type. */
+   across all types. Only the leading icon changes color per type. */
 .root[data-type="success"] .leadingIcon {
   color: var(--rs-color-foreground-success-primary);
 }

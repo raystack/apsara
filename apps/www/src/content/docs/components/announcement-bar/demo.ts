@@ -47,3 +47,14 @@ export const variantsDemo = {
     />
   </Flex>`
 };
+
+export const actionDemo = {
+  type: 'code',
+  code: `
+<AnnouncementBar
+  leadingIcon={<Info />}
+  text="Scheduled maintenance on Sunday, 02:00–04:00 UTC."
+  actionLabel="Read the notice"
+  actionIcon={<ExternalLink size={12} />}
+/>`
+};

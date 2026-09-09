@@ -8,9 +8,19 @@ import { useCalendarPreviewContext } from './calendar-preview-context';
 import { dayKey, parseKey } from './date-adapter';
 import { parseScaleInput } from './lib/parse';
 
+export type CalendarPreviewInputInvalidReason =
+  | 'unparseable'
+  | 'out-of-bounds'
+  | 'unavailable';
+
 export type CalendarPreviewInputValidity = {
   valid: boolean;
-  reason?: 'unparseable' | 'out-of-bounds' | 'unavailable';
+  reason?: CalendarPreviewInputInvalidReason;
+  /**
+   * The message to show, already resolved against `errorMessages`. Absent
+   * while valid, so it can be handed straight to `Field`'s `error`.
+   */
+  message?: string;
 };
 
 export interface CalendarPreviewInputProps
@@ -22,7 +32,18 @@ export interface CalendarPreviewInputProps
    * each addressable — rather than one bag of props per endpoint.
    */
   field?: CalendarPreviewField;
+  /**
+   * Replaces the message for one or more reasons; anything left out keeps the
+   * default. That default is one flat string because only the consumer knows
+   * the field's bounds — a built-in message cannot say which dates would be
+   * accepted.
+   *
+   * @defaultValue `'Invalid input'` for every reason
+   */
+  errorMessages?: Partial<Record<CalendarPreviewInputInvalidReason, string>>;
 }
+
+const DEFAULT_INVALID_MESSAGE = 'Invalid input';
 
 const VALID: CalendarPreviewInputValidity = { valid: true };
 
@@ -38,6 +59,7 @@ export function CalendarPreviewInput({
   placeholder,
   trailingIcon = <CalendarIcon />,
   onValidityChange,
+  errorMessages,
   onKeyDown,
   onBlur,
   onFocus,
@@ -80,10 +102,26 @@ export function CalendarPreviewInput({
   const [text, setText] = useState<string | null>(null);
   const lastReported = useRef<CalendarPreviewInputValidity>(VALID);
 
-  const report = (next: CalendarPreviewInputValidity) => {
+  /* Derived from the reason rather than returned alongside it, so the reason
+     stays the single source of truth. */
+  const withMessage = (
+    validity: CalendarPreviewInputValidity
+  ): CalendarPreviewInputValidity =>
+    validity.valid
+      ? validity
+      : {
+          ...validity,
+          message:
+            (validity.reason && errorMessages?.[validity.reason]) ??
+            DEFAULT_INVALID_MESSAGE
+        };
+
+  const report = (candidate: CalendarPreviewInputValidity) => {
+    const next = withMessage(candidate);
     if (
       next.valid === lastReported.current.valid &&
-      next.reason === lastReported.current.reason
+      next.reason === lastReported.current.reason &&
+      next.message === lastReported.current.message
     ) {
       return;
     }
@@ -159,7 +197,14 @@ export function CalendarPreviewInput({
       trailingIcon={trailingIcon}
       disabled={disabled}
       readOnly={readOnly || readOnlyProp}
-      aria-invalid={lastReported.current.valid ? undefined : true}
+      /* Input paints its error border from `data-invalid`, so marking only
+         `aria-invalid` reached assistive tech and left the field looking
+         untouched. Spread rather than set to `undefined`: these props land
+         after Field's, and an explicit `undefined` erases the invalid state
+         Field sets for errors this input knows nothing about. */
+      {...(lastReported.current.valid
+        ? {}
+        : { 'aria-invalid': true, 'data-invalid': true })}
       value={text ?? committedText}
       onValueChange={text => {
         if (inert) return;

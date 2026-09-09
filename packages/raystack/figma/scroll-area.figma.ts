@@ -4,7 +4,7 @@
 
 import figma from 'figma';
 
-// State (Default / Hover) is purely visual (scrollbar visibility) — no matching
+// State (Default / Hover) is purely visual (scrollbar visibility), with no matching
 // code prop, intentionally not mapped. Compose a minimal example.
 
 export default {

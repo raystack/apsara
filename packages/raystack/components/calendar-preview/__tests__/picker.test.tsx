@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { getSlot } from '~/test-utils/data-slots';
+import { Field } from '../../field';
 import { CalendarPreview } from '../calendar-preview';
 
 const TODAY = new Date(2026, 7, 15);
@@ -173,7 +174,8 @@ describe('CalendarPreview.Input commit', () => {
     expect(onValueChange).not.toHaveBeenCalled();
     expect(onValidityChange).toHaveBeenLastCalledWith({
       valid: false,
-      reason: 'unparseable'
+      reason: 'unparseable',
+      message: 'Invalid input'
     });
   });
 
@@ -211,7 +213,8 @@ describe('CalendarPreview.Input validity', () => {
     fireEvent.change(input, { target: { value: 'not a date' } });
     expect(onValidityChange).toHaveBeenLastCalledWith({
       valid: false,
-      reason: 'unparseable'
+      reason: 'unparseable',
+      message: 'Invalid input'
     });
   });
 
@@ -233,7 +236,8 @@ describe('CalendarPreview.Input validity', () => {
     fireEvent.change(input, { target: { value: '01/08/2026' } });
     expect(onValidityChange).toHaveBeenLastCalledWith({
       valid: false,
-      reason: 'out-of-bounds'
+      reason: 'out-of-bounds',
+      message: 'Invalid input'
     });
   });
 
@@ -246,7 +250,8 @@ describe('CalendarPreview.Input validity', () => {
     fireEvent.change(input, { target: { value: '12/08/2026' } });
     expect(onValidityChange).toHaveBeenLastCalledWith({
       valid: false,
-      reason: 'unavailable'
+      reason: 'unavailable',
+      message: 'Invalid input'
     });
   });
 
@@ -272,6 +277,184 @@ describe('CalendarPreview.Input validity', () => {
     fireEvent.change(input, { target: { value: '20/05/2027' } });
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(onValueChange).not.toHaveBeenCalled();
+  });
+});
+
+/* `aria-invalid` alone reached only assistive tech: Input paints its error
+   border from `data-invalid`, so a sighted user saw an untouched field. These
+   pin both attributes together -- dropping either one silently restores that. */
+describe('CalendarPreview.Input invalid marking', () => {
+  it('marks nothing before anything is typed', () => {
+    const { input } = renderPicker();
+    expect(input).not.toHaveAttribute('data-invalid');
+    expect(input).not.toHaveAttribute('aria-invalid');
+  });
+
+  it.each([
+    ['unparseable', {}, 'not a date'],
+    ['out-of-bounds', { minDate: new Date(2026, 7, 10) }, '01/08/2026'],
+    [
+      'unavailable',
+      { isDateUnavailable: (date: Date) => date.getDate() === 12 },
+      '12/08/2026'
+    ]
+  ])('marks the field invalid for %s text', (_reason, props, text) => {
+    const { input } = renderPicker(props);
+    fireEvent.change(input, { target: { value: text } });
+    expect(input).toHaveAttribute('data-invalid');
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  /* Input paints the border from `:has(.input-field[data-invalid])`, so what
+     the style depends on is the marked input sitting inside the container --
+     not the slot name, which this part overrides with its own. */
+  it('marks the input inside the container the border is keyed on', () => {
+    const { container, input } = renderPicker();
+    fireEvent.change(input, { target: { value: 'not a date' } });
+    const wrapper = container.querySelector('[data-slot="input-container"]');
+    expect(wrapper?.querySelector('input[data-invalid]')).toBe(input);
+  });
+
+  it('unmarks the field once the text parses again', () => {
+    const { input } = renderPicker();
+    fireEvent.change(input, { target: { value: 'nope' } });
+    expect(input).toHaveAttribute('data-invalid');
+    fireEvent.change(input, { target: { value: '20/05/2027' } });
+    expect(input).not.toHaveAttribute('data-invalid');
+    expect(input).not.toHaveAttribute('aria-invalid');
+  });
+
+  it('unmarks the field when it is emptied', () => {
+    const { input } = renderPicker({ defaultValue: new Date(2026, 7, 20) });
+    fireEvent.change(input, { target: { value: 'nope' } });
+    expect(input).toHaveAttribute('data-invalid');
+    fireEvent.change(input, { target: { value: '' } });
+    expect(input).not.toHaveAttribute('data-invalid');
+  });
+
+  /* A failed commit keeps the draft rather than discarding the typing, so the
+     mark has to survive the blur that failed to commit it. */
+  it('stays marked after a blur that could not commit', () => {
+    const { input } = renderPicker({ defaultValue: new Date(2026, 7, 20) });
+    fireEvent.change(input, { target: { value: 'garbage' } });
+    fireEvent.blur(input);
+    expect(input.value).toBe('garbage');
+    expect(input).toHaveAttribute('data-invalid');
+  });
+
+  it('never marks a field that cannot be typed into', () => {
+    const { input } = renderPicker({ readOnly: true });
+    fireEvent.change(input, { target: { value: 'not a date' } });
+    expect(input).not.toHaveAttribute('data-invalid');
+  });
+
+  /* Field marks its control invalid for errors this input cannot see — a
+     failed submit, a server response. Setting the attributes to `undefined`
+     while valid erased that, because these props land after Field's. */
+  it('leaves an error Field set alone while its own text is valid', () => {
+    const { container } = render(
+      <Field error='Server said no'>
+        <CalendarPreview today={TODAY}>
+          <CalendarPreview.Trigger>
+            <CalendarPreview.Input />
+          </CalendarPreview.Trigger>
+        </CalendarPreview>
+      </Field>
+    );
+    const input = container.querySelector('input') as HTMLInputElement;
+    expect(input).toHaveAttribute('data-invalid');
+  });
+});
+
+describe('CalendarPreview.Input error messages', () => {
+  const reasons = [
+    ['unparseable', {}, 'not a date'],
+    ['out-of-bounds', { minDate: new Date(2026, 7, 10) }, '01/08/2026'],
+    [
+      'unavailable',
+      { isDateUnavailable: (date: Date) => date.getDate() === 12 },
+      '12/08/2026'
+    ]
+  ] as const;
+
+  it.each(reasons)('defaults to one flat message for %s', (_r, props, text) => {
+    const onValidityChange = vi.fn();
+    const { input } = renderPicker(props, { onValidityChange });
+    fireEvent.change(input, { target: { value: text } });
+    expect(onValidityChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ valid: false, message: 'Invalid input' })
+    );
+  });
+
+  it('carries no message while the text is valid', () => {
+    const onValidityChange = vi.fn();
+    const { input } = renderPicker({}, { onValidityChange });
+    fireEvent.change(input, { target: { value: 'nope' } });
+    fireEvent.change(input, { target: { value: '20/05/2027' } });
+    expect(onValidityChange).toHaveBeenLastCalledWith({ valid: true });
+  });
+
+  it('takes a custom message for a reason', () => {
+    const onValidityChange = vi.fn();
+    const { input } = renderPicker(
+      {},
+      { onValidityChange, errorMessages: { unparseable: 'Use DD/MM/YYYY' } }
+    );
+    fireEvent.change(input, { target: { value: 'not a date' } });
+    expect(onValidityChange).toHaveBeenLastCalledWith({
+      valid: false,
+      reason: 'unparseable',
+      message: 'Use DD/MM/YYYY'
+    });
+  });
+
+  /* A partial override is the common case: one reason worded for the field,
+     the rest left alone. */
+  it('leaves the reasons it was not given on the default', () => {
+    const onValidityChange = vi.fn();
+    const { input } = renderPicker(
+      { minDate: new Date(2026, 7, 10) },
+      { onValidityChange, errorMessages: { unparseable: 'Use DD/MM/YYYY' } }
+    );
+    fireEvent.change(input, { target: { value: 'not a date' } });
+    expect(onValidityChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ message: 'Use DD/MM/YYYY' })
+    );
+    fireEvent.change(input, { target: { value: '01/08/2026' } });
+    expect(onValidityChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        reason: 'out-of-bounds',
+        message: 'Invalid input'
+      })
+    );
+  });
+
+  /* The reason is unchanged across these keystrokes, so only a message that
+     is part of the comparison makes this re-fire. */
+  it('re-reports when only the message changed', () => {
+    const onValidityChange = vi.fn();
+    const { rerender, input } = renderPicker(
+      {},
+      { onValidityChange, errorMessages: { unparseable: 'First' } }
+    );
+    fireEvent.change(input, { target: { value: 'nope' } });
+    expect(onValidityChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ message: 'First' })
+    );
+    rerender(
+      <CalendarPreview today={TODAY} defaultMonth={AUGUST}>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input
+            onValidityChange={onValidityChange}
+            errorMessages={{ unparseable: 'Second' }}
+          />
+        </CalendarPreview.Trigger>
+      </CalendarPreview>
+    );
+    fireEvent.change(input, { target: { value: 'nope!' } });
+    expect(onValidityChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ message: 'Second' })
+    );
   });
 });
 

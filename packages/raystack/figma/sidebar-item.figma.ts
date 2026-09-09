@@ -19,11 +19,11 @@ const active = instance.getEnum('State', {
   Active_hover: true
 });
 
-// Label BOOLEAN — when false the cell shows no text; the code component always
+// Label BOOLEAN. When false the cell shows no text; the code component always
 // takes children, so we render placeholder label text below.
 // Trailing Icon BOOLEAN has no matching prop on Sidebar.Item, intentionally
 // not mapped. Type (Expanded/Collapsed) is driven by the parent Sidebar state,
-// not a Sidebar.Item prop — intentionally not mapped.
+// not a Sidebar.Item prop, so intentionally not mapped.
 
 export default {
   id: 'Sidebar.Item',

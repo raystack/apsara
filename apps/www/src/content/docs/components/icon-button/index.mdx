@@ -1,5 +1,5 @@
 ---
-title: IconButton
+title: Icon Button
 description: A button component designed specifically for icons with various sizes and states.
 source: packages/raystack/components/icon-button
 ---
@@ -18,6 +18,22 @@ import { IconButton } from "@raystack/apsara";
 <IconButton />
 ```
 
+## Usage
+
+An icon-only button. Two props: how big it is, and whether it can be pressed.
+
+### Size
+
+Four steps, 1 through 4. Match the step to the control the button sits beside so their heights agree.
+
+<Demo data={sizeDemo} />
+
+### State
+
+Hover and focus are handled for you. `disabled` is the only state you set, and it removes the button from the tab order.
+
+<Demo data={stateDemo} />
+
 ## API Reference
 
 Renders a button designed for icon-only content.
@@ -33,21 +49,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `icon-button` | The root `<button>` element |
 | `icon-button-icon` | Wrapper around the icon content |
 
-## Examples
-
-### Size
-
-The IconButton component offers different size options. You can customize the size using the `size` prop. The available size options are:
-
-<Demo data={sizeDemo} />
-
-### State
-
-The IconButton component has different states: default, hover, and disabled.
-
-<Demo data={stateDemo} />
-
-## Styling
+### Styling
 
 The IconButton uses CSS variables for consistent styling across themes:
 

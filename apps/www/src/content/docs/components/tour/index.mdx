@@ -1,6 +1,6 @@
 ---
 title: Tour
-description: Guided product walkthroughs — a sequence of cards that point at real elements, spotlight them, and let people move on, go back, or leave.
+description: Guided product walkthroughs. A sequence of cards that point at real elements, spotlight them, and let people move on, go back, or leave.
 source: packages/raystack/components/tour
 tag: new
 ---
@@ -41,12 +41,108 @@ To compose the card yourself, pass the parts as children:
 </Tour>
 ```
 
+## Usage
+
+A tour is an array of steps, each pointing at a real element. The props below cover who drives the sequence and what the card looks like.
+
+### Controlled with imperative controls
+
+Control `open` and `stepIndex`, pass an `actionsRef`, and drive the tour from
+your own UI.
+
+```tsx
+const actionsRef = useRef<TourActions>(null);
+const [open, setOpen] = useState(false);
+const [index, setIndex] = useState(0);
+
+<Button onClick={() => actionsRef.current?.start()}>Take a tour</Button>
+
+<Tour
+  steps={steps}
+  open={open}
+  stepIndex={index}
+  actionsRef={actionsRef}
+  onOpenChange={(open, { status }) => {
+    setOpen(open);
+    if (!open) analytics.track("tour_end", { status });
+  }}
+  onStepChange={setIndex}
+/>;
+```
+
+### Custom card with a render function
+
+Leave out `Tour.Next` and advance from app code when the user does something. This is
+useful for action-gated steps (draw a shape, open a panel).
+
+```tsx
+<Tour steps={steps} open={open} stepIndex={index} actionsRef={actionsRef} disableOverlay>
+  <Tour.Content>
+    {({ step, index, totalSteps, isLastStep, actions }) => (
+      <Flex direction="column" gap={3}>
+        <Text weight="medium">{step.title}</Text>
+        <Text variant="secondary">{step.content}</Text>
+        <Flex justify="between" align="center">
+          <Text size="mini">{index + 1} of {totalSteps}</Text>
+          <Button size="small" onClick={isLastStep ? actions.stop : actions.next}>
+            {isLastStep ? "Done" : "Next"}
+          </Button>
+        </Flex>
+      </Flex>
+    )}
+  </Tour.Content>
+</Tour>;
+
+// advance the draw step once the app reports a shape on the map
+useEffect(() => {
+  if (open && index === 2 && store.hasShape) actionsRef.current?.go(3);
+}, [open, index, store.hasShape]);
+```
+
+### Targets and spotlight
+
+A target can be a CSS selector, an element, a React ref, or a function. Targets
+that mount after the tour starts are awaited automatically; if one never
+appears within `targetTimeout` the tour skips it (or stops, per
+`targetNotFound`). If a target unmounts mid-step, because its dialog closes or its route
+changes, the tour recovers instead of leaving a broken overlay.
+
+```tsx
+const steps = [
+  { target: "#search", title: "Selector target" },
+  { target: searchRef, title: "Ref target", spotlightClicks: true },
+  { target: () => editor.getNode("aoi"), title: "Function target" },
+  { target: "#panel", spotlightTarget: "#panel-header", title: "Spotlight a child" },
+];
+```
+
+### Motion between steps
+
+The dimmed backdrop stays put for the whole tour and never flashes away
+between steps. Only the spotlight cutout animates: it fades shut (dimming the
+old target), repositions while covered, and fades back open once the next
+target has scrolled into view and settled, so the hole never slides across the
+screen or opens at a position it is about to leave.
+
+The `transition` prop controls only the **popover card**. By default
+(`transition="fade"`) the card cross-fades with the spotlight. Set
+`transition="move"` to glide the card smoothly from one target to the next,
+which suits walkthroughs whose consecutive targets sit close together.
+
+```tsx
+<Tour steps={steps} defaultOpen transition="move" />
+```
+
+Both collapse to instant swaps under `prefers-reduced-motion: reduce`.
+
 ## API Reference
+
+The tour and its step shape, then the card parts to compose when the default card is not enough.
 
 ### Tour
 
 The root. Holds the steps and the open/index state, resolves targets, emits
-events, and owns the actions. Renders a context provider — its children default
+events, and owns the actions. Renders a context provider whose children default
 to `<Tour.Overlay />` and `<Tour.Content />`.
 
 <auto-type-table path="./props.ts" name="TourProps" />
@@ -123,98 +219,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `tour-skip` | `Tour.Skip` button |
 | `tour-close` | `Tour.Close` button |
 
-## Examples
-
-### Controlled with imperative controls
-
-Control `open` and `stepIndex`, pass an `actionsRef`, and drive the tour from
-your own UI.
-
-```tsx
-const actionsRef = useRef<TourActions>(null);
-const [open, setOpen] = useState(false);
-const [index, setIndex] = useState(0);
-
-<Button onClick={() => actionsRef.current?.start()}>Take a tour</Button>
-
-<Tour
-  steps={steps}
-  open={open}
-  stepIndex={index}
-  actionsRef={actionsRef}
-  onOpenChange={(open, { status }) => {
-    setOpen(open);
-    if (!open) analytics.track("tour_end", { status });
-  }}
-  onStepChange={setIndex}
-/>;
-```
-
-### Custom card with a render function
-
-Leave out `Tour.Next` and advance from app code when the user does something —
-useful for action-gated steps (draw a shape, open a panel).
-
-```tsx
-<Tour steps={steps} open={open} stepIndex={index} actionsRef={actionsRef} disableOverlay>
-  <Tour.Content>
-    {({ step, index, totalSteps, isLastStep, actions }) => (
-      <Flex direction="column" gap={3}>
-        <Text weight="medium">{step.title}</Text>
-        <Text variant="secondary">{step.content}</Text>
-        <Flex justify="between" align="center">
-          <Text size="mini">{index + 1} of {totalSteps}</Text>
-          <Button size="small" onClick={isLastStep ? actions.stop : actions.next}>
-            {isLastStep ? "Done" : "Next"}
-          </Button>
-        </Flex>
-      </Flex>
-    )}
-  </Tour.Content>
-</Tour>;
-
-// advance the draw step once the app reports a shape on the map
-useEffect(() => {
-  if (open && index === 2 && store.hasShape) actionsRef.current?.go(3);
-}, [open, index, store.hasShape]);
-```
-
-### Targets and spotlight
-
-A target can be a CSS selector, an element, a React ref, or a function. Targets
-that mount after the tour starts are awaited automatically; if one never
-appears within `targetTimeout` the tour skips it (or stops, per
-`targetNotFound`). If a target unmounts mid-step — its dialog closes, its route
-changes — the tour recovers instead of leaving a broken overlay.
-
-```tsx
-const steps = [
-  { target: "#search", title: "Selector target" },
-  { target: searchRef, title: "Ref target", spotlightClicks: true },
-  { target: () => editor.getNode("aoi"), title: "Function target" },
-  { target: "#panel", spotlightTarget: "#panel-header", title: "Spotlight a child" },
-];
-```
-
-### Motion between steps
-
-The dimmed backdrop stays put for the whole tour — it never flashes away
-between steps. Only the spotlight cutout animates: it fades shut (dimming the
-old target), repositions while covered, and fades back open once the next
-target has scrolled into view and settled, so the hole never slides across the
-screen or opens at a position it is about to leave.
-
-The `transition` prop controls only the **popover card**. By default
-(`transition="fade"`) the card cross-fades with the spotlight. Set
-`transition="move"` to glide the card smoothly from one target to the next,
-which suits walkthroughs whose consecutive targets sit close together.
-
-```tsx
-<Tour steps={steps} defaultOpen transition="move" />
-```
-
-Both collapse to instant swaps under `prefers-reduced-motion: reduce`.
-
 ## Accessibility
 
 - The card is built on a Base UI `Popover`, so `Tour.Title` and `Tour.Description` provide
@@ -225,6 +229,6 @@ Both collapse to instant swaps under `prefers-reduced-motion: reduce`.
 - Escape ends the tour. Outside clicks and focus moves do not, so a step can keep
   focus on the element it highlights.
 - The tour is non-modal (`modal={false}`); it does not trap focus or lock scroll.
-- Motion — the spotlight cutout's fade, the card fade or glide, and scroll-into-view —
+- Motion, meaning the spotlight cutout's fade, the card fade or glide, and scroll-into-view,
   is enabled only when `prefers-reduced-motion: no-preference`; otherwise steps swap
   instantly.

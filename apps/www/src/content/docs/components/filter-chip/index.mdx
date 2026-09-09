@@ -1,10 +1,12 @@
 ---
-title: FilterChip
+title: Filter Chip
 description: A compact, interactive element for filtering data with various input types.
 source: packages/raystack/components/filter-chip
 ---
 
-import { playground, inputDemo, autocompleteDemo, calendarPropsDemo, iconDemo, actionDemo, operationsDemo } from "./demo.ts";
+import { playground, inputDemo, autocompleteDemo, calendarPropsDemo, iconDemo, actionDemo, operationsDemo,
+  controlledDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -17,6 +19,56 @@ import { FilterChip } from "@raystack/apsara";
 
 <FilterChip />
 ```
+
+## Usage
+
+The input type decides what the chip edits: text, a number, a date, or a list of options. Everything else follows from it.
+
+### Input types
+
+FilterChip supports five input types, `select`, `multiselect`, `date`, `string`, and `number`, to handle various filtering needs. `multiselect` takes a `string[]` value and summarizes two or more selections as "N selected".
+
+<Demo data={inputDemo} />
+
+### Select with autocomplete
+
+Use `selectProps` to enable autocomplete search on select and multiselect filter types. This renders a search input inside the dropdown for filtering options.
+
+<Demo data={autocompleteDemo} />
+
+### Date with calendarProps
+
+Use `calendarProps` to forward DatePicker options such as `dateFormat`, `timeZone` and `slotProps.calendar` to the chip's date control. `value`, `onSelect`, and `defaultValue` are owned by `FilterChip`, and `children` is excluded so the chip's input trigger isn't replaced.
+
+<Demo data={calendarPropsDemo} />
+
+### With leading icon
+
+FilterChip can display an icon before the label to provide visual context.
+
+<Demo data={iconDemo} />
+
+### With remove action
+
+FilterChip can include a remove action to allow users to dismiss the filter.
+
+<Demo data={actionDemo} />
+
+### Custom operations
+
+FilterChip supports custom filter operations through the `operations` prop. When specified, these operations override the default operations that are automatically selected based on the `columnType`.
+
+- When multiple operations are provided, they are rendered as a select dropdown
+- When a single operation is provided, it is displayed as static text
+- If no operations are specified, default operations are used based on the column type
+
+<Demo data={operationsDemo} />
+
+### Controlled
+
+Pass `value` with `onValueChange` to own the filter. Do this when the chip drives a query and the value has to survive a refetch or a shared URL.
+
+<Demo data={controlledDemo} />
 
 ## API Reference
 
@@ -39,48 +91,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `filter-chip-value` | The value control (select trigger, date field, or input wrapper) |
 | `filter-chip-remove` | The remove button (when `onRemove` is set) |
 | `filter-chip-remove-icon` | The icon inside the remove button |
-
-## Examples
-
-### Input Types
-
-FilterChip supports five input types — `select`, `multiselect`, `date`, `string`, and `number` — to handle various filtering needs. `multiselect` takes a `string[]` value and summarizes two or more selections as "N selected".
-
-<Demo data={inputDemo} />
-
-### Select with Autocomplete
-
-Use `selectProps` to enable autocomplete search on select and multiselect filter types. This renders a search input inside the dropdown for filtering options.
-
-<Demo data={autocompleteDemo} />
-
-### Date with calendarProps
-
-Use `calendarProps` to forward DatePicker options — `dateFormat`, `timeZone`, `slotProps.calendar`, etc. — to the chip's date control. `value`, `onSelect`, and `defaultValue` are owned by `FilterChip`, and `children` is excluded so the chip's input trigger isn't replaced.
-
-<Demo data={calendarPropsDemo} />
-
-### With Leading Icon
-
-FilterChip can display an icon before the label to provide visual context.
-
-<Demo data={iconDemo} />
-
-### With Remove Action
-
-FilterChip can include a remove action to allow users to dismiss the filter.
-
-<Demo data={actionDemo} />
-
-### Custom Operations
-
-FilterChip supports custom filter operations through the `operations` prop. When specified, these operations override the default operations that are automatically selected based on the `columnType`.
-
-- When multiple operations are provided, they are rendered as a select dropdown
-- When a single operation is provided, it is displayed as static text
-- If no operations are specified, default operations are used based on the column type
-
-<Demo data={operationsDemo} />
 
 ## Accessibility
 

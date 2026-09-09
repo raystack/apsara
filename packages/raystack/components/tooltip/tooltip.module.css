@@ -70,7 +70,7 @@
       transform var(--rs-duration-fast) var(--rs-ease-out);
   }
 
-  /* Per-side directional offset — same vectors as the old keyframes */
+  /* Per-side directional offset, the same vectors as the old keyframes */
   .content[data-side="top"][data-starting-style],
   .content[data-side="top"][data-ending-style] {
     transform: translateY(calc(-1 * var(--rs-space-1)));
@@ -91,7 +91,7 @@
     transform: translateX(calc(-1 * var(--rs-space-1)));
   }
 
-  /* Aligned variants get a diagonal offset — same vectors as before.
+  /* Aligned variants get a diagonal offset, the same vectors as before.
      Higher specificity (0,4,0) than the side rules (0,3,0), so they win
      when data-align is start/end. */
   .content[data-side="top"][data-align="start"][data-starting-style],

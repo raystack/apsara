@@ -25,7 +25,7 @@ const dropdownItems = instance.getBoolean('Dropdown', {
   true: " dropdownItems={[{ children: 'Option 1' }, { children: 'Option 2' }]}",
   false: ''
 });
-// `Size` is owned by the Breadcrumb root, not the item — intentionally unmapped.
+// `Size` is owned by the Breadcrumb root, not the item, so it is intentionally unmapped.
 
 export default {
   id: 'Breadcrumb.Item',

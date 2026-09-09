@@ -21,11 +21,15 @@ export type {
   CalendarPreviewNavProps
 } from './calendar-preview-header';
 export type {
+  CalendarPreviewInputInvalidReason,
   CalendarPreviewInputProps,
   CalendarPreviewInputValidity
 } from './calendar-preview-input';
 export type { CalendarPreviewResetProps } from './calendar-preview-reset';
 export type { CalendarPreviewProps } from './calendar-preview-root';
 export type { CalendarPreviewTriggerProps } from './calendar-preview-trigger';
-export type { Scale, ScaleValue } from './lib/scale';
+export type {
+  CalendarPreviewScale,
+  CalendarPreviewScaleValue
+} from './lib/scale';
 export { type UseCalendarReturn, useCalendar } from './use-calendar';

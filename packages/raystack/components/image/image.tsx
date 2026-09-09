@@ -55,7 +55,7 @@ export function Image({
   useIsomorphicLayoutEffect(() => {
     hasFallenBackRef.current = false;
     const node = imgRef.current;
-    // Already-decoded (cached/SSR-painted) images stay visible — no fade.
+    // Already-decoded (cached/SSR-painted) images stay visible, with no fade.
     setLoadState(node && !node.complete ? 'loading' : 'static');
   }, [src]);
 

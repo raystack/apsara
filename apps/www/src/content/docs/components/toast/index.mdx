@@ -24,7 +24,67 @@ import { Toast, toastManager } from '@raystack/apsara'
 toastManager.add({ title: 'Hello!', type: 'success' })
 ```
 
+## Usage
+
+Toasts are dispatched from code rather than rendered inline. A provider holds them; a manager adds them.
+
+### Basic Toast
+
+Call `toastManager.add()` with a message. The toast appears in the provider's region and dismisses itself after `timeout`.
+
+<Demo data={basicDemo} />
+
+### Type variants
+
+Use the `type` prop to drive the leading icon color (e.g. green for success, red for error). The toast container itself stays visually neutral regardless of type.
+
+<Demo data={typesDemo} />
+
+### With title and description
+
+Pass `title` and `description` for a two-line toast. The title carries the outcome; the description carries the detail.
+
+<Demo data={descriptionDemo} />
+
+### With leading icon
+
+Each toast `type` ships with a sensible default icon. Pass `leadingIcon` to override it with any React node, or pass `leadingIcon: null` to render no icon at all.
+
+<Demo data={leadingIconDemo} />
+
+### With action button
+
+Use `actionProps` to render an action button inside the toast.
+
+<Demo data={actionDemo} />
+
+### Promise Toast
+
+Track an async operation with automatic loading, success, and error states.
+
+<Demo data={promiseDemo} />
+
+### Positioning
+
+Control where toasts appear on screen with the `position` prop on `Toast.Provider`.
+
+<Demo data={positionDemo} />
+
+### Close and update
+
+Create a toast, then update or close it programmatically using the returned ID.
+
+<Demo data={updateDemo} />
+
+### Dispatching from a component
+
+Use `useToastManager()` inside a component to dispatch toasts and/or read the reactive list of active toasts. The component must be a descendant of `<Toast.Provider>`.
+
+<Demo data={hookDemo} />
+
 ## API Reference
+
+The provider that renders toasts, and the manager APIs that add them, from a module or from inside a component.
 
 ### Toast.Provider
 
@@ -34,7 +94,7 @@ Renders the toast viewport and manages the toast lifecycle. Place once at the ro
 
 ### toastManager.add(options)
 
-Creates a new toast and returns its unique ID. The `toastManager` can be imported and used anywhere — including outside React components (e.g., API interceptors, utility functions).
+Creates a new toast and returns its unique ID. The `toastManager` can be imported and used anywhere, including outside React components (e.g., API interceptors, utility functions).
 
 <auto-type-table path="./props.ts" name="ToastManagerAddOptions" />
 
@@ -58,7 +118,7 @@ The returned object exposes the four manager methods:
 
 #### Update options
 
-The `update(id, options)` method accepts a partial of the toast — every field optional, used to patch an existing toast in place.
+The `update(id, options)` method accepts a partial of the toast, with every field optional, used to patch an existing toast in place.
 
 <auto-type-table path="./props.ts" name="ToastManagerUpdateOptions" />
 
@@ -70,7 +130,7 @@ The `promise(promise, options)` method drives a toast through the resolve/reject
 
 ### useToastManager()
 
-Hook for dispatching toasts from inside a component tree wrapped by `<Toast.Provider>`. Returns the same methods as `createToastManager()` — including first-class `leadingIcon` support — plus a reactive `toasts` array reflecting the currently-displayed toasts.
+Hook for dispatching toasts from inside a component tree wrapped by `<Toast.Provider>`. Returns the same methods as `createToastManager()`, including built-in `leadingIcon` support, plus a reactive `toasts` array reflecting the toasts on screen.
 
 ```tsx
 import { useToastManager } from '@raystack/apsara'
@@ -106,58 +166,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `toast-action` | The action button (when `actionProps`) |
 | `toast-close` | The close button |
 | `toast-description` | The description (when both title and description are set) |
-
-## Examples
-
-### Basic Toast
-
-<Demo data={basicDemo} />
-
-### Type Variants
-
-Use the `type` prop to drive the leading icon color (e.g. green for success, red for error). The toast container itself stays visually neutral regardless of type.
-
-<Demo data={typesDemo} />
-
-### With Title and Description
-
-<Demo data={descriptionDemo} />
-
-### With Leading Icon
-
-Each toast `type` ships with a sensible default icon. Pass `leadingIcon` to override it with any React node, or pass `leadingIcon: null` to render no icon at all.
-
-<Demo data={leadingIconDemo} />
-
-### With Action Button
-
-Use `actionProps` to render an action button inside the toast.
-
-<Demo data={actionDemo} />
-
-### Promise Toast
-
-Track an async operation with automatic loading, success, and error states.
-
-<Demo data={promiseDemo} />
-
-### Positioning
-
-Control where toasts appear on screen with the `position` prop on `Toast.Provider`.
-
-<Demo data={positionDemo} />
-
-### Close and Update
-
-Create a toast, then update or close it programmatically using the returned ID.
-
-<Demo data={updateDemo} />
-
-### Dispatching from a Component (Hook)
-
-Use `useToastManager()` inside a component to dispatch toasts and/or read the reactive list of active toasts. The component must be a descendant of `<Toast.Provider>`.
-
-<Demo data={hookDemo} />
 
 ## Accessibility
 

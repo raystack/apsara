@@ -16,13 +16,13 @@ export interface PackLanesResult {
 
 /**
  * Horizontal gap between cards sharing a lane. Not the vertical gap between
- * lanes — that's the `laneGap` prop (default 16) applied in timeline.tsx.
+ * lanes. That's the `laneGap` prop (default 16) applied in timeline.tsx.
  */
 const DEFAULT_CARD_GAP_PX = 8;
 
 /**
  * Below this, scanning `laneEnds` linearly beats the sweep's typed-array
- * setup — the scan is only quadratic once both the item count and the lane
+ * setup, since the scan is only quadratic once both the item count and the lane
  * count are large.
  */
 const SWEEP_MIN_ITEMS = 64;
@@ -31,7 +31,7 @@ const SWEEP_MIN_ITEMS = 64;
  * Greedy interval scheduling. Items are visited in ascending `x` order and
  * each is dropped into the first lane whose last occupant ends at least
  * `gapPx` before the item starts; a new lane is opened when none fits.
- * Produces the dense "packed" layout of the timeline design — many
+ * Produces the dense "packed" layout of the timeline design: many
  * non-overlapping cards share a lane.
  *
  * Two implementations, identical output: a direct scan for small inputs, and
@@ -59,7 +59,7 @@ export interface PackSortValueLaneItem extends PackLaneItem {
  * cards overlap in time. Backs `lanePacking="one-per-sort-value"`.
  *
  * Buckets come out in first-seen order, with the no-value bucket last. Lane
- * order is therefore the caller's row order — the timeline hands over the sorted
+ * order is therefore the caller's row order, and the timeline hands over the sorted
  * row model, so lanes follow the active sort and nothing else. That's
  * deliberately *not* `groupData`'s rule, which ranks sections by the field's
  * declared `groupOrder`: a field that is both grouped and sorted can order its
@@ -76,7 +76,7 @@ export function packLanesBySortValue(
   if (items.length === 0) return { lanes: [], laneCount: 0 };
   const lanes = new Array<number>(items.length).fill(0);
 
-  // Indices per bucket, in input order — Map insertion order is the first-seen
+  // Indices per bucket, in input order, since Map insertion order is the first-seen
   // (caller-sorted) order `orderBucketKeys` preserves.
   const buckets = new Map<string, number[]>();
   for (let index = 0; index < items.length; index++) {
@@ -92,7 +92,7 @@ export function packLanesBySortValue(
   let laneCount = 0;
   for (const key of orderBucketKeys([...buckets.keys()])) {
     const bucket = buckets.get(key) as number[];
-    // A bucket of one can't collide with itself, so skip the pack — `orderByX`
+    // A bucket of one can't collide with itself, so skip the pack, since `orderByX`
     // is a sort plus two typed arrays, and a high-cardinality sort field (which
     // the Ordering control lets a user pick at runtime) makes that most buckets.
     if (bucket.length === 1) {
@@ -114,7 +114,7 @@ export function packLanesBySortValue(
   return { lanes, laneCount };
 }
 
-/** First-fit by scanning every lane end — O(items × lanes). */
+/** First-fit by scanning every lane end, at O(items × lanes). */
 function packByScan(
   items: PackLaneItem[],
   gapPx: number,
@@ -136,7 +136,7 @@ function packByScan(
 }
 
 /**
- * First-fit as a left-to-right sweep — same assignment as `packByScan`, in
+ * First-fit as a left-to-right sweep, with the same assignment as `packByScan`, in
  * O(n) rather than O(items × lanes).
  *
  * Two structures replace the linear `findIndex`:
@@ -179,7 +179,7 @@ function packBySweep(
     const col = Math.floor((value - minX) * colScale);
     // Negated rather than `col < 0` so a NaN files into column 0 as well.
     // Unguarded it returns NaN, and a NaN index on a typed array reads
-    // undefined and writes nothing — the lane would be filed into no column at
+    // undefined and writes nothing, so the lane would be filed into no column at
     // all and never released, leaking it for the rest of the sweep.
     if (!(col >= 0)) return 0;
     return col >= colCount ? colCount - 1 : col;
@@ -190,7 +190,7 @@ function packBySweep(
   // lanes never exceed items.
   const releaseHead = new Int32Array(colCount).fill(-1);
   const releaseNext = new Int32Array(n).fill(-1);
-  /** Time (px) at which each lane's occupant frees it — end + gap. */
+  /** Time (px) at which each lane's occupant frees it, meaning end + gap. */
   const laneRelease = new Float64Array(n);
 
   // Free-lane bitmap. `summary` bit s.w is set when word w of block s has any
@@ -215,7 +215,7 @@ function packBySweep(
     freeLanes++;
   };
 
-  /** Lowest set bit's index. Undefined for 0 — callers guard. */
+  /** Lowest set bit's index. Undefined for 0, so callers guard. */
   const lowestBit = (bits: number) => 31 - Math.clz32(bits & -bits);
 
   const takeSmallestFree = () => {
@@ -227,7 +227,7 @@ function packBySweep(
         const word = (block << 5) + wordOffset;
         const bits = words[word];
         if (bits === 0) {
-          // Word emptied without its summary bit clearing — can't happen
+          // Word emptied without its summary bit clearing, which can't happen
           // below, but clearing here keeps the loop finite regardless.
           summary[block] = blockBits & ~(1 << wordOffset);
           continue;

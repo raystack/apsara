@@ -25,7 +25,11 @@ import {
   parseKey,
   yearOf
 } from './date-adapter';
-import { periodOf, type Scale, type ScaleValue } from './lib/scale';
+import {
+  type CalendarPreviewScale,
+  type CalendarPreviewScaleValue,
+  periodOf
+} from './lib/scale';
 
 const DEFAULT_YEAR_SPAN = 10;
 
@@ -33,8 +37,11 @@ function isRange(value: unknown): value is CalendarPreviewDateRange {
   return value != null && typeof value === 'object' && 'from' in value;
 }
 
-/* The day the view should open on, whichever selection shape the value is. */
-function monthAnchor(value: CalendarPreviewValue): Date | undefined {
+/* The day the view should open on, whichever selection shape the value is.
+   Takes `undefined` so an unset `value` prop can be read straight through. */
+function monthAnchor(
+  value: CalendarPreviewValue | undefined
+): Date | undefined {
   if (!value) return undefined;
   return isRange(value) ? value.from : value;
 }
@@ -118,15 +125,38 @@ interface CalendarPreviewSharedProps
    * The day `.Reset` restores. Read even when `value` is controlled, which
    * `defaultValue` is not — otherwise a controlled consumer never sees
    * `.Reset`.
+   *
+   * `null` is a default of *nothing selected*, so `.Reset` clears. Omitting
+   * the prop is different: the part then has no job and does not render.
    */
-  defaultDate?: Date;
+  defaultDate?: Date | null;
 
   /**
    * Renders a value for display.
    * @defaultValue `DD/MM/YYYY` at day scale
    */
-  formatValue?: (value: Date | ScaleValue, scale: Scale) => string;
-  /** Forwarded to the grid. No conversion is done here. */
+  formatValue?: (
+    value: Date | CalendarPreviewScaleValue,
+    scale: CalendarPreviewScale
+  ) => string;
+
+  /**
+   * The zone the grid reads days in. Forwarded to the grid; this family does
+   * no conversion of its own (RFC 005).
+   *
+   * Every `Date` prop and every `Date` handed back is therefore an **instant**,
+   * not a calendar day, and the calendar shows the day that instant falls on
+   * in this zone. At a far offset that is not the day the local fields spell:
+   * with `timeZone="Pacific/Niue"`, a `defaultMonth` of `new Date(2026, 7, 1)`
+   * is 31 July there, and the grid opens on July. Build `Date`s for a zoned
+   * calendar from a known instant — `new Date(Date.UTC(…))` — rather than from
+   * local calendar fields.
+   *
+   * `onValueChange` receives whatever the grid produced, which is a `TZDate`
+   * when this is set. It is a `Date` subclass carrying the same instant, so
+   * `getTime()` and comparisons are unaffected; only its field getters read in
+   * this zone.
+   */
   timeZone?: string;
   /**
    * Today, injectable so a calendar renders deterministically in tests.
@@ -152,8 +182,8 @@ interface CalendarPreviewSharedProps
 
 /* Exported for its tests; `formatValue` replaces it wholesale. */
 export function defaultFormatValue(
-  value: Date | ScaleValue,
-  scale: Scale
+  value: Date | CalendarPreviewScaleValue,
+  scale: CalendarPreviewScale
 ): string {
   const date = value instanceof Date ? value : parseKey(value.date);
   if (scale === 'day') return formatDayLabel(date);
@@ -215,14 +245,22 @@ export function CalendarPreviewRoot({
 
   const [month, setMonthUnwrapped] = useControlled<Date>({
     controlled: monthProp,
-    default: defaultMonth ?? monthAnchor(defaultValue) ?? today,
+    /* `valueProp` before `defaultValue`: `defaultValue` is forced to null the
+       moment `value` is controlled, so reading it alone opened a controlled
+       calendar on today's month with the selection off-screen — against this
+       prop's own documented default. */
+    default:
+      defaultMonth ??
+      monthAnchor(valueProp) ??
+      monthAnchor(defaultValue) ??
+      today,
     name: 'CalendarPreview',
     state: 'month'
   });
 
   /* Uncontrolled until the scale switcher lands in PR 5. The state lives here
      now so the parts and `useCalendar()` read it from one place either way. */
-  const [scale, setScaleUnwrapped] = useControlled<Scale>({
+  const [scale, setScaleUnwrapped] = useControlled<CalendarPreviewScale>({
     controlled: undefined,
     default: 'day',
     name: 'CalendarPreview',
@@ -237,20 +275,25 @@ export function CalendarPreviewRoot({
     [setMonthUnwrapped, onMonthChange]
   );
 
+  /* The inertness guard lives here rather than in the grid's click handler:
+     `useCalendar().setValue` and `reset()` reach this same function, and a
+     guard further out would leave both of them able to write to a calendar
+     the consumer asked to be read-only. */
   const setValue = useCallback(
     (
       next: CalendarPreviewValue,
       reason: CalendarPreviewChangeReason,
       occasion: Date
     ) => {
+      if (readOnly || disabled) return;
       setValueUnwrapped(next);
       emit?.(next, {
         reason,
-        period: periodOf(occasion, scale),
+        period: periodOf(occasion, scale, timeZone),
         toDate: () => occasion
       });
     },
-    [setValueUnwrapped, emit, scale]
+    [setValueUnwrapped, emit, scale, timeZone, readOnly, disabled]
   );
 
   const [open, setOpenUnwrapped] = useControlled<boolean>({
@@ -290,7 +333,7 @@ export function CalendarPreviewRoot({
   }, []);
 
   const setScale = useCallback(
-    (next: Scale) => setScaleUnwrapped(next),
+    (next: CalendarPreviewScale) => setScaleUnwrapped(next),
     [setScaleUnwrapped]
   );
 
@@ -370,10 +413,21 @@ export function CalendarPreviewRoot({
     ]
   );
 
+  /* `'reset'`, not `'select'`: restoring the default is not a pick, and a
+     consumer that logs or validates on selection needs to tell them apart. */
   const reset = useCallback(() => {
-    if (!defaultDate) return;
-    setValue(defaultDate, 'select', defaultDate);
-  }, [defaultDate, setValue]);
+    if (defaultDate === undefined) return;
+    /* A `null` default clears, and reports the day it cleared: `'reset'` would
+       claim a day was restored when none was. */
+    if (defaultDate === null) {
+      if (value == null) return;
+      /* A range reports the day it started on — `occasion` is a single day,
+         and the start is the endpoint the view was anchored to. */
+      setValue(null, 'clear', monthAnchor(value) ?? today);
+      return;
+    }
+    setValue(defaultDate, 'reset', defaultDate);
+  }, [defaultDate, value, setValue, today]);
 
   /* Day-keys, not instants: a `minDate` carrying a time of day still leaves
      its own day selectable, which the current family gets wrong. */

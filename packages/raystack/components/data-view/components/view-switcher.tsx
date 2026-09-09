@@ -9,7 +9,7 @@ interface ViewSwitcherProps {
 
 /**
  * Tab-based switcher for the configured `views`. Internal to
- * `DataView.DisplayControls` — reads `views` and `activeView` from context and
+ * `DataView.DisplayControls`. Reads `views` and `activeView` from context and
  * writes through `setActiveView`. Renders nothing when `views` is unset or has
  * fewer than two entries. Each tab shows the view's optional `leadingIcon`.
  */

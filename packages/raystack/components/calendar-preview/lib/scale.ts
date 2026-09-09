@@ -19,7 +19,12 @@ import {
 } from '../date-adapter';
 
 /** The granularities a value can be selected at. */
-export type Scale = 'day' | 'month' | 'quarter' | 'halfYear' | 'year';
+export type CalendarPreviewScale =
+  | 'day'
+  | 'month'
+  | 'quarter'
+  | 'halfYear'
+  | 'year';
 
 /**
  * A committed selection: a concrete day, plus what that day *means*.
@@ -28,9 +33,9 @@ export type Scale = 'day' | 'month' | 'quarter' | 'halfYear' | 'year';
  * `{ date: '2026-08-31', scale: 'month' }` still reads back as August 2026 with
  * no calendar mounted — see RFC 005, "The value carries its scale".
  */
-export interface ScaleValue {
+export interface CalendarPreviewScaleValue {
   date: DayKey;
-  scale: Scale;
+  scale: CalendarPreviewScale;
 }
 
 /** The inclusive day span a period covers. */
@@ -40,7 +45,7 @@ export interface Period {
 }
 
 /** Every scale, finest first. */
-export const SCALES: readonly Scale[] = [
+export const SCALES: readonly CalendarPreviewScale[] = [
   'day',
   'month',
   'quarter',
@@ -48,8 +53,7 @@ export const SCALES: readonly Scale[] = [
   'year'
 ];
 
-/** Whether `value` is one of the five scales. */
-export function isScale(value: string): value is Scale {
+export function isScale(value: string): value is CalendarPreviewScale {
   return (SCALES as readonly string[]).includes(value);
 }
 
@@ -59,8 +63,12 @@ export function isScale(value: string): value is Scale {
  * `halfYear` is ours to derive — no date library has it. H1 is January to June,
  * H2 is July to December.
  */
-export function periodOf(date: Date | DayKey, scale: Scale): Period {
-  const key = toKey(date);
+export function periodOf(
+  date: Date | DayKey,
+  scale: CalendarPreviewScale,
+  timeZone?: string
+): Period {
+  const key = toKey(date, timeZone);
   switch (scale) {
     case 'day':
       return { start: key, end: key };
@@ -94,25 +102,23 @@ export function anchorOf(period: Period, trailing: boolean): DayKey {
 }
 
 /**
- * Re-read a value at a different scale.
- *
- * One rule, every direction: take the value's date as the anchor, find the
- * period of the target scale that contains it, and emit that period's edge per
- * `trailing`.
+ * Re-read a value at a different scale: take its date as the anchor, find the
+ * period of the target scale containing it, emit that period's edge.
  *
  * Converting outward is lossy and does not undo. `2026-08-15` at `'day'`
- * becomes `2026-01-01` at `'year'` when leading, and converting that back to
- * `'day'` yields `2026-01-01`, not the original — the anchor is all that
- * survives. Converting to the scale a value already carries is idempotent for
- * any value sitting on its own period's edge, which is what every function
- * here emits.
+ * becomes `2026-01-01` at `'year'` when leading, and back at `'day'` stays
+ * `2026-01-01` — the anchor is all that survives.
  */
 export function convertScale(
-  value: ScaleValue,
-  to: Scale,
-  trailing: boolean
-): ScaleValue {
-  return { date: anchorOf(periodOf(value.date, to), trailing), scale: to };
+  value: CalendarPreviewScaleValue,
+  to: CalendarPreviewScale,
+  trailing: boolean,
+  timeZone?: string
+): CalendarPreviewScaleValue {
+  return {
+    date: anchorOf(periodOf(value.date, to, timeZone), trailing),
+    scale: to
+  };
 }
 
 /**
@@ -125,24 +131,25 @@ export function convertScale(
  * (emits 30 Sep) are available while H1 2026 (emits 30 Jun) is not. The two
  * rules coincide whenever `trailing` is false.
  *
- * `min` and `max` are inclusive; either may be omitted for an open bound. They
- * limit selection only — navigation is never clamped.
+ * `min` and `max` are inclusive and limit selection only — navigation is
+ * never clamped.
  */
 export function isAvailable(
   value: Date | DayKey,
-  scale: Scale,
+  scale: CalendarPreviewScale,
   trailing: boolean,
   min?: Date | DayKey,
-  max?: Date | DayKey
+  max?: Date | DayKey,
+  timeZone?: string
 ): boolean {
-  const produced = anchorOf(periodOf(value, scale), trailing);
-  if (min !== undefined && produced < toKey(min)) return false;
-  if (max !== undefined && produced > toKey(max)) return false;
+  const produced = anchorOf(periodOf(value, scale, timeZone), trailing);
+  if (min !== undefined && produced < toKey(min, timeZone)) return false;
+  if (max !== undefined && produced > toKey(max, timeZone)) return false;
   return true;
 }
 
-function toKey(date: Date | DayKey): DayKey {
-  if (typeof date !== 'string') return dayKey(date);
+function toKey(date: Date | DayKey, timeZone?: string): DayKey {
+  if (typeof date !== 'string') return dayKey(date, timeZone);
   if (!isDayKey(date)) {
     throw new RangeError(`Not a YYYY-MM-DD day: ${JSON.stringify(date)}`);
   }

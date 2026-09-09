@@ -213,3 +213,29 @@ export const autocompleteDemo = {
     }
   ]
 };
+
+export const controlledDemo = {
+  type: 'code',
+  code: `
+function ControlledContextMenu() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <Flex direction="column" align="center" gap={5}>
+      <ContextMenu open={open} onOpenChange={setOpen}>
+        <ContextMenu.Trigger>
+          <Flex align="center" justify="center"
+            style={{ width: 220, height: 80, border: '1px dashed var(--rs-color-border-base-primary)', borderRadius: 6 }}>
+            <Text size="small" variant="secondary">Right click here</Text>
+          </Flex>
+        </ContextMenu.Trigger>
+        <ContextMenu.Content>
+          <ContextMenu.Item onClick={() => setOpen(false)}>Rename</ContextMenu.Item>
+          <ContextMenu.Item onClick={() => setOpen(false)}>Delete</ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu>
+      <Text size="small" variant="secondary">{open ? 'open' : 'closed'}</Text>
+    </Flex>
+  );
+}`
+};

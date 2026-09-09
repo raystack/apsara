@@ -15,7 +15,7 @@ export interface ChatItemProps extends ComponentProps<'div'> {
   /**
    * Marks the item as a scroll anchor: when it mounts inside
    * `Chat.Messages`, the viewport scrolls it near the top so the reply can
-   * stream in below — set it on the latest user message.
+   * stream in below. Set it on the latest user message.
    * @defaultValue false
    */
   scrollAnchor?: boolean;

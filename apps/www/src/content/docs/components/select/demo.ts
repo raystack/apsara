@@ -227,3 +227,29 @@ export const autocompleteDemo = {
     }
   ]
 };
+
+export const controlledDemo = {
+  type: 'code',
+  code: `
+function ControlledSelect() {
+  const [fruit, setFruit] = React.useState('apple');
+
+  return (
+    <Flex direction="column" gap={5}>
+      <Select value={fruit} onValueChange={setFruit}>
+        <Select.Trigger width={200}>
+          <Select.Value />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Item value="apple">Apple</Select.Item>
+          <Select.Item value="banana">Banana</Select.Item>
+          <Select.Item value="grapes">Grapes</Select.Item>
+        </Select.Content>
+      </Select>
+      <Button size="small" variant="outline" onClick={() => setFruit('grapes')}>
+        Reset to Grapes
+      </Button>
+    </Flex>
+  );
+}`
+};
