@@ -467,9 +467,16 @@
 
 /* Wider than the trigger and centred on it, per the frames. `.Days` brings its
    own padding, so the surface adds none. */
+/* The shared popover is sized for text: `max-width: 18rem` is 288px, eight
+   short of the 296px this grid needs (7 columns of 40px inside `.days`' 8px
+   padding), so the cap clipped Saturday flush to the right border while Sunday
+   kept its padding. A calendar is a fixed-size surface -- wider again with
+   week numbers or a second month -- so it opts out of the text cap rather
+   than trimming itself to fit it. */
 .content {
   padding: 0;
   width: max-content;
+  max-width: none;
 }
 
 .input {
