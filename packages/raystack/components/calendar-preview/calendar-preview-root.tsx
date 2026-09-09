@@ -37,8 +37,7 @@ function isRange(value: unknown): value is CalendarPreviewDateRange {
   return value != null && typeof value === 'object' && 'from' in value;
 }
 
-/* The day the view should open on, whichever selection shape the value is.
-   Takes `undefined` so an unset `value` prop can be read straight through. */
+/* The day the view should open on, whichever selection shape the value is. */
 function monthAnchor(
   value: CalendarPreviewValue | undefined
 ): Date | undefined {
@@ -64,12 +63,9 @@ interface CalendarPreviewSingleProps {
     details: CalendarPreviewChangeDetails
   ) => void;
   /**
-   * The day `.Reset` restores. Read even when `value` is controlled, which
-   * `defaultValue` is not — otherwise a controlled consumer never sees
-   * `.Reset`.
-   *
-   * `null` is a default of *nothing selected*, so `.Reset` clears. Omitting
-   * the prop is different: the part then has no job and does not render.
+   * The day `.Reset` restores, read even when `value` is controlled — which
+   * `defaultValue` is not. `null` is a default of *nothing selected*, so
+   * `.Reset` clears; omitting it renders no button at all.
    */
   defaultDate?: Date | null;
 }
@@ -89,12 +85,9 @@ interface CalendarPreviewRangeProps {
     details: CalendarPreviewChangeDetails
   ) => void;
   /**
-   * The range `.Reset` restores. Read even when `value` is controlled, which
-   * `defaultValue` is not — otherwise a controlled consumer never sees
-   * `.Reset`.
-   *
-   * `null` is a default of *nothing selected*, so `.Reset` clears. Omitting
-   * the prop is different: the part then has no job and does not render.
+   * The range `.Reset` restores, read even when `value` is controlled — which
+   * `defaultValue` is not. `null` is a default of *nothing selected*, so
+   * `.Reset` clears; omitting it renders no button at all.
    */
   defaultDate?: CalendarPreviewDateRange | null;
 }
@@ -422,8 +415,7 @@ export function CalendarPreviewRoot({
   );
 
   /* A click means "the next endpoint"; typing into a field means that field,
-     so a typed date cannot go through `selectDay`. Falls back to the committed
-     value when there is no draft, so editing one edge keeps the other. */
+     so a typed date cannot go through `selectDay`. */
   const setEndpoint = useCallback(
     (field: CalendarPreviewField, date: Date) => {
       if (readOnly || disabled || fieldReadOnly[field]) return;
@@ -454,12 +446,10 @@ export function CalendarPreviewRoot({
        claim a day was restored when none was. */
     if (defaultDate === null) {
       if (value == null) return;
-      /* A range reports the day it started on — `occasion` is a single day,
-         and the start is the endpoint the view was anchored to. */
       setValue(null, 'clear', monthAnchor(value) ?? today);
       return;
     }
-    /* `occasion` is one day, so a restored range reports the day it starts on. */
+    /* `occasion` is one day, so a range reports the day it starts on. */
     setValue(defaultDate, 'reset', monthAnchor(defaultDate) ?? today);
   }, [defaultDate, value, setValue, today]);
 

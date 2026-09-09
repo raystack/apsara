@@ -47,7 +47,7 @@ export interface CalendarPreviewInputProps
 const DEFAULT_INVALID_MESSAGE = 'Invalid input';
 
 /* The one reason the component can word itself: it needs no knowledge of the
-   field's bounds, only of which endpoint was typed. */
+   field's bounds. */
 const DEFAULT_OUT_OF_ORDER: Record<CalendarPreviewField, string> = {
   start: 'Start date cannot be after the end date',
   end: 'End date cannot be before the start date'
@@ -156,10 +156,9 @@ export function CalendarPreviewInput({
       return { valid: false, reason: 'out-of-bounds' };
     }
     if (isDateUnavailable(date)) return { valid: false, reason: 'unavailable' };
-    /* An endpoint also has to sit on the right side of its partner, which the
-       checks above cannot see — they read one date on its own. A grid click
-       restarts the range instead, on purpose: a click is the next endpoint,
-       but typing names the field it lands in. Equal days are a valid range. */
+    /* The checks above read one date on its own and cannot see the partner. A
+       grid click restarts instead of rejecting, on purpose. Equal days are a
+       valid range. */
     const partner = field === 'start' ? draft?.to : draft?.from;
     if (isRange && partner) {
       const typed = dayKey(date, timeZone);
@@ -182,8 +181,6 @@ export function CalendarPreviewInput({
     }
     const resolved = resolve(trimmed);
     if (!(resolved instanceof Date)) return;
-    /* Addressed to this field, not to "the next endpoint" — a click means the
-       latter, but typing into the end of a settled range means the former. */
     if (isRange) setEndpoint(field, resolved);
     else setValue(resolved, 'input', resolved);
     setText(null);

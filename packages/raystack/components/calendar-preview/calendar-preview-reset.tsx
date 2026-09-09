@@ -40,8 +40,7 @@ export function CalendarPreviewReset({
   const sameDay = (a: Date, b: Date) =>
     dayKey(a, timeZone) === dayKey(b, timeZone);
 
-  /* Compared by shape as well as by day: a range and a day are never the same
-     default, and only both edges matching counts as restored. */
+  /* Both edges have to match: a shared start is not a restored range. */
   const restored =
     defaultDate === null
       ? value == null

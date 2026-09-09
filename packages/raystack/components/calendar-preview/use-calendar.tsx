@@ -5,8 +5,7 @@ import type { CalendarPreviewValue } from './calendar-preview-root';
 import type { CalendarPreviewScale } from './lib/scale';
 
 export interface UseCalendarReturn {
-  /* Holds a range at `selection='range'`; it was typed `Date | null` while
-     already carrying one. */
+  /* Holds a range at `selection='range'`. */
   value: CalendarPreviewValue;
   /** Commit a day or a range, or clear with `null`. Emits `onValueChange`. */
   setValue: (value: CalendarPreviewValue) => void;
