@@ -27,12 +27,10 @@ export interface CalendarPreviewInputProps
   /** Called when the typed text starts or stops being a usable date. */
   onValidityChange?: (validity: CalendarPreviewInputValidity) => void;
   /**
-   * Replaces the message for one or more reasons. Anything left out keeps the
-   * default, so a single override does not have to restate the others.
-   *
-   * The default is deliberately one flat string: only the consumer knows the
-   * field's bounds, so a built-in message cannot say which dates would be
-   * accepted without inventing wording it has no basis for.
+   * Replaces the message for one or more reasons; anything left out keeps the
+   * default. That default is one flat string because only the consumer knows
+   * the field's bounds — a built-in message cannot say which dates would be
+   * accepted.
    *
    * @defaultValue `'Invalid input'` for every reason
    */
@@ -80,8 +78,8 @@ export function CalendarPreviewInput({
   const [draft, setDraft] = useState<string | null>(null);
   const lastReported = useRef<CalendarPreviewInputValidity>(VALID);
 
-  /* Attached here rather than in `resolve`, so the reason stays the single
-     source of truth and the message is only ever derived from it. */
+  /* Derived from the reason rather than returned alongside it, so the reason
+     stays the single source of truth. */
   const withMessage = (
     validity: CalendarPreviewInputValidity
   ): CalendarPreviewInputValidity =>
@@ -155,12 +153,14 @@ export function CalendarPreviewInput({
       trailingIcon={trailingIcon}
       disabled={disabled}
       readOnly={readOnly || readOnlyProp}
-      /* Both, and not just `aria-invalid`: the Input's error styling keys off
-         `data-invalid` (`:has(.input-field[data-invalid])`), so announcing the
-         failure without marking it left the field looking untouched -- the
-         error reached assistive tech and nothing else. */
-      aria-invalid={lastReported.current.valid ? undefined : true}
-      data-invalid={lastReported.current.valid ? undefined : true}
+      /* Input paints its error border from `data-invalid`, so marking only
+         `aria-invalid` reached assistive tech and left the field looking
+         untouched. Spread rather than set to `undefined`: these props land
+         after Field's, and an explicit `undefined` erases the invalid state
+         Field sets for errors this input knows nothing about. */
+      {...(lastReported.current.valid
+        ? {}
+        : { 'aria-invalid': true, 'data-invalid': true })}
       value={draft ?? (value ? formatValue(value, scale) : '')}
       onValueChange={text => {
         if (inert) return;

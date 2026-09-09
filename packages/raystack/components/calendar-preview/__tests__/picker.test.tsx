@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { getSlot } from '~/test-utils/data-slots';
+import { Field } from '../../field';
 import { CalendarPreview } from '../calendar-preview';
 
 const TODAY = new Date(2026, 7, 15);
@@ -345,6 +346,23 @@ describe('CalendarPreview.Input invalid marking', () => {
     const { input } = renderPicker({ readOnly: true });
     fireEvent.change(input, { target: { value: 'not a date' } });
     expect(input).not.toHaveAttribute('data-invalid');
+  });
+
+  /* Field marks its control invalid for errors this input cannot see — a
+     failed submit, a server response. Setting the attributes to `undefined`
+     while valid erased that, because these props land after Field's. */
+  it('leaves an error Field set alone while its own text is valid', () => {
+    const { container } = render(
+      <Field error='Server said no'>
+        <CalendarPreview today={TODAY}>
+          <CalendarPreview.Trigger>
+            <CalendarPreview.Input />
+          </CalendarPreview.Trigger>
+        </CalendarPreview>
+      </Field>
+    );
+    const input = container.querySelector('input') as HTMLInputElement;
+    expect(input).toHaveAttribute('data-invalid');
   });
 });
 
