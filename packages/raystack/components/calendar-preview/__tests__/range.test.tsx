@@ -365,3 +365,115 @@ describe('CalendarPreview range parts that read the value', () => {
     expect(onValueChange).not.toHaveBeenCalled();
   });
 });
+
+describe('CalendarPreview range order validation', () => {
+  const RANGE = { from: new Date(2026, 7, 10), to: new Date(2026, 7, 20) };
+
+  const inputs = (container: HTMLElement) =>
+    getAllSlots(container, 'calendar-preview-input') as HTMLInputElement[];
+
+  const typeAndCommit = (input: HTMLInputElement, text: string) => {
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: text } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+  };
+
+  const picker = (onValidityChange?: (v: unknown) => void) => (
+    <CalendarPreview.Trigger>
+      <CalendarPreview.Input
+        field='start'
+        onValidityChange={onValidityChange}
+      />
+      <CalendarPreview.Input field='end' onValidityChange={onValidityChange} />
+    </CalendarPreview.Trigger>
+  );
+
+  it('rejects an end typed before the start, and emits nothing', () => {
+    const onValidityChange = vi.fn();
+    const onValueChange = vi.fn();
+    const { container } = renderRange(
+      { defaultValue: RANGE, onValueChange },
+      picker(onValidityChange)
+    );
+    const [start, end] = inputs(container);
+    typeAndCommit(end, '01/08/2026');
+    expect(onValidityChange).toHaveBeenLastCalledWith({
+      valid: false,
+      reason: 'out-of-order',
+      message: 'End date cannot be before the start date'
+    });
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(start.value).toBe('10/08/2026');
+    expect(end).toHaveAttribute('data-invalid');
+  });
+
+  it('rejects a start typed after the end', () => {
+    const onValidityChange = vi.fn();
+    const { container } = renderRange(
+      { defaultValue: RANGE },
+      picker(onValidityChange)
+    );
+    const [start] = inputs(container);
+    typeAndCommit(start, '25/08/2026');
+    expect(onValidityChange).toHaveBeenLastCalledWith({
+      valid: false,
+      reason: 'out-of-order',
+      message: 'Start date cannot be after the end date'
+    });
+    expect(start).toHaveAttribute('data-invalid');
+  });
+
+  it('allows the two endpoints to be the same day', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderRange(
+      { defaultValue: RANGE, onValueChange },
+      picker()
+    );
+    const [, end] = inputs(container);
+    typeAndCommit(end, '10/08/2026');
+    expect(onValueChange).toHaveBeenCalledWith(
+      { from: RANGE.from, to: RANGE.from },
+      expect.objectContaining({ reason: 'input' })
+    );
+  });
+
+  it('checks a half-built range against its own start', () => {
+    const onValidityChange = vi.fn();
+    const { container } = renderRange({}, picker(onValidityChange));
+    const [start, end] = inputs(container);
+    typeAndCommit(start, '10/08/2026');
+    typeAndCommit(end, '05/08/2026');
+    expect(onValidityChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ reason: 'out-of-order' })
+    );
+  });
+
+  it('takes an errorMessages override for the new reason', () => {
+    const onValidityChange = vi.fn();
+    const { container } = renderRange(
+      { defaultValue: RANGE },
+      <CalendarPreview.Trigger>
+        <CalendarPreview.Input field='start' />
+        <CalendarPreview.Input
+          field='end'
+          errorMessages={{ 'out-of-order': 'Pick a day after the start' }}
+          onValidityChange={onValidityChange}
+        />
+      </CalendarPreview.Trigger>
+    );
+    const [, end] = inputs(container);
+    typeAndCommit(end, '01/08/2026');
+    expect(onValidityChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ message: 'Pick a day after the start' })
+    );
+  });
+
+  /* The grid keeps its restart rule — only typing is strict. */
+  it('still lets a grid click restart the range from an earlier day', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderRange({ defaultValue: RANGE, onValueChange });
+    fireEvent.click(day(container, '5'));
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(day(container, '5')).toHaveAttribute('data-selected');
+  });
+});

@@ -506,6 +506,74 @@ export const rangeDemo = {
             </CalendarPreview>`
     },
     {
+      name: 'Invalid input',
+      code: `
+function CalendarPreviewRangeInvalidExample() {
+  const [defaultError, setDefaultError] = React.useState();
+  const [customError, setCustomError] = React.useState();
+
+  const range = {
+    selection: 'range',
+    defaultMonth: new Date(2024, 3, 1),
+    defaultValue: { from: new Date(2024, 3, 10), to: new Date(2024, 3, 20) }
+  };
+
+  return (
+    <Flex direction="column" gap={7} style={{ maxWidth: 320 }}>
+      <Field
+        label="Trip dates"
+        description="Type an end before 10/04/2024 — typing rejects, clicking restarts"
+        error={defaultError}
+      >
+        <CalendarPreview {...range}>
+          <CalendarPreview.Trigger>
+            <Flex align="center" gap={3}>
+              <CalendarPreview.Input
+                field="start"
+                onValidityChange={({ message }) => setDefaultError(message)}
+              />
+              <CalendarPreview.Input
+                field="end"
+                onValidityChange={({ message }) => setDefaultError(message)}
+              />
+            </Flex>
+          </CalendarPreview.Trigger>
+          <CalendarPreview.Content>
+            <CalendarPreview.Days numberOfMonths={2} />
+          </CalendarPreview.Content>
+        </CalendarPreview>
+      </Field>
+
+      <Field
+        label="Trip dates"
+        description="The same crossing, worded with errorMessages"
+        error={customError}
+      >
+        <CalendarPreview {...range}>
+          <CalendarPreview.Trigger>
+            <Flex align="center" gap={3}>
+              <CalendarPreview.Input
+                field="start"
+                errorMessages={{ 'out-of-order': 'Start must not pass the end' }}
+                onValidityChange={({ message }) => setCustomError(message)}
+              />
+              <CalendarPreview.Input
+                field="end"
+                errorMessages={{ 'out-of-order': 'Pick a day on or after the start' }}
+                onValidityChange={({ message }) => setCustomError(message)}
+              />
+            </Flex>
+          </CalendarPreview.Trigger>
+          <CalendarPreview.Content>
+            <CalendarPreview.Days numberOfMonths={2} />
+          </CalendarPreview.Content>
+        </CalendarPreview>
+      </Field>
+    </Flex>
+  );
+}`
+    },
+    {
       name: 'Custom trigger',
       code: `<CalendarPreview
               selection="range"

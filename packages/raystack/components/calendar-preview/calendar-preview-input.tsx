@@ -11,7 +11,8 @@ import { parseScaleInput } from './lib/parse';
 export type CalendarPreviewInputInvalidReason =
   | 'unparseable'
   | 'out-of-bounds'
-  | 'unavailable';
+  | 'unavailable'
+  | 'out-of-order';
 
 export type CalendarPreviewInputValidity = {
   valid: boolean;
@@ -44,6 +45,13 @@ export interface CalendarPreviewInputProps
 }
 
 const DEFAULT_INVALID_MESSAGE = 'Invalid input';
+
+/* The one reason the component can word itself: it needs no knowledge of the
+   field's bounds, only of which endpoint was typed. */
+const DEFAULT_OUT_OF_ORDER: Record<CalendarPreviewField, string> = {
+  start: 'Start date cannot be after the end date',
+  end: 'End date cannot be before the start date'
+};
 
 const VALID: CalendarPreviewInputValidity = { valid: true };
 
@@ -113,7 +121,9 @@ export function CalendarPreviewInput({
           ...validity,
           message:
             (validity.reason && errorMessages?.[validity.reason]) ??
-            DEFAULT_INVALID_MESSAGE
+            (validity.reason === 'out-of-order'
+              ? DEFAULT_OUT_OF_ORDER[field]
+              : DEFAULT_INVALID_MESSAGE)
         };
 
   const report = (candidate: CalendarPreviewInputValidity) => {
@@ -146,6 +156,18 @@ export function CalendarPreviewInput({
       return { valid: false, reason: 'out-of-bounds' };
     }
     if (isDateUnavailable(date)) return { valid: false, reason: 'unavailable' };
+    /* An endpoint also has to sit on the right side of its partner, which the
+       checks above cannot see — they read one date on its own. A grid click
+       restarts the range instead, on purpose: a click is the next endpoint,
+       but typing names the field it lands in. Equal days are a valid range. */
+    const partner = field === 'start' ? draft?.to : draft?.from;
+    if (isRange && partner) {
+      const typed = dayKey(date, timeZone);
+      const against = dayKey(partner, timeZone);
+      if (field === 'start' ? typed > against : typed < against) {
+        return { valid: false, reason: 'out-of-order' };
+      }
+    }
     return date;
   };
 

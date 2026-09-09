@@ -293,6 +293,19 @@ The click machine:
 
 Completing asks the popover to close through `onOpenChange`, so a consumer holding `open` open is not fought.
 
+**Typing is stricter than clicking.** A click means "the next endpoint", so an earlier day restarts
+the range, as the table above says. Typing names the field it lands in, so an endpoint that crosses
+its partner is rejected instead: `onValidityChange` reports `out-of-order`, the field goes red, and
+nothing is emitted. Two endpoints on the same day are a valid range.
+
+```tsx
+<CalendarPreview.Input
+  field="end"
+  errorMessages={{ 'out-of-order': 'Pick a day after the start' }}
+  onValidityChange={({ message }) => setError(message)}
+/>
+```
+
 Instead of a `lock` prop, mark one endpoint's `.Input` as `readOnly` — the grid will not rewrite it. **A read-only endpoint with no value makes the range unsatisfiable:** the free endpoint sets, the range never completes, and nothing emits. Give a read-only endpoint a value.
 
 <Demo data={rangeDemo} />
@@ -321,9 +334,12 @@ it is `undefined` while valid, which is exactly what [Field](/docs/components/fi
 </Field>
 ```
 
-The default is a flat **"Invalid input"** for every reason. It stays deliberately vague because only
+The default is a flat **"Invalid input"** for most reasons. It stays deliberately vague because only
 you know the field's bounds — the component cannot say *which* dates would be accepted without
 inventing wording it has no basis for.
+
+`out-of-order` is the exception, and gets a real default: it needs no knowledge of your bounds, only
+of which endpoint was typed.
 
 Override it with `errorMessages`, per reason. Anything left out keeps the default, so wording one
 reason does not mean restating the rest:
@@ -345,6 +361,7 @@ The reason is also on the payload if you would rather branch on it yourself:
 | `unparseable` | The text is not a date the input could read at all |
 | `out-of-bounds` | A real date, outside `minDate` / `maxDate` |
 | `unavailable` | A real date in range that `isDateUnavailable` rejected |
+| `out-of-order` | Range only — the endpoint crossed its partner |
 
 It fires only when validity *changes*, not on every keystroke, so it is safe to drive state with.
 

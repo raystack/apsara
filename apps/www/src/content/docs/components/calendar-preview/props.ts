@@ -242,17 +242,20 @@ export interface CalendarPreviewInputProps {
    */
   onValidityChange?: (validity: {
     valid: boolean;
-    reason?: 'unparseable' | 'out-of-bounds' | 'unavailable';
+    reason?: 'unparseable' | 'out-of-bounds' | 'unavailable' | 'out-of-order';
     message?: string;
   }) => void;
 
   /**
    * Replaces the message for one or more reasons; anything left out keeps the
    * default.
-   * @default "Invalid input" for every reason
+   * @default "Invalid input", except out-of-order, which words itself
    */
   errorMessages?: Partial<
-    Record<'unparseable' | 'out-of-bounds' | 'unavailable', string>
+    Record<
+      'unparseable' | 'out-of-bounds' | 'unavailable' | 'out-of-order',
+      string
+    >
   >;
 
   /** Read and navigable, but not typeable. */
