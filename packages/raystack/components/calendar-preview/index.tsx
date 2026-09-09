@@ -18,6 +18,7 @@ export type {
   CalendarPreviewNavProps
 } from './calendar-preview-header';
 export type {
+  CalendarPreviewInputInvalidReason,
   CalendarPreviewInputProps,
   CalendarPreviewInputValidity
 } from './calendar-preview-input';

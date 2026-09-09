@@ -7,16 +7,39 @@ import { useCalendarPreviewContext } from './calendar-preview-context';
 import { dayKey, parseKey } from './date-adapter';
 import { parseScaleInput } from './lib/parse';
 
+export type CalendarPreviewInputInvalidReason =
+  | 'unparseable'
+  | 'out-of-bounds'
+  | 'unavailable';
+
 export type CalendarPreviewInputValidity = {
   valid: boolean;
-  reason?: 'unparseable' | 'out-of-bounds' | 'unavailable';
+  reason?: CalendarPreviewInputInvalidReason;
+  /**
+   * The message to show, already resolved against `errorMessages`. Absent
+   * while valid, so it can be handed straight to `Field`'s `error`.
+   */
+  message?: string;
 };
 
 export interface CalendarPreviewInputProps
   extends Omit<ComponentProps<typeof Input>, 'value' | 'defaultValue'> {
   /** Called when the typed text starts or stops being a usable date. */
   onValidityChange?: (validity: CalendarPreviewInputValidity) => void;
+  /**
+   * Replaces the message for one or more reasons. Anything left out keeps the
+   * default, so a single override does not have to restate the others.
+   *
+   * The default is deliberately one flat string: only the consumer knows the
+   * field's bounds, so a built-in message cannot say which dates would be
+   * accepted without inventing wording it has no basis for.
+   *
+   * @defaultValue `'Invalid input'` for every reason
+   */
+  errorMessages?: Partial<Record<CalendarPreviewInputInvalidReason, string>>;
 }
+
+const DEFAULT_INVALID_MESSAGE = 'Invalid input';
 
 const VALID: CalendarPreviewInputValidity = { valid: true };
 
@@ -31,6 +54,7 @@ export function CalendarPreviewInput({
   placeholder = 'Select date',
   trailingIcon = <CalendarIcon />,
   onValidityChange,
+  errorMessages,
   onKeyDown,
   onBlur,
   className,
@@ -56,10 +80,26 @@ export function CalendarPreviewInput({
   const [draft, setDraft] = useState<string | null>(null);
   const lastReported = useRef<CalendarPreviewInputValidity>(VALID);
 
-  const report = (next: CalendarPreviewInputValidity) => {
+  /* Attached here rather than in `resolve`, so the reason stays the single
+     source of truth and the message is only ever derived from it. */
+  const withMessage = (
+    validity: CalendarPreviewInputValidity
+  ): CalendarPreviewInputValidity =>
+    validity.valid
+      ? validity
+      : {
+          ...validity,
+          message:
+            (validity.reason && errorMessages?.[validity.reason]) ??
+            DEFAULT_INVALID_MESSAGE
+        };
+
+  const report = (candidate: CalendarPreviewInputValidity) => {
+    const next = withMessage(candidate);
     if (
       next.valid === lastReported.current.valid &&
-      next.reason === lastReported.current.reason
+      next.reason === lastReported.current.reason &&
+      next.message === lastReported.current.message
     ) {
       return;
     }

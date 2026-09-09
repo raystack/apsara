@@ -173,7 +173,8 @@ describe('CalendarPreview.Input commit', () => {
     expect(onValueChange).not.toHaveBeenCalled();
     expect(onValidityChange).toHaveBeenLastCalledWith({
       valid: false,
-      reason: 'unparseable'
+      reason: 'unparseable',
+      message: 'Invalid input'
     });
   });
 
@@ -211,7 +212,8 @@ describe('CalendarPreview.Input validity', () => {
     fireEvent.change(input, { target: { value: 'not a date' } });
     expect(onValidityChange).toHaveBeenLastCalledWith({
       valid: false,
-      reason: 'unparseable'
+      reason: 'unparseable',
+      message: 'Invalid input'
     });
   });
 
@@ -233,7 +235,8 @@ describe('CalendarPreview.Input validity', () => {
     fireEvent.change(input, { target: { value: '01/08/2026' } });
     expect(onValidityChange).toHaveBeenLastCalledWith({
       valid: false,
-      reason: 'out-of-bounds'
+      reason: 'out-of-bounds',
+      message: 'Invalid input'
     });
   });
 
@@ -246,7 +249,8 @@ describe('CalendarPreview.Input validity', () => {
     fireEvent.change(input, { target: { value: '12/08/2026' } });
     expect(onValidityChange).toHaveBeenLastCalledWith({
       valid: false,
-      reason: 'unavailable'
+      reason: 'unavailable',
+      message: 'Invalid input'
     });
   });
 
@@ -341,6 +345,98 @@ describe('CalendarPreview.Input invalid marking', () => {
     const { input } = renderPicker({ readOnly: true });
     fireEvent.change(input, { target: { value: 'not a date' } });
     expect(input).not.toHaveAttribute('data-invalid');
+  });
+});
+
+describe('CalendarPreview.Input error messages', () => {
+  const reasons = [
+    ['unparseable', {}, 'not a date'],
+    ['out-of-bounds', { minDate: new Date(2026, 7, 10) }, '01/08/2026'],
+    [
+      'unavailable',
+      { isDateUnavailable: (date: Date) => date.getDate() === 12 },
+      '12/08/2026'
+    ]
+  ] as const;
+
+  it.each(reasons)('defaults to one flat message for %s', (_r, props, text) => {
+    const onValidityChange = vi.fn();
+    const { input } = renderPicker(props, { onValidityChange });
+    fireEvent.change(input, { target: { value: text } });
+    expect(onValidityChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ valid: false, message: 'Invalid input' })
+    );
+  });
+
+  it('carries no message while the text is valid', () => {
+    const onValidityChange = vi.fn();
+    const { input } = renderPicker({}, { onValidityChange });
+    fireEvent.change(input, { target: { value: 'nope' } });
+    fireEvent.change(input, { target: { value: '20/05/2027' } });
+    expect(onValidityChange).toHaveBeenLastCalledWith({ valid: true });
+  });
+
+  it('takes a custom message for a reason', () => {
+    const onValidityChange = vi.fn();
+    const { input } = renderPicker(
+      {},
+      { onValidityChange, errorMessages: { unparseable: 'Use DD/MM/YYYY' } }
+    );
+    fireEvent.change(input, { target: { value: 'not a date' } });
+    expect(onValidityChange).toHaveBeenLastCalledWith({
+      valid: false,
+      reason: 'unparseable',
+      message: 'Use DD/MM/YYYY'
+    });
+  });
+
+  /* A partial override is the common case: one reason worded for the field,
+     the rest left alone. */
+  it('leaves the reasons it was not given on the default', () => {
+    const onValidityChange = vi.fn();
+    const { input } = renderPicker(
+      { minDate: new Date(2026, 7, 10) },
+      { onValidityChange, errorMessages: { unparseable: 'Use DD/MM/YYYY' } }
+    );
+    fireEvent.change(input, { target: { value: 'not a date' } });
+    expect(onValidityChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ message: 'Use DD/MM/YYYY' })
+    );
+    fireEvent.change(input, { target: { value: '01/08/2026' } });
+    expect(onValidityChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        reason: 'out-of-bounds',
+        message: 'Invalid input'
+      })
+    );
+  });
+
+  /* The reason is unchanged across these keystrokes, so only a message that
+     is part of the comparison makes this re-fire. */
+  it('re-reports when only the message changed', () => {
+    const onValidityChange = vi.fn();
+    const { rerender, input } = renderPicker(
+      {},
+      { onValidityChange, errorMessages: { unparseable: 'First' } }
+    );
+    fireEvent.change(input, { target: { value: 'nope' } });
+    expect(onValidityChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ message: 'First' })
+    );
+    rerender(
+      <CalendarPreview today={TODAY} defaultMonth={AUGUST}>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input
+            onValidityChange={onValidityChange}
+            errorMessages={{ unparseable: 'Second' }}
+          />
+        </CalendarPreview.Trigger>
+      </CalendarPreview>
+    );
+    fireEvent.change(input, { target: { value: 'nope!' } });
+    expect(onValidityChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ message: 'Second' })
+    );
   });
 });
 
