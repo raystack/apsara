@@ -275,6 +275,75 @@ describe('CalendarPreview.Input validity', () => {
   });
 });
 
+/* `aria-invalid` alone reached only assistive tech: Input paints its error
+   border from `data-invalid`, so a sighted user saw an untouched field. These
+   pin both attributes together -- dropping either one silently restores that. */
+describe('CalendarPreview.Input invalid marking', () => {
+  it('marks nothing before anything is typed', () => {
+    const { input } = renderPicker();
+    expect(input).not.toHaveAttribute('data-invalid');
+    expect(input).not.toHaveAttribute('aria-invalid');
+  });
+
+  it.each([
+    ['unparseable', {}, 'not a date'],
+    ['out-of-bounds', { minDate: new Date(2026, 7, 10) }, '01/08/2026'],
+    [
+      'unavailable',
+      { isDateUnavailable: (date: Date) => date.getDate() === 12 },
+      '12/08/2026'
+    ]
+  ])('marks the field invalid for %s text', (_reason, props, text) => {
+    const { input } = renderPicker(props);
+    fireEvent.change(input, { target: { value: text } });
+    expect(input).toHaveAttribute('data-invalid');
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  /* Input paints the border from `:has(.input-field[data-invalid])`, so what
+     the style depends on is the marked input sitting inside the container --
+     not the slot name, which this part overrides with its own. */
+  it('marks the input inside the container the border is keyed on', () => {
+    const { container, input } = renderPicker();
+    fireEvent.change(input, { target: { value: 'not a date' } });
+    const wrapper = container.querySelector('[data-slot="input-container"]');
+    expect(wrapper?.querySelector('input[data-invalid]')).toBe(input);
+  });
+
+  it('unmarks the field once the text parses again', () => {
+    const { input } = renderPicker();
+    fireEvent.change(input, { target: { value: 'nope' } });
+    expect(input).toHaveAttribute('data-invalid');
+    fireEvent.change(input, { target: { value: '20/05/2027' } });
+    expect(input).not.toHaveAttribute('data-invalid');
+    expect(input).not.toHaveAttribute('aria-invalid');
+  });
+
+  it('unmarks the field when it is emptied', () => {
+    const { input } = renderPicker({ defaultValue: new Date(2026, 7, 20) });
+    fireEvent.change(input, { target: { value: 'nope' } });
+    expect(input).toHaveAttribute('data-invalid');
+    fireEvent.change(input, { target: { value: '' } });
+    expect(input).not.toHaveAttribute('data-invalid');
+  });
+
+  /* A failed commit keeps the draft rather than discarding the typing, so the
+     mark has to survive the blur that failed to commit it. */
+  it('stays marked after a blur that could not commit', () => {
+    const { input } = renderPicker({ defaultValue: new Date(2026, 7, 20) });
+    fireEvent.change(input, { target: { value: 'garbage' } });
+    fireEvent.blur(input);
+    expect(input.value).toBe('garbage');
+    expect(input).toHaveAttribute('data-invalid');
+  });
+
+  it('never marks a field that cannot be typed into', () => {
+    const { input } = renderPicker({ readOnly: true });
+    fireEvent.change(input, { target: { value: 'not a date' } });
+    expect(input).not.toHaveAttribute('data-invalid');
+  });
+});
+
 describe('CalendarPreview.Trigger content', () => {
   it('renders the formatted value when given no children', () => {
     const { container } = render(

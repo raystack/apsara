@@ -115,7 +115,12 @@ export function CalendarPreviewInput({
       trailingIcon={trailingIcon}
       disabled={disabled}
       readOnly={readOnly || readOnlyProp}
+      /* Both, and not just `aria-invalid`: the Input's error styling keys off
+         `data-invalid` (`:has(.input-field[data-invalid])`), so announcing the
+         failure without marking it left the field looking untouched -- the
+         error reached assistive tech and nothing else. */
       aria-invalid={lastReported.current.valid ? undefined : true}
+      data-invalid={lastReported.current.valid ? undefined : true}
       value={draft ?? (value ? formatValue(value, scale) : '')}
       onValueChange={text => {
         if (inert) return;
