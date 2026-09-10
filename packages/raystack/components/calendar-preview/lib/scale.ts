@@ -19,12 +19,7 @@ import {
 } from '../date-adapter';
 
 /** The granularities a value can be selected at. */
-export type CalendarPreviewScale =
-  | 'day'
-  | 'month'
-  | 'quarter'
-  | 'halfYear'
-  | 'year';
+export type Scale = 'day' | 'month' | 'quarter' | 'halfYear' | 'year';
 
 /**
  * A committed selection: a concrete day, plus what that day *means*.
@@ -33,9 +28,9 @@ export type CalendarPreviewScale =
  * `{ date: '2026-08-31', scale: 'month' }` still reads back as August 2026 with
  * no calendar mounted — see RFC 005, "The value carries its scale".
  */
-export interface CalendarPreviewScaleValue {
+export interface ScaleValue {
   date: DayKey;
-  scale: CalendarPreviewScale;
+  scale: Scale;
 }
 
 /** The inclusive day span a period covers. */
@@ -45,7 +40,7 @@ export interface Period {
 }
 
 /** Every scale, finest first. */
-export const SCALES: readonly CalendarPreviewScale[] = [
+export const SCALES: readonly Scale[] = [
   'day',
   'month',
   'quarter',
@@ -53,7 +48,7 @@ export const SCALES: readonly CalendarPreviewScale[] = [
   'year'
 ];
 
-export function isScale(value: string): value is CalendarPreviewScale {
+export function isScale(value: string): value is Scale {
   return (SCALES as readonly string[]).includes(value);
 }
 
@@ -65,7 +60,7 @@ export function isScale(value: string): value is CalendarPreviewScale {
  */
 export function periodOf(
   date: Date | DayKey,
-  scale: CalendarPreviewScale,
+  scale: Scale,
   timeZone?: string
 ): Period {
   const key = toKey(date, timeZone);
@@ -110,11 +105,11 @@ export function anchorOf(period: Period, trailing: boolean): DayKey {
  * `2026-01-01` — the anchor is all that survives.
  */
 export function convertScale(
-  value: CalendarPreviewScaleValue,
-  to: CalendarPreviewScale,
+  value: ScaleValue,
+  to: Scale,
   trailing: boolean,
   timeZone?: string
-): CalendarPreviewScaleValue {
+): ScaleValue {
   return {
     date: anchorOf(periodOf(value.date, to, timeZone), trailing),
     scale: to
@@ -136,7 +131,7 @@ export function convertScale(
  */
 export function isAvailable(
   value: Date | DayKey,
-  scale: CalendarPreviewScale,
+  scale: Scale,
   trailing: boolean,
   min?: Date | DayKey,
   max?: Date | DayKey,

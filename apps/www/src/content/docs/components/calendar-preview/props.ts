@@ -1,5 +1,7 @@
 import { ReactNode } from 'react';
 
+type Scale = 'day' | 'month' | 'quarter' | 'halfYear' | 'year';
+
 export interface CalendarPreviewProps {
   /** The selected day (controlled). */
   value?: Date | null;
@@ -49,7 +51,9 @@ export interface CalendarPreviewProps {
   maxDate?: Date;
 
   /**
-   * Reject individual days, on top of `minDate` / `maxDate`.
+   * Reject individual days, on top of `minDate` / `maxDate`. Day scale only —
+   * period cells never call it, and are bounded by `minDate` / `maxDate`
+   * against the day they would emit.
    * @example isDateUnavailable={date => date.getDay() === 0}
    */
   isDateUnavailable?: (date: Date) => boolean;
@@ -57,10 +61,25 @@ export interface CalendarPreviewProps {
   /**
    * The day `.Reset` restores. Read even when `value` is controlled, which
    * `defaultValue` is not. `null` is a default of nothing selected, so
-   * `.Reset` clears; omitting the prop renders no button at all. Takes a
-   * range at `selection="range"`.
+   * `.Reset` clears; omitting the prop renders no button at all. It follows
+   * the selection: a range at `selection="range"`, a period at a coarser
+   * scale.
    */
-  defaultDate?: Date | { from: Date; to: Date } | null;
+  defaultDate?:
+    | Date
+    | { from: Date; to: Date }
+    | { date: string; scale: Scale }
+    | null;
+
+  /**
+   * Renders a value for display — every trigger, input and annotation goes
+   * through it. Defaults to `DD MMM YYYY` at day scale, and the period's own
+   * shorthand above it.
+   */
+  formatValue?: (
+    value: Date | { date: string; scale: Scale },
+    scale: Scale
+  ) => string;
 
   /**
    * The zone the grid reads days in. Forwarded to the grid; the component does
@@ -196,7 +215,10 @@ export interface UseCalendarReturn {
   /** Commit a day, or clear with `null`. Emits `onValueChange`. */
   setValue: (value: Date | null) => void;
 
-  /** The granularity the value is committed at. Read-only until phase 5. */
+  /**
+   * The granularity the value is committed at. Read-only — switching scale is
+   * `.Scales` and `.Scale`, which take `render` for custom chrome.
+   */
   scale: 'day' | 'month' | 'quarter' | 'halfYear' | 'year';
 
   /** The first month currently displayed. */

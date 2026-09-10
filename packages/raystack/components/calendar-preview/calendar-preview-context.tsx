@@ -3,10 +3,7 @@
 import type { Popover } from '@base-ui/react';
 import { createContext, type ReactNode, useContext } from 'react';
 import type { DayKey } from './date-adapter';
-import type {
-  CalendarPreviewScale,
-  CalendarPreviewScaleValue
-} from './lib/scale';
+import type { Scale, ScaleValue } from './lib/scale';
 
 /** What caused a value to change. */
 export type CalendarPreviewChangeReason =
@@ -49,7 +46,7 @@ export interface CalendarPreviewChangeDetails {
 }
 
 /* Generic so a later phase's scale-aware arms carry a
-   `CalendarPreviewScaleValue` without a second context: stored as `unknown`,
+   `ScaleValue` without a second context: stored as `unknown`,
    cast once at the hook boundary. */
 export interface CalendarPreviewContextValue<Value = Date | null> {
   value: Value;
@@ -73,15 +70,15 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
    */
   shouldIgnoreFocusOpen: () => boolean;
   /** Read even when `value` is controlled. */
-  defaultDate: Date | CalendarPreviewDateRange | null | undefined;
+  defaultDate: Date | CalendarPreviewDateRange | ScaleValue | null | undefined;
   /** A value reset — it never moves the view. */
   reset: () => void;
   month: Date;
   /** Never clamped by `minDate` / `maxDate`. */
   setMonth: (month: Date) => void;
   yearRange: { from: number; to: number };
-  scale: CalendarPreviewScale;
-  setScale: (scale: CalendarPreviewScale) => void;
+  scale: Scale;
+  setScale: (scale: Scale) => void;
   isDateUnavailable: (date: Date) => boolean;
   /* Separate from `isDateUnavailable`, which folds them together: `.Input`
      reports which of the two rejected a typed date. */
@@ -92,10 +89,18 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
   clearable: boolean;
   disabled: boolean;
   readOnly: boolean;
-  formatValue: (
-    value: Date | CalendarPreviewScaleValue,
-    scale: CalendarPreviewScale
-  ) => string;
+  formatValue: (value: Date | ScaleValue, scale: Scale) => string;
+
+  /** Every scale the switcher offers. One entry hides `.Scales`. */
+  scales: readonly Scale[];
+  trailingValue: boolean;
+  /** Never emitted: a cell click or Enter commits it, Escape drops it. */
+  scaleDraft: ScaleValue | null;
+  switchScale: (scale: Scale) => void;
+  /** Honours `trailingValue`. */
+  selectPeriod: (date: Date | string, scale: Scale) => void;
+  dropDraft: () => void;
+  isPeriodAvailable: (date: Date | string, scale: Scale) => boolean;
 
   selection: 'single' | 'range';
   /**

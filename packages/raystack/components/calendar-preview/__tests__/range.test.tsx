@@ -147,8 +147,8 @@ describe('CalendarPreview range inputs', () => {
     fireEvent.click(day(document.body, '10'));
     fireEvent.click(day(document.body, '20'));
     const [start, end] = inputs(container);
-    expect(start.value).toBe('10/08/2026');
-    expect(end.value).toBe('20/08/2026');
+    expect(start.value).toBe('10 Aug 2026');
+    expect(end.value).toBe('20 Aug 2026');
   });
 
   /* `lock` is gone: a read-only endpoint is one read-only `.Input`. */
@@ -333,8 +333,8 @@ describe('CalendarPreview range parts that read the value', () => {
       <CalendarPreview.Trigger />
     );
     const trigger = getSlot(container, 'calendar-preview-trigger');
-    expect(trigger?.textContent).toContain('10/08/2026');
-    expect(trigger?.textContent).toContain('20/08/2026');
+    expect(trigger?.textContent).toContain('10 Aug 2026');
+    expect(trigger?.textContent).toContain('20 Aug 2026');
   });
 
   it('edits the end without disturbing the start', () => {
@@ -345,8 +345,8 @@ describe('CalendarPreview range parts that read the value', () => {
     );
     const [start, end] = inputs(container);
     typeAndCommit(end, '25/08/2026');
-    expect(start.value).toBe('10/08/2026');
-    expect(end.value).toBe('25/08/2026');
+    expect(start.value).toBe('10 Aug 2026');
+    expect(end.value).toBe('25 Aug 2026');
     expect(onValueChange).toHaveBeenCalledWith(
       { from: RANGE.from, to: new Date(2026, 7, 25) },
       expect.objectContaining({ reason: 'input' })
@@ -361,8 +361,8 @@ describe('CalendarPreview range parts that read the value', () => {
     );
     const [start, end] = inputs(container);
     typeAndCommit(start, '05/08/2026');
-    expect(start.value).toBe('05/08/2026');
-    expect(end.value).toBe('20/08/2026');
+    expect(start.value).toBe('05 Aug 2026');
+    expect(end.value).toBe('20 Aug 2026');
     expect(onValueChange).toHaveBeenCalledWith(
       { from: new Date(2026, 7, 5), to: RANGE.to },
       expect.objectContaining({ reason: 'input' })
@@ -432,7 +432,7 @@ describe('CalendarPreview range order validation', () => {
       message: 'End date cannot be before the start date'
     });
     expect(onValueChange).not.toHaveBeenCalled();
-    expect(start.value).toBe('10/08/2026');
+    expect(start.value).toBe('10 Aug 2026');
     expect(end).toHaveAttribute('data-invalid');
   });
 

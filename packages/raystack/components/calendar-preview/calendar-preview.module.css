@@ -534,3 +534,119 @@
   align-items: center;
   gap: var(--rs-space-3);
 }
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-3);
+  padding: var(--rs-space-3);
+  width: max-content;
+}
+
+.label {
+  color: var(--rs-color-foreground-base-secondary);
+  font-size: var(--rs-font-size-micro);
+  line-height: var(--rs-line-height-micro);
+  letter-spacing: var(--rs-letter-spacing-micro);
+}
+
+.separator {
+  height: 1px;
+  background: var(--rs-color-border-base-primary);
+}
+
+.scales {
+  display: flex;
+}
+
+/* `Tabs` gives every trigger an equal share of the row, and a fifth of the day
+   grid's width does not hold "Half-year". Each label takes the width it needs
+   and shares what is left; scoped to beat the primitive's own `flex`. */
+.scales .scale {
+  flex: 1 1 auto;
+}
+
+/* Nothing inside the panel has a width of its own to hand the popover, so the
+   panel is the anchor for all five views — seven 40px columns, the width the
+   input and switcher above it run at — and the popover stops resizing. */
+.panel {
+  width: calc(var(--rs-space-10) * 7 + var(--rs-space-3) * 2);
+}
+
+/* Standalone, `.Days` is its own inset surface. Under the switcher it is one
+   view of five, so it drops the inset and its columns share the row: the grid
+   lines up with the input and the tabs instead of sitting in from them. */
+.panel .days {
+  width: 100%;
+  padding-inline: 0;
+}
+
+.panel .weekday,
+.panel .day,
+.panel .week-number,
+.panel .week-number-header {
+  flex: 1;
+}
+
+/* The day view hugs; every period list is a fixed box that scrolls as one, so
+   the year headings scroll with their cells rather than pinning. */
+.panel[data-scale="day"] {
+  display: block;
+}
+
+.periods {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-4);
+  height: calc(var(--rs-space-10) * 8);
+  overflow-y: auto;
+}
+
+.period-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-2);
+}
+
+.period-year {
+  color: var(--rs-color-foreground-base-secondary);
+  font-size: var(--rs-font-size-micro);
+  line-height: var(--rs-line-height-micro);
+  letter-spacing: var(--rs-letter-spacing-micro);
+}
+
+.period-cells {
+  display: grid;
+  grid-template-columns: repeat(var(--rs-period-columns), 1fr);
+  gap: var(--rs-space-2);
+}
+
+.period {
+  padding: var(--rs-space-2) var(--rs-space-3);
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-2);
+  background: transparent;
+  color: var(--rs-color-foreground-base-primary);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  cursor: pointer;
+}
+
+.period:hover:not(:disabled) {
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+.period:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-inset);
+}
+
+.period[data-selected] {
+  background: var(--rs-color-background-neutral-secondary);
+}
+
+.period[data-unavailable] {
+  color: var(--rs-color-foreground-base-tertiary);
+  cursor: not-allowed;
+}

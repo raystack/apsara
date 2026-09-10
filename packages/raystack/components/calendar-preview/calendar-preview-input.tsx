@@ -5,8 +5,13 @@ import { Input } from '../input';
 import styles from './calendar-preview.module.css';
 import type { CalendarPreviewField } from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
+import {
+  type CalendarPreviewValue,
+  isRange as isRangeValue
+} from './calendar-preview-root';
 import { dayKey, parseKey } from './date-adapter';
 import { parseScaleInput } from './lib/parse';
+import type { Scale } from './lib/scale';
 
 export type CalendarPreviewInputInvalidReason =
   | 'unparseable'
@@ -88,13 +93,17 @@ export function CalendarPreviewInput({
     today,
     disabled,
     readOnly,
+    scales,
+    scaleDraft,
+    selectPeriod,
+    isPeriodAvailable,
     selection,
     setEndpoint,
     draft,
     activeField,
     setActiveField,
     setFieldReadOnly
-  } = useCalendarPreviewContext('CalendarPreview.Input');
+  } = useCalendarPreviewContext<CalendarPreviewValue>('CalendarPreview.Input');
 
   const isRange = selection === 'range';
 
@@ -139,15 +148,23 @@ export function CalendarPreviewInput({
     onValidityChange?.(next);
   };
 
-  const resolve = (text: string): CalendarPreviewInputValidity | Date => {
+  /* Only the scales this root offers: typing "Q4" into a day-only field is not
+     a quarter, it is a typo. */
+  const resolve = (
+    text: string
+  ): CalendarPreviewInputValidity | { date: Date; scale: Scale } => {
     const parsed = parseScaleInput(text);
-    /* Coarser scales parse today but have nowhere to go until the scale
-       switcher lands, so they read as unparseable rather than committing a day
-       the user did not type. */
-    if (!parsed || parsed.scale !== 'day') {
+    if (!parsed || !scales.includes(parsed.scale)) {
       return { valid: false, reason: 'unparseable' };
     }
     const date = parseKey(parsed.date);
+
+    if (parsed.scale !== 'day') {
+      return isPeriodAvailable(date, parsed.scale)
+        ? { date, scale: parsed.scale }
+        : { valid: false, reason: 'out-of-bounds' };
+    }
+
     const key = dayKey(date, timeZone);
     if (
       (minDate && key < dayKey(minDate, timeZone)) ||
@@ -167,7 +184,7 @@ export function CalendarPreviewInput({
         return { valid: false, reason: 'out-of-order' };
       }
     }
-    return date;
+    return { date, scale: 'day' };
   };
 
   const commit = () => {
@@ -180,9 +197,13 @@ export function CalendarPreviewInput({
       return;
     }
     const resolved = resolve(trimmed);
-    if (!(resolved instanceof Date)) return;
-    if (isRange) setEndpoint(field, resolved);
-    else setValue(resolved, 'input', resolved);
+    if ('valid' in resolved) return;
+    /* A typed endpoint writes the field it was typed into; only a click means
+       "the next endpoint". */
+    if (isRange) setEndpoint(field, resolved.date);
+    else if (resolved.scale !== 'day')
+      selectPeriod(resolved.date, resolved.scale);
+    else setValue(resolved.date, 'input', resolved.date);
     setText(null);
     report(VALID);
   };
@@ -191,15 +212,18 @@ export function CalendarPreviewInput({
 
   const endpoint = isRange
     ? ((field === 'start' ? draft?.from : draft?.to) ?? null)
-    : (value as Date | null);
+    : (scaleDraft ?? (isRangeValue(value) ? null : value));
   const committedText = endpoint ? formatValue(endpoint, scale) : '';
+  /* A multi-scale field has to advertise what it accepts. */
   const resolvedPlaceholder =
     placeholder ??
-    (isRange
-      ? field === 'start'
-        ? 'Select start date'
-        : 'Select end date'
-      : 'Select date');
+    (scales.length > 1
+      ? 'Try: 15 Aug 2026, May 2027, Q4'
+      : isRange
+        ? field === 'start'
+          ? 'Select start date'
+          : 'Select end date'
+        : 'Select date');
 
   return (
     <Input
@@ -233,7 +257,7 @@ export function CalendarPreviewInput({
           return;
         }
         const resolved = resolve(text);
-        report(resolved instanceof Date ? VALID : resolved);
+        report('valid' in resolved ? resolved : VALID);
       }}
       onKeyDown={event => {
         onKeyDown?.(event);

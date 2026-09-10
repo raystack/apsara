@@ -1,18 +1,22 @@
 'use client';
 
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import type { CalendarPreviewValue } from './calendar-preview-root';
-import type { CalendarPreviewScale } from './lib/scale';
+import {
+  type CalendarPreviewValue,
+  monthAnchor
+} from './calendar-preview-root';
+import type { Scale } from './lib/scale';
 
 export interface UseCalendarReturn {
   /* Holds a range at `selection='range'`. */
   value: CalendarPreviewValue;
   /** Commit a day or a range, or clear with `null`. Emits `onValueChange`. */
   setValue: (value: CalendarPreviewValue) => void;
-  /* Read-only until the scale switcher lands in phase 5. Exposing a setter
-     now would be a public API we cannot take back if the switcher reshapes
-     it; adding one later is additive. */
-  scale: CalendarPreviewScale;
+  /* Read-only by decision, not by omission: switching scale is `.Scales` and
+     `.Scale`, which take `render` for custom chrome. A setter here would be
+     public API we cannot take back, and it stays out until something needs
+     one — adding it later is additive. */
+  scale: Scale;
   month: Date;
   /** Bounds never clamp the view. */
   setMonth: (month: Date) => void;
@@ -36,12 +40,8 @@ export function useCalendar(): UseCalendarReturn {
        so a range reports the day it starts on. */
     setValue: next =>
       next === null
-        ? setValue(
-            null,
-            'clear',
-            (value instanceof Date ? value : value?.from) ?? new Date()
-          )
-        : setValue(next, 'select', next instanceof Date ? next : next.from),
+        ? setValue(null, 'clear', monthAnchor(value) ?? new Date())
+        : setValue(next, 'select', monthAnchor(next) ?? new Date()),
     scale,
     month,
     setMonth,

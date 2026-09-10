@@ -6,23 +6,24 @@ import { UndoIcon } from '~/icons';
 import { IconButton } from '../icon-button';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import type { CalendarPreviewValue } from './calendar-preview-root';
+import {
+  type CalendarPreviewValue,
+  isRange,
+  isScaleValue
+} from './calendar-preview-root';
 import { dayKey } from './date-adapter';
 
 export type CalendarPreviewResetProps = ComponentProps<typeof IconButton>;
 
 /**
- * Restores `defaultDate` — a day, or a range at range selection — or clears
- * the selection when it is `null`. A value
- * reset, not a view reset — it leaves the
- * visible month alone. Keyed off `defaultDate` rather than `defaultValue` so
- * it still shows under a controlled `value`.
+ * Restores `defaultDate` — a day, a range, or a period at a coarser scale — or
+ * clears when it is `null`. A value reset, not a view reset: it leaves the
+ * visible month alone. Keyed off `defaultDate` rather than `defaultValue` so it
+ * still shows under a controlled `value`.
  *
- * With nothing to restore it stays mounted and disabled rather than
- * unmounting: unmounting the focused element sends focus to `<body>`, which
- * strands a keyboard user mid-calendar, and removing a `flex: none` child
- * from the header re-flows both nav buttons sideways every time the value
- * crosses the default.
+ * With nothing to restore it stays mounted and disabled rather than unmounting:
+ * that would send focus to `<body>` mid-calendar, and drop a `flex: none` child
+ * that keeps both nav buttons in place.
  */
 export function CalendarPreviewReset({
   className,
@@ -40,16 +41,22 @@ export function CalendarPreviewReset({
   const sameDay = (a: Date, b: Date) =>
     dayKey(a, timeZone) === dayKey(b, timeZone);
 
-  /* Both edges have to match: a shared start is not a restored range. */
+  /* Both edges have to match: a shared start is not a restored range. A
+     period matches on its scale as well as its day — the same day read at two
+     scales is two different values. */
   const restored =
     defaultDate === null
       ? value == null
       : value != null &&
         (defaultDate instanceof Date
           ? value instanceof Date && sameDay(value, defaultDate)
-          : !(value instanceof Date) &&
-            sameDay(value.from, defaultDate.from) &&
-            sameDay(value.to, defaultDate.to));
+          : isRange(defaultDate)
+            ? isRange(value) &&
+              sameDay(value.from, defaultDate.from) &&
+              sameDay(value.to, defaultDate.to)
+            : isScaleValue(value) &&
+              value.date === defaultDate.date &&
+              value.scale === defaultDate.scale);
 
   return (
     <IconButton

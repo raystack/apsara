@@ -1,4 +1,5 @@
 export { CalendarPreview } from './calendar-preview';
+export type { CalendarPreviewBodyProps } from './calendar-preview-body';
 export type { CalendarPreviewCaptionProps } from './calendar-preview-caption';
 export type { CalendarPreviewContentProps } from './calendar-preview-content';
 export type {
@@ -25,11 +26,21 @@ export type {
   CalendarPreviewInputProps,
   CalendarPreviewInputValidity
 } from './calendar-preview-input';
+export type { CalendarPreviewLabelProps } from './calendar-preview-label';
+export type { CalendarPreviewPanelProps } from './calendar-preview-panel';
+export type { CalendarPreviewPeriodViewProps } from './calendar-preview-periods';
 export type { CalendarPreviewResetProps } from './calendar-preview-reset';
 export type { CalendarPreviewProps } from './calendar-preview-root';
-export type { CalendarPreviewTriggerProps } from './calendar-preview-trigger';
 export type {
-  CalendarPreviewScale,
-  CalendarPreviewScaleValue
+  CalendarPreviewScaleProps,
+  CalendarPreviewScalesProps
+} from './calendar-preview-scales';
+export type { CalendarPreviewSeparatorProps } from './calendar-preview-separator';
+export type { CalendarPreviewTriggerProps } from './calendar-preview-trigger';
+/* Prefixed on the way out, short inside: `CalendarPreview.Scale` is a part, so
+   the module cannot also call its type `CalendarPreviewScale`. */
+export type {
+  Scale as CalendarPreviewScale,
+  ScaleValue as CalendarPreviewScaleValue
 } from './lib/scale';
 export { type UseCalendarReturn, useCalendar } from './use-calendar';
