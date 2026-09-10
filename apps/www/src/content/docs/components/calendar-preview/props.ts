@@ -215,7 +215,10 @@ export interface UseCalendarReturn {
   /** Commit a day, or clear with `null`. Emits `onValueChange`. */
   setValue: (value: Date | null) => void;
 
-  /** The granularity the value is committed at. Read-only until phase 5. */
+  /**
+   * The granularity the value is committed at. Read-only — switching scale is
+   * `.Scales` and `.Scale`, which take `render` for custom chrome.
+   */
   scale: 'day' | 'month' | 'quarter' | 'halfYear' | 'year';
 
   /** The first month currently displayed. */
