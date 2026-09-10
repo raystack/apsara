@@ -559,6 +559,35 @@
   display: flex;
 }
 
+/* `Tabs` gives every trigger an equal share of the row, and a fifth of the day
+   grid's width does not hold "Half-year". Each label takes the width it needs
+   and shares what is left; scoped to beat the primitive's own `flex`. */
+.scales .scale {
+  flex: 1 1 auto;
+}
+
+/* Nothing inside the panel has a width of its own to hand the popover, so the
+   panel is the anchor for all five views — seven 40px columns, the width the
+   input and switcher above it run at — and the popover stops resizing. */
+.panel {
+  width: calc(var(--rs-space-10) * 7 + var(--rs-space-3) * 2);
+}
+
+/* Standalone, `.Days` is its own inset surface. Under the switcher it is one
+   view of five, so it drops the inset and its columns share the row: the grid
+   lines up with the input and the tabs instead of sitting in from them. */
+.panel .days {
+  width: 100%;
+  padding-inline: 0;
+}
+
+.panel .weekday,
+.panel .day,
+.panel .week-number,
+.panel .week-number-header {
+  flex: 1;
+}
+
 /* The day view hugs; every period list is a fixed box that scrolls as one, so
    the year headings scroll with their cells rather than pinning. */
 .panel[data-scale="day"] {

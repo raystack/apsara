@@ -15,10 +15,8 @@ const LABELS: Record<Scale, string> = {
 
 export type CalendarPreviewScalesProps = useRender.ComponentProps<'div'>;
 
-/**
- * The scale switcher. Renders nothing when only one scale is offered, which is
- * what keeps a plain day calendar from growing a one-tab row.
- */
+/* Renders nothing for a single scale, so a plain day calendar does not grow a
+   one-tab row. */
 export function CalendarPreviewScales({
   className,
   children,
@@ -40,6 +38,7 @@ export function CalendarPreviewScales({
         'data-slot': 'calendar-preview-scales',
         children: children ?? (
           <Tabs
+            size='small'
             value={scale}
             onValueChange={next => switchScale(next as Scale)}
           >
@@ -74,7 +73,7 @@ export interface CalendarPreviewScaleProps
   value: Scale;
 }
 
-/** One scale. Only needed to relabel or reorder what `.Scales` renders. */
+/** Only needed to relabel or reorder what `.Scales` renders. */
 export function CalendarPreviewScale({
   value,
   className,
@@ -94,7 +93,7 @@ export function CalendarPreviewScale({
     props: mergeProps<'button'>(
       {
         type: 'button',
-        className: cx(styles.scale, className),
+        className,
         'data-slot': 'calendar-preview-scale',
         'data-scale': value,
         'data-active': scale === value || undefined,
