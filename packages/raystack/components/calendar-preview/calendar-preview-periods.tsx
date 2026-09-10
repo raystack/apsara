@@ -3,6 +3,10 @@ import { cx } from 'class-variance-authority';
 import { useEffect, useMemo, useRef } from 'react';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
+import {
+  type CalendarPreviewValue,
+  isScaleValue
+} from './calendar-preview-root';
 import { dayKey, monthShortNames, monthStart, yearOf } from './date-adapter';
 import { anchorOf, periodOf, type Scale } from './lib/scale';
 
@@ -43,11 +47,8 @@ function cellsFor(scale: Scale, year: number): Cell[] {
 }
 
 /**
- * One scale's period list.
- *
- * Every year is a heading inside a single scrolling column rather than a page
- * of its own, so the whole list scrolls past the bounds — periods outside them
- * render disabled rather than being cut off.
+ * Every year is a heading inside one scrolling column rather than a page of its
+ * own, so periods outside the bounds render disabled rather than being cut off.
  */
 function PeriodView({
   scale: viewScale,
@@ -75,7 +76,9 @@ function PeriodView({
     timeZone,
     disabled,
     readOnly
-  } = useCalendarPreviewContext('CalendarPreview.Periods');
+  } = useCalendarPreviewContext<CalendarPreviewValue>(
+    'CalendarPreview.Periods'
+  );
 
   const years = useMemo(() => {
     const list: number[] = [];
@@ -87,28 +90,17 @@ function PeriodView({
      draft wins: it is what the user is looking at after a scale switch. */
   const activeYear = yearOf(
     scaleDraft?.date ??
-      (value && !(value instanceof Date) && 'date' in value
-        ? (value as { date: string }).date
-        : dayKey(month, timeZone))
+      (isScaleValue(value) ? value.date : dayKey(month, timeZone))
   );
 
   const selectedKey =
-    scaleDraft?.date ??
-    (value && !(value instanceof Date) && 'date' in value
-      ? (value as { date: string }).date
-      : null);
+    scaleDraft?.date ?? (isScaleValue(value) ? value.date : null);
 
-  /*
-   * A twenty-year list otherwise opens on its first year, twenty scrolls from
-   * the one the user means.
-   *
-   * Runs when the view becomes active, not on mount: every view is mounted at
-   * once and hooks still run while one returns null, so a mount effect fires
-   * with an empty ref and never fires again when the view appears.
-   *
-   * Scrolls the container rather than calling `scrollIntoView`, which walks
-   * every scrollable ancestor and would move the popover with it.
-   */
+  /* A twenty-year list otherwise opens twenty scrolls from the year meant.
+     Keyed on becoming active, not on mount: every view mounts at once, so a
+     mount effect fires with an empty ref and never fires again. Scrolls the
+     container rather than `scrollIntoView`, which would walk out and move the
+     popover with it. */
   const activeRef = useRef<HTMLDivElement>(null);
   const isActive = scale === viewScale;
   useEffect(() => {
@@ -192,8 +184,6 @@ function PeriodView({
     )
   });
 
-  /* Sibling views all mount; each gates on the active scale, so `.Quarters`
-     can stand alone with no day grid in the tree. */
   return isActive ? element : null;
 }
 

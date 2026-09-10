@@ -66,8 +66,7 @@ export function CalendarPreviewDays({
     )
   });
 
-  /* A sibling of the period views, gating the same way, so `.Panel` can mount
-     all five and only the active one renders. */
+  /* Gates like the period views, so `.Panel` can mount all five. */
   if (scale !== 'day') return null;
 
   return (

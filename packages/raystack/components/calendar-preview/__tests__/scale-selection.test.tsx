@@ -388,3 +388,118 @@ describe('CalendarPreview scale anchors on the visible month', () => {
     });
   });
 });
+
+/* A scale-aware root carries `{ date, scale }` at every scale, day included. */
+describe('CalendarPreview at day scale on a scale-aware root', () => {
+  const dayCell = (container: HTMLElement, day: string) => {
+    const match = getAllSlots(container, 'calendar-preview-day').find(
+      cell =>
+        getSlot(cell, 'calendar-preview-day-number')?.textContent === day &&
+        !cell.hasAttribute('data-outside')
+    );
+    if (!match) throw new Error(`no cell for day ${day}`);
+    return match;
+  };
+
+  it('marks the day the value carries', () => {
+    const { container } = renderBody({
+      value: { date: '2026-08-20', scale: 'day' }
+    });
+    expect(dayCell(container, '20')).toHaveAttribute('data-selected');
+  });
+
+  it('commits a clicked day as a period at day scale', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderBody({ onValueChange });
+    fireEvent.click(dayCell(container, '20'));
+    expect(onValueChange.mock.calls[0][0]).toEqual({
+      date: '2026-08-20',
+      scale: 'day'
+    });
+  });
+
+  it('keeps a bare Date for a day-only root', () => {
+    const onValueChange = vi.fn();
+    const { container } = render(
+      <CalendarPreview
+        today={TODAY}
+        defaultMonth={TODAY}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Days />
+      </CalendarPreview>
+    );
+    fireEvent.click(dayCell(container, '20'));
+    expect(onValueChange.mock.calls[0][0]).toEqual(new Date(2026, 7, 20));
+  });
+
+  it('labels a childless .Trigger with the period, at its own scale', () => {
+    const { container } = render(
+      <CalendarPreview
+        today={TODAY}
+        scales={ALL}
+        value={{ date: '2026-07-01', scale: 'quarter' }}
+      >
+        <CalendarPreview.Trigger />
+      </CalendarPreview>
+    );
+    expect(getSlot(container, 'calendar-preview-trigger')?.textContent).toBe(
+      'Q3 2026'
+    );
+  });
+});
+
+/* `.Reset` only ever mounts at day scale; what it restores is the value,
+   whatever scale that holds. */
+describe('CalendarPreview.Reset at scale', () => {
+  const QUARTER = { date: '2026-07-01', scale: 'quarter' } as const;
+  const reset = (container: HTMLElement) =>
+    getSlot(container, 'calendar-preview-reset') as HTMLElement;
+
+  it('renders while the value differs from the period default', () => {
+    const { container } = renderBody({
+      defaultDate: QUARTER,
+      value: { date: '2026-10-01', scale: 'quarter' }
+    });
+    expect(reset(container)).toBeInTheDocument();
+    expect(reset(container)).not.toBeDisabled();
+  });
+
+  /* The same day at two scales is two different values. */
+  it('is not restored when only the day matches', () => {
+    const { container } = renderBody({
+      defaultDate: QUARTER,
+      value: { date: '2026-07-01', scale: 'month' }
+    });
+    expect(reset(container)).not.toBeDisabled();
+  });
+
+  it('stays mounted but disabled once the day and the scale both match', () => {
+    const { container } = renderBody({
+      defaultDate: QUARTER,
+      value: QUARTER
+    });
+    expect(reset(container)).toBeDisabled();
+    expect(reset(container)).toHaveAttribute('data-restored');
+  });
+
+  it('restores the day and the scale together', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderBody({
+      defaultDate: QUARTER,
+      defaultValue: { date: '2026-08-20', scale: 'day' },
+      onValueChange
+    });
+
+    fireEvent.click(reset(container));
+    expect(onValueChange).toHaveBeenCalledWith(
+      QUARTER,
+      expect.objectContaining({ reason: 'reset' })
+    );
+    /* The scale came back with it. */
+    expect(getSlot(container, 'calendar-preview-days')).toBeNull();
+    expect(
+      (getSlot(container, 'calendar-preview-input') as HTMLInputElement).value
+    ).toBe('Q3 2026');
+  });
+});

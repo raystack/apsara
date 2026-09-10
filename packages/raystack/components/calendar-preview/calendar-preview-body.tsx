@@ -10,10 +10,7 @@ import { CalendarPreviewSeparator } from './calendar-preview-separator';
 
 export type CalendarPreviewBodyProps = useRender.ComponentProps<'div'>;
 
-/**
- * The popup body: label, input, scale switcher and the view for the active
- * scale. The input sits above the switcher, which is where the frames put it.
- */
+/** The input sits above the switcher, which is where the frames put it. */
 export function CalendarPreviewBody({
   className,
   children,

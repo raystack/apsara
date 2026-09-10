@@ -13,9 +13,8 @@ import {
 export type CalendarPreviewPanelProps = useRender.ComponentProps<'div'>;
 
 /**
- * The view container. Mounts all five views when childless; each one gates on
- * the active scale itself, so a consumer can mount `.Quarters` alone with no
- * day grid in the tree.
+ * Every view gates on the active scale itself, so a consumer can mount
+ * `.Quarters` alone with no day grid in the tree.
  */
 export function CalendarPreviewPanel({
   className,

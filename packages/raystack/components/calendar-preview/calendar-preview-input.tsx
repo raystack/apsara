@@ -5,6 +5,10 @@ import { Input } from '../input';
 import styles from './calendar-preview.module.css';
 import type { CalendarPreviewField } from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
+import {
+  type CalendarPreviewValue,
+  isRange as isRangeValue
+} from './calendar-preview-root';
 import { dayKey, parseKey } from './date-adapter';
 import { parseScaleInput } from './lib/parse';
 import type { Scale } from './lib/scale';
@@ -99,7 +103,7 @@ export function CalendarPreviewInput({
     activeField,
     setActiveField,
     setFieldReadOnly
-  } = useCalendarPreviewContext('CalendarPreview.Input');
+  } = useCalendarPreviewContext<CalendarPreviewValue>('CalendarPreview.Input');
 
   const isRange = selection === 'range';
 
@@ -194,8 +198,8 @@ export function CalendarPreviewInput({
     }
     const resolved = resolve(trimmed);
     if ('valid' in resolved) return;
-    /* A range is day-only, so a typed endpoint is always a day: it writes the
-       field it was typed into rather than running the click machine. */
+    /* A typed endpoint writes the field it was typed into; only a click means
+       "the next endpoint". */
     if (isRange) setEndpoint(field, resolved.date);
     else if (resolved.scale !== 'day')
       selectPeriod(resolved.date, resolved.scale);
@@ -208,10 +212,9 @@ export function CalendarPreviewInput({
 
   const endpoint = isRange
     ? ((field === 'start' ? draft?.from : draft?.to) ?? null)
-    : (scaleDraft ?? (value as Date | null));
+    : (scaleDraft ?? (isRangeValue(value) ? null : value));
   const committedText = endpoint ? formatValue(endpoint, scale) : '';
-  /* A multi-scale field has to advertise what it accepts; a day-only one does
-     not, and the old placeholder still reads correctly there. */
+  /* A multi-scale field has to advertise what it accepts. */
   const resolvedPlaceholder =
     placeholder ??
     (scales.length > 1

@@ -42,8 +42,8 @@ export function isRange(value: unknown): value is CalendarPreviewDateRange {
   return value != null && typeof value === 'object' && 'from' in value;
 }
 
-/* The day the view should open on, whichever selection shape the value is.
-   Also the day a change reports, which is always one day. */
+/* The one day a value stands for, whichever shape it takes: the month to open
+   on, and the day a change reports. */
 export function monthAnchor(
   value: CalendarPreviewValue | undefined
 ): Date | undefined {
@@ -69,7 +69,6 @@ export function isScaleValue(value: CalendarPreviewValue): value is ScaleValue {
    both edges. One shared `value` type would widen both. */
 interface CalendarPreviewSingleProps {
   selection?: 'single';
-  /** @defaultValue 'day' */
   scales?: 'day';
   /** The selected day (controlled). */
   value?: Date | null;
@@ -110,17 +109,13 @@ interface CalendarPreviewRangeProps {
   defaultDate?: CalendarPreviewDateRange | null;
 }
 
-/*
- * Open Item 1 in the RFC: expressing "day-only keeps `Date`" so that
- * `['day','month']` still narrows. TypeScript cannot test an array's contents,
- * so the discriminator is the SHAPE of `scales` rather than its members —
- * omitted or the literal `'day'` keeps `Date`; any other scale, or any array,
- * moves to `ScaleValue`. The wart is that `scales={['day']}` takes the
- * scale-aware arm where `scales='day'` does not.
- */
+/* TypeScript cannot test an array's contents, so the arms discriminate on the
+   SHAPE of `scales`: omitted or the literal `'day'` keeps `Date`, anything else
+   moves to `ScaleValue`. The wart is that `scales={['day']}` takes this arm
+   where `scales='day'` does not (RFC 005, Open Item 1). */
 interface CalendarPreviewScaleAwareProps {
-  /* Ranges across scales are not a thing this ships — a start/end pair is two
-     independent roots, each with its own `scales` and `trailingValue`. */
+  /* A start/end pair is two independent roots, each with its own `scales` and
+     `trailingValue`, so there is no range arm here. */
   selection?: 'single';
   scales: Exclude<Scale, 'day'> | Scale[];
   /** The selected period. `date` is timeless `'YYYY-MM-DD'`. */
@@ -130,11 +125,7 @@ interface CalendarPreviewScaleAwareProps {
     value: ScaleValue | null,
     details: CalendarPreviewChangeDetails
   ) => void;
-  /**
-   * The period `.Reset` restores, read even when `value` is controlled — which
-   * `defaultValue` is not. `null` is a default of *nothing selected*, so
-   * `.Reset` clears; omitting it renders no button at all.
-   */
+  /** The period `.Reset` restores. `null` clears; omitted renders no button. */
   defaultDate?: ScaleValue | null;
 }
 
@@ -152,9 +143,9 @@ interface CalendarPreviewSharedProps
   scale?: Scale;
   onScaleChange?: (scale: Scale) => void;
   /**
-   * Whether a period emits its last day rather than its first — an end field
-   * wants 31 July from "July 2026", a start field wants the 1st. It changes
-   * the value, not the formatting.
+   * Whether a period emits its last day rather than its first: an end field
+   * wants 31 July from "July 2026", a start field wants the 1st. The value
+   * changes, not the formatting.
    * @defaultValue false
    */
   trailingValue?: boolean;
@@ -187,7 +178,13 @@ interface CalendarPreviewSharedProps
   minDate?: Date;
   /** Latest selectable day, inclusive. Never clamps navigation. */
   maxDate?: Date;
-  /** Reject individual days. Applied on top of `minDate` / `maxDate`. */
+  /**
+   * Reject individual days. Applied on top of `minDate` / `maxDate`.
+   *
+   * **Day scale only** — a day predicate has no one lift to a period, and
+   * asking it per cell would run it 365 times a year. Period cells are bounded
+   * by `minDate` / `maxDate`, tested against the day the cell would emit.
+   */
   isDateUnavailable?: (date: Date) => boolean;
 
   /**
@@ -337,6 +334,10 @@ export function CalendarPreviewRoot({
 
   const [scaleDraft, setScaleDraft] = useState<ScaleValue | null>(null);
 
+  /* The only runtime read of the arms' rule: an array carries the scale even
+     when that scale is `'day'`. */
+  const carriesScale = Array.isArray(scalesProp) || scalesProp !== 'day';
+
   const setMonth = useCallback(
     (next: Date) => {
       setMonthUnwrapped(next);
@@ -447,11 +448,22 @@ export function CalendarPreviewRoot({
       if (readOnly || disabled) return;
 
       if (selection === 'single') {
-        const isSame =
-          value instanceof Date &&
-          dayKey(value, timeZone) === dayKey(date, timeZone);
-        if (isSame && clearable) setValue(null, 'clear', date);
-        else setValue(date, 'select', date);
+        const key = dayKey(date, timeZone);
+        const current = isScaleValue(value)
+          ? value.date
+          : value instanceof Date
+            ? dayKey(value, timeZone)
+            : null;
+        /* The input reads the draft first, so leaving one behind would show
+           the day the user passed through on the way back down. */
+        setScaleDraft(null);
+        if (current === key && clearable) setValue(null, 'clear', date);
+        else
+          setValue(
+            carriesScale ? { date: key, scale: 'day' } : date,
+            'select',
+            date
+          );
         return;
       }
 
@@ -484,6 +496,7 @@ export function CalendarPreviewRoot({
       draft,
       fieldReadOnly,
       clearable,
+      carriesScale,
       timeZone,
       readOnly,
       disabled,
@@ -492,7 +505,6 @@ export function CalendarPreviewRoot({
     ]
   );
 
-  /* The value as a ScaleValue, whichever shape the consumer holds. */
   const scaleValue = useMemo<ScaleValue | null>(() => {
     if (scaleDraft) return scaleDraft;
     if (value instanceof Date) return { date: dayKey(value, timeZone), scale };
@@ -500,14 +512,12 @@ export function CalendarPreviewRoot({
     return null;
   }, [scaleDraft, value, scale, timeZone]);
 
-  /* A scale switch moves the view and drafts; it never emits. The draft is
-     what the user is looking at, so the input and the views read it. */
+  /* Never emits: the draft is what the user is looking at, and a cell click
+     or Enter commits it. */
   const switchScale = useCallback(
     (next: Scale) => {
-      /* Falls back to the month on screen, not to today: a consumer opening on
-         2030, or a user who navigated there, must not be thrown back to this
-         year by switching scale. `month` already resolves to today when
-         nothing else set it. */
+      /* The month on screen, not today: someone who navigated to 2030 must
+         not be thrown back by switching scale. */
       const anchor = scaleValue ?? {
         date: dayKey(month, timeZone),
         scale
@@ -533,13 +543,14 @@ export function CalendarPreviewRoot({
     [trailingValue, timeZone, readOnly, disabled, setValue, setOpen]
   );
 
-  /* Restoring the input means restoring the scale too: a day value rendered at
-     the drafted quarter scale would still read "Q3 2026". */
+  /* The scale comes back with the value: a day rendered at the drafted quarter
+     scale would still read "Q3 2026". */
   const dropDraft = useCallback(() => {
     setScaleDraft(null);
     setScaleUnwrapped(isScaleValue(value) ? value.scale : scales[0]);
   }, [value, scales, setScaleUnwrapped]);
 
+  /* Bounds only, never `isDateUnavailable` — the prop documents why. */
   const isPeriodAvailable = useCallback(
     (date: Date | string, next: Scale) =>
       isAvailable(date, next, trailingValue, minDate, maxDate, timeZone),
@@ -574,9 +585,7 @@ export function CalendarPreviewRoot({
      consumer that logs or validates on selection needs to tell them apart. */
   const reset = useCallback(() => {
     if (defaultDate === undefined) return;
-    /* Restoring settles the scale the same way dropping a draft does: a
-       drafted quarter would otherwise keep rendering the restored value as a
-       period it is not. */
+    /* Settles the scale the way dropping a draft does, for the same reason. */
     setScaleDraft(null);
     setScaleUnwrapped(
       isScaleValue(defaultDate) ? defaultDate.scale : scales[0]

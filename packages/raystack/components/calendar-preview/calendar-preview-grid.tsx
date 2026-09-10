@@ -35,7 +35,15 @@ import {
   CalendarPreviewNextMonth,
   CalendarPreviewPrevMonth
 } from './calendar-preview-header';
-import { formatCaptionLabel, formatWeekdayLabel } from './date-adapter';
+import {
+  type CalendarPreviewValue,
+  isScaleValue
+} from './calendar-preview-root';
+import {
+  formatCaptionLabel,
+  formatWeekdayLabel,
+  parseKey
+} from './date-adapter';
 
 /* The only file that may import react-day-picker. It runs with
    `hideNavigation` and `captionLayout='label'` so it never mounts a `Select`,
@@ -160,7 +168,7 @@ export function CalendarPreviewGrid({
     clearable,
     disabled,
     readOnly
-  } = useCalendarPreviewContext('CalendarPreview.Grid');
+  } = useCalendarPreviewContext<CalendarPreviewValue>('CalendarPreview.Grid');
   const days = useCalendarPreviewDaysContext();
   const setBusy = days?.setBusy;
 
@@ -187,6 +195,14 @@ export function CalendarPreviewGrid({
   };
 
   const months = days?.numberOfMonths ?? 1;
+
+  /* A scale-aware root carries `{ date, scale }` at day scale too, so the day
+     to mark is inside the value rather than being it. */
+  const selected = isScaleValue(value)
+    ? parseKey(value.date)
+    : value instanceof Date
+      ? value
+      : undefined;
 
   /* Several months have no single header to caption them, so each month
      captions itself and `.Days` renders no `.Header` above. */
@@ -260,7 +276,7 @@ export function CalendarPreviewGrid({
             {...base}
             mode='single'
             required={false}
-            selected={(value as Date | null) ?? undefined}
+            selected={selected}
             onSelect={handleSelect}
           />
         ) : (
@@ -268,7 +284,7 @@ export function CalendarPreviewGrid({
             {...base}
             mode='single'
             required
-            selected={(value as Date | null) ?? undefined}
+            selected={selected}
             onSelect={handleSelect}
           />
         )}

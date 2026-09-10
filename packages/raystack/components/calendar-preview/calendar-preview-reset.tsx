@@ -16,17 +16,14 @@ import { dayKey } from './date-adapter';
 export type CalendarPreviewResetProps = ComponentProps<typeof IconButton>;
 
 /**
- * Restores `defaultDate` — a day, a range at range selection, or a period at a
- * coarser scale — or clears the selection when it is `null`. A value
- * reset, not a view reset — it leaves the
- * visible month alone. Keyed off `defaultDate` rather than `defaultValue` so
- * it still shows under a controlled `value`.
+ * Restores `defaultDate` — a day, a range, or a period at a coarser scale — or
+ * clears when it is `null`. A value reset, not a view reset: it leaves the
+ * visible month alone. Keyed off `defaultDate` rather than `defaultValue` so it
+ * still shows under a controlled `value`.
  *
- * With nothing to restore it stays mounted and disabled rather than
- * unmounting: unmounting the focused element sends focus to `<body>`, which
- * strands a keyboard user mid-calendar, and removing a `flex: none` child
- * from the header re-flows both nav buttons sideways every time the value
- * crosses the default.
+ * With nothing to restore it stays mounted and disabled rather than unmounting:
+ * that would send focus to `<body>` mid-calendar, and drop a `flex: none` child
+ * that keeps both nav buttons in place.
  */
 export function CalendarPreviewReset({
   className,

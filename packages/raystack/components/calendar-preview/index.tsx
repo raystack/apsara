@@ -38,8 +38,7 @@ export type {
 export type { CalendarPreviewSeparatorProps } from './calendar-preview-separator';
 export type { CalendarPreviewTriggerProps } from './calendar-preview-trigger';
 /* Prefixed on the way out, short inside: `CalendarPreview.Scale` is a part, so
-   the module cannot also call its type `Scale` — and the package root exports no
-   unprefixed generic names. */
+   the module cannot also call its type `CalendarPreviewScale`. */
 export type {
   Scale as CalendarPreviewScale,
   ScaleValue as CalendarPreviewScaleValue
