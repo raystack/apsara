@@ -2,7 +2,6 @@
 title: Number Field
 description: A numeric input component with increment and decrement buttons, supporting scrub interaction.
 source: packages/raystack/components/number-field
-tag: new
 ---
 
 import {
@@ -13,6 +12,7 @@ import {
   disabledDemo,
   composedDemo,
   formatDemo,
+  controlledDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -24,10 +24,10 @@ Import and use the component standalone or composed:
 ```tsx
 import { NumberField } from "@raystack/apsara";
 
-{/* Standalone — renders decrement, input, and increment internally */}
+{/* Standalone: renders decrement, input, and increment internally */}
 <NumberField defaultValue={0} />
 
-{/* Composed — full control over sub-components */}
+{/* Composed: full control over sub-components */}
 <NumberField defaultValue={0}>
   <NumberField.ScrubArea label="Amount" />
   <NumberField.Group>
@@ -38,7 +38,57 @@ import { NumberField } from "@raystack/apsara";
 </NumberField>
 ```
 
+## Usage
+
+A number field bounds and steps its value. Formatting and the scrub gesture are both opt-in.
+
+### Basic
+
+A standalone number field with default controls.
+
+<Demo data={basicDemo} />
+
+### Min / max
+
+`min` and `max` clamp the value. The stepper buttons disable at each end rather than letting the field go out of range.
+
+<Demo data={minMaxDemo} />
+
+### Step
+
+`step` sets how much the arrows and Arrow Up / Arrow Down move the value. Match it to the precision the field actually needs.
+
+<Demo data={stepDemo} />
+
+### Disabled
+
+`disabled` stops interaction and removes the field from the tab order, stepper buttons included.
+
+<Demo data={disabledDemo} />
+
+### Composed with ScrubArea
+
+Full control with scrub area for drag-to-adjust interaction.
+
+<Demo data={composedDemo} />
+
+### Formatted
+
+Number field with currency formatting, powered by `Intl.NumberFormat` internally.
+
+`format` sets what to format (currency, decimals); `locale` sets how it's written. Pin `locale` when the output should be stable across different users. 
+
+<Demo data={formatDemo} />
+
+### Controlled
+
+Pass `value` with `onValueChange` to own the number. Do this when the value feeds a calculation, a query, or another field.
+
+<Demo data={controlledDemo} />
+
 ## API Reference
+
+The input and its two steppers, with `ScrubArea` for drag-to-change.
 
 ### Root
 
@@ -93,46 +143,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `number-field-scrub-area-label` | The label inside the scrub area |
 | `number-field-scrub-area-cursor` | The virtual cursor (while scrubbing) |
 | `number-field-scrub-area-cursor-icon` | The default cursor icon (while scrubbing) |
-
-## Examples
-
-### Basic
-
-A standalone number field with default controls.
-
-<Demo data={basicDemo} />
-
-### Min / Max
-
-Number field constrained to a range.
-
-<Demo data={minMaxDemo} />
-
-### Step
-
-Number field with a custom step amount.
-
-<Demo data={stepDemo} />
-
-### Disabled
-
-Number field in disabled state.
-
-<Demo data={disabledDemo} />
-
-### Composed with ScrubArea
-
-Full control with scrub area for drag-to-adjust interaction.
-
-<Demo data={composedDemo} />
-
-### Formatted
-
-Number field with currency formatting, powered by `Intl.NumberFormat` internally.
-
-`format` sets what to format (currency, decimals); `locale` sets how it's written. Pin `locale` when the output should be stable across different users. 
-
-<Demo data={formatDemo} />
 
 ## Accessibility
 

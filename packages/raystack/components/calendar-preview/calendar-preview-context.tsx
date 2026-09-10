@@ -10,6 +10,7 @@ export type CalendarPreviewChangeReason =
   | 'select'
   | 'input'
   | 'clear'
+  | 'reset'
   | 'scale';
 
 export type CalendarPreviewOpenChangeDetails = Popover.Root.ChangeEventDetails;
@@ -44,8 +45,9 @@ export interface CalendarPreviewChangeDetails {
   toDate: () => Date;
 }
 
-/* Generic so a later phase's scale-aware arms carry a `ScaleValue` without a
-   second context: stored as `unknown`, cast once at the hook boundary. */
+/* Generic so a later phase's scale-aware arms carry a
+   `ScaleValue` without a second context: stored as `unknown`,
+   cast once at the hook boundary. */
 export interface CalendarPreviewContextValue<Value = Date | null> {
   value: Value;
   /** `occasion` is the day acted on, which a cleared `value` cannot carry. */
@@ -67,8 +69,8 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
    * clears. Tracks the last close reason, never the open state.
    */
   shouldIgnoreFocusOpen: () => boolean;
-  /** Read even when `value` is controlled. */
-  defaultDate: Date | undefined;
+  /** Read even when `value` is controlled. Whichever shape the value takes. */
+  defaultDate: Date | CalendarPreviewDateRange | ScaleValue | null | undefined;
   /** A value reset — it never moves the view. */
   reset: () => void;
   month: Date;
@@ -114,6 +116,8 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
    * the value and closes the popover.
    */
   selectDay: (date: Date) => void;
+  /** Writes one named endpoint, for a typed `.Input`. */
+  setEndpoint: (field: CalendarPreviewField, date: Date) => void;
   /**
    * The range as the grid should draw it — the draft while one is being built,
    * the committed value otherwise. Never emitted; the track between endpoints

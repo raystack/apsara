@@ -72,7 +72,7 @@
   flex: 1;
 }
 
-/* Filter container — chips wrap onto a new line when they overflow. */
+/* Filter container: chips wrap onto a new line when they overflow. */
 .filterContainer {
   flex-wrap: wrap;
 }
@@ -202,7 +202,7 @@
   background: var(--rs-color-background-base-primary-hover);
 }
 
-/* Virtual row variant — positioned absolutely; gridTemplateColumns is set
+/* Virtual row variant: positioned absolutely; gridTemplateColumns is set
    inline so columns line up with the header. */
 .listRowVirtual {
   display: grid;
@@ -273,7 +273,7 @@
   box-sizing: border-box;
 }
 
-/* Virtualized group header — absolutely positioned within `.listBodyVirtual`. */
+/* Virtualized group header: absolutely positioned within `.listBodyVirtual`. */
 .listGroupHeaderVirtual {
   display: flex;
   align-items: center;
@@ -300,7 +300,7 @@
   z-index: 1;
 }
 
-/* Virtualized sticky group anchor — single element that swaps content as the
+/* Virtualized sticky group anchor: a single element that swaps content as the
    user scrolls past each natural group header. `top` is set inline. */
 .listGroupAnchor {
   position: sticky;
@@ -330,13 +330,13 @@
   box-sizing: border-box;
 }
 
-/* Lets <Skeleton/> fill the available width inside a flex .listCell —
+/* Lets <Skeleton/> fill the available width inside a flex .listCell,
    matches DataTable's virtualized skeleton container. */
 .skeletonFill {
   flex: 1;
 }
 
-/* IntersectionObserver sentinel — sits below the loader rows. Non-visual. */
+/* IntersectionObserver sentinel: sits below the loader rows. Non-visual. */
 .listSentinel {
   grid-column: 1 / -1;
   height: 1px;
@@ -344,7 +344,7 @@
   pointer-events: none;
 }
 
-/* Timeline renderer — cards absolutely positioned on a continuous time axis.
+/* Timeline renderer: cards absolutely positioned on a continuous time axis.
    The root is the single scroll container for both axes; the axis strip
    sticks to the top on vertical scroll and moves with the canvas on
    horizontal scroll because both share the same explicit content width. */
@@ -362,7 +362,7 @@
   background: var(--rs-color-background-base-primary);
 }
 
-/* The pane stays focusable (tabIndex=0) so arrow/page keys scroll it — but it
+/* The pane stays focusable (tabIndex=0) so arrow/page keys scroll it, but it
    never draws a focus ring. A ring around a canvas this large reads as a stray
    blue line rather than a focus indicator: an inset outline is painted over by
    the absolutely-positioned cards, leaving broken segments down the left edge
@@ -374,7 +374,7 @@
   outline: none;
 }
 
-/* Drag-to-pan in progress — grabbing cursor everywhere (descendants too, so
+/* Drag-to-pan in progress: grabbing cursor everywhere (descendants too, so
    cards' own cursor styles don't flicker mid-drag) and selection locked. */
 .timelineRoot[data-dragging],
 .timelineRoot[data-dragging] * {
@@ -413,7 +413,7 @@
 }
 
 /* Sticks to the viewport's left edge while its band is in view (the nearest
-   scroll container is the timeline root). No overflow:hidden on the band —
+   scroll container is the timeline root). No overflow:hidden on the band,
    that would break the sticky behavior. */
 .timelineAxisBandLabel {
   position: sticky;
@@ -442,7 +442,7 @@
   display: flex;
 }
 
-/* Hover-cursor date badge — above marker badges, never intercepts events. */
+/* Hover-cursor date badge: above marker badges, never intercepts events. */
 .timelineAxisCursor {
   position: absolute;
   top: var(--rs-space-2);
@@ -466,7 +466,7 @@
 
 /* One slot per section, spanning that section's full height. The band sticks
    within it, so scrolling past a section slides its band out exactly as the
-   next section's band reaches the pin line — no JS scroll tracking. */
+   next section's band reaches the pin line, with no JS scroll tracking. */
 .timelineGroupSlot {
   position: absolute;
   left: 0;
@@ -475,7 +475,7 @@
 
 /* Pins directly under the sticky axis while its section is in view. Same
    treatment as `.listGroupHeader` (background, typography, count Badge) so the
-   band is visually identical across renderers — including no hairline, which
+   band is visually identical across renderers, including no hairline, which
    List's sticky header also does without. Height comes in inline from
    GROUP_BAND_HEIGHT: lane tops are derived from it, so the band must not size
    to its content. */
@@ -494,7 +494,7 @@
   letter-spacing: var(--rs-letter-spacing-small);
 }
 
-/* Sticks to the viewport's left edge while its band spans the viewport — same
+/* Sticks to the viewport's left edge while its band spans the viewport, the same
    trick as the axis month/year band labels. No overflow:hidden on the band or
    the slot: either would break this.
 
@@ -511,7 +511,7 @@
   white-space: nowrap;
 }
 
-/* `flex: 1 0 auto` — grow into the pane's leftover height so gridlines and
+/* `flex: 1 0 auto` grows into the pane's leftover height so gridlines and
    marker lines run its full height even with only a few lanes, but never
    shrink below the explicit lane geometry (that would clip cards). Growth is
    bounded by the real free space, so a rendered footer is accounted for.
@@ -536,7 +536,7 @@
 }
 
 /* Gridlines, marker lines, and the cursor line all paint beneath cards (DOM
-   order, no z-index) by design — lines are context, cards are content, and a
+   order, no z-index) by design: lines are context, cards are content, and a
    line crossing a card would read as part of it. The axis badge stays visible
    even where a card occludes the line. */
 .timelineMarkerLine {
@@ -556,7 +556,7 @@
   border-left-color: var(--rs-color-border-danger-emphasis);
 }
 
-/* Hover crosshair — darker than gridlines so the snapped position reads
+/* Hover crosshair: darker than gridlines so the snapped position reads
    clearly while tracking the pointer. */
 .timelineCursorLine {
   position: absolute;
@@ -567,7 +567,7 @@
   pointer-events: none;
 }
 
-/* Positioning wrapper only — visually neutral. The card interior (chrome,
+/* Positioning wrapper only, visually neutral. The card interior (chrome,
    states, truncation) is consumer-owned via `renderCard`. */
 .timelineCard {
   position: absolute;
@@ -576,7 +576,7 @@
 }
 
 /* Sticky-left so the filter-summary footer stays aligned to the viewport
-   (not the full canvas width) under horizontal scroll. Never shrinks — the
+   (not the full canvas width) under horizontal scroll. Never shrinks, since the
    canvas absorbs the free height instead. */
 .timelineFooter {
   position: sticky;

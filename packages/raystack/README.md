@@ -45,12 +45,12 @@ import { useCopyToClipboard } from "@raystack/apsara/hooks";
 
 Over 70 components, styled with plain CSS and `data-*` attributes so you can theme them with CSS variables. A few highlights:
 
-- **Layout** — Flex, Grid, Container, Sidebar, ScrollArea
-- **Navigation** — Tabs, Breadcrumb, Command, Menu, Navbar, Toolbar
-- **Data** — Table, DataView, Avatar, Badge, Chip, Meter
-- **Forms** — Input, Select, Combobox, Checkbox, Radio, Switch, Slider, Calendar, ColorPicker
-- **Feedback** — Toast, Tooltip, Callout, Spinner, Indicator
-- **Overlay** — Dialog, Popover, Drawer, ContextMenu
+- **Layout**: Flex, Grid, Container, Sidebar, ScrollArea
+- **Navigation**: Tabs, Breadcrumb, Command, Menu, Navbar, Toolbar
+- **Data**: Table, DataView, Avatar, Badge, Chip, Meter
+- **Forms**: Input, Select, Combobox, Checkbox, Radio, Switch, Slider, Calendar, ColorPicker
+- **Feedback**: Toast, Tooltip, Callout, Spinner, Indicator
+- **Overlay**: Dialog, Popover, Drawer, ContextMenu
 
 See the [documentation site](https://apsara.raystack.org) for the full list, live examples, and API references.
 

@@ -5,7 +5,7 @@
 // changing icon library is an edit to this file and nothing else.
 //
 // Keep the `/*#__PURE__*/` annotation on every call. It is what lets a bundler
-// drop an unused key — and its lucide import — out of this single module;
+// drop an unused key, and its lucide import, out of this single module;
 // `icons/__tests__/bundle.test.ts` checks that it still does.
 
 import {
@@ -68,7 +68,7 @@ export const ChevronRightIcon = /*#__PURE__*/ createIcon(
 );
 /** Clears an input. Shares a drawing with `ErrorIcon`, not a key. */
 export const ClearIcon = /*#__PURE__*/ createIcon('ClearIcon', CircleX);
-/** Marks an AI affordance — the ChatPanel trigger draws it. */
+/** Marks an AI affordance. The ChatPanel trigger draws it. */
 export const CoPilotIcon = /*#__PURE__*/ createIcon('CoPilotIcon', Sparkles);
 export const CopyIcon = /*#__PURE__*/ createIcon('CopyIcon', Copy);
 export const DisplayIcon = /*#__PURE__*/ createIcon(

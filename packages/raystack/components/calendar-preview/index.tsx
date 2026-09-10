@@ -22,6 +22,7 @@ export type {
   CalendarPreviewNavProps
 } from './calendar-preview-header';
 export type {
+  CalendarPreviewInputInvalidReason,
   CalendarPreviewInputProps,
   CalendarPreviewInputValidity
 } from './calendar-preview-input';
@@ -36,5 +37,11 @@ export type {
 } from './calendar-preview-scales';
 export type { CalendarPreviewSeparatorProps } from './calendar-preview-separator';
 export type { CalendarPreviewTriggerProps } from './calendar-preview-trigger';
-export type { Scale, ScaleValue } from './lib/scale';
+/* Prefixed on the way out, short inside: `CalendarPreview.Scale` is a part, so
+   the module cannot also call its type `Scale` — and the package root exports no
+   unprefixed generic names. */
+export type {
+  Scale as CalendarPreviewScale,
+  ScaleValue as CalendarPreviewScaleValue
+} from './lib/scale';
 export { type UseCalendarReturn, useCalendar } from './use-calendar';

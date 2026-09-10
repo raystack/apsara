@@ -23,7 +23,7 @@ export interface SidebarItemProps extends ComponentProps<'a'> {
   active?: boolean;
   disabled?: boolean;
   render?: ReactElement;
-  /** @deprecated Every key here has an equivalent `[data-slot]` — see the Slots table in the Sidebar docs. */
+  /** @deprecated Every key here has an equivalent `[data-slot]`. See the Slots table in the Sidebar docs. */
   classNames?: {
     /** @deprecated Use `[data-slot="sidebar-item"]` instead. */
     root?: string;
@@ -119,7 +119,7 @@ export function SidebarItem({
     return <Menu.Item disabled={disabled} render={content} />;
   }
 
-  // One prop opts out of every tooltip the library adds to items — the
+  // One prop opts out of every tooltip the library adds to items:
   // collapsed label tooltip and the expanded clipped-label tooltip.
   if (hideItemTooltips) return content;
 

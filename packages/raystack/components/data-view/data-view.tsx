@@ -206,7 +206,7 @@ function DataViewRoot<TData>({
     data: groupedData as unknown as TData[],
     columns: columnDefs,
     getRowId: resolveRowId,
-    // Group rows render without cells, so they have no checkbox — keeping them
+    // Group rows render without cells, so they have no checkbox, so keeping them
     // unselectable keeps `rowSelection` one key per data row.
     enableRowSelection: row => !isGroupRowData(row.original),
     getCoreRowModel: getCoreRowModel(),

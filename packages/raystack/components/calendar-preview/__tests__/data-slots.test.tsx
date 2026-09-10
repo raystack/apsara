@@ -30,6 +30,7 @@ describe('CalendarPreview data-slot contract', () => {
       'calendar-preview-table',
       'calendar-preview-skeleton',
       'calendar-preview-weekday',
+      'calendar-preview-day-trigger',
       'calendar-preview-day',
       'calendar-preview-day-number'
     ]);
@@ -49,6 +50,7 @@ describe('CalendarPreview data-slot contract', () => {
         'calendar-preview',
         'calendar-preview-day',
         'calendar-preview-day-number',
+        'calendar-preview-day-trigger',
         'calendar-preview-days',
         'calendar-preview-caption',
         'calendar-preview-grid',
@@ -63,6 +65,55 @@ describe('CalendarPreview data-slot contract', () => {
     );
   });
 
+  /* The inventory above renders the default grid, so a slot that only appears
+     under a prop cannot be caught by it. `showWeekNumber` shipped with two
+     elements carrying an empty `data-slot` for exactly that reason. */
+  it('renders exactly the documented slots with the optional columns on', () => {
+    const { container } = renderCalendar(
+      <CalendarPreview.Days>
+        <CalendarPreview.Grid showWeekNumber fixedWeeks showOutsideDays />
+      </CalendarPreview.Days>
+    );
+    const rendered = new Set(
+      Array.from(container.querySelectorAll('[data-slot]'))
+        .map(element => element.getAttribute('data-slot') ?? '')
+        .filter(name => name.startsWith('calendar-preview'))
+    );
+
+    expect([...rendered].sort()).toEqual(
+      [
+        'calendar-preview',
+        'calendar-preview-day',
+        'calendar-preview-day-number',
+        'calendar-preview-day-trigger',
+        'calendar-preview-days',
+        'calendar-preview-grid',
+        'calendar-preview-skeleton',
+        'calendar-preview-table',
+        'calendar-preview-week-number',
+        'calendar-preview-week-number-header',
+        'calendar-preview-weekday',
+        'calendar-preview-weeks'
+      ].sort()
+    );
+  });
+
+  /* No element may ship a blank slot: `[data-slot]` is the styling and
+     testing contract, and an empty one silently opts out of it. */
+  it('never renders an empty data-slot', () => {
+    const { container } = renderCalendar(
+      <CalendarPreview.Days>
+        <CalendarPreview.Grid showWeekNumber fixedWeeks showOutsideDays />
+      </CalendarPreview.Days>
+    );
+
+    const blank = Array.from(container.querySelectorAll('[data-slot]')).filter(
+      element => element.getAttribute('data-slot')?.trim() === ''
+    );
+
+    expect(blank).toHaveLength(0);
+  });
+
   it('exposes a slot for every element the two-month day view renders', () => {
     const { container } = renderCalendar(
       <CalendarPreview.Days numberOfMonths={2} />
@@ -72,7 +123,7 @@ describe('CalendarPreview data-slot contract', () => {
       'calendar-preview-days',
       'calendar-preview-month-header',
       'calendar-preview-prev-month',
-      'calendar-preview-caption',
+      'calendar-preview-month-header-caption',
       'calendar-preview-next-month',
       'calendar-preview-grid',
       'calendar-preview-table',

@@ -36,7 +36,7 @@ export interface ReasoningProps
   /**
    * Whether the reasoning is still being produced. While `true` the default
    * trigger shows a shimmering "Thinking…" label and the panel auto-opens;
-   * when it flips back to `false` the panel auto-collapses — unless the user
+   * when it flips back to `false` the panel auto-collapses, unless the user
    * has toggled it themselves.
    * @defaultValue false
    */

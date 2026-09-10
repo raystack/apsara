@@ -40,6 +40,26 @@ describe('dayKey', () => {
     expect(dayKey(instant, 'Asia/Tokyo')).toBe('2026-09-01');
     expect(dayKey(instant, 'America/New_York')).toBe('2026-08-31');
   });
+
+  /* `Date.UTC(0, 0, 1)` means 1900, so the far years are set explicitly. Built
+     in UTC, not local: at +14 a local-midnight year 10000 is year 9999 in UTC,
+     and the five-digit case below then has nothing to throw about. */
+  const atYear = (year: number): Date => {
+    const date = new Date(Date.UTC(2000, 0, 1));
+    date.setUTCFullYear(year, 0, 1);
+    return date;
+  };
+
+  it('keeps year 0 distinct from year 1, and round-trips it', () => {
+    expect(dayKey(atYear(0))).toBe('0000-01-01');
+    expect(dayKey(atYear(1))).toBe('0001-01-01');
+    expect(parseKey(dayKey(atYear(0))).getFullYear()).toBe(0);
+  });
+
+  it('throws rather than return a five-digit key', () => {
+    expect(() => dayKey(atYear(10000))).toThrow(RangeError);
+    expect(() => dayKey(atYear(10000), 'Asia/Tokyo')).toThrow(RangeError);
+  });
 });
 
 describe('epoch', () => {
@@ -55,7 +75,8 @@ describe('isDayKey', () => {
     '2026-08-31',
     '2028-02-29',
     '2000-02-29',
-    '0001-01-01'
+    '0001-01-01',
+    '0000-01-01'
   ])('accepts %s', key => {
     expect(isDayKey(key)).toBe(true);
   });
@@ -104,6 +125,10 @@ describe('dayKeyFromParts', () => {
   it('builds a key from 1-indexed months', () => {
     expect(dayKeyFromParts(2026, 8, 31)).toBe('2026-08-31');
     expect(dayKeyFromParts(2026, 1, 5)).toBe('2026-01-05');
+  });
+
+  it('accepts the first year a four-digit key can hold', () => {
+    expect(dayKeyFromParts(0, 1, 1)).toBe('0000-01-01');
   });
 
   it('validates against the real calendar rather than rolling forward', () => {

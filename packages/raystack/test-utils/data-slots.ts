@@ -3,7 +3,7 @@ import { expect } from 'vitest';
 /**
  * Helpers for asserting the `data-slot` contract: every element a component
  * renders carries a stable, kebab-case, component-prefixed `data-slot`
- * identifier (e.g. `filter-chip-remove`). Slot names are public API — tests
+ * identifier (e.g. `filter-chip-remove`). Slot names are public API, so tests
  * use these helpers so a rename fails loudly.
  */
 

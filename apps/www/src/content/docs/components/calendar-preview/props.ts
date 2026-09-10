@@ -1,5 +1,7 @@
 import { ReactNode } from 'react';
 
+type Scale = 'day' | 'month' | 'quarter' | 'halfYear' | 'year';
+
 export interface CalendarPreviewProps {
   /** The selected day (controlled). */
   value?: Date | null;
@@ -56,14 +58,37 @@ export interface CalendarPreviewProps {
 
   /**
    * The day `.Reset` restores. Read even when `value` is controlled, which
-   * `defaultValue` is not.
+   * `defaultValue` is not. `null` is a default of nothing selected, so
+   * `.Reset` clears; omitting the prop renders no button at all. It follows
+   * the selection: a range at `selection="range"`, a period at a coarser
+   * scale.
    */
-  defaultDate?: Date;
+  defaultDate?:
+    | Date
+    | { from: Date; to: Date }
+    | { date: string; scale: Scale }
+    | null;
 
-  /** Renders a value for display. Defaults to `DD/MM/YYYY` at day scale. */
-  formatValue?: (value: Date, scale: string) => string;
+  /**
+   * Renders a value for display — every trigger, input and annotation goes
+   * through it. Defaults to `DD MMM YYYY` at day scale, and the period's own
+   * shorthand above it.
+   */
+  formatValue?: (
+    value: Date | { date: string; scale: Scale },
+    scale: Scale
+  ) => string;
 
-  /** Forwarded to the grid. No conversion is done here. */
+  /**
+   * The zone the grid reads days in. Forwarded to the grid; the component does
+   * no conversion of its own.
+   *
+   * Every `Date` prop and every `Date` handed back is an instant, not a
+   * calendar day, so the calendar shows the day that instant falls on in this
+   * zone. With `timeZone="Pacific/Niue"`, `new Date(2026, 7, 1)` is 31 July
+   * there. Build dates for a zoned calendar from `Date.UTC`, not from local
+   * calendar fields.
+   */
   timeZone?: string;
 
   /** Today, injectable so a calendar renders deterministically in tests. */
@@ -83,6 +108,9 @@ export interface CalendarPreviewProps {
    * @default false
    */
   readOnly?: boolean;
+
+  /** Merged with the part's own classes. */
+  className?: string;
 }
 
 export interface CalendarPreviewDaysProps {
@@ -92,6 +120,9 @@ export interface CalendarPreviewDaysProps {
    * @default 1
    */
   numberOfMonths?: number;
+
+  /** Merged with the part's own classes. */
+  className?: string;
 }
 
 export interface CalendarPreviewCaptionProps {
@@ -100,10 +131,18 @@ export interface CalendarPreviewCaptionProps {
    * @default false
    */
   dropdown?: boolean;
+
+  /** Merged with the part's own classes. */
+  className?: string;
 }
 
 export interface CalendarPreviewGridProps {
-  /** Always render six week rows, so the grid height never jumps. */
+  /**
+   * Always render six week rows, so the grid height never jumps between a 4-,
+   * 5- and 6-row month. Opt out where the calendar is inline and the trailing
+   * blank row is not wanted.
+   * @default true
+   */
   fixedWeeks?: boolean;
 
   /**
@@ -141,6 +180,62 @@ export interface CalendarPreviewGridProps {
 
   /** Cover the grid with a skeleton and stop navigation. */
   loading?: boolean;
+
+  /** Merged with the part's own classes. */
+  className?: string;
+}
+
+export interface CalendarPreviewHeaderProps {
+  /** Merged with the part's own classes. */
+  className?: string;
+}
+
+export interface CalendarPreviewNavProps {
+  /** Merged with the part's own classes. */
+  className?: string;
+}
+
+export interface CalendarPreviewFooterProps {
+  /** Merged with the part's own classes. */
+  className?: string;
+}
+
+export interface CalendarPreviewResetProps {
+  /** Merged with the part's own classes. */
+  className?: string;
+}
+
+/** What the enclosing root exposes to a custom part. */
+export interface UseCalendarReturn {
+  /** The committed day, or null. */
+  value: Date | null;
+
+  /** Commit a day, or clear with `null`. Emits `onValueChange`. */
+  setValue: (value: Date | null) => void;
+
+  /** The granularity the value is committed at. Read-only until phase 5. */
+  scale: 'day' | 'month' | 'quarter' | 'halfYear' | 'year';
+
+  /** The first month currently displayed. */
+  month: Date;
+
+  /** Move the view. Bounds never clamp it. */
+  setMonth: (month: Date) => void;
+
+  /** Whether a day is out of bounds or rejected. */
+  isDateUnavailable: (date: Date) => boolean;
+}
+
+/** The second argument to `onValueChange`. */
+export interface CalendarPreviewChangeDetails {
+  /** What caused the change. */
+  reason: 'select' | 'input' | 'clear' | 'reset' | 'scale';
+
+  /** Both edges of the period. At day scale they are the same day. */
+  period: { start: string; end: string };
+
+  /** The day acted on — never null, even when the value is. */
+  toDate: () => Date;
 }
 
 export interface CalendarPreviewInputProps {
@@ -158,13 +253,28 @@ export interface CalendarPreviewInputProps {
   trailingIcon?: ReactNode;
 
   /**
-   * Called when the typed text starts or stops being a usable date.
-   * @example onValidityChange={({ valid, reason }) => setError(reason)}
+   * Called when the typed text starts or stops being a usable date. `message`
+   * is resolved against `errorMessages` and absent while valid, so it can be
+   * handed straight to `Field`'s `error`.
+   * @example onValidityChange={({ message }) => setError(message)}
    */
   onValidityChange?: (validity: {
     valid: boolean;
-    reason?: 'unparseable' | 'out-of-bounds' | 'unavailable';
+    reason?: 'unparseable' | 'out-of-bounds' | 'unavailable' | 'out-of-order';
+    message?: string;
   }) => void;
+
+  /**
+   * Replaces the message for one or more reasons; anything left out keeps the
+   * default.
+   * @default "Invalid input", except out-of-order, which words itself
+   */
+  errorMessages?: Partial<
+    Record<
+      'unparseable' | 'out-of-bounds' | 'unavailable' | 'out-of-order',
+      string
+    >
+  >;
 
   /** Read and navigable, but not typeable. */
   readOnly?: boolean;

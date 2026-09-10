@@ -234,7 +234,7 @@ describe('PromptInput', () => {
   // The header and footer carry `pointer-events: none`, so in a browser a press
   // on their padding is hit-tested to the form and arrives here with the form as
   // its target. jsdom applies no stylesheet and does no hit testing, so these
-  // press the form directly — the slots' own presses cannot be simulated.
+  // press the form directly, since the slots' own presses cannot be simulated.
   describe('Click to focus', () => {
     it('focuses the textarea when the frame is pressed', () => {
       const { container } = render(<BasicPromptInput />);

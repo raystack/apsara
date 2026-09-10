@@ -18,27 +18,9 @@ import { Label } from '@raystack/apsara'
 <Label htmlFor="email">Email</Label>
 ```
 
-## API Reference
+## Usage
 
-Renders a text label for form elements. Outside of a `Field`, use `Label` to
-attach a label to a control via `htmlFor`. Inside a `Field`, prefer
-`Field.Label` so the label is wired up to the field automatically.
-
-`Label` is layout-neutral — compose it with `Flex` (or wrap a control as a
-child) to lay out the label and its control.
-
-<auto-type-table path="./props.ts" name="LabelProps" />
-
-### Slots
-
-Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
-
-| Slot | Element |
-|------|---------|
-| `label` | The `<label>` element |
-| `label-indicator` | The optional/required indicator text (when `required={false}`, or `required` with `requiredText`) |
-
-## Examples
+A label names a control and, where it helps, says whether filling that control in is optional.
 
 ### Inline with a control
 
@@ -52,6 +34,26 @@ Pass `required={false}` to display an `(optional)` indicator next to the label.
 Override the text via `optionalText`.
 
 <Demo data={optionalDemo} />
+
+## API Reference
+
+Renders a text label for form elements. Outside of a `Field`, use `Label` to
+attach a label to a control via `htmlFor`. Inside a `Field`, prefer
+`Field.Label` so the label is wired up to the field automatically.
+
+`Label` is layout-neutral, so compose it with `Flex` (or wrap a control as a
+child) to lay out the label and its control.
+
+<auto-type-table path="./props.ts" name="LabelProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `label` | The `<label>` element |
+| `label-indicator` | The optional/required indicator text (when `required={false}`, or `required` with `requiredText`) |
 
 ## Accessibility
 

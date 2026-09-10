@@ -4,7 +4,7 @@ import { groupData } from '../utils';
 
 /**
  * `groupData` produces the sections every renderer walks, so its bucket order
- * *is* the rendered section order — `DataView.List`'s bands and
+ * *is* the rendered section order, so `DataView.List`'s bands and
  * `DataView.Timeline`'s group sections both read it.
  */
 interface Task {

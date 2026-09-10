@@ -1,18 +1,11 @@
 /*
  * Turning a typed string into a `ScaleValue` — pure functions, no React, no UI.
  *
- * A scale-aware input accepts more than one shape of date, because the scales
- * are what the user is choosing between: `20/05/2027` is a day, `Q4` is a
- * quarter, `2025` is a year. Parsing therefore decides both the date *and* the
- * scale, and the two are returned together for the same reason the committed
- * value carries its scale.
- *
- * Recognition is deliberately narrow. Every accepted shape is pinned by a
+ * Recognition is deliberately narrow: every accepted shape is pinned by a
  * regular expression before any date maths runs, so a near-miss is rejected
- * rather than coerced: the failure mode this replaces is dayjs'
- * `customParseFormat`, which is lenient enough to read `20/05/27` as the year
- * 27. Anything not listed below returns `null` and the caller keeps the field's
- * previous value.
+ * rather than coerced. The failure mode this replaces is dayjs'
+ * `customParseFormat`, lenient enough to read `20/05/27` as the year 27.
+ * Anything unrecognised returns `null` and the caller keeps its previous value.
  */
 import { dayKeyFromParts, isDayKey, monthFromName } from '../date-adapter';
 import { anchorOf, periodOf, type ScaleValue } from './scale';
@@ -60,13 +53,10 @@ const YEAR = /^(\d{4})$/;
  * | `H1 2026`, `H1` | `halfYear` | H1 is Jan-Jun, H2 is Jul-Dec |
  * | `2025` | `year` | exactly four digits |
  *
- * **Year inference.** A bare `Q4`, `H1` or `May` resolves inside the *reference
- * year* — the calendar year of `referenceDate`, which defaults to now. The rule
- * never rolls forward: `Q1` typed in December 2026 is Q1 **2026**, not Q1 2027.
- * A "next occurrence" rule would make the same typed string mean different
- * years depending on the day it was typed — `Q1` would change meaning across
- * midnight on 31 December, and a stored value would not agree with the string
- * that produced it after a reload. A user who means another year types it.
+ * **Year inference.** A bare `Q4`, `H1` or `May` resolves inside the calendar
+ * year of `referenceDate`, and never rolls forward: `Q1` typed in December
+ * 2026 is Q1 **2026**. Rolling forward would make the same string mean
+ * different years either side of midnight on 31 December.
  *
  * The returned date is the period's edge under `trailing`, matching what
  * clicking that period in the calendar would commit — so typing `Q4 2026` and
@@ -137,18 +127,13 @@ export function parseScaleInput(
   return null;
 }
 
-/** The explicit year when the input carried one, else the reference year. */
 function yearFrom(matched: string | undefined, reference?: Date): number {
   if (matched !== undefined) return Number(matched);
   return (reference ?? new Date()).getFullYear();
 }
 
-/**
- * The value for the period of `scale` that starts in `year`-`month`.
- *
- * `month` is the period's first month, so the first of it always exists and
- * always lands inside the period — the edge maths is then `scale.ts`'s.
- */
+/* `month` is the period's first month, so the first of it always exists and
+   always lands inside the period — the edge maths is then `scale.ts`'s. */
 function at(
   year: number,
   month: number,

@@ -13,7 +13,7 @@ export interface PromptInputMentionItem {
    */
   type?: string;
   icon?: ReactNode;
-  /** Trailing metadata — a badge, a shortcut, a timestamp. */
+  /** Trailing metadata: a badge, a shortcut, a timestamp. */
   trailing?: ReactNode;
   /** Section heading. Groups render in first-appearance order. */
   group?: string;
@@ -68,12 +68,12 @@ function sameData(
  * back when assembling a message).
  *
  * `icon`, `trailing` and `data` cannot survive serialization, so they live here
- * rather than on the document — keyed by `trigger|type|id`, filled in when an
+ * rather than on the document, keyed by `trigger|type|id` and filled in when an
  * item is picked from the menu or returned by `resolveMentions`.
  *
  * Registration is split from data on purpose. The trigger is established once,
  * while the data is pushed after every `Mentions` render and compared field by
- * field — so an inline `items` array stays live without a config object whose
+ * field, so an inline `items` array stays live without a config object whose
  * identity churns and restarts an in-flight search.
  */
 export class PromptInputMentionRegistry {
@@ -142,7 +142,7 @@ export class PromptInputMentionRegistry {
   /**
    * Bumped by every mutation. Read as a `useSyncExternalStore` snapshot, so a
    * reader that mounts after a writer has already emitted still sees the
-   * change — `Mentions` registers its trigger in an effect that runs before a
+   * change, since `Mentions` registers its trigger in an effect that runs before a
    * later sibling `Editor` has subscribed.
    */
   getRevision = (): number => this.revision;

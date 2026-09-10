@@ -1,7 +1,10 @@
 .container {
   display: flex;
   flex-direction: column;
-  border-radius: var(--rs-radius-2, 4px);
+  /* The card is a single surface. The canvas and the code strip below it are
+     divided by a hairline, not by a change of color. */
+  background-color: var(--docs-bg-surface);
+  border-radius: var(--docs-surface-radius);
   overflow: clip;
   border: 1px solid var(--rs-color-border-base-primary);
   width: 100%;
@@ -22,7 +25,7 @@
   justify-content: center;
   min-height: 368px;
   min-width: 0;
-  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+  border-bottom: var(--docs-rule);
 }
 
 .preview:has(:global(.navbar-demo-wrapper)) {
@@ -37,9 +40,9 @@
   flex-direction: column;
   gap: var(--rs-space-6, 20px);
   padding: var(--rs-space-5, 16px);
-  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
-  border-left: 0.5px solid var(--rs-color-border-base-primary);
-  background-color: var(--rs-color-background-base-primary);
+  border-bottom: var(--docs-rule);
+  border-left: var(--docs-rule);
+  background-color: var(--docs-bg-surface);
   overflow-x: hidden;
   overflow-y: auto;
   flex-shrink: 0;
@@ -62,8 +65,8 @@
   flex-direction: column;
   gap: var(--rs-space-5, 16px);
   padding: var(--rs-space-3, 8px);
-  background-color: var(--rs-color-background-base-secondary);
-  border: 0.5px solid var(--rs-color-border-base-primary);
+  background-color: var(--docs-bg-surface);
+  border: var(--docs-rule);
   border-radius: var(--rs-radius-2, 4px);
   width: 100%;
 }
@@ -104,8 +107,8 @@
 
 .tabs {
   display: flex;
-  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
-  background-color: var(--rs-color-background-base-secondary);
+  border-bottom: var(--docs-rule);
+  background-color: var(--docs-bg-surface);
 }
 
 .tab {
@@ -150,25 +153,23 @@
   .form {
     width: 100%;
     max-height: 280px;
-    border-top: 0.5px solid var(--rs-color-border-base-primary);
+    border-top: var(--docs-rule);
     border-left: none;
   }
 }
 
 .playgroundDialog {
-  height: 88vh;
-  width: 72%;
   width: 1048px;
   height: 880px;
-  border-radius: var(--rs-radius-2);
+  border-radius: var(--docs-surface-radius);
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
 .playgroundHeader {
-  border: 0.5px solid var(--rs-color-border-base-primary);
-  background: var(--rs-color-background-base-secondary);
+  border: var(--docs-rule);
+  background: var(--docs-bg-surface);
   height: 32px;
   padding: 0 var(--rs-space-5);
 }
@@ -202,7 +203,7 @@
 
 .playgroundEditor {
   flex: 1;
-  border-top: 0.5px solid var(--rs-color-border-base-primary);
+  border-top: var(--docs-rule);
   overflow: auto;
 }
 

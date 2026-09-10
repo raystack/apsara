@@ -2,7 +2,6 @@
 title: Navbar
 description: A horizontal navigation bar component with flexible start, center, and end sections for building site headers and navigation.
 source: packages/raystack/components/navbar
-tag: new
 ---
 
 import "./demo.css";
@@ -30,7 +29,37 @@ import { Navbar } from "@raystack/apsara";
 </Navbar>
 ```
 
+## Usage
+
+The bar has three regions: start, center and end. The props below cover how it behaves as the page scrolls.
+
+### Sticky navigation
+
+A sticky navbar stays pinned while the page scrolls. Use it when navigation has to stay reachable on long pages.
+
+<Demo data={stickyDemo} />
+
+### Section layouts
+
+Start, Center, and End are independent, so use any combination. The three-column grid keeps Center optically centred even when Start and End differ in width.
+
+<Demo data={sectionsDemo} />
+
+### Hide on scroll
+
+Set `hideOnScroll` to hide the navbar when the user scrolls down and show it when they scroll up. It works with both window scroll and scroll containers (e.g. ScrollArea). The navbar slides out of view with a transition. The slide animation is only visible when the navbar is sticky (or fixed); without it, the navbar scrolls away with the content.
+
+<Demo data={hideOnScrollDemo} />
+
+### Labelling sections
+
+Pass `aria-label` to the navbar or to any individual section. Do it when a page has more than one navigation landmark, so screen-reader users can tell them apart.
+
+<Demo data={accessibilityDemo} />
+
 ## API Reference
+
+The bar and its three regions.
 
 ### Root
 
@@ -46,7 +75,7 @@ The start section is a container that accepts Flex props (`align`, `gap`, `direc
 
 ### Center
 
-The center section sits in the middle of the navbar in a fixed position—it stays absolutely centered regardless of the width of Start or End content. The navbar uses a 3-column grid (Start | Center | End) so the center does not shift when left or right content changes. It accepts Flex props and section props.
+The center section sits in the middle of the navbar in a fixed position, so it stays absolutely centered regardless of the width of Start or End content. The navbar uses a 3-column grid (Start | Center | End) so the center does not shift when left or right content changes. It accepts Flex props and section props.
 
 <auto-type-table path="./props.ts" name="NavbarCenterProps" />
 
@@ -67,32 +96,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `navbar-start` | `Navbar.Start` section |
 | `navbar-center` | `Navbar.Center` section |
 | `navbar-end` | `Navbar.End` section |
-
-## Examples
-
-### Sticky Navigation
-
-The Navbar can be made sticky to remain visible at the top of the viewport when scrolling.
-
-<Demo data={stickyDemo} />
-
-### Section Layouts
-
-You can use any combination of Start, Center, and End. The navbar uses a 3-column grid so each section renders in its own space; the center remains absolutely centered.
-
-<Demo data={sectionsDemo} />
-
-### Hide on scroll
-
-Set `hideOnScroll` to hide the navbar when the user scrolls down and show it when they scroll up. It works with both window scroll and scroll containers (e.g. ScrollArea). The navbar slides out of view with a transition. The slide animation is only visible when the navbar is sticky (or fixed); without it, the navbar simply scrolls away with the content.
-
-<Demo data={hideOnScrollDemo} />
-
-### Accessibility
-
-The Navbar supports custom ARIA labels for better screen reader support. You can provide descriptive labels for the entire navbar or individual sections.
-
-<Demo data={accessibilityDemo} />
 
 ## Accessibility
 

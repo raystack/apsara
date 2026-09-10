@@ -26,30 +26,17 @@ import { Skeleton } from "@raystack/apsara";
 <Skeleton />
 ```
 
-## API Reference
+## Usage
 
-Renders a placeholder loading animation that mimics content layout.
+A skeleton stands in for content that has not arrived. The provider lets a whole subtree switch between loading and loaded at once.
 
-<auto-type-table path="./props.ts" name="SkeletonProps" />
-
-### Slots
-
-Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
-
-| Slot | Element |
-|------|---------|
-| `skeleton` | The container element |
-| `skeleton-item` | Each skeleton bar (repeated `count` times) |
-
-## Examples
-
-### Basic Usage
+### Basic usage
 
 A simple skeleton loader with fixed dimensions.
 
 <Demo data={basicDemo} />
 
-### Multiple Lines
+### Multiple lines
 
 Create multiple skeleton lines using the count prop.
 
@@ -61,27 +48,27 @@ Group multiple skeletons and share common props using Skeleton.Provider.
 
 <Demo data={providerDemo} />
 
-### Custom Styles
+### Custom styles
 
 Customize the appearance using baseColor and highlightColor.
 
 <Demo data={customStylesDemo} />
 
-### Animation Control
+### Animation control
 
 Control the animation duration or disable it entirely.
 
 <Demo data={animationDemo} />
 
-### Complex Layout
+### Complex layout
 
 Create a card-like loading state by combining multiple skeletons.
 
 <Demo data={cardDemo} />
 
-## Provider Pattern
+### Provider
 
-The Skeleton component supports a Provider pattern that allows you to share common props across multiple skeleton instances:
+`Skeleton.Provider` shares props with every skeleton beneath it, so a group of placeholders can be tuned in one place. Any child can override what it inherits.
 
 ```tsx
 <Skeleton.Provider
@@ -99,6 +86,21 @@ The Skeleton component supports a Provider pattern that allows you to share comm
 ```
 
 All props available on the Skeleton component can be passed to the Provider and will be inherited by child Skeleton components. Individual Skeleton components can override any provider props with their own values.
+
+## API Reference
+
+Renders a placeholder loading animation that mimics content layout.
+
+<auto-type-table path="./props.ts" name="SkeletonProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `skeleton` | The container element |
+| `skeleton-item` | Each skeleton bar (repeated `count` times) |
 
 ## Accessibility
 

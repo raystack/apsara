@@ -5,6 +5,7 @@ import { cx } from 'class-variance-authority';
 import { type ComponentProps, type FocusEvent, useRef } from 'react';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
+import { type CalendarPreviewValue, isRange } from './calendar-preview-root';
 
 export interface CalendarPreviewTriggerProps
   extends useRender.ComponentProps<'div'> {
@@ -45,7 +46,9 @@ export function CalendarPreviewTrigger({
     shouldIgnoreFocusOpen,
     disabled,
     readOnly
-  } = useCalendarPreviewContext('CalendarPreview.Trigger');
+  } = useCalendarPreviewContext<CalendarPreviewValue>(
+    'CalendarPreview.Trigger'
+  );
 
   /* Tracks the pointer, not the open state: Base UI owns whether the popover
      is open, and this only says whether a press is mid-flight. */
@@ -87,10 +90,19 @@ export function CalendarPreviewTrigger({
     )
   } as ComponentProps<typeof Popover.Trigger>;
 
+  /* `formatValue` takes a single value, so a range formats as its two ends. A
+     period carries its own scale, which is the one it reads back at. */
+  const label =
+    value instanceof Date
+      ? formatValue(value, scale)
+      : isRange(value)
+        ? `${formatValue(value.from, scale)} – ${formatValue(value.to, scale)}`
+        : value
+          ? formatValue(value, value.scale)
+          : placeholder;
+
   return (
-    <Popover.Trigger {...triggerProps}>
-      {children ?? (value ? formatValue(value, scale) : placeholder)}
-    </Popover.Trigger>
+    <Popover.Trigger {...triggerProps}>{children ?? label}</Popover.Trigger>
   );
 }
 

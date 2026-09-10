@@ -26,7 +26,7 @@ import { usePrefersReducedMotion } from './use-prefers-reduced-motion';
 import { resolveTourTarget, useTourTarget } from './use-tour-target';
 import { rectsEqual } from './utils';
 
-// Must match --rs-duration-fast — the .spotlightCover fade in tour.module.css.
+// Must match --rs-duration-fast, the .spotlightCover fade in tour.module.css.
 const FADE_OUT_MS = 150;
 
 const REVEAL_TIMEOUT_MS = 2000;
@@ -100,11 +100,11 @@ export interface TourRootProps {
   /**
    * How the popover card travels between steps. `fade` (default) cross-fades it
    * at each target; `move` glides it smoothly from one target to the next. The
-   * spotlight always cross-fades regardless — it never slides. @default 'fade'
+   * spotlight always cross-fades regardless and never slides. @default 'fade'
    */
   transition?: TourTransition;
   /**
-   * Hide the dimmed overlay for the whole tour — only the popover is shown and
+   * Hide the dimmed overlay for the whole tour, so only the popover is shown and
    * the page stays fully interactive. Steps can override with
    * `step.disableOverlay`. @default false
    */
@@ -247,7 +247,7 @@ export function TourRoot({
     }
   }, [emit, setIndex, setOpen]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on open/index, not `step` — inline steps arrays give function targets a fresh identity each render.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on open/index, not `step`, since inline steps arrays give function targets a fresh identity each render.
   const target = useMemo(
     () => (open ? step?.target : undefined),
     [open, index]
@@ -379,7 +379,7 @@ export function TourRoot({
     emit({ type: 'step:active', index, step });
   }, [open, popoverOpen, index, step, emit]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on `index`, not `step` — the per-render `step` identity would re-fire this and fight the user's scroll.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on `index`, not `step`, since the per-render `step` identity would re-fire this and fight the user's scroll.
   useEffect(() => {
     if (!popoverOpen || !step || step.disableScroll) return;
     const el = resolveTourTarget(step.scrollTarget) ?? anchor;
