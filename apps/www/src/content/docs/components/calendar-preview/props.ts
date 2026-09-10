@@ -51,7 +51,9 @@ export interface CalendarPreviewProps {
   maxDate?: Date;
 
   /**
-   * Reject individual days, on top of `minDate` / `maxDate`.
+   * Reject individual days, on top of `minDate` / `maxDate`. Day scale only —
+   * period cells never call it, and are bounded by `minDate` / `maxDate`
+   * against the day they would emit.
    * @example isDateUnavailable={date => date.getDay() === 0}
    */
   isDateUnavailable?: (date: Date) => boolean;

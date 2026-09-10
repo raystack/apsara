@@ -266,6 +266,8 @@ Each part renders a default; children replace it.
 
 `minDate`, `maxDate` and `isDateUnavailable` disable cells. **None of them clamps navigation** — the chevrons and the scroller still reach any month. Bounds compare whole calendar days, so a `minDate` carrying a time of day still leaves its own day selectable.
 
+`isDateUnavailable` is **day scale only**. A month, quarter, half-year or year cell never calls it — a day predicate has no single lift to a period, and answering per cell would run it 365 times a year. Period cells are bounded by `minDate` and `maxDate` instead, tested against the day the cell would emit, which is the same rule that makes a period available to one end of a pair and not the other.
+
 <Demo data={boundsDemo} />
 
 ### Grid layout

@@ -692,6 +692,41 @@ export const scaleDemo = {
             >
               <CalendarPreview.Body />
             </CalendarPreview>`
+    },
+    {
+      name: 'Trailing value',
+      code: `
+function CalendarPreviewTrailingExample() {
+  const scales = ['day', 'month', 'quarter', 'halfYear', 'year'];
+  const [start, setStart] = React.useState({ date: '2026-07-01', scale: 'quarter' });
+  const [end, setEnd] = React.useState({ date: '2026-09-30', scale: 'quarter' });
+
+  return (
+    <Flex direction="column" gap={5}>
+      <Flex align="center" gap={3}>
+        <CalendarPreview scales={scales} value={start} onValueChange={setStart}>
+          <CalendarPreview.Trigger placeholder="Add start date" />
+          <CalendarPreview.Content>
+            <CalendarPreview.Body />
+          </CalendarPreview.Content>
+        </CalendarPreview>
+
+        <Text size="small" variant="secondary">→</Text>
+
+        <CalendarPreview scales={scales} trailingValue value={end} onValueChange={setEnd}>
+          <CalendarPreview.Trigger placeholder="Add end date" />
+          <CalendarPreview.Content>
+            <CalendarPreview.Body />
+          </CalendarPreview.Content>
+        </CalendarPreview>
+      </Flex>
+
+      <Text size="micro" variant="secondary">
+        Emitted: {start.date} → {end.date}
+      </Text>
+    </Flex>
+  );
+}`
     }
   ]
 };
