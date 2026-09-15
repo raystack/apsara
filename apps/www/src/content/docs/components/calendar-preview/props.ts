@@ -3,24 +3,64 @@ import { ReactNode } from 'react';
 type Scale = 'day' | 'month' | 'quarter' | 'halfYear' | 'year';
 
 export interface CalendarPreviewProps {
-  /** The selected day (controlled). */
-  value?: Date | null;
-
-  /** The initially selected day (uncontrolled). */
-  defaultValue?: Date | null;
+  /**
+   * Whether the grid picks one day or a span. A range is two edges or nothing;
+   * the half-built state stays internal.
+   * @default "single"
+   */
+  selection?: 'single' | 'range';
 
   /**
-   * Called when a day is committed or cleared. `details.toDate()` returns the
-   * day acted on even when `value` is `null`.
+   * The selected value (controlled). Its shape follows the root: a `Date` by
+   * default, `{ from, to }` at `selection="range"`, and `{ date, scale }` once
+   * `scales` offers anything beyond `"day"` — `date` is a timeless
+   * `"YYYY-MM-DD"`.
+   */
+  value?:
+    | Date
+    | { from: Date; to: Date }
+    | { date: string; scale: Scale }
+    | null;
+
+  /** The initial value (uncontrolled). Same shape as `value`. */
+  defaultValue?:
+    | Date
+    | { from: Date; to: Date }
+    | { date: string; scale: Scale }
+    | null;
+
+  /**
+   * Called when a value is committed or cleared, with the same shape as
+   * `value`. `details.toDate()` returns the day acted on even when the value is
+   * `null`. A range fires on a complete range or not at all.
    * @example onValueChange={(value, details) => console.log(details.reason)}
    */
   onValueChange?: (
-    value: Date | null,
+    value:
+      | Date
+      | { from: Date; to: Date }
+      | { date: string; scale: Scale }
+      | null,
     details: {
-      reason: 'select' | 'input' | 'clear' | 'scale';
+      reason: 'select' | 'input' | 'clear' | 'reset' | 'scale';
       period: { start: string; end: string };
       toDate: () => Date;
     }
+  ) => void;
+
+  /** Whether the popover is open (controlled). Ignored by an inline calendar. */
+  open?: boolean;
+
+  /** @default false */
+  defaultOpen?: boolean;
+
+  /**
+   * Called when the popover opens or closes. `details` is Base UI's own,
+   * forwarded unchanged, so `details.reason` stays the union it narrows on.
+   */
+  onOpenChange?: (
+    open: boolean,
+    details: { reason?: string; event?: Event }
   ) => void;
 
   /** The first month the grid displays (controlled). */
@@ -84,6 +124,12 @@ export interface CalendarPreviewProps {
   /**
    * The granularities this root offers. One entry hides the switcher; anything
    * beyond `"day"` moves the value to `{ date, scale }`.
+   *
+   * The array form takes the scale-aware arm whatever it holds, so
+   * `scales={['day']}` types the value as `{ date, scale }` while the bare
+   * string `scales="day"` keeps it a `Date`. TypeScript cannot read an array's
+   * contents, so the two spellings of a day-only calendar are not equivalent —
+   * pass the string unless you want the period shape.
    * @default "day"
    * @example scales={['day', 'month', 'quarter']}
    */
