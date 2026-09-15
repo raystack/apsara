@@ -42,8 +42,6 @@ export function isRange(value: unknown): value is CalendarPreviewDateRange {
   return value != null && typeof value === 'object' && 'from' in value;
 }
 
-/* The one day a value stands for, whichever shape it takes: the month to open
-   on, and the day a change reports. */
 export function monthAnchor(
   value: CalendarPreviewValue | undefined
 ): Date | undefined {
@@ -114,18 +112,20 @@ interface CalendarPreviewRangeProps {
    moves to `ScaleValue`. The wart is that `scales={['day']}` takes this arm
    where `scales='day'` does not (RFC 005, Open Item 1). */
 interface CalendarPreviewScaleAwareProps {
-  /* A start/end pair is two independent roots, each with its own `scales` and
-     `trailingValue`, so there is no range arm here. */
+  /* A start/end pair is two roots, each with its own `scales`, so no range
+     arm belongs here. */
   selection?: 'single';
   scales: Exclude<Scale, 'day'> | Scale[];
-  /** The selected period. `date` is timeless `'YYYY-MM-DD'`. */
+  /** The selected period (controlled). `date` is timeless `'YYYY-MM-DD'`. */
   value?: ScaleValue | null;
+  /** The initially selected period (uncontrolled). */
   defaultValue?: ScaleValue | null;
+  /** Called when a period is committed or cleared. */
   onValueChange?: (
     value: ScaleValue | null,
     details: CalendarPreviewChangeDetails
   ) => void;
-  /** The period `.Reset` restores. `null` clears; omitted renders no button. */
+  /** The period `.Reset` restores, read even when `value` is controlled. */
   defaultDate?: ScaleValue | null;
 }
 
@@ -138,14 +138,15 @@ export type CalendarPreviewProps = (
 
 interface CalendarPreviewSharedProps
   extends Omit<useRender.ComponentProps<'div'>, 'defaultValue' | 'onChange'> {
-  /** The scale the picker opens on. @defaultValue the first of `scales` */
+  /** @defaultValue the first of `scales` */
   defaultScale?: Scale;
+  /** The active scale (controlled). */
   scale?: Scale;
+  /** Called when the switcher moves. */
   onScaleChange?: (scale: Scale) => void;
   /**
-   * Whether a period emits its last day rather than its first: an end field
-   * wants 31 July from "July 2026", a start field wants the 1st. The value
-   * changes, not the formatting.
+   * Whether a period emits its last day rather than its first — an end field
+   * wants 31 July from "July 2026", a start field the 1st.
    * @defaultValue false
    */
   trailingValue?: boolean;
@@ -178,19 +179,11 @@ interface CalendarPreviewSharedProps
   minDate?: Date;
   /** Latest selectable day, inclusive. Never clamps navigation. */
   maxDate?: Date;
-  /**
-   * Reject individual days. Applied on top of `minDate` / `maxDate`.
-   *
-   * **Day scale only** — a day predicate has no one lift to a period, and
-   * asking it per cell would run it 365 times a year. Period cells are bounded
-   * by `minDate` / `maxDate`, tested against the day the cell would emit.
-   */
+  /* Day scale only: a day predicate has no one lift to a period. Period cells
+     are bounded by `minDate` / `maxDate` instead. */
   isDateUnavailable?: (date: Date) => boolean;
 
-  /**
-   * Renders a value for display.
-   * @defaultValue `DD MMM YYYY` at day scale
-   */
+  /** @defaultValue `DD MMM YYYY` at day scale, the period's shorthand above it */
   formatValue?: (value: Date | ScaleValue, scale: Scale) => string;
 
   /**
@@ -316,8 +309,6 @@ export function CalendarPreviewRoot({
     state: 'month'
   });
 
-  /* Normalised to `SCALES` order, so the switcher reads finest-first whatever
-     order the consumer passed, and unknown entries drop out. */
   const scales = useMemo<readonly Scale[]>(() => {
     const list = (Array.isArray(scalesProp) ? scalesProp : [scalesProp]).filter(
       isScale
@@ -334,8 +325,7 @@ export function CalendarPreviewRoot({
 
   const [scaleDraft, setScaleDraft] = useState<ScaleValue | null>(null);
 
-  /* The only runtime read of the arms' rule: an array carries the scale even
-     when that scale is `'day'`. */
+  /* An array carries the scale even when that scale is `'day'`. */
   const carriesScale = Array.isArray(scalesProp) || scalesProp !== 'day';
 
   const setMonth = useCallback(
@@ -360,8 +350,8 @@ export function CalendarPreviewRoot({
       setValueUnwrapped(next);
       emit?.(next, {
         reason,
-        /* The scale that was committed, not the one on screen: typing
-           "Q4 2026" commits a quarter while the view is still on days. */
+        /* The committed scale, not the view's: typing "Q4 2026" commits a
+           quarter while the view is still on days. */
         period: periodOf(
           occasion,
           isScaleValue(next) ? next.scale : scale,
@@ -454,8 +444,7 @@ export function CalendarPreviewRoot({
           : value instanceof Date
             ? dayKey(value, timeZone)
             : null;
-        /* The input reads the draft first, so leaving one behind would show
-           the day the user passed through on the way back down. */
+        /* The input reads the draft first, so a stale one would show. */
         setScaleDraft(null);
         if (current === key && clearable) setValue(null, 'clear', date);
         else
@@ -512,12 +501,10 @@ export function CalendarPreviewRoot({
     return null;
   }, [scaleDraft, value, scale, timeZone]);
 
-  /* Never emits: the draft is what the user is looking at, and a cell click
-     or Enter commits it. */
+  /* Never emits: a cell click or Enter commits the draft. */
   const switchScale = useCallback(
     (next: Scale) => {
-      /* The month on screen, not today: someone who navigated to 2030 must
-         not be thrown back by switching scale. */
+      /* The month on screen, not today, or 2030 snaps back. */
       const anchor = scaleValue ?? {
         date: dayKey(month, timeZone),
         scale
@@ -543,8 +530,6 @@ export function CalendarPreviewRoot({
     [trailingValue, timeZone, readOnly, disabled, setValue, setOpen]
   );
 
-  /* The scale comes back with the value: a day rendered at the drafted quarter
-     scale would still read "Q3 2026". */
   const dropDraft = useCallback(() => {
     setScaleDraft(null);
     setScaleUnwrapped(isScaleValue(value) ? value.scale : scales[0]);
@@ -585,7 +570,6 @@ export function CalendarPreviewRoot({
      consumer that logs or validates on selection needs to tell them apart. */
   const reset = useCallback(() => {
     if (defaultDate === undefined) return;
-    /* Settles the scale the way dropping a draft does, for the same reason. */
     setScaleDraft(null);
     setScaleUnwrapped(
       isScaleValue(defaultDate) ? defaultDate.scale : scales[0]
@@ -597,8 +581,6 @@ export function CalendarPreviewRoot({
       setValue(null, 'clear', monthAnchor(value) ?? today);
       return;
     }
-    /* `occasion` is one day, so a range reports the day it starts on and a
-       period the day it anchors to. */
     setValue(defaultDate, 'reset', monthAnchor(defaultDate) ?? today);
   }, [defaultDate, value, scales, setScaleUnwrapped, setValue, today]);
 

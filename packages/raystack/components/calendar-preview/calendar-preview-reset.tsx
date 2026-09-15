@@ -15,16 +15,8 @@ import { dayKey } from './date-adapter';
 
 export type CalendarPreviewResetProps = ComponentProps<typeof IconButton>;
 
-/**
- * Restores `defaultDate` — a day, a range, or a period at a coarser scale — or
- * clears when it is `null`. A value reset, not a view reset: it leaves the
- * visible month alone. Keyed off `defaultDate` rather than `defaultValue` so it
- * still shows under a controlled `value`.
- *
- * With nothing to restore it stays mounted and disabled rather than unmounting:
- * that would send focus to `<body>` mid-calendar, and drop a `flex: none` child
- * that keeps both nav buttons in place.
- */
+/* Stays mounted and disabled rather than unmounting: that would send focus to
+   `<body>` mid-calendar, and drop a `flex: none` child holding the nav. */
 export function CalendarPreviewReset({
   className,
   children,
@@ -41,9 +33,7 @@ export function CalendarPreviewReset({
   const sameDay = (a: Date, b: Date) =>
     dayKey(a, timeZone) === dayKey(b, timeZone);
 
-  /* Both edges have to match: a shared start is not a restored range. A
-     period matches on its scale as well as its day — the same day read at two
-     scales is two different values. */
+  /* A period matches on scale too: the same day at two scales is two values. */
   const restored =
     defaultDate === null
       ? value == null

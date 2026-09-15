@@ -10,7 +10,6 @@ import { CalendarPreviewSeparator } from './calendar-preview-separator';
 
 export type CalendarPreviewBodyProps = useRender.ComponentProps<'div'>;
 
-/** The input sits above the switcher, which is where the frames put it. */
 export function CalendarPreviewBody({
   className,
   children,

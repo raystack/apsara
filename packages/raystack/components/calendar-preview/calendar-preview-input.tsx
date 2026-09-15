@@ -148,8 +148,6 @@ export function CalendarPreviewInput({
     onValidityChange?.(next);
   };
 
-  /* Only the scales this root offers: typing "Q4" into a day-only field is not
-     a quarter, it is a typo. */
   const resolve = (
     text: string
   ): CalendarPreviewInputValidity | { date: Date; scale: Scale } => {
@@ -214,7 +212,6 @@ export function CalendarPreviewInput({
     ? ((field === 'start' ? draft?.from : draft?.to) ?? null)
     : (scaleDraft ?? (isRangeValue(value) ? null : value));
   const committedText = endpoint ? formatValue(endpoint, scale) : '';
-  /* A multi-scale field has to advertise what it accepts. */
   const resolvedPlaceholder =
     placeholder ??
     (scales.length > 1

@@ -15,8 +15,6 @@ function renderBody(props = {}) {
   );
 }
 
-/* The list runs across every year in `yearRange`, so a label alone is
-   ambiguous — "Aug" exists once per year. */
 const period = (container: HTMLElement, label: string, year = 2026) => {
   const group = getAllSlots(container, 'calendar-preview-period-group').find(
     node =>
@@ -69,8 +67,6 @@ describe('CalendarPreview scale switching', () => {
 });
 
 describe('CalendarPreview trailingValue', () => {
-  /* The value itself changes, not the formatting — a start field emits the
-     period's first day and an end field its last. */
   it.each([
     ['month', 'Aug', '2026-08-01', '2026-08-31'],
     ['quarter', 'Q3', '2026-07-01', '2026-09-30'],
@@ -110,15 +106,9 @@ describe('CalendarPreview trailingValue', () => {
   });
 });
 
-/* The RFC's table: an end field bounded at 15 July 2026 disables H1 2026,
-   which would emit 30 June, while allowing July and Q3, which emit later. The
-   same periods are all available to a start field. */
 describe('CalendarPreview availability differs by field', () => {
   const bounded = { minDate: new Date(2026, 6, 15), today: TODAY };
 
-  /* The same period, opposite answers: Q3 2026 starts 1 July — before the
-     bound — but ends 30 September, after it. Only the produced date separates
-     them, which is the whole reason availability takes `trailing`. */
   it.each([
     ['quarter', 'Q3'],
     ['month', 'Jul']
@@ -199,8 +189,6 @@ describe('CalendarPreview period views mount alone', () => {
   });
 });
 
-/* DataView cells and FilterChip labels render the annotation with no calendar
-   anywhere in the tree. */
 describe('CalendarPreview.Trigger annotation', () => {
   it.each([
     ['day', '2026-07-02', '02 Jul 2026'],
@@ -315,7 +303,6 @@ describe('CalendarPreview change details at scale', () => {
     });
   });
 
-  /* Typing commits a scale the view has not moved to yet. */
   it('reports the typed scale period, not the scale still on screen', () => {
     const onValueChange = vi.fn();
     const { container } = renderBody({ onValueChange });
@@ -329,8 +316,6 @@ describe('CalendarPreview change details at scale', () => {
 });
 
 describe('CalendarPreview scale anchors on the visible month', () => {
-  /* The day grid is showing 2030; switching scale must land there, not on
-     whatever year today happens to be. */
   it('drafts from the view month rather than today', () => {
     const onValueChange = vi.fn();
     const { container } = render(
@@ -362,7 +347,6 @@ describe('CalendarPreview scale anchors on the visible month', () => {
       </CalendarPreview>
     );
     switchTo(container, 'month');
-    /* Both years exist in the list; the point is which one is anchored. */
     expect(period(container, 'Jan', 2030)).toBeInTheDocument();
     expect(period(container, 'Jan', 2026)).toBeInTheDocument();
   });
@@ -389,7 +373,6 @@ describe('CalendarPreview scale anchors on the visible month', () => {
   });
 });
 
-/* A scale-aware root carries `{ date, scale }` at every scale, day included. */
 describe('CalendarPreview at day scale on a scale-aware root', () => {
   const dayCell = (container: HTMLElement, day: string) => {
     const match = getAllSlots(container, 'calendar-preview-day').find(
@@ -449,8 +432,6 @@ describe('CalendarPreview at day scale on a scale-aware root', () => {
   });
 });
 
-/* `.Reset` only ever mounts at day scale; what it restores is the value,
-   whatever scale that holds. */
 describe('CalendarPreview.Reset at scale', () => {
   const QUARTER = { date: '2026-07-01', scale: 'quarter' } as const;
   const reset = (container: HTMLElement) =>
@@ -465,7 +446,6 @@ describe('CalendarPreview.Reset at scale', () => {
     expect(reset(container)).not.toBeDisabled();
   });
 
-  /* The same day at two scales is two different values. */
   it('is not restored when only the day matches', () => {
     const { container } = renderBody({
       defaultDate: QUARTER,
@@ -496,7 +476,6 @@ describe('CalendarPreview.Reset at scale', () => {
       QUARTER,
       expect.objectContaining({ reason: 'reset' })
     );
-    /* The scale came back with it. */
     expect(getSlot(container, 'calendar-preview-days')).toBeNull();
     expect(
       (getSlot(container, 'calendar-preview-input') as HTMLInputElement).value

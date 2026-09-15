@@ -15,7 +15,7 @@ export type CalendarPreviewPeriodViewProps = useRender.ComponentProps<'div'>;
 interface Cell {
   key: string;
   label: string;
-  /** The day this cell stands for, before `trailingValue` is applied. */
+  /** Before `trailingValue` is applied. */
   date: Date;
 }
 
@@ -46,10 +46,6 @@ function cellsFor(scale: Scale, year: number): Cell[] {
   return [{ key: `${year}`, label: String(year), date: monthStart(year, 0) }];
 }
 
-/**
- * Every year is a heading inside one scrolling column rather than a page of its
- * own, so periods outside the bounds render disabled rather than being cut off.
- */
 function PeriodView({
   scale: viewScale,
   columns,
@@ -86,8 +82,6 @@ function PeriodView({
     return list;
   }, [yearRange]);
 
-  /* Compared as day-keys so a re-rendered Date never counts as a change. The
-     draft wins: it is what the user is looking at after a scale switch. */
   const activeYear = yearOf(
     scaleDraft?.date ??
       (isScaleValue(value) ? value.date : dayKey(month, timeZone))
@@ -96,19 +90,16 @@ function PeriodView({
   const selectedKey =
     scaleDraft?.date ?? (isScaleValue(value) ? value.date : null);
 
-  /* A twenty-year list otherwise opens twenty scrolls from the year meant.
-     Keyed on becoming active, not on mount: every view mounts at once, so a
-     mount effect fires with an empty ref and never fires again. Scrolls the
-     container rather than `scrollIntoView`, which would walk out and move the
-     popover with it. */
+  /* Keyed on becoming active, not on mount: every view mounts at once, so a
+     mount effect would fire with an empty ref. Scrolls the container, not
+     `scrollIntoView`, which would move the popover with it. */
   const activeRef = useRef<HTMLDivElement>(null);
   const isActive = scale === viewScale;
   useEffect(() => {
     if (!isActive) return;
     const group = activeRef.current;
     const list = group?.parentElement;
-    /* The ref lags a render behind `activeYear`, so scrolling to a group that
-       is no longer the active one would land on the previous year. */
+    /* The ref lags a render behind `activeYear`. */
     if (!group || !list || group.dataset.year !== String(activeYear)) return;
     list.scrollTop +=
       group.getBoundingClientRect().top - list.getBoundingClientRect().top;

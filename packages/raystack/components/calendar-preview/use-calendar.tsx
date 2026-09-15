@@ -12,10 +12,7 @@ export interface UseCalendarReturn {
   value: CalendarPreviewValue;
   /** Commit a day or a range, or clear with `null`. Emits `onValueChange`. */
   setValue: (value: CalendarPreviewValue) => void;
-  /* Read-only by decision, not by omission: switching scale is `.Scales` and
-     `.Scale`, which take `render` for custom chrome. A setter here would be
-     public API we cannot take back, and it stays out until something needs
-     one — adding it later is additive. */
+  /* Read-only by decision: switching scale is `.Scales` and `.Scale`. */
   scale: Scale;
   month: Date;
   /** Bounds never clamp the view. */

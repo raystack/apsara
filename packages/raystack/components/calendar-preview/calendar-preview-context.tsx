@@ -90,13 +90,12 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
   readOnly: boolean;
   formatValue: (value: Date | ScaleValue, scale: Scale) => string;
 
-  /** Every scale the switcher offers. One entry hides `.Scales`. */
+  /** One entry hides `.Scales`. */
   scales: readonly Scale[];
   trailingValue: boolean;
   /** Never emitted: a cell click or Enter commits it, Escape drops it. */
   scaleDraft: ScaleValue | null;
   switchScale: (scale: Scale) => void;
-  /** Honours `trailingValue`. */
   selectPeriod: (date: Date | string, scale: Scale) => void;
   dropDraft: () => void;
   isPeriodAvailable: (date: Date | string, scale: Scale) => boolean;

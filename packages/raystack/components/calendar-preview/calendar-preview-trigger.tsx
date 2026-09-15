@@ -90,8 +90,7 @@ export function CalendarPreviewTrigger({
     )
   } as ComponentProps<typeof Popover.Trigger>;
 
-  /* `formatValue` takes a single value, so a range formats as its two ends. A
-     period carries its own scale, which is the one it reads back at. */
+  /* A period reads back at its own scale, not the view's. */
   const label =
     value instanceof Date
       ? formatValue(value, scale)

@@ -15,8 +15,6 @@ const LABELS: Record<Scale, string> = {
 
 export type CalendarPreviewScalesProps = useRender.ComponentProps<'div'>;
 
-/* Renders nothing for a single scale, so a plain day calendar does not grow a
-   one-tab row. */
 export function CalendarPreviewScales({
   className,
   children,
@@ -73,7 +71,6 @@ export interface CalendarPreviewScaleProps
   value: Scale;
 }
 
-/** Only needed to relabel or reorder what `.Scales` renders. */
 export function CalendarPreviewScale({
   value,
   className,

@@ -196,8 +196,7 @@ export function CalendarPreviewGrid({
 
   const months = days?.numberOfMonths ?? 1;
 
-  /* A scale-aware root carries `{ date, scale }` at day scale too, so the day
-     to mark is inside the value rather than being it. */
+  /* A scale-aware root carries `{ date, scale }` at day scale too. */
   const selected = isScaleValue(value)
     ? parseKey(value.date)
     : value instanceof Date
