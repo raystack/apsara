@@ -82,12 +82,15 @@ export interface CalendarPreviewProps {
   yearRange?: { from: number; to: number };
 
   /**
-   * Earliest selectable day, inclusive. Never clamps navigation.
+   * Earliest selectable day, inclusive. Never clamps navigation. A period is
+   * tested against the day it would emit, so `trailingValue` moves the answer:
+   * bounded at 15 July, Q3 is rejected for a start field and allowed for an end
+   * field.
    * @example minDate={new Date(2024, 3, 17)}
    */
   minDate?: Date;
 
-  /** Latest selectable day, inclusive. Never clamps navigation. */
+  /** Latest selectable day, inclusive. Tested as `minDate` is. */
   maxDate?: Date;
 
   /**
@@ -168,7 +171,8 @@ export interface CalendarPreviewProps {
   today?: Date;
 
   /**
-   * Whether clicking the selected day deselects it.
+   * Whether clicking the selected day deselects it. Day scale only — clicking
+   * an already-selected period re-commits it rather than clearing.
    * @default true
    */
   clearable?: boolean;

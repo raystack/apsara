@@ -175,9 +175,12 @@ interface CalendarPreviewSharedProps
    */
   yearRange?: { from: number; to: number };
 
-  /** Earliest selectable day, inclusive. Never clamps navigation. */
+  /**
+   * Earliest selectable day, inclusive. Never clamps navigation. A period is
+   * tested against the day it would emit, so `trailingValue` moves the answer.
+   */
   minDate?: Date;
-  /** Latest selectable day, inclusive. Never clamps navigation. */
+  /** Latest selectable day, inclusive. Tested as `minDate` is. */
   maxDate?: Date;
   /* Day scale only: a day predicate has no one lift to a period. Period cells
      are bounded by `minDate` / `maxDate` instead. */
@@ -210,7 +213,8 @@ interface CalendarPreviewSharedProps
    */
   today?: Date;
   /**
-   * Whether clicking the selected day deselects it.
+   * Whether clicking the selected day deselects it. Day scale only — clicking
+   * a selected period re-commits it.
    * @defaultValue true
    */
   clearable?: boolean;
