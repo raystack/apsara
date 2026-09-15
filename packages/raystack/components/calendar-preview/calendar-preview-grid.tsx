@@ -380,7 +380,7 @@ export interface CalendarPreviewDayProps
     Pick<useRender.ComponentProps<'button'>, 'render' | 'ref'> {}
 
 /* At day scale the draft is the roving-focus cell — arrowed to, not entered.
-   PR 5's scale-switch draft writes the same attribute. */
+   The scale-switch draft writes the same attribute at the period scales. */
 export function CalendarPreviewDay({
   day,
   modifiers,

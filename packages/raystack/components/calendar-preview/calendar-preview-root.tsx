@@ -316,8 +316,8 @@ export function CalendarPreviewRoot({
     state: 'month'
   });
 
-  /* Uncontrolled until the scale switcher lands in PR 5. The state lives here
-     now so the parts and `useCalendar()` read it from one place either way. */
+  /* Normalised to `SCALES` order, so the switcher reads finest-first whatever
+     order the consumer passed, and unknown entries drop out. */
   const scales = useMemo<readonly Scale[]>(() => {
     const list = (Array.isArray(scalesProp) ? scalesProp : [scalesProp]).filter(
       isScale

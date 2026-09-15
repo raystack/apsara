@@ -82,6 +82,31 @@ export interface CalendarPreviewProps {
   ) => string;
 
   /**
+   * The granularities this root offers. One entry hides the switcher; anything
+   * beyond `"day"` moves the value to `{ date, scale }`.
+   * @default "day"
+   * @example scales={['day', 'month', 'quarter']}
+   */
+  scales?: Scale | Scale[];
+
+  /** The scale the picker opens on. Defaults to the first of `scales`. */
+  defaultScale?: Scale;
+
+  /** The active scale (controlled). */
+  scale?: Scale;
+
+  /** Called when the switcher moves. */
+  onScaleChange?: (scale: Scale) => void;
+
+  /**
+   * Whether a period emits its last day rather than its first — an end field
+   * wants 31 July from "July 2026", a start field wants the 1st. It changes the
+   * value, not the formatting.
+   * @default false
+   */
+  trailingValue?: boolean;
+
+  /**
    * The zone the grid reads days in. Forwarded to the grid; the component does
    * no conversion of its own.
    *
@@ -209,11 +234,24 @@ export interface CalendarPreviewResetProps {
 
 /** What the enclosing root exposes to a custom part. */
 export interface UseCalendarReturn {
-  /** The committed day, or null. */
-  value: Date | null;
+  /**
+   * The committed value, or null. A day, a range at `selection="range"`, or a
+   * period at a coarser scale — whichever shape this root holds.
+   */
+  value:
+    | Date
+    | { from: Date; to: Date }
+    | { date: string; scale: Scale }
+    | null;
 
-  /** Commit a day, or clear with `null`. Emits `onValueChange`. */
-  setValue: (value: Date | null) => void;
+  /** Commit a value, or clear with `null`. Emits `onValueChange`. */
+  setValue: (
+    value:
+      | Date
+      | { from: Date; to: Date }
+      | { date: string; scale: Scale }
+      | null
+  ) => void;
 
   /**
    * The granularity the value is committed at. Read-only — switching scale is

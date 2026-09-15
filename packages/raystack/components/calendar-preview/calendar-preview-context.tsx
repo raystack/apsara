@@ -45,9 +45,8 @@ export interface CalendarPreviewChangeDetails {
   toDate: () => Date;
 }
 
-/* Generic so a later phase's scale-aware arms carry a
-   `ScaleValue` without a second context: stored as `unknown`,
-   cast once at the hook boundary. */
+/* Generic so the scale-aware arms carry a `ScaleValue` without a second
+   context: stored as `unknown`, cast once at the hook boundary. */
 export interface CalendarPreviewContextValue<Value = Date | null> {
   value: Value;
   /** `occasion` is the day acted on, which a cleared `value` cannot carry. */

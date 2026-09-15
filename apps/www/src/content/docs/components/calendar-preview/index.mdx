@@ -167,7 +167,8 @@ const { value, setValue, scale, month, setMonth, isDateUnavailable } = useCalend
 ```
 
 Calling it outside a `CalendarPreview` throws, naming the part that asked. `scale` is
-read-only for now — the setter arrives with the scale switcher in a later phase.
+read-only: switching scale is `.Scales` and `.Scale`, and `.Scale` takes `render` if you
+want your own chrome.
 
 `setValue(null)` clears the selection and reports `reason: 'clear'`, carrying the day
 that was cleared as `details.toDate()`.
