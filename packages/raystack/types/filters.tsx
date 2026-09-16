@@ -1,3 +1,5 @@
+import type { ScaleValue } from '~/components/calendar-preview/lib/scale';
+
 export const FilterType = {
   number: 'number',
   string: 'string',
@@ -13,7 +15,8 @@ export type FilterValueType = 'string' | 'number' | 'boolean';
 export interface FilterValue {
   value?: FilterValueType;
   // values?: Array<string | number>;
-  date?: Date;
+  /* A `ScaleValue` filters on the period it names, not on its anchor day. */
+  date?: Date | ScaleValue;
   // dateRange?: DateRange;
 }
 

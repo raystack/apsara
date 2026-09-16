@@ -108,3 +108,106 @@ describe('filter-operations', () => {
     });
   });
 });
+
+/* A `ScaleValue` has a `.date`, so a coarse value used to parse happily and
+   then compare as a single day. Every operator is asserted at both scales so
+   that cannot ship green again. */
+describe('date filters by period', () => {
+  const run = (
+    operator: 'eq' | 'neq' | 'lt' | 'lte' | 'gt' | 'gte',
+    filterDate: unknown,
+    rowValue: unknown
+  ) => {
+    const fn = getFilterFn('date', operator);
+    const row = { getValue: () => rowValue } as never;
+    return fn(row, 'when', { date: filterDate } as never, () => {});
+  };
+
+  const DAY = new Date(2026, 7, 15);
+  const MONTH = { date: '2026-08-01', scale: 'month' } as const;
+
+  describe('at day scale the day itself is the period', () => {
+    it.each([
+      ['eq', '2026-08-15', true],
+      ['eq', '2026-08-14', false],
+      ['neq', '2026-08-15', false],
+      ['neq', '2026-08-14', true],
+      ['lt', '2026-08-14', true],
+      ['lt', '2026-08-15', false],
+      ['lte', '2026-08-15', true],
+      ['lte', '2026-08-16', false],
+      ['gt', '2026-08-16', true],
+      ['gt', '2026-08-15', false],
+      ['gte', '2026-08-15', true],
+      ['gte', '2026-08-14', false]
+    ] as const)('%s against %s', (operator, row, expected) => {
+      expect(run(operator, DAY, row)).toBe(expected);
+    });
+  });
+
+  describe('at month scale the whole month is the period', () => {
+    it.each([
+      /* The bug: a day inside the month must match `eq`, not just the 1st. */
+      ['eq', '2026-08-15', true],
+      ['eq', '2026-08-01', true],
+      ['eq', '2026-08-31', true],
+      ['eq', '2026-07-31', false],
+      ['eq', '2026-09-01', false],
+      ['neq', '2026-08-15', false],
+      ['neq', '2026-09-01', true],
+      /* before the period start, not before its anchor */
+      ['lt', '2026-07-31', true],
+      ['lt', '2026-08-01', false],
+      ['lt', '2026-08-15', false],
+      ['lte', '2026-08-31', true],
+      ['lte', '2026-09-01', false],
+      /* after the period end, not after its anchor */
+      ['gt', '2026-09-01', true],
+      ['gt', '2026-08-31', false],
+      ['gt', '2026-08-15', false],
+      ['gte', '2026-08-01', true],
+      ['gte', '2026-07-31', false]
+    ] as const)('%s against %s', (operator, row, expected) => {
+      expect(run(operator, MONTH, row)).toBe(expected);
+    });
+  });
+
+  it.each([
+    ['quarter', { date: '2026-07-01', scale: 'quarter' }, '2026-09-30', true],
+    ['quarter', { date: '2026-07-01', scale: 'quarter' }, '2026-10-01', false],
+    ['halfYear', { date: '2026-01-01', scale: 'halfYear' }, '2026-06-30', true],
+    [
+      'halfYear',
+      { date: '2026-01-01', scale: 'halfYear' },
+      '2026-07-01',
+      false
+    ],
+    ['year', { date: '2026-01-01', scale: 'year' }, '2026-12-31', true],
+    ['year', { date: '2026-01-01', scale: 'year' }, '2027-01-01', false]
+  ] as const)('spans a whole %s', (_scale, filterDate, row, expected) => {
+    expect(run('eq', filterDate, row)).toBe(expected);
+  });
+
+  /* The stored value is the anchor and the period is derived from it, so a
+     trailing-edge anchor resolves to the same span as a leading-edge one. */
+  it('reaches both ends whichever edge was stored', () => {
+    const leading = { date: '2026-08-01', scale: 'month' } as const;
+    const trailing = { date: '2026-08-31', scale: 'month' } as const;
+    for (const row of ['2026-08-01', '2026-08-15', '2026-08-31']) {
+      expect(run('eq', leading, row)).toBe(true);
+      expect(run('eq', trailing, row)).toBe(true);
+    }
+  });
+
+  it('matches nothing when the row cannot be read, and neq matches it', () => {
+    expect(run('eq', DAY, 'not a date')).toBe(false);
+    expect(run('neq', DAY, 'not a date')).toBe(true);
+    expect(run('gt', DAY, undefined)).toBe(false);
+  });
+
+  /* dayjs read a missing filter date as "now", so an unset filter quietly
+     matched today's rows. */
+  it('does not fall back to today when the filter has no date', () => {
+    expect(run('eq', undefined, '2026-08-15')).toBe(false);
+  });
+});

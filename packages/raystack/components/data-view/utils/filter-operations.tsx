@@ -1,8 +1,11 @@
 import type { FilterFn } from '@tanstack/table-core';
-import dayjs from 'dayjs';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
+import {
+  type DayKey,
+  toDayKey,
+  toInstant
+} from '~/components/calendar-preview/date-adapter';
+import { type Period, periodOf } from '~/components/calendar-preview/lib/scale';
 import {
   DataTableFilterOperatorTypes,
   DateFilterOperatorType,
@@ -19,9 +22,6 @@ import {
 } from '~/types/filters';
 import { DataViewFilterValues } from '../data-view.types';
 
-dayjs.extend(isSameOrAfter);
-dayjs.extend(isSameOrBefore);
-
 export type FilterFunctionsMap = {
   number: Record<NumberFilterOperatorType, FilterFn<unknown>>;
   string: Record<StringFilterOperatorType, FilterFn<unknown>>;
@@ -29,6 +29,38 @@ export type FilterFunctionsMap = {
   select: Record<SelectFilterOperatorType, FilterFn<unknown>>;
   multiselect: Record<MultiSelectFilterOperatorType, FilterFn<unknown>>;
 };
+
+/* A day value filters on its day; a coarser one filters on the whole period it
+   names, so a month cannot compare as a single day. `trailingValue` never
+   reaches here: the period is derived from whichever edge was stored, so both
+   anchors resolve to the same span. */
+function periodFor(value: FilterValue['date']): Period | null {
+  if (value == null) return null;
+  if (
+    typeof value === 'object' &&
+    !(value instanceof Date) &&
+    'scale' in value
+  ) {
+    const anchor = toDayKey(value.date);
+    return anchor ? periodOf(anchor, value.scale) : null;
+  }
+  const day = toDayKey(value);
+  return day ? { start: day, end: day } : null;
+}
+
+/* An unreadable row or filter matches nothing, and `neq` negates that, so
+   `whenUnreadable` keeps a bad value from matching every row instead. */
+function onPeriod(
+  test: (day: DayKey, period: Period) => boolean,
+  whenUnreadable = false
+): FilterFn<unknown> {
+  return (row, columnId, filterValue: FilterValue) => {
+    const period = periodFor(filterValue.date);
+    const day = toDayKey(row.getValue(columnId));
+    if (!period || !day) return whenUnreadable;
+    return test(day, period);
+  };
+}
 
 export const filterOperationsMap: FilterFunctionsMap = {
   number: {
@@ -69,24 +101,15 @@ export const filterOperationsMap: FilterFunctionsMap = {
     }
   },
   date: {
-    eq: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isSame(dayjs(filterValue.date), 'day'),
-    neq: (row, columnId, filterValue: FilterValue) =>
-      !dayjs(row.getValue(columnId)).isSame(dayjs(filterValue.date), 'day'),
-    lt: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isBefore(dayjs(filterValue.date), 'day'),
-    lte: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isSameOrBefore(
-        dayjs(filterValue.date),
-        'day'
-      ),
-    gt: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isAfter(dayjs(filterValue.date), 'day'),
-    gte: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isSameOrAfter(
-        dayjs(filterValue.date),
-        'day'
-      )
+    eq: onPeriod((day, period) => day >= period.start && day <= period.end),
+    neq: onPeriod(
+      (day, period) => day < period.start || day > period.end,
+      true
+    ),
+    lt: onPeriod((day, period) => day < period.start),
+    lte: onPeriod((day, period) => day <= period.end),
+    gt: onPeriod((day, period) => day > period.end),
+    gte: onPeriod((day, period) => day >= period.start)
   },
   select: {
     eq: (row, columnId, filterValue: FilterValue) => {
@@ -131,16 +154,11 @@ const handleStringBasedTypes = (
 ): DataViewFilterValues => {
   switch (filterType) {
     case FilterType.date: {
-      const dateValue = dayjs(value);
-      let stringValue = '';
-      if (dateValue.isValid()) {
-        try {
-          stringValue = dateValue.toISOString();
-        } catch {
-          stringValue = '';
-        }
-      }
-      return { value, stringValue };
+      const anchor =
+        value && typeof value === 'object' && 'scale' in value
+          ? value.date
+          : value;
+      return { value, stringValue: toInstant(anchor)?.toISOString() ?? '' };
     }
     case FilterType.select:
       return {
