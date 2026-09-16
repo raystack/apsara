@@ -96,6 +96,7 @@ export function CalendarPreviewInput({
     readOnly,
     scales,
     scaleDraft,
+    trailingValue,
     selectPeriod,
     isPeriodAvailable,
     selection,
@@ -153,7 +154,13 @@ export function CalendarPreviewInput({
   const resolve = (
     text: string
   ): CalendarPreviewInputValidity | { date: Date; scale: Scale } => {
-    const parsed = parseScaleInput(text);
+    /* The root's clock and its edge, so what the parser reports is what the
+       commit writes — reading them off the wall clock is how `Q4` landed in
+       the wrong year. */
+    const parsed = parseScaleInput(text, {
+      referenceDate: today,
+      trailing: trailingValue
+    });
     if (!parsed || !scales.includes(parsed.scale)) {
       return { valid: false, reason: 'unparseable' };
     }

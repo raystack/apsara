@@ -189,7 +189,11 @@ interface CalendarPreviewSharedProps
   isDateUnavailable?: (date: Date) => boolean;
 
   /** @defaultValue `DD MMM YYYY` at day scale, the period's shorthand above it */
-  formatValue?: (value: Date | ScaleValue, scale: Scale) => string;
+  formatValue?: (
+    value: Date | ScaleValue,
+    scale: Scale,
+    timeZone?: string
+  ) => string;
 
   /**
    * The zone the grid reads days in. Forwarded to the grid; this family does
@@ -235,13 +239,14 @@ interface CalendarPreviewSharedProps
 /* Exported for its tests; `formatValue` replaces it wholesale. */
 export function defaultFormatValue(
   value: Date | ScaleValue,
-  scale: Scale
+  scale: Scale,
+  timeZone?: string
 ): string {
   const date = value instanceof Date ? value : parseKey(value.date);
-  if (scale === 'day') return formatDayLabel(date);
-  if (scale === 'month') return formatMonthLabel(date);
+  if (scale === 'day') return formatDayLabel(date, timeZone);
+  if (scale === 'month') return formatMonthLabel(date, timeZone);
 
-  const key = dayKey(date);
+  const key = dayKey(date, timeZone);
   const year = yearOf(key);
   if (scale === 'year') return String(year);
   const month = monthOf(key);
@@ -270,7 +275,7 @@ export function CalendarPreviewRoot({
   maxDate,
   isDateUnavailable: isDateUnavailableProp,
   defaultDate,
-  formatValue = defaultFormatValue,
+  formatValue: formatValueProp = defaultFormatValue,
   timeZone,
   today: todayProp,
   clearable = true,
@@ -685,6 +690,15 @@ export function CalendarPreviewRoot({
     if (maxDate) years.push(maxDate.getFullYear());
     return { from: Math.min(...years), to: Math.max(...years) };
   }, [yearRangeProp, today, minDate, maxDate]);
+
+  /* Bound here rather than at each call site: every part formats through the
+     context, and a `formatValue` that never saw `timeZone` rendered the
+     neighbouring day in any zone far enough from UTC. */
+  const formatValue = useCallback(
+    (value: Date | ScaleValue, scale: Scale) =>
+      formatValueProp(value, scale, timeZone),
+    [formatValueProp, timeZone]
+  );
 
   const context = useMemo<CalendarPreviewContextValue<CalendarPreviewValue>>(
     () => ({

@@ -773,6 +773,93 @@ describe('CalendarPreview drops a draft to the scale it started from', () => {
   });
 });
 
+describe('CalendarPreview.Input reads the root clock', () => {
+  const input = (container: HTMLElement) =>
+    getSlot(container, 'calendar-preview-input') as HTMLInputElement;
+
+  it('resolves a bare period in the root year, not the wall clock', () => {
+    const onValueChange = vi.fn();
+    const FAR = new Date(2030, 0, 1);
+    const { container } = render(
+      <CalendarPreview
+        today={FAR}
+        defaultMonth={FAR}
+        scales={ALL}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Body />
+      </CalendarPreview>
+    );
+    fireEvent.change(input(container), { target: { value: 'Q4' } });
+    fireEvent.keyDown(input(container), { key: 'Enter' });
+    expect(onValueChange.mock.calls[0][0]).toEqual({
+      date: '2030-10-01',
+      scale: 'quarter'
+    });
+  });
+
+  /* The end root of a scale pair: single selection, its own `scales`, its own
+     `trailingValue`. The parser hands back the first day either way. */
+  it('commits a typed period at the trailing edge of an end root', () => {
+    const onValueChange = vi.fn();
+    const { container } = render(
+      <CalendarPreview
+        today={TODAY}
+        defaultMonth={TODAY}
+        scales={ALL}
+        trailingValue
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Body />
+      </CalendarPreview>
+    );
+    fireEvent.change(input(container), { target: { value: 'Q4 2026' } });
+    fireEvent.keyDown(input(container), { key: 'Enter' });
+    expect(onValueChange.mock.calls[0][0]).toEqual({
+      date: '2026-12-31',
+      scale: 'quarter'
+    });
+  });
+
+  it('respects a bound that only the trailing edge clears', () => {
+    const onValueChange = vi.fn();
+    const { container } = render(
+      <CalendarPreview
+        today={TODAY}
+        defaultMonth={TODAY}
+        scales={ALL}
+        trailingValue
+        minDate={new Date(2026, 6, 15)}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Body />
+      </CalendarPreview>
+    );
+    fireEvent.change(input(container), { target: { value: 'Q3 2026' } });
+    fireEvent.keyDown(input(container), { key: 'Enter' });
+    expect(onValueChange.mock.calls[0][0]).toEqual({
+      date: '2026-09-30',
+      scale: 'quarter'
+    });
+  });
+});
+
+describe('CalendarPreview formatValue sees the root time zone', () => {
+  it('passes it as the third argument', () => {
+    const formatValue = vi.fn(() => 'formatted');
+    renderBody({
+      formatValue,
+      timeZone: 'Pacific/Niue',
+      value: { date: '2026-08-20', scale: 'day' }
+    });
+    expect(formatValue).toHaveBeenCalledWith(
+      expect.anything(),
+      'day',
+      'Pacific/Niue'
+    );
+  });
+});
+
 describe('CalendarPreview drops a scale draft when the popover closes', () => {
   function renderScalePicker(props = {}) {
     const utils = render(
