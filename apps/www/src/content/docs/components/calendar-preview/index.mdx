@@ -20,12 +20,6 @@ import {
 
 <Demo data={preview} />
 
-<Callout type="warn" title="Preview — not yet covered by semver">
-  Later RFC 005 phases may still reshape props, slots and `useCalendar()`'s
-  return, so pin an exact version if you adopt it now. `Calendar` and
-  `DatePicker` remain the supported choice.
-</Callout>
-
 ## Playground
 
 <Demo data={playground} />
@@ -466,10 +460,9 @@ anything that re-renders often.
 
 ## Localization
 
-English only for now. There is no `locale` prop: month and weekday names come from
-date-fns' default `en-US`, and the nav, reset and caption labels are hardcoded strings.
-`timeZone` is unaffected — a calendar can render in any zone, in English. Localization
-is tracked against RFC 005 rather than patched in per-part.
+English only. There is no `locale` prop: month and weekday names come from date-fns'
+default `en-US`, and the nav, reset and caption labels are hardcoded strings.
+`timeZone` is unaffected — a calendar can render in any zone, in English.
 
 ### Scale-aware selection
 
