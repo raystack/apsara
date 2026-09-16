@@ -133,6 +133,9 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
    */
   fieldReadOnly: Record<CalendarPreviewField, boolean>;
   setFieldReadOnly: (field: CalendarPreviewField, readOnly: boolean) => void;
+  /** Whether an `.Input` is mounted; `.Trigger` stops being a button when one is. */
+  hasInput: boolean;
+  registerInput: (mounted: boolean) => void;
 }
 
 const CalendarPreviewContext =

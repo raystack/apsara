@@ -1,9 +1,16 @@
 import { mergeProps, Popover, useRender } from '@base-ui/react';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import { REASONS } from '@base-ui/react/internals/reasons';
+import type { BaseUIEvent } from '@base-ui/react/types';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { cx } from 'class-variance-authority';
-import { type ComponentProps, type FocusEvent, useEffect, useRef } from 'react';
+import {
+  type ComponentProps,
+  type FocusEvent,
+  type MouseEvent,
+  useEffect,
+  useRef
+} from 'react';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
 import { type CalendarPreviewValue, isRange } from './calendar-preview-root';
@@ -46,6 +53,7 @@ export function CalendarPreviewTrigger({
     setOpen,
     shouldIgnoreFocusOpen,
     triggerRef,
+    hasInput,
     disabled,
     readOnly
   } = useCalendarPreviewContext<CalendarPreviewValue>(
@@ -85,6 +93,15 @@ export function CalendarPreviewTrigger({
         className: cx(styles.trigger, className),
         'data-slot': 'calendar-preview-trigger',
         'data-scale': scale,
+        /* Base UI gives a non-native trigger both, which around a field is a
+           second tab stop and a control inside a button role. */
+        role: hasInput ? undefined : 'button',
+        tabIndex: hasInput ? -1 : undefined,
+        /* Merged to the right of `useClick`, so this runs first and takes out
+           the press-toggle that closed the popover between two fields. */
+        onClick: (event: BaseUIEvent<MouseEvent<HTMLDivElement>>) => {
+          if (hasInput) event.preventBaseUIHandler();
+        },
         onPointerDown: () => {
           pressing.current = true;
         },
@@ -96,7 +113,10 @@ export function CalendarPreviewTrigger({
           /* Consumed before the press guard: a press that returns early
              without taking it leaves it armed against the next focus. */
           const returning = shouldIgnoreFocusOpen();
-          if (returning || pressing.current) return;
+          /* With the toggle gone there is nothing to race, and the guard
+             would swallow the focus a press delivers before `pointerup` —
+             leaving nothing to open the popover at all. */
+          if (returning || (!hasInput && pressing.current)) return;
           setOpen(
             true,
             createChangeEventDetails(

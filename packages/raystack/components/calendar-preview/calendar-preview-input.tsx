@@ -105,10 +105,16 @@ export function CalendarPreviewInput({
     draft,
     activeField,
     setActiveField,
-    setFieldReadOnly
+    setFieldReadOnly,
+    registerInput
   } = useCalendarPreviewContext<CalendarPreviewValue>('CalendarPreview.Input');
 
   const isRange = selection === 'range';
+
+  useEffect(() => {
+    registerInput(true);
+    return () => registerInput(false);
+  }, [registerInput]);
 
   /* The grid has to know which endpoint refuses a write, and `readOnly` is
      this input's prop, so it registers rather than the root guessing. */

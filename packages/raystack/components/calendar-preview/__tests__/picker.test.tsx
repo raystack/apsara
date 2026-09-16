@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { getSlot } from '~/test-utils/data-slots';
+import { getAllSlots, getSlot } from '~/test-utils/data-slots';
 import { Field } from '../../field';
 import { CalendarPreview } from '../calendar-preview';
 
@@ -510,5 +510,59 @@ describe('CalendarPreview.Trigger content', () => {
       'data-custom',
       'true'
     );
+  });
+});
+
+describe('CalendarPreview.Trigger is an anchor around a field', () => {
+  it('drops the button role and the tab stop when it wraps an input', () => {
+    const { container } = renderPicker();
+    const trigger = getSlot(container, 'calendar-preview-trigger');
+    expect(trigger).not.toHaveAttribute('role', 'button');
+    expect(trigger).toHaveAttribute('tabindex', '-1');
+  });
+
+  it('keeps both when it wraps only a label', () => {
+    const { container } = render(
+      <CalendarPreview today={TODAY} defaultMonth={AUGUST}>
+        <CalendarPreview.Trigger />
+        <CalendarPreview.Content>
+          <CalendarPreview.Days />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+    const trigger = getSlot(container, 'calendar-preview-trigger');
+    expect(trigger).toHaveAttribute('role', 'button');
+    expect(trigger).not.toHaveAttribute('tabindex', '-1');
+  });
+
+  it('opens on a pointer press, which no longer races the focus handler', () => {
+    const { input } = renderPicker();
+    fireEvent.pointerDown(input);
+    fireEvent.focus(input);
+    fireEvent.pointerUp(input);
+    fireEvent.click(input);
+    expect(isOpen()).toBe(true);
+  });
+
+  it('stays open when a press moves between two fields of a range', () => {
+    const { container } = render(
+      <CalendarPreview selection='range' today={TODAY} defaultMonth={AUGUST}>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input field='start' />
+          <CalendarPreview.Input field='end' />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Days />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+    const [start, end] = getAllSlots(container, 'calendar-preview-input');
+    fireEvent.focus(start);
+    expect(isOpen()).toBe(true);
+    fireEvent.pointerDown(end);
+    fireEvent.focus(end);
+    fireEvent.pointerUp(end);
+    fireEvent.click(end);
+    expect(isOpen()).toBe(true);
   });
 });
