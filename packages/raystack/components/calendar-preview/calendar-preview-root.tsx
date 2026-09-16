@@ -529,6 +529,24 @@ export function CalendarPreviewRoot({
         return;
       }
 
+      /* Falling through would restart the range from this day, which is the
+         one write a read-only start refuses — so every click did nothing. */
+      const fixed = fieldReadOnly.start
+        ? (draft?.from ?? (isRange(value) ? value.from : undefined))
+        : undefined;
+      if (fixed) {
+        if (fieldReadOnly.end) return;
+        if (dayKey(date, timeZone) < dayKey(fixed, timeZone)) return;
+        setDraft(null);
+        setActiveField('start');
+        setValue({ from: fixed, to: date }, 'select', date);
+        setOpen(
+          false,
+          createChangeEventDetails(REASONS.closePress, undefined, undefined)
+        );
+        return;
+      }
+
       const from = draft?.from;
       if (!from || draft?.to) {
         if (fieldReadOnly.start) return;

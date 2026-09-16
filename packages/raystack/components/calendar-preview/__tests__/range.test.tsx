@@ -506,3 +506,74 @@ describe('CalendarPreview range order validation', () => {
     expect(day(container, '5')).toHaveAttribute('data-selected');
   });
 });
+
+describe('CalendarPreview range with a read-only start', () => {
+  const COMMITTED = { from: new Date(2026, 7, 10), to: new Date(2026, 7, 20) };
+
+  function renderFixedStart(props = {}, endProps = {}) {
+    return render(
+      <CalendarPreview
+        selection='range'
+        today={TODAY}
+        defaultMonth={AUGUST}
+        defaultValue={COMMITTED}
+        {...props}
+      >
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input field='start' readOnly />
+          <CalendarPreview.Input field='end' {...endProps} />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Days />
+      </CalendarPreview>
+    );
+  }
+
+  it('moves the end against the committed start', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderFixedStart({ onValueChange });
+    fireEvent.click(day(container, '25'));
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+    expect(onValueChange.mock.calls[0][0]).toEqual({
+      from: new Date(2026, 7, 10),
+      to: new Date(2026, 7, 25)
+    });
+  });
+
+  it('refuses a day before the fixed start rather than restarting there', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderFixedStart({ onValueChange });
+    fireEvent.click(day(container, '5'));
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it('writes nothing when both endpoints are read-only', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderFixedStart(
+      { onValueChange },
+      { readOnly: true }
+    );
+    fireEvent.click(day(container, '25'));
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it('leaves the ordinary range machine alone when nothing is read-only', () => {
+    const onValueChange = vi.fn();
+    const { container } = render(
+      <CalendarPreview
+        selection='range'
+        today={TODAY}
+        defaultMonth={AUGUST}
+        defaultValue={COMMITTED}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input field='start' />
+          <CalendarPreview.Input field='end' />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Days />
+      </CalendarPreview>
+    );
+    fireEvent.click(day(container, '25'));
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+});
