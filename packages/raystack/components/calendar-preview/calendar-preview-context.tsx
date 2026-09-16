@@ -16,6 +16,7 @@ export type CalendarPreviewChangeReason =
   | 'input'
   | 'clear'
   | 'reset'
+  /** A commit that lands on a different granularity than the value carried. */
   | 'scale';
 
 export type CalendarPreviewOpenChangeDetails = Popover.Root.ChangeEventDetails;

@@ -236,6 +236,13 @@ interface CalendarPreviewSharedProps
   readOnly?: boolean;
 }
 
+/* RFC 005 line 144 keeps the switch itself silent, so the commit that lands on
+   a new granularity is the only place `'scale'` can be reported. A first
+   selection is a `'select'`: there is no granularity it moved away from. */
+function scaleChanged(value: CalendarPreviewValue, next: Scale): boolean {
+  return isScaleValue(value) && value.scale !== next;
+}
+
 /* Exported for its tests; `formatValue` replaces it wholesale. */
 export function defaultFormatValue(
   value: Date | ScaleValue,
@@ -397,9 +404,17 @@ export function CalendarPreviewRoot({
     (date: Date, reason: CalendarPreviewChangeReason) => {
       const key = dayKey(date, timeZone);
       clearScaleDraft();
-      setValue(carriesScale ? { date: key, scale: 'day' } : date, reason, date);
+      if (!carriesScale) {
+        setValue(date, reason, date);
+        return;
+      }
+      setValue(
+        { date: key, scale: 'day' },
+        scaleChanged(value, 'day') ? 'scale' : reason,
+        date
+      );
     },
-    [carriesScale, timeZone, setValue, clearScaleDraft]
+    [carriesScale, timeZone, value, setValue, clearScaleDraft]
   );
 
   const [open, setOpenUnwrapped] = useControlled<boolean>({
@@ -583,7 +598,11 @@ export function CalendarPreviewRoot({
       if (readOnly || disabled) return;
       const key = anchorOf(periodOf(date, next, timeZone), trailingValue);
       clearScaleDraft();
-      setValue({ date: key, scale: next }, 'select', parseKey(key));
+      setValue(
+        { date: key, scale: next },
+        scaleChanged(value, next) ? 'scale' : 'select',
+        parseKey(key)
+      );
       setOpen(
         false,
         createChangeEventDetails(REASONS.closePress, undefined, undefined)
@@ -594,6 +613,7 @@ export function CalendarPreviewRoot({
       timeZone,
       readOnly,
       disabled,
+      value,
       setValue,
       setOpen,
       clearScaleDraft
