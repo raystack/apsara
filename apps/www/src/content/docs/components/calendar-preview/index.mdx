@@ -114,6 +114,8 @@ buttons sideways. It carries `data-restored` while there is nothing to restore.
 
 Anchors the popover and owns opening it. Renders the formatted value, or the placeholder, when given no children — wrap an `.Input` in it for a typeable field. Never renders a `button`, so the control inside stays focusable. Takes `render`, `className` and `ref`.
 
+With an `.Input` inside, the trigger steps back and lets the field carry the interaction: it takes no `role`, sits out of the tab order, and opens on the input's focus rather than on a press. A range therefore has two tab stops, not four, and moving from the start field to the end field leaves the popover open. Given no `.Input` it stays a `role="button"` tab stop of its own.
+
 ### CalendarPreview.Content
 
 The portaled popover surface. Takes `Popover.Content` props — `side`, `align`, `sideOffset` and the rest — and flips above the trigger on collision.
