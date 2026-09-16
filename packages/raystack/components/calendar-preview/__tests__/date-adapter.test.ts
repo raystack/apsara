@@ -20,6 +20,7 @@ import {
   startOfMonthKey,
   startOfQuarterKey,
   startOfYearKey,
+  toDayKey,
   yearOf
 } from '../date-adapter';
 
@@ -260,5 +261,59 @@ describe('monthShortNames', () => {
     monthShortNames().forEach((name, index) => {
       expect(monthFromName(name)).toBe(index + 1);
     });
+  });
+});
+
+/* Characterisation, captured from the dayjs implementation these filters used
+   before the migration. Every row here was run through `dayjs(v)` first; the
+   three marked divergences are the only ones that changed, and each was a bug. */
+describe('toDayKey', () => {
+  it.each([
+    ['an ISO day', '2023-12-01', '2023-12-01'],
+    ['an ISO instant in UTC', '2023-12-01T10:30:00Z', '2023-12-01'],
+    [
+      'an ISO instant with an offset',
+      '2023-12-01T10:30:00+05:30',
+      '2023-12-01'
+    ],
+    ['a Date', new Date(2023, 11, 1), '2023-12-01'],
+    ['an epoch', new Date(2023, 11, 1).getTime(), '2023-12-01'],
+    ['a year and month', '2023-12', '2023-12-01'],
+    ['a bare year', '2023', '2023-01-01'],
+    ['basic ISO', '20231201', '2023-12-01'],
+    ['a month-first slashed day', '12/01/2023', '2023-12-01'],
+    ['a day-first slashed day read month-first', '01/12/2023', '2023-01-12'],
+    ['a long month name', 'December 1, 2023', '2023-12-01'],
+    ['a short month name', '1 Dec 2023', '2023-12-01'],
+    ['a dotted day', '2023.12.01', '2023-12-01']
+  ])('reads %s', (_label, input, expected) => {
+    expect(toDayKey(input)).toBe(expected);
+  });
+
+  it.each([
+    ['an empty string', ''],
+    ['whitespace', '   '],
+    ['null', null],
+    ['a non-date string', 'not a date'],
+    ['an object', { date: '2023-12-01' }]
+  ])('rejects %s', (_label, input) => {
+    expect(toDayKey(input)).toBeNull();
+  });
+
+  /* dayjs read this as 2024-01-01, rolling a bad month into the next year. */
+  it('rejects an out-of-range ISO month rather than rolling it over', () => {
+    expect(toDayKey('2023-13-01')).toBeNull();
+  });
+
+  /* dayjs read a missing filter date as "now", so an unset date filter quietly
+     matched today. */
+  it('rejects undefined rather than reading it as today', () => {
+    expect(toDayKey(undefined)).toBeNull();
+  });
+
+  it('reads the day in the zone it is given', () => {
+    const instant = new Date(Date.UTC(2023, 11, 1, 2, 0));
+    expect(toDayKey(instant, 'UTC')).toBe('2023-12-01');
+    expect(toDayKey(instant, 'Pacific/Niue')).toBe('2023-11-30');
   });
 });

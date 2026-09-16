@@ -3,15 +3,21 @@
    caused, and costs the swappability the RFC keeps for Temporal. */
 import { TZDate } from '@date-fns/tz';
 import {
+  addDays,
   addMonths,
+  addWeeks,
+  addYears,
   endOfMonth,
   endOfQuarter,
   endOfYear,
   format,
   isValid,
   parse,
+  parseISO,
+  startOfDay,
   startOfMonth,
   startOfQuarter,
+  startOfWeek,
   startOfYear
 } from 'date-fns';
 
@@ -36,6 +42,36 @@ export function dayKey(date: Date, timeZone?: string): DayKey {
     throw new RangeError(`Day is outside the supported range: ${key}`);
   }
   return key;
+}
+
+/* Whatever a consumer stored in a row or a filter: an ISO string, a `Date`, an
+   epoch. `parseISO` covers the ISO shapes and the native fallback is the one
+   dayjs itself used, so locale strings that parse today keep parsing. An
+   out-of-range ISO month is rejected rather than rolled into the next year. */
+export function toDayKey(value: unknown, timeZone?: string): DayKey | null {
+  const date = toInstant(value);
+  if (!date) return null;
+  try {
+    return dayKey(date, timeZone);
+  } catch {
+    /* Outside the four-digit year range `dayKey` supports. */
+    return null;
+  }
+}
+
+/* The instant behind the same inputs, for a caller that needs the time of day
+   rather than the calendar day. */
+export function toInstant(value: unknown): Date | null {
+  if (value instanceof Date) return isValid(value) ? value : null;
+  if (typeof value === 'number') {
+    const fromEpoch = new Date(value);
+    return isValid(fromEpoch) ? fromEpoch : null;
+  }
+  if (typeof value !== 'string' || value.trim() === '') return null;
+  const iso = parseISO(value);
+  if (isValid(iso)) return iso;
+  const native = new Date(value);
+  return isValid(native) ? native : null;
 }
 
 /* Not for ordering two days: an epoch carries a time and an offset, so two
@@ -149,6 +185,45 @@ export function formatCaptionLabel(date: Date, timeZone?: string): string {
    spell them `Sun Mon Tue`. */
 export function formatWeekdayLabel(date: Date, timeZone?: string): string {
   return format(zoned(date, timeZone), 'EEE');
+}
+
+/* Instant arithmetic for the timeline axis, which works in epoch ms rather
+   than day-keys. `TimelineScale` carries `week` and stops at quarter, so it
+   picks from these rather than sharing `lib/scale.ts`'s period maths. */
+export const startOfUnit = {
+  day: startOfDay,
+  week: startOfWeek,
+  month: startOfMonth,
+  quarter: startOfQuarter,
+  year: startOfYear
+} as const;
+
+export const addUnit = {
+  day: addDays,
+  week: addWeeks,
+  month: addMonths,
+  year: addYears
+} as const;
+
+/** 0-11, as on `Date`. */
+export function monthIndexOf(date: Date): number {
+  return date.getMonth();
+}
+
+export function formatDayOfMonth(date: Date, timeZone?: string): string {
+  return format(zoned(date, timeZone), 'd');
+}
+
+export function formatMonthShort(date: Date, timeZone?: string): string {
+  return format(zoned(date, timeZone), 'MMM');
+}
+
+export function formatDayMonth(date: Date, timeZone?: string): string {
+  return format(zoned(date, timeZone), 'd MMM');
+}
+
+export function formatYear(date: Date, timeZone?: string): string {
+  return format(zoned(date, timeZone), 'yyyy');
 }
 
 /* Same locale as monthFromName parses, so the caption's month column and the
