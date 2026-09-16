@@ -1,5 +1,5 @@
 import { cx } from 'class-variance-authority';
-import { type ComponentProps, useEffect, useRef, useState } from 'react';
+import { type ComponentProps, useEffect, useState } from 'react';
 import { CalendarIcon } from '~/icons';
 import { Input } from '../input';
 import styles from './calendar-preview.module.css';
@@ -119,7 +119,7 @@ export function CalendarPreviewInput({
 
   /* Null means "show the committed value"; a string is the user's draft. */
   const [text, setText] = useState<string | null>(null);
-  const lastReported = useRef<CalendarPreviewInputValidity>(VALID);
+  const [validity, setValidity] = useState<CalendarPreviewInputValidity>(VALID);
 
   /* Derived from the reason rather than returned alongside it, so the reason
      stays the single source of truth. */
@@ -140,13 +140,13 @@ export function CalendarPreviewInput({
   const report = (candidate: CalendarPreviewInputValidity) => {
     const next = withMessage(candidate);
     if (
-      next.valid === lastReported.current.valid &&
-      next.reason === lastReported.current.reason &&
-      next.message === lastReported.current.message
+      next.valid === validity.valid &&
+      next.reason === validity.reason &&
+      next.message === validity.message
     ) {
       return;
     }
-    lastReported.current = next;
+    setValidity(next);
     onValidityChange?.(next);
   };
 
@@ -248,7 +248,7 @@ export function CalendarPreviewInput({
          untouched. Spread rather than set to `undefined`: these props land
          after Field's, and an explicit `undefined` erases the invalid state
          Field sets for errors this input knows nothing about. */
-      {...(lastReported.current.valid
+      {...(validity.valid
         ? {}
         : { 'aria-invalid': true, 'data-invalid': true })}
       value={text ?? committedText}
