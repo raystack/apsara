@@ -410,6 +410,9 @@ export function CalendarPreviewRoot({
      — the rule floating-ui's own `useFocus` applies, plus `closePress`, which
      is ours because auto-closing on completion is. */
   const focusOpenBlocked = useRef(false);
+  const triggerRef = useRef<HTMLElement | null>(null);
+  /* `dropDraft` closes over state declared further down. */
+  const dropDraftRef = useRef<(() => void) | null>(null);
 
   const setOpen = useCallback(
     (next: boolean, details: CalendarPreviewOpenChangeDetails) => {
@@ -419,8 +422,18 @@ export function CalendarPreviewRoot({
           details.reason === REASONS.triggerPress ||
           details.reason === REASONS.closePress)
       ) {
-        focusOpenBlocked.current = true;
+        /* Only when focus has to travel back. In `<Trigger><Input/></Trigger>`
+           it never left, so no focus event follows, and arming here left the
+           guard set to swallow the next real one. */
+        focusOpenBlocked.current = !triggerRef.current?.contains(
+          document.activeElement
+        );
       }
+      /* A draft belongs to the open popover. A commit closes with `closePress`
+         having already cleared it; every other close throws it away, or the
+         shut field goes on reading a period nobody chose. */
+      if (!next && details.reason !== REASONS.closePress)
+        dropDraftRef.current?.();
       setOpenUnwrapped(next);
       onOpenChange?.(next, details);
     },
@@ -594,14 +607,15 @@ export function CalendarPreviewRoot({
   );
 
   /* `scales[0]` is the scale being undone, not the one to come back to. */
-  const dropDraft = useCallback(
-    () =>
-      settleScale(
-        scaleBeforeDraft.current ??
-          (isScaleValue(value) ? value.scale : scales[0])
-      ),
-    [value, scales, settleScale]
-  );
+  const dropDraft = useCallback(() => {
+    if (scaleDraft === null) return;
+    settleScale(
+      scaleBeforeDraft.current ??
+        (isScaleValue(value) ? value.scale : scales[0])
+    );
+  }, [scaleDraft, value, scales, settleScale]);
+
+  dropDraftRef.current = dropDraft;
 
   /* Bounds only, never `isDateUnavailable` — the prop documents why. */
   const isPeriodAvailable = useCallback(
@@ -695,6 +709,7 @@ export function CalendarPreviewRoot({
       open,
       setOpen,
       shouldIgnoreFocusOpen,
+      triggerRef,
       defaultDate,
       reset,
       month,

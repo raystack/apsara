@@ -92,6 +92,25 @@ describe('CalendarPreview picker composition', () => {
     expect(isOpen()).toBe(true);
   });
 
+  /* Focus never leaves the input in this composition, so no focus event
+     follows the close for the reopen guard to consume. */
+  it('opens on focus again after Escape closed it', () => {
+    const { input } = renderPicker();
+    /* Real focus, so the guard can see where it is; the event drives it. */
+    input.focus();
+    fireEvent.focus(input);
+    expect(isOpen()).toBe(true);
+
+    fireEvent.keyDown(
+      getSlot(document.body, 'calendar-preview-content') as HTMLElement,
+      { key: 'Escape' }
+    );
+    expect(isOpen()).toBe(false);
+
+    fireEvent.focus(input);
+    expect(isOpen()).toBe(true);
+  });
+
   it('never opens while disabled', () => {
     const onOpenChange = vi.fn();
     const { input } = renderPicker({ disabled: true, onOpenChange });

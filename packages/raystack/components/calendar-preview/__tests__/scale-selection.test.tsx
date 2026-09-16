@@ -772,3 +772,62 @@ describe('CalendarPreview drops a draft to the scale it started from', () => {
     expect(onScaleChange).not.toHaveBeenCalledWith('day');
   });
 });
+
+describe('CalendarPreview drops a scale draft when the popover closes', () => {
+  function renderScalePicker(props = {}) {
+    const utils = render(
+      <CalendarPreview
+        today={TODAY}
+        defaultMonth={TODAY}
+        scales={ALL}
+        {...props}
+      >
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Scales />
+          <CalendarPreview.Panel />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+    const input = getSlot(
+      utils.container,
+      'calendar-preview-input'
+    ) as HTMLInputElement;
+    return { ...utils, input };
+  }
+
+  /* `.Body` carries an Escape handler; this composition does not, which is
+     why the root has to drop the draft rather than the part. */
+  it('restores the field and the scale when Escape closes a bare panel', () => {
+    const { container, input } = renderScalePicker({
+      value: { date: '2026-08-20', scale: 'day' }
+    });
+    fireEvent.focus(input);
+    switchTo(document.body, 'quarter');
+    expect(input.value).toBe('Q3 2026');
+
+    fireEvent.keyDown(
+      getSlot(document.body, 'calendar-preview-content') as HTMLElement,
+      { key: 'Escape' }
+    );
+    expect(input.value).toBe('20 Aug 2026');
+    expect(getSlot(container, 'calendar-preview')).toHaveAttribute(
+      'data-scale',
+      'day'
+    );
+  });
+
+  it('keeps a committed period, which closes having already cleared', () => {
+    const { container, input } = renderScalePicker();
+    fireEvent.focus(input);
+    switchTo(document.body, 'quarter');
+    fireEvent.click(period(document.body, 'Q3'));
+    expect(input.value).toBe('Q3 2026');
+    expect(getSlot(container, 'calendar-preview')).toHaveAttribute(
+      'data-scale',
+      'quarter'
+    );
+  });
+});

@@ -1,7 +1,12 @@
 'use client';
 
 import type { Popover } from '@base-ui/react';
-import { createContext, type ReactNode, useContext } from 'react';
+import {
+  createContext,
+  type ReactNode,
+  type RefObject,
+  useContext
+} from 'react';
 import type { DayKey } from './date-adapter';
 import type { Scale, ScaleValue } from './lib/scale';
 
@@ -68,6 +73,7 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
    * clears. Tracks the last close reason, never the open state.
    */
   shouldIgnoreFocusOpen: () => boolean;
+  triggerRef: RefObject<HTMLElement | null>;
   /** Read even when `value` is controlled. */
   defaultDate: Date | CalendarPreviewDateRange | ScaleValue | null | undefined;
   /** A value reset — it never moves the view. */

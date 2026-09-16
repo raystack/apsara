@@ -1,8 +1,9 @@
 import { mergeProps, Popover, useRender } from '@base-ui/react';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import { REASONS } from '@base-ui/react/internals/reasons';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { cx } from 'class-variance-authority';
-import { type ComponentProps, type FocusEvent, useRef } from 'react';
+import { type ComponentProps, type FocusEvent, useEffect, useRef } from 'react';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
 import { type CalendarPreviewValue, isRange } from './calendar-preview-root';
@@ -44,6 +45,7 @@ export function CalendarPreviewTrigger({
     scale,
     setOpen,
     shouldIgnoreFocusOpen,
+    triggerRef,
     disabled,
     readOnly
   } = useCalendarPreviewContext<CalendarPreviewValue>(
@@ -54,6 +56,22 @@ export function CalendarPreviewTrigger({
      is open, and this only says whether a press is mid-flight. */
   const pressing = useRef(false);
 
+  /* A pointer released outside the trigger never reaches `onPointerUp` here,
+     and a flag left set swallows every focus that follows. */
+  useEffect(() => {
+    const release = () => {
+      pressing.current = false;
+    };
+    window.addEventListener('pointerup', release);
+    window.addEventListener('pointercancel', release);
+    return () => {
+      window.removeEventListener('pointerup', release);
+      window.removeEventListener('pointercancel', release);
+    };
+  }, []);
+
+  const mergedRef = useMergedRefs(triggerRef, ref);
+
   /* One cast at the boundary: Base UI types its trigger for the `button` it
      renders by default, and this one is always a `div`. Consumer props stay
      last, inside the merge. */
@@ -61,7 +79,7 @@ export function CalendarPreviewTrigger({
     nativeButton: false,
     disabled,
     render: render ?? <div />,
-    ref,
+    ref: mergedRef,
     ...mergeProps<'div'>(
       {
         className: cx(styles.trigger, className),
@@ -74,8 +92,11 @@ export function CalendarPreviewTrigger({
           pressing.current = false;
         },
         onFocus: (event: FocusEvent<HTMLDivElement>) => {
-          if (disabled || readOnly || pressing.current) return;
-          if (shouldIgnoreFocusOpen()) return;
+          if (disabled || readOnly) return;
+          /* Consumed before the press guard: a press that returns early
+             without taking it leaves it armed against the next focus. */
+          const returning = shouldIgnoreFocusOpen();
+          if (returning || pressing.current) return;
           setOpen(
             true,
             createChangeEventDetails(
