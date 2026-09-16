@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { getAllSlots, getSlot } from '~/test-utils/data-slots';
 import { CalendarPreview } from '../calendar-preview';
@@ -146,6 +147,162 @@ describe('CalendarPreview availability differs by field', () => {
     switchTo(container, 'month');
     expect(period(container, 'Dec')).toBeInTheDocument();
     expect(period(container, 'Dec')).toBeDisabled();
+  });
+});
+
+/* The suite runs at TZ=UTC, so a cell built from a local `Date` keyed a day
+   early west of UTC and a period late east of it. */
+describe('CalendarPreview periods ignore the time zone', () => {
+  it.each([
+    ['Pacific/Niue'],
+    ['Pacific/Kiritimati'],
+    ['UTC']
+  ])('commits the period that was clicked in %s', timeZone => {
+    const onValueChange = vi.fn();
+    const { container } = renderBody({
+      timeZone,
+      defaultScale: 'month',
+      onValueChange
+    });
+    fireEvent.click(period(container, 'Aug'));
+    expect(onValueChange.mock.calls[0][0]).toEqual({
+      date: '2026-08-01',
+      scale: 'month'
+    });
+  });
+
+  it('marks the clicked quarter, not its neighbour, west of UTC', () => {
+    const { container } = renderBody({
+      timeZone: 'Pacific/Niue',
+      defaultScale: 'quarter',
+      value: { date: '2026-07-01', scale: 'quarter' }
+    });
+    expect(period(container, 'Q3')).toHaveAttribute('data-selected');
+    expect(period(container, 'Q2')).not.toHaveAttribute('data-selected');
+  });
+});
+
+describe('CalendarPreview opens at the committed scale', () => {
+  it('mounts the period view, not the day grid, for a committed period', () => {
+    const { container } = renderBody({
+      value: { date: '2026-07-01', scale: 'quarter' }
+    });
+    expect(getSlot(container, 'calendar-preview-days')).toBeNull();
+    expect(getSlot(container, 'calendar-preview-quarters')).not.toBeNull();
+    expect(period(container, 'Q3')).toHaveAttribute('data-selected');
+  });
+
+  it('prefers an explicit defaultScale over the value', () => {
+    const { container } = renderBody({
+      value: { date: '2026-07-01', scale: 'quarter' },
+      defaultScale: 'day'
+    });
+    expect(getSlot(container, 'calendar-preview-days')).not.toBeNull();
+  });
+});
+
+/* `.Reset` rides in `.Header`, which only the day view mounts, so a period
+   scale had no way back to the default at all. */
+describe('CalendarPreview.Reset is reachable at every scale', () => {
+  const QUARTER = { date: '2026-07-01', scale: 'quarter' } as const;
+
+  it('restores from a period view', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderBody({
+      defaultDate: QUARTER,
+      value: { date: '2026-10-01', scale: 'quarter' },
+      onValueChange
+    });
+    const reset = getSlot(container, 'calendar-preview-reset') as HTMLElement;
+    expect(reset).not.toBeNull();
+    fireEvent.click(reset);
+    expect(onValueChange).toHaveBeenCalledWith(
+      QUARTER,
+      expect.objectContaining({ reason: 'reset' })
+    );
+  });
+
+  it.each([
+    ['day'],
+    ['quarter']
+  ] as const)('mounts exactly one reset at %s scale', scale => {
+    const { container } = renderBody({
+      defaultScale: scale,
+      defaultValue: { date: '2026-08-20', scale: 'day' },
+      defaultDate: { date: '2026-08-10', scale: 'day' }
+    });
+    expect(getAllSlots(container, 'calendar-preview-reset')).toHaveLength(1);
+  });
+});
+
+describe('CalendarPreview reads a period at its own scale', () => {
+  /* The view opens on `scales[0]`, so a committed quarter is shown while the
+     day grid is up; formatting it at the view's scale called it a day. */
+  it('agrees between .Trigger and .Input on a committed period', () => {
+    const { container } = render(
+      <CalendarPreview
+        today={TODAY}
+        scales={ALL}
+        value={{ date: '2026-07-01', scale: 'quarter' }}
+      >
+        <CalendarPreview.Trigger />
+        <CalendarPreview.Body />
+      </CalendarPreview>
+    );
+    expect(getSlot(container, 'calendar-preview-trigger')?.textContent).toBe(
+      'Q3 2026'
+    );
+    expect(
+      (getSlot(container, 'calendar-preview-input') as HTMLInputElement).value
+    ).toBe('Q3 2026');
+  });
+});
+
+describe('CalendarPreview settles the scale out loud', () => {
+  const inputValue = (container: HTMLElement) =>
+    (getSlot(container, 'calendar-preview-input') as HTMLInputElement).value;
+  const pressEscape = (container: HTMLElement) =>
+    fireEvent.keyDown(
+      getSlot(container, 'calendar-preview-body') as HTMLElement,
+      {
+        key: 'Escape'
+      }
+    );
+
+  it('reports the scale a dropped draft settles back on', () => {
+    const onScaleChange = vi.fn();
+    const { container } = renderBody({
+      value: { date: '2026-08-20', scale: 'day' },
+      onScaleChange
+    });
+    switchTo(container, 'quarter');
+    expect(onScaleChange).toHaveBeenLastCalledWith('quarter');
+    pressEscape(container);
+    expect(onScaleChange).toHaveBeenLastCalledWith('day');
+  });
+
+  /* A controlled `scale` moves only when the consumer is told to move it, so
+     settling through the raw setter left the switcher stuck on the draft. */
+  it('moves a controlled scale back when the draft is dropped', () => {
+    function Controlled() {
+      const [scale, setScale] = useState<Scale>('day');
+      return (
+        <CalendarPreview
+          today={TODAY}
+          scales={ALL}
+          value={{ date: '2026-08-20', scale: 'day' }}
+          scale={scale}
+          onScaleChange={setScale}
+        >
+          <CalendarPreview.Body />
+        </CalendarPreview>
+      );
+    }
+    const { container } = render(<Controlled />);
+    switchTo(container, 'quarter');
+    expect(inputValue(container)).toBe('Q3 2026');
+    pressEscape(container);
+    expect(inputValue(container)).toBe('20 Aug 2026');
   });
 });
 
@@ -370,6 +527,64 @@ describe('CalendarPreview scale anchors on the visible month', () => {
       date: '2027-04-01',
       scale: 'quarter'
     });
+  });
+});
+
+/* A click and a typed day are the same intent, so they must commit the same
+   shape: the grid honoured the root's arm and the input wrote a bare Date. */
+describe('CalendarPreview commits a day at one shape', () => {
+  const typeDay = (container: HTMLElement) => {
+    const input = getSlot(
+      container,
+      'calendar-preview-input'
+    ) as HTMLInputElement;
+    fireEvent.change(input, { target: { value: '15 Aug 2026' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+  };
+
+  it('types a day as a ScaleValue on a scale-aware root', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderBody({ onValueChange });
+    typeDay(container);
+    expect(onValueChange.mock.calls[0][0]).toEqual({
+      date: '2026-08-15',
+      scale: 'day'
+    });
+  });
+
+  it("types a day as a ScaleValue under scales={['day']}", () => {
+    const onValueChange = vi.fn();
+    const { container } = render(
+      <CalendarPreview
+        today={TODAY}
+        scales={['day']}
+        defaultMonth={TODAY}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Body />
+      </CalendarPreview>
+    );
+    typeDay(container);
+    expect(onValueChange.mock.calls[0][0]).toEqual({
+      date: '2026-08-15',
+      scale: 'day'
+    });
+  });
+
+  it('keeps a plain root on Date', () => {
+    const onValueChange = vi.fn();
+    const { container } = render(
+      <CalendarPreview
+        today={TODAY}
+        defaultMonth={TODAY}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Input />
+        <CalendarPreview.Days />
+      </CalendarPreview>
+    );
+    typeDay(container);
+    expect(onValueChange.mock.calls[0][0]).toEqual(new Date(2026, 7, 15));
   });
 });
 
