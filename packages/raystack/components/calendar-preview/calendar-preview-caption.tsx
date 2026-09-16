@@ -91,7 +91,11 @@ function CaptionDropdown({
 }: { dropdown: true } & useRender.ComponentProps<'button'>) {
   const { month, setMonth, yearRange, scale, disabled } =
     useCalendarPreviewContext('CalendarPreview.Caption');
+  const days = useCalendarPreviewDaysContext();
   const label = useCaptionLabel();
+  /* Matches `.Header`: the grid shims while it loads, so the scroller must not
+     open over a view that is about to change under it. */
+  const inert = disabled || (days?.busy ?? false);
 
   const activeMonth = month.getMonth();
   const activeYear = month.getFullYear();
@@ -107,7 +111,7 @@ function CaptionDropdown({
         data-slot='calendar-preview-caption'
         data-scale={scale}
         data-dropdown='true'
-        disabled={disabled}
+        disabled={inert}
         render={render}
         ref={ref}
         {...props}

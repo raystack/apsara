@@ -734,6 +734,32 @@ describe('CalendarPreview.Grid', () => {
     expect(getSlot(container, 'calendar-preview-next-month')).toBeDisabled();
   });
 
+  /* The nav was gated on `busy` but the caption was not, so the month and year
+     scroller stayed open over a grid that was about to change. */
+  it('disables the caption dropdown while the grid is loading', () => {
+    const { container } = renderCalendar(
+      <CalendarPreview.Days>
+        <CalendarPreview.Header>
+          <CalendarPreview.Caption dropdown />
+        </CalendarPreview.Header>
+        <CalendarPreview.Grid loading />
+      </CalendarPreview.Days>
+    );
+    expect(getSlot(container, 'calendar-preview-caption')).toBeDisabled();
+  });
+
+  it('leaves the caption dropdown alone when the grid is not loading', () => {
+    const { container } = renderCalendar(
+      <CalendarPreview.Days>
+        <CalendarPreview.Header>
+          <CalendarPreview.Caption dropdown />
+        </CalendarPreview.Header>
+        <CalendarPreview.Grid />
+      </CalendarPreview.Days>
+    );
+    expect(getSlot(container, 'calendar-preview-caption')).not.toBeDisabled();
+  });
+
   it('leaves navigation alone once loading finishes', () => {
     const { container, rerender } = render(
       <CalendarPreview today={TODAY} defaultMonth={AUGUST}>
