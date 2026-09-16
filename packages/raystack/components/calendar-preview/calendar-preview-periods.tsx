@@ -159,6 +159,11 @@ function PeriodView({
                         data-selected={produced === selectedKey || undefined}
                         data-unavailable={unavailable || undefined}
                         disabled={disabled || unavailable}
+                        aria-label={
+                          viewScale === 'year'
+                            ? cell.label
+                            : `${cell.label} ${year}`
+                        }
                         aria-current={produced === selectedKey || undefined}
                         onClick={() => {
                           if (readOnly) return;

@@ -697,3 +697,78 @@ describe('CalendarPreview.Reset at scale', () => {
     ).toBe('Q3 2026');
   });
 });
+
+describe('CalendarPreview period cells name their year', () => {
+  it('puts the year in a quarter cell name', () => {
+    const { container } = renderBody({ defaultScale: 'quarter' });
+    expect(period(container, 'Q3', 2026)).toHaveAttribute(
+      'aria-label',
+      'Q3 2026'
+    );
+    expect(period(container, 'Q3', 2027)).toHaveAttribute(
+      'aria-label',
+      'Q3 2027'
+    );
+  });
+
+  it('puts the year in a month cell name', () => {
+    const { container } = renderBody({ defaultScale: 'month' });
+    expect(period(container, 'Jan', 2030)).toHaveAttribute(
+      'aria-label',
+      'Jan 2030'
+    );
+  });
+
+  it('leaves a year cell named by itself', () => {
+    const { container } = renderBody({ defaultScale: 'year' });
+    expect(period(container, '2026', 2026)).toHaveAttribute(
+      'aria-label',
+      '2026'
+    );
+  });
+});
+
+describe('CalendarPreview drops a draft to the scale it started from', () => {
+  const pressEscape = (container: HTMLElement) =>
+    fireEvent.keyDown(
+      getSlot(container, 'calendar-preview-body') as HTMLElement,
+      { key: 'Escape' }
+    );
+
+  it('restores defaultScale rather than the first offered scale', () => {
+    const onScaleChange = vi.fn();
+    const { container } = render(
+      <CalendarPreview
+        today={TODAY}
+        scales={['month', 'year']}
+        defaultScale='year'
+        onScaleChange={onScaleChange}
+      >
+        <CalendarPreview.Body />
+      </CalendarPreview>
+    );
+    switchTo(container, 'month');
+    expect(onScaleChange).toHaveBeenLastCalledWith('month');
+    pressEscape(container);
+    expect(onScaleChange).toHaveBeenLastCalledWith('year');
+  });
+
+  it('comes back to the start of the run, not a scale passed through it', () => {
+    const onScaleChange = vi.fn();
+    const { container } = renderBody({ defaultScale: 'year', onScaleChange });
+    switchTo(container, 'month');
+    switchTo(container, 'quarter');
+    pressEscape(container);
+    expect(onScaleChange).toHaveBeenLastCalledWith('year');
+  });
+
+  it('forgets the run once a period is committed', () => {
+    const onScaleChange = vi.fn();
+    const { container } = renderBody({ defaultScale: 'day', onScaleChange });
+    switchTo(container, 'quarter');
+    fireEvent.click(period(container, 'Q3'));
+    onScaleChange.mockClear();
+    pressEscape(container);
+    expect(onScaleChange).not.toHaveBeenCalledWith('day');
+  });
+});

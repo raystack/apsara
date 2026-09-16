@@ -340,6 +340,13 @@ export function CalendarPreviewRoot({
 
   const [scaleDraft, setScaleDraft] = useState<ScaleValue | null>(null);
 
+  const scaleBeforeDraft = useRef<Scale | null>(null);
+
+  const clearScaleDraft = useCallback(() => {
+    setScaleDraft(null);
+    scaleBeforeDraft.current = null;
+  }, []);
+
   /* An array carries the scale even when that scale is `'day'`. */
   const carriesScale = Array.isArray(scalesProp) || scalesProp !== 'day';
 
@@ -384,10 +391,10 @@ export function CalendarPreviewRoot({
   const commitDay = useCallback(
     (date: Date, reason: CalendarPreviewChangeReason) => {
       const key = dayKey(date, timeZone);
-      setScaleDraft(null);
+      clearScaleDraft();
       setValue(carriesScale ? { date: key, scale: 'day' } : date, reason, date);
     },
-    [carriesScale, timeZone, setValue]
+    [carriesScale, timeZone, setValue, clearScaleDraft]
   );
 
   const [open, setOpenUnwrapped] = useControlled<boolean>({
@@ -473,7 +480,7 @@ export function CalendarPreviewRoot({
             : null;
         if (current === key && clearable) {
           /* The input reads the draft first, so a stale one would show. */
-          setScaleDraft(null);
+          clearScaleDraft();
           setValue(null, 'clear', date);
           return;
         }
@@ -511,6 +518,7 @@ export function CalendarPreviewRoot({
       fieldReadOnly,
       clearable,
       commitDay,
+      clearScaleDraft,
       timeZone,
       readOnly,
       disabled,
@@ -529,6 +537,8 @@ export function CalendarPreviewRoot({
   /* Never emits: a cell click or Enter commits the draft. */
   const switchScale = useCallback(
     (next: Scale) => {
+      /* First switch of a run only: a second is still the same draft. */
+      if (scaleDraft === null) scaleBeforeDraft.current = scale;
       /* The month on screen, not today, or 2030 snaps back. */
       const anchor = scaleValue ?? {
         date: dayKey(month, timeZone),
@@ -538,21 +548,38 @@ export function CalendarPreviewRoot({
       setMonth(parseKey(convertScale(anchor, next, false, timeZone).date));
       setScale(next);
     },
-    [scaleValue, month, timeZone, scale, trailingValue, setMonth, setScale]
+    [
+      scaleValue,
+      scaleDraft,
+      month,
+      timeZone,
+      scale,
+      trailingValue,
+      setMonth,
+      setScale
+    ]
   );
 
   const selectPeriod = useCallback(
     (date: Date | string, next: Scale) => {
       if (readOnly || disabled) return;
       const key = anchorOf(periodOf(date, next, timeZone), trailingValue);
-      setScaleDraft(null);
+      clearScaleDraft();
       setValue({ date: key, scale: next }, 'select', parseKey(key));
       setOpen(
         false,
         createChangeEventDetails(REASONS.closePress, undefined, undefined)
       );
     },
-    [trailingValue, timeZone, readOnly, disabled, setValue, setOpen]
+    [
+      trailingValue,
+      timeZone,
+      readOnly,
+      disabled,
+      setValue,
+      setOpen,
+      clearScaleDraft
+    ]
   );
 
   /* Routed through `setScale`, not the raw setter: a controlled `scale` only
@@ -560,14 +587,19 @@ export function CalendarPreviewRoot({
      report the scale it settles on the way switching to one does. */
   const settleScale = useCallback(
     (next: Scale) => {
-      setScaleDraft(null);
+      clearScaleDraft();
       if (next !== scale) setScale(next);
     },
-    [scale, setScale]
+    [scale, setScale, clearScaleDraft]
   );
 
+  /* `scales[0]` is the scale being undone, not the one to come back to. */
   const dropDraft = useCallback(
-    () => settleScale(isScaleValue(value) ? value.scale : scales[0]),
+    () =>
+      settleScale(
+        scaleBeforeDraft.current ??
+          (isScaleValue(value) ? value.scale : scales[0])
+      ),
     [value, scales, settleScale]
   );
 
