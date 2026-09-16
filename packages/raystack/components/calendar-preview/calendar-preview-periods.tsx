@@ -7,7 +7,13 @@ import {
   type CalendarPreviewValue,
   isScaleValue
 } from './calendar-preview-root';
-import { dayKey, monthShortNames, monthStart, yearOf } from './date-adapter';
+import {
+  type DayKey,
+  dayKey,
+  dayKeyFromParts,
+  monthShortNames,
+  yearOf
+} from './date-adapter';
 import { anchorOf, periodOf, type Scale } from './lib/scale';
 
 export type CalendarPreviewPeriodViewProps = useRender.ComponentProps<'div'>;
@@ -15,35 +21,33 @@ export type CalendarPreviewPeriodViewProps = useRender.ComponentProps<'div'>;
 interface Cell {
   key: string;
   label: string;
-  /** Before `trailingValue` is applied. */
-  date: Date;
+  /* A timeless day, not an instant: "August 2026" is a calendar period, and
+     keying it from a local `Date` read it a month early west of the zone. */
+  date: DayKey;
 }
 
 const MONTHS = monthShortNames();
 
+/* A month out of `dayKeyFromParts`' range has no cell rather than a bad one. */
 function cellsFor(scale: Scale, year: number): Cell[] {
+  const at = (key: string, label: string, month: number): Cell | null => {
+    const date = dayKeyFromParts(year, month, 1);
+    return date === null ? null : { key, label, date };
+  };
+
+  let cells: (Cell | null)[];
   if (scale === 'month') {
-    return MONTHS.map((label, index) => ({
-      key: `${year}-${index}`,
-      label,
-      date: monthStart(year, index)
-    }));
+    cells = MONTHS.map((label, index) =>
+      at(`${year}-${index}`, label, index + 1)
+    );
+  } else if (scale === 'quarter') {
+    cells = [0, 1, 2, 3].map(q => at(`${year}-q${q}`, `Q${q + 1}`, q * 3 + 1));
+  } else if (scale === 'halfYear') {
+    cells = [0, 1].map(h => at(`${year}-h${h}`, `H${h + 1}`, h * 6 + 1));
+  } else {
+    cells = [at(`${year}`, String(year), 1)];
   }
-  if (scale === 'quarter') {
-    return [0, 1, 2, 3].map(q => ({
-      key: `${year}-q${q}`,
-      label: `Q${q + 1}`,
-      date: monthStart(year, q * 3)
-    }));
-  }
-  if (scale === 'halfYear') {
-    return [0, 1].map(h => ({
-      key: `${year}-h${h}`,
-      label: `H${h + 1}`,
-      date: monthStart(year, h * 6)
-    }));
-  }
-  return [{ key: `${year}`, label: String(year), date: monthStart(year, 0) }];
+  return cells.filter((cell): cell is Cell => cell !== null);
 }
 
 function PeriodView({
