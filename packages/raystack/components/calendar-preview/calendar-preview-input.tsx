@@ -7,7 +7,8 @@ import type { CalendarPreviewField } from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
 import {
   type CalendarPreviewValue,
-  isRange as isRangeValue
+  isRange as isRangeValue,
+  isScaleValue
 } from './calendar-preview-root';
 import { dayKey, parseKey } from './date-adapter';
 import { parseScaleInput } from './lib/parse';
@@ -98,6 +99,7 @@ export function CalendarPreviewInput({
     selectPeriod,
     isPeriodAvailable,
     selection,
+    commitDay,
     setEndpoint,
     draft,
     activeField,
@@ -201,7 +203,7 @@ export function CalendarPreviewInput({
     if (isRange) setEndpoint(field, resolved.date);
     else if (resolved.scale !== 'day')
       selectPeriod(resolved.date, resolved.scale);
-    else setValue(resolved.date, 'input', resolved.date);
+    else commitDay(resolved.date, 'input');
     setText(null);
     report(VALID);
   };
@@ -211,7 +213,11 @@ export function CalendarPreviewInput({
   const endpoint = isRange
     ? ((field === 'start' ? draft?.from : draft?.to) ?? null)
     : (scaleDraft ?? (isRangeValue(value) ? null : value));
-  const committedText = endpoint ? formatValue(endpoint, scale) : '';
+  /* A period reads back at its own scale, as `.Trigger` does: the view can sit
+     on days while the committed value is a quarter. */
+  const committedText = endpoint
+    ? formatValue(endpoint, isScaleValue(endpoint) ? endpoint.scale : scale)
+    : '';
   const resolvedPlaceholder =
     placeholder ??
     (scales.length > 1

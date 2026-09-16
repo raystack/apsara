@@ -58,7 +58,9 @@ export type CalendarPreviewValue =
   | ScaleValue
   | null;
 
-export function isScaleValue(value: CalendarPreviewValue): value is ScaleValue {
+export function isScaleValue(
+  value: CalendarPreviewValue | undefined
+): value is ScaleValue {
   return value != null && !(value instanceof Date) && 'date' in value;
 }
 
@@ -322,7 +324,16 @@ export function CalendarPreviewRoot({
 
   const [scale, setScaleUnwrapped] = useControlled<Scale>({
     controlled: scaleProp,
-    default: defaultScale ?? scales[0],
+    /* The committed value's own scale, the way dropping a draft settles on it:
+       opening a quarter on the day grid showed the selection as a day and left
+       no cell marked. `valueProp` before `defaultValue`, as `month` does. */
+    default:
+      defaultScale ??
+      (isScaleValue(valueProp)
+        ? valueProp.scale
+        : isScaleValue(defaultValue)
+          ? defaultValue.scale
+          : scales[0]),
     name: 'CalendarPreview',
     state: 'scale'
   });
@@ -365,6 +376,18 @@ export function CalendarPreviewRoot({
       });
     },
     [setValueUnwrapped, emit, scale, timeZone, readOnly, disabled]
+  );
+
+  /* The one place a day becomes a value: a scale-aware root carries
+     `{ date, scale }` at day scale too, and a click and a typed date must not
+     disagree about that — writing the rule twice is how they last did. */
+  const commitDay = useCallback(
+    (date: Date, reason: CalendarPreviewChangeReason) => {
+      const key = dayKey(date, timeZone);
+      setScaleDraft(null);
+      setValue(carriesScale ? { date: key, scale: 'day' } : date, reason, date);
+    },
+    [carriesScale, timeZone, setValue]
   );
 
   const [open, setOpenUnwrapped] = useControlled<boolean>({
@@ -448,15 +471,13 @@ export function CalendarPreviewRoot({
           : value instanceof Date
             ? dayKey(value, timeZone)
             : null;
-        /* The input reads the draft first, so a stale one would show. */
-        setScaleDraft(null);
-        if (current === key && clearable) setValue(null, 'clear', date);
-        else
-          setValue(
-            carriesScale ? { date: key, scale: 'day' } : date,
-            'select',
-            date
-          );
+        if (current === key && clearable) {
+          /* The input reads the draft first, so a stale one would show. */
+          setScaleDraft(null);
+          setValue(null, 'clear', date);
+          return;
+        }
+        commitDay(date, 'select');
         return;
       }
 
@@ -489,7 +510,7 @@ export function CalendarPreviewRoot({
       draft,
       fieldReadOnly,
       clearable,
-      carriesScale,
+      commitDay,
       timeZone,
       readOnly,
       disabled,
@@ -525,7 +546,7 @@ export function CalendarPreviewRoot({
       if (readOnly || disabled) return;
       const key = anchorOf(periodOf(date, next, timeZone), trailingValue);
       setScaleDraft(null);
-      setValue({ date: key, scale: next } as never, 'select', parseKey(key));
+      setValue({ date: key, scale: next }, 'select', parseKey(key));
       setOpen(
         false,
         createChangeEventDetails(REASONS.closePress, undefined, undefined)
@@ -534,10 +555,21 @@ export function CalendarPreviewRoot({
     [trailingValue, timeZone, readOnly, disabled, setValue, setOpen]
   );
 
-  const dropDraft = useCallback(() => {
-    setScaleDraft(null);
-    setScaleUnwrapped(isScaleValue(value) ? value.scale : scales[0]);
-  }, [value, scales, setScaleUnwrapped]);
+  /* Routed through `setScale`, not the raw setter: a controlled `scale` only
+     moves when the consumer is told to move it, so dropping a draft has to
+     report the scale it settles on the way switching to one does. */
+  const settleScale = useCallback(
+    (next: Scale) => {
+      setScaleDraft(null);
+      if (next !== scale) setScale(next);
+    },
+    [scale, setScale]
+  );
+
+  const dropDraft = useCallback(
+    () => settleScale(isScaleValue(value) ? value.scale : scales[0]),
+    [value, scales, settleScale]
+  );
 
   /* Bounds only, never `isDateUnavailable` — the prop documents why. */
   const isPeriodAvailable = useCallback(
@@ -574,10 +606,7 @@ export function CalendarPreviewRoot({
      consumer that logs or validates on selection needs to tell them apart. */
   const reset = useCallback(() => {
     if (defaultDate === undefined) return;
-    setScaleDraft(null);
-    setScaleUnwrapped(
-      isScaleValue(defaultDate) ? defaultDate.scale : scales[0]
-    );
+    settleScale(isScaleValue(defaultDate) ? defaultDate.scale : scales[0]);
     /* A `null` default clears, and reports the day it cleared: `'reset'` would
        claim a day was restored when none was. */
     if (defaultDate === null) {
@@ -586,7 +615,7 @@ export function CalendarPreviewRoot({
       return;
     }
     setValue(defaultDate, 'reset', monthAnchor(defaultDate) ?? today);
-  }, [defaultDate, value, scales, setScaleUnwrapped, setValue, today]);
+  }, [defaultDate, value, scales, settleScale, setValue, today]);
 
   /* Day-keys, not instants: a `minDate` carrying a time of day still leaves
      its own day selectable, which the current family gets wrong. */
@@ -624,6 +653,7 @@ export function CalendarPreviewRoot({
       isPeriodAvailable,
       selection,
       selectDay,
+      commitDay,
       setEndpoint,
       draft: draft ?? (isRange(value) ? value : null),
       activeField,
@@ -662,6 +692,7 @@ export function CalendarPreviewRoot({
       isPeriodAvailable,
       selection,
       selectDay,
+      commitDay,
       setEndpoint,
       draft,
       activeField,

@@ -5,6 +5,7 @@ import { useCalendarPreviewContext } from './calendar-preview-context';
 import { CalendarPreviewInput } from './calendar-preview-input';
 import { CalendarPreviewLabel } from './calendar-preview-label';
 import { CalendarPreviewPanel } from './calendar-preview-panel';
+import { CalendarPreviewReset } from './calendar-preview-reset';
 import { CalendarPreviewScales } from './calendar-preview-scales';
 import { CalendarPreviewSeparator } from './calendar-preview-separator';
 
@@ -39,6 +40,9 @@ export function CalendarPreviewBody({
             <CalendarPreviewLabel />
             <CalendarPreviewInput />
             <CalendarPreviewScales />
+            {/* `.Reset` rides in `.Header`, which only the day view mounts, so
+                a period scale would otherwise have no way back to the default. */}
+            {scale !== 'day' && <CalendarPreviewReset />}
             <CalendarPreviewSeparator />
             <CalendarPreviewPanel />
           </>

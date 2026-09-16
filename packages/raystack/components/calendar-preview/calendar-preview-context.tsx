@@ -107,6 +107,8 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
    * the value and closes the popover.
    */
   selectDay: (date: Date) => void;
+  /** Writes a day at the root's value shape, for a path that is not a click. */
+  commitDay: (date: Date, reason: CalendarPreviewChangeReason) => void;
   /** Writes one named endpoint, for a typed `.Input`. */
   setEndpoint: (field: CalendarPreviewField, date: Date) => void;
   /**
