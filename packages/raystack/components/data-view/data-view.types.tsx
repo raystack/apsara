@@ -13,6 +13,7 @@ import type {
   FilterTypes,
   FilterValueType
 } from '~/types/filters';
+import type { FilterChipCalendarProps } from '../filter-chip/filter-chip';
 import type { BaseSelectProps } from '../select/select-root';
 
 export type DataViewMode = 'client' | 'server';
@@ -82,6 +83,10 @@ export interface DataViewField<TData = any> {
   defaultFilterValue?: unknown;
   filterProps?: {
     select?: BaseSelectProps;
+    /* `scales` here is what makes a column filter by month or quarter: the
+       value carries its scale, so the cell annotates at that scale with no
+       calendar mounted. */
+    calendar?: FilterChipCalendarProps;
   };
 
   // ordering / grouping / visibility capability
