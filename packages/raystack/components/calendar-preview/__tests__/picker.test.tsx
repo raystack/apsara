@@ -566,3 +566,33 @@ describe('CalendarPreview.Trigger is an anchor around a field', () => {
     expect(isOpen()).toBe(true);
   });
 });
+
+describe('CalendarPreview.Input drops a rejected draft on an outside write', () => {
+  it('clears the text and the invalid state when a day is clicked', () => {
+    const onValidityChange = vi.fn();
+    const { container, input } = renderPicker({}, { onValidityChange });
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: 'not a date' } });
+    expect(input).toHaveAttribute('data-invalid');
+
+    const cell = getAllSlots(document.body, 'calendar-preview-day').find(
+      one =>
+        getSlot(one, 'calendar-preview-day-number')?.textContent === '12' &&
+        !one.hasAttribute('data-outside')
+    ) as HTMLElement;
+    fireEvent.click(cell);
+
+    expect(input.value).toBe('12 Aug 2026');
+    expect(input).not.toHaveAttribute('data-invalid');
+    expect(onValidityChange).toHaveBeenLastCalledWith({ valid: true });
+    expect(container).toBeTruthy();
+  });
+
+  it('leaves a draft alone while the value has not moved', () => {
+    const { input } = renderPicker();
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: 'not a date' } });
+    fireEvent.change(input, { target: { value: 'still not' } });
+    expect(input.value).toBe('still not');
+  });
+});

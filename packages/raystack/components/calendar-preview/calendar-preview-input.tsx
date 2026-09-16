@@ -1,5 +1,5 @@
 import { cx } from 'class-variance-authority';
-import { type ComponentProps, useEffect, useState } from 'react';
+import { type ComponentProps, useEffect, useRef, useState } from 'react';
 import { CalendarIcon } from '~/icons';
 import { Input } from '../input';
 import styles from './calendar-preview.module.css';
@@ -127,6 +127,18 @@ export function CalendarPreviewInput({
   /* Null means "show the committed value"; a string is the user's draft. */
   const [text, setText] = useState<string | null>(null);
   const [validity, setValidity] = useState<CalendarPreviewInputValidity>(VALID);
+
+  /* A value this field did not type replaces whatever it was drafting, or a
+     rejected draft outlives the day the user went on to click. */
+  const committed = useRef(value);
+  useEffect(() => {
+    if (committed.current === value) return;
+    committed.current = value;
+    setText(null);
+    if (validity.valid) return;
+    setValidity(VALID);
+    onValidityChange?.(VALID);
+  }, [value, validity.valid, onValidityChange]);
 
   /* Derived from the reason rather than returned alongside it, so the reason
      stays the single source of truth. */
