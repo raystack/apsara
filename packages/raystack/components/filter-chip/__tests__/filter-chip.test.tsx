@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { getSlot } from '~/test-utils/data-slots';
 import { FilterType } from '~/types/filters';
 import { FilterChip } from '../filter-chip';
 import styles from '../filter-chip.module.css';
@@ -184,18 +185,56 @@ describe('FilterChip', () => {
       expect(screen.getByDisplayValue('27 May 2026')).toBeInTheDocument();
     });
 
-    it('forwards calendarProps to the underlying DatePicker', () => {
-      // dateFormat is the easiest forwarded prop to observe, since the formatted
-      // string in the input changes when it lands on DatePicker.
+    /* Ported from the `dateFormat` case: the prop is gone, and `formatValue`
+       is the forwarded prop whose effect is visible in the field. */
+    it('forwards calendarProps to the calendar', () => {
       render(
         <FilterChip
           label='Created'
           columnType={FilterType.date}
           value={new Date(2026, 4, 27)}
-          calendarProps={{ dateFormat: 'DD/MM/YYYY' }}
+          calendarProps={{
+            formatValue: value =>
+              value instanceof Date ? `day-${value.getDate()}` : 'period'
+          }}
         />
       );
-      expect(screen.getByDisplayValue('27/05/2026')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('day-27')).toBeInTheDocument();
+    });
+
+    /* The shallow `slotProps.input` merge let a consumer object replace the
+       chip's own, dropping the class that sizes the field. */
+    it('keeps its own class when a consumer passes calendarProps.className', () => {
+      const { container } = render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2026, 4, 27)}
+          calendarProps={{ className: 'consumer-calendar' }}
+        />
+      );
+      const root = container.querySelector('[data-slot="calendar-preview"]');
+      expect(root).toHaveClass('consumer-calendar');
+      expect(root?.className.split(' ').length).toBeGreaterThan(1);
+    });
+
+    it('composes a consumer onValueChange rather than replacing its own', () => {
+      const consumer = vi.fn();
+      const onValueChange = vi.fn();
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2026, 4, 27)}
+          onValueChange={onValueChange}
+          calendarProps={{ onValueChange: consumer }}
+        />
+      );
+      const input = screen.getByDisplayValue('27 May 2026');
+      fireEvent.change(input, { target: { value: '28 May 2026' } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(consumer).toHaveBeenCalled();
+      expect(onValueChange).toHaveBeenCalled();
     });
   });
 
@@ -214,5 +253,41 @@ describe('FilterChip', () => {
       expect(root).toHaveAttribute('id', 'my-filter');
       expect(root).toHaveAttribute('title', 'Tooltip');
     });
+  });
+});
+
+/* Reference C: the cell shows the value's annotation at the value's own scale,
+   and nothing mounts a calendar until the popover opens. */
+describe('FilterChip as the DataView calendar filter cell', () => {
+  it('annotates a day value with no calendar in the tree', () => {
+    const { container } = render(
+      <FilterChip
+        label='When'
+        columnType={FilterType.date}
+        value={new Date(2026, 7, 15)}
+      />
+    );
+    expect(screen.getByDisplayValue('15 Aug 2026')).toBeInTheDocument();
+    expect(getSlot(container, 'calendar-preview-days')).toBeNull();
+    expect(getSlot(container, 'calendar-preview-content')).toBeNull();
+  });
+
+  it.each([
+    [{ date: '2026-08-15', scale: 'day' }, '15 Aug 2026'],
+    [{ date: '2026-08-01', scale: 'month' }, 'Aug 2026'],
+    [{ date: '2026-07-01', scale: 'quarter' }, 'Q3 2026']
+  ] as const)('annotates %o at its own scale', (value, expected) => {
+    const { container } = render(
+      <FilterChip
+        label='When'
+        columnType={FilterType.date}
+        value={value}
+        calendarProps={{
+          scales: ['day', 'month', 'quarter', 'halfYear', 'year']
+        }}
+      />
+    );
+    expect(screen.getByDisplayValue(expected)).toBeInTheDocument();
+    expect(getSlot(container, 'calendar-preview-content')).toBeNull();
   });
 });

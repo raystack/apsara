@@ -1,7 +1,6 @@
 'use client';
 
-import { cva, VariantProps } from 'class-variance-authority';
-import dayjs from 'dayjs';
+import { cva, cx, VariantProps } from 'class-variance-authority';
 import { ComponentProps, ReactElement, useCallback, useState } from 'react';
 import { XIcon } from '~/icons';
 import {
@@ -12,7 +11,12 @@ import {
   FilterTypes,
   filterOperators
 } from '~/types/filters';
-import { DatePicker, type DatePickerProps } from '../calendar';
+import {
+  CalendarPreview,
+  type CalendarPreviewProps,
+  type CalendarPreviewScaleValue
+} from '../calendar-preview';
+import { toInstant } from '../calendar-preview/date-adapter';
 import { Flex } from '../flex';
 import { Input } from '../input';
 import { Select } from '../select';
@@ -33,31 +37,32 @@ const chip = cva(styles.chip, {
   }
 });
 
-export type FilterChipValue = string | string[] | number | Date;
+export type FilterChipValue =
+  | string
+  | string[]
+  | number
+  | Date
+  | CalendarPreviewScaleValue;
 
-/**
- * Coerce a `FilterChipValue` to the `Date` the DatePicker expects, since filter
- * state hydrated from a serialized query arrives as a string or epoch number.
- * Unparseable values leave the field unselected.
- */
-const toDateValue = (value: unknown): Date | undefined => {
-  if (value instanceof Date) return value;
-  if (typeof value === 'string' || typeof value === 'number') {
-    const parsed = dayjs(value);
-    return parsed.isValid() ? parsed.toDate() : undefined;
+/* Filter state hydrated from a serialized query arrives as a string or an
+   epoch. A period keeps its own shape — that is what carries its scale. */
+const toCalendarValue = (
+  value: unknown
+): Date | CalendarPreviewScaleValue | null => {
+  if (value && typeof value === 'object' && 'scale' in value) {
+    return value as CalendarPreviewScaleValue;
   }
-  return undefined;
+  return toInstant(value);
 };
 
 /**
- * Subset of `DatePickerProps` that consumers may forward to the chip's
- * built-in DatePicker via `calendarProps`. `value`/`onSelect`/`defaultValue`
- * are owned by `FilterChip`; `children` would replace the input trigger and
- * break the chip layout.
+ * Forwarded to the chip's `CalendarPreview`. `value` and `defaultValue` are
+ * owned by `FilterChip`, and `children` would replace the composition the chip
+ * renders. `onValueChange` is composed with the chip's, never replacing it.
  */
 export type FilterChipCalendarProps = Omit<
-  DatePickerProps,
-  'value' | 'onSelect' | 'defaultValue' | 'children'
+  CalendarPreviewProps,
+  'value' | 'defaultValue' | 'children'
 >;
 
 export interface FilterChipProps
@@ -73,11 +78,7 @@ export interface FilterChipProps
   leadingIcon?: ReactElement;
   operations?: FilterOperator<string>[];
   selectProps?: BaseSelectProps;
-  /**
-   * Props forwarded to the underlying `DatePicker` for `columnType="date"`.
-   * `value`/`onSelect`/`defaultValue` are owned by `FilterChip` and excluded;
-   * `children` is excluded so the chip's input trigger isn't replaced.
-   */
+  /** Forwarded to the `CalendarPreview` behind `columnType="date"`. */
   calendarProps?: FilterChipCalendarProps;
 }
 
@@ -174,27 +175,45 @@ export const FilterChip = ({
             </Select.Content>
           </Select>
         );
-      case FilterType.date:
+      case FilterType.date: {
+        const {
+          className: calendarClassName,
+          onValueChange: onCalendarValueChange,
+          ...calendarRest
+        } = calendarProps ?? {};
+        /* One cast at the boundary: the root's three arms are a union, so the
+           props the consumer chose cannot be spread back through `Omit`. */
+        const calendarRootProps = {
+          ...calendarRest,
+          className: cx(styles.dateField, calendarClassName),
+          value: toCalendarValue(filterValue),
+          /* Composed, not overwritten: a consumer callback must not silently
+             take the place of the chip's own. */
+          onValueChange: (next: unknown, details: unknown) => {
+            (
+              onCalendarValueChange as
+                | ((value: unknown, details: unknown) => void)
+                | undefined
+            )?.(next, details);
+            handleFilterValueChange(next);
+          }
+        } as CalendarPreviewProps;
         return (
           <div
             className={styles.dateFieldWrapper}
             data-slot='filter-chip-value'
           >
-            <DatePicker
-              showCalendarIcon={false}
-              {...calendarProps}
-              value={toDateValue(filterValue)}
-              onSelect={date => handleFilterValueChange(date)}
-              slotProps={{
-                ...calendarProps?.slotProps,
-                input: {
-                  classNames: { container: styles.dateField },
-                  ...calendarProps?.slotProps?.input
-                }
-              }}
-            />
+            <CalendarPreview {...calendarRootProps}>
+              <CalendarPreview.Trigger>
+                <CalendarPreview.Input trailingIcon={null} />
+              </CalendarPreview.Trigger>
+              <CalendarPreview.Content>
+                <CalendarPreview.Days />
+              </CalendarPreview.Content>
+            </CalendarPreview>
           </div>
         );
+      }
       default:
         return (
           <div
