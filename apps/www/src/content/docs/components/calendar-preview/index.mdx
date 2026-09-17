@@ -5,7 +5,6 @@ source: packages/raystack/components/calendar-preview
 ---
 
 import {
-  preview,
   playground,
   compositionDemo,
   resetDemo,
@@ -17,10 +16,6 @@ import {
   scaleDemo,
   scalePairDemo,
 } from "./demo.ts";
-
-<Demo data={preview} />
-
-## Playground
 
 <Demo data={playground} />
 
@@ -281,7 +276,7 @@ Outside days are **off by default**, so a grid ends on the last day of its month
 
 ### Month and year scroller
 
-`<CalendarPreview.Caption dropdown />` turns the caption into a filled chip that opens two adjacent scrolling columns. It is a plain popover of buttons, not a `Select` — picking from either column moves the view and never selects a value.
+`<CalendarPreview.Caption dropdown />` turns the caption into a filled chip that opens two adjacent scrolling columns, divided by a rule. It is a plain popover of buttons, not a `Select` — picking from either column moves the view and never selects a value. The **Month + year** tab under [Composition](#composition) shows it.
 
 ### Date picker
 

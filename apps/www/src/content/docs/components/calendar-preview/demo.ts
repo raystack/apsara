@@ -46,37 +46,6 @@ export const playground = {
   getCode
 };
 
-export const preview = {
-  type: 'code',
-  tabs: [
-    {
-      name: 'Inline',
-      code: `<CalendarPreview defaultMonth={new Date(2024, 3, 1)}>
-              <CalendarPreview.Days />
-            </CalendarPreview>`
-    },
-    {
-      name: 'Two months',
-      code: `<CalendarPreview defaultMonth={new Date(2024, 3, 1)}>
-              <CalendarPreview.Days numberOfMonths={2} />
-            </CalendarPreview>`
-    },
-    {
-      name: 'Month + year',
-      code: `<CalendarPreview defaultMonth={new Date(2024, 3, 1)}>
-              <CalendarPreview.Days>
-                <CalendarPreview.Header>
-                  <CalendarPreview.Caption dropdown />
-                  <CalendarPreview.PrevMonth />
-                  <CalendarPreview.NextMonth />
-                </CalendarPreview.Header>
-                <CalendarPreview.Grid />
-              </CalendarPreview.Days>
-            </CalendarPreview>`
-    }
-  ]
-};
-
 export const compositionDemo = {
   type: 'code',
   tabs: [
@@ -93,6 +62,19 @@ export const compositionDemo = {
                 <CalendarPreview.Header>
                   <CalendarPreview.Caption>Delivery date</CalendarPreview.Caption>
                   <CalendarPreview.Caption />
+                  <CalendarPreview.PrevMonth />
+                  <CalendarPreview.NextMonth />
+                </CalendarPreview.Header>
+                <CalendarPreview.Grid />
+              </CalendarPreview.Days>
+            </CalendarPreview>`
+    },
+    {
+      name: 'Month + year',
+      code: `<CalendarPreview defaultMonth={new Date(2024, 3, 1)}>
+              <CalendarPreview.Days>
+                <CalendarPreview.Header>
+                  <CalendarPreview.Caption dropdown />
                   <CalendarPreview.PrevMonth />
                   <CalendarPreview.NextMonth />
                 </CalendarPreview.Header>
@@ -259,6 +241,12 @@ export const gridDemo = {
                 <CalendarPreview.Header />
                 <CalendarPreview.Grid loading />
               </CalendarPreview.Days>
+            </CalendarPreview>`
+    },
+    {
+      name: 'Two months',
+      code: `<CalendarPreview defaultMonth={new Date(2024, 3, 1)}>
+              <CalendarPreview.Days numberOfMonths={2} />
             </CalendarPreview>`
     }
   ]
