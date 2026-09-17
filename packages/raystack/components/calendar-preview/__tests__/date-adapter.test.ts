@@ -6,7 +6,6 @@ import {
   endOfMonthKey,
   endOfQuarterKey,
   endOfYearKey,
-  epoch,
   formatCaptionLabel,
   formatDayLabel,
   formatMonthLabel,
@@ -59,14 +58,6 @@ describe('dayKey', () => {
   it('throws rather than return a five-digit key', () => {
     expect(() => dayKey(atYear(10000))).toThrow(RangeError);
     expect(() => dayKey(atYear(10000), 'Asia/Tokyo')).toThrow(RangeError);
-  });
-});
-
-describe('epoch', () => {
-  it('is the instant in milliseconds', () => {
-    const date = new Date(Date.UTC(2026, 7, 31, 20, 0));
-    expect(epoch(date)).toBe(date.getTime());
-    expect(epoch(date)).toBe(Date.UTC(2026, 7, 31, 20, 0));
   });
 });
 

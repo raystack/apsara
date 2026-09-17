@@ -552,12 +552,6 @@
 }
 
 /* Two fields side by side, sharing the trigger's width. */
-.range-fields {
-  display: flex;
-  align-items: center;
-  gap: var(--rs-space-3);
-}
-
 .body {
   display: flex;
   flex-direction: column;

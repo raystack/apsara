@@ -1013,16 +1013,13 @@ describe('CalendarPreview part boundaries', () => {
 });
 
 describe('CalendarPreview public surface', () => {
-  /* The scope boundary for this phase, asserted rather than described: the
-     popover, the input and the period views land in later PRs, and a part
-     appearing here early would be public API shipped by accident. */
   /* `displayName` is an own property of the root function `Object.assign`
      writes the parts onto, so it is not one of them. */
   const partNames = Object.keys(CalendarPreviewFromBarrel).filter(
     key => key !== 'displayName'
   );
 
-  it('exports exactly the parts this phase builds', () => {
+  it('exports exactly the parts it means to', () => {
     expect(partNames.sort()).toEqual(
       [
         'Body',
@@ -1531,5 +1528,51 @@ describe('useCalendar', () => {
 
     fireEvent.click(screen.getByText('clear'));
     expect(screen.getByTestId('value')).toHaveTextContent('none');
+  });
+});
+
+describe('CalendarPreview week numbers and the padded row', () => {
+  /* September fills five rows; August reaches into its sixth with the 30th. */
+  const SEPTEMBER = new Date(2026, 8, 1);
+
+  const weekNumbers = (container: HTMLElement) =>
+    getAllSlots(container, 'calendar-preview-week-number').map(
+      cell => cell.textContent
+    );
+
+  const grid = (props = {}) => (
+    <CalendarPreview.Days>
+      <CalendarPreview.Header />
+      <CalendarPreview.Grid showWeekNumber fixedWeeks {...props} />
+    </CalendarPreview.Days>
+  );
+
+  it('leaves the padded row unnumbered', () => {
+    const { container } = renderCalendar(grid(), { defaultMonth: SEPTEMBER });
+    const numbers = weekNumbers(container);
+    expect(numbers).toHaveLength(6);
+    expect(numbers[numbers.length - 1]).toBe('');
+    expect(numbers.slice(0, 5).every(Boolean)).toBe(true);
+  });
+
+  it('keeps the cell it empties', () => {
+    const { container } = renderCalendar(grid(), { defaultMonth: SEPTEMBER });
+    const rows = Array.from(container.querySelectorAll('tbody tr'));
+    const cells = rows.map(row => row.children.length);
+    expect(new Set(cells).size).toBe(1);
+  });
+
+  it('numbers the padded row when its days are shown', () => {
+    const { container } = renderCalendar(grid({ showOutsideDays: true }), {
+      defaultMonth: SEPTEMBER
+    });
+    expect(weekNumbers(container).every(Boolean)).toBe(true);
+  });
+
+  it('numbers a sixth row that the month reaches into', () => {
+    const { container } = renderCalendar(grid());
+    const numbers = weekNumbers(container);
+    expect(numbers).toHaveLength(6);
+    expect(numbers.every(Boolean)).toBe(true);
   });
 });

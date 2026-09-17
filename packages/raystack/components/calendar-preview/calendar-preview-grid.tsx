@@ -45,21 +45,15 @@ import {
   parseKey
 } from './date-adapter';
 
-/* The only file that may import react-day-picker. It runs with
-   `hideNavigation` and `captionLayout='label'` so it never mounts a `Select`,
-   and the selection props come from root context rather than from
-   `CalendarPreviewGridProps` — which is what lets `...props` stay last. */
-/* Split in two on purpose. Every day button and its tooltip wrapper consume
-   the day-facing half, so it is memoized — an unstable value there re-renders
-   all 42 cells per month on any grid render. The root half carries
-   `rootProps`, a fresh rest-spread every render that cannot be memoized
-   without going stale; it has exactly one consumer, so its instability costs
-   one element instead of 42. */
+/* The only file that may import react-day-picker, and it never mounts a
+   `Select`. Two contexts: the day-facing half is memoized because all 42 cells
+   consume it, while `rootProps` cannot be and has one consumer. */
 interface GridContextValue {
   dateInfo?: (date: Date) => ReactNode;
   tooltipMessages?: (date: Date) => ReactNode;
   showTooltip: boolean;
   loading: boolean;
+  showOutsideDays: boolean;
 }
 
 interface GridRootContextValue {
@@ -93,9 +87,8 @@ export interface CalendarPreviewGridProps
    * Always render six week rows, so the grid height never jumps between a
    * 4-, 5- and 6-row month.
    *
-   * On by default. Phases 3-4 put this calendar in a popover, where a grid
-   * that changes height on navigation resizes the surface under the user's
-   * cursor. Opt out with `fixedWeeks={false}` where the calendar is inline
+   * On by default: in a popover, a grid that changes height on navigation
+   * resizes the surface under the cursor. Opt out where the calendar is inline
    * and the trailing blank row is not wanted.
    *
    * @defaultValue true
@@ -184,8 +177,14 @@ export function CalendarPreviewGrid({
      inline arrows still invalidates this every render — which is why the docs
      ask for them to be memoized at the call site. */
   const gridContext = useMemo<GridContextValue>(
-    () => ({ dateInfo, tooltipMessages, showTooltip, loading }),
-    [dateInfo, tooltipMessages, showTooltip, loading]
+    () => ({
+      dateInfo,
+      tooltipMessages,
+      showTooltip,
+      loading,
+      showOutsideDays
+    }),
+    [dateInfo, tooltipMessages, showTooltip, loading, showOutsideDays]
   );
 
   const gridRootContext: GridRootContextValue = {
@@ -515,11 +514,22 @@ export function CalendarPreviewWeekday({
 
 CalendarPreviewWeekday.displayName = 'CalendarPreview.Weekday';
 
-/* `showWeekNumber` renders these two, and RFC 005 asks for a `data-slot` on
-   every rendered element. Overridden only to carry the slot — the classes
-   already arrive through `GRID_CLASS_NAMES`. */
-function CalendarPreviewWeekNumber({ week: _week, ...props }: WeekNumberProps) {
-  return <th data-slot='calendar-preview-week-number' {...props} />;
+/* `showWeekNumber` renders these two; the classes already arrive through
+   `GRID_CLASS_NAMES`, so these carry the slot and the rule below. */
+function CalendarPreviewWeekNumber({
+  week,
+  children,
+  ...props
+}: WeekNumberProps) {
+  const { showOutsideDays } = useGridContext('CalendarPreview.Grid');
+  /* A `fixedWeeks` padding row draws nothing when outside days are hidden, so
+     its number counts a week the grid never showed. The cell stays. */
+  const counts = showOutsideDays || week.days.some(day => !day.outside);
+  return (
+    <th data-slot='calendar-preview-week-number' {...props}>
+      {counts ? children : null}
+    </th>
+  );
 }
 
 function CalendarPreviewWeekNumberHeader(props: WeekNumberHeaderProps) {

@@ -38,12 +38,6 @@ export function dayKey(date: Date, timeZone?: string): DayKey {
   return key;
 }
 
-/* Not for ordering two days: an epoch carries a time and an offset, so two
-   Dates on the same calendar day can order either way. Compare dayKeys. */
-export function epoch(date: Date): number {
-  return date.getTime();
-}
-
 /** Whether `value` is a real calendar day. `'2027-02-29'` is not. */
 export function isDayKey(value: string): boolean {
   return DAY_KEY_SHAPE.test(value) && isValid(parseStrict(value));
