@@ -723,6 +723,26 @@ describe('CalendarPreview.Grid', () => {
     expect(screen.queryByText('Never shown')).toBeNull();
   });
 
+  /* The span carries the cell's box, so it outlives the Tooltip root that is
+     only mounted alongside it. */
+  it.each([
+    [false],
+    [true]
+  ])('keeps the day trigger with showTooltip=%s', showTooltip => {
+    const { container, unmount } = renderCalendar(
+      <CalendarPreview.Days>
+        <CalendarPreview.Grid
+          showTooltip={showTooltip}
+          tooltipMessages={() => 'Anything'}
+        />
+      </CalendarPreview.Days>
+    );
+    expect(getAllSlots(container, 'calendar-preview-day-trigger').length).toBe(
+      getAllSlots(container, 'calendar-preview-day').length
+    );
+    unmount();
+  });
+
   it('disables navigation while the grid is loading', () => {
     const { container } = renderCalendar(
       <CalendarPreview.Days>

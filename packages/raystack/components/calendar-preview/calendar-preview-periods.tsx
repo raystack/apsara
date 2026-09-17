@@ -94,11 +94,31 @@ function PeriodView({
   const selectedKey =
     scaleDraft?.date ?? (isScaleValue(value) ? value.date : null);
 
+  const isActive = scale === viewScale;
+
+  /* All five views mount at once and four render nothing, so the inactive ones
+     build no cells at all. The rest is date maths over every cell in the
+     range — a year of months is 12 of them — and none of it moves when the
+     selection does, so it is held rather than redone per render. */
+  const groups = useMemo(
+    () =>
+      isActive
+        ? years.map(year => ({
+            year,
+            cells: cellsFor(viewScale, year).map(cell => ({
+              ...cell,
+              produced: anchorOf(periodOf(cell.date, viewScale), trailingValue),
+              unavailable: !isPeriodAvailable(cell.date, viewScale)
+            }))
+          }))
+        : [],
+    [isActive, years, viewScale, trailingValue, isPeriodAvailable]
+  );
+
   /* Keyed on becoming active, not on mount: every view mounts at once, so a
      mount effect would fire with an empty ref. Scrolls the container, not
      `scrollIntoView`, which would move the popover with it. */
   const activeRef = useRef<HTMLDivElement>(null);
-  const isActive = scale === viewScale;
   useEffect(() => {
     if (!isActive) return;
     const group = activeRef.current;
@@ -120,7 +140,7 @@ function PeriodView({
         'data-scale': viewScale,
         children: children ?? (
           <>
-            {years.map(year => (
+            {groups.map(({ year, cells }) => (
               <div
                 key={year}
                 ref={year === activeYear ? activeRef : undefined}
@@ -140,40 +160,30 @@ function PeriodView({
                     { '--rs-period-columns': columns } as React.CSSProperties
                   }
                 >
-                  {cellsFor(viewScale, year).map(cell => {
-                    const produced = anchorOf(
-                      periodOf(cell.date, viewScale),
-                      trailingValue
-                    );
-                    const unavailable = !isPeriodAvailable(
-                      cell.date,
-                      viewScale
-                    );
-                    return (
-                      <button
-                        key={cell.key}
-                        type='button'
-                        className={styles.period}
-                        data-slot='calendar-preview-period'
-                        data-scale={viewScale}
-                        data-selected={produced === selectedKey || undefined}
-                        data-unavailable={unavailable || undefined}
-                        disabled={disabled || unavailable}
-                        aria-label={
-                          viewScale === 'year'
-                            ? cell.label
-                            : `${cell.label} ${year}`
-                        }
-                        aria-current={produced === selectedKey || undefined}
-                        onClick={() => {
-                          if (readOnly) return;
-                          selectPeriod(cell.date, viewScale);
-                        }}
-                      >
-                        {cell.label}
-                      </button>
-                    );
-                  })}
+                  {cells.map(({ produced, unavailable, ...cell }) => (
+                    <button
+                      key={cell.key}
+                      type='button'
+                      className={styles.period}
+                      data-slot='calendar-preview-period'
+                      data-scale={viewScale}
+                      data-selected={produced === selectedKey || undefined}
+                      data-unavailable={unavailable || undefined}
+                      disabled={disabled || unavailable}
+                      aria-label={
+                        viewScale === 'year'
+                          ? cell.label
+                          : `${cell.label} ${year}`
+                      }
+                      aria-current={produced === selectedKey || undefined}
+                      onClick={() => {
+                        if (readOnly) return;
+                        selectPeriod(cell.date, viewScale);
+                      }}
+                    >
+                      {cell.label}
+                    </button>
+                  ))}
                 </div>
               </div>
             ))}

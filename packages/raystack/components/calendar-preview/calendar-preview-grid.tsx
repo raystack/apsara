@@ -459,12 +459,23 @@ export function CalendarPreviewDay({
     )
   });
 
-  /* The wrapper is unconditional. Two reasons, both measured: a disabled
-     button fires no pointer events, so hanging the trigger on the day itself
-     hid exactly the tooltip a blocked day needs; and returning `button` bare
-     when there is no message changes the element type at that position, which
-     tears down the DOM node and drops focus the moment `showTooltip` or a
-     per-day message flips. */
+  /* The span is the trigger, not the day: a disabled button fires no pointer
+     events, and a blocked day is exactly the one whose tooltip is worth
+     reading. It stays when tooltips are off so the cell keeps its box, but
+     the `Tooltip` root does not — that is one per day, 84 in a two-month
+     range picker, for a feature nobody asked for. A per-day message coming
+     and going still changes nothing here; only `showTooltip` does. */
+  if (!showTooltip) {
+    return (
+      <span
+        className={styles['day-trigger']}
+        data-slot='calendar-preview-day-trigger'
+      >
+        {button}
+      </span>
+    );
+  }
+
   return (
     <Tooltip>
       <Tooltip.Trigger
