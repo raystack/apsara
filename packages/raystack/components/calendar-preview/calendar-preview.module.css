@@ -30,10 +30,7 @@
   margin-bottom: var(--rs-space-3);
 }
 
-/* The week-number column is a gutter, not a date column, so the caption starts
-   past it — aligned with Sunday rather than with the grid's outer edge. The
-   header cannot read `showWeekNumber`, which is a `.Grid` prop, so it asks the
-   rendered grid instead. */
+/* `showWeekNumber` is a `.Grid` prop, so the header asks the rendered grid. */
 .days:has(.week-number-header) .header {
   padding-inline-start: var(--rs-space-10);
 }
@@ -63,9 +60,7 @@
   cursor: not-allowed;
 }
 
-/* Takes the space left of the buttons, so the caption sits against the start
-   edge and the reset and two nav buttons group at the end — the single-month
-   header in reference A. Source order already matches, so nothing reorders. */
+/* Takes the space left of the buttons, which group at the end. */
 .caption {
   flex: 1;
   text-align: start;
@@ -78,9 +73,7 @@
   -webkit-user-select: none;
 }
 
-/* The caption that opens the scroller is a filled chip, so the affordance
-   reads without an adjacent glyph. `flex: none` undoes `.caption`'s stretch —
-   the chip hugs its label rather than running to the nav buttons. */
+/* `flex: none` undoes `.caption`'s stretch, so the chip hugs its label. */
 .caption-trigger {
   display: inline-flex;
   flex: none;
@@ -115,9 +108,8 @@
   z-index: 1;
 }
 
-/* Our own scroller, not a Select: two plain columns of buttons in a popup we
-   own, so nothing here portals a listbox the surrounding popover has to
-   recognise as inside itself. */
+/* Plain buttons, not a Select: a portalled listbox would read as outside the
+   surrounding popover. */
 .caption-popup {
   display: flex;
   gap: var(--rs-space-2);
@@ -128,8 +120,6 @@
   box-shadow: var(--rs-shadow-lifted);
 }
 
-/* The popup is sized by its columns, so the separator's percentage height
-   resolves to nothing; stretching is what fills the row. */
 .caption-popup .caption-divider[data-orientation="vertical"] {
   height: auto;
   align-self: stretch;
@@ -182,8 +172,7 @@
   flex: none;
 }
 
-/* Both nav tracks stay reserved whether or not this month draws a button, so
-   the caption centres on its grid rather than on the remaining space. */
+/* Both nav tracks stay reserved, so the caption centres on its grid. */
 .month-header {
   display: grid;
   grid-template-columns: var(--rs-space-8) 1fr var(--rs-space-8);
@@ -197,7 +186,7 @@
   grid-column: 1;
 }
 
-.header {
+.root {
   --rs-caption-inset: calc((var(--rs-space-10) - var(--rs-space-6)) / 2);
 }
 
@@ -207,6 +196,15 @@
 
 .header .caption[data-dropdown] {
   margin-inline-start: calc(var(--rs-caption-inset) - var(--rs-space-3));
+}
+
+.body .label,
+.panel .header .caption:not([data-dropdown]) {
+  padding-inline-start: var(--rs-caption-inset);
+}
+
+.panel .header .caption[data-dropdown] {
+  margin-inline-start: 0;
 }
 
 .month-header-caption {
@@ -252,8 +250,7 @@
   position: relative;
 }
 
-/* The user-agent's 2px border-spacing would ring the grid, leaving the header
-   two pixels wider than the columns it sits above. */
+/* The UA's 2px border-spacing would leave the header wider than its columns. */
 .weeks table {
   border-spacing: 0;
 }
@@ -488,10 +485,7 @@
   cursor: not-allowed;
 }
 
-/* Wider than the trigger and centred on it, per the frames. `.Days` brings its
-   own padding, so the surface adds none — and it opts out of the shared
-   popover's `max-width: 18rem`, sized for text at 288px against the 296px
-   seven 40px columns need, which cropped Saturday flush to the border. */
+/* Opts out of the shared popover's `max-width: 18rem`, which cropped Saturday. */
 .content {
   padding: 0;
   width: max-content;
@@ -502,17 +496,14 @@
   width: 100%;
 }
 
-/* The endpoints are pill-rounded on their outer edges and the days between sit
-   on one continuous band. The track is drawn on the cell rather than the day
-   button so neighbouring cells meet with no seam. */
+/* Drawn on the cell, not the button, so neighbours meet with no seam. */
 .range-middle {
   background: var(--rs-color-background-neutral-secondary);
   border-radius: 0;
 }
 
-/* react-day-picker marks every day of the range `selected`, and the single-day
-   rule paints that white for the accent pill. The days on the track are on
-   grey, so they keep the ordinary text colour. */
+/* RDP marks every day of a range `selected`; on the grey track they keep the
+   ordinary colour rather than the accent pill's white. */
 .range-middle .day-button {
   background: transparent;
   color: var(--rs-color-foreground-base-primary);
@@ -576,26 +567,24 @@
   display: flex;
 }
 
-/* `Tabs` gives every trigger an equal share of the row, and a fifth of the day
-   grid's width does not hold "Half-year". Each label takes the width it needs
-   and shares what is left; scoped to beat the primitive's own `flex`. */
+/* A fifth of the row does not hold "Half-year". Scoped to beat `Tabs`' flex. */
 .scales .scale {
   flex: 1 1 auto;
 }
 
-/* Nothing inside the panel has a width of its own to hand the popover, so the
-   panel is the anchor for all five views — seven 40px columns, the width the
-   input and switcher above it run at — and the popover stops resizing. */
+/* The anchor for all five views, so the popover stops resizing. */
 .panel {
-  width: calc(var(--rs-space-10) * 7 + var(--rs-space-4) * 2);
+  width: calc(var(--rs-space-10) * 7);
 }
 
-/* Standalone, `.Days` is its own inset surface. Under the switcher it is one
-   view of five, so it drops the inset and its columns share the row: the grid
-   lines up with the input and the tabs instead of sitting in from them. */
+/* Under the switcher it is one view of five, so it drops its own inset. */
 .panel .days {
   width: 100%;
-  padding-inline: 0;
+  padding: 0;
+}
+
+.panel .weeks table {
+  width: 100%;
 }
 
 .panel .weekday,
