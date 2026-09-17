@@ -284,7 +284,10 @@ describe('CalendarPreview.Input validity', () => {
 
   it('does not commit an out-of-bounds date', () => {
     const onValueChange = vi.fn();
-    const { input } = renderPicker({ minDate: new Date(2026, 7, 10) });
+    const { input } = renderPicker({
+      minDate: new Date(2026, 7, 10),
+      onValueChange
+    });
     fireEvent.change(input, { target: { value: '01/08/2026' } });
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(onValueChange).not.toHaveBeenCalled();
@@ -663,6 +666,111 @@ describe('CalendarPreview.Trigger beside a Body that owns the input', () => {
     expect(getSlot(container, 'calendar-preview-trigger')).not.toHaveAttribute(
       'role',
       'button'
+    );
+  });
+});
+
+describe('CalendarPreview picker props the review left open', () => {
+  /* `onValueChange` is inherited from `Input`, so a consumer passing it used
+     to replace the handler that keeps the draft — and Enter then committed
+     nothing at all. */
+  it('composes a consumer onValueChange rather than replacing it', () => {
+    const onInputValueChange = vi.fn();
+    const onValueChange = vi.fn();
+    const { input } = renderPicker(
+      { onValueChange },
+      { onValueChange: onInputValueChange }
+    );
+
+    fireEvent.change(input, { target: { value: '20/05/2027' } });
+    expect(onInputValueChange).toHaveBeenCalled();
+    expect(onInputValueChange.mock.calls[0][0]).toBe('20/05/2027');
+
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+    expect(onValueChange.mock.calls[0][0]).toEqual(new Date(2027, 4, 20));
+  });
+
+  /* Retained text is judged against the bounds, and the bounds can move while
+     it sits there. */
+  it('re-judges drafted text when the bounds move under it', () => {
+    const { input, rerender } = renderPicker({
+      minDate: new Date(2026, 7, 10)
+    });
+    fireEvent.change(input, { target: { value: '05/08/2026' } });
+    expect(input).toHaveAttribute('data-invalid');
+
+    rerender(
+      <CalendarPreview
+        today={TODAY}
+        defaultMonth={AUGUST}
+        minDate={new Date(2026, 7, 1)}
+      >
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Days />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+
+    expect(input.value).toBe('05/08/2026');
+    expect(input).not.toHaveAttribute('data-invalid');
+  });
+
+  it('reports the recovered validity to the consumer', () => {
+    const onValidityChange = vi.fn();
+    const { input, rerender } = renderPicker(
+      { maxDate: new Date(2026, 7, 10) },
+      { onValidityChange }
+    );
+    fireEvent.change(input, { target: { value: '20/08/2026' } });
+    expect(onValidityChange).toHaveBeenLastCalledWith({
+      valid: false,
+      reason: 'out-of-bounds',
+      message: 'Invalid input'
+    });
+
+    rerender(
+      <CalendarPreview
+        today={TODAY}
+        defaultMonth={AUGUST}
+        maxDate={new Date(2026, 7, 31)}
+      >
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input onValidityChange={onValidityChange} />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Days />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+
+    expect(onValidityChange).toHaveBeenLastCalledWith({ valid: true });
+  });
+
+  /* Without an `.Input` the trigger is the control, so it carries the tab
+     stop — Base UI adds none to a rendered `div`. */
+  it('gives a trigger with no input a tab stop of its own', () => {
+    const { container } = render(
+      <CalendarPreview today={TODAY} defaultMonth={AUGUST}>
+        <CalendarPreview.Trigger />
+        <CalendarPreview.Content>
+          <CalendarPreview.Days />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+    const trigger = getSlot(container, 'calendar-preview-trigger');
+    expect(trigger).toHaveAttribute('role', 'button');
+    expect(trigger).toHaveAttribute('tabindex', '0');
+  });
+
+  it('keeps a trigger around an input out of the tab order', () => {
+    const { container } = renderPicker();
+    expect(getSlot(container, 'calendar-preview-trigger')).toHaveAttribute(
+      'tabindex',
+      '-1'
     );
   });
 });

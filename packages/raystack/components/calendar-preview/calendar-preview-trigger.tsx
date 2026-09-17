@@ -115,9 +115,12 @@ export function CalendarPreviewTrigger({
         className: cx(styles.trigger, className),
         'data-slot': 'calendar-preview-trigger',
         /* Base UI gives a non-native trigger both, which around a field is a
-           second tab stop and a control inside a button role. */
+           second tab stop and a control inside a button role. Without an
+           input the trigger IS the control, and Base UI adds no `tabIndex`
+           to a rendered `div` — so it has to say so itself or no keyboard
+           ever reaches it. */
         role: hasInput ? undefined : 'button',
-        tabIndex: hasInput ? -1 : undefined,
+        tabIndex: hasInput ? -1 : 0,
         /* Merged to the right of `useClick`, so this runs first. Only the
            closing half goes, or a press could not reopen a field that never
            lost focus. */

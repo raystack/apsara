@@ -74,6 +74,7 @@ export function CalendarPreviewInput({
   onKeyDown,
   onBlur,
   onFocus,
+  onValueChange: onValueChangeProp,
   className,
   readOnly: readOnlyProp,
   ...props
@@ -126,9 +127,41 @@ export function CalendarPreviewInput({
   const [text, setText] = useState<string | null>(null);
   const [validity, setValidity] = useState<CalendarPreviewInputValidity>(VALID);
 
+  const committed = useRef(value);
+
+  /* Retained text is judged against things outside it — the partner endpoint
+     and the bounds — and both move while it sits there. Without this, an end
+     rejected for crossing a 10 Apr start stayed marked invalid after the start
+     moved to the 1st, and a draft kept its verdict when `minDate` changed
+     under it. Runs every render and compares rather than listing deps:
+     `resolve` closes over the whole context and is rebuilt each time. */
+  const judgedAgainst = useRef<unknown[]>([]);
+  useEffect(() => {
+    const partner = isRange
+      ? field === 'start'
+        ? draft?.to
+        : draft?.from
+      : undefined;
+    const next = [
+      partner && dayKey(partner, timeZone),
+      minDate && dayKey(minDate, timeZone),
+      maxDate && dayKey(maxDate, timeZone),
+      isDateUnavailable
+    ];
+    const moved = next.some(
+      (item, index) => item !== judgedAgainst.current[index]
+    );
+    judgedAgainst.current = next;
+    /* A value change replaces the text outright, which the effect below owns. */
+    if (!moved || text === null || committed.current !== value) return;
+    const trimmed = text.trim();
+    if (trimmed === '') return;
+    const resolved = resolve(trimmed);
+    report('valid' in resolved ? resolved : VALID);
+  });
+
   /* A value this field did not type replaces whatever it was drafting, or a
      rejected draft outlives the day the user went on to click. */
-  const committed = useRef(value);
   useEffect(() => {
     if (committed.current === value) return;
     committed.current = value;
@@ -282,7 +315,8 @@ export function CalendarPreviewInput({
         ? {}
         : { 'aria-invalid': true, 'data-invalid': true })}
       value={text ?? committedText}
-      onValueChange={text => {
+      onValueChange={(text, details) => {
+        onValueChangeProp?.(text, details);
         if (inert) return;
         setText(text);
         if (text.trim() === '') {

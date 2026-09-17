@@ -348,6 +348,35 @@ describe('CalendarPreview.Reset', () => {
     expect(reset).toHaveAttribute('data-restored');
   });
 
+  /* `{...props}` follows the computed `disabled`, so without pulling the
+     caller's out of it a `disabled={false}` re-enabled a button whose only job
+     was already done — and clicking it emitted a second reset. */
+  it('stays disabled when a caller passes disabled={false}', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderCalendar(
+      <CalendarPreview.Days>
+        <CalendarPreview.Header>
+          <CalendarPreview.Reset disabled={false} />
+        </CalendarPreview.Header>
+        <CalendarPreview.Grid />
+      </CalendarPreview.Days>,
+      {
+        defaultDate: new Date(2026, 7, 20),
+        defaultValue: new Date(2026, 7, 20),
+        onValueChange
+      }
+    );
+
+    const reset = getSlot(
+      container,
+      'calendar-preview-reset'
+    ) as HTMLButtonElement;
+    expect(reset).toBeDisabled();
+
+    fireEvent.click(reset);
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
   it('renders once the value differs from the defaultDate', () => {
     const { container } = renderCalendar(undefined, {
       defaultDate: new Date(2026, 7, 20),

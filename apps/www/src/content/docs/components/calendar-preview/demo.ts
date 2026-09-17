@@ -542,8 +542,13 @@ export const rangeDemo = {
       name: 'Invalid input',
       code: `
 function CalendarPreviewRangeInvalidExample() {
-  const [defaultError, setDefaultError] = React.useState();
-  const [customError, setCustomError] = React.useState();
+  // One message per Field, but two endpoints feed it — so each endpoint's
+  // verdict is tracked on its own and the Field shows whichever is unhappy.
+  const [defaultErrors, setDefaultErrors] = React.useState({});
+  const [customErrors, setCustomErrors] = React.useState({});
+  const at = (set, field) => ({ message }) =>
+    set(current => ({ ...current, [field]: message }));
+  const first = errors => errors.start ?? errors.end;
 
   const range = {
     selection: 'range',
@@ -556,18 +561,18 @@ function CalendarPreviewRangeInvalidExample() {
       <Field
         label="Trip dates"
         description="Type an end before 10/04/2024 — typing rejects, clicking restarts"
-        error={defaultError}
+        error={first(defaultErrors)}
       >
         <CalendarPreview {...range}>
           <CalendarPreview.Trigger>
             <Flex align="center" gap={3}>
               <CalendarPreview.Input
                 field="start"
-                onValidityChange={({ message }) => setDefaultError(message)}
+                onValidityChange={at(setDefaultErrors, 'start')}
               />
               <CalendarPreview.Input
                 field="end"
-                onValidityChange={({ message }) => setDefaultError(message)}
+                onValidityChange={at(setDefaultErrors, 'end')}
               />
             </Flex>
           </CalendarPreview.Trigger>
@@ -580,7 +585,7 @@ function CalendarPreviewRangeInvalidExample() {
       <Field
         label="Trip dates"
         description="The same crossing, worded with errorMessages"
-        error={customError}
+        error={first(customErrors)}
       >
         <CalendarPreview {...range}>
           <CalendarPreview.Trigger>
@@ -588,12 +593,12 @@ function CalendarPreviewRangeInvalidExample() {
               <CalendarPreview.Input
                 field="start"
                 errorMessages={{ 'out-of-order': 'Start must not pass the end' }}
-                onValidityChange={({ message }) => setCustomError(message)}
+                onValidityChange={at(setCustomErrors, 'start')}
               />
               <CalendarPreview.Input
                 field="end"
                 errorMessages={{ 'out-of-order': 'Pick a day on or after the start' }}
-                onValidityChange={({ message }) => setCustomError(message)}
+                onValidityChange={at(setCustomErrors, 'end')}
               />
             </Flex>
           </CalendarPreview.Trigger>

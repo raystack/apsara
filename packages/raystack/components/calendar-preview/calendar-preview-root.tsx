@@ -367,6 +367,11 @@ export function CalendarPreviewRoot({
     [setMonthUnwrapped, onMonthChange]
   );
 
+  /* The last value this root wrote. A `value` that does not match it came
+     from the consumer, which is the only kind of change a half-built draft
+     has to give way to. */
+  const emitted = useRef<CalendarPreviewValue>(value);
+
   /* The inertness guard lives here rather than in the grid's click handler:
      `useCalendar().setValue` and `reset()` reach this same function, and a
      guard further out would leave both of them able to write to a calendar
@@ -378,6 +383,7 @@ export function CalendarPreviewRoot({
       occasion: Date
     ) => {
       if (readOnly || disabled) return;
+      emitted.current = next;
       setValueUnwrapped(next);
       emit?.(next, {
         reason,
@@ -492,6 +498,18 @@ export function CalendarPreviewRoot({
     },
     []
   );
+
+  /* A draft is a range half-built against the value it started from, so a
+     value the consumer set behind it leaves the grid and both inputs showing
+     endpoints that are no longer anyone's. Our own writes are excluded by
+     `emitted`: emptying one field sets a draft and clears the value in the
+     same pass, and that draft is the whole point of it. */
+  useEffect(() => {
+    if (value === emitted.current) return;
+    emitted.current = value;
+    setDraft(null);
+    setActiveField('start');
+  }, [value]);
 
   /* Day-keys, not instants: a `minDate` carrying a time of day still leaves
      its own day selectable, which the current family gets wrong. */
@@ -731,15 +749,17 @@ export function CalendarPreviewRoot({
       const to = field === 'end' ? date : base?.to;
 
       /* An ordered pair completes. Anything else — one edge still missing, or
-         a typed day that crossed its partner — restarts from that day. */
+         a typed day that crossed its partner — keeps the day in the field it
+         was typed into and waits for the other. Routing it to `from`
+         regardless put a date typed into an empty end field in the start. */
       if (from && to && dayKey(from, timeZone) <= dayKey(to, timeZone)) {
         setDraft(null);
         setActiveField('start');
         setValue({ from, to }, 'input', date);
         return;
       }
-      setDraft({ from: date });
-      setActiveField('end');
+      setDraft(field === 'start' ? { from: date } : { to: date });
+      setActiveField(field === 'start' ? 'end' : 'start');
     },
     [value, draft, fieldReadOnly, timeZone, readOnly, disabled, setValue]
   );

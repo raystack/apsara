@@ -703,3 +703,99 @@ describe('CalendarPreview range emptying one field', () => {
     expect(end.value).toBe('20 Aug 2026');
   });
 });
+
+describe('CalendarPreview range endpoints the review left open', () => {
+  function renderFields(props = {}) {
+    const utils = renderRange(
+      props,
+      <>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input field='start' />
+          <CalendarPreview.Input field='end' />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Days />
+      </>
+    );
+    const [start, end] = getAllSlots(
+      utils.container,
+      'calendar-preview-input'
+    ) as HTMLInputElement[];
+    return { ...utils, start, end };
+  }
+
+  const type = (input: HTMLInputElement, text: string) => {
+    fireEvent.change(input, { target: { value: text } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+  };
+
+  /* A click means "the next endpoint"; typing means the field typed into. */
+  it('keeps a typed end in the end field when there is no start yet', () => {
+    const { start, end } = renderFields();
+    type(end, '20 Aug 2026');
+    expect(end.value).toBe('20 Aug 2026');
+    expect(start.value).toBe('');
+  });
+
+  it('completes from a typed end once the start arrives', () => {
+    const onValueChange = vi.fn();
+    const { container, end } = renderFields({ onValueChange });
+    type(end, '20 Aug 2026');
+    fireEvent.click(day(container, '10'));
+    expect(onValueChange.mock.calls[0][0]).toEqual({
+      from: new Date(2026, 7, 10),
+      to: new Date(2026, 7, 20)
+    });
+  });
+
+  /* The verdict on retained text depends on the partner, so it has to be
+     re-read when the partner moves rather than left where it was. */
+  it('clears a crossing end once the start moves behind it', () => {
+    const { container, end } = renderFields();
+    fireEvent.click(day(container, '10'));
+    fireEvent.change(end, { target: { value: '05 Aug 2026' } });
+    expect(end).toHaveAttribute('data-invalid');
+
+    fireEvent.click(day(container, '1'));
+    expect(end.value).toBe('05 Aug 2026');
+    expect(end).not.toHaveAttribute('data-invalid');
+  });
+
+  /* A draft is half a range built against the value it started from. */
+  it('drops a half-built draft when the consumer moves the value', () => {
+    const { container, rerender, start, end } = renderFields({
+      value: null
+    });
+    fireEvent.click(day(container, '10'));
+    expect(start.value).toBe('10 Aug 2026');
+
+    rerender(
+      <CalendarPreview
+        selection='range'
+        today={TODAY}
+        defaultMonth={AUGUST}
+        value={{ from: new Date(2026, 7, 3), to: new Date(2026, 7, 7) }}
+      >
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input field='start' />
+          <CalendarPreview.Input field='end' />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Days />
+      </CalendarPreview>
+    );
+
+    expect(start.value).toBe('03 Aug 2026');
+    expect(end.value).toBe('07 Aug 2026');
+  });
+
+  /* Emptying one field writes a draft and clears the value in the same pass,
+     and that draft is the whole point of it. */
+  it('keeps the draft that emptying one field leaves behind', () => {
+    const { start, end } = renderFields({
+      defaultValue: { from: new Date(2026, 7, 10), to: new Date(2026, 7, 20) }
+    });
+    fireEvent.change(start, { target: { value: '' } });
+    fireEvent.blur(start);
+    expect(start.value).toBe('');
+    expect(end.value).toBe('20 Aug 2026');
+  });
+});

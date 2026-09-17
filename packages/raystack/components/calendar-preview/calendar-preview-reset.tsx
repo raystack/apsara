@@ -17,6 +17,7 @@ export function CalendarPreviewReset({
   className,
   children,
   onClick,
+  disabled: disabledProp,
   ...props
 }: CalendarPreviewResetProps) {
   const { value, defaultDate, reset, disabled, readOnly, timeZone } =
@@ -48,7 +49,7 @@ export function CalendarPreviewReset({
     <IconButton
       size={3}
       className={cx(styles['nav-button'], styles.reset, className)}
-      disabled={disabled || readOnly || restored}
+      disabled={disabled || readOnly || restored || disabledProp}
       data-slot='calendar-preview-reset'
       data-restored={restored || undefined}
       aria-label='Reset'
