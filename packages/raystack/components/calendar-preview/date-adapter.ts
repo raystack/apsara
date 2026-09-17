@@ -3,6 +3,7 @@
    caused, and costs the swappability the RFC keeps for Temporal. */
 import { TZDate } from '@date-fns/tz';
 import {
+  addDays,
   addMonths,
   endOfMonth,
   endOfQuarter,
@@ -109,6 +110,21 @@ export function monthFromName(name: string): number | null {
     if (isValid(date)) return date.getMonth() + 1;
   }
   return null;
+}
+
+/** Whether any day in `[from, to]` matches. Stops at the first that does. */
+export function anyDayBetween(
+  from: DayKey,
+  to: DayKey,
+  match: (date: Date) => boolean
+): boolean {
+  let cursor = from;
+  while (cursor <= to) {
+    const date = parseKey(cursor);
+    if (match(date)) return true;
+    cursor = dayKey(addDays(date, 1));
+  }
+  return false;
 }
 
 /* Normalising to the first stops repeated navigation drifting: stepping on

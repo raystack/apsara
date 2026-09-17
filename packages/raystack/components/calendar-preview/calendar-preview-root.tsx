@@ -17,6 +17,7 @@ import {
   CalendarPreviewProvider
 } from './calendar-preview-context';
 import {
+  anyDayBetween,
   dayKey,
   formatDayLabel,
   formatMonthLabel,
@@ -496,6 +497,28 @@ export function CalendarPreviewRoot({
     []
   );
 
+  /* Day-keys, not instants: a `minDate` carrying a time of day still leaves
+     its own day selectable, which the current family gets wrong. */
+  const isDateUnavailable = useCallback(
+    (date: Date) => {
+      const key = dayKey(date, timeZone);
+      if (minDate && key < dayKey(minDate, timeZone)) return true;
+      if (maxDate && key > dayKey(maxDate, timeZone)) return true;
+      return isDateUnavailableProp?.(date) ?? false;
+    },
+    [minDate, maxDate, isDateUnavailableProp, timeZone]
+  );
+
+  const spans = useCallback(
+    (from: Date, to: Date) =>
+      anyDayBetween(
+        dayKey(from, timeZone),
+        dayKey(to, timeZone),
+        isDateUnavailable
+      ),
+    [timeZone, isDateUnavailable]
+  );
+
   /*
    * The from/to machine:
    *   no from            -> set from, advance to the end input
@@ -534,6 +557,8 @@ export function CalendarPreviewRoot({
       if (fixed) {
         if (fieldReadOnly.end) return;
         if (dayKey(date, timeZone) < dayKey(fixed, timeZone)) return;
+        /* The start cannot move, so there is nothing to restart from. */
+        if (spans(fixed, date)) return;
         setDraft(null);
         setActiveField('start');
         setValue({ from: fixed, to: date }, 'select', date);
@@ -555,6 +580,12 @@ export function CalendarPreviewRoot({
       }
 
       if (fieldReadOnly.end) return;
+      /* A day the consumer marked unavailable cannot be handed back inside a
+         range, so the click restarts rather than completing over it. */
+      if (spans(from, date)) {
+        setDraft({ from: date });
+        return;
+      }
       setDraft(null);
       setActiveField('start');
       setValue({ from, to: date }, 'select', date);
@@ -570,8 +601,8 @@ export function CalendarPreviewRoot({
       timeZone,
       readOnly,
       disabled,
-      setValue,
-      setOpen
+      spans,
+      setValue
     ]
   );
 
@@ -697,18 +728,6 @@ export function CalendarPreviewRoot({
     }
     setValue(defaultDate, 'reset', monthAnchor(defaultDate) ?? today);
   }, [defaultDate, value, scales, settleScale, setValue, today]);
-
-  /* Day-keys, not instants: a `minDate` carrying a time of day still leaves
-     its own day selectable, which the current family gets wrong. */
-  const isDateUnavailable = useCallback(
-    (date: Date) => {
-      const key = dayKey(date, timeZone);
-      if (minDate && key < dayKey(minDate, timeZone)) return true;
-      if (maxDate && key > dayKey(maxDate, timeZone)) return true;
-      return isDateUnavailableProp?.(date) ?? false;
-    },
-    [minDate, maxDate, isDateUnavailableProp, timeZone]
-  );
 
   /* A year the user can never scroll to is a trap, so the span stretches to
      cover the bounds even though bounds never clamp navigation. */

@@ -577,3 +577,60 @@ describe('CalendarPreview range with a read-only start', () => {
     expect(onValueChange).not.toHaveBeenCalled();
   });
 });
+
+describe('CalendarPreview range and days it may not cover', () => {
+  const blocked = (date: Date) => date.getDate() === 15;
+
+  it('restarts instead of completing over a blocked day', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderRange({
+      onValueChange,
+      isDateUnavailable: blocked
+    });
+    fireEvent.click(day(container, '10'));
+    fireEvent.click(day(container, '20'));
+    expect(onValueChange).not.toHaveBeenCalled();
+
+    fireEvent.click(day(container, '22'));
+    expect(onValueChange.mock.calls[0][0]).toEqual({
+      from: new Date(2026, 7, 20),
+      to: new Date(2026, 7, 22)
+    });
+  });
+
+  it('completes a range that clears the blocked day', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderRange({
+      onValueChange,
+      isDateUnavailable: blocked
+    });
+    fireEvent.click(day(container, '16'));
+    fireEvent.click(day(container, '20'));
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+  });
+
+  it('rejects a typed endpoint whose span is blocked', () => {
+    const onValidityChange = vi.fn();
+    const { container } = renderRange(
+      { isDateUnavailable: blocked },
+      <>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input field='start' />
+          <CalendarPreview.Input
+            field='end'
+            onValidityChange={onValidityChange}
+          />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Days />
+      </>
+    );
+    fireEvent.click(day(container, '10'));
+
+    const end = getAllSlots(container, 'calendar-preview-input')[1];
+    fireEvent.change(end, { target: { value: '20 Aug 2026' } });
+    const calls = onValidityChange.mock.calls;
+    const last = calls[calls.length - 1][0];
+    expect(last.valid).toBe(false);
+    expect(last.reason).toBe('unavailable');
+  });
+});

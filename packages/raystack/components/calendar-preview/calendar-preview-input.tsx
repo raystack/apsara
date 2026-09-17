@@ -11,7 +11,7 @@ import {
   isScaleValue
 } from './calendar-preview-root';
 import { useTriggerInput } from './calendar-preview-trigger';
-import { dayKey, parseKey } from './date-adapter';
+import { anyDayBetween, dayKey, parseKey } from './date-adapter';
 import { parseScaleInput } from './lib/parse';
 import type { Scale } from './lib/scale';
 
@@ -208,6 +208,11 @@ export function CalendarPreviewInput({
       const against = dayKey(partner, timeZone);
       if (field === 'start' ? typed > against : typed < against) {
         return { valid: false, reason: 'out-of-order' };
+      }
+      const [lead, trail] =
+        typed < against ? [typed, against] : [against, typed];
+      if (anyDayBetween(lead, trail, isDateUnavailable)) {
+        return { valid: false, reason: 'unavailable' };
       }
     }
     return { date, scale: 'day' };
