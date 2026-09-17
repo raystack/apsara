@@ -4,7 +4,11 @@ export {
   type UseThemePreviewReturn,
   useThemePreview
 } from './context';
-export { type ThemeInjectionProps, useThemeInjection } from './portal';
+export {
+  type PortalContainer,
+  type ThemeInjectionProps,
+  useThemeInjection
+} from './portal';
 export { radiusClass, radiusClasses, radiusVariants } from './radius';
 export { createThemeScript, type ThemeScriptParams } from './script';
 export {

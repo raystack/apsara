@@ -19,8 +19,7 @@ type ImageLoadingStatus = 'idle' | 'loading' | 'loaded' | 'error';
 
 const avatar = cva(styles.avatar, {
   variants: {
-    // Each size class names its own base step, so the corner still grows with
-    // the avatar. `medium` reproduces the previous `small` default exactly.
+    // Each size names its own base step. No default: the theme radius applies.
     ...radiusVariants,
     size: {
       1: styles['avatar-size-1'],
@@ -125,7 +124,6 @@ const avatar = cva(styles.avatar, {
   ],
   defaultVariants: {
     size: 3,
-    radius: 'medium',
     variant: 'soft',
     color: 'indigo'
   }

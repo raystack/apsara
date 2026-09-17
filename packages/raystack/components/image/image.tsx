@@ -14,7 +14,6 @@ const image = cva(styles.image, {
       cover: styles['image-cover'],
       fill: styles['image-fill']
     },
-    // The base step lives in `image.module.css` as `--rs-radius-step`.
     ...radiusVariants
   },
   defaultVariants: {

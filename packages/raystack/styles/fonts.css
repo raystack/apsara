@@ -1,4 +1,3 @@
-/* Internal partial, inlined at build time by `postcss-import`. Not a package
-   export: `style-no-fonts.css` is the same stylesheet with these stripped. */
+/* Internal partial, inlined by `postcss-import`. Not a package export. */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;1,400;1,500&display=swap");

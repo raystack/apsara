@@ -4,9 +4,8 @@
  * All variables must be used from colors.css file only.
  */
 
-/* Indigo is the default, so it also applies where no `data-accent-color` is
-   set. Its own selector is listed too, so `data-accent-color="indigo"` inside
-   an orange scope resets the ramp instead of inheriting it. */
+/* Indigo is the default and also has its own selector, so it can reset the
+   ramp inside another accent's scope. */
 :where([data-accent-color="indigo"], [data-theme="light"]) {
   --rs-accent-1: oklch(0.9943 0.0013 286.38);
   --rs-accent-2: oklch(0.9823 0.0083 271.33);

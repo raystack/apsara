@@ -1,12 +1,5 @@
-/*
- * Legacy: the two hardcoded scales keyed off `data-style` on the previous
- * `Theme` provider. The factor model that replaces them lives in
- * `styles/theme.css`.
- *
- * Deliberately not wrapped in `:where()`: at (0,1,0) they beat the
- * zero-specificity base scale on a `data-style` element whichever order the two
- * files land in. `ThemePreview` never writes `data-style`.
- */
+/* Legacy `data-style` scales for the previous `Theme`. Not `:where()`-wrapped on
+   purpose: at (0,1,0) they beat the zero-specificity base scale in any order. */
 [data-style="modern"] {
   --rs-radius-1: 2px;
   --rs-radius-2: 4px;

@@ -1,10 +1,7 @@
 import { act } from '@testing-library/react';
 import { vi } from 'vitest';
 
-/**
- * A real in-memory `localStorage`. The theme round-trips JSON through it, so a
- * mock that only records calls cannot exercise the merge or the cache.
- */
+/** In-memory `localStorage`; the merge and cache need a real round-trip. */
 export function installLocalStorage(): Map<string, string> {
   const entries = new Map<string, string>();
   const storage: Storage = {
@@ -27,6 +24,16 @@ export function installLocalStorage(): Map<string, string> {
     value: storage
   });
   return entries;
+}
+
+/** A `localStorage` that throws on access, as in a sandboxed frame. */
+export function installThrowingLocalStorage(): void {
+  Object.defineProperty(window, 'localStorage', {
+    configurable: true,
+    get: () => {
+      throw new DOMException('Storage is disabled', 'SecurityError');
+    }
+  });
 }
 
 type MediaListener = (event: MediaQueryListEvent) => void;

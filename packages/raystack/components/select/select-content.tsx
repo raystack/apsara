@@ -21,11 +21,7 @@ export interface SelectContentProps
     >,
     SelectPrimitive.Popup.Props {
   searchPlaceholder?: string;
-  /**
-   * Portals into this element instead of `document.body`. Only the
-   * autocomplete variant portals; the plain variant keeps its items in the
-   * DOM so the trigger can display the selected value.
-   */
+  /** Portals into this element instead of `document.body`; autocomplete only. */
   container?: PortalContainer;
   /** Corner radius for this popup only. Overrides the theme's `radius`. */
   radius?: Radius;

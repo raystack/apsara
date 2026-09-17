@@ -16,9 +16,6 @@
   --fallback-letter-spacing: 0.03em;
 }
 
-/* `radius` comes from the shared override; each `.avatar-size-N` block names
-   its own `--rs-radius-step`. */
-
 .avatar-disabled {
   opacity: 0.5;
 }

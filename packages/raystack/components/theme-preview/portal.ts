@@ -18,17 +18,9 @@ export interface ThemeInjectionProps {
 }
 
 /**
- * Theme values cross a portal through React context rather than the DOM, so a
- * portalled element has to re-emit them. The returned props merge onto that
- * element rather than adding a node — spread them first and pass `className`
- * explicitly afterwards:
- *
- * ```tsx
- * const theme = useThemeInjection();
- * <Popup {...theme} className={cx(styles.popup, theme?.className, className)} />
- * ```
- *
- * Returns `undefined` outside a provider, leaving such a portal unchanged.
+ * Re-emits the theme onto a portalled element; `undefined` outside a provider.
+ * Spread first, then pass `className` yourself:
+ * `<Popup {...theme} className={cx(theme?.className, className)} />`
  */
 export function useThemeInjection(): ThemeInjectionProps | undefined {
   const theme = useThemeContextOrNull();

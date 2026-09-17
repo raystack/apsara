@@ -81,14 +81,18 @@ describe('Avatar', () => {
       expect(avatar).toHaveClass(radiusClasses[radius]);
     });
 
-    it('defaults to medium radius, which reproduces the old default', () => {
+    it('sets no radius class by default, so the theme radius applies', () => {
       const { container } = render(<Avatar fallback='JD' />);
       const avatar = container.querySelector('[class*="avatar"]');
-      expect(avatar).toHaveClass(radiusClasses.medium);
+      for (const className of Object.values(radiusClasses)) {
+        expect(avatar).not.toHaveClass(className);
+      }
     });
 
     it('takes its base step from the size class', () => {
-      const { container } = render(<Avatar size={10} fallback='JD' />);
+      const { container } = render(
+        <Avatar size={10} radius='medium' fallback='JD' />
+      );
       const avatar = container.querySelector('[class*="avatar"]');
       expect(avatar).toHaveClass(styles['avatar-size-10']);
       expect(avatar).toHaveClass(radiusClasses.medium);

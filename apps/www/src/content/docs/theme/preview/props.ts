@@ -7,7 +7,7 @@ export type Scaling = '0.9' | '0.95' | '1' | '1.05' | '1.1';
 export type PanelBackground = 'solid' | 'translucent';
 export type ReducedMotion = 'true' | 'false' | 'system';
 
-/** One settings object describes the theme. Every key is independent. */
+/** The theme settings. Every key is independent. */
 export type ThemeSettings = {
   /**
    * Colour scheme. `system` resolves against `prefers-color-scheme`.
@@ -55,21 +55,19 @@ export type ThemeSettings = {
 export type ThemeSettingKey = keyof ThemeSettings;
 
 export type ThemePreviewProps = {
-  /**
-   * Partial settings that seed uncontrolled keys. A stored user choice
-   * overrides them, so this is a seed rather than a value.
-   */
+  /** Seeds uncontrolled keys. A stored user choice overrides it. */
   defaultValue?: Partial<ThemeSettings>;
 
   /**
-   * Partial settings that are controlled. A controlled key always wins, is
-   * never persisted, and is never written by the inline script. Control is per
-   * key: drive `appearance` from a cookie while accent and radius stay
-   * adjustable.
+   * Controlled keys, per key. A controlled key always wins and is never
+   * persisted.
    */
   value?: Partial<ThemeSettings>;
 
-  /** Fires with the full next settings object and the changed subset. */
+  /**
+   * Fires when `setValue` requests a change. Controlled keys are reported but
+   * not applied; changes arriving from storage do not fire it.
+   */
   onValueChange?: (
     value: ThemeSettings,
     changed: Partial<ThemeSettings>
@@ -81,29 +79,24 @@ export type ThemePreviewProps = {
    */
   persist?: ThemeSettingKey[];
 
-  /**
-   * Storage namespace. Persistence is off unless this is set; a theme without
-   * one holds its settings in memory and emits no inline script.
-   */
+  /** Storage namespace. Persistence is off unless this is set. */
   persistKey?: string;
 
   /**
    * Whether this theme owns the document's colour scheme. An embedded widget
-   * or micro-frontend that has no ancestor theme but does not own the page
-   * must pass `false`.
+   * with no ancestor theme should pass `false`.
    * @defaultValue true when there is no ancestor theme
    */
   isRoot?: boolean;
 
   /**
-   * Overrides the painting heuristic: true at the root, true for a nested
-   * theme that sets an explicit `light` or `dark` appearance, false for one
-   * that only changes accent, gray, radius or scaling.
+   * Overrides the painting heuristic: true at the root or for a nested theme
+   * with its own `light` or `dark` appearance, false otherwise.
    */
   hasBackground?: boolean;
 
   /**
-   * Suppresses the 0.4s colour transition during an appearance switch.
+   * Suppresses the colour transition during an appearance switch.
    * @defaultValue false
    */
   disableTransitionOnChange?: boolean;
@@ -126,17 +119,14 @@ export type ThemeHandle = {
   value: ThemeSettings;
   /** Settings as applied, with `system` and `auto` resolved. */
   resolved: ThemeSettings & { appearance: Appearance };
-  /** Takes a partial settings object. Controlled keys are ignored. */
+  /** Partial settings. Controlled keys are reported, not applied. */
   setValue: (next: Partial<ThemeSettings>) => void;
   /** What the OS reports, whatever the current setting is. */
   systemAppearance: Appearance;
 };
 
 export type UseThemePreviewReturn = ThemeHandle & {
-  /**
-   * The same shape bound to the root provider, for flipping the page theme
-   * from inside a scope.
-   */
+  /** The same handle bound to the root provider. */
   root: ThemeHandle;
 };
 

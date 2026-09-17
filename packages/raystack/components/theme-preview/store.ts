@@ -1,8 +1,4 @@
-/**
- * Theme persistence. A namespace is one `localStorage` entry holding one JSON
- * object: the settings it covers, alongside a schema version. Two themes may
- * share a namespace deliberately, so a write merges rather than replaces.
- */
+/** Theme persistence: one `localStorage` entry per namespace, merged on write. */
 
 import {
   STORAGE_VERSION,
@@ -19,14 +15,10 @@ interface StoredEntry {
   settings: Record<string, unknown>;
 }
 
-/**
- * Stable empty result. `useSyncExternalStore` compares with `Object.is` and
- * accepts no equality function, so every "nothing stored" answer must be the
- * same object or the component re-renders without end.
- */
+// Shared so `useSyncExternalStore`'s `Object.is` check sees one empty answer.
 const EMPTY: Partial<ThemeSettings> = Object.freeze({});
 
-/** Parsed settings cached against the raw string they came from. */
+// Cached by raw string, so an unchanged entry keeps its identity.
 const snapshotCache = new Map<
   string,
   { raw: string | null; parsed: Partial<ThemeSettings> }
@@ -45,14 +37,14 @@ function readRaw(persistKey: string): string | null {
   }
 }
 
-/** Reads the settings object out of an entry, tolerating anything at all. */
+// Tolerates any stored shape.
 function parseEntry(raw: string | null): Record<string, unknown> {
   if (!raw) return {};
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw);
   } catch {
-    // Includes the legacy `"dark"` bare theme name, which is not an object.
+    // Includes the legacy bare theme name.
     return {};
   }
   if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
@@ -73,29 +65,27 @@ export function readStoredSettings(
   const cached = snapshotCache.get(persistKey);
   if (cached && cached.raw === raw) return cached.parsed;
   const settings = sanitizeSettings(parseEntry(raw));
-  // Keep the frozen singleton when nothing survived, so an absent entry and a
-  // fully-invalid one both compare equal across renders.
+  // Reuse EMPTY so absent and invalid entries compare equal.
   const parsed = Object.keys(settings).length === 0 ? EMPTY : settings;
   snapshotCache.set(persistKey, { raw, parsed });
   return parsed;
 }
 
-/** The server snapshot. There is no storage, so the seed stands. */
+/** Server snapshot: the seed stands. */
 export function readServerSettings(): Partial<ThemeSettings> {
   return EMPTY;
 }
 
 /**
- * Merges `patch` into the namespace, applying only the settings `allowed`
- * covers. Fields outside it survive untouched, including ones owned by a theme
- * with a different `persist` on the same namespace.
+ * Merges `patch` into the namespace for the `allowed` keys only. Returns
+ * `false` when storage refused the write.
  */
 export function writeStoredSettings(
   persistKey: string,
   allowed: readonly ThemeSettingKey[],
   patch: Partial<ThemeSettings>
-): void {
-  if (typeof window === 'undefined') return;
+): boolean {
+  if (typeof window === 'undefined') return false;
   const settings = parseEntry(readRaw(persistKey));
   let changed = false;
   for (const key of allowed) {
@@ -104,15 +94,17 @@ export function writeStoredSettings(
     settings[key] = next;
     changed = true;
   }
-  if (!changed) return;
+  if (!changed) return true;
 
   const entry: StoredEntry = { v: STORAGE_VERSION, settings };
   try {
     window.localStorage.setItem(persistKey, JSON.stringify(entry));
   } catch {
     // Quota or disabled storage.
+    return false;
   }
   notifyThemeStorage();
+  return true;
 }
 
 /** Wakes every reader in this document. Other tabs get the `storage` event. */
@@ -132,7 +124,7 @@ export function subscribeToThemeStorage(onChange: () => void): () => void {
   };
 }
 
-/** Test seam. Drops the parsed-snapshot cache. */
+/** Test seam. */
 export function clearThemeStorageCache(): void {
   snapshotCache.clear();
 }

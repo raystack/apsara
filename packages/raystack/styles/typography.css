@@ -1,13 +1,5 @@
-/*
- * Font imports live in `./fonts.css` and `./fonts-legacy.css` so a font-free
- * stylesheet can be published from the same source. Families are customised by
- * redeclaring `--rs-font-body`, `--rs-font-title` or `--rs-font-mono` on
- * `.rs-theme`, not through a prop.
- *
- * Caveat: the pixel sizes and line heights below are paired and the letter
- * spacing is tuned for Inter, so a font with different metrics leaves line
- * heights uncentred and shifts control dimensions.
- */
+/* Font imports live in `./fonts.css` and `./fonts-legacy.css` so a font-free
+   stylesheet can be built from the same source. Metrics are tuned for Inter. */
 :where(:root, [data-theme]) {
   /* Fonts */
   --rs-font-inter: "Inter";
@@ -19,8 +11,7 @@
   /* Font Families */
   --rs-font-title: var(--rs-font-inter), sans-serif;
   --rs-font-body: var(--rs-font-inter), sans-serif;
-  /* JetBrains Mono precedes Menlo: with Menlo first the imported face never
-     rendered on macOS. */
+  /* JetBrains Mono before Menlo, or the imported face never renders on macOS. */
   --rs-font-mono:
     var(--rs-font-jetbrains-mono), var(--rs-font-menlo), monospace;
 
@@ -44,7 +35,7 @@
 
   /* Body Letter spacing — tuned for Inter, which is spaced generously already.
      Near-zero at small sizes, slightly negative as size grows. em-based so it
-     scales with font-size, and therefore with `--rs-scaling`, implicitly. */
+     scales with font-size. */
   --rs-letter-spacing-micro: 0.01em;
   --rs-letter-spacing-mini: 0.005em;
   --rs-letter-spacing-small: 0em;
@@ -88,8 +79,7 @@
   --rs-letter-spacing-mono-large: 0px;
 }
 
-/* Legacy: `style` on the previous `Theme` provider. `ThemePreview` never writes
-   `data-style` and leaves the font pair to the `--rs-font-*` tokens. */
+/* Legacy: `data-style` font pairs for the previous `Theme` provider. */
 [data-style="modern"] {
   /* Re-declare (not just inherit from :root) so a modern theme nested inside a
      traditional one resets to Inter instead of inheriting Lora/Josefin. */

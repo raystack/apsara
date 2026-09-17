@@ -8,9 +8,8 @@
 @import "./primitives/appearance.css";
 @import "./primitives/z-index.css";
 @import "./colors.css";
-/* Before radius.css, whose `data-style` scales must win over the base scale,
-   and after primitives/appearance.css, whose `:root` colour-scheme rule this
-   overrides only by source order. */
+/* After primitives/appearance.css (overrides its `:root` colour-scheme by source
+   order) and before radius.css (whose `data-style` scales must win). */
 @import "./theme.css";
 @import "./radius.css";
 @import "./spacing.css";

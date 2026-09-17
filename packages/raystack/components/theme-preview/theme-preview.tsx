@@ -56,12 +56,12 @@ export interface ThemePreviewProps
   extends Omit<HTMLAttributes<HTMLElement>, 'defaultValue' | 'onChange'> {
   /** Seeds uncontrolled keys. A stored user choice overrides it. */
   defaultValue?: Partial<ThemeSettings>;
-  /**
-   * Controlled keys always win, are never persisted and are never written by
-   * the inline script. Control is per key.
-   */
+  /** Per-key control. Wins over storage, never persisted or scripted. */
   value?: Partial<ThemeSettings>;
-  /** Fires with the full next settings object and the changed subset. */
+  /**
+   * Fires when `setValue` requests a change. Controlled keys are reported but
+   * not applied; changes arriving from storage do not fire it.
+   */
   onValueChange?: (
     value: ThemeSettings,
     changed: Partial<ThemeSettings>
@@ -70,16 +70,9 @@ export interface ThemePreviewProps
   persist?: readonly ThemeSettingKey[];
   /** Storage namespace. Persistence is off unless this is set. */
   persistKey?: string;
-  /**
-   * Whether this theme owns the document's colour scheme. Defaults to true
-   * when there is no ancestor theme; an embedded widget that has no ancestor
-   * but does not own the page must pass `false`.
-   */
+  /** Owns the document colour scheme. Defaults to true with no ancestor theme. */
   isRoot?: boolean;
-  /**
-   * Overrides the painting heuristic: true at the root, true for a nested theme
-   * that sets an explicit `light` or `dark` appearance, false otherwise.
-   */
+  /** Overrides the paint heuristic: root or own light/dark appearance paints. */
   hasBackground?: boolean;
   /** Suppresses the colour transition during an appearance switch. */
   disableTransitionOnChange?: boolean;
@@ -95,7 +88,6 @@ export interface ThemePreviewProps
 const NO_KEYS: readonly ThemeSettingKey[] = [];
 const EMPTY_PATCH: Partial<ThemeSettings> = {};
 
-/** Keeps only the keys `allowed` covers. */
 function pickSettings(
   source: Partial<ThemeSettings>,
   allowed: readonly ThemeSettingKey[]
@@ -115,11 +107,7 @@ function isSettingsEmpty(patch: Partial<ThemeSettings>): boolean {
   return true;
 }
 
-/**
- * Per-key precedence: controlled, then stored, then in-memory, then the seed,
- * and finally the parent theme. A nested theme therefore inherits every key it
- * does not set, which is how "inherit" is expressed — by omission.
- */
+// Precedence: controlled, stored, in-memory, seed, then the parent theme.
 function resolvePrecedence(
   inherited: ThemeSettings | undefined,
   controlled: Partial<ThemeSettings> | undefined,
@@ -135,11 +123,7 @@ function resolvePrecedence(
   return next;
 }
 
-/**
- * Holds identity stable while the contents are unchanged. A dependency list
- * over `value`, `defaultValue` and `persist` cannot work, because those are
- * naturally written as fresh object literals on every render.
- */
+// Holds identity while contents match; props arrive as fresh literals.
 function useStableSettings(next: ThemeSettings): ThemeSettings {
   const held = useRef(next);
   for (const key of THEME_SETTING_KEYS) {
@@ -151,7 +135,6 @@ function useStableSettings(next: ThemeSettings): ThemeSettings {
   return held.current;
 }
 
-/** The same, for the persisted-key list. */
 function useStableKeys(
   next: readonly ThemeSettingKey[]
 ): readonly ThemeSettingKey[] {
@@ -166,7 +149,6 @@ function useStableKeys(
   return held.current;
 }
 
-/** Merges the theme's props onto a caller-supplied element. */
 function renderThemeElement(
   render: ThemeRenderProp | undefined,
   props: Record<string, unknown>
@@ -177,9 +159,7 @@ function renderThemeElement(
     return cloneElement(render, {
       ...props,
       ...own,
-      // The theme's identity must survive whatever the supplied element sets:
-      // classes join, styles merge, both refs fire, the children are the
-      // theme's, and the data attributes are not overwritable.
+      // Classes join, styles merge, refs compose; data attributes stay ours.
       className: cx(props.className as string, own.className as string),
       style: {
         ...(props.style as CSSProperties),
@@ -193,7 +173,6 @@ function renderThemeElement(
   return <div {...(props as HTMLAttributes<HTMLDivElement>)} />;
 }
 
-/** Calls both refs, so a `render` target keeps its own. */
 function composeRefs(
   ours: Ref<HTMLElement>,
   theirs: Ref<unknown>
@@ -207,7 +186,6 @@ function composeRefs(
   };
 }
 
-/** The prop subset a `render` target may not override. */
 function protectedProps(
   props: Record<string, unknown>
 ): Record<string, unknown> {
@@ -220,14 +198,7 @@ function protectedProps(
   return out;
 }
 
-/**
- * The theme.
- *
- * Every token-bearing attribute lives on the element this renders, so the root
- * theme, a nested scope and a portal re-injection are the same component
- * rendering the same attributes; only their defaults and background behaviour
- * differ. Nothing is written to `document.documentElement`.
- */
+/** The theme element. Nothing is written to `document.documentElement`. */
 export function ThemePreview({
   defaultValue,
   value,
@@ -248,15 +219,13 @@ export function ThemePreview({
   const isRootTheme = isRoot ?? parent === null;
 
   const reactId = useId();
-  // `useId` returns colons and guillemets that are not valid unescaped in a
-  // selector, and the script's fallback lookup is a selector.
+  // `useId` emits characters invalid in a selector; the script's fallback is one.
   const elementId = useMemo(
     () => `rs-theme-${reactId.replace(/[^a-zA-Z0-9_-]/g, '')}`,
     [reactId]
   );
 
-  // Controlled keys are excluded from the namespace a write touches and from
-  // the script's key list: stale storage must never shadow them.
+  // Controlled keys never enter storage or the script.
   const persistedKeys = useStableKeys(
     persistKey
       ? (persist ?? THEME_SETTING_KEYS).filter(
@@ -279,7 +248,7 @@ export function ThemePreview({
     [rawStored, persistedKeys]
   );
 
-  /** Uncontrolled keys the namespace does not cover live here instead. */
+  // Uncontrolled keys outside the namespace.
   const [local, setLocal] = useState<Partial<ThemeSettings>>(EMPTY_PATCH);
 
   const systemAppearance = useSystemAppearance();
@@ -297,56 +266,54 @@ export function ThemePreview({
   valueRef.current = value;
   const persistedKeysRef = useRef(persistedKeys);
   persistedKeysRef.current = persistedKeys;
+  const settingsRef = useRef(settings);
+  settingsRef.current = settings;
+  const onValueChangeRef = useRef(onValueChange);
+  onValueChangeRef.current = onValueChange;
 
   const setValue = useCallback(
     (next: Partial<ThemeSettings>) => {
+      const current = settingsRef.current;
+      const changed: Partial<ThemeSettings> = {};
       const patch: Partial<ThemeSettings> = {};
       for (const key of THEME_SETTING_KEYS) {
         const candidate = next[key];
         if (candidate === undefined) continue;
-        // Controlled keys are ignored rather than throwing, so a switcher that
-        // does not know which keys a page controls stays usable.
-        if (valueRef.current?.[key] !== undefined) continue;
         const allowed: readonly string[] = SETTING_VALUES[key];
-        if (!allowed.includes(candidate)) continue;
+        if (!allowed.includes(candidate) || current[key] === candidate) {
+          continue;
+        }
+        assignSetting(changed, key, candidate);
+        // Controlled keys are reported, not applied.
+        if (valueRef.current?.[key] !== undefined) continue;
         assignSetting(patch, key, candidate);
       }
-      if (isSettingsEmpty(patch)) return;
+      if (isSettingsEmpty(changed)) return;
 
-      const persisted = persistedKeysRef.current;
-      if (persistKey && persisted.length > 0) {
-        writeStoredSettings(persistKey, persisted, patch);
+      if (!isSettingsEmpty(patch)) {
+        const persisted = persistedKeysRef.current;
+        // A refused write falls back to memory rather than dropping the change.
+        const stored =
+          persistKey && persisted.length > 0
+            ? writeStoredSettings(persistKey, persisted, patch)
+            : false;
+        const inMemory: Partial<ThemeSettings> = {};
+        for (const key of THEME_SETTING_KEYS) {
+          const pending = patch[key];
+          if (pending === undefined) continue;
+          if (stored && persisted.includes(key)) continue;
+          assignSetting(inMemory, key, pending);
+        }
+        if (!isSettingsEmpty(inMemory)) {
+          setLocal(previous => ({ ...previous, ...inMemory }));
+        }
       }
-      const inMemory: Partial<ThemeSettings> = {};
-      for (const key of THEME_SETTING_KEYS) {
-        const pending = patch[key];
-        if (pending === undefined || persisted.includes(key)) continue;
-        assignSetting(inMemory, key, pending);
-      }
-      if (!isSettingsEmpty(inMemory)) {
-        setLocal(previous => ({ ...previous, ...inMemory }));
-      }
+
+      // From the request, not settled state, so hydration never fires it.
+      onValueChangeRef.current?.({ ...current, ...changed }, changed);
     },
     [persistKey]
   );
-
-  const onValueChangeRef = useRef(onValueChange);
-  onValueChangeRef.current = onValueChange;
-  const previousSettings = useRef<ThemeSettings | null>(null);
-
-  useEffect(() => {
-    const previous = previousSettings.current;
-    previousSettings.current = settings;
-    if (!previous) return;
-    const changed: Partial<ThemeSettings> = {};
-    for (const key of THEME_SETTING_KEYS) {
-      if (previous[key] !== settings[key]) {
-        assignSetting(changed, key, settings[key]);
-      }
-    }
-    if (!isSettingsEmpty(changed))
-      onValueChangeRef.current?.(settings, changed);
-  }, [settings]);
 
   const handle = useMemo<ThemeHandle>(
     () => ({ value: settings, resolved, setValue, systemAppearance }),
@@ -357,15 +324,20 @@ export function ThemePreview({
     [handle, isRootTheme]
   );
 
-  // Only a root publishes itself, which is what lets a scope flip the page.
+  // Only a root publishes itself, so a scope can flip the page.
   const inheritedRoot = useContext(RootThemeContext);
   const rootHandle = isRootTheme ? handle : (inheritedRoot ?? handle);
 
-  const explicitAppearance = value?.appearance ?? defaultValue?.appearance;
+  // Own appearance from any source; inherited keys do not count.
+  const ownAppearance =
+    value?.appearance ??
+    stored.appearance ??
+    local.appearance ??
+    defaultValue?.appearance;
   const paints =
     hasBackground ??
     (isRootTheme ||
-      (explicitAppearance !== undefined && explicitAppearance !== 'system'));
+      (ownAppearance !== undefined && ownAppearance !== 'system'));
 
   useAppearanceTransitionGuard(
     resolved.appearance,
@@ -384,10 +356,8 @@ export function ThemePreview({
   const elementRef = useRef<HTMLElement | null>(null);
   const attributes = useMemo(() => settingsToAttributes(resolved), [resolved]);
 
-  // React only warns about hydration attribute mismatches, and
-  // `suppressHydrationWarning` silences even that, so where no inline script
-  // ran the server's guess can survive in the DOM. One imperative
-  // reconciliation on mount closes that gap; elsewhere it is a no-op.
+  // Where no script ran, the server's guess survives hydration silently;
+  // one reconciliation on mount closes that.
   useEffect(() => {
     const element = elementRef.current;
     if (!element) return;
@@ -420,9 +390,7 @@ export function ThemePreview({
     children: (
       <>
         {script ? (
-          // First child, so it patches its parent's attributes before any
-          // child content is parsed. The source is generated from a closed
-          // configuration with every interpolated value escaped.
+          // First child, so it patches the parent before any child is parsed.
           <script
             data-slot='theme-preview-script'
             nonce={nonce}
@@ -451,10 +419,7 @@ export function ThemePreview({
 
 ThemePreview.displayName = 'ThemePreview';
 
-/**
- * Suppresses the deliberate 0.4s colour transition on themed elements while an
- * appearance switch lands, so the change does not sweep across the page.
- */
+// Suppresses the colour transition while an appearance switch lands.
 function useAppearanceTransitionGuard(
   appearance: string,
   enabled: boolean,
@@ -475,8 +440,7 @@ function useAppearanceTransitionGuard(
       )
     );
     document.head.appendChild(style);
-    // Force a reflow so the suppression lands before the swap is painted, then
-    // drop it on the next tick.
+    // Reflow so the suppression lands before the swap paints.
     void window.getComputedStyle(document.body).opacity;
     const timer = window.setTimeout(() => style.remove(), 1);
     return () => {

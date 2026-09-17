@@ -1,9 +1,6 @@
 /**
- * The pre-hydration inline script. Server-rendered HTML cannot know a
- * client-side value, so this patches the theme element's attributes before
- * first paint: it renders as the first child of that element and corrects its
- * own parent, whose opening tag has already been parsed. Only a namespace's
- * uncontrolled settings appear here, which usually means appearance alone.
+ * Pre-hydration script. Rendered as the theme element's first child, it patches
+ * its own parent from storage before first paint.
  */
 
 import {
@@ -30,11 +27,7 @@ function inlineJson(value: unknown): string {
 
 export interface ThemeScriptParams {
   persistKey: string;
-  /**
-   * The settings this namespace covers that are not controlled. Controlled
-   * keys are excluded here rather than filtered at runtime, so stale storage
-   * cannot shadow them.
-   */
+  /** Uncontrolled keys the namespace covers; controlled keys are excluded. */
   keys: readonly ThemeSettingKey[];
   /** Fallback selector target, in case `document.currentScript` is absent. */
   elementId: string;
@@ -45,8 +38,7 @@ export function createThemeScript(params: ThemeScriptParams): string | null {
   const { persistKey, keys, elementId } = params;
   if (keys.length === 0) return null;
 
-  // [settingKey, attribute, legalValues] — generated from the shared config so
-  // the script and the React reader cannot drift apart.
+  // From the shared config, so the script and the React reader cannot drift.
   const map = keys.map(key => [
     key,
     SETTING_ATTRIBUTES[key],
@@ -67,13 +59,11 @@ export function createThemeScript(params: ThemeScriptParams): string | null {
     `&&o.settings&&typeof o.settings==="object")s=o.settings}}catch(t){}` +
     `for(var i=0;i<m.length;i++){` +
     `var k=m[i][0],a=m[i][1],v=s[k];` +
-    // Skipping an out-of-union value leaves the server-rendered attribute, so
-    // a bad stored value cannot block first paint.
+    // An out-of-union value leaves the server-rendered attribute alone.
     `if(m[i][2].indexOf(v)<0)continue;` +
     `if(k==="appearance"&&v==="system")` +
     `v=matchMedia(${inlineJson(SYSTEM_APPEARANCE_QUERY)}).matches?"dark":"light";` +
-    // `accentColor` precedes `grayColor` in the shared key order, so the accent
-    // attribute read here is already patched when both are stored.
+    // Key order puts `accentColor` first, so the accent is already patched.
     `else if(k==="grayColor"&&v==="auto")v=g[p.getAttribute("data-accent-color")];` +
     `if(v)p.setAttribute(a,v)}` +
     `}catch(t){}}()`

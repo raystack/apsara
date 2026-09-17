@@ -14,7 +14,7 @@ export interface ThemeHandle {
   value: ThemeSettings;
   /** Settings as applied, with `system` and `auto` resolved. */
   resolved: ResolvedThemeSettings;
-  /** Takes a partial settings object. Controlled keys are ignored. */
+  /** Partial settings. Controlled keys are reported, not applied. */
   setValue: (next: Partial<ThemeSettings>) => void;
   /** What the OS reports, whatever the current setting is. */
   systemAppearance: Appearance;
@@ -37,11 +37,7 @@ export interface UseThemePreviewReturn extends ThemeHandle {
   root: ThemeHandle;
 }
 
-/**
- * Reads the nearest theme. Throws outside a provider rather than returning a
- * no-op: every colour token is declared under `[data-theme]`, so a tree with
- * no provider has no colours at all.
- */
+/** Nearest theme. Throws outside a provider, where no colour tokens exist. */
 export function useThemePreview(): UseThemePreviewReturn {
   const context = useContext(ThemeContext);
   const root = useContext(RootThemeContext);

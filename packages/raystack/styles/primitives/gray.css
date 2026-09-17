@@ -4,9 +4,8 @@
  * All variables must be used from colors.css file only.
  */
 
-/* The bare `[data-theme]` selectors make the default-gray scale apply to scoped
- * sections that set no explicit `data-gray-color`. Every rule carries zero
- * specificity, so the non-default ramps win by being declared later. */
+/* Bare `[data-theme]` makes the default gray apply where no `data-gray-color` is
+ * set. All rules are zero-specificity, so the later ramps win by order. */
 :where([data-gray-color="gray"], [data-theme="light"]) {
   --rs-gray-1: oklch(0.9911 0 0);
   --rs-gray-2: oklch(0.9821 0 0);

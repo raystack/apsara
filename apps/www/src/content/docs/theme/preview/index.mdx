@@ -120,7 +120,7 @@ Sharing a `persistKey` is a supported feature, not a hazard — it is exactly wh
 
 ## Server rendering
 
-Accent, gray, radius, scaling and panel background are ordinary props, so React server-renders them correctly on the first byte. Only appearance can differ between the server and the browser, and only when it is uncontrolled and persisted — which is the one case the inline script covers.
+Every setting is an ordinary prop, so React server-renders the seeded values on the first byte. What the server cannot know is what the browser has **stored**. The inline script closes that gap: it runs before first paint, reads the namespace, and patches every persisted, uncontrolled setting it finds there. A setting with nothing stored keeps the server-rendered value until React mounts, so on a first visit the default `appearance: "system"` paints light before the OS preference is applied.
 
 ```tsx
 // Next.js App Router: app/layout.tsx
@@ -156,7 +156,7 @@ A nested `ThemePreview` inherits every key it does not set, so "inherit" is expr
 
 ### hasBackground
 
-The component cannot infer whether it should paint, because re-tinting the accent and flipping a panel to dark use the same component but want opposite behaviour. `hasBackground` decides, and its default follows a heuristic: true at the root, true for a nested theme that sets an explicit `light` or `dark` appearance, false for one that only changes accent, gray, radius or scaling.
+The component cannot infer whether it should paint, because re-tinting the accent and flipping a panel to dark use the same component but want opposite behaviour. `hasBackground` decides, and its default follows a heuristic: true at the root, true for a nested theme with a `light` or `dark` appearance of its own, whether seeded, controlled, stored or set at runtime, and false for one that only changes accent, gray, radius or scaling.
 
 Pass `hasBackground={false}` if your application paints its own page background. Foreground colour applies regardless.
 

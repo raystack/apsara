@@ -1,6 +1,5 @@
 .image {
-  /* Base step for the shared `radius` override; `medium` reproduces the
-     previous `--rs-radius-3`. */
+  /* Base step for the shared `radius` override. */
   --rs-radius-step: 6px;
   display: block;
   max-width: 100%;

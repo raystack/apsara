@@ -29,7 +29,6 @@ import { useState } from 'react';
 
 const APPEARANCES = ['light', 'dark', 'system'] as const;
 
-/** A live control for every setting, next to a sampler of components. */
 function Controls() {
   const { value, resolved, setValue } = useThemePreview();
 
@@ -128,7 +127,7 @@ function Sampler() {
   );
 }
 
-/** `isRoot={false}`: one example on a page, not the page itself. */
+/** `isRoot={false}`: one example on the page, not the page itself. */
 export default function ThemePanelDemo() {
   return (
     <ThemePreview

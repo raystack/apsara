@@ -12,10 +12,7 @@ export interface ThemePreviewSwitcherProps {
   'aria-label'?: string;
 }
 
-/**
- * Flips the appearance between light and dark. Reads `resolved.appearance`, so
- * `system` shows the icon for what is actually on screen.
- */
+/** Flips light/dark. Reads `resolved`, so `system` shows what is on screen. */
 export function ThemePreviewSwitcher({
   size = 30,
   target = 'nearest',

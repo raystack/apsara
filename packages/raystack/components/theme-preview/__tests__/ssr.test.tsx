@@ -44,7 +44,6 @@ describe('server rendering', () => {
       </ThemePreview>
     );
 
-    // The server snapshot returns the seed, so the hydration render matches.
     expect(html).toContain('data-theme="light"');
     expect(html).toContain('data-accent-color="mint"');
     expect(html).toContain('data-radius="medium"');
@@ -93,7 +92,6 @@ describe('hydration', () => {
     container.innerHTML = renderToString(tree);
     document.body.appendChild(container);
 
-    // The server wrote `light`; the script corrects the DOM before paint.
     const theme = container.querySelector('.rs-theme') as HTMLElement;
     expect(theme.getAttribute('data-theme')).toBe('light');
     runInlineScript(theme);
@@ -106,7 +104,6 @@ describe('hydration', () => {
       hydrateRoot(container, tree);
     });
 
-    // The post-hydration snapshot returns the same value, so nothing moves.
     expect(theme.getAttribute('data-theme')).toBe('dark');
     const hydrationWarnings = error.mock.calls.filter(call =>
       String(call[0]).includes('did not match')
@@ -116,8 +113,7 @@ describe('hydration', () => {
   });
 
   it('reconciles the element when no script ran to correct it', async () => {
-    // `system` with no persistence: the server guesses light, nothing patches
-    // the DOM, and React does not fix attribute mismatches during hydration.
+    // React does not fix attribute mismatches during hydration; the mount effect does.
     installMatchMedia(true);
 
     const tree = (

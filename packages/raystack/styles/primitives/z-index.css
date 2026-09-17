@@ -1,5 +1,4 @@
-/* On the theme selector so a scope can change it; `:root` is kept for the
-   previous provider, which writes to `<html>`. */
+/* Theme selector so a scope can change it; `:root` for the previous `Theme`. */
 :where(:root, [data-theme]) {
   --rs-z-index-portal: 99;
   --rs-z-index-toast: 999;

@@ -86,9 +86,8 @@ export const componentRadiusDemo = {
   code: `
   <ThemePreview isRoot={false} defaultValue={{ radius: "large" }} hasBackground={false}>
     <Flex gap={3} align="center">
-      {/* Follows the theme */}
       <Button>Large</Button>
-      {/* Overrides it, without compounding */}
+      {/* Overrides the theme without compounding */}
       <Button radius="none">None</Button>
       <Button radius="small">Small</Button>
       <Button radius="full">Full</Button>

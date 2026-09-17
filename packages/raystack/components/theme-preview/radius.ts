@@ -1,16 +1,7 @@
 import styles from './radius.module.css';
 import type { Radius } from './settings';
 
-/**
- * The per-component `radius` override, as a cva variant so no component
- * carries bespoke override CSS.
- *
- * ```ts
- * const button = cva(styles['button'], {
- *   variants: { ...radiusVariants, size: { … } }
- * });
- * ```
- */
+/** Per-component `radius` override, spread into a cva `variants` block. */
 export const radiusClasses = {
   none: styles['radius-none'],
   small: styles['radius-small'],
@@ -19,7 +10,6 @@ export const radiusClasses = {
   full: styles['radius-full']
 } satisfies Record<Radius, string>;
 
-/** Drop-in `variants` fragment for a cva definition. */
 export const radiusVariants = { radius: radiusClasses };
 
 /** The class for a `radius` prop, or `undefined` when it is unset. */

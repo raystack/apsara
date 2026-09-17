@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   clearThemeStorageCache,
@@ -8,7 +8,11 @@ import {
   THEME_STORAGE_EVENT,
   writeStoredSettings
 } from '../store';
-import { installLocalStorage, storedEntry } from './mocks';
+import {
+  installLocalStorage,
+  installThrowingLocalStorage,
+  storedEntry
+} from './mocks';
 
 let entries: Map<string, string>;
 
@@ -41,8 +45,7 @@ describe('readStoredSettings', () => {
   });
 
   it('falls back to the seed for a bare legacy theme name', () => {
-    // The previous provider stored `"dark"`, which is valid JSON but not an
-    // object, and is therefore detectable rather than silently accepted.
+    // The old provider stored `"dark"`: valid JSON, not an object, so detectable.
     entries.set('app', JSON.stringify('dark'));
     expect(readStoredSettings('app')).toEqual({});
   });
@@ -64,8 +67,7 @@ describe('readStoredSettings', () => {
     entries.set('app', storedEntry({ appearance: 'dark' }));
     const first = readStoredSettings('app');
     const second = readStoredSettings('app');
-    // `useSyncExternalStore` compares with `Object.is` and accepts no equality
-    // function, so a freshly parsed object each call would re-render forever.
+    // `useSyncExternalStore` compares with `Object.is`; a fresh object would loop.
     expect(second).toBe(first);
   });
 
@@ -142,6 +144,51 @@ describe('writeStoredSettings', () => {
     writeStoredSettings('app', ['appearance'], { appearance: 'dark' });
     unsubscribe();
     expect(notified).toBe(0);
+  });
+
+  it('reports success, so the caller can trust storage', () => {
+    expect(
+      writeStoredSettings('app', ['appearance'], { appearance: 'dark' })
+    ).toBe(true);
+  });
+
+  it('reports success when storage already holds the value', () => {
+    entries.set('app', storedEntry({ appearance: 'dark' }));
+    expect(
+      writeStoredSettings('app', ['appearance'], { appearance: 'dark' })
+    ).toBe(true);
+  });
+
+  it('reports failure when setItem throws, and notifies nobody', () => {
+    vi.spyOn(window.localStorage, 'setItem').mockImplementation(() => {
+      throw new DOMException('Quota exceeded', 'QuotaExceededError');
+    });
+    let notified = 0;
+    const unsubscribe = subscribeToThemeStorage(() => {
+      notified += 1;
+    });
+    expect(
+      writeStoredSettings('app', ['appearance'], { appearance: 'dark' })
+    ).toBe(false);
+    unsubscribe();
+    expect(notified).toBe(0);
+    expect(entries.has('app')).toBe(false);
+  });
+});
+
+describe('when storage access itself throws', () => {
+  beforeEach(() => {
+    installThrowingLocalStorage();
+  });
+
+  it('reads as nothing stored', () => {
+    expect(readStoredSettings('app')).toEqual({});
+  });
+
+  it('reports the write as failed', () => {
+    expect(
+      writeStoredSettings('app', ['appearance'], { appearance: 'dark' })
+    ).toBe(false);
   });
 });
 

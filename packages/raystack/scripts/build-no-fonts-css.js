@@ -1,8 +1,4 @@
-/**
- * Emits `dist/style-no-fonts.css` from `dist/style.css` by stripping the Google
- * Fonts `@import url(...)` statements, for consumers that self-host their faces
- * or already load them. Deriving it here keeps the token CSS single-sourced.
- */
+/** Emits `dist/style-no-fonts.css`: `dist/style.css` minus the Google Fonts imports. */
 
 const fs = require('node:fs');
 const path = require('node:path');
@@ -24,10 +20,15 @@ function main() {
   }
 
   const source = fs.readFileSync(SOURCE, 'utf8');
-  const stripped = source.replace(FONT_IMPORT, '');
   const removed = (source.match(FONT_IMPORT) ?? []).length;
+  if (removed === 0) {
+    console.error(
+      `[style-no-fonts] no Google Fonts @import found in ${SOURCE}; refusing to write an identical copy.`
+    );
+    process.exit(1);
+  }
 
-  fs.writeFileSync(TARGET, stripped, 'utf8');
+  fs.writeFileSync(TARGET, source.replace(FONT_IMPORT, ''), 'utf8');
   console.log(
     `[style-no-fonts] wrote ${path.relative(process.cwd(), TARGET)} (${removed} font import${removed === 1 ? '' : 's'} stripped)`
   );

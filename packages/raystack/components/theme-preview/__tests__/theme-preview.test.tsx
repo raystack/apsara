@@ -12,6 +12,7 @@ import { ThemePreview } from '../theme-preview';
 import {
   installLocalStorage,
   installMatchMedia,
+  installThrowingLocalStorage,
   type MediaController,
   storedEntry
 } from './mocks';
@@ -25,7 +26,6 @@ beforeEach(() => {
   clearThemeStorageCache();
 });
 
-/** The element every theme carries the documented override class on. */
 function themeElement(container: HTMLElement, index = 0): HTMLElement {
   const elements = container.querySelectorAll<HTMLElement>('.rs-theme');
   const element = elements[index];
@@ -93,7 +93,6 @@ describe('ThemePreview attributes', () => {
 
     const scope = themeElement(container, 1);
     expect(scope).toHaveAttribute('data-accent-color', 'mint');
-    // Inherited by omission: a nested theme keeps every key it does not set.
     expect(scope).toHaveAttribute('data-radius', 'large');
   });
 });
@@ -152,6 +151,46 @@ describe('hasBackground', () => {
     expect(themeElement(container, 1)).not.toHaveAttribute(
       'data-rs-background'
     );
+  });
+
+  it('paints a nested theme whose appearance comes from storage', () => {
+    entries.set('panel', storedEntry({ appearance: 'dark' }));
+    const { container } = render(
+      <ThemePreview>
+        <ThemePreview persistKey='panel' persist={['appearance']}>
+          panel
+        </ThemePreview>
+      </ThemePreview>
+    );
+    const panel = themeElement(container, 1);
+    expect(panel).toHaveAttribute('data-theme', 'dark');
+    expect(panel).toHaveAttribute('data-rs-background');
+  });
+
+  it('starts painting once a nested theme gets an appearance at runtime', async () => {
+    const user = userEvent.setup();
+    function Switcher() {
+      const { setValue } = useThemePreview();
+      return (
+        <button type='button' onClick={() => setValue({ appearance: 'dark' })}>
+          set
+        </button>
+      );
+    }
+    const { container } = render(
+      <ThemePreview>
+        <ThemePreview>
+          <Switcher />
+        </ThemePreview>
+      </ThemePreview>
+    );
+    const panel = themeElement(container, 1);
+    expect(panel).not.toHaveAttribute('data-rs-background');
+
+    await user.click(screen.getByRole('button'));
+
+    expect(panel).toHaveAttribute('data-theme', 'dark');
+    expect(panel).toHaveAttribute('data-rs-background');
   });
 
   it('honours an explicit override', () => {
@@ -250,7 +289,6 @@ describe('persistence', () => {
     );
     await user.click(screen.getByRole('button'));
 
-    // The setting still applies, in memory.
     expect(themeElement(container)).toHaveAttribute('data-theme', 'dark');
     expect(getItem).not.toHaveBeenCalled();
     expect(setItem).not.toHaveBeenCalled();
@@ -346,8 +384,7 @@ describe('persistence', () => {
 
     await user.click(screen.getByRole('button'));
 
-    // The `storage` event does not fire here, so the in-document notification
-    // is what keeps the second theme in step.
+    // `storage` never fires in the writing document; the in-document event does.
     expect(themeElement(container, 0)).toHaveAttribute('data-theme', 'dark');
     expect(themeElement(container, 1)).toHaveAttribute('data-theme', 'dark');
   });
@@ -381,7 +418,6 @@ describe('persistence', () => {
       </ThemePreview>
     );
 
-    // No hydration under CSR, so the first render is already correct.
     expect(renders[0]).toBe('dark/full');
   });
 
@@ -496,7 +532,6 @@ describe('useThemePreview', () => {
     await user.click(screen.getByRole('button'));
 
     expect(themeElement(container, 0)).toHaveAttribute('data-theme', 'dark');
-    // The scope inherits the flipped appearance because it never set its own.
     expect(themeElement(container, 1)).toHaveAttribute('data-theme', 'dark');
   });
 
@@ -546,6 +581,111 @@ describe('onValueChange', () => {
     expect(next.appearance).toBe('dark');
     expect(next.accentColor).toBe('indigo');
     expect(changed).toEqual({ appearance: 'dark' });
+  });
+
+  it('reports a controlled key without applying it', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+
+    function Switcher() {
+      const { setValue } = useThemePreview();
+      return (
+        <button type='button' onClick={() => setValue({ appearance: 'light' })}>
+          set
+        </button>
+      );
+    }
+
+    const { container } = render(
+      <ThemePreview
+        value={{ appearance: 'dark' }}
+        onValueChange={onValueChange}
+      >
+        <Switcher />
+      </ThemePreview>
+    );
+    await user.click(screen.getByRole('button'));
+
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+    const [next, changed] = onValueChange.mock.calls[0];
+    expect(next.appearance).toBe('light');
+    expect(changed).toEqual({ appearance: 'light' });
+    expect(themeElement(container)).toHaveAttribute('data-theme', 'dark');
+  });
+
+  it('does not fire for a value that is already set', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+
+    function Switcher() {
+      const { setValue } = useThemePreview();
+      return (
+        <button type='button' onClick={() => setValue({ appearance: 'light' })}>
+          set
+        </button>
+      );
+    }
+
+    render(
+      <ThemePreview
+        defaultValue={{ appearance: 'light' }}
+        onValueChange={onValueChange}
+      >
+        <Switcher />
+      </ThemePreview>
+    );
+    await user.click(screen.getByRole('button'));
+
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it('does not fire for a change that arrives from storage', () => {
+    const onValueChange = vi.fn();
+    const { container } = render(
+      <ThemePreview persistKey='app' onValueChange={onValueChange}>
+        content
+      </ThemePreview>
+    );
+
+    act(() => {
+      entries.set('app', storedEntry({ accentColor: 'mint' }));
+      window.dispatchEvent(new Event('storage'));
+    });
+
+    expect(themeElement(container)).toHaveAttribute(
+      'data-accent-color',
+      'mint'
+    );
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+});
+
+// ─── Storage unavailable ────────────────────────────────────────────────────
+
+describe('when storage is unavailable', () => {
+  it('still applies a persisted setting, in memory', async () => {
+    installThrowingLocalStorage();
+    const user = userEvent.setup();
+
+    function Switcher() {
+      const { setValue } = useThemePreview();
+      return (
+        <button type='button' onClick={() => setValue({ appearance: 'dark' })}>
+          set
+        </button>
+      );
+    }
+
+    const { container } = render(
+      <ThemePreview persistKey='app'>
+        <Switcher />
+      </ThemePreview>
+    );
+    expect(themeElement(container)).toHaveAttribute('data-theme', 'light');
+
+    await user.click(screen.getByRole('button'));
+
+    expect(themeElement(container)).toHaveAttribute('data-theme', 'dark');
   });
 });
 
@@ -633,7 +773,6 @@ describe('the portal re-injector', () => {
     const portalled = screen.getByTestId('portalled');
     expect(portalled).toHaveClass('rs-theme');
     expect(portalled).toHaveAttribute('data-theme', 'dark');
-    // The nearest scope wins: a portal used to render in the root's theme.
     expect(portalled).toHaveAttribute('data-accent-color', 'orange');
   });
 
@@ -684,8 +823,7 @@ describe('disableTransitionOnChange', () => {
     await act(async () => {
       await user.click(screen.getByRole('button'));
     });
-    // The guard style is torn down on the next tick, so assert it ran and
-    // cleaned up rather than trying to observe it mid-flight.
+    // The guard style is removed on the next tick, so assert cleanup, not presence.
     await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 5));
     });

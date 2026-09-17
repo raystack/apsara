@@ -3,8 +3,7 @@
  * Avoid using color variables from other files in the styles folder directly.
  */
 
-/* `:where()` so a consumer rule on `.rs-theme` wins without `!important` and
-   regardless of bundler output order. */
+/* `:where()`: zero specificity, so a consumer rule on `.rs-theme` wins. */
 :where([data-theme="light"], [data-theme="dark"]) {
   /* Base Foreground Colors */
   --rs-color-foreground-base-primary: var(--rs-neutral-12);

@@ -20,7 +20,7 @@ function getSnapshot(): Appearance {
   return window.matchMedia(SYSTEM_APPEARANCE_QUERY).matches ? 'dark' : 'light';
 }
 
-/** Matches the attribute the server writes for `appearance: 'system'`. */
+// Matches what the server renders for `system`.
 function getServerSnapshot(): Appearance {
   return 'light';
 }

@@ -158,6 +158,7 @@ export {
   type GrayColorSetting,
   PANEL_BACKGROUNDS,
   type PanelBackground,
+  type PortalContainer,
   RADII,
   type Radius,
   REDUCED_MOTION_VALUES,

@@ -1,11 +1,5 @@
-/*
- * On the theme selector rather than `:root` so a scope can change it, which is
- * what makes `scaling` possible. The declaration must match the theme element
- * itself rather than be inherited: custom properties substitute at
- * computed-value time, so an inherited `--rs-space-1` would already have
- * resolved against the ancestor's `--rs-scaling`. `:root` is kept for the
- * previous provider, which writes to `<html>`.
- */
+/* On the theme selector, not just `:root`, so a scope can rescale it: an
+   inherited value would already have resolved against the ancestor's scaling. */
 :where(:root, [data-theme]) {
   --rs-space-1: calc(2px * var(--rs-scaling, 1));
   --rs-space-2: calc(4px * var(--rs-scaling, 1));
