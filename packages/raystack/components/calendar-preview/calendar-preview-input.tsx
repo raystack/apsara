@@ -10,6 +10,7 @@ import {
   isRange as isRangeValue,
   isScaleValue
 } from './calendar-preview-root';
+import { useTriggerInput } from './calendar-preview-trigger';
 import { dayKey, parseKey } from './date-adapter';
 import { parseScaleInput } from './lib/parse';
 import type { Scale } from './lib/scale';
@@ -105,16 +106,16 @@ export function CalendarPreviewInput({
     draft,
     activeField,
     setActiveField,
-    setFieldReadOnly,
-    registerInput
+    setFieldReadOnly
   } = useCalendarPreviewContext<CalendarPreviewValue>('CalendarPreview.Input');
 
   const isRange = selection === 'range';
 
+  const trigger = useTriggerInput();
   useEffect(() => {
-    registerInput(true);
-    return () => registerInput(false);
-  }, [registerInput]);
+    trigger?.registerInput(true);
+    return () => trigger?.registerInput(false);
+  }, [trigger]);
 
   /* The grid has to know which endpoint refuses a write, and `readOnly` is
      this input's prop, so it registers rather than the root guessing. */

@@ -6,14 +6,29 @@ import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { cx } from 'class-variance-authority';
 import {
   type ComponentProps,
+  createContext,
   type FocusEvent,
   type MouseEvent,
+  useCallback,
+  useContext,
   useEffect,
-  useRef
+  useMemo,
+  useRef,
+  useState
 } from 'react';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
 import { type CalendarPreviewValue, isRange } from './calendar-preview-root';
+
+/* Per trigger, not per root: `.Body` mounts an `.Input` inside `.Content`, and
+   a childless trigger beside it is still a button. */
+const TriggerInputContext = createContext<{
+  registerInput: (mounted: boolean) => void;
+} | null>(null);
+
+export function useTriggerInput() {
+  return useContext(TriggerInputContext);
+}
 
 export interface CalendarPreviewTriggerProps
   extends useRender.ComponentProps<'div'> {
@@ -54,12 +69,20 @@ export function CalendarPreviewTrigger({
     setOpen,
     shouldIgnoreFocusOpen,
     triggerRef,
-    hasInput,
     disabled,
     readOnly
   } = useCalendarPreviewContext<CalendarPreviewValue>(
     'CalendarPreview.Trigger'
   );
+
+  const [inputCount, setInputCount] = useState(0);
+  const hasInput = inputCount > 0;
+
+  const registerInput = useCallback((mounted: boolean) => {
+    setInputCount(current => current + (mounted ? 1 : -1));
+  }, []);
+
+  const inputContext = useMemo(() => ({ registerInput }), [registerInput]);
 
   /* Tracks the pointer, not the open state: Base UI owns whether the popover
      is open, and this only says whether a press is mid-flight. */
@@ -144,7 +167,11 @@ export function CalendarPreviewTrigger({
           : placeholder;
 
   return (
-    <Popover.Trigger {...triggerProps}>{children ?? label}</Popover.Trigger>
+    <Popover.Trigger {...triggerProps}>
+      <TriggerInputContext value={inputContext}>
+        {children ?? label}
+      </TriggerInputContext>
+    </Popover.Trigger>
   );
 }
 

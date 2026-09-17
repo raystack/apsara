@@ -496,14 +496,6 @@ export function CalendarPreviewRoot({
     []
   );
 
-  /* Counted, not a flag: a range mounts two, and the first to unmount would
-     otherwise report that none are left. */
-  const [inputCount, setInputCount] = useState(0);
-
-  const registerInput = useCallback((mounted: boolean) => {
-    setInputCount(current => current + (mounted ? 1 : -1));
-  }, []);
-
   /*
    * The from/to machine:
    *   no from            -> set from, advance to the end input
@@ -758,8 +750,6 @@ export function CalendarPreviewRoot({
       setActiveField,
       fieldReadOnly,
       setFieldReadOnly,
-      hasInput: inputCount > 0,
-      registerInput,
       open,
       setOpen,
       shouldIgnoreFocusOpen,
@@ -799,8 +789,6 @@ export function CalendarPreviewRoot({
       activeField,
       fieldReadOnly,
       setFieldReadOnly,
-      inputCount,
-      registerInput,
       open,
       setOpen,
       shouldIgnoreFocusOpen,

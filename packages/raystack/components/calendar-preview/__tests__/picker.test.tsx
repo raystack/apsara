@@ -632,3 +632,37 @@ describe('CalendarPreview.Trigger and the focus a dismissal gives back', () => {
     expect(isOpen()).toBe(true);
   });
 });
+
+describe('CalendarPreview.Trigger beside a Body that owns the input', () => {
+  const composition = (
+    <>
+      <CalendarPreview.Trigger />
+      <CalendarPreview.Content>
+        <CalendarPreview.Body />
+      </CalendarPreview.Content>
+    </>
+  );
+
+  it('stays a button while an input it does not own is mounted', () => {
+    const { container } = render(
+      <CalendarPreview today={TODAY} defaultMonth={AUGUST} defaultOpen>
+        {composition}
+      </CalendarPreview>
+    );
+    expect(
+      getSlot(document.body, 'calendar-preview-input')
+    ).toBeInTheDocument();
+
+    const trigger = getSlot(container, 'calendar-preview-trigger');
+    expect(trigger).toHaveAttribute('role', 'button');
+    expect(trigger).not.toHaveAttribute('tabindex', '-1');
+  });
+
+  it('still gives up the role for an input of its own', () => {
+    const { container } = renderPicker();
+    expect(getSlot(container, 'calendar-preview-trigger')).not.toHaveAttribute(
+      'role',
+      'button'
+    );
+  });
+});
