@@ -26,7 +26,7 @@ export interface UseCalendarReturn {
  */
 export function useCalendar(): UseCalendarReturn {
   const { value, setValue, scale, month, setMonth, isDateUnavailable } =
-    useCalendarPreviewContext<CalendarPreviewValue>('useCalendar');
+    useCalendarPreviewContext('useCalendar');
 
   return {
     value,

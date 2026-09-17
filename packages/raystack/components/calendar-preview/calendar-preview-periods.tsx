@@ -3,10 +3,7 @@ import { cx } from 'class-variance-authority';
 import { useEffect, useMemo, useRef } from 'react';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import {
-  type CalendarPreviewValue,
-  isScaleValue
-} from './calendar-preview-root';
+import { isScaleValue } from './calendar-preview-root';
 import {
   type DayKey,
   dayKey,
@@ -76,9 +73,7 @@ function PeriodView({
     timeZone,
     disabled,
     readOnly
-  } = useCalendarPreviewContext<CalendarPreviewValue>(
-    'CalendarPreview.Periods'
-  );
+  } = useCalendarPreviewContext('CalendarPreview.Periods');
 
   const years = useMemo(() => {
     const list: number[] = [];
@@ -137,7 +132,6 @@ function PeriodView({
       {
         className: cx(styles.periods, className),
         'data-slot': slot,
-        'data-scale': viewScale,
         children: children ?? (
           <>
             {groups.map(({ year, cells }) => (
@@ -148,12 +142,14 @@ function PeriodView({
                 data-slot='calendar-preview-period-group'
                 data-year={year}
               >
-                <div
-                  className={styles['period-year']}
-                  data-slot='calendar-preview-period-year'
-                >
-                  {year}
-                </div>
+                {viewScale !== 'year' && (
+                  <div
+                    className={styles['period-year']}
+                    data-slot='calendar-preview-period-year'
+                  >
+                    {year}
+                  </div>
+                )}
                 <div
                   className={styles['period-cells']}
                   style={

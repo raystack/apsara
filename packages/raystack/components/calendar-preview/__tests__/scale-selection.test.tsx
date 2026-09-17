@@ -18,9 +18,7 @@ function renderBody(props = {}) {
 
 const period = (container: HTMLElement, label: string, year = 2026) => {
   const group = getAllSlots(container, 'calendar-preview-period-group').find(
-    node =>
-      getSlot(node, 'calendar-preview-period-year')?.textContent ===
-      String(year)
+    node => node.getAttribute('data-year') === String(year)
   );
   if (!group) throw new Error(`no year group ${year}`);
   const match = getAllSlots(group, 'calendar-preview-period').find(
@@ -922,5 +920,44 @@ describe('CalendarPreview drops a scale draft when the popover closes', () => {
       'data-scale',
       'quarter'
     );
+  });
+});
+
+describe('CalendarPreview.Scales honours the order it was given', () => {
+  const labels = (container: HTMLElement) =>
+    getAllSlots(container, 'calendar-preview-scale').map(node =>
+      node.getAttribute('data-scale')
+    );
+
+  it('shows them in the order listed, not a canonical one', () => {
+    const { container } = renderBody({ scales: ['year', 'day', 'quarter'] });
+    expect(labels(container)).toEqual(['year', 'day', 'quarter']);
+  });
+
+  it('takes the first listed as the default scale', () => {
+    const { container } = renderBody({ scales: ['quarter', 'day'] });
+    expect(getSlot(container, 'calendar-preview')).toHaveAttribute(
+      'data-scale',
+      'quarter'
+    );
+  });
+
+  it('drops a repeat rather than rendering it twice', () => {
+    const { container } = renderBody({ scales: ['day', 'month', 'day'] });
+    expect(labels(container)).toEqual(['day', 'month']);
+  });
+});
+
+describe('CalendarPreview.Scale announces which scale is active', () => {
+  it('marks the active one pressed and the others not', () => {
+    const { container } = render(
+      <CalendarPreview today={TODAY} scales={ALL} defaultScale='quarter'>
+        <CalendarPreview.Scale value='day' />
+        <CalendarPreview.Scale value='quarter' />
+      </CalendarPreview>
+    );
+    const [day, quarter] = getAllSlots(container, 'calendar-preview-scale');
+    expect(day).toHaveAttribute('aria-pressed', 'false');
+    expect(quarter).toHaveAttribute('aria-pressed', 'true');
   });
 });

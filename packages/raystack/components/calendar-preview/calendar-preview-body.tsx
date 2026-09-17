@@ -30,7 +30,6 @@ export function CalendarPreviewBody({
       {
         className: cx(styles.body, className),
         'data-slot': 'calendar-preview-body',
-        'data-scale': scale,
         /* Escape drops the draft on its way to Base UI, which closes on it. */
         onKeyDown: (event: React.KeyboardEvent) => {
           if (event.key === 'Escape') dropDraft();

@@ -35,10 +35,7 @@ import {
   CalendarPreviewNextMonth,
   CalendarPreviewPrevMonth
 } from './calendar-preview-header';
-import {
-  type CalendarPreviewValue,
-  isScaleValue
-} from './calendar-preview-root';
+import { isScaleValue } from './calendar-preview-root';
 import {
   formatCaptionLabel,
   formatWeekdayLabel,
@@ -161,7 +158,7 @@ export function CalendarPreviewGrid({
     clearable,
     disabled,
     readOnly
-  } = useCalendarPreviewContext<CalendarPreviewValue>('CalendarPreview.Grid');
+  } = useCalendarPreviewContext('CalendarPreview.Grid');
   const days = useCalendarPreviewDaysContext();
   const setBusy = days?.setBusy;
 

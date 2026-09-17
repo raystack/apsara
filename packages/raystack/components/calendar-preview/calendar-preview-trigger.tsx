@@ -18,7 +18,7 @@ import {
 } from 'react';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import { type CalendarPreviewValue, isRange } from './calendar-preview-root';
+import { isRange } from './calendar-preview-root';
 
 /* Per trigger, not per root: `.Body` mounts an `.Input` inside `.Content`, and
    a childless trigger beside it is still a button. */
@@ -71,9 +71,7 @@ export function CalendarPreviewTrigger({
     triggerRef,
     disabled,
     readOnly
-  } = useCalendarPreviewContext<CalendarPreviewValue>(
-    'CalendarPreview.Trigger'
-  );
+  } = useCalendarPreviewContext('CalendarPreview.Trigger');
 
   const [inputCount, setInputCount] = useState(0);
   const hasInput = inputCount > 0;
@@ -116,7 +114,6 @@ export function CalendarPreviewTrigger({
       {
         className: cx(styles.trigger, className),
         'data-slot': 'calendar-preview-trigger',
-        'data-scale': scale,
         /* Base UI gives a non-native trigger both, which around a field is a
            second tab stop and a control inside a button role. */
         role: hasInput ? undefined : 'button',

@@ -1,12 +1,7 @@
 'use client';
 
 import type { Popover } from '@base-ui/react';
-import {
-  createContext,
-  type ReactNode,
-  type RefObject,
-  useContext
-} from 'react';
+import { createContext, type RefObject, useContext } from 'react';
 import type { DayKey } from './date-adapter';
 import type { Scale, ScaleValue } from './lib/scale';
 
@@ -52,13 +47,19 @@ export interface CalendarPreviewChangeDetails {
   toDate: () => Date;
 }
 
-/* Generic so the scale-aware arms carry a `ScaleValue` without a second
-   context: stored as `unknown`, cast once at the hook boundary. */
-export interface CalendarPreviewContextValue<Value = Date | null> {
-  value: Value;
+/* The widened value every arm shares. The public props discriminate on
+   `selection` and `scales`; the implementation works in the union. */
+export type CalendarPreviewValue =
+  | Date
+  | CalendarPreviewDateRange
+  | ScaleValue
+  | null;
+
+export interface CalendarPreviewContextValue {
+  value: CalendarPreviewValue;
   /** `occasion` is the day acted on, which a cleared `value` cannot carry. */
   setValue: (
-    value: Value,
+    value: CalendarPreviewValue,
     reason: CalendarPreviewChangeReason,
     occasion: Date
   ) => void;
@@ -137,31 +138,19 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
   setFieldReadOnly: (field: CalendarPreviewField, readOnly: boolean) => void;
 }
 
-const CalendarPreviewContext =
-  createContext<CalendarPreviewContextValue<unknown> | null>(null);
-
-export function CalendarPreviewProvider({
-  value,
-  children
-}: {
-  value: CalendarPreviewContextValue<unknown>;
-  children: ReactNode;
-}) {
-  return (
-    <CalendarPreviewContext value={value}>{children}</CalendarPreviewContext>
-  );
-}
+export const CalendarPreviewContext =
+  createContext<CalendarPreviewContextValue | null>(null);
 
 /* `part` is the caller's display name, so the throw points at the element the
    author wrote rather than at this file. */
-export function useCalendarPreviewContext<Value = Date | null>(
+export function useCalendarPreviewContext(
   part: string
-): CalendarPreviewContextValue<Value> {
+): CalendarPreviewContextValue {
   const context = useContext(CalendarPreviewContext);
   if (!context) {
     throw new Error(`${part} must be used within <CalendarPreview>`);
   }
-  return context as CalendarPreviewContextValue<Value>;
+  return context;
 }
 
 /* `.Days` owns this rather than the root, so two day views in one tree cannot
@@ -172,22 +161,8 @@ export interface CalendarPreviewDaysContextValue {
   setBusy: (busy: boolean) => void;
 }
 
-const CalendarPreviewDaysContext =
+export const CalendarPreviewDaysContext =
   createContext<CalendarPreviewDaysContextValue | null>(null);
-
-export function CalendarPreviewDaysProvider({
-  value,
-  children
-}: {
-  value: CalendarPreviewDaysContextValue;
-  children: ReactNode;
-}) {
-  return (
-    <CalendarPreviewDaysContext value={value}>
-      {children}
-    </CalendarPreviewDaysContext>
-  );
-}
 
 export function useCalendarPreviewDaysContext(): CalendarPreviewDaysContextValue | null {
   return useContext(CalendarPreviewDaysContext);

@@ -6,11 +6,7 @@ import { UndoIcon } from '~/icons';
 import { IconButton } from '../icon-button';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import {
-  type CalendarPreviewValue,
-  isRange,
-  isScaleValue
-} from './calendar-preview-root';
+import { isRange, isScaleValue } from './calendar-preview-root';
 import { dayKey } from './date-adapter';
 
 export type CalendarPreviewResetProps = ComponentProps<typeof IconButton>;
@@ -24,7 +20,7 @@ export function CalendarPreviewReset({
   ...props
 }: CalendarPreviewResetProps) {
   const { value, defaultDate, reset, disabled, readOnly, timeZone } =
-    useCalendarPreviewContext<CalendarPreviewValue>('CalendarPreview.Reset');
+    useCalendarPreviewContext('CalendarPreview.Reset');
 
   /* No `defaultDate` means the part has no job at all, which is a different
      thing from having nothing to restore right now — `null` is a default. */

@@ -9,12 +9,13 @@ import styles from './calendar-preview.module.css';
 import {
   type CalendarPreviewChangeDetails,
   type CalendarPreviewChangeReason,
+  CalendarPreviewContext,
   type CalendarPreviewContextValue,
   type CalendarPreviewDateRange,
   type CalendarPreviewDraftRange,
   type CalendarPreviewField,
   type CalendarPreviewOpenChangeDetails,
-  CalendarPreviewProvider
+  type CalendarPreviewValue
 } from './calendar-preview-context';
 import {
   anyDayBetween,
@@ -31,7 +32,6 @@ import {
   isAvailable,
   isScale,
   periodOf,
-  SCALES,
   type Scale,
   type ScaleValue
 } from './lib/scale';
@@ -50,13 +50,7 @@ export function monthAnchor(
   return value instanceof Date ? value : parseKey(value.date);
 }
 
-/* `defaultValue` is omitted because `HTMLAttributes` already declares it as a
-   form value, which is not what it means here. */
-export type CalendarPreviewValue =
-  | Date
-  | CalendarPreviewDateRange
-  | ScaleValue
-  | null;
+export type { CalendarPreviewValue };
 
 export function isScaleValue(
   value: CalendarPreviewValue | undefined
@@ -333,7 +327,8 @@ export function CalendarPreviewRoot({
     const list = (Array.isArray(scalesProp) ? scalesProp : [scalesProp]).filter(
       isScale
     );
-    return list.length > 0 ? SCALES.filter(s => list.includes(s)) : ['day'];
+    /* The order given is the order shown, and `scales[0]` is the default. */
+    return list.length > 0 ? Array.from(new Set(list)) : ['day'];
   }, [scalesProp]);
 
   const [scale, setScaleUnwrapped] = useControlled<Scale>({
@@ -389,9 +384,8 @@ export function CalendarPreviewRoot({
         /* The committed scale, not the view's: typing "Q4 2026" commits a
            quarter while the view is still on days. */
         period: periodOf(
-          occasion,
-          isScaleValue(next) ? next.scale : scale,
-          timeZone
+          dayKey(occasion, timeZone),
+          isScaleValue(next) ? next.scale : scale
         ),
         toDate: () => occasion
       });
@@ -523,7 +517,9 @@ export function CalendarPreviewRoot({
 
   /*
    * The from/to machine:
-   *   no from            -> set from, advance to the end input
+   *   nothing drafted    -> set from, advance to the end input
+   *   to only            -> fills the from, completing unless the click
+   *                         crosses it or the span is unavailable
    *   from, day earlier  -> that day becomes the new from
    *   from, day later    -> completes and emits
    *   from and to        -> restart from the new day
@@ -642,8 +638,8 @@ export function CalendarPreviewRoot({
         date: dayKey(month, timeZone),
         scale
       };
-      setScaleDraft(convertScale(anchor, next, trailingValue, timeZone));
-      setMonth(parseKey(convertScale(anchor, next, false, timeZone).date));
+      setScaleDraft(convertScale(anchor, next, trailingValue));
+      setMonth(parseKey(convertScale(anchor, next, false).date));
       setScale(next);
     },
     [
@@ -661,7 +657,13 @@ export function CalendarPreviewRoot({
   const selectPeriod = useCallback(
     (date: Date | string, next: Scale) => {
       if (readOnly || disabled) return;
-      const key = anchorOf(periodOf(date, next, timeZone), trailingValue);
+      const key = anchorOf(
+        periodOf(
+          typeof date === 'string' ? date : dayKey(date, timeZone),
+          next
+        ),
+        trailingValue
+      );
       clearScaleDraft();
       setValue(
         { date: key, scale: next },
@@ -691,7 +693,8 @@ export function CalendarPreviewRoot({
     [scale, setScale, clearScaleDraft]
   );
 
-  /* `scales[0]` is the scale being undone, not the one to come back to. */
+  /* The scale the run started from, not `scales[0]`: that is the default the
+     root opened at, which a committed switch has already moved away from. */
   const dropDraft = useCallback(() => {
     if (scaleDraft === null) return;
     settleScale(
@@ -705,7 +708,15 @@ export function CalendarPreviewRoot({
   /* Bounds only, never `isDateUnavailable` — the prop documents why. */
   const isPeriodAvailable = useCallback(
     (date: Date | string, next: Scale) =>
-      isAvailable(date, next, trailingValue, minDate, maxDate, timeZone),
+      isAvailable(
+        typeof date === 'string' ? date : dayKey(date, timeZone),
+        next,
+        {
+          trailing: trailingValue,
+          min: minDate && dayKey(minDate, timeZone),
+          max: maxDate && dayKey(maxDate, timeZone)
+        }
+      ),
     [trailingValue, minDate, maxDate, timeZone]
   );
 
@@ -781,7 +792,7 @@ export function CalendarPreviewRoot({
     [formatValueProp, timeZone]
   );
 
-  const context = useMemo<CalendarPreviewContextValue<CalendarPreviewValue>>(
+  const context = useMemo<CalendarPreviewContextValue>(
     () => ({
       value,
       setValue,
@@ -887,13 +898,11 @@ export function CalendarPreviewRoot({
   /* Base UI owns dismissal — outside press, escape and focus-out all come from
      `Popover.Root`, which is why no file here has an outside-click listener. */
   return (
-    <CalendarPreviewProvider
-      value={context as CalendarPreviewContextValue<unknown>}
-    >
+    <CalendarPreviewContext value={context}>
       <Popover.Root open={open} onOpenChange={setOpen}>
         {element}
       </Popover.Root>
-    </CalendarPreviewProvider>
+    </CalendarPreviewContext>
   );
 }
 

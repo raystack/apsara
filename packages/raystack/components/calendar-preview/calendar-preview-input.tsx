@@ -5,11 +5,7 @@ import { Input } from '../input';
 import styles from './calendar-preview.module.css';
 import type { CalendarPreviewField } from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import {
-  type CalendarPreviewValue,
-  isRange as isRangeValue,
-  isScaleValue
-} from './calendar-preview-root';
+import { isRange as isRangeValue, isScaleValue } from './calendar-preview-root';
 import { useTriggerInput } from './calendar-preview-trigger';
 import { anyDayBetween, dayKey, parseKey } from './date-adapter';
 import { parseScaleInput } from './lib/parse';
@@ -108,7 +104,7 @@ export function CalendarPreviewInput({
     activeField,
     setActiveField,
     setFieldReadOnly
-  } = useCalendarPreviewContext<CalendarPreviewValue>('CalendarPreview.Input');
+  } = useCalendarPreviewContext('CalendarPreview.Input');
 
   const isRange = selection === 'range';
 
@@ -267,7 +263,6 @@ export function CalendarPreviewInput({
     <Input
       className={cx(styles.input, className)}
       data-slot='calendar-preview-input'
-      data-scale={scale}
       placeholder={resolvedPlaceholder}
       data-field={isRange ? field : undefined}
       data-active={isRange && activeField === field ? 'true' : undefined}

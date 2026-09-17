@@ -63,7 +63,6 @@ function CaptionLabel({
   ref,
   ...props
 }: { dropdown?: false } & useRender.ComponentProps<'span'>) {
-  const { scale } = useCalendarPreviewContext('CalendarPreview.Caption');
   const label = useCaptionLabel();
 
   return useRender({
@@ -74,7 +73,6 @@ function CaptionLabel({
       {
         className: cx(styles.caption, className),
         'data-slot': 'calendar-preview-caption',
-        'data-scale': scale,
         children: children ?? label
       } as useRender.ComponentProps<'span'>,
       props
@@ -90,8 +88,9 @@ function CaptionDropdown({
   ref,
   ...props
 }: { dropdown: true } & useRender.ComponentProps<'button'>) {
-  const { month, setMonth, yearRange, scale, disabled } =
-    useCalendarPreviewContext('CalendarPreview.Caption');
+  const { month, setMonth, yearRange, disabled } = useCalendarPreviewContext(
+    'CalendarPreview.Caption'
+  );
   const label = useCaptionLabel();
 
   const activeMonth = month.getMonth();
@@ -106,7 +105,6 @@ function CaptionDropdown({
       <PopoverPrimitive.Trigger
         className={cx(styles.caption, styles['caption-trigger'], className)}
         data-slot='calendar-preview-caption'
-        data-scale={scale}
         data-dropdown='true'
         disabled={disabled}
         render={render}

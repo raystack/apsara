@@ -6,14 +6,10 @@ import {
   addDays,
   addMonths,
   endOfMonth,
-  endOfQuarter,
-  endOfYear,
   format,
   isValid,
   parse,
-  startOfMonth,
-  startOfQuarter,
-  startOfYear
+  startOfMonth
 } from 'date-fns';
 
 /* Lexicographic order is chronological order, so `lib/` orders days as
@@ -76,22 +72,6 @@ export function startOfMonthKey(key: DayKey): DayKey {
 
 export function endOfMonthKey(key: DayKey): DayKey {
   return dayKey(endOfMonth(parseKey(key)));
-}
-
-export function startOfQuarterKey(key: DayKey): DayKey {
-  return dayKey(startOfQuarter(parseKey(key)));
-}
-
-export function endOfQuarterKey(key: DayKey): DayKey {
-  return dayKey(endOfQuarter(parseKey(key)));
-}
-
-export function startOfYearKey(key: DayKey): DayKey {
-  return dayKey(startOfYear(parseKey(key)));
-}
-
-export function endOfYearKey(key: DayKey): DayKey {
-  return dayKey(endOfYear(parseKey(key)));
 }
 
 export function yearOf(key: DayKey): number {
