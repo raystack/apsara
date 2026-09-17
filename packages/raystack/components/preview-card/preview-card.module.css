@@ -1,7 +1,7 @@
 /* Default mode (no PreviewCard.Viewport): Base UI positions the positioner
    via transform (floating-ui). Don't transition that transform, or the card
    eases toward every reposition and swims behind its anchor. The popup owns
-   the entrance (scale below); the positioner only fades — like popover/menu/tooltip. */
+   the entrance (scale below); the positioner only fades, like popover/menu/tooltip. */
 .positioner {
   --easing: var(--rs-ease-out);
   --animation-duration: var(--rs-duration-moderate);

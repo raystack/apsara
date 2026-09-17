@@ -4,7 +4,7 @@
 
 import figma from 'figma';
 
-// State Hover is visual-only — only Disabled maps to a code prop.
+// State Hover is visual-only, and only Disabled maps to a code prop.
 const disabled = figma.selectedInstance.getEnum('State', {
   Disabled: true
 });

@@ -127,7 +127,7 @@
   overflow: clip;
 }
 
-/* Toggle inside Group — strip standalone container styles.
+/* Toggle inside Group: strip standalone container styles.
    Border-radius is handled by the group's overflow: clip. */
 .group .toggle {
   background-color: transparent;
@@ -145,7 +145,7 @@
 }
 
 /* In a group the container carries the pressed fill, so keep the inner content
-   transparent — otherwise the standalone content fill paints a second, darker
+   transparent, since otherwise the standalone content fill paints a second, darker
    box inside the 2px padding (a halo) and doubles the inset shadow. */
 .group .toggle[data-pressed] .toggleContent,
 .group .toggle[data-pressed]:hover .toggleContent {

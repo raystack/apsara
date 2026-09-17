@@ -88,7 +88,7 @@ export function fieldsToColumnDefs<TData>(
  *
  * Sections come out in the field's `groupOrder` where it declares one, with
  * undeclared values following in first-seen order and the null-valued bucket
- * last — see `orderBucketKeys`.
+ * last. See `orderBucketKeys`.
  */
 export function groupData<TData>(
   data: TData[],

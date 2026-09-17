@@ -42,5 +42,5 @@
   font-size: 20px;
   font-weight: 400;
   line-height: 28px;
-  color: hsl(var(--fd-muted-foreground) / 1);
+  color: var(--rs-color-foreground-base-secondary);
 }

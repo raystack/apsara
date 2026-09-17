@@ -54,7 +54,7 @@ function DropDown({
   const [open, setOpen] = useState(false);
 
   /*
-   * Mirror the callback into a ref so the effect depends only on `open` —
+   * Mirror the callback into a ref so the effect depends only on `open`,
    * parents that re-create `onDropdownOpen` per render would otherwise cause
    * a re-fire on every parent render where `open` is true.
    */

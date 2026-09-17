@@ -1,8 +1,8 @@
 'use client';
 
-import { TagType } from '@/lib/types';
 import { Badge } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
+import { TagType } from '@/lib/types';
 import styles from './tag.module.css';
 
 interface TagProps {

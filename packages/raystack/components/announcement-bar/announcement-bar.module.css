@@ -57,7 +57,7 @@
   opacity: 0.8;
 }
 
-/* Press reads as scale, not a second dim — 0.64 text mid-press is barely
+/* Press reads as scale, not a second dim, since 0.64 text mid-press is barely
    legible on the gradient variant, and hover's 0.8 still applies. */
 .action-btn:active {
   transform: scale(var(--rs-scale-pressed));

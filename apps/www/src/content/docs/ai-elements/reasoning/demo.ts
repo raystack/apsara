@@ -64,3 +64,30 @@ export const customTriggerDemo = {
   </Reasoning>
 </div>`
 };
+
+export const controlledDemo = {
+  type: 'code',
+  code: `
+function ControlledReasoning() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <Flex direction="column" gap={5} style={{ width: '100%' }}>
+      <Button size="small" variant="outline" onClick={() => setOpen(o => !o)}>
+        {open ? 'Hide reasoning' : 'Show reasoning'}
+      </Button>
+      <Reasoning open={open} onOpenChange={setOpen} duration={4}>
+        <Reasoning.Trigger />
+        <Reasoning.Content>
+          <Reasoning.Step label="Reading the ticket">
+            Pulled the last three comments.
+          </Reasoning.Step>
+          <Reasoning.Step label="Drafting a reply">
+            Matched the tone of earlier responses.
+          </Reasoning.Step>
+        </Reasoning.Content>
+      </Reasoning>
+    </Flex>
+  );
+}`
+};

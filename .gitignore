@@ -43,3 +43,6 @@ yarn-error.log*
 
 # npm pack artifacts
 *.tgz
+
+# Playwright MCP session logs
+.playwright-mcp/

@@ -263,7 +263,7 @@ describe('Sidebar', () => {
       const nav = screen.getByRole('navigation');
       fireEvent.mouseEnter(nav);
       expect(onMouseEnter).toHaveBeenCalled();
-      // The consumer handler must not replace ours — the peek still starts.
+      // The consumer handler must not replace ours, and the peek still starts.
       await waitFor(() => {
         expect(screen.getByTestId('peek-status')).toHaveTextContent(
           'expanded:peeking'
@@ -340,7 +340,7 @@ describe('Sidebar', () => {
       });
 
       // `open` is still false during a peek, so the handle still reads as
-      // "Expand sidebar" — clicking it pins the sidebar open for real.
+      // "Expand sidebar". Clicking it pins the sidebar open for real.
       const handle = screen.getByRole('button', { name: 'Expand sidebar' });
       fireEvent.click(handle);
 
@@ -402,7 +402,7 @@ describe('Sidebar', () => {
 
       fireEvent.click(screen.getByRole('button', { name: 'Expand sidebar' }));
 
-      // Opening for real supersedes the peek — the peek shadow and state
+      // Opening for real supersedes the peek, so the peek shadow and state
       // must drop immediately, without waiting for the mouse to leave.
       expect(nav).not.toHaveAttribute('data-peeking');
       expect(screen.getByTestId('peek-status')).toHaveTextContent(
@@ -434,7 +434,7 @@ describe('Sidebar', () => {
       expect(screen.getByText('Extra')).toBeInTheDocument();
 
       // The menu portals to document.body, so moving the pointer into it
-      // fires mouseleave on the sidebar — the peek must survive that.
+      // fires mouseleave on the sidebar, and the peek must survive that.
       fireEvent.mouseLeave(nav);
 
       expect(screen.getByTestId('peek-status')).toHaveTextContent(

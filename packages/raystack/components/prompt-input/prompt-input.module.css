@@ -66,8 +66,8 @@
   padding: var(--rs-space-3);
 }
 
-/* `PromptInput.Editor` shares the textarea's box inside the frame — same
-   padding, same floor, same cap — minus `field-sizing`, which applies to form
+/* `PromptInput.Editor` shares the textarea's box inside the frame, with the same
+   padding, floor and cap, minus `field-sizing`, which applies to form
    controls only: a contentEditable grows with its content natively. */
 .root .editor {
   max-height: var(--prompt-input-textarea-max-height);
@@ -86,8 +86,8 @@
   display: none;
 }
 
-/* The frame reads as one field, so a press on the slots' own padding — or on
-   the gap between their controls — has to focus the input. Taking the slots out
+/* The frame reads as one field, so a press on the slots' own padding, or on
+   the gap between their controls, has to focus the input. Taking the slots out
    of hit testing hands those presses to the form, which is the element that
    focuses; their contents take hit testing back, so a button or a label the
    consumer drops in keeps its own press. */

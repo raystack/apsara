@@ -75,7 +75,7 @@
 /* ------------------------------ mode changes ------------------------------ */
 
 /* A morph draws the panel outside its own box on the way in, so the docked
-   panel — in flow, and otherwise painted under its siblings — is raised for the
+   panel, in flow and otherwise painted under its siblings, is raised for the
    trip. */
 .root[data-transition="morph"][data-mode="docked"] {
   position: relative;
@@ -98,7 +98,7 @@
       opacity var(--rs-duration-normal) var(--rs-ease-out);
   }
 
-  /* The from-values are jumped to, not tweened into — the tween is the frame
+  /* The from-values are jumped to, not tweened into, since the tween is the frame
      after this rule stops applying. */
   .root[data-mode-starting] {
     transition: none;
@@ -143,7 +143,7 @@
   /* The from-values are the measured inverse of the box the panel just left,
      written inline off its top-left corner, so the origin has to stay there for
      the scale to land back on that box. Real distance to cover, so the longer
-     duration — but still the shared ease-out, which is off the mark on the first
+     duration, but still the shared ease-out, which is off the mark on the first
      frame where a symmetric curve would sit there and read as lag. */
   .root[data-transition="morph"] {
     transform-origin: top left;
@@ -151,7 +151,7 @@
   }
 
   /* Docked and floating are close enough in shape to morph outright. The bubble
-     is a tenth of their size, so its two pairs cross-fade as well — covering
+     is a tenth of their size, so its two pairs cross-fade as well, covering
      the content stretched on the way out of it, and a whole panel swapped for
      one small control on the way in. */
   .root[data-transition="morph"][data-mode-starting][data-mode="minimized"],

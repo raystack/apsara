@@ -41,7 +41,7 @@
   transform-origin: left;
 }
 
-/* Circular variant — viewBox is 72×72, SVG scales to container size */
+/* Circular variant. viewBox is 72×72, SVG scales to container size */
 .meter-variant-circular {
   align-items: center;
   justify-content: center;

@@ -6,7 +6,7 @@ import { mentionType } from './schema';
 
 /**
  * One live chip. The node view owns the element and writes the label into it
- * synchronously — there is never an empty chip frame — while React portals the
+ * synchronously, so there is never an empty chip frame, while React portals the
  * consumer's `icon` and `trailing` nodes into the two slots, so those render in
  * the host tree and see Theme and any other provider context.
  */

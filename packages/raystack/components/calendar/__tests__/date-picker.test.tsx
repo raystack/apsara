@@ -39,12 +39,12 @@ describe('DatePicker', () => {
     /*
      * Two regressions on the picker's `calendarProps` type:
      * - Original type required `mode`/`selected`/`onSelect`, which the picker
-     *   overrides after the spread — consumer values were silently ignored.
+     *   overrides after the spread, so consumer values were silently ignored.
      * - CalendarPropsExtended fields (tooltipMessages, dateInfo, loadingData,
      *   showTooltip) were unreachable because the type didn't include them.
      */
     it('accepts CalendarPropsExtended fields via calendarProps without type cast', () => {
-      // The compile-time check is the real test — failing it stops compilation.
+      // The compile-time check is the real test, and failing it stops compilation.
       expect(() =>
         render(
           <DatePicker
@@ -424,14 +424,14 @@ describe('DatePicker', () => {
       ) as HTMLInputElement;
 
       fireEvent.change(input, { target: { value: '15/06/2025' } });
-      // The change handler accepted it — no error transition fired.
+      // The change handler accepted it, so no error transition fired.
       expect(onErrorChange).not.toHaveBeenCalled();
     });
 
     /*
      * Follow-up regression: pre-fix the input was bound to a derived
      * `formattedDate`, so partial typed values were overwritten on the next
-     * render and typing felt broken — only paste of the full string worked.
+     * render and typing felt broken, and only paste of the full string worked.
      */
     it('keeps typed characters visible while typing a full date one char at a time', () => {
       const onSelect = vi.fn();
@@ -466,7 +466,7 @@ describe('DatePicker', () => {
       }
     });
 
-    it('does not fire onSelect while typing — partial stays uncommitted, valid waits for commit (Enter/blur/outside-click)', () => {
+    it('does not fire onSelect while typing, so partial stays uncommitted, valid waits for commit (Enter/blur/outside-click)', () => {
       const onSelect = vi.fn();
       const onErrorChange = vi.fn();
       render(
@@ -481,11 +481,11 @@ describe('DatePicker', () => {
         'Select date'
       ) as HTMLInputElement;
 
-      // Partial input is not even parseable — no commit.
+      // Partial input is not even parseable, so no commit.
       fireEvent.change(input, { target: { value: '15/06' } });
       expect(onSelect).not.toHaveBeenCalled();
 
-      // Full valid input parses internally but still doesn't fire onSelect —
+      // Full valid input parses internally but still doesn't fire onSelect,
       // commit only happens via Enter / blur / outside-click (see the
       // dedicated single-fire test below for that path).
       fireEvent.change(input, { target: { value: '15/06/2025' } });
@@ -496,7 +496,7 @@ describe('DatePicker', () => {
 
   describe('onErrorChange', () => {
     /*
-     * DatePicker renders no error message itself — consumers lift validity
+     * DatePicker renders no error message itself, and consumers lift validity
      * into `Field`'s `error` prop (or a form library) via this callback.
      * It fires on transitions only, like `onOpenChange`.
      */
@@ -567,7 +567,7 @@ describe('DatePicker', () => {
       expect(onErrorChange).toHaveBeenLastCalledWith(undefined);
     });
 
-    it('renders no error presentation of its own — no message, no aria-invalid', () => {
+    it('renders no error presentation of its own, with no message and no aria-invalid', () => {
       render(<DatePicker dateFormat='DD/MM/YYYY' />);
 
       const input = screen.getByPlaceholderText('Select date');
@@ -682,7 +682,7 @@ describe('DatePicker', () => {
 
     it('does not throw on input change with no calendar bounds', () => {
       /*
-       * Covers the no-bounds path — past regression had an unconditional
+       * Covers the no-bounds path, where a past regression had an unconditional
        * `isSameOrBefore(dayjs())` that threw without the plugin extended.
        */
       render(<DatePicker dateFormat='DD/MM/YYYY' />);
@@ -701,7 +701,7 @@ describe('DatePicker', () => {
     /*
      * Regression: Base UI's `Popover.Trigger` toggles open on every trigger
      * click. The input's `onFocus` opens the picker, so the same click's
-     * trigger-press toggled it straight back closed — the popover flickered
+     * trigger-press toggled it straight back closed, so the popover flickered
      * shut on the first click and only stuck open on the second. The hook's
      * `onOpenChange` now ignores trigger-press *closes* (see use-picker-popover).
      */

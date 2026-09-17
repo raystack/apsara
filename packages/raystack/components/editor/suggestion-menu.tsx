@@ -51,7 +51,7 @@ export interface SuggestionMenuProps {
   loadingRowCount?: number;
   /** @defaultValue "No results" */
   emptyMessage?: ReactNode;
-  /** Width the popup takes, in pixels — the composer frame's width. */
+  /** Width the popup takes, in pixels, matching the composer frame's width. */
   width?: number;
   'aria-label'?: string;
 }
@@ -86,7 +86,7 @@ export function SuggestionMenu({
         align='start'
         side='bottom'
         sideOffset={6}
-        // Focus never leaves the editor — the query lives in the document
+        // Focus never leaves the editor, since the query lives in the document
         // because it is the text the chip replaces.
         initialFocus={false}
         finalFocus={false}

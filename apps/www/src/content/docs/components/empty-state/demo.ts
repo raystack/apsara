@@ -82,3 +82,15 @@ export const variantsDemo = {
     />
   </Flex>`
 };
+
+export const actionsDemo = {
+  type: 'code',
+  code: `
+<EmptyState
+  icon={<Search />}
+  heading="No matching invoices"
+  subHeading="Check the spelling, or clear the filters to see everything."
+  primaryAction={<Button size="small">Clear filters</Button>}
+  secondaryAction={<Button size="small" variant="outline">Learn more</Button>}
+/>`
+};

@@ -161,3 +161,21 @@ function ParentExample() {
   );
 }`
 };
+
+export const controlledDemo = {
+  type: 'code',
+  code: `
+function ControlledCheckbox() {
+  const [checked, setChecked] = React.useState(false);
+
+  return (
+    <Flex direction="column" gap={5}>
+      <Flex align="center" gap={3}>
+        <Checkbox checked={checked} onCheckedChange={setChecked} id="terms" />
+        <Label htmlFor="terms">I accept the terms</Label>
+      </Flex>
+      <Button size="small" disabled={!checked}>Continue</Button>
+    </Flex>
+  );
+}`
+};

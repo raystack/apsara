@@ -454,7 +454,7 @@ export function DataViewGroupingDemo() {
 }
 
 // ---------------------------------------------------------------------------
-// Virtualized + grouping + sticky header — exercises the combined path that
+// Virtualized + grouping + sticky header, exercising the combined path that
 // uses the anchor pattern (single sticky element whose content swaps as you
 // scroll past each group's offset).
 // ---------------------------------------------------------------------------
@@ -527,7 +527,7 @@ export function DataViewLoadingDemo() {
 }
 
 // ---------------------------------------------------------------------------
-// Per-view fields override demo — Email hidden in the List view only.
+// Per-view fields override demo: Email hidden in the List view only.
 // ---------------------------------------------------------------------------
 
 export function DataViewPerViewFieldsDemo() {
@@ -583,7 +583,7 @@ export function DataViewPerViewFieldsDemo() {
 }
 
 // ---------------------------------------------------------------------------
-// Row selection demo — unmanaged checkbox column + a FloatingActions bar.
+// Row selection demo: unmanaged checkbox column + a FloatingActions bar.
 // ---------------------------------------------------------------------------
 
 const selectionColumn: DataViewListColumn<Person> = {
@@ -689,7 +689,7 @@ type Task = {
   status: 'todo' | 'active' | 'done';
   priority: 'High' | 'Medium' | 'Low';
   /* Priority as a number. Sorting the label alphabetically gives High, Low,
-     Medium — this is what "sort by priority" has to mean to be useful, and it
+     Medium. This is what "sort by priority" has to mean to be useful, and it
      is what the sort-value lane timeline lanes on. */
   rank: 1 | 2 | 3;
   start: string;
@@ -802,7 +802,7 @@ const taskFields: DataViewField<Task>[] = [
     filterable: true,
     filterType: 'select',
     hideable: true,
-    // groupOrder ranks the sections when grouping by priority — text sort
+    // groupOrder ranks the sections when grouping by priority, where text sort
     // would give High, Low, Medium.
     groupable: true,
     showGroupCount: true,
@@ -849,7 +849,7 @@ const TASK_STATUS_BADGE: Record<
   done: 'success'
 };
 
-/* The card interior is entirely consumer-owned — the Timeline only positions
+/* The card interior is entirely consumer-owned. The Timeline only positions
    the wrapper. `context.collapsed` flags spans narrower than `minCardWidth`. */
 function TaskCard({
   task,
@@ -859,7 +859,7 @@ function TaskCard({
   context: TimelineCardContext;
 }) {
   // Card height is content-driven (the wrapper auto-measures, like
-  // DataView.List rows) — fix it here so collapsed stubs match full cards.
+  // DataView.List rows), so fix it here and collapsed stubs match full cards.
   const chrome: React.CSSProperties = {
     height: 64,
     boxSizing: 'border-box',
@@ -1031,7 +1031,7 @@ export function DataViewTimelineDemo() {
             </Button>
             {/* Sort can't move a card horizontally (x is time) and `auto`
                 packing is chronological, so Ordering is hidden. Grouping is
-                left in: it renders swim-lane sections — try Team or Status. */}
+                left in: it renders swim-lane sections; try Team or Status. */}
             <DataView.DisplayControls hideOrdering />
           </Flex>
         </DataView.Toolbar>
@@ -1063,7 +1063,7 @@ export function DataViewTimelineDemo() {
 }
 
 /* ── Grouped timeline demo (swim-lane sections) ────────────────────────────
-   `group_by` in the query is the only wiring grouping needs — the timeline
+   `group_by` in the query is the only wiring grouping needs. The timeline
    consumes the same group rows `DataView.List` renders as section headers, so
    labels, order, and counts match between the two views. Packing runs per
    section, and each band pins under the axis while its section is in view. */
@@ -1123,7 +1123,7 @@ export function DataViewTimelineSortValueLaneDemo() {
       >
         <DataView.Toolbar>
           <DataView.Filters />
-          {/* Ordering stays visible — it repositions and rebuilds lanes. */}
+          {/* Ordering stays visible, and repositions and rebuilds lanes. */}
           <DataView.DisplayControls />
         </DataView.Toolbar>
         <Flex

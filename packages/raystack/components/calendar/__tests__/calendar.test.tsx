@@ -217,7 +217,7 @@ describe('Calendar', () => {
 
       /*
        * Renders for Sundays if any are visible. Test just exercises the
-       * function-based path — actual presence depends on which days the
+       * function-based path, where actual presence depends on which days the
        * current month surfaces.
        */
       expect(container).toBeInTheDocument();

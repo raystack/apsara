@@ -13,7 +13,7 @@ const BUCKET_SORT_MIN_ITEMS = 64;
 /**
  * A bucket deeper than this would drag insertion sort towards O(m²) (thousands
  * of cards landing in one pixel column), so it hands off to a comparison sort
- * instead — bounding the pathological case at O(n log n).
+ * instead, bounding the pathological case at O(n log n).
  */
 const INSERTION_SORT_MAX_BUCKET = 32;
 
@@ -21,7 +21,7 @@ const INSERTION_SORT_MAX_BUCKET = 32;
  * Item indices ordered ascending by `x`, ties broken by input order.
  *
  * Counting sort over uniform x buckets. `x` is affine in time, so cards spread
- * near-uniformly across the domain and buckets stay ~1 deep — O(n) at the
+ * near-uniformly across the domain and buckets stay ~1 deep, at O(n) for the
  * sizes that matter, where a comparison sort is O(n log n). Clustered input
  * degrades gracefully rather than falling off a cliff (see the two constants
  * above).
@@ -58,7 +58,7 @@ export function orderByX(items: readonly XPositioned[]): Int32Array {
     return order;
   }
 
-  // One bucket per item — the density that keeps buckets ~1 deep.
+  // One bucket per item, the density that keeps buckets ~1 deep.
   const bucketCount = n;
   const scale = bucketCount / span;
   const bucketOf = new Int32Array(n);
@@ -72,7 +72,7 @@ export function orderByX(items: readonly XPositioned[]): Int32Array {
     // rather than misplacing one item: `bucketOf` is an Int32Array, so NaN
     // stores as 0, while `starts[NaN + 1]++` is a silent no-op on a typed
     // array. Bucket 0 then receives an item it never reserved a slot for and
-    // the scatter overwrites its neighbour — one index duplicated, one lost,
+    // the scatter overwrites its neighbour, leaving one index duplicated and one lost,
     // which downstream means one card packed twice and another left unplaced.
     if (!(bucket >= 0)) bucket = 0;
     else if (bucket >= bucketCount) bucket = bucketCount - 1;
@@ -83,7 +83,7 @@ export function orderByX(items: readonly XPositioned[]): Int32Array {
     starts[bucket + 1] += starts[bucket];
   }
 
-  // Stable scatter — within a bucket, items stay in input order, which is the
+  // Stable scatter: within a bucket, items stay in input order, which is the
   // tie-break the comparison path applies for equal x.
   const cursor = Int32Array.from(starts.subarray(0, bucketCount));
   for (let i = 0; i < n; i++) order[cursor[bucketOf[i]]++] = i;

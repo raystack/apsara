@@ -39,7 +39,7 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 beforeEach(() => {
-  // mockReset clears implementations too — vital for isolation since tests
+  // mockReset clears implementations too, which is vital for isolation since tests
   // set `mockReturnValue`/`mockImplementation` and mockClear alone would let
   // those leak into subsequent tests.
   localStorageMock.getItem.mockReset();
@@ -440,7 +440,7 @@ describe('Theme (scoped)', () => {
       </Theme>
     );
 
-    // The child's parent is the test container — no scope wrapper in between.
+    // The child's parent is the test container, with no scope wrapper in between.
     expect(screen.getByTestId('child').parentElement).toBe(container);
   });
 
@@ -541,7 +541,7 @@ describe('useTheme inside a stateless scope', () => {
     );
 
     fireEvent.click(screen.getByText('set'));
-    // Scope owns its own state — call updates the scope, root's storage is
+    // Scope owns its own state, so the call updates the scope, root's storage is
     // untouched.
     expect(localStorageMock.setItem).not.toHaveBeenCalledWith('theme', 'dark');
     expect(screen.getByTestId('theme')).toHaveTextContent('dark');
@@ -562,7 +562,7 @@ describe('useTheme inside a stateless scope', () => {
     );
 
     fireEvent.click(screen.getByText('set root'));
-    // Hook targeted the root by its storageKey — root's storage was written.
+    // Hook targeted the root by its storageKey, so root's storage was written.
     expect(localStorageMock.setItem).toHaveBeenCalledWith('theme', 'dark');
   });
 });

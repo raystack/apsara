@@ -2,7 +2,6 @@
 title: Context Menu
 description: Displays a menu activated by right-click or long press, such as a set of actions or functions.
 source: packages/raystack/components/context-menu
-tag: new
 ---
 
 import {
@@ -12,6 +11,7 @@ import {
   customDemo,
   submenuDemo,
   autocompleteDemo,
+  controlledDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -30,6 +30,49 @@ import { ContextMenu } from '@raystack/apsara'
   </ContextMenu.Content>
 </ContextMenu>
 ```
+
+## Usage
+
+A context menu opens on right-click or long press. Its contents are composed the same way as [Menu](/docs/components/menu).
+
+### Basic usage
+
+A simple context menu with basic functionality. Right-click the trigger area to open.
+
+<Demo data={basicDemo} />
+
+### With icons
+
+You can add icons to the menu items. Supports both leading and trailing icons.
+
+<Demo data={iconsDemo} />
+
+### With groups and labels
+
+Organize related menu items into sections with descriptive headers.
+
+<Demo data={customDemo} />
+
+### Submenu
+
+Use `ContextMenu.Submenu`, `ContextMenu.SubmenuTrigger`, and `ContextMenu.SubmenuContent` to create nested menus with multiple levels.
+
+<Demo data={submenuDemo} />
+
+### Autocomplete
+
+Pass `autocomplete` to the ContextMenu root. Each menu manages its own autocomplete state.
+
+- **`autocompleteMode="auto"`** is the default. Items filter as the user types, matched against each item's `value` prop or its children text.
+- **Submenus** opt in separately: pass `autocomplete` to `ContextMenu.Submenu`.
+
+<Demo data={autocompleteDemo} />
+
+### Controlled
+
+Pass `open` with `onOpenChange` to own the state. Do this when the menu has to close on something other than a selection, or when only one menu may be open at a time.
+
+<Demo data={controlledDemo} />
 
 ## API Reference
 
@@ -127,42 +170,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `menu-cell-leading-icon` | Leading icon inside an item or submenu trigger (when provided; shared with `Menu`'s internals) |
 | `menu-cell-trailing-icon` | Trailing icon inside an item or submenu trigger (when provided; shared with `Menu`'s internals) |
 
-## Examples
-
-### Basic Usage
-
-A simple context menu with basic functionality. Right-click the trigger area to open.
-
-<Demo data={basicDemo} />
-
-### With Icons
-
-You can add icons to the menu items. Supports both leading and trailing icons.
-
-<Demo data={iconsDemo} />
-
-### With Groups and Labels
-
-Organize related menu items into sections with descriptive headers.
-
-<Demo data={customDemo} />
-
-### Submenu
-
-Use `ContextMenu.Submenu`, `ContextMenu.SubmenuTrigger`, and `ContextMenu.SubmenuContent` to create nested menus with multiple levels.
-
-<Demo data={submenuDemo} />
-
-### Autocomplete
-
-To enable autocomplete, pass the `autocomplete` prop to the ContextMenu root element. Each menu instance will manage its own autocomplete behavior.
-
-By default (`autocompleteMode="auto"`), items are automatically filtered as the user types. The filter matches against the item's `value` prop or its `children` text content.
-
-For submenus, you can independently enable autocomplete by passing `autocomplete` to `ContextMenu.Submenu`.
-
-<Demo data={autocompleteDemo} />
-
 ## Accessibility
 
 - Built on [Base UI Context Menu](https://base-ui.com/react/components/context-menu):
@@ -174,6 +181,6 @@ For submenus, you can independently enable autocomplete by passing `autocomplete
   ArrowRight/ArrowLeft open and close submenus.
 - With `autocomplete`, the popup becomes a `role="dialog"` containing a search
   input, items render as `role="option"`, and focus stays in the input while
-  arrow keys move the highlight — Escape first closes an open submenu.
+  arrow keys move the highlight, and Escape first closes an open submenu.
 - `ContextMenu.Label` must be wrapped in `ContextMenu.Group` so the group is
   labelled via `aria-labelledby`.

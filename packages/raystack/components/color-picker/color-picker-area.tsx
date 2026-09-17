@@ -50,7 +50,7 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
 
   const { lightness, chroma, hue, setColor } = useColorPicker();
   // Use the native CSS oklch() so the thumb renders the actual picked color on
-  // wide-gamut (P3) displays — hex would silently sRGB-clip wide-gamut picks.
+  // wide-gamut (P3) displays, and hex would silently sRGB-clip wide-gamut picks.
   const thumbColor = useMemo(
     () => `oklch(${lightness} ${chroma} ${hue})`,
     [lightness, chroma, hue]

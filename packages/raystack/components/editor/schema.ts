@@ -3,7 +3,7 @@ import type { MentionAttrs } from './mention';
 
 /**
  * A deliberately tiny schema: one paragraph of text, hard breaks, and atomic
- * mentions. Nothing else, so pasted HTML sanitizes to plain text for free —
+ * mentions. Nothing else, so pasted HTML sanitizes to plain text for free,
  * there is no mark or block the parser could keep.
  */
 export const editorSchema = new Schema({
@@ -55,7 +55,7 @@ export const editorSchema = new Schema({
           }
         }
       ],
-      // Only used for the clipboard's `text/html` flavour — on screen the node
+      // Only used for the clipboard's `text/html` flavour. On screen the node
       // view owns the element. Pasting this back restores the chip with its id.
       toDOM: node => {
         const { id, label, type, trigger } = node.attrs as MentionAttrs;

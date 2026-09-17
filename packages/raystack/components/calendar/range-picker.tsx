@@ -64,7 +64,7 @@ export function RangePicker({
   onSelect = () => undefined,
   value,
   /*
-   * No inline default — the state machine's "first click sets `from`" branch
+   * No inline default, since the state machine's "first click sets `from`" branch
    * needs an empty range to fire.
    */
   defaultValue,
@@ -120,7 +120,7 @@ export function RangePicker({
   /*
    * Sync visible month when controlled `value.from` changes externally
    * (form reset, preset buttons, sync-from-URL). Sync runs whenever
-   * `value` is defined — including when `value.from` is cleared — so a
+   * `value` is defined, including when `value.from` is cleared, so a
    * parent reset (`setValue({ from: undefined })`) actually unpins the
    * calendar. Uncontrolled mode (value === undefined) skips entirely.
    */
@@ -144,7 +144,7 @@ export function RangePicker({
 
   /*
    * Ensures two months are visible even when the current month is the last
-   * allowed month (endMonth). Skips when `currentMonth` is undefined —
+   * allowed month (endMonth). Skips when `currentMonth` is undefined,
    * `dayjs(undefined)` returns "now" and would falsely match `endMonth` if
    * endMonth happens to be the current month, forcing the calendar away
    * from its own default.
@@ -208,7 +208,7 @@ export function RangePicker({
     }
 
     if (newField !== currentRangeField) setCurrentRangeField(newField);
-    // Only update internal state when uncontrolled — controlled consumers own `value`.
+    // Only update internal state when uncontrolled, since controlled consumers own `value`.
     if (!isControlled) setInternalValue(newRange);
     onSelect(newRange);
     if (shouldClose) popover.disengage();
@@ -254,7 +254,7 @@ export function RangePicker({
    * Always wrap the trigger in a `<div>` so the rendered outer element is
    * never a `<button>`. This keeps `nativeButton={false}` correct regardless
    * of what the consumer passes (string, host element, React component that
-   * happens to render a button, etc.) — avoiding Base UI's button-nesting
+   * happens to render a button, etc.), avoiding Base UI's button-nesting
    * warning.
    */
   const triggerContent =
@@ -284,7 +284,7 @@ export function RangePicker({
         <div data-slot='range-picker-content'>
           <Calendar
             /*
-             * No `captionLayout` default — 'dropdown' renders Apsara Selects
+             * No `captionLayout` default, since 'dropdown' renders Apsara Selects
              * inside the popover whose unmount loops ("Maximum update depth").
              * Consumers can opt in via `calendarProps.captionLayout`.
              */

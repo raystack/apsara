@@ -1,4 +1,4 @@
-/* Group layout — uses flex to arrange radio items */
+/* Group layout. Uses flex to arrange radio items */
 .group {
   display: flex;
   flex-direction: column;
@@ -9,7 +9,7 @@
   flex-direction: row;
 }
 
-/* Radio button — uses inline-flex to center the indicator dot */
+/* Radio button. Uses inline-flex to center the indicator dot */
 .radioitem {
   all: unset;
   border-radius: var(--rs-radius-full);
@@ -25,7 +25,7 @@
     border-color var(--rs-duration-fast) var(--rs-ease-out);
 }
 
-/* Group-level size — low specificity via :where() so item-level size wins */
+/* Group-level size, low specificity via :where() so item-level size wins */
 :where(.group-large) .radioitem,
 .radioitem.large {
   width: var(--rs-space-5);
@@ -126,7 +126,7 @@
   background: var(--rs-color-foreground-base-emphasis);
 }
 
-/* Scale indicator dot for small size — group-level and item-level */
+/* Scale indicator dot for small size, group-level and item-level */
 :where(.group-small) .indicator::after,
 .radioitem.small .indicator::after {
   width: var(--rs-radius-2);

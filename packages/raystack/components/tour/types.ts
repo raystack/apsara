@@ -18,7 +18,7 @@ export type TourAlign = 'start' | 'center' | 'end';
 /**
  * How the popover card travels between steps. The spotlight always cross-fades
  * (it never slides), regardless of this setting.
- * - `fade` (default): the card cross-fades at each target — it fades out, moves
+ * - `fade` (default): the card cross-fades at each target, so it fades out, moves
  *   while hidden, and fades in once the target is in view. Best for targets that
  *   are far apart or need scrolling, where a glide reads as jank.
  * - `move`: the card glides smoothly from the previous target to the next,
@@ -71,8 +71,8 @@ export interface TourStep {
 export type TourEndStatus = 'finished' | 'skipped' | 'closed';
 
 /**
- * `idle` — the tour is closed. `waiting` — the active step's target is not in
- * the DOM yet and the tour is observing for it to appear. `running` — the
+ * `idle` means the tour is closed. `waiting` means the active step's target is not in
+ * the DOM yet and the tour is observing for it to appear. `running` means the
  * target is resolved and the step is showing.
  */
 export type TourStatus = 'idle' | 'waiting' | 'running';

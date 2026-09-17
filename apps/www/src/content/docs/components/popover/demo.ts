@@ -129,3 +129,28 @@ export const alignDemo = {
     }
   ]
 };
+
+export const controlledDemo = {
+  type: 'code',
+  code: `
+function ControlledPopover() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <Flex align="center" gap={5}>
+      <Popover open={open} onOpenChange={setOpen}>
+        <Popover.Trigger asChild>
+          <Button variant="outline">Filters</Button>
+        </Popover.Trigger>
+        <Popover.Content>
+          <Flex direction="column" gap={4} style={{ padding: 4 }}>
+            <Text size="small">Two filters active.</Text>
+            <Button size="small" onClick={() => setOpen(false)}>Apply</Button>
+          </Flex>
+        </Popover.Content>
+      </Popover>
+      <Text size="small" variant="secondary">{open ? 'open' : 'closed'}</Text>
+    </Flex>
+  );
+}`
+};

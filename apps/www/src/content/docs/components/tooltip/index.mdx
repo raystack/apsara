@@ -4,7 +4,9 @@ description: A popup that displays information related to an element when it rec
 source: packages/raystack/components/tooltip
 ---
 
-import { playground, sideDemo, alignDemo, customDemo, providerDemo, trackCursorDemo, arrowDemo } from "./demo.ts";
+import { playground, sideDemo, alignDemo, customDemo, providerDemo, trackCursorDemo, arrowDemo,
+  controlledDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -20,7 +22,55 @@ import { Tooltip } from "@raystack/apsara";
 </Tooltip.Provider>
 ```
 
+## Usage
+
+A tooltip anchors to its trigger and opens on hover or focus. Where it lands is `side` and `align`.
+
+### Side
+
+The Tooltip Content component can be positioned in different directions using the `side` prop:
+
+<Demo data={sideDemo} />
+
+### Align
+
+The Tooltip Content component can be aligned in different directions using the `align` prop:
+
+<Demo data={alignDemo} />
+
+### Custom Content
+
+Tooltips can contain custom content using ReactNode:
+
+<Demo data={customDemo} />
+
+### With Provider
+
+`TooltipProvider` sets delay and skip-delay for every tooltip beneath it, so a group of controls opens with one consistent rhythm rather than each tooltip timing itself.
+
+<Demo data={providerDemo} />
+
+### Track cursor
+
+Use `trackCursorAxis` prop on the Root component to make the tooltip follow the cursor:
+
+<Demo data={trackCursorDemo} />
+
+### With arrow
+
+Show the arrow by setting `showArrow={true}` on the Content component:
+
+<Demo data={arrowDemo} />
+
+### Controlled
+
+Pass `open` with `onOpenChange` to own the state. Use it to show a tooltip from somewhere other than hover: a first-run hint, or a validation message tied to a field.
+
+<Demo data={controlledDemo} />
+
 ## API Reference
+
+A trigger and its content, with a provider for sharing one delay across many tooltips.
 
 ### Root
 
@@ -57,44 +107,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `tooltip-content` | The tooltip popup |
 | `tooltip-text` | Text wrapper (when children is a string) |
 | `tooltip-arrow` | The arrow (when `showArrow`) |
-
-## Examples
-
-### Side
-
-The Tooltip Content component can be positioned in different directions using the `side` prop:
-
-<Demo data={sideDemo} />
-
-### Align
-
-The Tooltip Content component can be aligned in different directions using the `align` prop:
-
-<Demo data={alignDemo} />
-
-### Custom Content
-
-Tooltips can contain custom content using ReactNode:
-
-<Demo data={customDemo} />
-
-### With Provider
-
-The TooltipProvider component can be used to provide a global configuration for all tooltips in your application.
-
-<Demo data={providerDemo} />
-
-### Track Cursor
-
-Use `trackCursorAxis` prop on the Root component to make the tooltip follow the cursor:
-
-<Demo data={trackCursorDemo} />
-
-### With Arrow
-
-Show the arrow by setting `showArrow={true}` on the Content component:
-
-<Demo data={arrowDemo} />
 
 ## Accessibility
 

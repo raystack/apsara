@@ -4,13 +4,18 @@ description: A layout primitive that arranges children in a row or column, with 
 source: packages/raystack/components/flex
 ---
 
-import { playground, basicDemo } from "./demo.ts";
+import { playground, basicDemo,
+  directionDemo,
+  justifyDemo,
+  alignDemo,
+  wrapDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
 ## Overview
 
-`Flex` is the workhorse layout primitive: a `div` with `display: flex` and props for `direction`, `align`, `justify`, `wrap`, and `gap`, so you rarely write flexbox CSS by hand. By default it lays children out in a row (`direction="row"`, `align="stretch"`, `justify="start"`, `wrap="noWrap"`). Reach for it whenever you're stacking or spacing things along one axis — toolbars, form rows, sidebars. For two-dimensional layouts use [Grid](/docs/components/grid), and for a page-width wrapper use [Container](/docs/components/container).
+`Flex` is the workhorse layout primitive: a `div` with `display: flex` and props for `direction`, `align`, `justify`, `wrap`, and `gap`, so you rarely write flexbox CSS by hand. By default it lays children out in a row (`direction="row"`, `align="stretch"`, `justify="start"`, `wrap="noWrap"`). Reach for it whenever you're stacking or spacing things along one axis: toolbars, form rows, sidebars. For two-dimensional layouts use [Grid](/docs/components/grid), and for a page-width wrapper use [Container](/docs/components/container).
 
 ## Anatomy
 
@@ -21,6 +26,40 @@ import { Flex } from "@raystack/apsara";
 
 <Flex />
 ```
+
+## Usage
+
+`Flex` maps the flexbox properties onto props. Set the direction first: the alignment props read against whichever axis it picks.
+
+### Nesting
+
+Nest Flex containers to compose a layout: here an outer row, the default direction, holds two columns, each spaced with `gap`.
+
+<Demo data={basicDemo} />
+
+### Direction
+
+`row` is the default. `column` stacks children instead. The reverse variants flip the visual order without touching the DOM order, so keyboard and screen-reader order stay put.
+
+<Demo data={directionDemo} />
+
+### Justify
+
+`justify` distributes children along the main axis. `between` pushes the first and last to the edges, which is the usual way to build a toolbar with actions on both sides.
+
+<Demo data={justifyDemo} />
+
+### Align
+
+`align` positions children on the cross axis. `center` is what pulls a row of mixed heights, such as an icon, a label and a button, onto one optical line. `baseline` aligns their text instead.
+
+<Demo data={alignDemo} />
+
+### Wrap
+
+`nowrap` is the default, so children shrink rather than move to a new line. Set `wrap` when the item count is unbounded, like a row of tags.
+
+<Demo data={wrapDemo} />
 
 ## API Reference
 
@@ -36,17 +75,9 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 |------|---------|
 | `flex` | The flex container (or the element supplied via `render`) |
 
-## Examples
-
-### Basic Usage
-
-Nest Flex containers to compose layouts: here an outer row (the default direction) holds two columns, each spaced with `gap`.
-
-<Demo data={basicDemo} />
-
 ## Accessibility
 
-- Renders a plain `<div>` and adds no roles or ARIA attributes — purely
+- Renders a plain `<div>` and adds no roles or ARIA attributes, and is purely
   visual layout with no semantic meaning.
 - Screen readers read children in DOM order, so `rowReverse` and
   `columnReverse` change only the visual order. Don't rely on them to

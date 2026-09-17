@@ -1,4 +1,4 @@
-import { Callout, Headline, Tabs, Text } from '@raystack/apsara';
+import { Callout, Tabs, Text } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
 import { Image as FrameworkImage } from 'fumadocs-core/framework';
 import Link from 'fumadocs-core/link';
@@ -66,36 +66,16 @@ const mdxComponents = {
   a: Link as FC<AnchorHTMLAttributes<HTMLAnchorElement>>,
   img: Image,
   h1: (props: HTMLAttributes<HTMLHeadingElement>) => (
-    <Headline
-      render={<h1 />}
-      size='t4'
-      {...props}
-      className={cx(styles['prose-h1'], props.className)}
-    />
+    <h1 {...props} className={cx(styles['prose-h1'], props.className)} />
   ),
   h2: (props: HTMLAttributes<HTMLHeadingElement>) => (
-    <Headline
-      render={<h2 />}
-      size='t3'
-      {...props}
-      className={cx(styles['prose-h2'], props.className)}
-    />
+    <h2 {...props} className={cx(styles['prose-h2'], props.className)} />
   ),
   h3: (props: HTMLAttributes<HTMLHeadingElement>) => (
-    <Headline
-      render={<h3 />}
-      size='t2'
-      {...props}
-      className={cx(styles['prose-h3'], props.className)}
-    />
+    <h3 {...props} className={cx(styles['prose-h3'], props.className)} />
   ),
   h4: (props: HTMLAttributes<HTMLHeadingElement>) => (
-    <Headline
-      render={<h4 />}
-      size='t1'
-      {...props}
-      className={cx(styles['prose-h4'], props.className)}
-    />
+    <h4 {...props} className={cx(styles['prose-h4'], props.className)} />
   ),
   h5: (props: HTMLAttributes<HTMLHeadingElement>) => (
     <Text

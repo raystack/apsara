@@ -11,13 +11,13 @@ export const EMPTY_BUCKET_KEY = '';
  * empty bucket last.
  *
  * `keys` arrives in first-seen order (a `Map`'s key order, which is insertion
- * order), and only keys that are actually present are emitted — a declared
+ * order), and only keys that are actually present are emitted, so a declared
  * value with no rows produces no section and no lane, so ordering never
  * conjures empty bands. The empty bucket is pinned last regardless of where it
  * appears in `order`, so a declared list doesn't have to mention it.
  *
  * Shared by `groupData`, which passes the grouped field's declared `groupOrder`,
- * and by `packLanesBySortValue`, which passes nothing — timeline lanes follow
+ * and by `packLanesBySortValue`, which passes nothing, so timeline lanes follow
  * the active sort, so only the empty-bucket-last half of the rule applies
  * there. One field that is both grouped and sorted can therefore rank its
  * sections and its lanes differently; that's the documented contract of
@@ -36,7 +36,7 @@ export function orderBucketKeys(keys: string[], order?: string[]): string[] {
       ordered.push(key);
     }
   }
-  // Undeclared keys keep first-seen order — `keys`, not the Set, drives this.
+  // Undeclared keys keep first-seen order, and `keys`, not the Set, drives this.
   for (const key of keys) {
     if (!present.has(key)) continue;
     present.delete(key);

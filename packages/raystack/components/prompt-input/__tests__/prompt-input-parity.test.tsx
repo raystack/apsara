@@ -13,7 +13,7 @@ import type { PromptInputMessage } from '../prompt-input-context';
 interface Substrate {
   name: string;
   render: (props: Partial<Parameters<typeof PromptInput>[0]>) => ReactElement;
-  /** The element that receives keys — a textarea or an editing host. */
+  /** The element that receives keys: a textarea or an editing host. */
   input: (container: HTMLElement) => HTMLElement;
   /** Enters text the way that substrate accepts it in jsdom. */
   type: (element: HTMLElement, text: string) => void;
@@ -90,7 +90,7 @@ const substrates: Substrate[] = [
   }
 ];
 
-describe.each(substrates)('PromptInput shared contract — $name', substrate => {
+describe.each(substrates)('PromptInput shared contract: $name', substrate => {
   const setup = (props: Partial<Parameters<typeof PromptInput>[0]> = {}) => {
     const result = render(substrate.render(props));
     return { ...result, input: substrate.input(result.container) };

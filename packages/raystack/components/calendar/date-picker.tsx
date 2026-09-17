@@ -51,7 +51,7 @@ export interface DatePickerProps {
    * Fires when the typed-input validation state changes: with a message when
    * the typed text stops parsing as a valid in-bounds date, and with
    * `undefined` when it becomes valid again (or the picker commits/closes).
-   * DatePicker renders no error UI of its own — not even `aria-invalid`.
+   * DatePicker renders no error UI of its own, not even `aria-invalid`.
    * Lift this into `Field`'s `error` prop (or your form library) to display
    * it; `Field` also wires `aria-invalid` onto the input.
    */
@@ -84,7 +84,7 @@ export function DatePicker({
   const calendarProps = { ...legacyCalendarProps, ...slotProps?.calendar };
   const popoverProps = { ...legacyPopoverProps, ...slotProps?.popover };
   /*
-   * Gate the popover when the input is disabled — the trailing icon
+   * Gate the popover when the input is disabled, since the trailing icon
    * renders as a sibling `<div>` to the `<input>`, so its clicks bubble
    * to `Popover.Trigger` even when the input itself is `disabled`.
    */
@@ -105,7 +105,7 @@ export function DatePicker({
     errorRef.current = next;
   }
 
-  // Sync only when controlled — uncontrolled mode keeps its own state.
+  // Sync only when controlled, since uncontrolled mode keeps its own state.
   // biome-ignore lint/correctness/useExhaustiveDependencies: compare on timestamp, not Date identity
   useEffect(() => {
     if (valueProp !== undefined) setSelectedDate(valueProp);
@@ -119,7 +119,7 @@ export function DatePicker({
 
   /*
    * Separate from `selectedDate` so chevron/dropdown nav doesn't rewrite the
-   * committed date — only day-clicks (`onSelect`) do. Initial month honors
+   * committed date. Only day-clicks (`onSelect`) do. Initial month honors
    * `calendarProps.defaultMonth`, then the selected date, then today.
    */
   const [viewMonth, setViewMonth] = useState<Date>(
@@ -166,7 +166,7 @@ export function DatePicker({
      * a format spec, which falls back to native `Date` parsing and can shift
      * non-ISO formats (e.g. DD/MM/YYYY → wrong Date).
      *
-     * Skip when nothing was ever selected — `onSelect` is typed
+     * Skip when nothing was ever selected, since `onSelect` is typed
      * `(date: Date) => void` so we don't fire with `undefined`.
      */
     if (!hadError && committedDate) onSelect(committedDate);
@@ -176,7 +176,7 @@ export function DatePicker({
     setSelectedDate(day);
     // RDP can hand us `undefined` when `required={false}` and the user
     // clicks the currently-selected day (deselect). Only forward defined
-    // dates to consumer `onSelect` — keeps the prop type narrow.
+    // dates to consumer `onSelect`, which keeps the prop type narrow.
     if (day) onSelect(day);
     updateError(undefined);
     popover.disengage();
@@ -198,7 +198,7 @@ export function DatePicker({
     const isValidDate = date.isValid();
 
     /*
-     * RDP treats `startMonth`/`endMonth` as months — compare against month
+     * RDP treats `startMonth`/`endMonth` as months, so compare against month
      * bounds so any day inside the boundary month is accepted.
      */
     const isAfter =
@@ -245,7 +245,7 @@ export function DatePicker({
    * Always wrap the trigger in a `<div>` so the rendered outer element is
    * never a `<button>`. This keeps `nativeButton={false}` correct regardless
    * of what the consumer passes (string, host element, React component that
-   * happens to render a button, etc.) — avoiding Base UI's button-nesting
+   * happens to render a button, etc.), avoiding Base UI's button-nesting
    * warning.
    */
   const triggerContent =

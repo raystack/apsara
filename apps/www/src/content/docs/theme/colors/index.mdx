@@ -3,9 +3,9 @@ title: Colors
 description: Overview of the color system and semantic color tokens in Apsara.
 ---
 
-Apsara uses a semantic color system that provides meaningful, context-aware colors for your interface. Rather than using fixed color values, semantic tokens represent the intended purpose of a color—such as "primary text" or "danger background"—and automatically resolve to the appropriate value based on the active theme and style. This abstraction allows you to build consistent, themeable interfaces by focusing on what a color represents rather than what it looks like.
+Apsara uses a semantic color system that provides meaningful, context-aware colors for your interface. Rather than using fixed color values, semantic tokens represent the intended purpose of a color, such as "primary text" or "danger background", and automatically resolve to the appropriate value based on the active theme and style. This abstraction allows you to build consistent, themeable interfaces by focusing on what a color represents rather than what it looks like.
 
-## Foreground Colors
+## Foreground colors
 
 Foreground colors are used for text, icons, and other content elements.
 
@@ -31,7 +31,7 @@ Foreground colors are used for text, icons, and other content elements.
   ]}
 />
 
-## Background Colors
+## Background colors
 
 Background colors define surfaces and containers in your interface.
 
@@ -62,7 +62,7 @@ Background colors define surfaces and containers in your interface.
   ]}
 />
 
-## Border Colors
+## Border colors
 
 Border colors define boundaries and separators.
 
@@ -90,7 +90,7 @@ Border colors define boundaries and separators.
   ]}
 />
 
-## Overlay Colors
+## Overlay colors
 
 Overlay colors are used for modals, tooltips, and layered elements.
 
@@ -136,7 +136,7 @@ Overlay colors are used for modals, tooltips, and layered elements.
   ]}
 />
 
-## Visualization Colors
+## Visualization colors
 
 A palette of colors designed for data visualization, charts, and graphs.
 
@@ -161,6 +161,8 @@ A palette of colors designed for data visualization, charts, and graphs.
 />
 
 ## Usage
+
+Reference the tokens directly in CSS. Because they resolve per theme, the same rule works in light and dark without a second declaration.
 
 ```css
 /* Custom status indicator */
@@ -231,9 +233,9 @@ A palette of colors designed for data visualization, charts, and graphs.
 }
 ```
 
-## Best Practices
+## Best practices
 
 - **Use semantic tokens** - Prefer semantic color tokens over raw color values for consistency and theming support
 - **Match foreground with background** - Use corresponding foreground colors when placing text on semantic backgrounds (e.g., `foreground-accent-emphasis` on `background-accent-emphasis`)
 - **Respect color hierarchy** - Use primary colors for main content, secondary for supporting content, and tertiary for subtle elements
-- **Test in both themes** - Ensure your color choices work well in both light and dark modes
+- **Test in both themes** - Check your color choices in light and dark

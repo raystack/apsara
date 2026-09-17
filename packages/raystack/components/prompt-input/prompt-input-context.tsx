@@ -18,7 +18,7 @@ export interface PromptInputMention extends EditorMention {
 export interface PromptInputMessage {
   /** Plain text with each label inlined behind its trigger. */
   text: string;
-  /** Round-trippable markup — feeds straight back into `value`. */
+  /** Round-trippable markup that feeds straight back into `value`. */
   markup: string;
   /** Document order; duplicates preserved. */
   mentions: PromptInputMention[];
@@ -51,7 +51,7 @@ export interface PromptInputInputApi {
 export type PromptInputPartKind = 'textarea' | 'editor';
 
 export interface PromptInputContextValue {
-  /** Markup — opaque to Root, interpreted only by `Editor`. */
+  /** Markup, opaque to Root and interpreted only by `Editor`. */
   value: string;
   details: PromptInputValueDetails;
   /** No mentions, and text that trims to `""`. */
@@ -71,7 +71,7 @@ export interface PromptInputContextValue {
   ) => void;
   requestSubmit: () => void;
   mentions: PromptInputMentionRegistry;
-  /** Whether an `Editor` part is mounted — `Mentions` requires one. */
+  /** Whether an `Editor` part is mounted. `Mentions` requires one. */
   editorMounted: boolean;
 }
 

@@ -18,6 +18,28 @@ import { Image } from "@raystack/apsara";
 <Image />
 ```
 
+## Usage
+
+All presentational: the fit, the corner radius, and what stands in when loading fails.
+
+### Object fit
+
+Control how the image fills its container with different object-fit modes.
+
+<Demo data={fitDemo} />
+
+### Border radius
+
+Choose from different border radius styles to match your design.
+
+<Demo data={radiusDemo} />
+
+### Fallback
+
+Handle image loading failures gracefully with fallback images.
+
+<Demo data={fallbackDemo} />
+
 ## API Reference
 
 Renders a responsive image with fallback support.
@@ -32,26 +54,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 |------|---------|
 | `image` | The `<img>` element |
 
-## Examples
-
-### Object Fit
-
-Control how the image fills its container with different object-fit modes.
-
-<Demo data={fitDemo} />
-
-### Border Radius
-
-Choose from different border radius styles to match your design.
-
-<Demo data={radiusDemo} />
-
-### Fallback
-
-Handle image loading failures gracefully with fallback images.
-
-<Demo data={fallbackDemo} />
-
 ## Accessibility
 
 The Image component follows accessibility best practices:
@@ -60,7 +62,7 @@ The Image component follows accessibility best practices:
 
 - `alt` is the accessible name. Set it to a meaningful description, or `""`
   for decorative images (which marks the element as presentational).
-- No redundant `role="img"` or duplicated `aria-label` is emitted — the
+- No redundant `role="img"` or duplicated `aria-label` is emitted, so the
   native `<img>` element already provides those semantics.
 
 ### Performance

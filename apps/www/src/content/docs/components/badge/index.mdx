@@ -24,6 +24,28 @@ import { Badge } from '@raystack/apsara'
 <Badge />
 ```
 
+## Usage
+
+Set how filled the badge looks, how big it is, and whether it carries an icon.
+
+### Variant
+
+Choose between different variants to convey different meanings or importance levels. Default variant is `accent`.
+
+<Demo data={variantDemo} />
+
+### Size
+
+Three sizes. `regular` is the default; `small` and `micro` fit inside table rows and beside dense labels.
+
+<Demo data={sizesDemo} />
+
+### With icon
+
+Badges can include an icon to provide additional visual context. By default there is no icon.
+
+<Demo data={iconDemo} />
+
 ## API Reference
 
 Renders a small label for status, count, or category indication.
@@ -39,26 +61,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `badge` | The root `<span>` element |
 | `badge-icon` | Wrapper around `icon` (when set) |
 | `badge-screen-reader-text` | Visually hidden text (when `screenReaderText` is set) |
-
-## Examples
-
-### Variant
-
-Choose between different variants to convey different meanings or importance levels. Default variant is `accent`.
-
-<Demo data={variantDemo} />
-
-### Size
-
-The Badge component supports three sizes to accommodate various layout requirements. Default size is `small`.
-
-<Demo data={sizesDemo} />
-
-### With Icon
-
-Badges can include an icon to provide additional visual context. By default there is no icon.
-
-<Demo data={iconDemo} />
 
 ## Accessibility
 

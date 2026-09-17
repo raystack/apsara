@@ -24,7 +24,7 @@ interface UseStickyGroupAnchorResult<TData> {
  * anchor's content stays in sync with the natural section header underneath.
  *
  * Returns the current group's data plus the row index of its natural section
- * header — the consumer hides that row in the virtualized body so the natural
+ * header, and the consumer hides that row in the virtualized body so the natural
  * header doesn't visually slide past the anchor (matching the non-virtualized
  * table where CSS sticky pins each section header at the offset).
  *

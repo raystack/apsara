@@ -49,7 +49,7 @@ export interface UseEditorOptions {
   placeholder?: string;
   disabled?: boolean;
   spellCheck?: boolean;
-  /** Cap on the derived plain text — a chip counts as its label. */
+  /** Cap on the derived plain text, where a chip counts as its label. */
   maxLength?: number;
   /** Trigger characters currently registered by a `Mentions` part. */
   getTriggers?: () => string[];
@@ -121,7 +121,7 @@ function deleteAdjacentMention(direction: -1 | 1): Command {
 /**
  * Arrow keys step over a chip in one press. ProseMirror's default for a
  * selectable inline atom is to make it a NodeSelection first, which puts a
- * selection ring on the chip on the way past it — a stop the user never asked
+ * selection ring on the chip on the way past it, a stop the user never asked
  * for while moving the caret through a sentence. Clicking a chip still selects
  * it, which is where the ring belongs.
  */
@@ -240,7 +240,7 @@ export function useEditor(options: UseEditorOptions): UseEditorResult {
 
     // A bare `focus()` on an editing host places no caret. When focus arrives
     // from the frame rather than from a press inside the editor, drop the caret
-    // at the end — the way clicking past the end of a textarea's text behaves.
+    // at the end, the way clicking past the end of a textarea's text behaves.
     const focusPlugin = new Plugin({
       props: {
         handleDOMEvents: {

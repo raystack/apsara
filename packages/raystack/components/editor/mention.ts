@@ -1,5 +1,5 @@
 /**
- * The parts of the mention model that are pure strings and offsets — no
+ * The parts of the mention model that are pure strings and offsets, with no
  * ProseMirror. Kept in its own module so `PromptInput`'s root, its textarea and
  * the mention registry can share the vocabulary without pulling the editor
  * engine into their module graph.
@@ -9,7 +9,7 @@
 export interface MentionAttrs {
   id: string;
   label: string;
-  /** Entity kind — `"project"`, `"user"`, … */
+  /** Entity kind: `"project"`, `"user"`, … */
   type: string;
   /** The character that opened the menu this mention was picked from. */
   trigger: string;
@@ -32,7 +32,7 @@ export function mentionKey(trigger: string, type: string, id: string): string {
 /**
  * A trigger is a single ASCII punctuation character. `[`, `]` and `\` are
  * excluded because the dialect uses them as delimiters, and `_` because it
- * reads as a word character — so a bare markdown link (`[label](a:b)`) and a
+ * reads as a word character, so a bare markdown link (`[label](a:b)`) and a
  * snake_cased word are never mistaken for a mention.
  */
 const TRIGGER_PATTERN = new RegExp(
@@ -51,7 +51,7 @@ function escapeRef(value: string): string {
   return value.replace(/[\\:)]/g, match => `\\${match}`);
 }
 
-/** Serializes one mention — `@[label](type:id)`. */
+/** Serializes one mention as `@[label](type:id)`. */
 export function serializeMention(attrs: MentionAttrs): string {
   return `${attrs.trigger}[${escapeLabel(attrs.label)}](${escapeRef(
     attrs.type
@@ -59,8 +59,8 @@ export function serializeMention(attrs: MentionAttrs): string {
 }
 
 /**
- * Drops whitespace at the document edges — including the space auto-inserted
- * after a chip — while leaving mentions alone, then re-bases the offsets. A
+ * Drops whitespace at the document edges, including the space auto-inserted
+ * after a chip, while leaving mentions alone, then re-bases the offsets. A
  * chip is never at an edge in the whitespace sense, so trimming can only ever
  * remove text.
  */

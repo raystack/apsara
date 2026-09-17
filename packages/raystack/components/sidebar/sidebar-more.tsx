@@ -24,7 +24,7 @@ export interface SidebarMoreProps {
     /**
      * Not deprecated: `Menu.Content` portals to `document.body`, so a
      * `[data-slot="menu-content"]` selector can't be scoped to just this
-     * instance's dropdown — this prop remains the only way to target it.
+     * instance's dropdown, so this prop remains the only way to target it.
      */
     menuContent?: string;
   };

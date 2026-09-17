@@ -14,10 +14,10 @@ export interface PromptInputMentionsProps {
    * @defaultValue "@"
    */
   trigger?: string;
-  /** Sync data — filtered internally with match-sorter on the label. */
+  /** Sync data, filtered internally with match-sorter on the label. */
   items?: PromptInputMentionItem[];
   /**
-   * Async data — debounced ~150 ms, superseded requests aborted through
+   * Async data, debounced ~150 ms, with superseded requests aborted through
    * `signal`, stale resolutions discarded. Wins over `items`.
    */
   onSearch?: (
@@ -47,7 +47,7 @@ export interface PromptInputMentionsProps {
 }
 
 /**
- * Declares a trigger and supplies its data. Renders nothing itself — the
+ * Declares a trigger and supplies its data. Renders nothing itself, since the
  * caret-anchored menu belongs to `PromptInput.Editor`, which owns the document
  * the query lives in, because the query is the text the chip replaces.
  *
@@ -92,7 +92,7 @@ export function PromptInputMentions({
   }, [registry, trigger]);
 
   // `Editor` registers itself during the commit that mounts it, which can land
-  // after this effect — so the check waits for the tree to settle, and the
+  // after this effect, so the check waits for the tree to settle, and the
   // cleanup cancels it the moment an editor does show up.
   const sawEditorRef = useRef(false);
   useEffect(() => {
@@ -114,7 +114,7 @@ export function PromptInputMentions({
 
   // Pushed after every render and compared field by field, so an inline `items`
   // array or an inline `onSearch` stays live without churning the config
-  // identity — which would restart an in-flight debounce on every keystroke.
+  // identity, which would restart an in-flight debounce on every keystroke.
   useEffect(() => {
     registry.setData(trigger, {
       items,

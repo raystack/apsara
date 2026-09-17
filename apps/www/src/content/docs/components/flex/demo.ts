@@ -59,3 +59,53 @@ export const basicDemo = {
     </Flex>
   </Flex>`
 };
+
+export const directionDemo = {
+  type: 'code',
+  code: `
+<Flex direction="column" gap={5}>
+  <Flex direction="row" gap={3}>
+    <Button size="small" variant="outline">row</Button>
+    <Button size="small" variant="outline">is the</Button>
+    <Button size="small" variant="outline">default</Button>
+  </Flex>
+  <Flex direction="column" gap={3} style={{ width: 'fit-content' }}>
+    <Button size="small" variant="outline">column</Button>
+    <Button size="small" variant="outline">stacks</Button>
+  </Flex>
+</Flex>`
+};
+
+export const justifyDemo = {
+  type: 'code',
+  code: `
+<Flex direction="column" gap={4} style={{ width: '100%' }}>
+  {["start", "center", "end", "between"].map((j) => (
+    <Flex key={j} justify={j} gap={3}
+      style={{ width: '100%', padding: 8, border: '1px dashed var(--rs-color-border-base-primary)', borderRadius: 4 }}>
+      <Badge>{j}</Badge>
+      <Badge>b</Badge>
+    </Flex>
+  ))}
+</Flex>`
+};
+
+export const alignDemo = {
+  type: 'code',
+  code: `
+<Flex gap={4} align="center" style={{ height: 90, padding: 8, border: '1px dashed var(--rs-color-border-base-primary)', borderRadius: 4 }}>
+  <Badge>align</Badge>
+  <Text size="large">center</Text>
+  <Button size="small">pulls a mixed-height row onto one line</Button>
+</Flex>`
+};
+
+export const wrapDemo = {
+  type: 'code',
+  code: `
+<Flex wrap="wrap" gap={3} style={{ maxWidth: 300 }}>
+  {["alpha", "bravo", "charlie", "delta", "echo", "foxtrot"].map((t) => (
+    <Badge key={t}>{t}</Badge>
+  ))}
+</Flex>`
+};

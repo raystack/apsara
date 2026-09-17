@@ -6,7 +6,7 @@
  * cannot drift, and two copies of an LCG eventually stop agreeing.
  */
 
-/** Seeded LCG — a failing case has to be reproducible. */
+/** Seeded LCG, so a failing case is reproducible. */
 export function seededRandom(seed: number) {
   let state = seed;
   return () => {

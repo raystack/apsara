@@ -30,6 +30,70 @@ import { Amount } from '@raystack/apsara'
 <Amount />
 ```
 
+## Usage
+
+`Amount` takes a number and a currency and handles the formatting. The props below change what that formatting produces.
+
+### Basic
+
+Pass a `value` and a `currency` code. Amount formats it for the active locale using `Intl.NumberFormat`, and renders in tabular numbers so columns of figures line up.
+
+<Demo data={basicDemo} />
+
+### Currency variants
+
+`currency` takes any ISO 4217 code. The symbol, its position, and the decimal and grouping separators all follow the currency and locale rather than being hard-coded.
+
+<Demo data={currencyDemo} />
+
+### Currency display
+
+How the currency is written: `symbol` (the default, `$`), `code` (`USD`), or `name` (`US dollars`).
+
+<Demo data={currencyDisplayDemo} />
+
+### Number without currency
+
+Render only the formatted number, without any currency symbol, code, or name. Locale-driven separators and decimal places are preserved.
+
+<Demo data={hideCurrencyDemo} />
+
+### Minor units
+
+Set `valueInMinorUnits` when your API returns integer cents, paise, or fils. Amount divides by the currency's own exponent, 100 for USD and 1 for JPY, so you never hard-code the divisor.
+
+<Demo data={valueInMinorUnitsDemo} />
+
+### Locale
+
+`locale` overrides the browser locale for one value. Useful when an invoice must render in the customer's locale rather than the viewer's.
+
+<Demo data={localeDemo} />
+
+### Whole units
+
+`hideDecimals` rounds to whole units. Use it in dense tables and summary figures where the fraction adds noise rather than precision.
+
+<Demo data={hideDecimalsDemo} />
+
+### Digit grouping
+
+Thousands separators are on by default. Set `groupDigits={false}` for identifiers and reference numbers, where grouping would misread as a quantity.
+
+<Demo data={groupDigitsDemo} />
+
+### Large numbers
+
+For numbers larger than JavaScript's safe integer limit (2^53 - 1), pass the value as a `string` (supports decimals) or a `bigint` (integer-only). BigInt values are always treated as already in major units, so `valueInMinorUnits` is ignored for them.
+
+<Demo data={largeNumbersDemo} />
+
+### With Text
+
+Amount renders a `span`, so it composes inside `Text` and inherits size, weight, and color from it.
+
+<Demo data={withTextDemo} />
+
 ## API Reference
 
 Formats and displays monetary values with locale and currency support.
@@ -43,52 +107,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | Slot | Element |
 |------|---------|
 | `amount` | The root `<span>` element |
-
-## Examples
-
-### Basic
-
-<Demo data={basicDemo} />
-
-### Currency Variants
-
-<Demo data={currencyDemo} />
-
-### valueInMinorUnits
-
-<Demo data={valueInMinorUnitsDemo} />
-
-### locale
-
-<Demo data={localeDemo} />
-
-### hideDecimals
-
-<Demo data={hideDecimalsDemo} />
-
-### currencyDisplay
-
-<Demo data={currencyDisplayDemo} />
-
-### hideCurrency
-
-Render only the formatted number, without any currency symbol, code, or name. Locale-driven separators and decimal places are preserved.
-
-<Demo data={hideCurrencyDemo} />
-
-### groupDigits
-
-<Demo data={groupDigitsDemo} />
-
-### Large Numbers
-
-For numbers larger than JavaScript's safe integer limit (2^53 - 1), pass the value as a `string` (supports decimals) or a `bigint` (integer-only). BigInt values are always treated as already in major units, so `valueInMinorUnits` is ignored for them.
-
-<Demo data={largeNumbersDemo} />
-
-### With Text
-
-<Demo data={withTextDemo} />
 
 ## Accessibility
 

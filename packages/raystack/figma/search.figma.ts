@@ -9,7 +9,7 @@ const findTextContent = (name: string) => {
   return t && t.type === 'TEXT' ? t.textContent : undefined;
 };
 
-// State Hover/Active are visual-only — only the filled states surface a typed value.
+// State Hover/Active are visual-only, and only the filled states surface a typed value.
 const placeholder = figma.selectedInstance.getEnum('State', {
   Default: findTextContent('Search...'),
   Active: findTextContent('Search...'),
@@ -19,7 +19,7 @@ const value = figma.selectedInstance.getEnum('State', {
   Filled: findTextContent('Search...'),
   Filled_Active: findTextContent('Search...')
 });
-// Search renders its own leading magnifying-glass icon — the Leading Icon
+// Search renders its own leading magnifying-glass icon, so the Leading Icon
 // boolean has no public prop, so it is intentionally not mapped.
 const size = figma.selectedInstance.getEnum('Size', {
   Small: 'small',

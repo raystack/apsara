@@ -8,7 +8,7 @@
   pointer-events: none;
 }
 
-/* Before the first step reveals, the dim is transparent — its hit strips must
+/* Before the first step reveals, the dim is transparent, so its hit strips must
    not swallow clicks while the page is still usable. */
 .overlay[data-entered="false"] .overlayHit {
   pointer-events: none;
@@ -28,7 +28,7 @@
 }
 
 /* The dimming layer is this element's box-shadow; the element itself is the
-   transparent cutout over the target. It never transitions position — it is
+   transparent cutout over the target. It never transitions position; it is
    repositioned instantly while the cutout is covered (see .spotlightCover). */
 .spotlight {
   position: absolute;
@@ -40,7 +40,7 @@
    and reopen without the surrounding dim ever changing. Open step: transparent
    (clear hole); between steps: opaque (hole dimmed closed). The cutout is
    repositioned to the next target while this cover is opaque, so the move is
-   never seen — a soft fade both ways, never a slide. */
+   never seen: a soft fade both ways, never a slide. */
 .spotlightCover {
   position: absolute;
   pointer-events: none;
@@ -68,7 +68,7 @@
 }
 
 /* Glide between step targets in `move` mode only, and not while the popup is
-   mounting — otherwise the first open would animate in from the viewport
+   mounting, since otherwise the first open would animate in from the viewport
    origin. `fade` mode repositions the card while it is hidden, so no glide. */
 @media (prefers-reduced-motion: no-preference) {
   .positioner[data-transition="move"]:has(.popup:not([data-starting-style])) {

@@ -11,7 +11,7 @@ describe('ScrollArea data-slot contract', () => {
       </ScrollArea>
     );
     // Corner only mounts when Base UI detects overflow on both axes, which
-    // jsdom's unmeasured layout never reports — its slot is exercised via
+    // jsdom's unmeasured layout never reports, so its slot is exercised via
     // source inspection rather than a DOM assertion here.
     expectSlots(container, [
       'scroll-area',

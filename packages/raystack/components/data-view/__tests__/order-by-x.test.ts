@@ -5,8 +5,8 @@ import { seededRandom } from './helpers';
 /**
  * `orderByX` returns indices ascending by `x`, ties broken by input order.
  *
- * It has two implementations behind one signature — a comparison sort below 64
- * items, a counting sort at or above it — so most of these run a differential
+ * It has two implementations behind one signature: a comparison sort below 64
+ * items, and a counting sort at or above it, so most of these run a differential
  * against `Array#sort`, which is the specification the counting sort has to
  * reproduce exactly (including the tie-break, which lane packing depends on).
  */
@@ -39,7 +39,7 @@ describe('orderByX', () => {
 
   it('agrees with itself either side of the counting-sort threshold', () => {
     // The implementation is chosen by item count, so the same data must order
-    // identically at 63 items and at 64 — otherwise adding one card silently
+    // identically at 63 items and at 64, since otherwise adding one card silently
     // repacks the lanes. Ties are dense here to put the tie-break under load.
     const items = Array.from({ length: BUCKET_SORT_MIN_ITEMS }, (_, i) => ({
       x: (i % 8) * 50
@@ -61,7 +61,7 @@ describe('orderByX', () => {
 
   it('matches a comparison sort when every x is negative', () => {
     // `minX` is negative, so the bucket index is driven entirely by the offset
-    // rather than by x itself — the case where a missing `- minX` still looks
+    // rather than by x itself, the case where a missing `- minX` still looks
     // correct on non-negative data.
     const random = seededRandom(13);
     const items = Array.from({ length: 400 }, () => ({
@@ -71,7 +71,7 @@ describe('orderByX', () => {
   });
 
   it('keeps input order when every item shares one x', () => {
-    // Zero extent — nothing to bucket by, and the tie-break is input order.
+    // Zero extent: nothing to bucket by, and the tie-break is input order.
     const items = Array.from({ length: 100 }, () => ({ x: 42 }));
     expect(Array.from(orderByX(items))).toEqual(
       Array.from({ length: 100 }, (_, i) => i)
@@ -102,7 +102,7 @@ describe('orderByX', () => {
   });
 
   it('still returns a usable permutation for non-finite x', () => {
-    // Non-finite geometry shouldn't reach here — x comes from the time scale —
+    // Non-finite geometry shouldn't reach here, since x comes from the time scale,
     // but a NaN must not corrupt the ordering of the cards around it or drop
     // an index, which would lose a card from the canvas entirely. Ordering
     // *among* non-finite values is not asserted: `a.x - b.x` is NaN for those

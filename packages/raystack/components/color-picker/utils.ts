@@ -138,7 +138,7 @@ export const getColorString = (color: ColorObject, mode: ModeType): string => {
     alpha: color.alpha ?? 1
   });
   if (!rgb) return '';
-  // clampRgb is culori's per-channel clip to [0, 1] — identical to the manual
+  // clampRgb is culori's per-channel clip to [0, 1], identical to the manual
   // clamp it replaces, keeping non-oklch output a valid representable value.
   const clipped = clampRgb(rgb);
 
@@ -152,7 +152,7 @@ export const getColorString = (color: ColorObject, mode: ModeType): string => {
 
 /**
  * Converts an OKLCH triple to a culori RGB object. The returned r/g/b channels
- * may fall outside [0, 1] when the input is outside the sRGB gamut — callers
+ * may fall outside [0, 1] when the input is outside the sRGB gamut, so callers
  * use that signal to detect and mark the gamut boundary.
  */
 export const oklchToRgb = (l: number, c: number, h: number) =>

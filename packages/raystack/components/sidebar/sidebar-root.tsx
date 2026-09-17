@@ -42,7 +42,7 @@ export function useSidebar(): SidebarContextValue {
 // Subcomponents rendered outside a <Sidebar> (stories, isolated tests,
 // standalone reuse of an item) worked before the context became nullable,
 // so they fall back to an expanded left sidebar instead of throwing.
-// Internal only — consumers get the throwing hook above.
+// Internal only. Consumers get the throwing hook above.
 const FALLBACK_CONTEXT: SidebarContextValue = {
   isCollapsed: false,
   isPeeking: false,
@@ -187,7 +187,7 @@ export function SidebarRoot({
     setIsPeeking(false);
   }, [open]);
 
-  // data-open/data-closed drive the visuals, so a peek counts as open —
+  // data-open/data-closed drive the visuals, so a peek counts as open,
   // every collapse-hiding CSS rule turns off during a peek for free. The
   // real state stays in `open` (and the toggle controls' aria-expanded).
   const visualOpen = open || isPeeking;

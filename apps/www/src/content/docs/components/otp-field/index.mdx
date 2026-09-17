@@ -2,7 +2,6 @@
 title: OTP Field
 description: A one-time password input split into individual character slots with automatic focus management.
 source: packages/raystack/components/otp-field
-tag: new
 ---
 
 import {
@@ -38,7 +37,67 @@ import { OTPField } from "@raystack/apsara";
 </OTPField>
 ```
 
+## Usage
+
+The field splits a code into slots and moves focus as the user types. The props below cover what a slot accepts and what happens once the last one fills.
+
+### With separator
+
+Group slots visually with `OTPField.Separator` to make long codes easier to read.
+
+<Demo data={separatorDemo} />
+
+### Masked
+
+Use `mask` to obscure entered characters, which suits sensitive codes.
+
+<Demo data={maskedDemo} />
+
+### Alphanumeric
+
+Use `validationType` to accept letters, digits, or both. Defaults to `"numeric"`.
+
+<Demo data={alphanumericDemo} />
+
+### Disabled
+
+`disabled` stops interaction across every slot at once, not just the focused one.
+
+<Demo data={disabledDemo} />
+
+### Read-only
+
+Set `readOnly` to display a value without allowing edits.
+
+<Demo data={readOnlyDemo} />
+
+### Controlled
+
+Pass `value` and `onValueChange` to control the field from React state.
+
+<Demo data={controlledDemo} />
+
+### Complete callback
+
+`onValueComplete` fires once all slots are filled. Combine with `autoSubmit` to submit the surrounding form automatically.
+
+<Demo data={onCompleteDemo} />
+
+### Custom normalization
+
+Provide `normalizeValue` to restrict input to a custom set of characters. It composes with `validationType` filtering, so set `validationType="none"` to rely on it entirely.
+
+<Demo data={customNormalizeDemo} />
+
+### With Field
+
+Compose with `Field` to get an associated label and description.
+
+<Demo data={withFieldDemo} />
+
 ## API Reference
+
+The inputs, with an optional separator between groups.
 
 ### Root
 
@@ -67,62 +126,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `otp-field` | The root container |
 | `otp-field-input` | Each `OTPField.Input` slot |
 | `otp-field-separator` | The `OTPField.Separator` element |
-
-## Examples
-
-### With separator
-
-Group slots visually with `OTPField.Separator` to make long codes easier to read.
-
-<Demo data={separatorDemo} />
-
-### Masked
-
-Use `mask` to obscure entered characters — useful for sensitive codes.
-
-<Demo data={maskedDemo} />
-
-### Alphanumeric
-
-Use `validationType` to accept letters, digits, or both. Defaults to `"numeric"`.
-
-<Demo data={alphanumericDemo} />
-
-### Disabled
-
-Set `disabled` to prevent interaction.
-
-<Demo data={disabledDemo} />
-
-### Read-only
-
-Set `readOnly` to display a value without allowing edits.
-
-<Demo data={readOnlyDemo} />
-
-### Controlled
-
-Pass `value` and `onValueChange` to control the field from React state.
-
-<Demo data={controlledDemo} />
-
-### Complete callback
-
-`onValueComplete` fires once all slots are filled. Combine with `autoSubmit` to submit the surrounding form automatically.
-
-<Demo data={onCompleteDemo} />
-
-### Custom normalization
-
-Provide `normalizeValue` to restrict input to a custom set of characters. It composes with `validationType` filtering — set `validationType="none"` to rely on it entirely.
-
-<Demo data={customNormalizeDemo} />
-
-### With Field
-
-Compose with `Field` to get an associated label and description.
-
-<Demo data={withFieldDemo} />
 
 ## Accessibility
 

@@ -29,7 +29,7 @@ const defaultContext: UseThemeProps = { setTheme: _ => {}, themes: [] };
  * Read the current theme state from the nearest `<Theme>` ancestor (default)
  * or from a specific ancestor by its `storageKey` when one is provided.
  *
- * `setTheme` from the return value updates *that* scope only — it never
+ * `setTheme` from the return value updates *that* scope only. It never
  * propagates outward. To flip the page-level theme from inside a scope,
  * pass the root provider's `storageKey` (default `"theme"`).
  */
@@ -105,7 +105,7 @@ const Scoped = ({
   );
 
   // Every active scope owns its theme state so `useTheme()` always targets
-  // the nearest scope — independent of persistence. Persistent scopes seed
+  // the nearest scope, independent of persistence. Persistent scopes seed
   // their state from localStorage on first mount; stateless ones start from
   // `defaultTheme` (or undefined) and live only in memory.
   const [stored, setStored] = useState<string | undefined>(() =>
@@ -158,7 +158,7 @@ const Scoped = ({
 
   // Layer scope overrides on top of the parent's context so `useTheme()`
   // inside the scope sees the effective values. Every active scope (persistent
-  // or with overrides) owns its own `theme`/`setTheme` — persistence is
+  // or with overrides) owns its own `theme`/`setTheme`, and persistence is
   // orthogonal. Scopes with a `storageKey` register themselves into `scopes`
   // so `useTheme({ storageKey })` can address them past the nearest one.
   const layered = useMemo<UseThemeProps | undefined>(() => {
@@ -198,7 +198,7 @@ const Scoped = ({
   if (!isPersistent && !hasOverrides) return <>{children}</>;
 
   // Mirror the layered (own + inherited) values onto the wrapper so CSS rules
-  // that combine attributes — e.g. `[data-accent-color='orange'][data-theme='dark']` —
+  // that combine attributes, for example `[data-accent-color='orange'][data-theme='dark']`,
   // match even when the consumer overrides only one attribute.
   return (
     <ThemeContext value={layered}>

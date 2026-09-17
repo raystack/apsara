@@ -54,7 +54,7 @@ export interface PromptInputActions {
 export interface PromptInputRootProps
   extends Omit<ComponentProps<'form'>, 'onSubmit'> {
   /**
-   * Controlled markup string — the same dialect `onValueChange` reports and
+   * Controlled markup string, the same dialect `onValueChange` reports and
    * `PromptInput.Editor` parses. Most consumers should stay uncontrolled.
    */
   value?: string;
@@ -72,7 +72,7 @@ export interface PromptInputRootProps
     details: { text: string; mentions: PromptInputMention[] }
   ) => void;
   /**
-   * Called with the trimmed message when the prompt is submitted — Enter in the
+   * Called with the trimmed message when the prompt is submitted. Enter in the
    * input or a click on `PromptInput.Submit`. Call
    * `event.currentTarget.reset()` to clear the composer after sending.
    */
@@ -250,7 +250,7 @@ export function PromptInputRoot({
     [setValueUnwrapped, withData]
   );
 
-  /** A value Root itself pushed — a form reset, or `actionsRef.clear()`. */
+  /** A value Root itself pushed, such as a form reset or `actionsRef.clear()`. */
   const applyValue = useCallback(
     (markup: string) => {
       const derived =
@@ -272,7 +272,7 @@ export function PromptInputRoot({
 
   // Reconciles a value that did not come from the part: a controlled prop the
   // consumer changed, or a controlled prop they did *not* change after a
-  // keystroke — in which case the part is asked to revert, which is what
+  // keystroke, in which case the part is asked to revert, which is what
   // `Textarea` has always done by rendering `value` straight through. Runs after
   // every render, because a controlled prop that stays put still needs it.
   useLayoutEffect(() => {
@@ -334,7 +334,7 @@ export function PromptInputRoot({
   // input. The header and footer are out of hit testing (see the stylesheet),
   // so a press on their padding lands on the form itself while their contents
   // keep their own. Handled on mousedown so focus never leaves the input and
-  // back again — that round trip would dismiss anything anchored to it.
+  // back again, since that round trip would dismiss anything anchored to it.
   const handleMouseDown = (event: MouseEvent<HTMLFormElement>) => {
     onMouseDown?.(event);
     if (event.defaultPrevented || disabled || event.button !== 0) return;
