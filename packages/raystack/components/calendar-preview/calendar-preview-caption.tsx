@@ -7,6 +7,7 @@ import {
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { type ReactNode, useEffect, useRef } from 'react';
+import { Separator } from '../separator';
 import styles from './calendar-preview.module.css';
 import {
   useCalendarPreviewContext,
@@ -135,6 +136,12 @@ function CaptionDropdown({
                 active: index === activeMonth,
                 onSelect: () => setMonth(monthStart(activeYear, index))
               }))}
+            />
+            <Separator
+              orientation='vertical'
+              decorative
+              className={styles['caption-divider']}
+              data-slot='calendar-preview-caption-divider'
             />
             <CaptionColumn
               slot='calendar-preview-caption-years'

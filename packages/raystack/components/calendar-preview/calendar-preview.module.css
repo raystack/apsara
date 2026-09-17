@@ -117,6 +117,13 @@
   box-shadow: var(--rs-shadow-lifted);
 }
 
+/* The popup is sized by its columns, so the separator's percentage height
+   resolves to nothing; stretching is what fills the row. */
+.caption-popup .caption-divider[data-orientation='vertical'] {
+  height: auto;
+  align-self: stretch;
+}
+
 .caption-column {
   display: flex;
   flex-direction: column;
