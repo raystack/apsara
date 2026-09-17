@@ -76,7 +76,7 @@ Font families are deliberately not a setting. They are customised through CSS va
 
 ### Radius
 
-Radius is a factor applied to a fixed base scale, so `radius="small"` means the same thing in every configuration.
+Radius is a factor applied to a fixed base scale, so `radius="small"` means the same thing in every configuration. Pill shapes follow two further rules, as in Radix Themes: controls such as `Button` and `Chip` become pills only at `full`, while round controls such as `Switch` and the `Slider` track stay round from `medium` up and square off at `none` and `small`. Surfaces such as `Dialog` and `Popover` never become pills, and `Radio` is always round.
 
 <Demo data={radiusDemo} />
 

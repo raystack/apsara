@@ -55,6 +55,7 @@ export const radiusDemo = {
         <Flex direction="column" gap={3} align="start">
           <Text>{radius}</Text>
           <Button>Primary</Button>
+          <Switch defaultChecked />
         </Flex>
       </ThemePreview>
     ))}

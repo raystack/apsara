@@ -19,20 +19,22 @@
   align-items: center;
 }
 
+/* Track, range and small thumb: round from `medium` up, square at `none` and
+   `small`; see theme.css. The large thumb is a grip and keeps the pill rule. */
 .track {
   position: relative;
   flex-grow: 1;
   height: var(--rs-space-2);
   background-color: var(--rs-color-background-neutral-secondary);
   margin: 0 var(--rs-space-4);
-  border-radius: var(--rs-radius-full);
+  border-radius: max(var(--rs-radius-1), var(--rs-radius-thumb, 9999px));
 }
 
 .indicator {
   position: absolute;
   height: 100%;
   background-color: var(--rs-color-background-accent-emphasis);
-  border-radius: var(--rs-radius-full);
+  border-radius: max(var(--rs-radius-1), var(--rs-radius-thumb, 9999px));
 }
 
 .thumb {
@@ -82,7 +84,7 @@
 .thumbSmall {
   width: var(--rs-space-3);
   height: var(--rs-space-5);
-  border-radius: var(--rs-radius-full);
+  border-radius: max(var(--rs-radius-1), var(--rs-radius-thumb, 9999px));
   background-color: var(--rs-color-background-base-primary);
   border: 0.5px solid var(--rs-color-border-base-tertiary);
   box-shadow: var(--rs-shadow-soft);

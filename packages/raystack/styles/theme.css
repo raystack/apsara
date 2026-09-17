@@ -48,10 +48,14 @@
   --rs-scaling: 1.1;
 }
 
-/* Radius. `--rs-radius-full` is the legacy pill token; `radius.css` overrides it. */
+/* Radius. Three pill tokens: `--rs-radius-pill` rounds controls only at `full`;
+   `--rs-radius-thumb` keeps round controls (Switch, Slider) round from `medium`
+   up and squares them at `none` and `small`, as Radix Themes does;
+   `--rs-radius-full` is the legacy pill token that `radius.css` overrides. */
 :where([data-theme]) {
   --rs-radius-factor: 1;
   --rs-radius-pill: 0px;
+  --rs-radius-thumb: 9999px;
 
   --rs-radius-1: calc(2px * var(--rs-scaling) * var(--rs-radius-factor));
   --rs-radius-2: calc(4px * var(--rs-scaling) * var(--rs-radius-factor));
@@ -65,22 +69,27 @@
 :where([data-radius="none"]) {
   --rs-radius-factor: 0;
   --rs-radius-pill: 0px;
+  --rs-radius-thumb: 0px;
 }
 :where([data-radius="small"]) {
   --rs-radius-factor: 0.75;
   --rs-radius-pill: 0px;
+  --rs-radius-thumb: 0px;
 }
 :where([data-radius="medium"]) {
   --rs-radius-factor: 1;
   --rs-radius-pill: 0px;
+  --rs-radius-thumb: 9999px;
 }
 :where([data-radius="large"]) {
   --rs-radius-factor: 1.5;
   --rs-radius-pill: 0px;
+  --rs-radius-thumb: 9999px;
 }
 :where([data-radius="full"]) {
   --rs-radius-factor: 1.5;
   --rs-radius-pill: 9999px;
+  --rs-radius-thumb: 9999px;
 }
 
 /* Surfaces and panel background */

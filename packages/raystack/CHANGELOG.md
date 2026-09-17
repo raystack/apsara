@@ -95,6 +95,9 @@ includes the migration guide.
   backdrop-filter tokens.
 - **Per-component `radius`** on Button, IconButton, Badge, Callout, Chip,
   Input, TextArea, Image, Avatar and the portalled `Content` sub-components.
+- **Round controls follow the theme radius.** `Switch` and the `Slider` track
+  and thumb are round from `medium` up and square at `none` and `small`, via
+  a new `--rs-radius-thumb` token. `Radio` stays round.
 - **`style-no-fonts.css`** is published alongside `style.css` for consumers
   that self-host or already load the fonts.
 
