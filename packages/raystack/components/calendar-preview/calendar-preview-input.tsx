@@ -103,6 +103,7 @@ export function CalendarPreviewInput({
     selection,
     commitDay,
     setEndpoint,
+    clearEndpoint,
     draft,
     activeField,
     setActiveField,
@@ -222,7 +223,10 @@ export function CalendarPreviewInput({
     if (text === null) return;
     const trimmed = text.trim();
     if (trimmed === '') {
-      if (clearable && value) setValue(null, 'clear', today);
+      if (clearable) {
+        if (isRange) clearEndpoint(field);
+        else if (value) setValue(null, 'clear', today);
+      }
       setText(null);
       report(VALID);
       return;

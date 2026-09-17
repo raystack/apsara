@@ -328,6 +328,8 @@ The click machine:
 
 Nothing here closes the popover. A commit leaves it open, so a second pick needs no second trip to the trigger. Escape and an outside press dismiss it; a press on the trigger does too, unless the trigger wraps an `.Input`, where it would close the field the user is still filling in.
 
+Emptying one field clears that endpoint and leaves the other drafted in its own field, so the range can be rebuilt without retyping both. The value emits `null` at that point — one endpoint is not a range. `clearable={false}` turns both this and click-to-deselect off.
+
 **Typing is stricter than clicking.** A click means "the next endpoint", so an earlier day restarts
 the range, as the table above says. Typing names the field it lands in, so an endpoint that crosses
 its partner is rejected instead: `onValidityChange` reports `out-of-order`, the field goes red, and

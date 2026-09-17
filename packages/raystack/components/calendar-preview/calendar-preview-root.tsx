@@ -219,8 +219,10 @@ interface CalendarPreviewSharedProps
    */
   today?: Date;
   /**
-   * Whether clicking the selected day deselects it. Day scale only — clicking
-   * a selected period re-commits it.
+   * Whether the selection can be emptied — by clicking the selected day, or by
+   * emptying an `.Input`. Day scale only for the click; clicking a selected
+   * period re-commits it. Emptying one field of a range clears that endpoint
+   * and leaves the other drafted.
    * @defaultValue true
    */
   clearable?: boolean;
@@ -565,6 +567,23 @@ export function CalendarPreviewRoot({
         return;
       }
 
+      /* An emptied field leaves its partner drafted alone; a click fills the
+         hole rather than throwing the endpoint the user kept away. */
+      const lone = draft && !draft.from ? draft.to : undefined;
+      if (lone) {
+        if (fieldReadOnly.start) return;
+        const ordered = dayKey(date, timeZone) <= dayKey(lone, timeZone);
+        if (!ordered || spans(date, lone)) {
+          setDraft({ from: date });
+          setActiveField('end');
+          return;
+        }
+        setDraft(null);
+        setActiveField('start');
+        setValue({ from: date, to: lone }, 'select', date);
+        return;
+      }
+
       const from = draft?.from;
       if (!from || draft?.to) {
         if (fieldReadOnly.start) return;
@@ -714,6 +733,19 @@ export function CalendarPreviewRoot({
     [value, draft, fieldReadOnly, timeZone, readOnly, disabled, setValue]
   );
 
+  const clearEndpoint = useCallback(
+    (field: CalendarPreviewField) => {
+      if (readOnly || disabled || fieldReadOnly[field]) return;
+      const base = draft ?? (isRange(value) ? value : null);
+      const kept = field === 'start' ? { to: base?.to } : { from: base?.from };
+      setDraft(kept.from || kept.to ? kept : null);
+      setActiveField(field);
+      /* One endpoint short of a range, so nothing valid is left to emit. */
+      if (isRange(value)) setValue(null, 'clear', monthAnchor(value) ?? today);
+    },
+    [value, draft, fieldReadOnly, readOnly, disabled, setValue, today]
+  );
+
   /* `'reset'`, not `'select'`: restoring the default is not a pick, and a
      consumer that logs or validates on selection needs to tell them apart. */
   const reset = useCallback(() => {
@@ -764,6 +796,7 @@ export function CalendarPreviewRoot({
       selectDay,
       commitDay,
       setEndpoint,
+      clearEndpoint,
       draft: draft ?? (isRange(value) ? value : null),
       activeField,
       setActiveField,
@@ -804,6 +837,7 @@ export function CalendarPreviewRoot({
       selectDay,
       commitDay,
       setEndpoint,
+      clearEndpoint,
       draft,
       activeField,
       fieldReadOnly,

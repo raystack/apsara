@@ -264,7 +264,7 @@ export function CalendarPreviewGrid({
             {...base}
             mode='range'
             required={false}
-            selected={draft ?? undefined}
+            selected={draft ? { from: draft.from, to: draft.to } : undefined}
             onSelect={handleSelect}
           />
         ) : clearable ? (

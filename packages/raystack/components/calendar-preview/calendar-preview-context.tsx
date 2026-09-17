@@ -33,9 +33,10 @@ export interface CalendarPreviewDateRange {
   to: Date;
 }
 
-/** A range mid-build. `to` is absent until the second click lands. */
+/** A range mid-build. Either edge may be absent: `to` until the second click
+    lands, `from` once a field has been emptied. */
 export interface CalendarPreviewDraftRange {
-  from: Date;
+  from?: Date;
   to?: Date;
 }
 
@@ -117,6 +118,8 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
   commitDay: (date: Date, reason: CalendarPreviewChangeReason) => void;
   /** Writes one named endpoint, for a typed `.Input`. */
   setEndpoint: (field: CalendarPreviewField, date: Date) => void;
+  /** Empties one endpoint, leaving the other drafted. */
+  clearEndpoint: (field: CalendarPreviewField) => void;
   /**
    * The range as the grid should draw it — the draft while one is being built,
    * the committed value otherwise. Never emitted; the track between endpoints

@@ -634,3 +634,72 @@ describe('CalendarPreview range and days it may not cover', () => {
     expect(last.reason).toBe('unavailable');
   });
 });
+
+describe('CalendarPreview range emptying one field', () => {
+  const RANGE = { from: new Date(2026, 7, 10), to: new Date(2026, 7, 20) };
+
+  function renderFields(props = {}) {
+    const utils = renderRange(
+      { defaultValue: RANGE, ...props },
+      <>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input field='start' />
+          <CalendarPreview.Input field='end' />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Days />
+      </>
+    );
+    const [start, end] = getAllSlots(
+      utils.container,
+      'calendar-preview-input'
+    ) as HTMLInputElement[];
+    return { ...utils, start, end };
+  }
+
+  const empty = (input: HTMLInputElement) => {
+    fireEvent.change(input, { target: { value: '' } });
+    fireEvent.blur(input);
+  };
+
+  it('keeps the partner endpoint in its field', () => {
+    const { start, end } = renderFields();
+    empty(start);
+    expect(start.value).toBe('');
+    expect(end.value).toBe('20 Aug 2026');
+  });
+
+  it('emits null once the range can no longer be formed', () => {
+    const onValueChange = vi.fn();
+    const { start } = renderFields({ onValueChange });
+    empty(start);
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+    expect(onValueChange.mock.calls[0][0]).toBeNull();
+  });
+
+  it('completes again from a grid click without losing the kept endpoint', () => {
+    const onValueChange = vi.fn();
+    const { container, start } = renderFields({ onValueChange });
+    empty(start);
+    fireEvent.click(day(container, '12'));
+    const calls = onValueChange.mock.calls;
+    expect(calls[calls.length - 1][0]).toEqual({
+      from: new Date(2026, 7, 12),
+      to: new Date(2026, 7, 20)
+    });
+  });
+
+  it('restarts when the click crosses the kept endpoint', () => {
+    const onValueChange = vi.fn();
+    const { container, start } = renderFields({ onValueChange });
+    empty(start);
+    fireEvent.click(day(container, '25'));
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+  });
+
+  it('leaves both fields alone when clearable is off', () => {
+    const { start, end } = renderFields({ clearable: false });
+    empty(start);
+    expect(start.value).toBe('10 Aug 2026');
+    expect(end.value).toBe('20 Aug 2026');
+  });
+});
