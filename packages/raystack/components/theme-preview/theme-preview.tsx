@@ -29,13 +29,13 @@ import {
 import { createThemeScript, THEME_ID_ATTRIBUTE } from './script';
 import {
   assignSetting,
-  DEFAULT_SETTINGS,
   ROOT_ATTRIBUTE,
   resolveSettings,
-  SETTING_VALUES,
   settingsToAttributes,
   THEME_CLASS,
+  THEME_DEFAULT_SETTINGS,
   THEME_SETTING_KEYS,
+  THEME_SETTING_VALUES,
   type ThemeSettingKey,
   type ThemeSettings
 } from './settings';
@@ -56,7 +56,7 @@ export interface ThemePreviewProps
   extends Omit<HTMLAttributes<HTMLElement>, 'defaultValue' | 'onChange'> {
   /** Seeds uncontrolled keys. A stored user choice overrides it. */
   defaultValue?: Partial<ThemeSettings>;
-  /** Per-key control. Wins over storage, never persisted or scripted. */
+  /** Per-key control. Wins over storage and is never persisted. */
   value?: Partial<ThemeSettings>;
   /**
    * Fires when `setValue` requests a change. Controlled keys are reported but
@@ -115,7 +115,7 @@ function resolvePrecedence(
   local: Partial<ThemeSettings>,
   seed: Partial<ThemeSettings> | undefined
 ): ThemeSettings {
-  const next = { ...(inherited ?? DEFAULT_SETTINGS) };
+  const next = { ...(inherited ?? THEME_DEFAULT_SETTINGS) };
   for (const key of THEME_SETTING_KEYS) {
     const value = controlled?.[key] ?? stored[key] ?? local[key] ?? seed?.[key];
     if (value !== undefined) assignSetting(next, key, value);
@@ -279,7 +279,7 @@ export function ThemePreview({
       for (const key of THEME_SETTING_KEYS) {
         const candidate = next[key];
         if (candidate === undefined) continue;
-        const allowed: readonly string[] = SETTING_VALUES[key];
+        const allowed: readonly string[] = THEME_SETTING_VALUES[key];
         if (!allowed.includes(candidate) || current[key] === candidate) {
           continue;
         }
@@ -345,12 +345,20 @@ export function ThemePreview({
     nonce
   );
 
+  // What the server rendered from, before storage is consulted.
+  const seed = useStableSettings(
+    resolvePrecedence(
+      parent?.value,
+      value,
+      EMPTY_PATCH,
+      EMPTY_PATCH,
+      defaultValue
+    )
+  );
   const script = useMemo(
     () =>
-      persistKey
-        ? createThemeScript({ persistKey, keys: persistedKeys, elementId })
-        : null,
-    [persistKey, persistedKeys, elementId]
+      createThemeScript({ persistKey, keys: persistedKeys, seed, elementId }),
+    [persistKey, persistedKeys, seed, elementId]
   );
 
   const elementRef = useRef<HTMLElement | null>(null);

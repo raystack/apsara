@@ -1,8 +1,8 @@
 import { Field as FieldPrimitive } from '@base-ui/react/field';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ChangeEvent, type ComponentProps } from 'react';
+import { radiusVariants } from '../../shared/radius';
 import { useFieldContext } from '../field';
-import { radiusVariants } from '../theme-preview/radius';
 
 import styles from './text-area.module.css';
 

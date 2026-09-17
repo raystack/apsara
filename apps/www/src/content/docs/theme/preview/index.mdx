@@ -39,7 +39,7 @@ export default function App() {
 }
 ```
 
-Tokens live on the element `ThemePreview` renders, so everything that needs them must be inside it. Consumer CSS and hand-rolled portals mounted outside the provider will not resolve `--rs-*`; the `container` prop on every portalling component is the supported way to place portalled content back inside the theme.
+Tokens live on the element `ThemePreview` renders, so everything that needs them must be inside it. Consumer CSS and hand-rolled portals mounted outside the provider will not resolve `--rs-*`; the portalling components re-emit the theme onto their own popups, so only your own portals need moving inside.
 
 ## Theme panel
 
@@ -120,7 +120,7 @@ Sharing a `persistKey` is a supported feature, not a hazard — it is exactly wh
 
 ## Server rendering
 
-Every setting is an ordinary prop, so React server-renders the seeded values on the first byte. What the server cannot know is what the browser has **stored**. The inline script closes that gap: it runs before first paint, reads the namespace, and patches every persisted, uncontrolled setting it finds there. A setting with nothing stored keeps the server-rendered value until React mounts, so on a first visit the default `appearance: "system"` paints light before the OS preference is applied.
+Every setting is an ordinary prop, so React server-renders the seeded values on the first byte. Two things the server cannot know: what the browser has **stored**, and which way the OS leans when appearance is `system`. The inline script closes both gaps before first paint. It reads the namespace and patches every persisted, uncontrolled setting it finds there, and where nothing is stored it resolves a `system` appearance against `prefers-color-scheme`. A first visit on a dark OS therefore paints dark instead of flashing light.
 
 ```tsx
 // Next.js App Router: app/layout.tsx
@@ -139,7 +139,7 @@ export default function RootLayout({ children }) {
 
 No `suppressHydrationWarning` on `<html>` is needed: nothing is written there. The theme element carries it itself, which suppresses attribute diffs exactly one level deep.
 
-The script renders as the theme element's first child and patches its own parent. It is emitted only for a theme with a `persistKey`, and then only for that namespace's uncontrolled settings — a consumer reading appearance from a cookie ships no script at all. Pass `nonce` if your CSP requires one.
+The script renders as the theme element's first child and patches its own parent. It is emitted when the theme has a `persistKey` with uncontrolled settings to read, or when its appearance is `system`. A theme with a pinned light or dark appearance and no persistence, such as one reading appearance from a cookie, ships no script at all. Pass `nonce` if your CSP requires one.
 
 ## Scoping
 
@@ -237,13 +237,7 @@ It lives on the portalled sub-component rather than the root because a portal ca
 
 ## Portals
 
-Every portalling component exposes a `container` prop, so portalled content can be placed inside a subtree you control:
-
-```tsx
-<Popover.Content container={panelRef}>…</Popover.Content>
-```
-
-You rarely need it for theming — the inherited theme is re-emitted onto the portalled element automatically — but it is the supported way to keep portalled content inside a specific scroll container, dialog, or shadow root.
+Theme values travel through React context, not the DOM, so a portalled popup would otherwise land in `document.body` where no `--rs-*` token is defined. Every portalling component re-emits the inherited theme onto its portalled element automatically: the popup carries the same `rs-theme` class and data attributes as its nearest `ThemePreview`, so a popover opened inside a dark scope is dark. Nothing is required from you.
 
 ## Panel background
 
@@ -411,13 +405,13 @@ root.setValue({ appearance: "dark" });
 `Image` and `Avatar` had bespoke radius scales disconnected from the theme; both now use the shared five values.
 
 - **`Image`** — `none`, `medium` and `full` are unchanged; `small` is now 0.75× the base step rather than a separate token, and `large` is new.
-- **`Avatar`** — the default moves from `small` to `medium`, which renders exactly as the old default did. An explicit `radius="small"` is now slightly tighter; `full` is unchanged.
+- **`Avatar`** — no default `radius` any more, so it follows the theme radius like every other component, with a base step that still grows with `size`. An explicit `radius` overrides as before; `full` is unchanged.
 
 ### Other things to know
 
-- Tokens are no longer on `<html>`, so consumer CSS and hand-rolled portals living outside the provider stop resolving `--rs-*`. Move them inside, or use a `container` prop.
+- Tokens are no longer on `<html>`, so consumer CSS and hand-rolled portals living outside the provider stop resolving `--rs-*`. Move them inside the provider.
 - `useThemePreview` throws outside a provider instead of returning a no-op.
-- The mono font stack now puts JetBrains Mono ahead of Menlo, so the imported face actually renders on macOS.
+- `persistKey` reads only the JSON entry `ThemePreview` writes. A bare theme name that `Theme` stored under the same key is ignored, so a migrated user starts from the seed once. Use a fresh `persistKey` if that matters.
 
 ## API Reference
 

@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { radiusClasses } from '../../theme-preview/radius';
+import { radiusClasses } from '../../../shared/radius';
 import { Image } from '../image';
 import styles from '../image.module.css';
 

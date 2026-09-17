@@ -145,37 +145,29 @@ export { Tabs } from './components/tabs';
 export { Text } from './components/text';
 export { TextArea } from './components/text-area';
 export {
-  ACCENT_COLORS,
   type AccentColor,
-  APPEARANCE_VALUES,
   type Appearance,
   type AppearanceSetting,
-  DEFAULT_SETTINGS,
-  GRAY_COLOR_VALUES,
-  GRAY_COLORS,
-  GRAY_PAIRING,
+  createThemeScript,
   type GrayColor,
   type GrayColorSetting,
-  PANEL_BACKGROUNDS,
   type PanelBackground,
-  type PortalContainer,
-  RADII,
   type Radius,
-  REDUCED_MOTION_VALUES,
   type ReducedMotion,
   type ResolvedThemeSettings,
-  radiusClass,
-  radiusClasses,
-  radiusVariants,
-  SCALINGS,
   type Scaling,
+  THEME_DEFAULT_SETTINGS,
   THEME_SETTING_KEYS,
+  THEME_SETTING_VALUES,
+  type ThemeContextValue,
   type ThemeHandle,
+  type ThemeInjectionProps,
   ThemePreview,
   type ThemePreviewProps,
   ThemePreviewSwitcher,
   type ThemePreviewSwitcherProps,
   type ThemeRenderProp,
+  type ThemeScriptParams,
   type ThemeSettingKey,
   type ThemeSettings,
   type UseThemePreviewReturn,
@@ -215,3 +207,4 @@ export {
 } from './icons/create-icon';
 export * from './icons/icons';
 export type { IconName } from './icons/types';
+export { radiusClass } from './shared/radius';

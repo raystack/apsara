@@ -23,8 +23,10 @@ describe('ThemePreview data-slot contract', () => {
     expectSlots(container, ['theme-preview']);
   });
 
-  it('exposes the script slot only for a persisted namespace', () => {
-    const { container: plain } = render(<ThemePreview>child</ThemePreview>);
+  it('exposes the script slot only when there is something to patch', () => {
+    const { container: plain } = render(
+      <ThemePreview defaultValue={{ appearance: 'light' }}>child</ThemePreview>
+    );
     expect(getSlot(plain, 'theme-preview-script')).toBeNull();
 
     const { container: persisted } = render(

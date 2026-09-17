@@ -37,23 +37,31 @@ function readRaw(persistKey: string): string | null {
   }
 }
 
-// Tolerates any stored shape.
-function parseEntry(raw: string | null): Record<string, unknown> {
-  if (!raw) return {};
+// Tolerates any stored shape; `null` when nothing usable is there.
+function readEntry(raw: string | null): StoredEntry | null {
+  if (!raw) return null;
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw);
   } catch {
     // Includes the legacy bare theme name.
-    return {};
+    return null;
   }
   if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
-    return {};
+    return null;
   }
   const entry = parsed as Partial<StoredEntry>;
-  if (typeof entry.v !== 'number' || entry.v > STORAGE_VERSION) return {};
-  if (typeof entry.settings !== 'object' || entry.settings === null) return {};
-  return entry.settings as Record<string, unknown>;
+  if (typeof entry.v !== 'number') return null;
+  if (typeof entry.settings !== 'object' || entry.settings === null)
+    return null;
+  return { v: entry.v, settings: entry.settings as Record<string, unknown> };
+}
+
+// A newer schema reads as empty: this build cannot vouch for its fields.
+function parseEntry(raw: string | null): Record<string, unknown> {
+  const entry = readEntry(raw);
+  if (!entry || entry.v > STORAGE_VERSION) return {};
+  return entry.settings;
 }
 
 /** The client snapshot, identity-stable while the stored string is unchanged. */
@@ -78,7 +86,7 @@ export function readServerSettings(): Partial<ThemeSettings> {
 
 /**
  * Merges `patch` into the namespace for the `allowed` keys only. Returns
- * `false` when storage refused the write.
+ * `false` when storage refused the write or already holds a newer schema.
  */
 export function writeStoredSettings(
   persistKey: string,
@@ -86,7 +94,10 @@ export function writeStoredSettings(
   patch: Partial<ThemeSettings>
 ): boolean {
   if (typeof window === 'undefined') return false;
-  const settings = parseEntry(readRaw(persistKey));
+  const existing = readEntry(readRaw(persistKey));
+  // Never downgrade: rewriting a newer entry would destroy what that build owns.
+  if (existing && existing.v > STORAGE_VERSION) return false;
+  const settings = existing?.settings ?? {};
   let changed = false;
   for (const key of allowed) {
     const next = patch[key];

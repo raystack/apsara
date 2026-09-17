@@ -55,6 +55,7 @@
 .drawerPopup {
   box-sizing: border-box;
   padding: var(--rs-space-3);
+  --rs-radius-step: 4px;
   background-color: var(--rs-color-panel);
   backdrop-filter: var(--rs-panel-backdrop-filter);
   color: var(--rs-color-foreground-base-primary);
@@ -83,6 +84,7 @@
 .drawerPopup-right {
   width: 250px;
   height: 100%;
+  border-radius: var(--rs-radius-2) 0 0 var(--rs-radius-2);
   transform: translateX(var(--drawer-swipe-movement-x));
 }
 
@@ -97,6 +99,7 @@
 .drawerPopup-left {
   width: 250px;
   height: 100%;
+  border-radius: 0 var(--rs-radius-2) var(--rs-radius-2) 0;
   transform: translateX(var(--drawer-swipe-movement-x));
 }
 
@@ -111,6 +114,7 @@
 .drawerPopup-top {
   width: 100%;
   height: 300px;
+  border-radius: 0 0 var(--rs-radius-2) var(--rs-radius-2);
   transform: translateY(var(--drawer-swipe-movement-y));
 }
 
@@ -125,6 +129,7 @@
 .drawerPopup-bottom {
   width: 100%;
   height: 300px;
+  border-radius: var(--rs-radius-2) var(--rs-radius-2) 0 0;
   transform: translateY(var(--drawer-swipe-movement-y));
 }
 
@@ -133,6 +138,29 @@
     var(--drawer-swipe-strength, 1) *
     var(--rs-duration-drawer)
   );
+}
+
+/* A sheet sits flush against one viewport edge, so only its two free corners
+   round. Tripled selectors: the shared `radius` override writes the shorthand
+   at (0,2,0), and the flush corners must stay square under it too. */
+.drawerPopup-right.drawerPopup-right.drawerPopup-right {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.drawerPopup-left.drawerPopup-left.drawerPopup-left {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.drawerPopup-top.drawerPopup-top.drawerPopup-top {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.drawerPopup-bottom.drawerPopup-bottom.drawerPopup-bottom {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .content {

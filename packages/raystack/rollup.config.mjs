@@ -1,6 +1,7 @@
 import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
+import autoprefixer from 'autoprefixer';
 import postcssImport from 'postcss-import';
 import nodeExternals from 'rollup-plugin-node-externals';
 import postcss from 'rollup-plugin-postcss';
@@ -22,7 +23,7 @@ const createPlugins = ({ rootDir, declarationDir }) => [
   nodeResolve(),
   commonjs(),
   postcss({
-    plugins: [postcssImport()],
+    plugins: [postcssImport(), autoprefixer()],
     extract: 'style.css',
     minimize: true,
     autoModules: true, // Auto process files ending with .module.css

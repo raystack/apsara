@@ -1,7 +1,7 @@
 import { cva, VariantProps } from 'class-variance-authority';
 import { ComponentProps } from 'react';
+import { radiusVariants } from '../../shared/radius';
 import { Flex } from '../flex';
-import { radiusVariants } from '../theme-preview/radius';
 import styles from './icon-button.module.css';
 
 const iconButton = cva(styles.iconButton, {

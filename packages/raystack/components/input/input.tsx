@@ -1,9 +1,9 @@
 import { Input as InputPrimitive } from '@base-ui/react/input';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ReactNode, RefObject } from 'react';
+import { radiusVariants } from '../../shared/radius';
 import { Chip } from '../chip';
 import { useFieldContext } from '../field';
-import { radiusVariants } from '../theme-preview/radius';
 import styles from './input.module.css';
 
 const inputWrapper = cva(styles['input-wrapper'], {

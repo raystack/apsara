@@ -1,16 +1,9 @@
 'use client';
 
-import { type RefObject, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { useThemeContextOrNull } from './context';
 import { settingsToAttributes, THEME_CLASS } from './settings';
-
-/** Where a portalling component puts its content. */
-export type PortalContainer =
-  | HTMLElement
-  | ShadowRoot
-  | null
-  | RefObject<HTMLElement | ShadowRoot | null>;
 
 export interface ThemeInjectionProps {
   className: string;

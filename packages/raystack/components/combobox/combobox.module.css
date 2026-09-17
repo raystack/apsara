@@ -10,7 +10,7 @@
   background-color: var(--rs-color-panel);
   backdrop-filter: var(--rs-panel-backdrop-filter);
   --rs-radius-step: 4px;
-  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
+  border-radius: var(--rs-radius-2);
   box-shadow: var(--rs-shadow-soft);
   border: 0.5px solid var(--rs-color-border-base-primary);
   /* Todo: var does not exist for 320px */
@@ -64,7 +64,7 @@
   color: var(--rs-color-foreground-base-primary);
   white-space: normal;
   word-break: break-word;
-  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-1));
+  border-radius: var(--rs-radius-1);
 }
 
 .menuitem[data-highlighted] {

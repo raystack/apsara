@@ -9,12 +9,8 @@ import {
   useMemo,
   useRef
 } from 'react';
-import {
-  type PortalContainer,
-  useThemeInjection
-} from '../theme-preview/portal';
-import { radiusClass } from '../theme-preview/radius';
-import type { Radius } from '../theme-preview/settings';
+import { type Radius, radiusClass } from '../../shared/radius';
+import { useThemeInjection } from '../theme-preview/portal';
 import styles from './tour.module.css';
 import { useTourContext } from './tour-context';
 import { TourDefaultLayout } from './tour-parts';
@@ -40,8 +36,6 @@ export interface TourContentProps {
    * `Tour.Description`, `Tour.Progress` and the navigation buttons.
    */
   children?: ReactNode | ((props: TourRenderProps) => ReactNode);
-  /** Portals into this element instead of `document.body`. */
-  container?: PortalContainer;
   /** Corner radius for this card only. Overrides the theme's `radius`. */
   radius?: Radius;
 }
@@ -53,7 +47,6 @@ export function TourContent({
   showArrow = false,
   className,
   style,
-  container,
   radius,
   children
 }: TourContentProps) {
@@ -116,7 +109,7 @@ export function TourContent({
         if (eventDetails.reason === 'escape-key') actions.stop();
       }}
     >
-      <PopoverPrimitive.Portal container={container}>
+      <PopoverPrimitive.Portal>
         <PopoverPrimitive.Positioner
           data-slot='tour-positioner'
           anchor={detached ? centerAnchor : anchor}

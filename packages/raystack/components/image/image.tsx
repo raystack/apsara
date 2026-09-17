@@ -4,7 +4,7 @@ import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ComponentProps, SyntheticEvent, useRef, useState } from 'react';
 import { useIsomorphicLayoutEffect } from '~/hooks';
 
-import { radiusVariants } from '../theme-preview/radius';
+import { radiusVariants } from '../../shared/radius';
 import styles from './image.module.css';
 
 const image = cva(styles.image, {

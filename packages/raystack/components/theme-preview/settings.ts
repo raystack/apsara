@@ -1,11 +1,12 @@
 /** Single source of truth for setting names, defaults, attributes and values. */
 
+import { RADII, type Radius } from '../../shared/radius';
+
 export const APPEARANCES = ['light', 'dark'] as const;
 export const APPEARANCE_VALUES = ['light', 'dark', 'system'] as const;
 export const ACCENT_COLORS = ['indigo', 'orange', 'mint'] as const;
 export const GRAY_COLORS = ['gray', 'mauve', 'slate', 'sage'] as const;
 export const GRAY_COLOR_VALUES = [...GRAY_COLORS, 'auto'] as const;
-export const RADII = ['none', 'small', 'medium', 'large', 'full'] as const;
 export const SCALINGS = ['0.9', '0.95', '1', '1.05', '1.1'] as const;
 export const PANEL_BACKGROUNDS = ['solid', 'translucent'] as const;
 export const REDUCED_MOTION_VALUES = ['true', 'false', 'system'] as const;
@@ -17,7 +18,7 @@ export type AccentColor = (typeof ACCENT_COLORS)[number];
 /** Gray with `auto` resolved. */
 export type GrayColor = (typeof GRAY_COLORS)[number];
 export type GrayColorSetting = (typeof GRAY_COLOR_VALUES)[number];
-export type Radius = (typeof RADII)[number];
+export { RADII, type Radius };
 export type Scaling = (typeof SCALINGS)[number];
 export type PanelBackground = (typeof PANEL_BACKGROUNDS)[number];
 export type ReducedMotion = (typeof REDUCED_MOTION_VALUES)[number];
@@ -52,7 +53,7 @@ export const THEME_SETTING_KEYS = [
   'reducedMotion'
 ] as const satisfies readonly ThemeSettingKey[];
 
-export const DEFAULT_SETTINGS: ThemeSettings = {
+export const THEME_DEFAULT_SETTINGS: ThemeSettings = {
   appearance: 'system',
   accentColor: 'indigo',
   grayColor: 'auto',
@@ -73,7 +74,7 @@ export const SETTING_ATTRIBUTES = {
 } as const satisfies Record<ThemeSettingKey, string>;
 
 /** Legal values per setting. */
-export const SETTING_VALUES = {
+export const THEME_SETTING_VALUES = {
   appearance: APPEARANCE_VALUES,
   accentColor: ACCENT_COLORS,
   grayColor: GRAY_COLOR_VALUES,
@@ -106,7 +107,7 @@ export function coerceSetting<K extends ThemeSettingKey>(
   key: K,
   value: unknown
 ): ThemeSettings[K] | undefined {
-  const allowed: readonly string[] = SETTING_VALUES[key];
+  const allowed: readonly string[] = THEME_SETTING_VALUES[key];
   return typeof value === 'string' && allowed.includes(value)
     ? (value as ThemeSettings[K])
     : undefined;

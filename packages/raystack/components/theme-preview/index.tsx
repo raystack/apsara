@@ -4,37 +4,22 @@ export {
   type UseThemePreviewReturn,
   useThemePreview
 } from './context';
-export {
-  type PortalContainer,
-  type ThemeInjectionProps,
-  useThemeInjection
-} from './portal';
-export { radiusClass, radiusClasses, radiusVariants } from './radius';
+export { type ThemeInjectionProps, useThemeInjection } from './portal';
 export { createThemeScript, type ThemeScriptParams } from './script';
 export {
-  ACCENT_COLORS,
   type AccentColor,
-  APPEARANCE_VALUES,
-  APPEARANCES,
   type Appearance,
   type AppearanceSetting,
-  DEFAULT_SETTINGS,
-  GRAY_COLOR_VALUES,
-  GRAY_COLORS,
-  GRAY_PAIRING,
   type GrayColor,
   type GrayColorSetting,
-  PANEL_BACKGROUNDS,
   type PanelBackground,
-  RADII,
   type Radius,
-  REDUCED_MOTION_VALUES,
   type ReducedMotion,
   type ResolvedThemeSettings,
-  resolveSettings,
-  SCALINGS,
   type Scaling,
+  THEME_DEFAULT_SETTINGS,
   THEME_SETTING_KEYS,
+  THEME_SETTING_VALUES,
   type ThemeSettingKey,
   type ThemeSettings
 } from './settings';

@@ -2,12 +2,8 @@
 
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import {
-  type PortalContainer,
-  useThemeInjection
-} from '../theme-preview/portal';
-import { radiusClass } from '../theme-preview/radius';
-import type { Radius } from '../theme-preview/settings';
+import { type Radius, radiusClass } from '../../shared/radius';
+import { useThemeInjection } from '../theme-preview/portal';
 import styles from './combobox.module.css';
 import { useComboboxContext } from './combobox-root';
 
@@ -17,8 +13,6 @@ export interface ComboboxContentProps
       'render' | 'className' | 'style'
     >,
     ComboboxPrimitive.Popup.Props {
-  /** Portals into this element instead of `document.body`. */
-  container?: PortalContainer;
   /** Corner radius for this popup only. Overrides the theme's `radius`. */
   radius?: Radius;
 }
@@ -32,14 +26,13 @@ export const ComboboxContent = ({
   initialFocus,
   finalFocus,
   sideOffset = 4,
-  container,
   radius,
   ...positionerProps
 }: ComboboxContentProps) => {
   const { inputContainerRef } = useComboboxContext();
   const theme = useThemeInjection();
   return (
-    <ComboboxPrimitive.Portal container={container}>
+    <ComboboxPrimitive.Portal>
       <ComboboxPrimitive.Positioner
         sideOffset={sideOffset}
         className={styles.positioner}

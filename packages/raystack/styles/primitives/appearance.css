@@ -4,9 +4,9 @@
  * All variables must be used from colors.css file only.
  */
 
-/* Smooth theme switch transition — applies regardless of which theme is active */
-[data-theme="light"],
-[data-theme="dark"] {
+/* Smooth theme switch transition. Zero specificity like every other theme rule,
+   so a component's own `transition` shorthand always wins over it. */
+:where([data-theme="light"], [data-theme="dark"]) {
   transition:
     background-color var(--rs-duration-slow) ease,
     color var(--rs-duration-slow) ease;

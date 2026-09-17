@@ -10,7 +10,7 @@ import {
   useRef,
   useState
 } from 'react';
-import { radiusVariants } from '../theme-preview/radius';
+import { radiusVariants } from '../../shared/radius';
 import styles from './avatar.module.css';
 import { AVATAR_COLORS } from './utils';
 

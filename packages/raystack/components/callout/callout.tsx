@@ -9,9 +9,8 @@ import {
   useState
 } from 'react';
 import { InfoIcon, XIcon } from '~/icons';
-
+import { radiusVariants } from '../../shared/radius';
 import { IconButton } from '../icon-button';
-import { radiusVariants } from '../theme-preview/radius';
 import styles from './callout.module.css';
 
 /** Exit duration. Keep in sync with --rs-duration-normal (styles/effects.css:38). */

@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  ACCENT_COLORS,
   Avatar,
   Badge,
   Button,
@@ -9,25 +8,20 @@ import {
   Checkbox,
   Chip,
   Flex,
-  GRAY_COLOR_VALUES,
   Input,
-  PANEL_BACKGROUNDS,
   Popover,
   Progress,
-  RADII,
-  SCALINGS,
   Select,
   Separator,
   Switch,
   Text,
+  THEME_SETTING_VALUES,
   ThemePreview,
   type ThemeSettings,
   Tooltip,
   useThemePreview
 } from '@raystack/apsara';
 import { useState } from 'react';
-
-const APPEARANCES = ['light', 'dark', 'system'] as const;
 
 function Controls() {
   const { value, resolved, setValue } = useThemePreview();
@@ -61,13 +55,17 @@ function Controls() {
 
   return (
     <Flex direction='column' gap={4} style={{ minWidth: 200 }}>
-      {field('Appearance', 'appearance', APPEARANCES)}
-      {field('Accent', 'accentColor', ACCENT_COLORS)}
-      {field('Gray', 'grayColor', GRAY_COLOR_VALUES)}
-      {field('Radius', 'radius', RADII)}
-      {field('Scaling', 'scaling', SCALINGS)}
-      {field('Panel', 'panelBackground', PANEL_BACKGROUNDS)}
-      {field('Reduced motion', 'reducedMotion', ['system', 'true', 'false'])}
+      {field('Appearance', 'appearance', THEME_SETTING_VALUES.appearance)}
+      {field('Accent', 'accentColor', THEME_SETTING_VALUES.accentColor)}
+      {field('Gray', 'grayColor', THEME_SETTING_VALUES.grayColor)}
+      {field('Radius', 'radius', THEME_SETTING_VALUES.radius)}
+      {field('Scaling', 'scaling', THEME_SETTING_VALUES.scaling)}
+      {field('Panel', 'panelBackground', THEME_SETTING_VALUES.panelBackground)}
+      {field(
+        'Reduced motion',
+        'reducedMotion',
+        THEME_SETTING_VALUES.reducedMotion
+      )}
 
       <Separator />
       <Text size='mini' variant='secondary'>

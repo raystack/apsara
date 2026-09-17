@@ -61,11 +61,31 @@ describe('server rendering', () => {
     expect(theme.firstElementChild?.tagName).toBe('SCRIPT');
   });
 
-  it('emits no script and reads no storage when persistence is off', () => {
+  it('emits no script and reads no storage for a pinned appearance without persistence', () => {
     const getItem = vi.spyOn(window.localStorage, 'getItem');
-    const html = renderToString(<ThemePreview>content</ThemePreview>);
+    const html = renderToString(
+      <ThemePreview defaultValue={{ appearance: 'light' }}>
+        content
+      </ThemePreview>
+    );
     expect(html).not.toContain('<script');
     expect(getItem).not.toHaveBeenCalled();
+  });
+
+  it('resolves a seeded `system` appearance before hydration on a first visit', () => {
+    // Nothing stored and the OS is dark: the server's light must not survive.
+    installMatchMedia(true);
+    const html = renderToString(
+      <ThemePreview persistKey='app'>content</ThemePreview>
+    );
+    const container = document.createElement('div');
+    container.innerHTML = html;
+    const theme = container.querySelector('.rs-theme') as HTMLElement;
+    expect(theme.getAttribute('data-theme')).toBe('light');
+
+    runInlineScript(theme);
+
+    expect(theme.getAttribute('data-theme')).toBe('dark');
   });
 
   it('carries the CSP nonce onto the script', () => {

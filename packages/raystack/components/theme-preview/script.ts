@@ -1,15 +1,19 @@
 /**
  * Pre-hydration script. Rendered as the theme element's first child, it patches
- * its own parent from storage before first paint.
+ * its own parent before first paint with what the server could not know: the
+ * stored value of each persisted key, and the OS answer for a `system`
+ * appearance that has nothing stored.
  */
 
 import {
   GRAY_PAIRING,
   SETTING_ATTRIBUTES,
-  SETTING_VALUES,
   STORAGE_VERSION,
   SYSTEM_APPEARANCE_QUERY,
-  type ThemeSettingKey
+  THEME_SETTING_KEYS,
+  THEME_SETTING_VALUES,
+  type ThemeSettingKey,
+  type ThemeSettings
 } from './settings';
 
 /** Identifies the theme element when `document.currentScript` is unavailable. */
@@ -26,26 +30,55 @@ function inlineJson(value: unknown): string {
 }
 
 export interface ThemeScriptParams {
-  persistKey: string;
-  /** Uncontrolled keys the namespace covers; controlled keys are excluded. */
+  /** Storage namespace. Without one the script reads no storage at all. */
+  persistKey?: string;
+  /** Keys read from storage: the namespace's uncontrolled, persisted settings. */
   keys: readonly ThemeSettingKey[];
+  /**
+   * The settings the server rendered from. A key with nothing stored falls
+   * back to this, which is how a seeded `system` appearance resolves against
+   * the OS before first paint.
+   */
+  seed: ThemeSettings;
   /** Fallback selector target, in case `document.currentScript` is absent. */
   elementId: string;
 }
 
 /** Builds the script source, or `null` when there is nothing for it to do. */
 export function createThemeScript(params: ThemeScriptParams): string | null {
-  const { persistKey, keys, elementId } = params;
-  if (keys.length === 0) return null;
+  const { persistKey, keys, seed, elementId } = params;
+  const stored = persistKey ? keys : [];
 
-  // From the shared config, so the script and the React reader cannot drift.
-  const map = keys.map(key => [
-    key,
-    SETTING_ATTRIBUTES[key],
-    SETTING_VALUES[key]
-  ]);
+  // [key, attribute, legalValues, seededValue, readsStorage]. A key takes part
+  // when storage may hold it, or when its seed needs the browser to resolve it.
+  const map: [string, string, readonly string[], string, boolean][] = [];
+  for (const key of THEME_SETTING_KEYS) {
+    const fromStore = stored.includes(key);
+    const needsBrowser =
+      (key === 'appearance' && seed.appearance === 'system') ||
+      (key === 'grayColor' &&
+        seed.grayColor === 'auto' &&
+        stored.includes('accentColor'));
+    if (!fromStore && !needsBrowser) continue;
+    map.push([
+      key,
+      SETTING_ATTRIBUTES[key],
+      THEME_SETTING_VALUES[key],
+      seed[key],
+      fromStore
+    ]);
+  }
+  if (map.length === 0) return null;
 
   const fallbackSelector = `[${THEME_ID_ATTRIBUTE}="${elementId}"]`;
+  // Only when some key actually reads storage; a bare `system` seed never does.
+  const readStorage =
+    persistKey && stored.length > 0
+      ? `try{var r=localStorage.getItem(${inlineJson(persistKey)});` +
+        `if(r){var o=JSON.parse(r);` +
+        `if(o&&typeof o==="object"&&typeof o.v==="number"&&o.v<=${STORAGE_VERSION}` +
+        `&&o.settings&&typeof o.settings==="object")s=o.settings}}catch(t){}`
+      : '';
 
   return (
     `!function(){try{` +
@@ -53,14 +86,13 @@ export function createThemeScript(params: ThemeScriptParams): string | null {
     `p=(e&&e.parentElement)||d.querySelector(${inlineJson(fallbackSelector)});` +
     `if(!p)return;` +
     `var m=${inlineJson(map)},g=${inlineJson(GRAY_PAIRING)},s={};` +
-    `try{var r=localStorage.getItem(${inlineJson(persistKey)});` +
-    `if(r){var o=JSON.parse(r);` +
-    `if(o&&typeof o==="object"&&typeof o.v==="number"&&o.v<=${STORAGE_VERSION}` +
-    `&&o.settings&&typeof o.settings==="object")s=o.settings}}catch(t){}` +
+    readStorage +
     `for(var i=0;i<m.length;i++){` +
-    `var k=m[i][0],a=m[i][1],v=s[k];` +
-    // An out-of-union value leaves the server-rendered attribute alone.
-    `if(m[i][2].indexOf(v)<0)continue;` +
+    `var k=m[i][0],a=m[i][1],l=m[i][2],v=m[i][3];` +
+    // A stored value wins only when legal. The React reader drops a bad field
+    // the same way, so both land on the seed.
+    `if(m[i][4]&&k in s&&l.indexOf(s[k])>=0)v=s[k];` +
+    `if(l.indexOf(v)<0)continue;` +
     `if(k==="appearance"&&v==="system")` +
     `v=matchMedia(${inlineJson(SYSTEM_APPEARANCE_QUERY)}).matches?"dark":"light";` +
     // Key order puts `accentColor` first, so the accent is already patched.

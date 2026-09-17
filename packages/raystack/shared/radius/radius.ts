@@ -1,5 +1,7 @@
 import styles from './radius.module.css';
-import type { Radius } from './settings';
+
+export const RADII = ['none', 'small', 'medium', 'large', 'full'] as const;
+export type Radius = (typeof RADII)[number];
 
 /** Per-component `radius` override, spread into a cva `variants` block. */
 export const radiusClasses = {
@@ -16,5 +18,3 @@ export const radiusVariants = { radius: radiusClasses };
 export function radiusClass(radius?: Radius | null): string | undefined {
   return radius ? radiusClasses[radius] : undefined;
 }
-
-export type { Radius };

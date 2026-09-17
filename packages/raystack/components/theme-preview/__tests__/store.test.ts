@@ -146,6 +146,17 @@ describe('writeStoredSettings', () => {
     expect(notified).toBe(0);
   });
 
+  it('leaves a newer-schema entry untouched and reports failure', () => {
+    entries.set('app', storedEntry({ appearance: 'dark', radius: 'full' }, 99));
+    expect(
+      writeStoredSettings('app', ['accentColor'], { accentColor: 'mint' })
+    ).toBe(false);
+    expect(JSON.parse(entries.get('app') as string)).toEqual({
+      v: 99,
+      settings: { appearance: 'dark', radius: 'full' }
+    });
+  });
+
   it('reports success, so the caller can trust storage', () => {
     expect(
       writeStoredSettings('app', ['appearance'], { appearance: 'dark' })

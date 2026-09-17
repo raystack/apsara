@@ -11,9 +11,9 @@
   /* Font Families */
   --rs-font-title: var(--rs-font-inter), sans-serif;
   --rs-font-body: var(--rs-font-inter), sans-serif;
-  /* JetBrains Mono before Menlo, or the imported face never renders on macOS. */
+  /* Menlo first by design: the system mono on macOS, JetBrains Mono elsewhere. */
   --rs-font-mono:
-    var(--rs-font-jetbrains-mono), var(--rs-font-menlo), monospace;
+    var(--rs-font-menlo), var(--rs-font-jetbrains-mono), monospace;
 
   /* Font Weights */
   --rs-font-weight-regular: 400;

@@ -4,13 +4,9 @@ import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ReactNode } from 'react';
 import { XIcon } from '~/icons';
+import { type Radius, radiusClass } from '../../shared/radius';
 import { IconButton } from '../icon-button';
-import {
-  type PortalContainer,
-  useThemeInjection
-} from '../theme-preview/portal';
-import { radiusClass } from '../theme-preview/radius';
-import type { Radius } from '../theme-preview/settings';
+import { useThemeInjection } from '../theme-preview/portal';
 import styles from './drawer.module.css';
 
 const drawerPopup = cva(styles.drawerPopup, {
@@ -33,8 +29,6 @@ export interface DrawerContentProps
   showCloseButton?: boolean;
   overlayProps?: DrawerPrimitive.Backdrop.Props;
   children?: ReactNode;
-  /** Portals into this element instead of `document.body`. */
-  container?: PortalContainer;
   /** Corner radius for this drawer only. Overrides the theme's `radius`. */
   radius?: Radius;
 }
@@ -48,7 +42,6 @@ export function DrawerContent({
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
   closeLabel = 'Close',
-  container,
   radius,
   ...props
 }: DrawerContentProps & { closeLabel?: string }) {
@@ -56,7 +49,7 @@ export function DrawerContent({
     ariaLabel ?? (ariaLabelledBy ? undefined : 'Drawer');
   const theme = useThemeInjection();
   return (
-    <DrawerPrimitive.Portal container={container}>
+    <DrawerPrimitive.Portal>
       <DrawerPrimitive.Backdrop
         data-slot='drawer-backdrop'
         {...overlayProps}

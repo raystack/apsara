@@ -6,12 +6,8 @@ import {
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { KeyboardEvent, useCallback, useRef } from 'react';
-import {
-  type PortalContainer,
-  useThemeInjection
-} from '../theme-preview/portal';
-import { radiusClass } from '../theme-preview/radius';
-import type { Radius } from '../theme-preview/settings';
+import { type Radius, radiusClass } from '../../shared/radius';
+import { useThemeInjection } from '../theme-preview/portal';
 import styles from './menu.module.css';
 import { useMenuContext } from './menu-root';
 import {
@@ -28,8 +24,6 @@ export interface MenuContentProps
     >,
     MenuPrimitive.Popup.Props {
   searchPlaceholder?: string;
-  /** Portals into this element instead of `document.body`. */
-  container?: PortalContainer;
   /** Corner radius for this menu only. Overrides the theme's `radius`. */
   radius?: Radius;
 }
@@ -45,7 +39,6 @@ export function MenuContent({
   sideOffset = 4,
   align = 'start',
   onFocus,
-  container,
   radius,
   ...positionerProps
 }: MenuContentProps) {
@@ -112,7 +105,7 @@ export function MenuContent({
   const theme = useThemeInjection();
 
   return (
-    <MenuPrimitive.Portal container={container}>
+    <MenuPrimitive.Portal>
       <MenuPrimitive.Positioner
         data-slot='menu-positioner'
         className={styles.positioner}

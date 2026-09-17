@@ -2,13 +2,9 @@
 
 import { AlertDialog as AlertDialogPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import { type Radius, radiusClass } from '../../shared/radius';
 import styles from '../dialog/dialog.module.css';
-import {
-  type PortalContainer,
-  useThemeInjection
-} from '../theme-preview/portal';
-import { radiusClass } from '../theme-preview/radius';
-import type { Radius } from '../theme-preview/settings';
+import { useThemeInjection } from '../theme-preview/portal';
 
 export interface AlertDialogContentProps
   extends AlertDialogPrimitive.Popup.Props {
@@ -18,8 +14,6 @@ export interface AlertDialogContentProps
    * `@default` true
    */
   showNestedAnimation?: boolean;
-  /** Portals into this element instead of `document.body`. */
-  container?: PortalContainer;
   /** Corner radius for this dialog only. Overrides the theme's `radius`. */
   radius?: Radius;
 }
@@ -29,13 +23,12 @@ export const AlertDialogContent = ({
   children,
   overlay,
   showNestedAnimation = true,
-  container,
   radius,
   ...props
 }: AlertDialogContentProps) => {
   const theme = useThemeInjection();
   return (
-    <AlertDialogPrimitive.Portal container={container}>
+    <AlertDialogPrimitive.Portal>
       <AlertDialogPrimitive.Backdrop
         data-slot='alert-dialog-backdrop'
         {...overlay}

@@ -1,6 +1,11 @@
 {
   "name": "@raystack/apsara",
   "version": "0.48.0",
+  "browserslist": [
+    "defaults",
+    "safari >= 15",
+    "ios_saf >= 15"
+  ],
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "engines": {
@@ -96,6 +101,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitest/ui": "^3.2.4",
+    "autoprefixer": "^10.4.21",
     "dotenv": "^17.2.2",
     "identity-obj-proxy": "^3.0.0",
     "jsdom": "^26.1.0",

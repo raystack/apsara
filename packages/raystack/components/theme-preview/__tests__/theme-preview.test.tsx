@@ -2,10 +2,9 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { type ReactNode, useEffect } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-
+import { radiusClass } from '../../../shared/radius';
 import { useThemePreview } from '../context';
 import { useThemeInjection } from '../portal';
-import { radiusClass } from '../radius';
 import type { ThemeSettings } from '../settings';
 import { clearThemeStorageCache } from '../store';
 import { ThemePreview } from '../theme-preview';
@@ -294,9 +293,21 @@ describe('persistence', () => {
     expect(setItem).not.toHaveBeenCalled();
   });
 
-  it('emits no inline script without a persistKey', () => {
-    const { container } = render(<ThemePreview>content</ThemePreview>);
+  it('emits no inline script when nothing needs patching', () => {
+    const { container } = render(
+      <ThemePreview defaultValue={{ appearance: 'light' }}>
+        content
+      </ThemePreview>
+    );
     expect(container.querySelector('script')).toBeNull();
+  });
+
+  it('emits a storage-free script for a `system` appearance without a persistKey', () => {
+    const { container } = render(<ThemePreview>content</ThemePreview>);
+    const script = container.querySelector('script');
+    expect(script).not.toBeNull();
+    expect(script?.textContent).not.toContain('localStorage');
+    expect(script?.textContent).toContain('matchMedia');
   });
 
   it('emits an inline script for a persisted namespace', () => {
@@ -322,13 +333,28 @@ describe('persistence', () => {
     expect(container.querySelector('script')).toBeNull();
   });
 
-  it('omits the script when persist excludes everything', () => {
+  it('omits the script when persist excludes everything and appearance is pinned', () => {
+    const { container } = render(
+      <ThemePreview
+        persistKey='app'
+        persist={[]}
+        defaultValue={{ appearance: 'light' }}
+      >
+        content
+      </ThemePreview>
+    );
+    expect(container.querySelector('script')).toBeNull();
+  });
+
+  it('reads no storage when persist excludes everything but appearance is system', () => {
     const { container } = render(
       <ThemePreview persistKey='app' persist={[]}>
         content
       </ThemePreview>
     );
-    expect(container.querySelector('script')).toBeNull();
+    const script = container.querySelector('script');
+    expect(script).not.toBeNull();
+    expect(script?.textContent).not.toContain('localStorage');
   });
 
   it('narrows a namespace with persist, keeping other settings in memory', async () => {

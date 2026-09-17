@@ -3,7 +3,7 @@
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ComponentProps, ReactNode } from 'react';
 
-import { radiusVariants } from '../theme-preview/radius';
+import { radiusVariants } from '../../shared/radius';
 import styles from './chip.module.css';
 
 const chip = cva(styles.chip, {

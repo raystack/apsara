@@ -1,9 +1,8 @@
 import { Button as ButtonPrimitive } from '@base-ui/react';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ReactNode } from 'react';
-
+import { radiusVariants } from '../../shared/radius';
 import { Spinner } from '../spinner';
-import { radiusVariants } from '../theme-preview/radius';
 import styles from './button.module.css';
 
 const button = cva(styles['button'], {

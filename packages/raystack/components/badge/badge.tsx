@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import { ComponentProps, ReactNode } from 'react';
 
-import { radiusVariants } from '../theme-preview/radius';
+import { radiusVariants } from '../../shared/radius';
 import styles from './badge.module.css';
 
 const badge = cva(styles['badge'], {

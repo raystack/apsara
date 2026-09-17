@@ -2,10 +2,7 @@
 
 import { Toast as ToastPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import {
-  type PortalContainer,
-  useThemeInjection
-} from '../theme-preview/portal';
+import { useThemeInjection } from '../theme-preview/portal';
 import styles from './toast.module.css';
 import {
   toastManager as defaultToastManager,
@@ -34,8 +31,6 @@ export interface ToastProviderProps
    * `Toast.createToastManager()` to scope toasts to this provider.
    */
   toastManager?: ToastManager;
-  /** Portals the viewport into this element instead of `document.body`. */
-  container?: PortalContainer;
 }
 
 function ToastList({ position }: { position: ToastPosition }) {
@@ -48,7 +43,6 @@ function ToastList({ position }: { position: ToastPosition }) {
 export function ToastProvider({
   position = 'bottom-right',
   toastManager = defaultToastManager,
-  container,
   children,
   ...props
 }: ToastProviderProps) {
@@ -56,7 +50,7 @@ export function ToastProvider({
   return (
     <ToastPrimitive.Provider toastManager={toastManager} {...props}>
       {children}
-      <ToastPrimitive.Portal container={container}>
+      <ToastPrimitive.Portal>
         <ToastPrimitive.Viewport
           {...theme}
           className={cx(

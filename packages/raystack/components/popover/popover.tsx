@@ -2,12 +2,8 @@
 
 import { Popover as PopoverPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import {
-  type PortalContainer,
-  useThemeInjection
-} from '../theme-preview/portal';
-import { radiusClass } from '../theme-preview/radius';
-import type { Radius } from '../theme-preview/settings';
+import { type Radius, radiusClass } from '../../shared/radius';
+import { useThemeInjection } from '../theme-preview/portal';
 import styles from './popover.module.css';
 
 export interface PopoverContentProps
@@ -16,8 +12,6 @@ export interface PopoverContentProps
       'render' | 'className' | 'style' | 'ref'
     >,
     PopoverPrimitive.Popup.Props {
-  /** Portals into this element instead of `document.body`. */
-  container?: PortalContainer;
   /** Corner radius for this popup only. Overrides the theme's `radius`. */
   radius?: Radius;
 }
@@ -30,13 +24,12 @@ function PopoverContent({
   style,
   render,
   children,
-  container,
   radius,
   ...positionerProps
 }: PopoverContentProps) {
   const theme = useThemeInjection();
   return (
-    <PopoverPrimitive.Portal container={container}>
+    <PopoverPrimitive.Portal>
       <PopoverPrimitive.Positioner
         sideOffset={4}
         collisionPadding={3}

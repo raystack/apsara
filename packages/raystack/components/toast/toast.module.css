@@ -58,7 +58,7 @@
   color: var(--rs-color-foreground-base-primary);
   border: 0.5px solid var(--rs-color-border-base-primary);
   --rs-radius-step: 4px;
-  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
+  border-radius: var(--rs-radius-2);
   box-shadow: var(--rs-shadow-lifted);
   padding: var(--rs-space-3);
   background-clip: padding-box;

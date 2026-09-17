@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
-import { radiusClasses } from '../../theme-preview/radius';
+import { radiusClasses } from '../../../shared/radius';
 import { Avatar, AvatarGroup } from '../avatar';
 import styles from '../avatar.module.css';
 import { getAvatarColor } from '../utils';

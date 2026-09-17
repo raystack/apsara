@@ -6,6 +6,7 @@ import {
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { KeyboardEvent, useCallback, useRef } from 'react';
+import { type Radius, radiusClass } from '../../shared/radius';
 import styles from '../menu/menu.module.css';
 import { useMenuContext } from '../menu/menu-root';
 import {
@@ -14,12 +15,7 @@ import {
   isElementSubMenuTrigger,
   KEYCODES
 } from '../menu/utils';
-import {
-  type PortalContainer,
-  useThemeInjection
-} from '../theme-preview/portal';
-import { radiusClass } from '../theme-preview/radius';
-import type { Radius } from '../theme-preview/settings';
+import { useThemeInjection } from '../theme-preview/portal';
 
 export interface ContextMenuContentProps
   extends Omit<
@@ -28,8 +24,6 @@ export interface ContextMenuContentProps
     >,
     ContextMenuPrimitive.Popup.Props {
   searchPlaceholder?: string;
-  /** Portals into this element instead of `document.body`. */
-  container?: PortalContainer;
   /** Corner radius for this menu only. Overrides the theme's `radius`. */
   radius?: Radius;
 }
@@ -45,7 +39,6 @@ export const ContextMenuContent = ({
   sideOffset = 4,
   align = 'start',
   onFocus,
-  container,
   radius,
   ...positionerProps
 }: ContextMenuContentProps) => {
@@ -112,7 +105,7 @@ export const ContextMenuContent = ({
   const theme = useThemeInjection();
 
   return (
-    <ContextMenuPrimitive.Portal container={container}>
+    <ContextMenuPrimitive.Portal>
       <ContextMenuPrimitive.Positioner
         data-slot='context-menu-positioner'
         className={cx(styles.positioner)}

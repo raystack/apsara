@@ -5,12 +5,8 @@ import {
   Select as SelectPrimitive
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import {
-  type PortalContainer,
-  useThemeInjection
-} from '../theme-preview/portal';
-import { radiusClass } from '../theme-preview/radius';
-import type { Radius } from '../theme-preview/settings';
+import { type Radius, radiusClass } from '../../shared/radius';
+import { useThemeInjection } from '../theme-preview/portal';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';
 
@@ -21,8 +17,6 @@ export interface SelectContentProps
     >,
     SelectPrimitive.Popup.Props {
   searchPlaceholder?: string;
-  /** Portals into this element instead of `document.body`; autocomplete only. */
-  container?: PortalContainer;
   /** Corner radius for this popup only. Overrides the theme's `radius`. */
   radius?: Radius;
 }
@@ -34,7 +28,6 @@ export function SelectContent({
   sideOffset = 4,
   side = 'bottom',
   align = 'start',
-  container,
   radius,
   ...props
 }: SelectContentProps) {
@@ -43,7 +36,7 @@ export function SelectContent({
 
   if (autocomplete) {
     return (
-      <ComboboxPrimitive.Portal keepMounted container={container}>
+      <ComboboxPrimitive.Portal keepMounted>
         <ComboboxPrimitive.Positioner
           sideOffset={sideOffset}
           side={side}
