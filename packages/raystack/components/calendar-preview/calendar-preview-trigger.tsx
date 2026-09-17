@@ -50,6 +50,7 @@ export function CalendarPreviewTrigger({
     value,
     formatValue,
     scale,
+    open,
     setOpen,
     shouldIgnoreFocusOpen,
     triggerRef,
@@ -97,10 +98,11 @@ export function CalendarPreviewTrigger({
            second tab stop and a control inside a button role. */
         role: hasInput ? undefined : 'button',
         tabIndex: hasInput ? -1 : undefined,
-        /* Merged to the right of `useClick`, so this runs first and takes out
-           the press-toggle that closed the popover between two fields. */
+        /* Merged to the right of `useClick`, so this runs first. Only the
+           closing half goes, or a press could not reopen a field that never
+           lost focus. */
         onClick: (event: BaseUIEvent<MouseEvent<HTMLDivElement>>) => {
-          if (hasInput) event.preventBaseUIHandler();
+          if (hasInput && open) event.preventBaseUIHandler();
         },
         onPointerDown: () => {
           pressing.current = true;

@@ -906,11 +906,17 @@ describe('CalendarPreview drops a scale draft when the popover closes', () => {
     );
   });
 
-  it('keeps a committed period, which closes having already cleared', () => {
+  it('keeps a committed period, and a later Escape does not undo it', () => {
     const { container, input } = renderScalePicker();
     fireEvent.focus(input);
     switchTo(document.body, 'quarter');
     fireEvent.click(period(document.body, 'Q3'));
+    expect(input.value).toBe('Q3 2026');
+
+    fireEvent.keyDown(
+      getSlot(document.body, 'calendar-preview-content') as HTMLElement,
+      { key: 'Escape' }
+    );
     expect(input.value).toBe('Q3 2026');
     expect(getSlot(container, 'calendar-preview')).toHaveAttribute(
       'data-scale',

@@ -327,11 +327,11 @@ The click machine:
 | State | A click does |
 |---|---|
 | Nothing selected | sets `from`, moves focus to the end field |
-| `from` only, later day | completes the range, emits, closes the popover |
+| `from` only, later day | completes the range and emits |
 | `from` only, earlier day | that day becomes the new `from` |
 | Complete range | restarts — the new day is `from`, and the value stays at the previous range until the new one completes |
 
-Completing asks the popover to close through `onOpenChange`, so a consumer holding `open` open is not fought.
+Nothing here closes the popover. A commit leaves it open, so a second pick needs no second trip to the trigger; Escape, an outside press and the trigger itself still dismiss it.
 
 **Typing is stricter than clicking.** A click means "the next endpoint", so an earlier day restarts
 the range, as the table above says. Typing names the field it lands in, so an endpoint that crosses

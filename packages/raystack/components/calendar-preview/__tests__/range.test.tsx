@@ -177,7 +177,7 @@ describe('CalendarPreview range inputs', () => {
   });
 });
 
-describe('CalendarPreview range auto-close', () => {
+describe('CalendarPreview range completion leaves the popover open', () => {
   const picker = (
     <>
       <CalendarPreview.Trigger>
@@ -193,54 +193,54 @@ describe('CalendarPreview range auto-close', () => {
   const isOpen = () =>
     getSlot(document.body, 'calendar-preview-content') !== null;
 
-  it('closes through onOpenChange when the range completes', () => {
-    const onOpenChange = vi.fn();
-    const { container } = renderRange({ onOpenChange }, picker);
+  const open = (container: HTMLElement) =>
     fireEvent.focus(
       getAllSlots(container, 'calendar-preview-input')[0] as HTMLElement
     );
-    expect(isOpen()).toBe(true);
 
-    fireEvent.click(day(document.body, '10'));
-    expect(isOpen()).toBe(true);
-
-    fireEvent.click(day(document.body, '20'));
-    expect(isOpen()).toBe(false);
-    expect(onOpenChange).toHaveBeenLastCalledWith(false, expect.anything());
-  });
-
-  /* Completing a range hands focus back to the trigger, and an unguarded
-     focus handler reopens the popover on the way out. jsdom does not restore
-     focus the way a browser does, so this asserts the guard rather than the
-     symptom: the close must be the last thing that happens. */
-  it('does not reopen on the focus that follows an auto-close', () => {
+  it('stays open when the range completes', () => {
     const onOpenChange = vi.fn();
     const { container } = renderRange({ onOpenChange }, picker);
-    const [start] = getAllSlots(
-      container,
-      'calendar-preview-input'
-    ) as HTMLElement[];
-    fireEvent.focus(start);
+    open(container);
+    expect(isOpen()).toBe(true);
 
-    fireEvent.click(day(document.body, '10'));
-    fireEvent.click(day(document.body, '20'));
-    expect(isOpen()).toBe(false);
-
-    /* The browser returns focus to the trigger here. */
-    fireEvent.focus(start);
-    expect(isOpen()).toBe(false);
-    const calls = onOpenChange.mock.calls;
-    expect(calls[calls.length - 1][0]).toBe(false);
-  });
-
-  /* Completing a range asks to close; a consumer holding `open` open wins. */
-  it('does not fight a controlled open', () => {
-    const onOpenChange = vi.fn();
-    renderRange({ open: true, onOpenChange }, picker);
     fireEvent.click(day(document.body, '10'));
     fireEvent.click(day(document.body, '20'));
     expect(isOpen()).toBe(true);
-    expect(onOpenChange).toHaveBeenLastCalledWith(false, expect.anything());
+    expect(onOpenChange.mock.calls.filter(call => call[0] === false)).toEqual(
+      []
+    );
+  });
+
+  it('takes a second range without a second trip to the trigger', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderRange({ onValueChange }, picker);
+    open(container);
+    fireEvent.click(day(document.body, '10'));
+    fireEvent.click(day(document.body, '20'));
+
+    fireEvent.click(day(document.body, '5'));
+    fireEvent.click(day(document.body, '8'));
+    expect(isOpen()).toBe(true);
+    expect(onValueChange).toHaveBeenCalledTimes(2);
+    expect(onValueChange.mock.calls[1][0]).toEqual({
+      from: new Date(2026, 7, 5),
+      to: new Date(2026, 7, 8)
+    });
+  });
+
+  it('still dismisses on Escape once the range is complete', () => {
+    const { container } = renderRange({}, picker);
+    open(container);
+    fireEvent.click(day(document.body, '10'));
+    fireEvent.click(day(document.body, '20'));
+    expect(isOpen()).toBe(true);
+
+    fireEvent.keyDown(
+      getSlot(document.body, 'calendar-preview-content') as HTMLElement,
+      { key: 'Escape' }
+    );
+    expect(isOpen()).toBe(false);
   });
 });
 

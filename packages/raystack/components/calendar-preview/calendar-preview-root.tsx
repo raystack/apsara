@@ -1,11 +1,10 @@
 'use client';
 
 import { mergeProps, Popover, useRender } from '@base-ui/react';
-import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import { REASONS } from '@base-ui/react/internals/reasons';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styles from './calendar-preview.module.css';
 import {
   type CalendarPreviewChangeDetails,
@@ -424,40 +423,48 @@ export function CalendarPreviewRoot({
     state: 'open'
   });
 
-  /* Escape, a press on the trigger, and completing a range all leave focus on
-     the trigger, so the focus event that follows would immediately undo the
-     close. Recording the reason lets `.Trigger` swallow exactly that one focus
-     — the rule floating-ui's own `useFocus` applies, plus `closePress`, which
-     is ours because auto-closing on completion is. */
+  /* A dismissal restores focus to the trigger, which would reopen it. */
   const focusOpenBlocked = useRef(false);
   const triggerRef = useRef<HTMLElement | null>(null);
+
+  /* The restore trails the close by the exit transition, so nothing timed is
+     safe; what the user does next releases the guard instead. Capture phase,
+     so the dismissing press runs this before the close arms it again. */
+  useEffect(() => {
+    const release = () => {
+      focusOpenBlocked.current = false;
+    };
+    document.addEventListener('pointerdown', release, true);
+    document.addEventListener('keydown', release, true);
+    return () => {
+      document.removeEventListener('pointerdown', release, true);
+      document.removeEventListener('keydown', release, true);
+    };
+  }, []);
+
+  const armFocusGuard = useCallback((leaving: boolean) => {
+    /* An outside press is read on pointerdown, before focus has moved, so the
+       trigger still holds it here and only the reason says it is leaving. An
+       Escape that never moves focus must not arm: no focus follows it. */
+    focusOpenBlocked.current =
+      leaving || !triggerRef.current?.contains(document.activeElement);
+  }, []);
+
   /* `dropDraft` closes over state declared further down. */
   const dropDraftRef = useRef<(() => void) | null>(null);
 
   const setOpen = useCallback(
     (next: boolean, details: CalendarPreviewOpenChangeDetails) => {
-      if (
-        !next &&
-        (details.reason === REASONS.escapeKey ||
-          details.reason === REASONS.triggerPress ||
-          details.reason === REASONS.closePress)
-      ) {
-        /* Only when focus has to travel back. In `<Trigger><Input/></Trigger>`
-           it never left, so no focus event follows, and arming here left the
-           guard set to swallow the next real one. */
-        focusOpenBlocked.current = !triggerRef.current?.contains(
-          document.activeElement
-        );
-      }
-      /* A draft belongs to the open popover. A commit closes with `closePress`
-         having already cleared it; every other close throws it away, or the
-         shut field goes on reading a period nobody chose. */
-      if (!next && details.reason !== REASONS.closePress)
+      if (!next) {
+        armFocusGuard(details.reason === REASONS.outsidePress);
+        /* A draft belongs to the open popover; a commit has already cleared
+           it, so this finds nothing left to drop. */
         dropDraftRef.current?.();
+      }
       setOpenUnwrapped(next);
       onOpenChange?.(next, details);
     },
-    [setOpenUnwrapped, onOpenChange]
+    [setOpenUnwrapped, onOpenChange, armFocusGuard]
   );
 
   const shouldIgnoreFocusOpen = useCallback(() => {
@@ -498,15 +505,13 @@ export function CalendarPreviewRoot({
   }, []);
 
   /*
-   * The from/to machine, unchanged from the shipped picker:
+   * The from/to machine:
    *   no from            -> set from, advance to the end input
    *   from, day earlier  -> that day becomes the new from
-   *   from, day later    -> completes, emits, closes
+   *   from, day later    -> completes and emits
    *   from and to        -> restart from the new day
    *
-   * It lives on the root because completing a range both writes the value and
-   * closes the popover, and closing has to go through `setOpen` so a consumer
-   * controlling `open` is not fought.
+   * It lives on the root because `.Grid` and a typed `.Input` both drive it.
    */
   const selectDay = useCallback(
     (date: Date) => {
@@ -540,10 +545,6 @@ export function CalendarPreviewRoot({
         setDraft(null);
         setActiveField('start');
         setValue({ from: fixed, to: date }, 'select', date);
-        setOpen(
-          false,
-          createChangeEventDetails(REASONS.closePress, undefined, undefined)
-        );
         return;
       }
 
@@ -565,10 +566,6 @@ export function CalendarPreviewRoot({
       setDraft(null);
       setActiveField('start');
       setValue({ from, to: date }, 'select', date);
-      setOpen(
-        false,
-        createChangeEventDetails(REASONS.closePress, undefined, undefined)
-      );
     },
     [
       selection,
@@ -629,10 +626,6 @@ export function CalendarPreviewRoot({
         scaleChanged(value, next) ? 'scale' : 'select',
         parseKey(key)
       );
-      setOpen(
-        false,
-        createChangeEventDetails(REASONS.closePress, undefined, undefined)
-      );
     },
     [
       trailingValue,
@@ -641,7 +634,6 @@ export function CalendarPreviewRoot({
       disabled,
       value,
       setValue,
-      setOpen,
       clearScaleDraft
     ]
   );

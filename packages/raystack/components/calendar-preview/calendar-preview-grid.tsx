@@ -220,10 +220,8 @@ export function CalendarPreviewGrid({
   );
 
   /* Every click goes to the root, which owns both the single commit and the
-     from/to machine — completing a range has to close the popover, and that
-     must travel through the root's open state rather than from in here. It
-     also keeps the `readOnly` / `disabled` guard in one place, so every path
-     in and out of the calendar inherits the same one. */
+     from/to machine. It also keeps the `readOnly` / `disabled` guard in one
+     place, so every path in and out of the calendar inherits the same one. */
   const handleSelect = useCallback(
     (_selected: unknown, triggerDate: Date) => {
       selectDay(triggerDate);

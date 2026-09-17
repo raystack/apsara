@@ -110,8 +110,7 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
   selection: 'single' | 'range';
   /**
    * Commits a clicked day. Single scale commits it directly; range runs the
-   * from/to machine, which lives here because completing a range both writes
-   * the value and closes the popover.
+   * from/to machine.
    */
   selectDay: (date: Date) => void;
   /** Writes a day at the root's value shape, for a path that is not a click. */

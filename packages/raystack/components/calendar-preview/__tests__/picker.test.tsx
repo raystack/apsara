@@ -596,3 +596,39 @@ describe('CalendarPreview.Input drops a rejected draft on an outside write', () 
     expect(input.value).toBe('still not');
   });
 });
+
+describe('CalendarPreview.Trigger and the focus a dismissal gives back', () => {
+  const pressOutside = () => {
+    fireEvent.pointerDown(document.body);
+    fireEvent.mouseDown(document.body);
+    fireEvent.click(document.body);
+  };
+
+  it('does not reopen on the focus an outside press hands back', () => {
+    const onOpenChange = vi.fn();
+    const { input } = renderPicker({ onOpenChange });
+    /* Real focus, so the close can see the trigger still holding it. */
+    input.focus();
+    fireEvent.focus(input);
+    expect(isOpen()).toBe(true);
+
+    pressOutside();
+    expect(isOpen()).toBe(false);
+    const calls = onOpenChange.mock.calls;
+    expect(calls[calls.length - 1][1].reason).toBe('outside-press');
+
+    fireEvent.focus(input);
+    expect(isOpen()).toBe(false);
+  });
+
+  it('releases the guard on the next press when no focus comes back', () => {
+    const { input } = renderPicker();
+    fireEvent.focus(input);
+    pressOutside();
+    expect(isOpen()).toBe(false);
+
+    fireEvent.pointerDown(input);
+    fireEvent.focus(input);
+    expect(isOpen()).toBe(true);
+  });
+});
