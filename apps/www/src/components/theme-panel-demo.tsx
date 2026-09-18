@@ -7,8 +7,11 @@ import {
   Callout,
   Checkbox,
   Chip,
+  Dialog,
+  Drawer,
   Flex,
   Input,
+  Menu,
   Popover,
   Progress,
   Select,
@@ -107,14 +110,14 @@ function Sampler() {
         direction='column'
         align='start'
         style={{
-          minHeight: 168,
+          minHeight: 188,
           padding: 'var(--rs-space-4)',
           borderRadius: 'var(--rs-radius-3)',
           background:
-            'repeating-linear-gradient(45deg, var(--rs-color-background-accent-emphasis) 0 120px, var(--rs-color-background-attention-emphasis) 120px 240px)'
+            'radial-gradient(70% 90% at 10% 10%, var(--rs-color-background-accent-emphasis), transparent 60%), radial-gradient(65% 85% at 95% 20%, var(--rs-color-background-danger-emphasis), transparent 60%), radial-gradient(90% 90% at 55% 110%, var(--rs-color-background-attention-emphasis), transparent 65%), var(--rs-color-background-accent-emphasis-hover)'
         }}
       >
-        <Flex gap={3}>
+        <Flex gap={3} wrap='wrap'>
           <Tooltip>
             <Tooltip.Trigger
               render={<Button variant='outline'>Tooltip</Button>}
@@ -133,6 +136,66 @@ function Sampler() {
               </Text>
             </Popover.Content>
           </Popover>
+
+          <Menu>
+            <Menu.Trigger render={<Button variant='outline'>Menu</Button>} />
+            <Menu.Content>
+              <Menu.Group>
+                <Menu.Label>Actions</Menu.Label>
+                <Menu.Item>Assign member</Menu.Item>
+                <Menu.Item>Rename</Menu.Item>
+              </Menu.Group>
+              <Menu.Separator />
+              <Menu.Item>Delete</Menu.Item>
+            </Menu.Content>
+          </Menu>
+
+          <Select defaultValue='medium'>
+            <Select.Trigger style={{ width: 120 }}>
+              <Select.Value />
+            </Select.Trigger>
+            <Select.Content>
+              <Select.Item value='small'>Small</Select.Item>
+              <Select.Item value='medium'>Medium</Select.Item>
+              <Select.Item value='large'>Large</Select.Item>
+            </Select.Content>
+          </Select>
+
+          <Dialog>
+            <Dialog.Trigger
+              render={<Button variant='outline'>Dialog</Button>}
+            />
+            <Dialog.Content style={{ width: 360 }}>
+              <Dialog.Header>
+                <Dialog.Title>Dialog</Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Body>
+                <Dialog.Description>
+                  The scrim behind is what a translucent panel reads against.
+                </Dialog.Description>
+              </Dialog.Body>
+            </Dialog.Content>
+          </Dialog>
+
+          <Drawer>
+            <Drawer.Trigger
+              render={<Button variant='outline'>Drawer</Button>}
+            />
+            <Drawer.Content>
+              <Drawer.Header>
+                <Drawer.Title>Drawer</Drawer.Title>
+                <Drawer.Description>
+                  Radius, scaling and panel background all reach it.
+                </Drawer.Description>
+              </Drawer.Header>
+              <Drawer.Body>
+                <Text>
+                  Portalled parts re-emit the theme, so the drawer matches the
+                  scope its trigger lives in.
+                </Text>
+              </Drawer.Body>
+            </Drawer.Content>
+          </Drawer>
         </Flex>
       </Flex>
     </Flex>

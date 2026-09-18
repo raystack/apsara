@@ -100,7 +100,7 @@ export const panelBackgroundDemo = {
       padding: "var(--rs-space-7)",
       borderRadius: "var(--rs-radius-4)",
       background:
-        "repeating-linear-gradient(45deg, var(--rs-color-background-accent-emphasis) 0 120px, var(--rs-color-background-attention-emphasis) 120px 240px)"
+        "radial-gradient(70% 90% at 10% 10%, var(--rs-color-background-accent-emphasis), transparent 60%), radial-gradient(65% 85% at 95% 20%, var(--rs-color-background-danger-emphasis), transparent 60%), radial-gradient(90% 90% at 55% 110%, var(--rs-color-background-attention-emphasis), transparent 65%), var(--rs-color-background-accent-emphasis-hover)"
     }}
   >
     {["solid", "translucent"].map(panelBackground => (
