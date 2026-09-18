@@ -97,12 +97,19 @@
   --rs-color-panel-solid: var(--rs-color-background-base-primary);
   --rs-color-panel-translucent: color-mix(
     in oklab,
-    var(--rs-color-background-base-primary) 80%,
+    var(--rs-color-panel-solid) 70%,
     transparent
   );
   --rs-color-panel: var(--rs-color-panel-solid);
   --rs-color-overlay: var(--rs-color-overlay-black-a5);
   --rs-panel-backdrop-filter: none;
+}
+
+/* Radix Themes' two translucent panels: a 70% wash of the surface in light,
+   and in dark a faint white lift over the blur rather than a wash, because a
+   dark panel mixed with the dark page behind it reads as neither. */
+:where([data-theme="dark"]) {
+  --rs-color-panel-translucent: var(--rs-color-overlay-base-a1);
 }
 
 :where([data-panel-background="solid"]) {
