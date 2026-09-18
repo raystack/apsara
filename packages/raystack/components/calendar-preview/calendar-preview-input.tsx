@@ -5,8 +5,11 @@ import { Input } from '../input';
 import styles from './calendar-preview.module.css';
 import type { CalendarPreviewField } from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import { dayKey, parseKey } from './date-adapter';
+import { isRange as isRangeValue, isScaleValue } from './calendar-preview-root';
+import { useTriggerInput } from './calendar-preview-trigger';
+import { anyDayBetween, dayKey, parseKey } from './date-adapter';
 import { parseScaleInput } from './lib/parse';
+import type { Scale } from './lib/scale';
 
 export type CalendarPreviewInputInvalidReason =
   | 'unparseable'
@@ -71,6 +74,7 @@ export function CalendarPreviewInput({
   onKeyDown,
   onBlur,
   onFocus,
+  onValueChange: onValueChangeProp,
   className,
   readOnly: readOnlyProp,
   ...props
@@ -88,8 +92,15 @@ export function CalendarPreviewInput({
     today,
     disabled,
     readOnly,
+    scales,
+    scaleDraft,
+    trailingValue,
+    selectPeriod,
+    isPeriodAvailable,
     selection,
+    commitDay,
     setEndpoint,
+    clearEndpoint,
     draft,
     activeField,
     setActiveField,
@@ -97,6 +108,12 @@ export function CalendarPreviewInput({
   } = useCalendarPreviewContext('CalendarPreview.Input');
 
   const isRange = selection === 'range';
+
+  const trigger = useTriggerInput();
+  useEffect(() => {
+    trigger?.registerInput(true);
+    return () => trigger?.registerInput(false);
+  }, [trigger]);
 
   /* The grid has to know which endpoint refuses a write, and `readOnly` is
      this input's prop, so it registers rather than the root guessing. */
@@ -108,7 +125,51 @@ export function CalendarPreviewInput({
 
   /* Null means "show the committed value"; a string is the user's draft. */
   const [text, setText] = useState<string | null>(null);
-  const lastReported = useRef<CalendarPreviewInputValidity>(VALID);
+  const [validity, setValidity] = useState<CalendarPreviewInputValidity>(VALID);
+
+  const committed = useRef(value);
+
+  /* Retained text is judged against things outside it — the partner endpoint
+     and the bounds — and both move while it sits there. Without this, an end
+     rejected for crossing a 10 Apr start stayed marked invalid after the start
+     moved to the 1st, and a draft kept its verdict when `minDate` changed
+     under it. Runs every render and compares rather than listing deps:
+     `resolve` closes over the whole context and is rebuilt each time. */
+  const judgedAgainst = useRef<unknown[]>([]);
+  useEffect(() => {
+    const partner = isRange
+      ? field === 'start'
+        ? draft?.to
+        : draft?.from
+      : undefined;
+    const next = [
+      partner && dayKey(partner, timeZone),
+      minDate && dayKey(minDate, timeZone),
+      maxDate && dayKey(maxDate, timeZone),
+      isDateUnavailable
+    ];
+    const moved = next.some(
+      (item, index) => item !== judgedAgainst.current[index]
+    );
+    judgedAgainst.current = next;
+    /* A value change replaces the text outright, which the effect below owns. */
+    if (!moved || text === null || committed.current !== value) return;
+    const trimmed = text.trim();
+    if (trimmed === '') return;
+    const resolved = resolve(trimmed);
+    report('valid' in resolved ? resolved : VALID);
+  });
+
+  /* A value this field did not type replaces whatever it was drafting, or a
+     rejected draft outlives the day the user went on to click. */
+  useEffect(() => {
+    if (committed.current === value) return;
+    committed.current = value;
+    setText(null);
+    if (validity.valid) return;
+    setValidity(VALID);
+    onValidityChange?.(VALID);
+  }, [value, validity.valid, onValidityChange]);
 
   /* Derived from the reason rather than returned alongside it, so the reason
      stays the single source of truth. */
@@ -129,25 +190,37 @@ export function CalendarPreviewInput({
   const report = (candidate: CalendarPreviewInputValidity) => {
     const next = withMessage(candidate);
     if (
-      next.valid === lastReported.current.valid &&
-      next.reason === lastReported.current.reason &&
-      next.message === lastReported.current.message
+      next.valid === validity.valid &&
+      next.reason === validity.reason &&
+      next.message === validity.message
     ) {
       return;
     }
-    lastReported.current = next;
+    setValidity(next);
     onValidityChange?.(next);
   };
 
-  const resolve = (text: string): CalendarPreviewInputValidity | Date => {
-    const parsed = parseScaleInput(text);
-    /* Coarser scales parse today but have nowhere to go until the scale
-       switcher lands, so they read as unparseable rather than committing a day
-       the user did not type. */
-    if (!parsed || parsed.scale !== 'day') {
+  const resolve = (
+    text: string
+  ): CalendarPreviewInputValidity | { date: Date; scale: Scale } => {
+    /* The root's clock and its edge, so what the parser reports is what the
+       commit writes — reading them off the wall clock is how `Q4` landed in
+       the wrong year. */
+    const parsed = parseScaleInput(text, {
+      referenceDate: today,
+      trailing: trailingValue
+    });
+    if (!parsed || !scales.includes(parsed.scale)) {
       return { valid: false, reason: 'unparseable' };
     }
     const date = parseKey(parsed.date);
+
+    if (parsed.scale !== 'day') {
+      return isPeriodAvailable(date, parsed.scale)
+        ? { date, scale: parsed.scale }
+        : { valid: false, reason: 'out-of-bounds' };
+    }
+
     const key = dayKey(date, timeZone);
     if (
       (minDate && key < dayKey(minDate, timeZone)) ||
@@ -166,23 +239,35 @@ export function CalendarPreviewInput({
       if (field === 'start' ? typed > against : typed < against) {
         return { valid: false, reason: 'out-of-order' };
       }
+      const [lead, trail] =
+        typed < against ? [typed, against] : [against, typed];
+      if (anyDayBetween(lead, trail, isDateUnavailable)) {
+        return { valid: false, reason: 'unavailable' };
+      }
     }
-    return date;
+    return { date, scale: 'day' };
   };
 
   const commit = () => {
     if (text === null) return;
     const trimmed = text.trim();
     if (trimmed === '') {
-      if (clearable && value) setValue(null, 'clear', today);
+      if (clearable) {
+        if (isRange) clearEndpoint(field);
+        else if (value) setValue(null, 'clear', today);
+      }
       setText(null);
       report(VALID);
       return;
     }
     const resolved = resolve(trimmed);
-    if (!(resolved instanceof Date)) return;
-    if (isRange) setEndpoint(field, resolved);
-    else setValue(resolved, 'input', resolved);
+    if ('valid' in resolved) return;
+    /* A typed endpoint writes the field it was typed into; only a click means
+       "the next endpoint". */
+    if (isRange) setEndpoint(field, resolved.date);
+    else if (resolved.scale !== 'day')
+      selectPeriod(resolved.date, resolved.scale);
+    else commitDay(resolved.date, 'input');
     setText(null);
     report(VALID);
   };
@@ -191,21 +276,26 @@ export function CalendarPreviewInput({
 
   const endpoint = isRange
     ? ((field === 'start' ? draft?.from : draft?.to) ?? null)
-    : (value as Date | null);
-  const committedText = endpoint ? formatValue(endpoint, scale) : '';
+    : (scaleDraft ?? (isRangeValue(value) ? null : value));
+  /* A period reads back at its own scale, as `.Trigger` does: the view can sit
+     on days while the committed value is a quarter. */
+  const committedText = endpoint
+    ? formatValue(endpoint, isScaleValue(endpoint) ? endpoint.scale : scale)
+    : '';
   const resolvedPlaceholder =
     placeholder ??
-    (isRange
-      ? field === 'start'
-        ? 'Select start date'
-        : 'Select end date'
-      : 'Select date');
+    (scales.length > 1
+      ? 'Try: 15 Aug 2026, May 2027, Q4'
+      : isRange
+        ? field === 'start'
+          ? 'Select start date'
+          : 'Select end date'
+        : 'Select date');
 
   return (
     <Input
       className={cx(styles.input, className)}
       data-slot='calendar-preview-input'
-      data-scale={scale}
       placeholder={resolvedPlaceholder}
       data-field={isRange ? field : undefined}
       data-active={isRange && activeField === field ? 'true' : undefined}
@@ -221,11 +311,12 @@ export function CalendarPreviewInput({
          untouched. Spread rather than set to `undefined`: these props land
          after Field's, and an explicit `undefined` erases the invalid state
          Field sets for errors this input knows nothing about. */
-      {...(lastReported.current.valid
+      {...(validity.valid
         ? {}
         : { 'aria-invalid': true, 'data-invalid': true })}
       value={text ?? committedText}
-      onValueChange={text => {
+      onValueChange={(text, details) => {
+        onValueChangeProp?.(text, details);
         if (inert) return;
         setText(text);
         if (text.trim() === '') {
@@ -233,7 +324,7 @@ export function CalendarPreviewInput({
           return;
         }
         const resolved = resolve(text);
-        report(resolved instanceof Date ? VALID : resolved);
+        report('valid' in resolved ? resolved : VALID);
       }}
       onKeyDown={event => {
         onKeyDown?.(event);

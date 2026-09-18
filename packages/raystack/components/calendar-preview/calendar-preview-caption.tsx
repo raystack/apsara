@@ -7,6 +7,7 @@ import {
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { type ReactNode, useEffect, useRef } from 'react';
+import { Separator } from '../separator';
 import styles from './calendar-preview.module.css';
 import {
   useCalendarPreviewContext,
@@ -62,7 +63,6 @@ function CaptionLabel({
   ref,
   ...props
 }: { dropdown?: false } & useRender.ComponentProps<'span'>) {
-  const { scale } = useCalendarPreviewContext('CalendarPreview.Caption');
   const label = useCaptionLabel();
 
   return useRender({
@@ -73,7 +73,6 @@ function CaptionLabel({
       {
         className: cx(styles.caption, className),
         'data-slot': 'calendar-preview-caption',
-        'data-scale': scale,
         children: children ?? label
       } as useRender.ComponentProps<'span'>,
       props
@@ -89,8 +88,9 @@ function CaptionDropdown({
   ref,
   ...props
 }: { dropdown: true } & useRender.ComponentProps<'button'>) {
-  const { month, setMonth, yearRange, scale, disabled } =
-    useCalendarPreviewContext('CalendarPreview.Caption');
+  const { month, setMonth, yearRange, disabled } = useCalendarPreviewContext(
+    'CalendarPreview.Caption'
+  );
   const label = useCaptionLabel();
 
   const activeMonth = month.getMonth();
@@ -105,7 +105,6 @@ function CaptionDropdown({
       <PopoverPrimitive.Trigger
         className={cx(styles.caption, styles['caption-trigger'], className)}
         data-slot='calendar-preview-caption'
-        data-scale={scale}
         data-dropdown='true'
         disabled={disabled}
         render={render}
@@ -135,6 +134,12 @@ function CaptionDropdown({
                 active: index === activeMonth,
                 onSelect: () => setMonth(monthStart(activeYear, index))
               }))}
+            />
+            <Separator
+              orientation='vertical'
+              decorative
+              className={styles['caption-divider']}
+              data-slot='calendar-preview-caption-divider'
             />
             <CaptionColumn
               slot='calendar-preview-caption-years'

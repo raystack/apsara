@@ -3,16 +3,13 @@
    caused, and costs the swappability the RFC keeps for Temporal. */
 import { TZDate } from '@date-fns/tz';
 import {
+  addDays,
   addMonths,
   endOfMonth,
-  endOfQuarter,
-  endOfYear,
   format,
   isValid,
   parse,
-  startOfMonth,
-  startOfQuarter,
-  startOfYear
+  startOfMonth
 } from 'date-fns';
 
 /* Lexicographic order is chronological order, so `lib/` orders days as
@@ -36,12 +33,6 @@ export function dayKey(date: Date, timeZone?: string): DayKey {
     throw new RangeError(`Day is outside the supported range: ${key}`);
   }
   return key;
-}
-
-/* Not for ordering two days: an epoch carries a time and an offset, so two
-   Dates on the same calendar day can order either way. Compare dayKeys. */
-export function epoch(date: Date): number {
-  return date.getTime();
 }
 
 /** Whether `value` is a real calendar day. `'2027-02-29'` is not. */
@@ -83,22 +74,6 @@ export function endOfMonthKey(key: DayKey): DayKey {
   return dayKey(endOfMonth(parseKey(key)));
 }
 
-export function startOfQuarterKey(key: DayKey): DayKey {
-  return dayKey(startOfQuarter(parseKey(key)));
-}
-
-export function endOfQuarterKey(key: DayKey): DayKey {
-  return dayKey(endOfQuarter(parseKey(key)));
-}
-
-export function startOfYearKey(key: DayKey): DayKey {
-  return dayKey(startOfYear(parseKey(key)));
-}
-
-export function endOfYearKey(key: DayKey): DayKey {
-  return dayKey(endOfYear(parseKey(key)));
-}
-
 export function yearOf(key: DayKey): number {
   return Number(key.slice(0, 4));
 }
@@ -117,6 +92,21 @@ export function monthFromName(name: string): number | null {
   return null;
 }
 
+/** Whether any day in `[from, to]` matches. Stops at the first that does. */
+export function anyDayBetween(
+  from: DayKey,
+  to: DayKey,
+  match: (date: Date) => boolean
+): boolean {
+  let cursor = from;
+  while (cursor <= to) {
+    const date = parseKey(cursor);
+    if (match(date)) return true;
+    cursor = dayKey(addDays(date, 1));
+  }
+  return false;
+}
+
 /* Normalising to the first stops repeated navigation drifting: stepping on
    from 31 January would clamp to the 28th and stay there. */
 export function shiftMonths(date: Date, delta: number): Date {
@@ -128,10 +118,11 @@ export function monthStart(year: number, monthIndex: number): Date {
   return new Date(year, monthIndex, 1);
 }
 
-/* Day-first, matching what `lib/parse.ts` accepts, so a rendered value can be
-   typed straight back in. */
+/* `lib/parse.ts` accepts this form back, so a rendered value can be typed
+   straight in. Day-first and month-named, matching the frames and the shipped
+   picker's `dateFormat`. */
 export function formatDayLabel(date: Date, timeZone?: string): string {
-  return format(zoned(date, timeZone), 'dd/MM/yyyy');
+  return format(zoned(date, timeZone), 'dd MMM yyyy');
 }
 
 export function formatMonthLabel(date: Date, timeZone?: string): string {

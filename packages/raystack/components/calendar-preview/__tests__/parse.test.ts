@@ -24,6 +24,22 @@ describe('parseScaleInput — day', () => {
     });
   });
 
+  /* `formatDayLabel` renders this form, and a field shows it. Selecting all
+     and retyping it verbatim has to come back as the same day. */
+  it.each([
+    ['15 Aug 2026', '2026-08-15'],
+    ['15 August 2026', '2026-08-15'],
+    ['5 Jan 2027', '2027-01-05'],
+    ['01 Sep 2026', '2026-09-01']
+  ])('round-trips the rendered day form %s', (input, expected) => {
+    expect(parseScaleInput(input)?.date).toBe(expected);
+    expect(parseScaleInput(input)?.scale).toBe('day');
+  });
+
+  it('rejects a day-named form with an impossible day', () => {
+    expect(parseScaleInput('31 Feb 2026')).toBeNull();
+  });
+
   it('accepts 29 February in a leap year', () => {
     expect(parseScaleInput('29/02/2028', IN_2026)).toEqual({
       date: '2028-02-29',

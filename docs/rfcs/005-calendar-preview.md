@@ -243,6 +243,15 @@ Selection arms are discriminated on `selection` and `scales`; `onValueChange` re
 | **Five sibling view parts**, not one switched by a prop | They need different layouts (3 / 4 / 2 / 1 columns) and different heights, and a consumer must be able to mount the quarter view alone. Each self-gates on the active scale exactly as `DataView`'s `.List` / `.Timeline` / `.Custom` do. Also retires `.MonthGrid`, which collided with RDP's own `MonthGrid` slot |
 | **`.Caption`** | Opens our own two-column month+year scroller — never a `Select`, so the unmount loop cannot return. Standalone calendar only; inside a picker the caption is plain text and the scale switcher navigates |
 | **`.Reset`** | Restores `defaultDate`. Renders only when `defaultDate` is set and the value differs. A **value** reset, not a view reset |
+
+> **Note — deviation, phase 5.** The tree above mounts `.Reset` only inside
+> `.Header`, which `.Days` alone renders. Once phase 5 added the four period
+> views and let `defaultDate` hold a `ScaleValue`, that left a period default
+> that could never be invoked: pick a quarter and the day view — and the reset
+> with it — unmounts. `.Body` now also mounts `.Reset` when the scale is not
+> `'day'`, so exactly one renders at every scale and the standalone inline
+> calendar keeps the approved `.Header` placement untouched. The row it lands
+> in is unstyled pending design.
 | **Height** | `.Days` hugs its content. The four period views are 320px and scroll — the whole list, not only the rows under a year heading |
 | **Every part** | Takes `render`, `className`, `ref`, `data-slot`. **Children override context-computed content** the way `Tour.Title` does, so `<CalendarPreview.Caption>Q3 2026</CalendarPreview.Caption>` works |
 | **Cell state** | `data-selected`, `data-draft`, `data-unavailable`, `data-today`, `data-outside`, `data-scale`. Slots say what an element is; these say what state it is in. `dateInfo` renders above the date number, as today |

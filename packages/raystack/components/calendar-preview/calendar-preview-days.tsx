@@ -5,8 +5,8 @@ import { cx } from 'class-variance-authority';
 import { useMemo, useState } from 'react';
 import styles from './calendar-preview.module.css';
 import {
+  CalendarPreviewDaysContext,
   type CalendarPreviewDaysContextValue,
-  CalendarPreviewDaysProvider,
   useCalendarPreviewContext
 } from './calendar-preview-context';
 import { CalendarPreviewGrid } from './calendar-preview-grid';
@@ -49,7 +49,6 @@ export function CalendarPreviewDays({
       {
         className: cx(styles.days, className),
         'data-slot': 'calendar-preview-days',
-        'data-scale': scale,
         'data-disabled': disabled || undefined,
         'data-readonly': readOnly || undefined,
         'data-busy': busy || undefined,
@@ -66,10 +65,13 @@ export function CalendarPreviewDays({
     )
   });
 
+  /* Gates like the period views, so `.Panel` can mount all five. */
+  if (scale !== 'day') return null;
+
   return (
-    <CalendarPreviewDaysProvider value={context}>
+    <CalendarPreviewDaysContext value={context}>
       {element}
-    </CalendarPreviewDaysProvider>
+    </CalendarPreviewDaysContext>
   );
 }
 

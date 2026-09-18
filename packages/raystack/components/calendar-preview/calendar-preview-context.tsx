@@ -1,12 +1,9 @@
 'use client';
 
 import type { Popover } from '@base-ui/react';
-import { createContext, type ReactNode, useContext } from 'react';
+import { createContext, type RefObject, useContext } from 'react';
 import type { DayKey } from './date-adapter';
-import type {
-  CalendarPreviewScale,
-  CalendarPreviewScaleValue
-} from './lib/scale';
+import type { Scale, ScaleValue } from './lib/scale';
 
 /** What caused a value to change. */
 export type CalendarPreviewChangeReason =
@@ -14,6 +11,7 @@ export type CalendarPreviewChangeReason =
   | 'input'
   | 'clear'
   | 'reset'
+  /** A commit that lands on a different granularity than the value carried. */
   | 'scale';
 
 export type CalendarPreviewOpenChangeDetails = Popover.Root.ChangeEventDetails;
@@ -30,9 +28,10 @@ export interface CalendarPreviewDateRange {
   to: Date;
 }
 
-/** A range mid-build. `to` is absent until the second click lands. */
+/** A range mid-build. Either edge may be absent: `to` until the second click
+    lands, `from` once a field has been emptied. */
 export interface CalendarPreviewDraftRange {
-  from: Date;
+  from?: Date;
   to?: Date;
 }
 
@@ -48,14 +47,19 @@ export interface CalendarPreviewChangeDetails {
   toDate: () => Date;
 }
 
-/* Generic so a later phase's scale-aware arms carry a
-   `CalendarPreviewScaleValue` without a second context: stored as `unknown`,
-   cast once at the hook boundary. */
-export interface CalendarPreviewContextValue<Value = Date | null> {
-  value: Value;
+/* The widened value every arm shares. The public props discriminate on
+   `selection` and `scales`; the implementation works in the union. */
+export type CalendarPreviewValue =
+  | Date
+  | CalendarPreviewDateRange
+  | ScaleValue
+  | null;
+
+export interface CalendarPreviewContextValue {
+  value: CalendarPreviewValue;
   /** `occasion` is the day acted on, which a cleared `value` cannot carry. */
   setValue: (
-    value: Value,
+    value: CalendarPreviewValue,
     reason: CalendarPreviewChangeReason,
     occasion: Date
   ) => void;
@@ -72,16 +76,19 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
    * clears. Tracks the last close reason, never the open state.
    */
   shouldIgnoreFocusOpen: () => boolean;
+  triggerRef: RefObject<HTMLElement | null>;
+  triggerHasInput: boolean;
+  setTriggerHasInput: (hasInput: boolean) => void;
   /** Read even when `value` is controlled. */
-  defaultDate: Date | CalendarPreviewDateRange | null | undefined;
+  defaultDate: Date | CalendarPreviewDateRange | ScaleValue | null | undefined;
   /** A value reset — it never moves the view. */
   reset: () => void;
   month: Date;
   /** Never clamped by `minDate` / `maxDate`. */
   setMonth: (month: Date) => void;
   yearRange: { from: number; to: number };
-  scale: CalendarPreviewScale;
-  setScale: (scale: CalendarPreviewScale) => void;
+  scale: Scale;
+  setScale: (scale: Scale) => void;
   isDateUnavailable: (date: Date) => boolean;
   /* Separate from `isDateUnavailable`, which folds them together: `.Input`
      reports which of the two rejected a typed date. */
@@ -92,20 +99,30 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
   clearable: boolean;
   disabled: boolean;
   readOnly: boolean;
-  formatValue: (
-    value: Date | CalendarPreviewScaleValue,
-    scale: CalendarPreviewScale
-  ) => string;
+  formatValue: (value: Date | ScaleValue, scale: Scale) => string;
+
+  /** One entry hides `.Scales`. */
+  scales: readonly Scale[];
+  trailingValue: boolean;
+  /** Never emitted: a cell click or Enter commits it, Escape drops it. */
+  scaleDraft: ScaleValue | null;
+  switchScale: (scale: Scale) => void;
+  selectPeriod: (date: Date | string, scale: Scale) => void;
+  dropDraft: () => void;
+  isPeriodAvailable: (date: Date | string, scale: Scale) => boolean;
 
   selection: 'single' | 'range';
   /**
    * Commits a clicked day. Single scale commits it directly; range runs the
-   * from/to machine, which lives here because completing a range both writes
-   * the value and closes the popover.
+   * from/to machine.
    */
   selectDay: (date: Date) => void;
+  /** Writes a day at the root's value shape, for a path that is not a click. */
+  commitDay: (date: Date, reason: CalendarPreviewChangeReason) => void;
   /** Writes one named endpoint, for a typed `.Input`. */
   setEndpoint: (field: CalendarPreviewField, date: Date) => void;
+  /** Empties one endpoint, leaving the other drafted. */
+  clearEndpoint: (field: CalendarPreviewField) => void;
   /**
    * The range as the grid should draw it — the draft while one is being built,
    * the committed value otherwise. Never emitted; the track between endpoints
@@ -123,31 +140,19 @@ export interface CalendarPreviewContextValue<Value = Date | null> {
   setFieldReadOnly: (field: CalendarPreviewField, readOnly: boolean) => void;
 }
 
-const CalendarPreviewContext =
-  createContext<CalendarPreviewContextValue<unknown> | null>(null);
-
-export function CalendarPreviewProvider({
-  value,
-  children
-}: {
-  value: CalendarPreviewContextValue<unknown>;
-  children: ReactNode;
-}) {
-  return (
-    <CalendarPreviewContext value={value}>{children}</CalendarPreviewContext>
-  );
-}
+export const CalendarPreviewContext =
+  createContext<CalendarPreviewContextValue | null>(null);
 
 /* `part` is the caller's display name, so the throw points at the element the
    author wrote rather than at this file. */
-export function useCalendarPreviewContext<Value = Date | null>(
+export function useCalendarPreviewContext(
   part: string
-): CalendarPreviewContextValue<Value> {
+): CalendarPreviewContextValue {
   const context = useContext(CalendarPreviewContext);
   if (!context) {
     throw new Error(`${part} must be used within <CalendarPreview>`);
   }
-  return context as CalendarPreviewContextValue<Value>;
+  return context;
 }
 
 /* `.Days` owns this rather than the root, so two day views in one tree cannot
@@ -158,22 +163,8 @@ export interface CalendarPreviewDaysContextValue {
   setBusy: (busy: boolean) => void;
 }
 
-const CalendarPreviewDaysContext =
+export const CalendarPreviewDaysContext =
   createContext<CalendarPreviewDaysContextValue | null>(null);
-
-export function CalendarPreviewDaysProvider({
-  value,
-  children
-}: {
-  value: CalendarPreviewDaysContextValue;
-  children: ReactNode;
-}) {
-  return (
-    <CalendarPreviewDaysContext value={value}>
-      {children}
-    </CalendarPreviewDaysContext>
-  );
-}
 
 export function useCalendarPreviewDaysContext(): CalendarPreviewDaysContextValue | null {
   return useContext(CalendarPreviewDaysContext);

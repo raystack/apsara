@@ -12,7 +12,7 @@
   display: flex;
   flex-direction: column;
   width: fit-content;
-  padding: var(--rs-space-3);
+  padding: var(--rs-space-4);
   border-radius: var(--rs-radius-4);
   background: var(--rs-color-background-base-primary);
   color: var(--rs-color-foreground-base-primary);
@@ -22,24 +22,17 @@
   pointer-events: none;
 }
 
-/* Inset by the gap a weekday label leaves inside its 40px cell. Aligning the
-   header to the column box instead would sit the caption visibly left of
-   "Sun", because the label is centred in the cell rather than flush to it. */
 .header {
   display: flex;
   align-items: center;
   gap: var(--rs-space-2);
-  min-height: var(--rs-space-9);
+  min-height: var(--rs-space-7);
   margin-bottom: var(--rs-space-3);
-  padding-inline: var(--rs-space-3);
 }
 
-/* The week-number column is a gutter, not a date column, so the caption starts
-   past it — aligned with Sunday rather than with the grid's outer edge. The
-   header cannot read `showWeekNumber`, which is a `.Grid` prop, so it asks the
-   rendered grid instead. */
+/* `showWeekNumber` is a `.Grid` prop, so the header asks the rendered grid. */
 .days:has(.week-number-header) .header {
-  padding-inline-start: calc(var(--rs-space-10) + var(--rs-space-3));
+  padding-inline-start: var(--rs-space-10);
 }
 
 .nav-button {
@@ -47,14 +40,44 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
+.header .nav-button,
+.month-header .nav-button {
+  width: var(--rs-space-8);
+  height: var(--rs-space-7);
+  padding: 0;
+}
+
+.header .nav-button > div,
+.header .nav-button > div > *,
+.month-header .nav-button > div,
+.month-header .nav-button > div > * {
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
+}
+
 .nav-button:disabled {
   color: var(--rs-color-foreground-base-tertiary);
   cursor: not-allowed;
 }
 
-/* Takes the space left of the buttons, so the caption sits against the start
-   edge and the reset and two nav buttons group at the end — the single-month
-   header in reference A. Source order already matches, so nothing reorders. */
+/* `.Reset` says it is off with `aria-disabled`, not `disabled`, so that it can
+   keep the focus it was activated with — which means the look `:disabled`
+   would have given it has to be spelled out. Both classes, to outweigh
+   `IconButton`'s own `:hover:not(:disabled)`. */
+.nav-button.reset[aria-disabled="true"] {
+  opacity: 0.5;
+  color: var(--rs-color-foreground-base-tertiary);
+  cursor: not-allowed;
+}
+
+.nav-button.reset[aria-disabled="true"]:hover,
+.nav-button.reset[aria-disabled="true"]:active {
+  background-color: transparent;
+  color: var(--rs-color-foreground-base-tertiary);
+  transform: none;
+}
+
+/* Takes the space left of the buttons, which group at the end. */
 .caption {
   flex: 1;
   text-align: start;
@@ -67,9 +90,7 @@
   -webkit-user-select: none;
 }
 
-/* The caption that opens the scroller is a filled chip, so the affordance
-   reads without an adjacent glyph. `flex: none` undoes `.caption`'s stretch —
-   the chip hugs its label rather than running to the nav buttons. */
+/* `flex: none` undoes `.caption`'s stretch, so the chip hugs its label. */
 .caption-trigger {
   display: inline-flex;
   flex: none;
@@ -77,12 +98,12 @@
   align-items: center;
   justify-content: center;
   gap: var(--rs-space-1);
-  padding: var(--rs-space-1) var(--rs-space-3);
+  padding: var(--rs-space-2) var(--rs-space-3);
   border: none;
   border-radius: var(--rs-radius-2);
   background: var(--rs-color-background-neutral-secondary);
   color: inherit;
-  font: inherit;
+  font-family: inherit;
   cursor: pointer;
 }
 
@@ -104,9 +125,8 @@
   z-index: 1;
 }
 
-/* Our own scroller, not a Select: two plain columns of buttons in a popup we
-   own, so nothing here portals a listbox the surrounding popover has to
-   recognise as inside itself. */
+/* Plain buttons, not a Select: a portalled listbox would read as outside the
+   surrounding popover. */
 .caption-popup {
   display: flex;
   gap: var(--rs-space-2);
@@ -117,6 +137,11 @@
   box-shadow: var(--rs-shadow-lifted);
 }
 
+.caption-popup .caption-divider[data-orientation="vertical"] {
+  height: auto;
+  align-self: stretch;
+}
+
 .caption-column {
   display: flex;
   flex-direction: column;
@@ -124,11 +149,14 @@
   overflow-y: auto;
   /* Six rows of the day-cell height; taller lists scroll. */
   max-height: calc(var(--rs-space-10) * 6);
+  padding: var(--rs-space-2);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .caption-option {
   flex: none;
-  padding: var(--rs-space-2) var(--rs-space-3);
+  padding: var(--rs-space-3);
   border: none;
   border-radius: var(--rs-radius-2);
   background: transparent;
@@ -161,21 +189,39 @@
   flex: none;
 }
 
-/* Both nav tracks stay reserved whether or not this month draws a button, so
-   the caption centres on its grid rather than on the remaining space. The
-   track width is the size-3 IconButton the nav renders. */
+/* Both nav tracks stay reserved, so the caption centres on its grid. */
 .month-header {
   display: grid;
-  grid-template-columns: var(--rs-space-6) 1fr var(--rs-space-6);
+  grid-template-columns: var(--rs-space-8) 1fr var(--rs-space-8);
   align-items: center;
   gap: var(--rs-space-2);
-  min-height: var(--rs-space-9);
+  min-height: var(--rs-space-7);
   margin-bottom: var(--rs-space-3);
-  padding-inline: var(--rs-space-3);
 }
 
 .month-header-prev {
   grid-column: 1;
+}
+
+.root {
+  --rs-caption-inset: calc((var(--rs-space-10) - var(--rs-space-6)) / 2);
+}
+
+.header .caption:not([data-dropdown]) {
+  padding-inline-start: var(--rs-caption-inset);
+}
+
+.header .caption[data-dropdown] {
+  margin-inline-start: calc(var(--rs-caption-inset) - var(--rs-space-3));
+}
+
+.body .label,
+.panel .header .caption:not([data-dropdown]) {
+  padding-inline-start: var(--rs-caption-inset);
+}
+
+.panel .header .caption[data-dropdown] {
+  margin-inline-start: 0;
 }
 
 .month-header-caption {
@@ -201,12 +247,8 @@
   flex-direction: column;
 }
 
-/* `.Header` owns the visible caption. This one stays in the tree because
-   react-day-picker points each grid's accessible name at the month, and a
-   removed node would take that name with it. */
 .month-caption {
   position: absolute;
-  /* A hairline box, not a spacing value — the space scale starts at 2px. */
   width: 1px;
   height: 1px;
   margin: -1px;
@@ -225,8 +267,7 @@
   position: relative;
 }
 
-/* The user-agent's 2px border-spacing would ring the grid, leaving the header
-   two pixels wider than the columns it sits above. */
+/* The UA's 2px border-spacing would leave the header wider than its columns. */
 .weeks table {
   border-spacing: 0;
 }
@@ -236,10 +277,6 @@
   display: flex;
 }
 
-/* Cells size to the border box and drop the user-agent's table-cell padding,
-   so a heading and the days under it are the same 40px column. Content-box
-   would make the bordered day cell 4px wider than its heading, and the two
-   rows would drift a column apart by Saturday. */
 .weekday,
 .day,
 .week-number,
@@ -253,7 +290,7 @@
   align-items: center;
   justify-content: center;
   width: var(--rs-space-10);
-  height: var(--rs-space-10);
+  height: var(--rs-space-9);
   color: var(--rs-color-foreground-base-secondary);
   text-align: center;
   font-weight: var(--rs-font-weight-medium);
@@ -433,7 +470,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--rs-space-6);
-  padding-top: var(--rs-space-6);
+  padding-top: var(--rs-space-9);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -465,10 +502,7 @@
   cursor: not-allowed;
 }
 
-/* Wider than the trigger and centred on it, per the frames. `.Days` brings its
-   own padding, so the surface adds none — and it opts out of the shared
-   popover's `max-width: 18rem`, sized for text at 288px against the 296px
-   seven 40px columns need, which cropped Saturday flush to the border. */
+/* Opts out of the shared popover's `max-width: 18rem`, which cropped Saturday. */
 .content {
   padding: 0;
   width: max-content;
@@ -479,17 +513,14 @@
   width: 100%;
 }
 
-/* The endpoints are pill-rounded on their outer edges and the days between sit
-   on one continuous band. The track is drawn on the cell rather than the day
-   button so neighbouring cells meet with no seam. */
+/* Drawn on the cell, not the button, so neighbours meet with no seam. */
 .range-middle {
   background: var(--rs-color-background-neutral-secondary);
   border-radius: 0;
 }
 
-/* react-day-picker marks every day of the range `selected`, and the single-day
-   rule paints that white for the accent pill. The days on the track are on
-   grey, so they keep the ordinary text colour. */
+/* RDP marks every day of a range `selected`; on the grey track they keep the
+   ordinary colour rather than the accent pill's white. */
 .range-middle .day-button {
   background: transparent;
   color: var(--rs-color-foreground-base-primary);
@@ -529,8 +560,116 @@
 }
 
 /* Two fields side by side, sharing the trigger's width. */
-.range-fields {
+.body {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: var(--rs-space-3);
+  padding: var(--rs-space-3);
+  width: max-content;
+}
+
+.label {
+  color: var(--rs-color-foreground-base-secondary);
+  font-size: var(--rs-font-size-micro);
+  line-height: var(--rs-line-height-micro);
+  letter-spacing: var(--rs-letter-spacing-micro);
+}
+
+.separator {
+  height: 1px;
+  background: var(--rs-color-border-base-primary);
+}
+
+.scales {
+  display: flex;
+}
+
+/* A fifth of the row does not hold "Half-year". Scoped to beat `Tabs`' flex. */
+.scales .scale {
+  flex: 1 1 auto;
+}
+
+/* The anchor for all five views, so the popover stops resizing. */
+.panel {
+  width: calc(var(--rs-space-10) * 7);
+}
+
+/* Under the switcher it is one view of five, so it drops its own inset. */
+.panel .days {
+  width: 100%;
+  padding: 0;
+}
+
+.panel .weeks table {
+  width: 100%;
+}
+
+.panel .weekday,
+.panel .day,
+.panel .week-number,
+.panel .week-number-header {
+  flex: 1;
+}
+
+/* The day view hugs; every period list is a fixed box that scrolls as one, so
+   the year headings scroll with their cells rather than pinning. */
+.panel[data-scale="day"] {
+  display: block;
+}
+
+.periods {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-4);
+  height: calc(var(--rs-space-10) * 8);
+  overflow-y: auto;
+}
+
+.period-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-2);
+}
+
+.period-year {
+  color: var(--rs-color-foreground-base-secondary);
+  font-size: var(--rs-font-size-micro);
+  line-height: var(--rs-line-height-micro);
+  letter-spacing: var(--rs-letter-spacing-micro);
+}
+
+.period-cells {
+  display: grid;
+  grid-template-columns: repeat(var(--rs-period-columns), 1fr);
+  gap: var(--rs-space-2);
+}
+
+.period {
+  padding: var(--rs-space-2) var(--rs-space-3);
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-2);
+  background: transparent;
+  color: var(--rs-color-foreground-base-primary);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  cursor: pointer;
+}
+
+.period:hover:not(:disabled) {
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+.period:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-inset);
+}
+
+.period[data-selected] {
+  background: var(--rs-color-background-neutral-secondary);
+}
+
+.period[data-unavailable] {
+  color: var(--rs-color-foreground-base-tertiary);
+  cursor: not-allowed;
 }

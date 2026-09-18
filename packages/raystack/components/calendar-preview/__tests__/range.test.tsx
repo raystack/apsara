@@ -147,8 +147,8 @@ describe('CalendarPreview range inputs', () => {
     fireEvent.click(day(document.body, '10'));
     fireEvent.click(day(document.body, '20'));
     const [start, end] = inputs(container);
-    expect(start.value).toBe('10/08/2026');
-    expect(end.value).toBe('20/08/2026');
+    expect(start.value).toBe('10 Aug 2026');
+    expect(end.value).toBe('20 Aug 2026');
   });
 
   /* `lock` is gone: a read-only endpoint is one read-only `.Input`. */
@@ -177,7 +177,7 @@ describe('CalendarPreview range inputs', () => {
   });
 });
 
-describe('CalendarPreview range auto-close', () => {
+describe('CalendarPreview range completion leaves the popover open', () => {
   const picker = (
     <>
       <CalendarPreview.Trigger>
@@ -193,54 +193,54 @@ describe('CalendarPreview range auto-close', () => {
   const isOpen = () =>
     getSlot(document.body, 'calendar-preview-content') !== null;
 
-  it('closes through onOpenChange when the range completes', () => {
-    const onOpenChange = vi.fn();
-    const { container } = renderRange({ onOpenChange }, picker);
+  const open = (container: HTMLElement) =>
     fireEvent.focus(
       getAllSlots(container, 'calendar-preview-input')[0] as HTMLElement
     );
-    expect(isOpen()).toBe(true);
 
-    fireEvent.click(day(document.body, '10'));
-    expect(isOpen()).toBe(true);
-
-    fireEvent.click(day(document.body, '20'));
-    expect(isOpen()).toBe(false);
-    expect(onOpenChange).toHaveBeenLastCalledWith(false, expect.anything());
-  });
-
-  /* Completing a range hands focus back to the trigger, and an unguarded
-     focus handler reopens the popover on the way out. jsdom does not restore
-     focus the way a browser does, so this asserts the guard rather than the
-     symptom: the close must be the last thing that happens. */
-  it('does not reopen on the focus that follows an auto-close', () => {
+  it('stays open when the range completes', () => {
     const onOpenChange = vi.fn();
     const { container } = renderRange({ onOpenChange }, picker);
-    const [start] = getAllSlots(
-      container,
-      'calendar-preview-input'
-    ) as HTMLElement[];
-    fireEvent.focus(start);
+    open(container);
+    expect(isOpen()).toBe(true);
 
-    fireEvent.click(day(document.body, '10'));
-    fireEvent.click(day(document.body, '20'));
-    expect(isOpen()).toBe(false);
-
-    /* The browser returns focus to the trigger here. */
-    fireEvent.focus(start);
-    expect(isOpen()).toBe(false);
-    const calls = onOpenChange.mock.calls;
-    expect(calls[calls.length - 1][0]).toBe(false);
-  });
-
-  /* Completing a range asks to close; a consumer holding `open` open wins. */
-  it('does not fight a controlled open', () => {
-    const onOpenChange = vi.fn();
-    renderRange({ open: true, onOpenChange }, picker);
     fireEvent.click(day(document.body, '10'));
     fireEvent.click(day(document.body, '20'));
     expect(isOpen()).toBe(true);
-    expect(onOpenChange).toHaveBeenLastCalledWith(false, expect.anything());
+    expect(onOpenChange.mock.calls.filter(call => call[0] === false)).toEqual(
+      []
+    );
+  });
+
+  it('takes a second range without a second trip to the trigger', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderRange({ onValueChange }, picker);
+    open(container);
+    fireEvent.click(day(document.body, '10'));
+    fireEvent.click(day(document.body, '20'));
+
+    fireEvent.click(day(document.body, '5'));
+    fireEvent.click(day(document.body, '8'));
+    expect(isOpen()).toBe(true);
+    expect(onValueChange).toHaveBeenCalledTimes(2);
+    expect(onValueChange.mock.calls[1][0]).toEqual({
+      from: new Date(2026, 7, 5),
+      to: new Date(2026, 7, 8)
+    });
+  });
+
+  it('still dismisses on Escape once the range is complete', () => {
+    const { container } = renderRange({}, picker);
+    open(container);
+    fireEvent.click(day(document.body, '10'));
+    fireEvent.click(day(document.body, '20'));
+    expect(isOpen()).toBe(true);
+
+    fireEvent.keyDown(
+      getSlot(document.body, 'calendar-preview-content') as HTMLElement,
+      { key: 'Escape' }
+    );
+    expect(isOpen()).toBe(false);
   });
 });
 
@@ -300,7 +300,7 @@ describe('CalendarPreview range parts that read the value', () => {
       defaultDate: RANGE
     });
     const reset = getSlot(container, 'calendar-preview-reset') as HTMLElement;
-    expect(reset).toBeDisabled();
+    expect(reset).toHaveAttribute('aria-disabled', 'true');
     expect(reset).toHaveAttribute('data-restored');
   });
 
@@ -333,8 +333,8 @@ describe('CalendarPreview range parts that read the value', () => {
       <CalendarPreview.Trigger />
     );
     const trigger = getSlot(container, 'calendar-preview-trigger');
-    expect(trigger?.textContent).toContain('10/08/2026');
-    expect(trigger?.textContent).toContain('20/08/2026');
+    expect(trigger?.textContent).toContain('10 Aug 2026');
+    expect(trigger?.textContent).toContain('20 Aug 2026');
   });
 
   it('edits the end without disturbing the start', () => {
@@ -345,8 +345,8 @@ describe('CalendarPreview range parts that read the value', () => {
     );
     const [start, end] = inputs(container);
     typeAndCommit(end, '25/08/2026');
-    expect(start.value).toBe('10/08/2026');
-    expect(end.value).toBe('25/08/2026');
+    expect(start.value).toBe('10 Aug 2026');
+    expect(end.value).toBe('25 Aug 2026');
     expect(onValueChange).toHaveBeenCalledWith(
       { from: RANGE.from, to: new Date(2026, 7, 25) },
       expect.objectContaining({ reason: 'input' })
@@ -361,8 +361,8 @@ describe('CalendarPreview range parts that read the value', () => {
     );
     const [start, end] = inputs(container);
     typeAndCommit(start, '05/08/2026');
-    expect(start.value).toBe('05/08/2026');
-    expect(end.value).toBe('20/08/2026');
+    expect(start.value).toBe('05 Aug 2026');
+    expect(end.value).toBe('20 Aug 2026');
     expect(onValueChange).toHaveBeenCalledWith(
       { from: new Date(2026, 7, 5), to: RANGE.to },
       expect.objectContaining({ reason: 'input' })
@@ -432,7 +432,7 @@ describe('CalendarPreview range order validation', () => {
       message: 'End date cannot be before the start date'
     });
     expect(onValueChange).not.toHaveBeenCalled();
-    expect(start.value).toBe('10/08/2026');
+    expect(start.value).toBe('10 Aug 2026');
     expect(end).toHaveAttribute('data-invalid');
   });
 
@@ -504,5 +504,298 @@ describe('CalendarPreview range order validation', () => {
     fireEvent.click(day(container, '5'));
     expect(onValueChange).not.toHaveBeenCalled();
     expect(day(container, '5')).toHaveAttribute('data-selected');
+  });
+});
+
+describe('CalendarPreview range with a read-only start', () => {
+  const COMMITTED = { from: new Date(2026, 7, 10), to: new Date(2026, 7, 20) };
+
+  function renderFixedStart(props = {}, endProps = {}) {
+    return render(
+      <CalendarPreview
+        selection='range'
+        today={TODAY}
+        defaultMonth={AUGUST}
+        defaultValue={COMMITTED}
+        {...props}
+      >
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input field='start' readOnly />
+          <CalendarPreview.Input field='end' {...endProps} />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Days />
+      </CalendarPreview>
+    );
+  }
+
+  it('moves the end against the committed start', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderFixedStart({ onValueChange });
+    fireEvent.click(day(container, '25'));
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+    expect(onValueChange.mock.calls[0][0]).toEqual({
+      from: new Date(2026, 7, 10),
+      to: new Date(2026, 7, 25)
+    });
+  });
+
+  it('refuses a day before the fixed start rather than restarting there', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderFixedStart({ onValueChange });
+    fireEvent.click(day(container, '5'));
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it('writes nothing when both endpoints are read-only', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderFixedStart(
+      { onValueChange },
+      { readOnly: true }
+    );
+    fireEvent.click(day(container, '25'));
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it('leaves the ordinary range machine alone when nothing is read-only', () => {
+    const onValueChange = vi.fn();
+    const { container } = render(
+      <CalendarPreview
+        selection='range'
+        today={TODAY}
+        defaultMonth={AUGUST}
+        defaultValue={COMMITTED}
+        onValueChange={onValueChange}
+      >
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input field='start' />
+          <CalendarPreview.Input field='end' />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Days />
+      </CalendarPreview>
+    );
+    fireEvent.click(day(container, '25'));
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+});
+
+describe('CalendarPreview range and days it may not cover', () => {
+  const blocked = (date: Date) => date.getDate() === 15;
+
+  it('restarts instead of completing over a blocked day', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderRange({
+      onValueChange,
+      isDateUnavailable: blocked
+    });
+    fireEvent.click(day(container, '10'));
+    fireEvent.click(day(container, '20'));
+    expect(onValueChange).not.toHaveBeenCalled();
+
+    fireEvent.click(day(container, '22'));
+    expect(onValueChange.mock.calls[0][0]).toEqual({
+      from: new Date(2026, 7, 20),
+      to: new Date(2026, 7, 22)
+    });
+  });
+
+  it('completes a range that clears the blocked day', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderRange({
+      onValueChange,
+      isDateUnavailable: blocked
+    });
+    fireEvent.click(day(container, '16'));
+    fireEvent.click(day(container, '20'));
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+  });
+
+  it('rejects a typed endpoint whose span is blocked', () => {
+    const onValidityChange = vi.fn();
+    const { container } = renderRange(
+      { isDateUnavailable: blocked },
+      <>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input field='start' />
+          <CalendarPreview.Input
+            field='end'
+            onValidityChange={onValidityChange}
+          />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Days />
+      </>
+    );
+    fireEvent.click(day(container, '10'));
+
+    const end = getAllSlots(container, 'calendar-preview-input')[1];
+    fireEvent.change(end, { target: { value: '20 Aug 2026' } });
+    const calls = onValidityChange.mock.calls;
+    const last = calls[calls.length - 1][0];
+    expect(last.valid).toBe(false);
+    expect(last.reason).toBe('unavailable');
+  });
+});
+
+describe('CalendarPreview range emptying one field', () => {
+  const RANGE = { from: new Date(2026, 7, 10), to: new Date(2026, 7, 20) };
+
+  function renderFields(props = {}) {
+    const utils = renderRange(
+      { defaultValue: RANGE, ...props },
+      <>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input field='start' />
+          <CalendarPreview.Input field='end' />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Days />
+      </>
+    );
+    const [start, end] = getAllSlots(
+      utils.container,
+      'calendar-preview-input'
+    ) as HTMLInputElement[];
+    return { ...utils, start, end };
+  }
+
+  const empty = (input: HTMLInputElement) => {
+    fireEvent.change(input, { target: { value: '' } });
+    fireEvent.blur(input);
+  };
+
+  it('keeps the partner endpoint in its field', () => {
+    const { start, end } = renderFields();
+    empty(start);
+    expect(start.value).toBe('');
+    expect(end.value).toBe('20 Aug 2026');
+  });
+
+  it('emits null once the range can no longer be formed', () => {
+    const onValueChange = vi.fn();
+    const { start } = renderFields({ onValueChange });
+    empty(start);
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+    expect(onValueChange.mock.calls[0][0]).toBeNull();
+  });
+
+  it('completes again from a grid click without losing the kept endpoint', () => {
+    const onValueChange = vi.fn();
+    const { container, start } = renderFields({ onValueChange });
+    empty(start);
+    fireEvent.click(day(container, '12'));
+    const calls = onValueChange.mock.calls;
+    expect(calls[calls.length - 1][0]).toEqual({
+      from: new Date(2026, 7, 12),
+      to: new Date(2026, 7, 20)
+    });
+  });
+
+  it('restarts when the click crosses the kept endpoint', () => {
+    const onValueChange = vi.fn();
+    const { container, start } = renderFields({ onValueChange });
+    empty(start);
+    fireEvent.click(day(container, '25'));
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+  });
+
+  it('leaves both fields alone when clearable is off', () => {
+    const { start, end } = renderFields({ clearable: false });
+    empty(start);
+    expect(start.value).toBe('10 Aug 2026');
+    expect(end.value).toBe('20 Aug 2026');
+  });
+});
+
+describe('CalendarPreview range endpoints the review left open', () => {
+  function renderFields(props = {}) {
+    const utils = renderRange(
+      props,
+      <>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input field='start' />
+          <CalendarPreview.Input field='end' />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Days />
+      </>
+    );
+    const [start, end] = getAllSlots(
+      utils.container,
+      'calendar-preview-input'
+    ) as HTMLInputElement[];
+    return { ...utils, start, end };
+  }
+
+  const type = (input: HTMLInputElement, text: string) => {
+    fireEvent.change(input, { target: { value: text } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+  };
+
+  /* A click means "the next endpoint"; typing means the field typed into. */
+  it('keeps a typed end in the end field when there is no start yet', () => {
+    const { start, end } = renderFields();
+    type(end, '20 Aug 2026');
+    expect(end.value).toBe('20 Aug 2026');
+    expect(start.value).toBe('');
+  });
+
+  it('completes from a typed end once the start arrives', () => {
+    const onValueChange = vi.fn();
+    const { container, end } = renderFields({ onValueChange });
+    type(end, '20 Aug 2026');
+    fireEvent.click(day(container, '10'));
+    expect(onValueChange.mock.calls[0][0]).toEqual({
+      from: new Date(2026, 7, 10),
+      to: new Date(2026, 7, 20)
+    });
+  });
+
+  /* The verdict on retained text depends on the partner, so it has to be
+     re-read when the partner moves rather than left where it was. */
+  it('clears a crossing end once the start moves behind it', () => {
+    const { container, end } = renderFields();
+    fireEvent.click(day(container, '10'));
+    fireEvent.change(end, { target: { value: '05 Aug 2026' } });
+    expect(end).toHaveAttribute('data-invalid');
+
+    fireEvent.click(day(container, '1'));
+    expect(end.value).toBe('05 Aug 2026');
+    expect(end).not.toHaveAttribute('data-invalid');
+  });
+
+  /* A draft is half a range built against the value it started from. */
+  it('drops a half-built draft when the consumer moves the value', () => {
+    const { container, rerender, start, end } = renderFields({
+      value: null
+    });
+    fireEvent.click(day(container, '10'));
+    expect(start.value).toBe('10 Aug 2026');
+
+    rerender(
+      <CalendarPreview
+        selection='range'
+        today={TODAY}
+        defaultMonth={AUGUST}
+        value={{ from: new Date(2026, 7, 3), to: new Date(2026, 7, 7) }}
+      >
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input field='start' />
+          <CalendarPreview.Input field='end' />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Days />
+      </CalendarPreview>
+    );
+
+    expect(start.value).toBe('03 Aug 2026');
+    expect(end.value).toBe('07 Aug 2026');
+  });
+
+  /* Emptying one field writes a draft and clears the value in the same pass,
+     and that draft is the whole point of it. */
+  it('keeps the draft that emptying one field leaves behind', () => {
+    const { start, end } = renderFields({
+      defaultValue: { from: new Date(2026, 7, 10), to: new Date(2026, 7, 20) }
+    });
+    fireEvent.change(start, { target: { value: '' } });
+    fireEvent.blur(start);
+    expect(start.value).toBe('');
+    expect(end.value).toBe('20 Aug 2026');
   });
 });

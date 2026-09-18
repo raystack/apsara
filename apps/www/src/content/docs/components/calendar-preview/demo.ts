@@ -46,37 +46,6 @@ export const playground = {
   getCode
 };
 
-export const preview = {
-  type: 'code',
-  tabs: [
-    {
-      name: 'Inline',
-      code: `<CalendarPreview defaultMonth={new Date(2024, 3, 1)}>
-              <CalendarPreview.Days />
-            </CalendarPreview>`
-    },
-    {
-      name: 'Two months',
-      code: `<CalendarPreview defaultMonth={new Date(2024, 3, 1)}>
-              <CalendarPreview.Days numberOfMonths={2} />
-            </CalendarPreview>`
-    },
-    {
-      name: 'Month + year',
-      code: `<CalendarPreview defaultMonth={new Date(2024, 3, 1)}>
-              <CalendarPreview.Days>
-                <CalendarPreview.Header>
-                  <CalendarPreview.Caption dropdown />
-                  <CalendarPreview.PrevMonth />
-                  <CalendarPreview.NextMonth />
-                </CalendarPreview.Header>
-                <CalendarPreview.Grid />
-              </CalendarPreview.Days>
-            </CalendarPreview>`
-    }
-  ]
-};
-
 export const compositionDemo = {
   type: 'code',
   tabs: [
@@ -93,6 +62,19 @@ export const compositionDemo = {
                 <CalendarPreview.Header>
                   <CalendarPreview.Caption>Delivery date</CalendarPreview.Caption>
                   <CalendarPreview.Caption />
+                  <CalendarPreview.PrevMonth />
+                  <CalendarPreview.NextMonth />
+                </CalendarPreview.Header>
+                <CalendarPreview.Grid />
+              </CalendarPreview.Days>
+            </CalendarPreview>`
+    },
+    {
+      name: 'Month + year',
+      code: `<CalendarPreview defaultMonth={new Date(2024, 3, 1)}>
+              <CalendarPreview.Days>
+                <CalendarPreview.Header>
+                  <CalendarPreview.Caption dropdown />
                   <CalendarPreview.PrevMonth />
                   <CalendarPreview.NextMonth />
                 </CalendarPreview.Header>
@@ -259,6 +241,12 @@ export const gridDemo = {
                 <CalendarPreview.Header />
                 <CalendarPreview.Grid loading />
               </CalendarPreview.Days>
+            </CalendarPreview>`
+    },
+    {
+      name: 'Two months',
+      code: `<CalendarPreview defaultMonth={new Date(2024, 3, 1)}>
+              <CalendarPreview.Days numberOfMonths={2} />
             </CalendarPreview>`
     }
   ]
@@ -440,7 +428,7 @@ function CalendarPreviewInvalidExample() {
               defaultMonth={new Date(2024, 3, 1)}
               defaultValue={new Date(2024, 3, 17)}
             >
-              <CalendarPreview.Trigger render={<Button variant="outline" />} />
+              <CalendarPreview.Trigger nativeButton render={<Button variant="outline" />} />
               <CalendarPreview.Content>
                 <CalendarPreview.Days />
               </CalendarPreview.Content>
@@ -554,8 +542,13 @@ export const rangeDemo = {
       name: 'Invalid input',
       code: `
 function CalendarPreviewRangeInvalidExample() {
-  const [defaultError, setDefaultError] = React.useState();
-  const [customError, setCustomError] = React.useState();
+  // One message per Field, but two endpoints feed it — so each endpoint's
+  // verdict is tracked on its own and the Field shows whichever is unhappy.
+  const [defaultErrors, setDefaultErrors] = React.useState({});
+  const [customErrors, setCustomErrors] = React.useState({});
+  const at = (set, field) => ({ message }) =>
+    set(current => ({ ...current, [field]: message }));
+  const first = errors => errors.start ?? errors.end;
 
   const range = {
     selection: 'range',
@@ -568,18 +561,18 @@ function CalendarPreviewRangeInvalidExample() {
       <Field
         label="Trip dates"
         description="Type an end before 10/04/2024 — typing rejects, clicking restarts"
-        error={defaultError}
+        error={first(defaultErrors)}
       >
         <CalendarPreview {...range}>
           <CalendarPreview.Trigger>
             <Flex align="center" gap={3}>
               <CalendarPreview.Input
                 field="start"
-                onValidityChange={({ message }) => setDefaultError(message)}
+                onValidityChange={at(setDefaultErrors, 'start')}
               />
               <CalendarPreview.Input
                 field="end"
-                onValidityChange={({ message }) => setDefaultError(message)}
+                onValidityChange={at(setDefaultErrors, 'end')}
               />
             </Flex>
           </CalendarPreview.Trigger>
@@ -592,7 +585,7 @@ function CalendarPreviewRangeInvalidExample() {
       <Field
         label="Trip dates"
         description="The same crossing, worded with errorMessages"
-        error={customError}
+        error={first(customErrors)}
       >
         <CalendarPreview {...range}>
           <CalendarPreview.Trigger>
@@ -600,12 +593,12 @@ function CalendarPreviewRangeInvalidExample() {
               <CalendarPreview.Input
                 field="start"
                 errorMessages={{ 'out-of-order': 'Start must not pass the end' }}
-                onValidityChange={({ message }) => setCustomError(message)}
+                onValidityChange={at(setCustomErrors, 'start')}
               />
               <CalendarPreview.Input
                 field="end"
                 errorMessages={{ 'out-of-order': 'Pick a day on or after the start' }}
-                onValidityChange={({ message }) => setCustomError(message)}
+                onValidityChange={at(setCustomErrors, 'end')}
               />
             </Flex>
           </CalendarPreview.Trigger>
@@ -625,7 +618,7 @@ function CalendarPreviewRangeInvalidExample() {
               defaultMonth={new Date(2024, 3, 1)}
               defaultValue={{ from: new Date(2024, 3, 10), to: new Date(2024, 3, 20) }}
             >
-              <CalendarPreview.Trigger render={<Button variant="outline" />}>
+              <CalendarPreview.Trigger nativeButton render={<Button variant="outline" />}>
                 10 Apr – 20 Apr
               </CalendarPreview.Trigger>
               <CalendarPreview.Content>
@@ -634,4 +627,128 @@ function CalendarPreviewRangeInvalidExample() {
             </CalendarPreview>`
     }
   ]
+};
+
+export const scaleDemo = {
+  type: 'code',
+  tabs: [
+    {
+      name: 'Inline',
+      code: `<CalendarPreview
+              scales={['day', 'month', 'quarter', 'halfYear', 'year']}
+              defaultMonth={new Date(2026, 7, 1)}
+              defaultScale="quarter"
+            >
+              <CalendarPreview.Body />
+            </CalendarPreview>`
+    },
+    {
+      name: 'Day scale',
+      code: `<CalendarPreview
+              scales={['day', 'month', 'quarter', 'halfYear', 'year']}
+              defaultMonth={new Date(2026, 7, 1)}
+            >
+              <CalendarPreview.Body />
+            </CalendarPreview>`
+    },
+    {
+      name: 'In a popover',
+      code: `<CalendarPreview
+              scales={['day', 'month', 'quarter', 'halfYear', 'year']}
+              defaultMonth={new Date(2026, 7, 1)}
+            >
+              <CalendarPreview.Trigger placeholder="Add start date" />
+              <CalendarPreview.Content>
+                <CalendarPreview.Body />
+              </CalendarPreview.Content>
+            </CalendarPreview>`
+    },
+    {
+      name: 'Periods only',
+      code: `<CalendarPreview scales={['month', 'quarter', 'year']} defaultScale="month">
+              <CalendarPreview.Body />
+            </CalendarPreview>`
+    },
+    {
+      name: 'One view alone',
+      code: `<CalendarPreview scales="quarter" defaultMonth={new Date(2026, 7, 1)}>
+              <CalendarPreview.Quarters />
+            </CalendarPreview>`
+    },
+    {
+      name: 'Bounded',
+      code: `<CalendarPreview
+              scales={['month', 'quarter', 'halfYear']}
+              defaultScale="quarter"
+              trailingValue
+              minDate={new Date(2026, 6, 15)}
+            >
+              <CalendarPreview.Body />
+            </CalendarPreview>`
+    },
+    {
+      name: 'Trailing value',
+      code: `
+function CalendarPreviewTrailingExample() {
+  const scales = ['day', 'month', 'quarter', 'halfYear', 'year'];
+  const [start, setStart] = React.useState({ date: '2026-07-01', scale: 'quarter' });
+  const [end, setEnd] = React.useState({ date: '2026-09-30', scale: 'quarter' });
+
+  return (
+    <Flex direction="column" gap={5}>
+      <Flex align="center" gap={3}>
+        <CalendarPreview scales={scales} value={start} onValueChange={setStart}>
+          <CalendarPreview.Trigger placeholder="Add start date" />
+          <CalendarPreview.Content>
+            <CalendarPreview.Body />
+          </CalendarPreview.Content>
+        </CalendarPreview>
+
+        <Text size="small" variant="secondary">→</Text>
+
+        <CalendarPreview scales={scales} trailingValue value={end} onValueChange={setEnd}>
+          <CalendarPreview.Trigger placeholder="Add end date" />
+          <CalendarPreview.Content>
+            <CalendarPreview.Body />
+          </CalendarPreview.Content>
+        </CalendarPreview>
+      </Flex>
+
+      <Text size="micro" variant="secondary">
+        Emitted: {start.date} → {end.date}
+      </Text>
+    </Flex>
+  );
+}`
+    }
+  ]
+};
+
+export const scalePairDemo = {
+  type: 'code',
+  code: `<Flex align="center" gap={3}>
+      <CalendarPreview
+        scales={['day', 'month', 'quarter', 'halfYear', 'year']}
+        defaultValue={{ date: '2026-08-01', scale: 'day' }}
+      >
+        <CalendarPreview.Trigger placeholder="Add start date" />
+        <CalendarPreview.Content>
+          <CalendarPreview.Body />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+
+      <Text size="small" variant="secondary">→</Text>
+
+      <CalendarPreview
+        scales={['day', 'month', 'quarter', 'halfYear', 'year']}
+        trailingValue
+        minDate={new Date(2026, 7, 1)}
+        defaultValue={{ date: '2026-09-30', scale: 'quarter' }}
+      >
+        <CalendarPreview.Trigger placeholder="Add end date" />
+        <CalendarPreview.Content>
+          <CalendarPreview.Body />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    </Flex>`
 };

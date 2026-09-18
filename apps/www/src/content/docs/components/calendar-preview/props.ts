@@ -1,24 +1,66 @@
 import { ReactNode } from 'react';
 
-export interface CalendarPreviewProps {
-  /** The selected day (controlled). */
-  value?: Date | null;
+type Scale = 'day' | 'month' | 'quarter' | 'halfYear' | 'year';
 
-  /** The initially selected day (uncontrolled). */
-  defaultValue?: Date | null;
+export interface CalendarPreviewProps {
+  /**
+   * Whether the grid picks one day or a span. A range is two edges or nothing;
+   * the half-built state stays internal.
+   * @default "single"
+   */
+  selection?: 'single' | 'range';
 
   /**
-   * Called when a day is committed or cleared. `details.toDate()` returns the
-   * day acted on even when `value` is `null`.
+   * The selected value (controlled). Its shape follows the root: a `Date` by
+   * default, `{ from, to }` at `selection="range"`, and `{ date, scale }` once
+   * `scales` offers anything beyond `"day"` — `date` is a timeless
+   * `"YYYY-MM-DD"`.
+   */
+  value?:
+    | Date
+    | { from: Date; to: Date }
+    | { date: string; scale: Scale }
+    | null;
+
+  /** The initial value (uncontrolled). Same shape as `value`. */
+  defaultValue?:
+    | Date
+    | { from: Date; to: Date }
+    | { date: string; scale: Scale }
+    | null;
+
+  /**
+   * Called when a value is committed or cleared, with the same shape as
+   * `value`. `details.toDate()` returns the day acted on even when the value is
+   * `null`. A range fires on a complete range or not at all.
    * @example onValueChange={(value, details) => console.log(details.reason)}
    */
   onValueChange?: (
-    value: Date | null,
+    value:
+      | Date
+      | { from: Date; to: Date }
+      | { date: string; scale: Scale }
+      | null,
     details: {
-      reason: 'select' | 'input' | 'clear' | 'scale';
+      reason: 'select' | 'input' | 'clear' | 'reset' | 'scale';
       period: { start: string; end: string };
       toDate: () => Date;
     }
+  ) => void;
+
+  /** Whether the popover is open (controlled). Ignored by an inline calendar. */
+  open?: boolean;
+
+  /** @default false */
+  defaultOpen?: boolean;
+
+  /**
+   * Called when the popover opens or closes. `details` is Base UI's own,
+   * forwarded unchanged, so `details.reason` stays the union it narrows on.
+   */
+  onOpenChange?: (
+    open: boolean,
+    details: { reason?: string; event?: Event }
   ) => void;
 
   /** The first month the grid displays (controlled). */
@@ -40,16 +82,21 @@ export interface CalendarPreviewProps {
   yearRange?: { from: number; to: number };
 
   /**
-   * Earliest selectable day, inclusive. Never clamps navigation.
+   * Earliest selectable day, inclusive. Never clamps navigation. A period is
+   * tested against the day it would emit, so `trailingValue` moves the answer:
+   * bounded at 15 July, Q3 is rejected for a start field and allowed for an end
+   * field.
    * @example minDate={new Date(2024, 3, 17)}
    */
   minDate?: Date;
 
-  /** Latest selectable day, inclusive. Never clamps navigation. */
+  /** Latest selectable day, inclusive. Tested as `minDate` is. */
   maxDate?: Date;
 
   /**
-   * Reject individual days, on top of `minDate` / `maxDate`.
+   * Reject individual days, on top of `minDate` / `maxDate`. Day scale only —
+   * period cells never call it, and are bounded by `minDate` / `maxDate`
+   * against the day they would emit.
    * @example isDateUnavailable={date => date.getDay() === 0}
    */
   isDateUnavailable?: (date: Date) => boolean;
@@ -57,10 +104,56 @@ export interface CalendarPreviewProps {
   /**
    * The day `.Reset` restores. Read even when `value` is controlled, which
    * `defaultValue` is not. `null` is a default of nothing selected, so
-   * `.Reset` clears; omitting the prop renders no button at all. Takes a
-   * range at `selection="range"`.
+   * `.Reset` clears; omitting the prop renders no button at all. It follows
+   * the selection: a range at `selection="range"`, a period at a coarser
+   * scale.
    */
-  defaultDate?: Date | { from: Date; to: Date } | null;
+  defaultDate?:
+    | Date
+    | { from: Date; to: Date }
+    | { date: string; scale: Scale }
+    | null;
+
+  /**
+   * Renders a value for display — every trigger, input and annotation goes
+   * through it. Defaults to `DD MMM YYYY` at day scale, and the period's own
+   * shorthand above it.
+   */
+  formatValue?: (
+    value: Date | { date: string; scale: Scale },
+    scale: Scale
+  ) => string;
+
+  /**
+   * The granularities this root offers. One entry hides the switcher; anything
+   * beyond `"day"` moves the value to `{ date, scale }`.
+   *
+   * The array form takes the scale-aware arm whatever it holds, so
+   * `scales={['day']}` types the value as `{ date, scale }` while the bare
+   * string `scales="day"` keeps it a `Date`. TypeScript cannot read an array's
+   * contents, so the two spellings of a day-only calendar are not equivalent —
+   * pass the string unless you want the period shape.
+   * @default "day"
+   * @example scales={['day', 'month', 'quarter']}
+   */
+  scales?: Scale | Scale[];
+
+  /** The scale the picker opens on. Defaults to the first of `scales`. */
+  defaultScale?: Scale;
+
+  /** The active scale (controlled). */
+  scale?: Scale;
+
+  /** Called when the switcher moves. */
+  onScaleChange?: (scale: Scale) => void;
+
+  /**
+   * Whether a period emits its last day rather than its first — an end field
+   * wants 31 July from "July 2026", a start field wants the 1st. It changes the
+   * value, not the formatting.
+   * @default false
+   */
+  trailingValue?: boolean;
 
   /**
    * The zone the grid reads days in. Forwarded to the grid; the component does
@@ -78,7 +171,8 @@ export interface CalendarPreviewProps {
   today?: Date;
 
   /**
-   * Whether clicking the selected day deselects it.
+   * Whether clicking the selected day deselects it. Day scale only — clicking
+   * an already-selected period re-commits it rather than clearing.
    * @default true
    */
   clearable?: boolean;
@@ -190,13 +284,29 @@ export interface CalendarPreviewResetProps {
 
 /** What the enclosing root exposes to a custom part. */
 export interface UseCalendarReturn {
-  /** The committed day, or null. */
-  value: Date | null;
+  /**
+   * The committed value, or null. A day, a range at `selection="range"`, or a
+   * period at a coarser scale — whichever shape this root holds.
+   */
+  value:
+    | Date
+    | { from: Date; to: Date }
+    | { date: string; scale: Scale }
+    | null;
 
-  /** Commit a day, or clear with `null`. Emits `onValueChange`. */
-  setValue: (value: Date | null) => void;
+  /** Commit a value, or clear with `null`. Emits `onValueChange`. */
+  setValue: (
+    value:
+      | Date
+      | { from: Date; to: Date }
+      | { date: string; scale: Scale }
+      | null
+  ) => void;
 
-  /** The granularity the value is committed at. Read-only until phase 5. */
+  /**
+   * The granularity the value is committed at. Read-only — switching scale is
+   * `.Scales` and `.Scale`, which take `render` for custom chrome.
+   */
   scale: 'day' | 'month' | 'quarter' | 'halfYear' | 'year';
 
   /** The first month currently displayed. */

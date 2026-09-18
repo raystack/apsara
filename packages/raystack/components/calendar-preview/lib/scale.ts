@@ -1,30 +1,20 @@
 /*
  * The scale maths from RFC 005 — pure functions, no React, no UI.
  *
- * Everything here is expressed in `DayKey`s (`'YYYY-MM-DD'`, timeless). Every
- * date-library call goes through `../date-adapter`; this file makes none of
- * its own.
+ * Everything here is expressed in `DayKey`s (`'YYYY-MM-DD'`, timeless), so
+ * none of it takes a zone. Callers convert at their own boundary. Every
+ * date-library call goes through `../date-adapter`; this file makes none.
  */
 import {
   type DayKey,
-  dayKey,
   endOfMonthKey,
-  endOfQuarterKey,
-  endOfYearKey,
   isDayKey,
   monthOf,
-  startOfMonthKey,
-  startOfQuarterKey,
-  startOfYearKey
+  startOfMonthKey
 } from '../date-adapter';
 
 /** The granularities a value can be selected at. */
-export type CalendarPreviewScale =
-  | 'day'
-  | 'month'
-  | 'quarter'
-  | 'halfYear'
-  | 'year';
+export type Scale = 'day' | 'month' | 'quarter' | 'halfYear' | 'year';
 
 /**
  * A committed selection: a concrete day, plus what that day *means*.
@@ -33,9 +23,9 @@ export type CalendarPreviewScale =
  * `{ date: '2026-08-31', scale: 'month' }` still reads back as August 2026 with
  * no calendar mounted — see RFC 005, "The value carries its scale".
  */
-export interface CalendarPreviewScaleValue {
+export interface ScaleValue {
   date: DayKey;
-  scale: CalendarPreviewScale;
+  scale: Scale;
 }
 
 /** The inclusive day span a period covers. */
@@ -45,7 +35,7 @@ export interface Period {
 }
 
 /** Every scale, finest first. */
-export const SCALES: readonly CalendarPreviewScale[] = [
+export const SCALES: readonly Scale[] = [
   'day',
   'month',
   'quarter',
@@ -53,7 +43,7 @@ export const SCALES: readonly CalendarPreviewScale[] = [
   'year'
 ];
 
-export function isScale(value: string): value is CalendarPreviewScale {
+export function isScale(value: string): value is Scale {
   return (SCALES as readonly string[]).includes(value);
 }
 
@@ -63,31 +53,33 @@ export function isScale(value: string): value is CalendarPreviewScale {
  * `halfYear` is ours to derive — no date library has it. H1 is January to June,
  * H2 is July to December.
  */
-export function periodOf(
-  date: Date | DayKey,
-  scale: CalendarPreviewScale,
-  timeZone?: string
-): Period {
-  const key = toKey(date, timeZone);
-  switch (scale) {
-    case 'day':
-      return { start: key, end: key };
-    case 'month':
-      return { start: startOfMonthKey(key), end: endOfMonthKey(key) };
-    case 'quarter':
-      return { start: startOfQuarterKey(key), end: endOfQuarterKey(key) };
-    case 'halfYear': {
-      /* The four half-year edges exist in every year, leap or not, so the key
-       * can be composed from the year segment directly. */
-      const year = yearSegment(key);
-      return monthOf(key) <= 6
-        ? { start: `${year}-01-01`, end: `${year}-06-30` }
-        : { start: `${year}-07-01`, end: `${year}-12-31` };
-    }
-    case 'year':
-      return { start: startOfYearKey(key), end: endOfYearKey(key) };
+export function periodOf(date: DayKey, scale: Scale): Period {
+  const key = requireKey(date);
+  if (scale === 'day') return { start: key, end: key };
+  /* A month's last day is the only edge that moves with the calendar. */
+  if (scale === 'month') {
+    return { start: startOfMonthKey(key), end: endOfMonthKey(key) };
   }
+  const year = key.slice(0, 4);
+  const [start, end] = FIXED_EDGES[scale](monthOf(key));
+  return { start: `${year}-${start}`, end: `${year}-${end}` };
 }
+
+const QUARTERS: readonly (readonly [string, string])[] = [
+  ['01-01', '03-31'],
+  ['04-01', '06-30'],
+  ['07-01', '09-30'],
+  ['10-01', '12-31']
+];
+
+const FIXED_EDGES: Record<
+  Exclude<Scale, 'day' | 'month'>,
+  (month: number) => readonly [string, string]
+> = {
+  quarter: month => QUARTERS[Math.floor((month - 1) / 3)],
+  halfYear: month => (month <= 6 ? ['01-01', '06-30'] : ['07-01', '12-31']),
+  year: () => ['01-01', '12-31']
+};
 
 /**
  * The single day a period stands for: its last day when `trailing`, its first
@@ -110,19 +102,21 @@ export function anchorOf(period: Period, trailing: boolean): DayKey {
  * `2026-01-01` — the anchor is all that survives.
  */
 export function convertScale(
-  value: CalendarPreviewScaleValue,
-  to: CalendarPreviewScale,
-  trailing: boolean,
-  timeZone?: string
-): CalendarPreviewScaleValue {
-  return {
-    date: anchorOf(periodOf(value.date, to, timeZone), trailing),
-    scale: to
-  };
+  value: ScaleValue,
+  to: Scale,
+  trailing: boolean
+): ScaleValue {
+  return { date: anchorOf(periodOf(value.date, to), trailing), scale: to };
+}
+
+export interface AvailabilityOptions {
+  trailing?: boolean;
+  min?: DayKey;
+  max?: DayKey;
 }
 
 /**
- * Whether the period of `scale` containing `value` can be selected.
+ * Whether the period of `scale` containing `date` can be selected.
  *
  * The test is against **the date the period would produce**, not the period's
  * start — so availability depends on `trailing`, and one period can be
@@ -135,28 +129,19 @@ export function convertScale(
  * never clamped.
  */
 export function isAvailable(
-  value: Date | DayKey,
-  scale: CalendarPreviewScale,
-  trailing: boolean,
-  min?: Date | DayKey,
-  max?: Date | DayKey,
-  timeZone?: string
+  date: DayKey,
+  scale: Scale,
+  { trailing = false, min, max }: AvailabilityOptions = {}
 ): boolean {
-  const produced = anchorOf(periodOf(value, scale, timeZone), trailing);
-  if (min !== undefined && produced < toKey(min, timeZone)) return false;
-  if (max !== undefined && produced > toKey(max, timeZone)) return false;
+  const produced = anchorOf(periodOf(date, scale), trailing);
+  if (min !== undefined && produced < requireKey(min)) return false;
+  if (max !== undefined && produced > requireKey(max)) return false;
   return true;
 }
 
-function toKey(date: Date | DayKey, timeZone?: string): DayKey {
-  if (typeof date !== 'string') return dayKey(date, timeZone);
-  if (!isDayKey(date)) {
-    throw new RangeError(`Not a YYYY-MM-DD day: ${JSON.stringify(date)}`);
+function requireKey(key: DayKey): DayKey {
+  if (!isDayKey(key)) {
+    throw new RangeError(`Not a YYYY-MM-DD day: ${JSON.stringify(key)}`);
   }
-  return date;
-}
-
-/** The `YYYY` of a key, as written — not parsed, so it never loses a leading zero. */
-function yearSegment(key: DayKey): string {
-  return key.slice(0, 4);
+  return key;
 }

@@ -1,16 +1,49 @@
 import { mergeProps, Popover, useRender } from '@base-ui/react';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import { REASONS } from '@base-ui/react/internals/reasons';
+import type { BaseUIEvent } from '@base-ui/react/types';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { cx } from 'class-variance-authority';
-import { type ComponentProps, type FocusEvent, useRef } from 'react';
+import {
+  type ComponentProps,
+  createContext,
+  type FocusEvent,
+  type MouseEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import type { CalendarPreviewValue } from './calendar-preview-root';
+import { isRange } from './calendar-preview-root';
+
+/* Per trigger, not per root: `.Body` mounts an `.Input` inside `.Content`, and
+   a childless trigger beside it is still a button. */
+const TriggerInputContext = createContext<{
+  registerInput: (mounted: boolean) => void;
+} | null>(null);
+
+export function useTriggerInput() {
+  return useContext(TriggerInputContext);
+}
 
 export interface CalendarPreviewTriggerProps
   extends useRender.ComponentProps<'div'> {
   /** Shown when there is no value and no children. */
   placeholder?: string;
+  /**
+   * Whether `render` produces a native `<button>`.
+   *
+   * Base UI supplies the button role, the tab stop and the key handling for
+   * anything that is not one, and warns in the console when it is told wrong —
+   * which a `render={<Button />}` trigger otherwise is, on every render.
+   *
+   * @defaultValue false, which is what the default `div` is
+   */
+  nativeButton?: boolean;
 }
 
 /**
@@ -32,6 +65,7 @@ export interface CalendarPreviewTriggerProps
  */
 export function CalendarPreviewTrigger({
   placeholder = 'Select date',
+  nativeButton = false,
   className,
   children,
   render,
@@ -42,31 +76,76 @@ export function CalendarPreviewTrigger({
     value,
     formatValue,
     scale,
+    open,
     setOpen,
     shouldIgnoreFocusOpen,
+    triggerRef,
+    setTriggerHasInput,
     disabled,
     readOnly
-  } = useCalendarPreviewContext<CalendarPreviewValue>(
-    'CalendarPreview.Trigger'
-  );
+  } = useCalendarPreviewContext('CalendarPreview.Trigger');
+
+  const [inputCount, setInputCount] = useState(0);
+  const hasInput = inputCount > 0;
+
+  const registerInput = useCallback((mounted: boolean) => {
+    setInputCount(current => current + (mounted ? 1 : -1));
+  }, []);
+
+  const inputContext = useMemo(() => ({ registerInput }), [registerInput]);
+
+  /* `.Content` is a sibling, so what this trigger wraps has to reach it through
+     the root rather than through the context below. */
+  useEffect(() => {
+    setTriggerHasInput(hasInput);
+    return () => setTriggerHasInput(false);
+  }, [hasInput, setTriggerHasInput]);
 
   /* Tracks the pointer, not the open state: Base UI owns whether the popover
      is open, and this only says whether a press is mid-flight. */
   const pressing = useRef(false);
 
+  /* A pointer released outside the trigger never reaches `onPointerUp` here,
+     and a flag left set swallows every focus that follows. */
+  useEffect(() => {
+    const release = () => {
+      pressing.current = false;
+    };
+    window.addEventListener('pointerup', release);
+    window.addEventListener('pointercancel', release);
+    return () => {
+      window.removeEventListener('pointerup', release);
+      window.removeEventListener('pointercancel', release);
+    };
+  }, []);
+
+  const mergedRef = useMergedRefs(triggerRef, ref);
+
   /* One cast at the boundary: Base UI types its trigger for the `button` it
      renders by default, and this one is always a `div`. Consumer props stay
      last, inside the merge. */
   const triggerProps = {
-    nativeButton: false,
+    nativeButton,
     disabled,
     render: render ?? <div />,
-    ref,
+    ref: mergedRef,
     ...mergeProps<'div'>(
       {
         className: cx(styles.trigger, className),
         'data-slot': 'calendar-preview-trigger',
-        'data-scale': scale,
+        /* Base UI gives a non-native trigger both, which around a field is a
+           second tab stop and a control inside a button role. Without an
+           input the trigger IS the control, and Base UI adds no `tabIndex`
+           to a rendered `div` — so it has to say so itself or no keyboard
+           ever reaches it. A real `button` arrives with both. */
+        role: hasInput || nativeButton ? undefined : 'button',
+        tabIndex: hasInput ? -1 : nativeButton ? undefined : 0,
+        /* Merged to the right of `useClick`, so this runs first. Only the
+           closing half goes, or a press could not reopen a field that never
+           lost focus. */
+        onClick: (event: BaseUIEvent<MouseEvent<HTMLDivElement>>) => {
+          if (hasInput && open) event.preventBaseUIHandler();
+        },
         onPointerDown: () => {
           pressing.current = true;
         },
@@ -74,8 +153,14 @@ export function CalendarPreviewTrigger({
           pressing.current = false;
         },
         onFocus: (event: FocusEvent<HTMLDivElement>) => {
-          if (disabled || readOnly || pressing.current) return;
-          if (shouldIgnoreFocusOpen()) return;
+          if (disabled || readOnly) return;
+          /* Consumed before the press guard: a press that returns early
+             without taking it leaves it armed against the next focus. */
+          const returning = shouldIgnoreFocusOpen();
+          /* With the toggle gone there is nothing to race, and the guard
+             would swallow the focus a press delivers before `pointerup` —
+             leaving nothing to open the popover at all. */
+          if (returning || (!hasInput && pressing.current)) return;
           setOpen(
             true,
             createChangeEventDetails(
@@ -90,16 +175,22 @@ export function CalendarPreviewTrigger({
     )
   } as ComponentProps<typeof Popover.Trigger>;
 
-  /* `formatValue` takes a single day, so a range formats as its two ends. */
+  /* A period reads back at its own scale, not the view's. */
   const label =
     value instanceof Date
       ? formatValue(value, scale)
-      : value
+      : isRange(value)
         ? `${formatValue(value.from, scale)} – ${formatValue(value.to, scale)}`
-        : placeholder;
+        : value
+          ? formatValue(value, value.scale)
+          : placeholder;
 
   return (
-    <Popover.Trigger {...triggerProps}>{children ?? label}</Popover.Trigger>
+    <Popover.Trigger {...triggerProps}>
+      <TriggerInputContext value={inputContext}>
+        {children ?? label}
+      </TriggerInputContext>
+    </Popover.Trigger>
   );
 }
 

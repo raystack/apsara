@@ -35,23 +35,22 @@ import {
   CalendarPreviewNextMonth,
   CalendarPreviewPrevMonth
 } from './calendar-preview-header';
-import { formatCaptionLabel, formatWeekdayLabel } from './date-adapter';
+import { isScaleValue } from './calendar-preview-root';
+import {
+  formatCaptionLabel,
+  formatWeekdayLabel,
+  parseKey
+} from './date-adapter';
 
-/* The only file that may import react-day-picker. It runs with
-   `hideNavigation` and `captionLayout='label'` so it never mounts a `Select`,
-   and the selection props come from root context rather than from
-   `CalendarPreviewGridProps` — which is what lets `...props` stay last. */
-/* Split in two on purpose. Every day button and its tooltip wrapper consume
-   the day-facing half, so it is memoized — an unstable value there re-renders
-   all 42 cells per month on any grid render. The root half carries
-   `rootProps`, a fresh rest-spread every render that cannot be memoized
-   without going stale; it has exactly one consumer, so its instability costs
-   one element instead of 42. */
+/* The only file that may import react-day-picker, and it never mounts a
+   `Select`. Two contexts: the day-facing half is memoized because all 42 cells
+   consume it, while `rootProps` cannot be and has one consumer. */
 interface GridContextValue {
   dateInfo?: (date: Date) => ReactNode;
   tooltipMessages?: (date: Date) => ReactNode;
   showTooltip: boolean;
   loading: boolean;
+  showOutsideDays: boolean;
 }
 
 interface GridRootContextValue {
@@ -85,9 +84,8 @@ export interface CalendarPreviewGridProps
    * Always render six week rows, so the grid height never jumps between a
    * 4-, 5- and 6-row month.
    *
-   * On by default. Phases 3-4 put this calendar in a popover, where a grid
-   * that changes height on navigation resizes the surface under the user's
-   * cursor. Opt out with `fixedWeeks={false}` where the calendar is inline
+   * On by default: in a popover, a grid that changes height on navigation
+   * resizes the surface under the cursor. Opt out where the calendar is inline
    * and the trailing blank row is not wanted.
    *
    * @defaultValue true
@@ -176,8 +174,14 @@ export function CalendarPreviewGrid({
      inline arrows still invalidates this every render — which is why the docs
      ask for them to be memoized at the call site. */
   const gridContext = useMemo<GridContextValue>(
-    () => ({ dateInfo, tooltipMessages, showTooltip, loading }),
-    [dateInfo, tooltipMessages, showTooltip, loading]
+    () => ({
+      dateInfo,
+      tooltipMessages,
+      showTooltip,
+      loading,
+      showOutsideDays
+    }),
+    [dateInfo, tooltipMessages, showTooltip, loading, showOutsideDays]
   );
 
   const gridRootContext: GridRootContextValue = {
@@ -187,6 +191,13 @@ export function CalendarPreviewGrid({
   };
 
   const months = days?.numberOfMonths ?? 1;
+
+  /* A scale-aware root carries `{ date, scale }` at day scale too. */
+  const selected = isScaleValue(value)
+    ? parseKey(value.date)
+    : value instanceof Date
+      ? value
+      : undefined;
 
   /* Several months have no single header to caption them, so each month
      captions itself and `.Days` renders no `.Header` above. */
@@ -205,10 +216,8 @@ export function CalendarPreviewGrid({
   );
 
   /* Every click goes to the root, which owns both the single commit and the
-     from/to machine — completing a range has to close the popover, and that
-     must travel through the root's open state rather than from in here. It
-     also keeps the `readOnly` / `disabled` guard in one place, so every path
-     in and out of the calendar inherits the same one. */
+     from/to machine. It also keeps the `readOnly` / `disabled` guard in one
+     place, so every path in and out of the calendar inherits the same one. */
   const handleSelect = useCallback(
     (_selected: unknown, triggerDate: Date) => {
       selectDay(triggerDate);
@@ -252,7 +261,7 @@ export function CalendarPreviewGrid({
             {...base}
             mode='range'
             required={false}
-            selected={draft ?? undefined}
+            selected={draft ? { from: draft.from, to: draft.to } : undefined}
             onSelect={handleSelect}
           />
         ) : clearable ? (
@@ -260,7 +269,7 @@ export function CalendarPreviewGrid({
             {...base}
             mode='single'
             required={false}
-            selected={(value as Date | null) ?? undefined}
+            selected={selected}
             onSelect={handleSelect}
           />
         ) : (
@@ -268,7 +277,7 @@ export function CalendarPreviewGrid({
             {...base}
             mode='single'
             required
-            selected={(value as Date | null) ?? undefined}
+            selected={selected}
             onSelect={handleSelect}
           />
         )}
@@ -313,10 +322,11 @@ function CalendarPreviewWeeks(props: MonthGridProps) {
         aria-hidden='true'
       >
         <Skeleton
-          count={5}
+          count={6}
           height='var(--rs-space-5)'
           width='100%'
           containerClassName={styles['skeleton-rows']}
+          containerStyle={{ gap: undefined }}
         />
       </div>
     </div>
@@ -364,7 +374,7 @@ export interface CalendarPreviewDayProps
     Pick<useRender.ComponentProps<'button'>, 'render' | 'ref'> {}
 
 /* At day scale the draft is the roving-focus cell — arrowed to, not entered.
-   PR 5's scale-switch draft writes the same attribute. */
+   The scale-switch draft writes the same attribute at the period scales. */
 export function CalendarPreviewDay({
   day,
   modifiers,
@@ -402,7 +412,6 @@ export function CalendarPreviewDay({
       {
         type: 'button',
         className: cx(
-          styles['day-button'],
           info != null && styles['day-button-with-info'],
           className
         ),
@@ -447,12 +456,23 @@ export function CalendarPreviewDay({
     )
   });
 
-  /* The wrapper is unconditional. Two reasons, both measured: a disabled
-     button fires no pointer events, so hanging the trigger on the day itself
-     hid exactly the tooltip a blocked day needs; and returning `button` bare
-     when there is no message changes the element type at that position, which
-     tears down the DOM node and drops focus the moment `showTooltip` or a
-     per-day message flips. */
+  /* The span is the trigger, not the day: a disabled button fires no pointer
+     events, and a blocked day is exactly the one whose tooltip is worth
+     reading. It stays when tooltips are off so the cell keeps its box, but
+     the `Tooltip` root does not — that is one per day, 84 in a two-month
+     range picker, for a feature nobody asked for. A per-day message coming
+     and going still changes nothing here; only `showTooltip` does. */
+  if (!showTooltip) {
+    return (
+      <span
+        className={styles['day-trigger']}
+        data-slot='calendar-preview-day-trigger'
+      >
+        {button}
+      </span>
+    );
+  }
+
   return (
     <Tooltip>
       <Tooltip.Trigger
@@ -502,11 +522,22 @@ export function CalendarPreviewWeekday({
 
 CalendarPreviewWeekday.displayName = 'CalendarPreview.Weekday';
 
-/* `showWeekNumber` renders these two, and RFC 005 asks for a `data-slot` on
-   every rendered element. Overridden only to carry the slot — the classes
-   already arrive through `GRID_CLASS_NAMES`. */
-function CalendarPreviewWeekNumber({ week: _week, ...props }: WeekNumberProps) {
-  return <th data-slot='calendar-preview-week-number' {...props} />;
+/* `showWeekNumber` renders these two; the classes already arrive through
+   `GRID_CLASS_NAMES`, so these carry the slot and the rule below. */
+function CalendarPreviewWeekNumber({
+  week,
+  children,
+  ...props
+}: WeekNumberProps) {
+  const { showOutsideDays } = useGridContext('CalendarPreview.Grid');
+  /* A `fixedWeeks` padding row draws nothing when outside days are hidden, so
+     its number counts a week the grid never showed. The cell stays. */
+  const counts = showOutsideDays || week.days.some(day => !day.outside);
+  return (
+    <th data-slot='calendar-preview-week-number' {...props}>
+      {counts ? children : null}
+    </th>
+  );
 }
 
 function CalendarPreviewWeekNumberHeader(props: WeekNumberHeaderProps) {

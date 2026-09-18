@@ -213,13 +213,12 @@ describe('CalendarPreview data-slot contract', () => {
 });
 
 describe('CalendarPreview state attributes', () => {
-  it('marks the day view with its scale and its inert states', () => {
+  it('marks the day view with its inert states', () => {
     const { container } = renderCalendar(undefined, {
       disabled: true,
       readOnly: true
     });
     const days = getSlot(container, 'calendar-preview-days');
-    expect(days).toHaveAttribute('data-scale', 'day');
     expect(days).toHaveAttribute('data-disabled', 'true');
     expect(days).toHaveAttribute('data-readonly', 'true');
   });
@@ -245,11 +244,16 @@ describe('CalendarPreview state attributes', () => {
     );
   });
 
-  it('carries the scale on the caption and on every cell', () => {
+  /* The root says what scale is committed; the cells say it per cell. Nothing
+     in between repeats it. */
+  it('carries the scale on the root and on every cell, and nowhere between', () => {
     const { container } = renderCalendar();
-    expect(getSlot(container, 'calendar-preview-caption')).toHaveAttribute(
+    expect(getSlot(container, 'calendar-preview')).toHaveAttribute(
       'data-scale',
       'day'
+    );
+    expect(getSlot(container, 'calendar-preview-caption')).not.toHaveAttribute(
+      'data-scale'
     );
     for (const cell of getAllSlots(container, 'calendar-preview-day')) {
       expect(cell).toHaveAttribute('data-scale', 'day');

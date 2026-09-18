@@ -336,16 +336,49 @@ describe('CalendarPreview.Reset', () => {
   /* Stays mounted with nothing to restore, rather than unmounting: removing
      the focused element sends focus to `<body>`, and removing a `flex: none`
      child re-flows the nav buttons sideways. */
-  it('stays mounted but disabled when the value equals the defaultDate', () => {
+  it('stays mounted and inert when the value equals the defaultDate', () => {
+    const onValueChange = vi.fn();
     const { container } = renderCalendar(undefined, {
       defaultDate: new Date(2026, 7, 20),
-      defaultValue: new Date(2026, 7, 20)
+      defaultValue: new Date(2026, 7, 20),
+      onValueChange
     });
 
-    const reset = getSlot(container, 'calendar-preview-reset');
+    const reset = getSlot(container, 'calendar-preview-reset') as HTMLElement;
     expect(reset).toBeInTheDocument();
-    expect(reset).toBeDisabled();
+    expect(reset).toHaveAttribute('aria-disabled', 'true');
     expect(reset).toHaveAttribute('data-restored');
+    fireEvent.click(reset);
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  /* `{...props}` follows the computed `disabled`, so without pulling the
+     caller's out of it a `disabled={false}` re-enabled a button whose only job
+     was already done — and clicking it emitted a second reset. */
+  it('stays disabled when a caller passes disabled={false}', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderCalendar(
+      <CalendarPreview.Days>
+        <CalendarPreview.Header>
+          <CalendarPreview.Reset disabled={false} />
+        </CalendarPreview.Header>
+        <CalendarPreview.Grid />
+      </CalendarPreview.Days>,
+      {
+        defaultDate: new Date(2026, 7, 20),
+        defaultValue: new Date(2026, 7, 20),
+        onValueChange
+      }
+    );
+
+    const reset = getSlot(
+      container,
+      'calendar-preview-reset'
+    ) as HTMLButtonElement;
+    expect(reset).toHaveAttribute('aria-disabled', 'true');
+
+    fireEvent.click(reset);
+    expect(onValueChange).not.toHaveBeenCalled();
   });
 
   it('renders once the value differs from the defaultDate', () => {
@@ -399,12 +432,12 @@ describe('CalendarPreview.Reset', () => {
     expect(details.toDate()).toEqual(new Date(2026, 7, 10));
   });
 
-  it('is disabled under a null defaultDate while nothing is selected', () => {
+  it('is inert under a null defaultDate while nothing is selected', () => {
     const { container } = renderCalendar(undefined, { defaultDate: null });
 
     const reset = getSlot(container, 'calendar-preview-reset');
     expect(reset).toBeInTheDocument();
-    expect(reset).toBeDisabled();
+    expect(reset).toHaveAttribute('aria-disabled', 'true');
     expect(reset).toHaveAttribute('data-restored');
   });
 
@@ -422,10 +455,12 @@ describe('CalendarPreview.Reset', () => {
 
     expect(onValueChange.mock.calls[0][0]).toEqual(new Date(2026, 7, 20));
     expect(dayCell(container, '20')).toHaveAttribute('data-selected');
-    /* Still there, now disabled -- there is nothing left to restore. */
+    /* Still there, now inert -- there is nothing left to restore. It keeps a
+       real tab stop, so the focus it was activated with survives. */
     const reset = getSlot(container, 'calendar-preview-reset');
     expect(reset).toBeInTheDocument();
-    expect(reset).toBeDisabled();
+    expect(reset).toHaveAttribute('aria-disabled', 'true');
+    expect(reset).not.toBeDisabled();
   });
 
   /* The reason the button stays mounted: it is usually the focused element
@@ -723,6 +758,26 @@ describe('CalendarPreview.Grid', () => {
     expect(screen.queryByText('Never shown')).toBeNull();
   });
 
+  /* The span carries the cell's box, so it outlives the Tooltip root that is
+     only mounted alongside it. */
+  it.each([
+    [false],
+    [true]
+  ])('keeps the day trigger with showTooltip=%s', showTooltip => {
+    const { container, unmount } = renderCalendar(
+      <CalendarPreview.Days>
+        <CalendarPreview.Grid
+          showTooltip={showTooltip}
+          tooltipMessages={() => 'Anything'}
+        />
+      </CalendarPreview.Days>
+    );
+    expect(getAllSlots(container, 'calendar-preview-day-trigger').length).toBe(
+      getAllSlots(container, 'calendar-preview-day').length
+    );
+    unmount();
+  });
+
   it('disables navigation while the grid is loading', () => {
     const { container } = renderCalendar(
       <CalendarPreview.Days>
@@ -1013,31 +1068,38 @@ describe('CalendarPreview part boundaries', () => {
 });
 
 describe('CalendarPreview public surface', () => {
-  /* The scope boundary for this phase, asserted rather than described: the
-     popover, the input and the period views land in later PRs, and a part
-     appearing here early would be public API shipped by accident. */
   /* `displayName` is an own property of the root function `Object.assign`
      writes the parts onto, so it is not one of them. */
   const partNames = Object.keys(CalendarPreviewFromBarrel).filter(
     key => key !== 'displayName'
   );
 
-  it('exports exactly the parts this phase builds', () => {
+  it('exports exactly the parts it means to', () => {
     expect(partNames.sort()).toEqual(
       [
+        'Body',
         'Caption',
         'Content',
         'Day',
         'Days',
         'Footer',
         'Grid',
+        'HalfYears',
         'Header',
-        'NextMonth',
-        'PrevMonth',
         'Input',
+        'Label',
+        'Months',
+        'NextMonth',
+        'Panel',
+        'PrevMonth',
+        'Quarters',
         'Reset',
+        'Scale',
+        'Scales',
+        'Separator',
         'Trigger',
-        'Weekday'
+        'Weekday',
+        'Years'
       ].sort()
     );
   });
@@ -1432,8 +1494,10 @@ describe('timeZone', () => {
 });
 
 describe('defaultFormatValue', () => {
-  it('formats a day as DD/MM/YYYY', () => {
-    expect(defaultFormatValue(new Date(2027, 4, 20), 'day')).toBe('20/05/2027');
+  it('formats a day as DD MMM YYYY', () => {
+    expect(defaultFormatValue(new Date(2027, 4, 20), 'day')).toBe(
+      '20 May 2027'
+    );
   });
 
   it('formats the coarser scales by their own shorthand', () => {
@@ -1519,5 +1583,51 @@ describe('useCalendar', () => {
 
     fireEvent.click(screen.getByText('clear'));
     expect(screen.getByTestId('value')).toHaveTextContent('none');
+  });
+});
+
+describe('CalendarPreview week numbers and the padded row', () => {
+  /* September fills five rows; August reaches into its sixth with the 30th. */
+  const SEPTEMBER = new Date(2026, 8, 1);
+
+  const weekNumbers = (container: HTMLElement) =>
+    getAllSlots(container, 'calendar-preview-week-number').map(
+      cell => cell.textContent
+    );
+
+  const grid = (props = {}) => (
+    <CalendarPreview.Days>
+      <CalendarPreview.Header />
+      <CalendarPreview.Grid showWeekNumber fixedWeeks {...props} />
+    </CalendarPreview.Days>
+  );
+
+  it('leaves the padded row unnumbered', () => {
+    const { container } = renderCalendar(grid(), { defaultMonth: SEPTEMBER });
+    const numbers = weekNumbers(container);
+    expect(numbers).toHaveLength(6);
+    expect(numbers[numbers.length - 1]).toBe('');
+    expect(numbers.slice(0, 5).every(Boolean)).toBe(true);
+  });
+
+  it('keeps the cell it empties', () => {
+    const { container } = renderCalendar(grid(), { defaultMonth: SEPTEMBER });
+    const rows = Array.from(container.querySelectorAll('tbody tr'));
+    const cells = rows.map(row => row.children.length);
+    expect(new Set(cells).size).toBe(1);
+  });
+
+  it('numbers the padded row when its days are shown', () => {
+    const { container } = renderCalendar(grid({ showOutsideDays: true }), {
+      defaultMonth: SEPTEMBER
+    });
+    expect(weekNumbers(container).every(Boolean)).toBe(true);
+  });
+
+  it('numbers a sixth row that the month reaches into', () => {
+    const { container } = renderCalendar(grid());
+    const numbers = weekNumbers(container);
+    expect(numbers).toHaveLength(6);
+    expect(numbers.every(Boolean)).toBe(true);
   });
 });
