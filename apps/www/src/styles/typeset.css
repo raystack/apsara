@@ -13,7 +13,7 @@
   Sizes stay in px because the values are optical choices, not a modular scale.
 */
 
-:root {
+.rs-theme {
   /* Page title: one per page, on the top step of Apsara's heading scale. */
   --docs-title-size: var(--rs-font-size-t4);
   --docs-title-leading: var(--rs-line-height-t4);

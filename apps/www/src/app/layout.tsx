@@ -7,7 +7,6 @@ import '@raystack/apsara/style.css';
 import '@/styles/base.css';
 import '@/styles/typeset.css';
 import '@/styles/surfaces.css';
-import { ThemeProvider as NextThemeProvider } from 'next-themes';
 import styles from './layout.module.css';
 
 const inter = Inter({
@@ -32,9 +31,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       </head>
       <body className={styles.body}>
         <NextProvider>
-          <NextThemeProvider disableTransitionOnChange>
-            <ThemeProvider>{children}</ThemeProvider>
-          </NextThemeProvider>
+          <ThemeProvider>{children}</ThemeProvider>
         </NextProvider>
       </body>
     </html>

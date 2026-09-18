@@ -13,6 +13,10 @@ Apsara's theming is built on CSS custom properties, called tokens. A token is a 
   [`ThemePreview`](/docs/theme/preview) — it server-renders, allows more than
   one provider per page, works inside portals, and adds radius, scaling, panel
   background and reduced-motion settings. It includes a migration guide.
+
+  This site itself now runs on `ThemePreview`, and the two do not compose: the
+  `ThemeSwitcher` examples below render, but they write to `<html>`, which the
+  page's own theme element overrides. Use the toggle in the header instead.
 </Callout>
 
 ## Installation
