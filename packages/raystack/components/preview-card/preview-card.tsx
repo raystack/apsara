@@ -3,7 +3,7 @@
 import { PreviewCard as PreviewCardPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { type Radius, radiusClass } from '../../shared/radius';
-import { useThemeInjection } from '../theme-preview/portal';
+import { useThemeInjection } from '../theme/portal';
 import styles from './preview-card.module.css';
 
 export interface PreviewCardContentProps

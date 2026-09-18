@@ -7,7 +7,7 @@ import {
 import { cx } from 'class-variance-authority';
 import { KeyboardEvent, useCallback, useRef } from 'react';
 import { type Radius, radiusClass } from '../../shared/radius';
-import { useThemeInjection } from '../theme-preview/portal';
+import { useThemeInjection } from '../theme/portal';
 import styles from './menu.module.css';
 import { useMenuContext } from './menu-root';
 import {

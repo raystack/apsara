@@ -6,7 +6,7 @@ import { ReactNode } from 'react';
 import { XIcon } from '~/icons';
 import { type Radius, radiusClass } from '../../shared/radius';
 import { IconButton } from '../icon-button';
-import { useThemeInjection } from '../theme-preview/portal';
+import { useThemeInjection } from '../theme/portal';
 import styles from './drawer.module.css';
 
 const drawerPopup = cva(styles.drawerPopup, {

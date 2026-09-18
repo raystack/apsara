@@ -1,10 +1,10 @@
 'use client';
-import { IconButton, useThemePreview } from '@raystack/apsara';
+import { IconButton, useTheme } from '@raystack/apsara';
 import { Moon, Sun } from 'lucide-react';
 import { type HTMLAttributes } from 'react';
 
 export default function ThemeToggle(props: HTMLAttributes<HTMLElement>) {
-  const { resolved, setValue } = useThemePreview();
+  const { resolved, setValue } = useTheme();
   const isDark = resolved.appearance === 'dark';
   const Icon = isDark ? Moon : Sun;
 

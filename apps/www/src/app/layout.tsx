@@ -1,7 +1,7 @@
 import { NextProvider } from 'fumadocs-core/framework/next';
 import { Geist_Mono, Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
-import { ThemeProvider } from '@/components/theme';
+import { DocsTheme } from '@/components/theme';
 import '@raystack/apsara/normalize.css';
 import '@raystack/apsara/style.css';
 import '@/styles/base.css';
@@ -31,7 +31,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       </head>
       <body className={styles.body}>
         <NextProvider>
-          <ThemeProvider>{children}</ThemeProvider>
+          <DocsTheme>{children}</DocsTheme>
         </NextProvider>
       </body>
     </html>

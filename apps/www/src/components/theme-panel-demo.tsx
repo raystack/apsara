@@ -19,15 +19,15 @@ import {
   Switch,
   Text,
   THEME_SETTING_VALUES,
-  ThemePreview,
+  Theme,
   type ThemeSettings,
   Tooltip,
-  useThemePreview
+  useTheme
 } from '@raystack/apsara';
 import { useState } from 'react';
 
 function Controls() {
-  const { value, resolved, setValue } = useThemePreview();
+  const { value, resolved, setValue } = useTheme();
 
   const field = <K extends keyof ThemeSettings>(
     label: string,
@@ -187,7 +187,7 @@ function Sampler() {
 /** `isRoot={false}`: one example on the page, not the page itself. */
 export default function ThemePanelDemo() {
   return (
-    <ThemePreview
+    <Theme
       isRoot={false}
       defaultValue={{ appearance: 'light' }}
       hasBackground
@@ -207,6 +207,6 @@ export default function ThemePanelDemo() {
         />
         <Sampler />
       </Flex>
-    </ThemePreview>
+    </Theme>
   );
 }

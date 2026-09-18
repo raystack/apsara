@@ -1,6 +1,6 @@
 ---
 title: Overview
-description: Theming with ThemePreview. Tokens, seven settings, nested scopes, and portals that follow.
+description: Theming with the Theme component. Tokens, seven settings, nested scopes, and portals that follow.
 ---
 
 import {
@@ -20,23 +20,23 @@ import {
 
 <Demo data={panelDemo} />
 
-Apsara's theming is built on CSS custom properties, called tokens. `ThemePreview` mounts them on a real element, so the root theme, a nested scope and a portalled popup are all the same component. It server-renders, more than one can exist per page, and a popup opened inside a scope keeps that scope's theme.
+Apsara's theming is built on CSS custom properties, called tokens. `Theme` mounts them on a real element, so the root theme, a nested scope and a portalled popup are all the same component. It server-renders, more than one can exist per page, and a popup opened inside a scope keeps that scope's theme.
 
 ## Usage
 
 ```tsx
-import { ThemePreview } from "@raystack/apsara";
+import { Theme } from "@raystack/apsara";
 
 export default function App() {
   return (
-    <ThemePreview persistKey="app-theme">
+    <Theme persistKey="app-theme">
       <YourApp />
-    </ThemePreview>
+    </Theme>
   );
 }
 ```
 
-Tokens live on the element `ThemePreview` renders, so anything that reads `--rs-*` must be inside it. Portalled components re-emit the theme onto their popups; only your own portals need to move inside.
+Tokens live on the element `Theme` renders, so anything that reads `--rs-*` must be inside it. Portalled components re-emit the theme onto their popups; only your own portals need to move inside.
 
 ## Settings
 
@@ -89,12 +89,12 @@ A translucent panel only reads as translucent against something other than itsel
 `system` follows `prefers-reduced-motion`. `"true"` collapses the duration tokens, which stops transitions and any animation timed by a token.
 
 ```tsx
-<ThemePreview defaultValue={{ reducedMotion: "true" }}>
+<Theme defaultValue={{ reducedMotion: "true" }}>
 ```
 
 ## Nesting
 
-A nested `ThemePreview` inherits every key it does not set.
+A nested `Theme` inherits every key it does not set.
 
 <Demo data={nestingDemo} />
 
@@ -113,9 +113,9 @@ Theme values travel through React context, so every portalling component re-emit
 One theme per document owns the page colour scheme: the scrollbar, the overscroll area and native widget defaults. The first theme with no ancestor claims it. An embedded widget that has no ancestor theme but does not own the page must pass `isRoot={false}`.
 
 ```tsx
-<ThemePreview isRoot={false} defaultValue={{ appearance: "dark" }}>
+<Theme isRoot={false} defaultValue={{ appearance: "dark" }}>
   <Widget />
-</ThemePreview>
+</Theme>
 ```
 
 ### render
@@ -123,9 +123,9 @@ One theme per document owns the page colour scheme: the scrollbar, the overscrol
 Merge the theme onto your own element instead of adding a wrapper:
 
 ```tsx
-<ThemePreview render={<main className="page" />}>
+<Theme render={<main className="page" />}>
   <App />
-</ThemePreview>
+</Theme>
 ```
 
 ## Controlled
@@ -136,13 +136,13 @@ Merge the theme onto your own element instead of adding a wrapper:
 
 ```tsx
 // Appearance from a cookie; accent stays adjustable and persisted
-<ThemePreview
+<Theme
   value={{ appearance: appearanceFromCookie }}
   defaultValue={{ accentColor: "mint" }}
   persistKey="app-theme"
 >
   <App />
-</ThemePreview>
+</Theme>
 ```
 
 ## Persistence
@@ -151,10 +151,10 @@ Off unless `persistKey` is set. A theme without one keeps its settings in memory
 
 ```tsx
 // Everything under one namespace
-<ThemePreview persistKey="app-theme" />
+<Theme persistKey="app-theme" />
 
 // Only the appearance
-<ThemePreview persistKey="app-theme" persist={["appearance"]} />
+<Theme persistKey="app-theme" persist={["appearance"]} />
 ```
 
 Themes sharing a `persistKey` stay in step, across tabs as well. Writes merge into the stored object, so themes with different `persist` lists can share one key.
@@ -165,13 +165,13 @@ Settings are props, so the server renders them. An inline script, the theme elem
 
 ```tsx
 // Next.js App Router: app/layout.tsx
-import { ThemePreview } from "@raystack/apsara";
+import { Theme } from "@raystack/apsara";
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <ThemePreview persistKey="app-theme">{children}</ThemePreview>
+        <Theme persistKey="app-theme">{children}</Theme>
       </body>
     </html>
   );
@@ -180,13 +180,13 @@ export default function RootLayout({ children }) {
 
 Nothing is written to `<html>`, so it needs no `suppressHydrationWarning`.
 
-## useThemePreview
+## useTheme
 
 ```tsx
-import { useThemePreview } from "@raystack/apsara";
+import { useTheme } from "@raystack/apsara";
 
 function AppearanceToggle() {
-  const { resolved, setValue } = useThemePreview();
+  const { resolved, setValue } = useTheme();
   const isDark = resolved.appearance === "dark";
 
   return (
@@ -197,24 +197,24 @@ function AppearanceToggle() {
 }
 ```
 
-<auto-type-table path="./props.ts" name="UseThemePreviewReturn" />
+<auto-type-table path="./props.ts" name="UseThemeReturn" />
 
 `value` is what was set, `system` and `auto` included; `resolved` is what is on screen. `root` is the same handle bound to the root provider, so a control inside a scope can change the page:
 
 ```tsx
-const { root } = useThemePreview();
+const { root } = useTheme();
 root.setValue({ appearance: "dark" });
 ```
 
 The hook throws outside a provider.
 
-### ThemePreviewSwitcher
+### ThemeSwitcher
 
 An icon button that flips between light and dark. It follows `resolved.appearance`.
 
 <Demo data={switcherDemo} />
 
-<auto-type-table path="./props.ts" name="ThemePreviewSwitcherProps" />
+<auto-type-table path="./props.ts" name="ThemeSwitcherProps" />
 
 ## Per-component radius
 
@@ -263,7 +263,7 @@ Every `--rs-*` declaration is wrapped in `:where()` and every theme element carr
 Inline `style` works too:
 
 ```tsx
-<ThemePreview style={{ "--rs-space-5": "18px" }}>
+<Theme style={{ "--rs-space-5": "18px" }}>
 ```
 
 ### Fonts
@@ -287,9 +287,13 @@ Import one stylesheet: `@raystack/apsara/style.css` includes the font imports, `
 
 ## API Reference
 
-### ThemePreview
+### Theme
 
-<auto-type-table path="./props.ts" name="ThemePreviewProps" />
+<auto-type-table path="./props.ts" name="ThemeProps" />
+
+`Theme` also takes an `icons` prop, which replaces the drawings inside Apsara's
+components and sets the props every icon receives. It is documented on
+[Icons](/docs/theme/icons#replacing-an-icon).
 
 ### ThemeSettings
 

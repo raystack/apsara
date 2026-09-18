@@ -3,7 +3,7 @@
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { type Radius, radiusClass } from '../../shared/radius';
-import { useThemeInjection } from '../theme-preview/portal';
+import { useThemeInjection } from '../theme/portal';
 import styles from './combobox.module.css';
 import { useComboboxContext } from './combobox-root';
 

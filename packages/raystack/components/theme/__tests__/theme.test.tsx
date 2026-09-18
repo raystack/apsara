@@ -1,14 +1,15 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { type ReactNode, useEffect } from 'react';
+import { type ReactNode, type SVGProps, useEffect } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { XIcon } from '~/icons';
 import { radiusClass } from '../../../shared/radius';
 import { Dialog } from '../../dialog';
-import { useThemePreview } from '../context';
+import { useTheme } from '../context';
 import { useThemeInjection } from '../portal';
 import type { ThemeSettings } from '../settings';
 import { clearThemeStorageCache } from '../store';
-import { ThemePreview } from '../theme-preview';
+import { Theme } from '../theme';
 import {
   installLocalStorage,
   installMatchMedia,
@@ -34,7 +35,7 @@ function themeElement(container: HTMLElement, index = 0): HTMLElement {
 }
 
 function Probe({ label = 'probe' }: { label?: string }) {
-  const theme = useThemePreview();
+  const theme = useTheme();
   return (
     <output data-testid={label}>
       {JSON.stringify({ value: theme.value, resolved: theme.resolved })}
@@ -51,9 +52,9 @@ function readProbe(label = 'probe'): {
 
 // ─── Attributes ─────────────────────────────────────────────────────────────
 
-describe('ThemePreview attributes', () => {
+describe('Theme attributes', () => {
   it('writes every setting as a data attribute on its own element', () => {
-    const { container } = render(<ThemePreview>content</ThemePreview>);
+    const { container } = render(<Theme>content</Theme>);
     const element = themeElement(container);
 
     expect(element).toHaveAttribute('data-theme', 'light');
@@ -66,7 +67,7 @@ describe('ThemePreview attributes', () => {
   });
 
   it('writes nothing to the document element', () => {
-    render(<ThemePreview>content</ThemePreview>);
+    render(<Theme>content</Theme>);
     expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
     expect(document.documentElement.hasAttribute('data-accent-color')).toBe(
       false
@@ -74,9 +75,7 @@ describe('ThemePreview attributes', () => {
   });
 
   it('carries the stable rs-theme override class', () => {
-    const { container } = render(
-      <ThemePreview className='mine'>content</ThemePreview>
-    );
+    const { container } = render(<Theme className='mine'>content</Theme>);
     const element = themeElement(container);
     expect(element).toHaveClass('rs-theme');
     expect(element).toHaveClass('mine');
@@ -84,11 +83,9 @@ describe('ThemePreview attributes', () => {
 
   it('lets a nested scope layer settings over its parent', () => {
     const { container } = render(
-      <ThemePreview defaultValue={{ accentColor: 'orange', radius: 'large' }}>
-        <ThemePreview defaultValue={{ accentColor: 'mint' }}>
-          scoped
-        </ThemePreview>
-      </ThemePreview>
+      <Theme defaultValue={{ accentColor: 'orange', radius: 'large' }}>
+        <Theme defaultValue={{ accentColor: 'mint' }}>scoped</Theme>
+      </Theme>
     );
 
     const scope = themeElement(container, 1);
@@ -101,24 +98,24 @@ describe('ThemePreview attributes', () => {
 
 describe('the root marker', () => {
   it('marks a theme with no ancestor', () => {
-    const { container } = render(<ThemePreview>content</ThemePreview>);
+    const { container } = render(<Theme>content</Theme>);
     expect(themeElement(container)).toHaveAttribute('data-rs-root');
   });
 
   it('does not mark a nested theme', () => {
     const { container } = render(
-      <ThemePreview>
-        <ThemePreview>scoped</ThemePreview>
-      </ThemePreview>
+      <Theme>
+        <Theme>scoped</Theme>
+      </Theme>
     );
     expect(themeElement(container, 1)).not.toHaveAttribute('data-rs-root');
   });
 
   it('isRoot={false} suppresses the marker but leaves the theme intact', () => {
     const { container } = render(
-      <ThemePreview isRoot={false} defaultValue={{ appearance: 'dark' }}>
+      <Theme isRoot={false} defaultValue={{ appearance: 'dark' }}>
         widget
-      </ThemePreview>
+      </Theme>
     );
     const element = themeElement(container);
     expect(element).not.toHaveAttribute('data-rs-root');
@@ -129,24 +126,24 @@ describe('the root marker', () => {
 
 describe('hasBackground', () => {
   it('paints at the root by default', () => {
-    const { container } = render(<ThemePreview>content</ThemePreview>);
+    const { container } = render(<Theme>content</Theme>);
     expect(themeElement(container)).toHaveAttribute('data-rs-background');
   });
 
   it('paints a nested theme that sets an explicit appearance', () => {
     const { container } = render(
-      <ThemePreview>
-        <ThemePreview defaultValue={{ appearance: 'dark' }}>panel</ThemePreview>
-      </ThemePreview>
+      <Theme>
+        <Theme defaultValue={{ appearance: 'dark' }}>panel</Theme>
+      </Theme>
     );
     expect(themeElement(container, 1)).toHaveAttribute('data-rs-background');
   });
 
   it('does not paint a nested theme that only re-tints', () => {
     const { container } = render(
-      <ThemePreview>
-        <ThemePreview defaultValue={{ accentColor: 'mint' }}>tint</ThemePreview>
-      </ThemePreview>
+      <Theme>
+        <Theme defaultValue={{ accentColor: 'mint' }}>tint</Theme>
+      </Theme>
     );
     expect(themeElement(container, 1)).not.toHaveAttribute(
       'data-rs-background'
@@ -156,11 +153,11 @@ describe('hasBackground', () => {
   it('paints a nested theme whose appearance comes from storage', () => {
     entries.set('panel', storedEntry({ appearance: 'dark' }));
     const { container } = render(
-      <ThemePreview>
-        <ThemePreview persistKey='panel' persist={['appearance']}>
+      <Theme>
+        <Theme persistKey='panel' persist={['appearance']}>
           panel
-        </ThemePreview>
-      </ThemePreview>
+        </Theme>
+      </Theme>
     );
     const panel = themeElement(container, 1);
     expect(panel).toHaveAttribute('data-theme', 'dark');
@@ -170,7 +167,7 @@ describe('hasBackground', () => {
   it('starts painting once a nested theme gets an appearance at runtime', async () => {
     const user = userEvent.setup();
     function Switcher() {
-      const { setValue } = useThemePreview();
+      const { setValue } = useTheme();
       return (
         <button type='button' onClick={() => setValue({ appearance: 'dark' })}>
           set
@@ -178,11 +175,11 @@ describe('hasBackground', () => {
       );
     }
     const { container } = render(
-      <ThemePreview>
-        <ThemePreview>
+      <Theme>
+        <Theme>
           <Switcher />
-        </ThemePreview>
-      </ThemePreview>
+        </Theme>
+      </Theme>
     );
     const panel = themeElement(container, 1);
     expect(panel).not.toHaveAttribute('data-rs-background');
@@ -194,9 +191,7 @@ describe('hasBackground', () => {
   });
 
   it('honours an explicit override', () => {
-    const { container } = render(
-      <ThemePreview hasBackground={false}>content</ThemePreview>
-    );
+    const { container } = render(<Theme hasBackground={false}>content</Theme>);
     expect(themeElement(container)).not.toHaveAttribute('data-rs-background');
   });
 });
@@ -207,9 +202,9 @@ describe('controlled versus uncontrolled precedence', () => {
   it('a controlled key ignores a stored value', () => {
     entries.set('app', storedEntry({ appearance: 'dark' }));
     const { container } = render(
-      <ThemePreview persistKey='app' value={{ appearance: 'light' }}>
+      <Theme persistKey='app' value={{ appearance: 'light' }}>
         content
-      </ThemePreview>
+      </Theme>
     );
     expect(themeElement(container)).toHaveAttribute('data-theme', 'light');
   });
@@ -217,9 +212,9 @@ describe('controlled versus uncontrolled precedence', () => {
   it('a stored value overrides the seed for an uncontrolled key', () => {
     entries.set('app', storedEntry({ appearance: 'dark' }));
     const { container } = render(
-      <ThemePreview persistKey='app' defaultValue={{ appearance: 'light' }}>
+      <Theme persistKey='app' defaultValue={{ appearance: 'light' }}>
         content
-      </ThemePreview>
+      </Theme>
     );
     expect(themeElement(container)).toHaveAttribute('data-theme', 'dark');
   });
@@ -227,9 +222,9 @@ describe('controlled versus uncontrolled precedence', () => {
   it('control is per key', () => {
     entries.set('app', storedEntry({ appearance: 'dark', radius: 'full' }));
     const { container } = render(
-      <ThemePreview persistKey='app' value={{ appearance: 'light' }}>
+      <Theme persistKey='app' value={{ appearance: 'light' }}>
         content
-      </ThemePreview>
+      </Theme>
     );
     const element = themeElement(container);
     expect(element).toHaveAttribute('data-theme', 'light');
@@ -239,7 +234,7 @@ describe('controlled versus uncontrolled precedence', () => {
   it('setValue never writes a controlled key', async () => {
     const user = userEvent.setup();
     function Switcher() {
-      const { setValue } = useThemePreview();
+      const { setValue } = useTheme();
       return (
         <button
           type='button'
@@ -251,9 +246,9 @@ describe('controlled versus uncontrolled precedence', () => {
     }
 
     const { container } = render(
-      <ThemePreview persistKey='app' value={{ appearance: 'light' }}>
+      <Theme persistKey='app' value={{ appearance: 'light' }}>
         <Switcher />
-      </ThemePreview>
+      </Theme>
     );
     await user.click(screen.getByRole('button'));
 
@@ -274,7 +269,7 @@ describe('persistence', () => {
     const user = userEvent.setup();
 
     function Switcher() {
-      const { setValue } = useThemePreview();
+      const { setValue } = useTheme();
       return (
         <button type='button' onClick={() => setValue({ appearance: 'dark' })}>
           set
@@ -283,9 +278,9 @@ describe('persistence', () => {
     }
 
     const { container } = render(
-      <ThemePreview>
+      <Theme>
         <Switcher />
-      </ThemePreview>
+      </Theme>
     );
     await user.click(screen.getByRole('button'));
 
@@ -296,15 +291,13 @@ describe('persistence', () => {
 
   it('emits no inline script when nothing needs patching', () => {
     const { container } = render(
-      <ThemePreview defaultValue={{ appearance: 'light' }}>
-        content
-      </ThemePreview>
+      <Theme defaultValue={{ appearance: 'light' }}>content</Theme>
     );
     expect(container.querySelector('script')).toBeNull();
   });
 
   it('emits a storage-free script for a `system` appearance without a persistKey', () => {
-    const { container } = render(<ThemePreview>content</ThemePreview>);
+    const { container } = render(<Theme>content</Theme>);
     const script = container.querySelector('script');
     expect(script).not.toBeNull();
     expect(script?.textContent).not.toContain('localStorage');
@@ -312,9 +305,7 @@ describe('persistence', () => {
   });
 
   it('emits an inline script for a persisted namespace', () => {
-    const { container } = render(
-      <ThemePreview persistKey='app'>content</ThemePreview>
-    );
+    const { container } = render(<Theme persistKey='app'>content</Theme>);
     const script = container.querySelector('script');
     expect(script).not.toBeNull();
     // First child, so it patches the opening tag already parsed above it.
@@ -323,35 +314,35 @@ describe('persistence', () => {
 
   it('omits the script when every persistable setting is controlled', () => {
     const { container } = render(
-      <ThemePreview
+      <Theme
         persistKey='app'
         persist={['appearance']}
         value={{ appearance: 'dark' }}
       >
         content
-      </ThemePreview>
+      </Theme>
     );
     expect(container.querySelector('script')).toBeNull();
   });
 
   it('omits the script when persist excludes everything and appearance is pinned', () => {
     const { container } = render(
-      <ThemePreview
+      <Theme
         persistKey='app'
         persist={[]}
         defaultValue={{ appearance: 'light' }}
       >
         content
-      </ThemePreview>
+      </Theme>
     );
     expect(container.querySelector('script')).toBeNull();
   });
 
   it('reads no storage when persist excludes everything but appearance is system', () => {
     const { container } = render(
-      <ThemePreview persistKey='app' persist={[]}>
+      <Theme persistKey='app' persist={[]}>
         content
-      </ThemePreview>
+      </Theme>
     );
     const script = container.querySelector('script');
     expect(script).not.toBeNull();
@@ -361,7 +352,7 @@ describe('persistence', () => {
   it('narrows a namespace with persist, keeping other settings in memory', async () => {
     const user = userEvent.setup();
     function Switcher() {
-      const { setValue } = useThemePreview();
+      const { setValue } = useTheme();
       return (
         <button
           type='button'
@@ -373,9 +364,9 @@ describe('persistence', () => {
     }
 
     const { container } = render(
-      <ThemePreview persistKey='app' persist={['appearance']}>
+      <Theme persistKey='app' persist={['appearance']}>
         <Switcher />
-      </ThemePreview>
+      </Theme>
     );
     await user.click(screen.getByRole('button'));
 
@@ -390,7 +381,7 @@ describe('persistence', () => {
   it('keeps two themes sharing a namespace in step within one document', async () => {
     const user = userEvent.setup();
     function Switcher() {
-      const { setValue } = useThemePreview();
+      const { setValue } = useTheme();
       return (
         <button type='button' onClick={() => setValue({ appearance: 'dark' })}>
           set
@@ -400,12 +391,12 @@ describe('persistence', () => {
 
     const { container } = render(
       <>
-        <ThemePreview persistKey='shared'>
+        <Theme persistKey='shared'>
           <Switcher />
-        </ThemePreview>
-        <ThemePreview persistKey='shared' isRoot={false}>
+        </Theme>
+        <Theme persistKey='shared' isRoot={false}>
           second
-        </ThemePreview>
+        </Theme>
       </>
     );
 
@@ -417,9 +408,7 @@ describe('persistence', () => {
   });
 
   it('synchronises across tabs through the storage event', () => {
-    const { container } = render(
-      <ThemePreview persistKey='app'>content</ThemePreview>
-    );
+    const { container } = render(<Theme persistKey='app'>content</Theme>);
     expect(themeElement(container)).toHaveAttribute('data-theme', 'light');
 
     act(() => {
@@ -434,15 +423,15 @@ describe('persistence', () => {
     entries.set('app', storedEntry({ appearance: 'dark', radius: 'full' }));
     const renders: string[] = [];
     function Recorder() {
-      const { resolved } = useThemePreview();
+      const { resolved } = useTheme();
       renders.push(`${resolved.appearance}/${resolved.radius}`);
       return null;
     }
 
     render(
-      <ThemePreview persistKey='app'>
+      <Theme persistKey='app'>
         <Recorder />
-      </ThemePreview>
+      </Theme>
     );
 
     expect(renders[0]).toBe('dark/full');
@@ -451,9 +440,9 @@ describe('persistence', () => {
   it('falls back to the seed for an unparseable entry', () => {
     entries.set('app', 'not json at all');
     const { container } = render(
-      <ThemePreview persistKey='app' defaultValue={{ appearance: 'dark' }}>
+      <Theme persistKey='app' defaultValue={{ appearance: 'dark' }}>
         content
-      </ThemePreview>
+      </Theme>
     );
     expect(themeElement(container)).toHaveAttribute('data-theme', 'dark');
   });
@@ -465,9 +454,9 @@ describe('resolution', () => {
   it('resolves `system` against the OS', () => {
     installMatchMedia(true);
     const { container } = render(
-      <ThemePreview defaultValue={{ appearance: 'system' }}>
+      <Theme defaultValue={{ appearance: 'system' }}>
         <Probe />
-      </ThemePreview>
+      </Theme>
     );
 
     expect(themeElement(container)).toHaveAttribute('data-theme', 'dark');
@@ -477,7 +466,7 @@ describe('resolution', () => {
   });
 
   it('follows the OS when it changes', () => {
-    const { container } = render(<ThemePreview>content</ThemePreview>);
+    const { container } = render(<Theme>content</Theme>);
     expect(themeElement(container)).toHaveAttribute('data-theme', 'light');
 
     media.setPrefersDark(true);
@@ -487,9 +476,9 @@ describe('resolution', () => {
 
   it('pairs `auto` gray to the accent', () => {
     const { container } = render(
-      <ThemePreview defaultValue={{ accentColor: 'orange' }}>
+      <Theme defaultValue={{ accentColor: 'orange' }}>
         <Probe />
-      </ThemePreview>
+      </Theme>
     );
 
     expect(themeElement(container)).toHaveAttribute('data-gray-color', 'mauve');
@@ -499,9 +488,9 @@ describe('resolution', () => {
 
   it('honours an explicit gray over the pairing', () => {
     const { container } = render(
-      <ThemePreview defaultValue={{ accentColor: 'orange', grayColor: 'sage' }}>
+      <Theme defaultValue={{ accentColor: 'orange', grayColor: 'sage' }}>
         content
-      </ThemePreview>
+      </Theme>
     );
     expect(themeElement(container)).toHaveAttribute('data-gray-color', 'sage');
   });
@@ -509,15 +498,15 @@ describe('resolution', () => {
   it('reports the OS appearance whatever the setting is', () => {
     installMatchMedia(true);
     function SystemProbe() {
-      const { systemAppearance, resolved } = useThemePreview();
+      const { systemAppearance, resolved } = useTheme();
       return (
         <output data-testid='sys'>{`${systemAppearance}/${resolved.appearance}`}</output>
       );
     }
     render(
-      <ThemePreview defaultValue={{ appearance: 'light' }}>
+      <Theme defaultValue={{ appearance: 'light' }}>
         <SystemProbe />
-      </ThemePreview>
+      </Theme>
     );
     expect(screen.getByTestId('sys')).toHaveTextContent('dark/light');
   });
@@ -525,7 +514,7 @@ describe('resolution', () => {
 
 // ─── The hook ───────────────────────────────────────────────────────────────
 
-describe('useThemePreview', () => {
+describe('useTheme', () => {
   it('throws outside a provider', () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => {
       /* swallow React's expected error logging */
@@ -537,7 +526,7 @@ describe('useThemePreview', () => {
   it('reaches the root provider from inside a scope', async () => {
     const user = userEvent.setup();
     function RootSwitcher() {
-      const { root } = useThemePreview();
+      const { root } = useTheme();
       return (
         <button
           type='button'
@@ -549,11 +538,11 @@ describe('useThemePreview', () => {
     }
 
     const { container } = render(
-      <ThemePreview>
-        <ThemePreview defaultValue={{ accentColor: 'mint' }}>
+      <Theme>
+        <Theme defaultValue={{ accentColor: 'mint' }}>
           <RootSwitcher />
-        </ThemePreview>
-      </ThemePreview>
+        </Theme>
+      </Theme>
     );
 
     await user.click(screen.getByRole('button'));
@@ -564,15 +553,15 @@ describe('useThemePreview', () => {
 
   it('reports the nearest theme as the root when there is only one', () => {
     function RootProbe() {
-      const theme = useThemePreview();
+      const theme = useTheme();
       return (
         <output data-testid='root'>{theme.root.resolved.accentColor}</output>
       );
     }
     render(
-      <ThemePreview defaultValue={{ accentColor: 'mint' }}>
+      <Theme defaultValue={{ accentColor: 'mint' }}>
         <RootProbe />
-      </ThemePreview>
+      </Theme>
     );
     expect(screen.getByTestId('root')).toHaveTextContent('mint');
   });
@@ -586,7 +575,7 @@ describe('onValueChange', () => {
     const onValueChange = vi.fn();
 
     function Switcher() {
-      const { setValue } = useThemePreview();
+      const { setValue } = useTheme();
       return (
         <button type='button' onClick={() => setValue({ appearance: 'dark' })}>
           set
@@ -595,9 +584,9 @@ describe('onValueChange', () => {
     }
 
     render(
-      <ThemePreview onValueChange={onValueChange}>
+      <Theme onValueChange={onValueChange}>
         <Switcher />
-      </ThemePreview>
+      </Theme>
     );
 
     expect(onValueChange).not.toHaveBeenCalled();
@@ -615,7 +604,7 @@ describe('onValueChange', () => {
     const onValueChange = vi.fn();
 
     function Switcher() {
-      const { setValue } = useThemePreview();
+      const { setValue } = useTheme();
       return (
         <button type='button' onClick={() => setValue({ appearance: 'light' })}>
           set
@@ -624,12 +613,9 @@ describe('onValueChange', () => {
     }
 
     const { container } = render(
-      <ThemePreview
-        value={{ appearance: 'dark' }}
-        onValueChange={onValueChange}
-      >
+      <Theme value={{ appearance: 'dark' }} onValueChange={onValueChange}>
         <Switcher />
-      </ThemePreview>
+      </Theme>
     );
     await user.click(screen.getByRole('button'));
 
@@ -645,7 +631,7 @@ describe('onValueChange', () => {
     const onValueChange = vi.fn();
 
     function Switcher() {
-      const { setValue } = useThemePreview();
+      const { setValue } = useTheme();
       return (
         <button type='button' onClick={() => setValue({ appearance: 'light' })}>
           set
@@ -654,12 +640,12 @@ describe('onValueChange', () => {
     }
 
     render(
-      <ThemePreview
+      <Theme
         defaultValue={{ appearance: 'light' }}
         onValueChange={onValueChange}
       >
         <Switcher />
-      </ThemePreview>
+      </Theme>
     );
     await user.click(screen.getByRole('button'));
 
@@ -669,9 +655,9 @@ describe('onValueChange', () => {
   it('does not fire for a change that arrives from storage', () => {
     const onValueChange = vi.fn();
     const { container } = render(
-      <ThemePreview persistKey='app' onValueChange={onValueChange}>
+      <Theme persistKey='app' onValueChange={onValueChange}>
         content
-      </ThemePreview>
+      </Theme>
     );
 
     act(() => {
@@ -695,7 +681,7 @@ describe('when storage is unavailable', () => {
     const user = userEvent.setup();
 
     function Switcher() {
-      const { setValue } = useThemePreview();
+      const { setValue } = useTheme();
       return (
         <button type='button' onClick={() => setValue({ appearance: 'dark' })}>
           set
@@ -704,9 +690,9 @@ describe('when storage is unavailable', () => {
     }
 
     const { container } = render(
-      <ThemePreview persistKey='app'>
+      <Theme persistKey='app'>
         <Switcher />
-      </ThemePreview>
+      </Theme>
     );
     expect(themeElement(container)).toHaveAttribute('data-theme', 'light');
 
@@ -721,7 +707,7 @@ describe('when storage is unavailable', () => {
 describe('render', () => {
   it('merges the theme onto a caller-supplied element', () => {
     const { container } = render(
-      <ThemePreview render={<section className='page' />}>content</ThemePreview>
+      <Theme render={<section className='page' />}>content</Theme>
     );
     const element = themeElement(container);
     expect(element.tagName).toBe('SECTION');
@@ -732,19 +718,19 @@ describe('render', () => {
 
   it('accepts a function form', () => {
     const { container } = render(
-      <ThemePreview render={props => <main {...props} />}>content</ThemePreview>
+      <Theme render={props => <main {...props} />}>content</Theme>
     );
     expect(themeElement(container).tagName).toBe('MAIN');
   });
 
   it('keeps the theme children, including the inline script', () => {
     const { container } = render(
-      <ThemePreview
+      <Theme
         persistKey='app'
         render={<section>supplied children are replaced</section>}
       >
         <span data-testid='mine'>mine</span>
-      </ThemePreview>
+      </Theme>
     );
     const element = themeElement(container);
     expect(element.firstElementChild?.tagName).toBe('SCRIPT');
@@ -756,7 +742,7 @@ describe('render', () => {
     let ours: HTMLElement | null = null;
     let theirs: unknown = null;
     render(
-      <ThemePreview
+      <Theme
         ref={node => {
           ours = node;
         }}
@@ -769,7 +755,7 @@ describe('render', () => {
         }
       >
         content
-      </ThemePreview>
+      </Theme>
     );
     expect(ours).not.toBeNull();
     expect(theirs).toBe(ours);
@@ -790,11 +776,11 @@ describe('the portal re-injector', () => {
 
   it('re-emits the inherited settings onto the portalled element', () => {
     render(
-      <ThemePreview defaultValue={{ appearance: 'dark', accentColor: 'mint' }}>
-        <ThemePreview defaultValue={{ accentColor: 'orange' }}>
+      <Theme defaultValue={{ appearance: 'dark', accentColor: 'mint' }}>
+        <Theme defaultValue={{ accentColor: 'orange' }}>
           <Portalled />
-        </ThemePreview>
-      </ThemePreview>
+        </Theme>
+      </Theme>
     );
 
     const portalled = screen.getByTestId('portalled');
@@ -816,14 +802,14 @@ describe('the portal re-injector', () => {
   it('themes the parts that sit beside the popup, not just the popup', async () => {
     const user = userEvent.setup();
     render(
-      <ThemePreview defaultValue={{ appearance: 'dark' }}>
+      <Theme defaultValue={{ appearance: 'dark' }}>
         <Dialog>
           <Dialog.Trigger render={<button type='button'>open</button>} />
           <Dialog.Content>
             <Dialog.Title>Titled</Dialog.Title>
           </Dialog.Content>
         </Dialog>
-      </ThemePreview>
+      </Theme>
     );
     await user.click(screen.getByRole('button', { name: 'open' }));
 
@@ -835,19 +821,69 @@ describe('the portal re-injector', () => {
     );
   });
 
+  /* Both portals land under <body> as siblings, so the inner dialog gets its
+     theme from the React tree it was declared in, not from where it renders. */
+  it('keeps a nested dialog on its own scope, not the dialog that opened it', async () => {
+    const user = userEvent.setup();
+    render(
+      <Theme defaultValue={{ appearance: 'dark', accentColor: 'mint' }}>
+        <Dialog>
+          <Dialog.Trigger render={<button type='button'>outer</button>} />
+          <Dialog.Content>
+            <Dialog.Title>Outer</Dialog.Title>
+            <Theme
+              defaultValue={{ appearance: 'light', accentColor: 'orange' }}
+            >
+              <Dialog>
+                <Dialog.Trigger render={<button type='button'>inner</button>} />
+                <Dialog.Content>
+                  <Dialog.Title>Inner</Dialog.Title>
+                </Dialog.Content>
+              </Dialog>
+            </Theme>
+          </Dialog.Content>
+        </Dialog>
+      </Theme>
+    );
+
+    await user.click(screen.getByRole('button', { name: 'outer' }));
+    await user.click(screen.getByRole('button', { name: 'inner' }));
+
+    const scopeOf = (element: Element) => {
+      const scope = element.closest('[data-theme]');
+      return [
+        scope?.getAttribute('data-theme'),
+        scope?.getAttribute('data-accent-color')
+      ];
+    };
+
+    // Base UI renders no backdrop for a nested dialog; the parent's serves both.
+    const backdrops = [
+      ...document.querySelectorAll('[data-slot="dialog-backdrop"]')
+    ];
+    expect(backdrops).toHaveLength(1);
+    expect(scopeOf(backdrops[0])).toEqual(['dark', 'mint']);
+
+    const titles = [...document.querySelectorAll('[data-slot="dialog-title"]')];
+    expect(titles.map(t => [t.textContent, ...scopeOf(t)])).toEqual([
+      ['Outer', 'dark', 'mint'],
+      ['Inner', 'light', 'orange']
+    ]);
+  });
+
   it('gives each open portal its own scope', async () => {
     const user = userEvent.setup();
     render(
-      <ThemePreview defaultValue={{ appearance: 'dark' }}>
-        <ThemePreview defaultValue={{ appearance: 'light' }}>
+      <Theme defaultValue={{ appearance: 'dark' }}>
+        <Theme defaultValue={{ appearance: 'light' }}>
           <Dialog>
             <Dialog.Trigger render={<button type='button'>open</button>} />
             <Dialog.Content>
               <Dialog.Title>Titled</Dialog.Title>
             </Dialog.Content>
           </Dialog>
-        </ThemePreview>
-      </ThemePreview>
+        </Theme>
+      </Theme>
     );
     await user.click(screen.getByRole('button', { name: 'open' }));
 
@@ -881,7 +917,7 @@ describe('disableTransitionOnChange', () => {
   it('suppresses transitions across an appearance switch', async () => {
     const user = userEvent.setup();
     function Switcher() {
-      const { setValue } = useThemePreview();
+      const { setValue } = useTheme();
       return (
         <button type='button' onClick={() => setValue({ appearance: 'dark' })}>
           set
@@ -890,9 +926,9 @@ describe('disableTransitionOnChange', () => {
     }
 
     render(
-      <ThemePreview disableTransitionOnChange>
+      <Theme disableTransitionOnChange>
         <Switcher />
-      </ThemePreview>
+      </Theme>
     );
 
     const before = document.head.querySelectorAll('style').length;
@@ -908,7 +944,7 @@ describe('disableTransitionOnChange', () => {
 
   it('does not suppress anything on the first render', () => {
     const before = document.head.querySelectorAll('style').length;
-    render(<ThemePreview disableTransitionOnChange>content</ThemePreview>);
+    render(<Theme disableTransitionOnChange>content</Theme>);
     expect(document.head.querySelectorAll('style').length).toBe(before);
   });
 });
@@ -921,7 +957,7 @@ describe('appearance transition', () => {
   });
 
   function Switcher({ to }: { to: 'light' | 'dark' }) {
-    const { setValue } = useThemePreview();
+    const { setValue } = useTheme();
     return (
       <button type='button' onClick={() => setValue({ appearance: to })}>
         set
@@ -963,9 +999,9 @@ describe('appearance transition', () => {
     const vt = stubViewTransition();
 
     render(
-      <ThemePreview>
+      <Theme>
         <Switcher to='dark' />
-      </ThemePreview>
+      </Theme>
     );
     expect(document.documentElement).not.toHaveAttribute(marker);
 
@@ -983,9 +1019,9 @@ describe('appearance transition', () => {
   it('applies the change even where view transitions are unsupported', async () => {
     const user = userEvent.setup();
     const { container } = render(
-      <ThemePreview>
+      <Theme>
         <Switcher to='dark' />
-      </ThemePreview>
+      </Theme>
     );
 
     await act(async () => {
@@ -1000,7 +1036,7 @@ describe('appearance transition', () => {
     const vt = stubViewTransition();
 
     function RadiusSwitcher() {
-      const { setValue } = useThemePreview();
+      const { setValue } = useTheme();
       return (
         <button type='button' onClick={() => setValue({ radius: 'full' })}>
           set
@@ -1009,9 +1045,9 @@ describe('appearance transition', () => {
     }
 
     const { container } = render(
-      <ThemePreview>
+      <Theme>
         <RadiusSwitcher />
-      </ThemePreview>
+      </Theme>
     );
     await act(async () => {
       await user.click(screen.getByRole('button'));
@@ -1026,9 +1062,9 @@ describe('appearance transition', () => {
     const vt = stubViewTransition();
 
     render(
-      <ThemePreview disableTransitionOnChange>
+      <Theme disableTransitionOnChange>
         <Switcher to='dark' />
-      </ThemePreview>
+      </Theme>
     );
     await act(async () => {
       await user.click(screen.getByRole('button'));
@@ -1043,9 +1079,9 @@ describe('appearance transition', () => {
     const vt = stubViewTransition();
 
     render(
-      <ThemePreview defaultValue={{ reducedMotion: 'true' }}>
+      <Theme defaultValue={{ reducedMotion: 'true' }}>
         <Switcher to='dark' />
-      </ThemePreview>
+      </Theme>
     );
     await act(async () => {
       await user.click(screen.getByRole('button'));
@@ -1067,11 +1103,88 @@ describe('mount reconciliation', () => {
       return null;
     }
     const { container } = render(
-      <ThemePreview>
+      <Theme>
         <Watcher />
-      </ThemePreview>
+      </Theme>
     );
     expect(observed).toEqual(['mounted']);
     expect(themeElement(container)).toHaveAttribute('data-theme', 'light');
+  });
+});
+
+// ─── Icons ──────────────────────────────────────────────────────────────────
+
+// The registry itself is tested in `icons/__tests__/registry.test.tsx`. These
+// cover the wiring: that `<Theme>` mounts the IconProvider, and only when the
+// consumer configures it.
+describe('icons', () => {
+  const StubIcon = (props: SVGProps<SVGSVGElement>) => (
+    <svg {...props} data-testid='stub' />
+  );
+
+  it('resolves the overrides given to Theme', () => {
+    render(
+      <Theme icons={{ components: { XIcon: StubIcon } }}>
+        <XIcon />
+      </Theme>
+    );
+
+    expect(screen.getByTestId('stub')).toHaveAttribute('data-icon', 'XIcon');
+  });
+
+  it('resolves the icon props given to Theme', () => {
+    render(
+      <Theme icons={{ props: { strokeWidth: 1.5 } }}>
+        <XIcon />
+      </Theme>
+    );
+
+    expect(document.querySelector('[data-icon="XIcon"]')).toHaveAttribute(
+      'stroke-width',
+      '1.5'
+    );
+  });
+
+  it('renders the defaults when Theme configures no icons', () => {
+    render(
+      <Theme>
+        <XIcon />
+      </Theme>
+    );
+
+    const icon = document.querySelector('[data-icon="XIcon"]');
+    expect(icon).toBeInTheDocument();
+    expect(icon).toHaveAttribute('stroke-width', '1.5');
+  });
+
+  it('layers a nested Theme per icon key', () => {
+    render(
+      <Theme icons={{ components: { XIcon: StubIcon } }}>
+        <Theme icons={{ props: { strokeWidth: 1 } }}>
+          <XIcon />
+        </Theme>
+      </Theme>
+    );
+
+    // The inner Theme sets props only, so XIcon keeps the outer override and
+    // gains the inner stroke weight.
+    expect(screen.getByTestId('stub')).toHaveAttribute('stroke-width', '1');
+  });
+
+  it('lets a nested Theme replace an icon the outer one named', () => {
+    const Inner = (props: SVGProps<SVGSVGElement>) => (
+      <svg {...props} data-testid='inner' />
+    );
+
+    render(
+      <Theme icons={{ components: { XIcon: StubIcon } }}>
+        <Theme icons={{ components: { XIcon: Inner } }}>
+          <XIcon />
+        </Theme>
+      </Theme>
+    );
+
+    expect(screen.getByTestId('inner')).toBeInTheDocument();
+    expect(screen.queryByTestId('stub')).not.toBeInTheDocument();
   });
 });

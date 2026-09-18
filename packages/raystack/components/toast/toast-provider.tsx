@@ -2,7 +2,7 @@
 
 import { Toast as ToastPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { useThemeInjection } from '../theme-preview/portal';
+import { useThemeInjection } from '../theme/portal';
 import styles from './toast.module.css';
 import {
   toastManager as defaultToastManager,

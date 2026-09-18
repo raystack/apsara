@@ -15,7 +15,7 @@ import {
   isElementSubMenuTrigger,
   KEYCODES
 } from '../menu/utils';
-import { useThemeInjection } from '../theme-preview/portal';
+import { useThemeInjection } from '../theme/portal';
 
 export interface ContextMenuContentProps
   extends Omit<

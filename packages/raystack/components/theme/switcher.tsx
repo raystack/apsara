@@ -2,9 +2,9 @@
 
 import { MoonIcon, SunIcon } from '~/icons';
 import { IconButton } from '../icon-button';
-import { useThemePreview } from './context';
+import { useTheme } from './context';
 
-export interface ThemePreviewSwitcherProps {
+export interface ThemeSwitcherProps {
   /** Square size of the button box, in pixels. */
   size?: number;
   /** Whether to flip the root theme rather than the nearest scope. */
@@ -13,12 +13,12 @@ export interface ThemePreviewSwitcherProps {
 }
 
 /** Flips light/dark. Reads `resolved`, so `system` shows what is on screen. */
-export function ThemePreviewSwitcher({
+export function ThemeSwitcher({
   size = 30,
   target = 'nearest',
   ...props
-}: ThemePreviewSwitcherProps) {
-  const theme = useThemePreview();
+}: ThemeSwitcherProps) {
+  const theme = useTheme();
   const handle = target === 'root' ? theme.root : theme;
   const isDark = handle.resolved.appearance === 'dark';
 
@@ -27,7 +27,7 @@ export function ThemePreviewSwitcher({
       aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
       onClick={() => handle.setValue({ appearance: isDark ? 'light' : 'dark' })}
       style={{ width: size, height: size }}
-      data-slot='theme-preview-switcher'
+      data-slot='theme-switcher'
       {...props}
     >
       {isDark ? <SunIcon /> : <MoonIcon />}
@@ -35,4 +35,4 @@ export function ThemePreviewSwitcher({
   );
 }
 
-ThemePreviewSwitcher.displayName = 'ThemePreviewSwitcher';
+ThemeSwitcher.displayName = 'ThemeSwitcher';

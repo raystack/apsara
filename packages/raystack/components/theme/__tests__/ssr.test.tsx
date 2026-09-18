@@ -3,9 +3,9 @@ import { hydrateRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useThemePreview } from '../context';
+import { useTheme } from '../context';
 import { clearThemeStorageCache } from '../store';
-import { ThemePreview } from '../theme-preview';
+import { Theme } from '../theme';
 import { installLocalStorage, installMatchMedia, storedEntry } from './mocks';
 
 let entries: Map<string, string>;
@@ -39,9 +39,9 @@ describe('server rendering', () => {
   it('renders every setting as an attribute on the first byte', () => {
     entries.set('app', storedEntry({ appearance: 'dark' }));
     const html = renderToString(
-      <ThemePreview persistKey='app' defaultValue={{ accentColor: 'mint' }}>
+      <Theme persistKey='app' defaultValue={{ accentColor: 'mint' }}>
         content
-      </ThemePreview>
+      </Theme>
     );
 
     expect(html).toContain('data-theme="light"');
@@ -51,9 +51,7 @@ describe('server rendering', () => {
   });
 
   it('renders the script inside the theme element, as its first child', () => {
-    const html = renderToString(
-      <ThemePreview persistKey='app'>content</ThemePreview>
-    );
+    const html = renderToString(<Theme persistKey='app'>content</Theme>);
     const container = document.createElement('div');
     container.innerHTML = html;
     const theme = container.querySelector('.rs-theme') as HTMLElement;
@@ -64,9 +62,7 @@ describe('server rendering', () => {
   it('emits no script and reads no storage for a pinned appearance without persistence', () => {
     const getItem = vi.spyOn(window.localStorage, 'getItem');
     const html = renderToString(
-      <ThemePreview defaultValue={{ appearance: 'light' }}>
-        content
-      </ThemePreview>
+      <Theme defaultValue={{ appearance: 'light' }}>content</Theme>
     );
     expect(html).not.toContain('<script');
     expect(getItem).not.toHaveBeenCalled();
@@ -75,9 +71,7 @@ describe('server rendering', () => {
   it('resolves a seeded `system` appearance before hydration on a first visit', () => {
     // Nothing stored and the OS is dark: the server's light must not survive.
     installMatchMedia(true);
-    const html = renderToString(
-      <ThemePreview persistKey='app'>content</ThemePreview>
-    );
+    const html = renderToString(<Theme persistKey='app'>content</Theme>);
     const container = document.createElement('div');
     container.innerHTML = html;
     const theme = container.querySelector('.rs-theme') as HTMLElement;
@@ -90,9 +84,9 @@ describe('server rendering', () => {
 
   it('carries the CSP nonce onto the script', () => {
     const html = renderToString(
-      <ThemePreview persistKey='app' nonce='abc123'>
+      <Theme persistKey='app' nonce='abc123'>
         content
-      </ThemePreview>
+      </Theme>
     );
     expect(html).toContain('nonce="abc123"');
   });
@@ -103,9 +97,9 @@ describe('hydration', () => {
     entries.set('app', storedEntry({ appearance: 'dark' }));
 
     const tree = (
-      <ThemePreview persistKey='app'>
+      <Theme persistKey='app'>
         <span>content</span>
-      </ThemePreview>
+      </Theme>
     );
 
     const container = document.createElement('div');
@@ -137,9 +131,9 @@ describe('hydration', () => {
     installMatchMedia(true);
 
     const tree = (
-      <ThemePreview defaultValue={{ appearance: 'system' }}>
+      <Theme defaultValue={{ appearance: 'system' }}>
         <span>content</span>
-      </ThemePreview>
+      </Theme>
     );
 
     const container = document.createElement('div');
@@ -163,14 +157,14 @@ describe('hydration', () => {
     entries.set('app', storedEntry({ radius: 'full' }));
     let seen: string | undefined;
     function Probe() {
-      seen = useThemePreview().resolved.radius;
+      seen = useTheme().resolved.radius;
       return null;
     }
 
     const tree = (
-      <ThemePreview persistKey='app'>
+      <Theme persistKey='app'>
         <Probe />
-      </ThemePreview>
+      </Theme>
     );
 
     const container = document.createElement('div');

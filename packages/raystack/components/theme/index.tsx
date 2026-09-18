@@ -1,8 +1,8 @@
 export {
   type ThemeContextValue,
   type ThemeHandle,
-  type UseThemePreviewReturn,
-  useThemePreview
+  type UseThemeReturn,
+  useTheme
 } from './context';
 export { type ThemeInjectionProps, useThemeInjection } from './portal';
 export { createThemeScript, type ThemeScriptParams } from './script';
@@ -24,12 +24,12 @@ export {
   type ThemeSettings
 } from './settings';
 export {
-  ThemePreviewSwitcher,
-  type ThemePreviewSwitcherProps
+  ThemeSwitcher,
+  type ThemeSwitcherProps
 } from './switcher';
 export {
-  ThemePreview,
-  type ThemePreviewProps,
+  Theme,
+  type ThemeProps,
   type ThemeRenderProp
-} from './theme-preview';
+} from './theme';
 export { useSystemAppearance } from './use-system-appearance';

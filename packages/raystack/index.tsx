@@ -159,29 +159,22 @@ export {
   THEME_DEFAULT_SETTINGS,
   THEME_SETTING_KEYS,
   THEME_SETTING_VALUES,
+  Theme,
   type ThemeContextValue,
   type ThemeHandle,
   type ThemeInjectionProps,
-  ThemePreview,
-  type ThemePreviewProps,
-  ThemePreviewSwitcher,
-  type ThemePreviewSwitcherProps,
+  type ThemeProps,
   type ThemeRenderProp,
   type ThemeScriptParams,
   type ThemeSettingKey,
   type ThemeSettings,
-  type UseThemePreviewReturn,
-  useSystemAppearance,
-  useThemeInjection,
-  useThemePreview
-} from './components/theme-preview';
-export {
-  Theme,
-  ThemeProvider,
-  ThemeProviderProps,
   ThemeSwitcher,
-  useTheme
-} from './components/theme-provider';
+  type ThemeSwitcherProps,
+  type UseThemeReturn,
+  useSystemAppearance,
+  useTheme,
+  useThemeInjection
+} from './components/theme';
 export { Toast, toastManager, useToastManager } from './components/toast';
 export { Toggle } from './components/toggle';
 export { Toolbar } from './components/toolbar';

@@ -10,7 +10,7 @@ export const appearanceDemo = {
   code: `
   <Flex gap={5} align="start">
     {["light", "dark"].map(appearance => (
-      <ThemePreview
+      <Theme
         key={appearance}
         isRoot={false}
         defaultValue={{ appearance }}
@@ -21,7 +21,7 @@ export const appearanceDemo = {
           <Button>Primary</Button>
           <Input placeholder="Input" />
         </Flex>
-      </ThemePreview>
+      </Theme>
     ))}
   </Flex>`
 };
@@ -31,7 +31,7 @@ export const accentDemo = {
   code: `
   <Flex gap={5} align="start">
     {["indigo", "orange", "mint"].map(accent => (
-      <ThemePreview
+      <Theme
         key={accent}
         isRoot={false}
         defaultValue={{ accentColor: accent }}
@@ -42,7 +42,7 @@ export const accentDemo = {
           <Button>Primary</Button>
           <Badge>Badge</Badge>
         </Flex>
-      </ThemePreview>
+      </Theme>
     ))}
   </Flex>`
 };
@@ -52,7 +52,7 @@ export const radiusDemo = {
   code: `
   <Flex gap={5} align="start">
     {["none", "small", "medium", "large", "full"].map(radius => (
-      <ThemePreview
+      <Theme
         key={radius}
         isRoot={false}
         defaultValue={{ radius }}
@@ -63,7 +63,7 @@ export const radiusDemo = {
           <Button>Primary</Button>
           <Switch defaultChecked />
         </Flex>
-      </ThemePreview>
+      </Theme>
     ))}
   </Flex>`
 };
@@ -73,7 +73,7 @@ export const scalingDemo = {
   code: `
   <Flex gap={5} align="start">
     {["0.9", "1", "1.1"].map(scaling => (
-      <ThemePreview
+      <Theme
         key={scaling}
         isRoot={false}
         defaultValue={{ scaling }}
@@ -83,7 +83,7 @@ export const scalingDemo = {
           <Text>{scaling}x</Text>
           <Button>Primary</Button>
         </Flex>
-      </ThemePreview>
+      </Theme>
     ))}
   </Flex>`
 };
@@ -93,7 +93,7 @@ export const panelBackgroundDemo = {
   code: `
   <Flex gap={7} align="start" style={{ width: "100%" }}>
     {["solid", "translucent"].map(panelBackground => (
-      <ThemePreview
+      <Theme
         key={panelBackground}
         isRoot={false}
         defaultValue={{ panelBackground }}
@@ -113,7 +113,7 @@ export const panelBackgroundDemo = {
             the surface.
           </Text>
         </Flex>
-      </ThemePreview>
+      </Theme>
     ))}
   </Flex>`
 };
@@ -121,7 +121,7 @@ export const panelBackgroundDemo = {
 export const nestingDemo = {
   type: 'code',
   code: `
-  <ThemePreview
+  <Theme
     isRoot={false}
     defaultValue={{ appearance: "light", accentColor: "indigo" }}
     style={{ width: "100%", padding: "var(--rs-space-5)", borderRadius: "var(--rs-radius-4)" }}
@@ -134,7 +134,7 @@ export const nestingDemo = {
       </Flex>
 
       {/* Sets accent and radius; inherits appearance */}
-      <ThemePreview
+      <Theme
         defaultValue={{ accentColor: "mint", radius: "full" }}
         style={{ padding: "var(--rs-space-5)", borderRadius: "var(--rs-radius-4)", border: "1px dashed var(--rs-color-border-base-secondary)" }}
       >
@@ -146,7 +146,7 @@ export const nestingDemo = {
           </Flex>
 
           {/* Sets only the accent; inherits the full radius */}
-          <ThemePreview
+          <Theme
             defaultValue={{ accentColor: "orange" }}
             style={{ padding: "var(--rs-space-5)", borderRadius: "var(--rs-radius-4)", border: "1px dashed var(--rs-color-border-base-secondary)" }}
           >
@@ -155,17 +155,17 @@ export const nestingDemo = {
               <Button>Button</Button>
               <Switch defaultChecked />
             </Flex>
-          </ThemePreview>
+          </Theme>
         </Flex>
-      </ThemePreview>
+      </Theme>
     </Flex>
-  </ThemePreview>`
+  </Theme>`
 };
 
 export const layoutDemo = {
   type: 'code',
   code: `
-  <ThemePreview
+  <Theme
     isRoot={false}
     defaultValue={{ appearance: "light" }}
     style={{
@@ -177,7 +177,7 @@ export const layoutDemo = {
   >
     <Flex align="stretch">
       {/* A dark scope paints its own background */}
-      <ThemePreview
+      <Theme
         defaultValue={{ appearance: "dark" }}
         style={{ width: 200, padding: "var(--rs-space-4)" }}
       >
@@ -186,7 +186,7 @@ export const layoutDemo = {
           <Button variant="ghost">Projects</Button>
           <Button variant="ghost">Settings</Button>
         </Flex>
-      </ThemePreview>
+      </Theme>
 
       <Flex direction="column" gap={4} align="start" style={{ flex: 1, padding: "var(--rs-space-6)" }}>
         <Text size="large" weight="medium">Inbox</Text>
@@ -197,13 +197,13 @@ export const layoutDemo = {
         </Flex>
       </Flex>
     </Flex>
-  </ThemePreview>`
+  </Theme>`
 };
 
 export const portalDemo = {
   type: 'code',
   code: `
-  <ThemePreview
+  <Theme
     isRoot={false}
     defaultValue={{ appearance: "dark", accentColor: "mint" }}
     style={{ padding: "var(--rs-space-6)", borderRadius: "var(--rs-radius-4)" }}
@@ -232,7 +232,7 @@ export const portalDemo = {
         <Tooltip.Content>Dark, like its trigger</Tooltip.Content>
       </Tooltip>
     </Flex>
-  </ThemePreview>`
+  </Theme>`
 };
 
 export const controlledDemo = {
@@ -248,7 +248,7 @@ function ControlledScope() {
         <Text size="small">Dark</Text>
       </Flex>
 
-      <ThemePreview
+      <Theme
         isRoot={false}
         value={{ appearance: dark ? "dark" : "light" }}
         style={{ padding: "var(--rs-space-5)", borderRadius: "var(--rs-radius-4)" }}
@@ -257,7 +257,7 @@ function ControlledScope() {
           <Text>Controlled by the switch</Text>
           <Button>Button</Button>
         </Flex>
-      </ThemePreview>
+      </Theme>
     </Flex>
   );
 }`
@@ -266,7 +266,7 @@ function ControlledScope() {
 export const componentRadiusDemo = {
   type: 'code',
   code: `
-  <ThemePreview isRoot={false} defaultValue={{ radius: "large" }} hasBackground={false}>
+  <Theme isRoot={false} defaultValue={{ radius: "large" }} hasBackground={false}>
     <Flex gap={3} align="center">
       <Button>Large</Button>
       {/* Overrides the theme without compounding */}
@@ -274,20 +274,20 @@ export const componentRadiusDemo = {
       <Button radius="small">Small</Button>
       <Button radius="full">Full</Button>
     </Flex>
-  </ThemePreview>`
+  </Theme>`
 };
 
 export const switcherDemo = {
   type: 'code',
   code: `
-  <ThemePreview
+  <Theme
     isRoot={false}
     defaultValue={{ appearance: "light" }}
     style={{ padding: "var(--rs-space-5)", borderRadius: "var(--rs-radius-4)" }}
   >
     <Flex gap={3} align="center">
-      <ThemePreviewSwitcher />
+      <ThemeSwitcher />
       <Text size="small" variant="secondary">Flips this scope</Text>
     </Flex>
-  </ThemePreview>`
+  </Theme>`
 };

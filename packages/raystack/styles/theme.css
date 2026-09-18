@@ -1,5 +1,5 @@
 /* All `:where()`-wrapped: zero specificity, so a consumer rule on `.rs-theme`
-   always wins. `[data-theme]` also matches the previous `Theme`'s `<html>`. */
+   always wins. */
 
 /* `:global`: CSS Modules would otherwise hash the override target. */
 :global(.rs-theme) {
@@ -51,7 +51,7 @@
 /* Radius. Three pill tokens: `--rs-radius-pill` rounds controls only at `full`;
    `--rs-radius-thumb` keeps round controls (Switch, Slider) round from `medium`
    up and squares them at `none` and `small`, as Radix Themes does;
-   `--rs-radius-full` is the legacy pill token that `radius.css` overrides. */
+   `--rs-radius-full` is the legacy pill token, fixed and ignoring the setting. */
 :where([data-theme]) {
   --rs-radius-factor: 1;
   --rs-radius-pill: 0px;
@@ -129,7 +129,7 @@
    Giving every element the transition instead means ~10k concurrent transitions
    on a page this size, which renders slower than no animation at all.
 
-   Scoped to the attribute `ThemePreview` sets for the length of the switch, so
+   Scoped to the attribute `Theme` sets for the length of the switch, so
    an app's own view transitions keep their timing. */
 html[data-rs-appearance-change]::view-transition-old(root),
 html[data-rs-appearance-change]::view-transition-new(root) {

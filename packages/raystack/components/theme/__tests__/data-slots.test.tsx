@@ -3,8 +3,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { expectSlots, getSlot } from '~/test-utils/data-slots';
 
 import { clearThemeStorageCache } from '../store';
-import { ThemePreviewSwitcher } from '../switcher';
-import { ThemePreview } from '../theme-preview';
+import { ThemeSwitcher } from '../switcher';
+import { Theme } from '../theme';
 import { installLocalStorage, installMatchMedia } from './mocks';
 
 beforeEach(() => {
@@ -13,47 +13,45 @@ beforeEach(() => {
   clearThemeStorageCache();
 });
 
-describe('ThemePreview data-slot contract', () => {
+describe('Theme data-slot contract', () => {
   it('exposes the theme element slot', () => {
     const { container } = render(
-      <ThemePreview>
+      <Theme>
         <div>child</div>
-      </ThemePreview>
+      </Theme>
     );
-    expectSlots(container, ['theme-preview']);
+    expectSlots(container, ['theme']);
   });
 
   it('exposes the script slot only when there is something to patch', () => {
     const { container: plain } = render(
-      <ThemePreview defaultValue={{ appearance: 'light' }}>child</ThemePreview>
+      <Theme defaultValue={{ appearance: 'light' }}>child</Theme>
     );
-    expect(getSlot(plain, 'theme-preview-script')).toBeNull();
+    expect(getSlot(plain, 'theme-script')).toBeNull();
 
     const { container: persisted } = render(
-      <ThemePreview persistKey='app'>child</ThemePreview>
+      <Theme persistKey='app'>child</Theme>
     );
-    expect(getSlot(persisted, 'theme-preview-script')?.tagName).toBe('SCRIPT');
+    expect(getSlot(persisted, 'theme-script')?.tagName).toBe('SCRIPT');
   });
 
   it('exposes the slot on a nested scope too', () => {
     const { container } = render(
-      <ThemePreview>
-        <ThemePreview defaultValue={{ accentColor: 'orange' }}>
+      <Theme>
+        <Theme defaultValue={{ accentColor: 'orange' }}>
           <div>nested</div>
-        </ThemePreview>
-      </ThemePreview>
+        </Theme>
+      </Theme>
     );
-    expect(
-      container.querySelectorAll('[data-slot="theme-preview"]')
-    ).toHaveLength(2);
+    expect(container.querySelectorAll('[data-slot="theme"]')).toHaveLength(2);
   });
 
   it('exposes the switcher slot', () => {
     const { container } = render(
-      <ThemePreview>
-        <ThemePreviewSwitcher />
-      </ThemePreview>
+      <Theme>
+        <ThemeSwitcher />
+      </Theme>
     );
-    expectSlots(container, ['theme-preview-switcher']);
+    expectSlots(container, ['theme-switcher']);
   });
 });

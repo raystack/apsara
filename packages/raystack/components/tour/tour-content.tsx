@@ -10,7 +10,7 @@ import {
   useRef
 } from 'react';
 import { type Radius, radiusClass } from '../../shared/radius';
-import { useThemeInjection } from '../theme-preview/portal';
+import { useThemeInjection } from '../theme/portal';
 import styles from './tour.module.css';
 import { useTourContext } from './tour-context';
 import { TourDefaultLayout } from './tour-parts';

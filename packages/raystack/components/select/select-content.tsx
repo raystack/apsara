@@ -6,7 +6,7 @@ import {
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { type Radius, radiusClass } from '../../shared/radius';
-import { useThemeInjection } from '../theme-preview/portal';
+import { useThemeInjection } from '../theme/portal';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';
 

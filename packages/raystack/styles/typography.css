@@ -1,10 +1,8 @@
-/* Font imports live in `./fonts.css` and `./fonts-legacy.css` so a font-free
-   stylesheet can be built from the same source. Metrics are tuned for Inter. */
+/* Font imports live in `./fonts.css` so a font-free stylesheet can be built
+   from the same source. Metrics are tuned for Inter. */
 :where(:root, [data-theme]) {
   /* Fonts */
   --rs-font-inter: "Inter";
-  --rs-font-lora: "Lora";
-  --rs-font-josefin-sans: "Josefin Sans";
   --rs-font-jetbrains-mono: "JetBrains Mono";
   --rs-font-menlo: "Menlo";
 
@@ -77,21 +75,6 @@
   --rs-letter-spacing-mono-small: 0px;
   --rs-letter-spacing-mono-regular: 0px;
   --rs-letter-spacing-mono-large: 0px;
-}
-
-/* Legacy: `data-style` font pairs for the previous `Theme` provider. */
-[data-style="modern"] {
-  /* Re-declare (not just inherit from :root) so a modern theme nested inside a
-     traditional one resets to Inter instead of inheriting Lora/Josefin. */
-  --rs-font-title: var(--rs-font-inter), sans-serif;
-  --rs-font-body: var(--rs-font-inter), sans-serif;
-  font-family: var(--rs-font-body);
-}
-
-[data-style="traditional"] {
-  --rs-font-title: var(--rs-font-lora), serif;
-  --rs-font-body: var(--rs-font-josefin-sans), sans-serif;
-  font-family: var(--rs-font-body);
 }
 
 body {

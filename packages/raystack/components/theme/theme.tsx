@@ -20,6 +20,7 @@ import {
 } from 'react';
 import { flushSync } from 'react-dom';
 
+import { type IconOptions, IconProvider } from '~/icons/create-icon';
 import {
   RootThemeContext,
   ThemeContext,
@@ -54,7 +55,7 @@ export type ThemeRenderProp =
   | ReactElement<Record<string, unknown>>
   | ((props: Record<string, unknown>) => ReactElement);
 
-export interface ThemePreviewProps
+export interface ThemeProps
   extends Omit<HTMLAttributes<HTMLElement>, 'defaultValue' | 'onChange'> {
   /** Seeds uncontrolled keys. A stored user choice overrides it. */
   defaultValue?: Partial<ThemeSettings>;
@@ -80,6 +81,22 @@ export interface ThemePreviewProps
   disableTransitionOnChange?: boolean;
   /** CSP nonce for the inline script. */
   nonce?: string;
+  /**
+   * The icons inside Apsara's components, and the props applied to every icon.
+   *
+   * `components` replaces a drawing by key, as in `{ ErrorIcon: MyError }`. A
+   * partial map changes only the keys it names, and a nested `<Theme icons={…}>`
+   * layers on top of an outer one, per key.
+   *
+   * `props` applies to every icon built by `createIcon`, the consumer's own
+   * included, as in `{ strokeWidth: 2 }`. The props at the call site still win.
+   * Prefer the `data-icon` attribute and CSS where a style rule is enough,
+   * because CSS re-renders nothing.
+   *
+   * The map holds functions, so a React Server Component cannot pass it. Set it
+   * from a client component (the `providers.tsx` pattern).
+   */
+  icons?: IconOptions;
   /** Replaces the mount element, merging the theme's props onto it. */
   render?: ThemeRenderProp;
   ref?: Ref<HTMLElement>;
@@ -201,7 +218,7 @@ function protectedProps(
 }
 
 /** The theme element. Nothing is written to `document.documentElement`. */
-export function ThemePreview({
+export function Theme({
   defaultValue,
   value,
   onValueChange,
@@ -211,12 +228,13 @@ export function ThemePreview({
   hasBackground,
   disableTransitionOnChange = false,
   nonce,
+  icons,
   render,
   className,
   children,
   ref,
   ...props
-}: ThemePreviewProps) {
+}: ThemeProps) {
   const parent = useThemeContextOrNull();
   const isRootTheme = isRoot ?? parent === null;
 
@@ -379,6 +397,19 @@ export function ThemePreview({
   const elementRef = useRef<HTMLElement | null>(null);
   const attributes = useMemo(() => settingsToAttributes(resolved), [resolved]);
 
+  // Mount the icon registry only when the consumer configures it, so a tree
+  // without icon overrides gains no provider and no extra render work. Nesting
+  // layers per icon key, the way a nested theme layers settings.
+  const { components: iconComponents, props: iconProps } = icons ?? {};
+  const content =
+    iconComponents || iconProps ? (
+      <IconProvider components={iconComponents} props={iconProps}>
+        {children}
+      </IconProvider>
+    ) : (
+      children
+    );
+
   // Where no script ran, the server's guess survives hydration silently;
   // one reconciliation on mount closes that.
   useEffect(() => {
@@ -408,19 +439,19 @@ export function ThemePreview({
     [ROOT_ATTRIBUTE]: isRootTheme ? '' : undefined,
     'data-rs-background': paints ? '' : undefined,
     [THEME_ID_ATTRIBUTE]: script ? elementId : undefined,
-    'data-slot': 'theme-preview',
+    'data-slot': 'theme',
     suppressHydrationWarning: true,
     children: (
       <>
         {script ? (
           // First child, so it patches the parent before any child is parsed.
           <script
-            data-slot='theme-preview-script'
+            data-slot='theme-script'
             nonce={nonce}
             dangerouslySetInnerHTML={{ __html: script }}
           />
         ) : null}
-        {children}
+        {content}
       </>
     )
   };
@@ -440,7 +471,7 @@ export function ThemePreview({
   );
 }
 
-ThemePreview.displayName = 'ThemePreview';
+Theme.displayName = 'Theme';
 
 type ViewTransitionDocument = Document & {
   startViewTransition?: (update: () => void) => { finished: Promise<void> };

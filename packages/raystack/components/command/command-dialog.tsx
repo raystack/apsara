@@ -4,7 +4,7 @@ import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import { cx } from 'class-variance-authority';
 import { forwardRef, useRef } from 'react';
 import { type Radius, radiusClass } from '../../shared/radius';
-import { useThemeInjection } from '../theme-preview/portal';
+import { useThemeInjection } from '../theme/portal';
 import styles from './command.module.css';
 
 export const CommandDialog = (props: DialogPrimitive.Root.Props) => (

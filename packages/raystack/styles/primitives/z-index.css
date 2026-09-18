@@ -1,4 +1,5 @@
-/* Theme selector so a scope can change it; `:root` for the previous `Theme`. */
+/* Theme selector so a scope can change it; `:root` as a document-wide default
+   for anything rendered outside a theme element. */
 :where(:root, [data-theme]) {
   --rs-z-index-portal: 99;
   --rs-z-index-toast: 999;

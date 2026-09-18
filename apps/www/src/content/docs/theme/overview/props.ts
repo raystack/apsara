@@ -54,7 +54,7 @@ export type ThemeSettings = {
 
 export type ThemeSettingKey = keyof ThemeSettings;
 
-export type ThemePreviewProps = {
+export type ThemeProps = {
   /** Seeds uncontrolled keys. A stored user choice overrides it. */
   defaultValue?: Partial<ThemeSettings>;
 
@@ -125,12 +125,12 @@ export type ThemeHandle = {
   systemAppearance: Appearance;
 };
 
-export type UseThemePreviewReturn = ThemeHandle & {
+export type UseThemeReturn = ThemeHandle & {
   /** The same handle bound to the root provider. */
   root: ThemeHandle;
 };
 
-export type ThemePreviewSwitcherProps = {
+export type ThemeSwitcherProps = {
   /**
    * Square size of the button box, in pixels.
    * @defaultValue 30

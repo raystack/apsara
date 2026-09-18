@@ -48,18 +48,18 @@ import "@raystack/apsara/style.css";
 
 This single stylesheet includes all component styles and CSS custom properties (tokens) for theming.
 
-### 2. Add ThemePreview
+### 2. Add Theme
 
-Wrap your application with `ThemePreview` to enable theming support:
+Wrap your application with `Theme` to enable theming support:
 
 ```tsx
-import { ThemePreview } from "@raystack/apsara";
+import { Theme } from "@raystack/apsara";
 
 function App() {
   return (
-    <ThemePreview persistKey="app-theme">
+    <Theme persistKey="app-theme">
       <YourApp />
-    </ThemePreview>
+    </Theme>
   );
 }
 ```
@@ -96,16 +96,16 @@ Add the provider to your root layout:
 
 ```tsx
 // app/layout.tsx
-import { ThemePreview } from "@raystack/apsara";
+import { Theme } from "@raystack/apsara";
 import "@raystack/apsara/style.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <ThemePreview persistKey="app-theme">
+        <Theme persistKey="app-theme">
           {children}
-        </ThemePreview>
+        </Theme>
       </body>
     </html>
   );
@@ -122,15 +122,15 @@ Add the provider to your main entry file:
 // main.tsx
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { ThemePreview } from "@raystack/apsara";
+import { Theme } from "@raystack/apsara";
 import "@raystack/apsara/style.css";
 import App from "./App";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ThemePreview persistKey="app-theme">
+    <Theme persistKey="app-theme">
       <App />
-    </ThemePreview>
+    </Theme>
   </React.StrictMode>
 );
 ```
@@ -172,13 +172,13 @@ function CopyButton({ value }: { value: string }) {
 }
 ```
 
-To read or change the active theme, use `useThemePreview` from the main entry:
+To read or change the active theme, use `useTheme` from the main entry:
 
 ```tsx
-import { Button, useThemePreview } from "@raystack/apsara";
+import { Button, useTheme } from "@raystack/apsara";
 
 function ThemeToggle() {
-  const { resolved, setValue } = useThemePreview();
+  const { resolved, setValue } = useTheme();
   const isDark = resolved.appearance === "dark";
 
   return (

@@ -26,24 +26,24 @@ export interface ThemeContextValue extends ThemeHandle {
 }
 
 export const ThemeContext = createContext<ThemeContextValue | null>(null);
-ThemeContext.displayName = 'ThemePreviewContext';
+ThemeContext.displayName = 'ThemeContext';
 
 /** The root provider's handle, carried past every nested scope. */
 export const RootThemeContext = createContext<ThemeHandle | null>(null);
-RootThemeContext.displayName = 'RootThemePreviewContext';
+RootThemeContext.displayName = 'RootThemeContext';
 
-export interface UseThemePreviewReturn extends ThemeHandle {
+export interface UseThemeReturn extends ThemeHandle {
   /** The same shape bound to the root provider. */
   root: ThemeHandle;
 }
 
 /** Nearest theme. Throws outside a provider, where no colour tokens exist. */
-export function useThemePreview(): UseThemePreviewReturn {
+export function useTheme(): UseThemeReturn {
   const context = useContext(ThemeContext);
   const root = useContext(RootThemeContext);
   if (!context) {
     throw new Error(
-      '`useThemePreview` must be called inside a `<ThemePreview>`. Wrap your ' +
+      '`useTheme` must be called inside a `<Theme>`. Wrap your ' +
         'application in one — component colours are declared under the theme ' +
         "element's attributes and do not exist without it."
     );
