@@ -5,11 +5,13 @@
  */
 
 /* Smooth theme switch transition. Zero specificity like every other theme rule,
-   so a component's own `transition` shorthand always wins over it. */
+   so a component's own `transition` shorthand always wins over it. Same duration
+   and easing as --rs-transition-interactive, so the ground a control sits on
+   never arrives at a different time than the control. */
 :where([data-theme="light"], [data-theme="dark"]) {
   transition:
-    background-color var(--rs-duration-slow) ease,
-    color var(--rs-duration-slow) ease;
+    background-color var(--rs-duration-normal) var(--rs-ease-out),
+    color var(--rs-duration-normal) var(--rs-ease-out);
 }
 
 /* Native UI (form controls, scrollbars, text selection) follows the scoped theme */

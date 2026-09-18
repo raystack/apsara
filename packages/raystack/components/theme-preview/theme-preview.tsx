@@ -18,6 +18,7 @@ import {
   useState,
   useSyncExternalStore
 } from 'react';
+import { flushSync } from 'react-dom';
 
 import {
   RootThemeContext,
@@ -28,6 +29,7 @@ import {
 } from './context';
 import { createThemeScript, THEME_ID_ATTRIBUTE } from './script';
 import {
+  APPEARANCE_CHANGE_ATTRIBUTE,
   assignSetting,
   ROOT_ATTRIBUTE,
   resolveSettings,
@@ -74,7 +76,7 @@ export interface ThemePreviewProps
   isRoot?: boolean;
   /** Overrides the paint heuristic: root or own light/dark appearance paints. */
   hasBackground?: boolean;
-  /** Suppresses the colour transition during an appearance switch. */
+  /** Switches appearance with no crossfade, and no component transitions either. */
   disableTransitionOnChange?: boolean;
   /** CSP nonce for the inline script. */
   nonce?: string;
@@ -268,8 +270,12 @@ export function ThemePreview({
   persistedKeysRef.current = persistedKeys;
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
+  const resolvedRef = useRef(resolved);
+  resolvedRef.current = resolved;
   const onValueChangeRef = useRef(onValueChange);
   onValueChangeRef.current = onValueChange;
+  const disableTransitionRef = useRef(disableTransitionOnChange);
+  disableTransitionRef.current = disableTransitionOnChange;
 
   const setValue = useCallback(
     (next: Partial<ThemeSettings>) => {
@@ -290,27 +296,36 @@ export function ThemePreview({
       }
       if (isSettingsEmpty(changed)) return;
 
-      if (!isSettingsEmpty(patch)) {
-        const persisted = persistedKeysRef.current;
-        // A refused write falls back to memory rather than dropping the change.
-        const stored =
-          persistKey && persisted.length > 0
-            ? writeStoredSettings(persistKey, persisted, patch)
-            : false;
-        const inMemory: Partial<ThemeSettings> = {};
-        for (const key of THEME_SETTING_KEYS) {
-          const pending = patch[key];
-          if (pending === undefined) continue;
-          if (stored && persisted.includes(key)) continue;
-          assignSetting(inMemory, key, pending);
+      const apply = () => {
+        if (!isSettingsEmpty(patch)) {
+          const persisted = persistedKeysRef.current;
+          // A refused write falls back to memory rather than dropping the change.
+          const stored =
+            persistKey && persisted.length > 0
+              ? writeStoredSettings(persistKey, persisted, patch)
+              : false;
+          const inMemory: Partial<ThemeSettings> = {};
+          for (const key of THEME_SETTING_KEYS) {
+            const pending = patch[key];
+            if (pending === undefined) continue;
+            if (stored && persisted.includes(key)) continue;
+            assignSetting(inMemory, key, pending);
+          }
+          if (!isSettingsEmpty(inMemory)) {
+            setLocal(previous => ({ ...previous, ...inMemory }));
+          }
         }
-        if (!isSettingsEmpty(inMemory)) {
-          setLocal(previous => ({ ...previous, ...inMemory }));
-        }
-      }
 
-      // From the request, not settled state, so hydration never fires it.
-      onValueChangeRef.current?.({ ...current, ...changed }, changed);
+        // From the request, not settled state, so hydration never fires it.
+        onValueChangeRef.current?.({ ...current, ...changed }, changed);
+      };
+
+      // An appearance swap repaints the page; anything else is a local change.
+      if (changed.appearance === undefined || disableTransitionRef.current) {
+        apply();
+        return;
+      }
+      crossfadeAppearance(apply, resolvedRef.current.reducedMotion);
     },
     [persistKey]
   );
@@ -339,7 +354,7 @@ export function ThemePreview({
     (isRootTheme ||
       (ownAppearance !== undefined && ownAppearance !== 'system'));
 
-  useAppearanceTransitionGuard(
+  useAppearanceTransition(
     resolved.appearance,
     disableTransitionOnChange,
     nonce
@@ -427,17 +442,66 @@ export function ThemePreview({
 
 ThemePreview.displayName = 'ThemePreview';
 
-// Suppresses the colour transition while an appearance switch lands.
-function useAppearanceTransitionGuard(
+type ViewTransitionDocument = Document & {
+  startViewTransition?: (update: () => void) => { finished: Promise<void> };
+};
+
+function prefersReducedMotion(setting: string): boolean {
+  if (setting === 'true') return true;
+  if (setting === 'false') return false;
+  return (
+    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+  );
+}
+
+/**
+ * A theme switch repaints far more than the elements that own a transition, so
+ * left alone a page arrives in waves — controls at 200ms, everything else on the
+ * next frame. A view transition crossfades one snapshot of the page instead, so
+ * all of it lands on the same clock; `theme.css` gives that crossfade the same
+ * duration and easing the components use.
+ *
+ * The attribute scopes those rules to this transition, and `flushSync` puts the
+ * new attributes in the DOM while the snapshot is still being captured.
+ */
+function crossfadeAppearance(apply: () => void, reducedMotion: string): void {
+  if (typeof document === 'undefined') {
+    apply();
+    return;
+  }
+  const doc = document as ViewTransitionDocument;
+  if (!doc.startViewTransition || prefersReducedMotion(reducedMotion)) {
+    apply();
+    return;
+  }
+
+  const root = document.documentElement;
+  root.setAttribute(APPEARANCE_CHANGE_ATTRIBUTE, '');
+  const transition = doc.startViewTransition(() => {
+    flushSync(apply);
+  });
+  // A skipped transition rejects; the attribute still has to come off.
+  transition.finished
+    .catch(() => undefined)
+    .finally(() => root.removeAttribute(APPEARANCE_CHANGE_ATTRIBUTE));
+}
+
+/**
+ * Covers the changes `setValue` never sees — the OS flipping under `system`,
+ * another tab writing storage — and suppresses motion entirely when that is what
+ * was asked for. Those arrive mid-render, too late to capture a snapshot from,
+ * so they take the components' own transitions rather than a crossfade.
+ */
+function useAppearanceTransition(
   appearance: string,
-  enabled: boolean,
+  disabled: boolean,
   nonce: string | undefined
 ): void {
   const previous = useRef<string | null>(null);
   useEffect(() => {
     const last = previous.current;
     previous.current = appearance;
-    if (!enabled || last === null || last === appearance) return;
+    if (!disabled || last === null || last === appearance) return;
     if (typeof document === 'undefined') return;
 
     const style = document.createElement('style');
@@ -455,5 +519,5 @@ function useAppearanceTransitionGuard(
       window.clearTimeout(timer);
       style.remove();
     };
-  }, [appearance, enabled, nonce]);
+  }, [appearance, disabled, nonce]);
 }

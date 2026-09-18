@@ -863,6 +863,148 @@ describe('disableTransitionOnChange', () => {
   });
 });
 
+describe('appearance transition', () => {
+  // The attribute lives on the document, not on the theme element.
+  const marker = 'data-rs-appearance-change';
+  beforeEach(() => {
+    document.documentElement.removeAttribute(marker);
+  });
+
+  function Switcher({ to }: { to: 'light' | 'dark' }) {
+    const { setValue } = useThemePreview();
+    return (
+      <button type='button' onClick={() => setValue({ appearance: to })}>
+        set
+      </button>
+    );
+  }
+
+  function stubViewTransition() {
+    let resolveFinished: () => void = () => undefined;
+    const finished = new Promise<void>(resolve => {
+      resolveFinished = resolve;
+    });
+    const startViewTransition = vi.fn((update: () => void) => {
+      update();
+      return { finished };
+    });
+    Object.defineProperty(document, 'startViewTransition', {
+      configurable: true,
+      writable: true,
+      value: startViewTransition
+    });
+    return {
+      startViewTransition,
+      finish: async () => {
+        resolveFinished();
+        await act(async () => {
+          await finished;
+          await Promise.resolve();
+        });
+      },
+      restore: () => {
+        Reflect.deleteProperty(document, 'startViewTransition');
+      }
+    };
+  }
+
+  it('crossfades an appearance switch and marks the document while it runs', async () => {
+    const user = userEvent.setup();
+    const vt = stubViewTransition();
+
+    render(
+      <ThemePreview>
+        <Switcher to='dark' />
+      </ThemePreview>
+    );
+    expect(document.documentElement).not.toHaveAttribute(marker);
+
+    await act(async () => {
+      await user.click(screen.getByRole('button'));
+    });
+    expect(vt.startViewTransition).toHaveBeenCalledTimes(1);
+    expect(document.documentElement).toHaveAttribute(marker);
+
+    await vt.finish();
+    expect(document.documentElement).not.toHaveAttribute(marker);
+    vt.restore();
+  });
+
+  it('applies the change even where view transitions are unsupported', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <ThemePreview>
+        <Switcher to='dark' />
+      </ThemePreview>
+    );
+
+    await act(async () => {
+      await user.click(screen.getByRole('button'));
+    });
+    expect(themeElement(container)).toHaveAttribute('data-theme', 'dark');
+    expect(document.documentElement).not.toHaveAttribute(marker);
+  });
+
+  it('leaves a setting other than appearance alone', async () => {
+    const user = userEvent.setup();
+    const vt = stubViewTransition();
+
+    function RadiusSwitcher() {
+      const { setValue } = useThemePreview();
+      return (
+        <button type='button' onClick={() => setValue({ radius: 'full' })}>
+          set
+        </button>
+      );
+    }
+
+    const { container } = render(
+      <ThemePreview>
+        <RadiusSwitcher />
+      </ThemePreview>
+    );
+    await act(async () => {
+      await user.click(screen.getByRole('button'));
+    });
+    expect(vt.startViewTransition).not.toHaveBeenCalled();
+    expect(themeElement(container)).toHaveAttribute('data-radius', 'full');
+    vt.restore();
+  });
+
+  it('skips the crossfade when transitions are disabled', async () => {
+    const user = userEvent.setup();
+    const vt = stubViewTransition();
+
+    render(
+      <ThemePreview disableTransitionOnChange>
+        <Switcher to='dark' />
+      </ThemePreview>
+    );
+    await act(async () => {
+      await user.click(screen.getByRole('button'));
+    });
+    expect(vt.startViewTransition).not.toHaveBeenCalled();
+    expect(document.documentElement).not.toHaveAttribute(marker);
+    vt.restore();
+  });
+
+  it('skips the crossfade under reduced motion', async () => {
+    const user = userEvent.setup();
+    const vt = stubViewTransition();
+
+    render(
+      <ThemePreview defaultValue={{ reducedMotion: 'true' }}>
+        <Switcher to='dark' />
+      </ThemePreview>
+    );
+    await act(async () => {
+      await user.click(screen.getByRole('button'));
+    });
+    expect(vt.startViewTransition).not.toHaveBeenCalled();
+    vt.restore();
+  });
+});
+
 // ─── Mount reconciliation ───────────────────────────────────────────────────
 
 describe('mount reconciliation', () => {

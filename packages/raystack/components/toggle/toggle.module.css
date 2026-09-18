@@ -27,17 +27,15 @@
 @media (prefers-reduced-motion: no-preference) {
   .toggleContent {
     transition:
-      background-color var(--rs-duration-fast) var(--rs-ease-out),
-      box-shadow var(--rs-duration-fast) var(--rs-ease-out);
+      background-color var(--rs-duration-normal) var(--rs-ease-out),
+      box-shadow var(--rs-duration-normal) var(--rs-ease-out);
   }
 
   .group .toggle {
-    /* color entry matches .toggle's own transition (line 9) so both are
-       driven by the same token */
     transition:
       color var(--rs-duration-normal) var(--rs-ease-out),
-      background-color var(--rs-duration-fast) var(--rs-ease-out),
-      box-shadow var(--rs-duration-fast) var(--rs-ease-out);
+      background-color var(--rs-duration-normal) var(--rs-ease-out),
+      box-shadow var(--rs-duration-normal) var(--rs-ease-out);
   }
 }
 

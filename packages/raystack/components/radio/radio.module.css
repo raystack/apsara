@@ -21,8 +21,8 @@
   cursor: pointer;
   box-sizing: border-box;
   transition:
-    background-color var(--rs-duration-fast) var(--rs-ease-out),
-    border-color var(--rs-duration-fast) var(--rs-ease-out);
+    background-color var(--rs-duration-normal) var(--rs-ease-out),
+    border-color var(--rs-duration-normal) var(--rs-ease-out);
 }
 
 /* Group-level size, low specificity via :where() so item-level size wins */
@@ -59,8 +59,8 @@
 @media (prefers-reduced-motion: no-preference) {
   .radioitem {
     transition:
-      background-color var(--rs-duration-fast) var(--rs-ease-out),
-      border-color var(--rs-duration-fast) var(--rs-ease-out),
+      background-color var(--rs-duration-normal) var(--rs-ease-out),
+      border-color var(--rs-duration-normal) var(--rs-ease-out),
       transform var(--rs-duration-press) var(--rs-ease-out);
   }
 }

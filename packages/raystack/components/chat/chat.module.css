@@ -82,9 +82,8 @@
 @media (prefers-reduced-motion: no-preference) {
   .jump-button {
     transition:
-      background-color var(--rs-duration-fast) var(--rs-ease-out),
-      opacity var(--rs-duration-fast) var(--rs-ease-out),
-      transform var(--rs-duration-fast) var(--rs-ease-out);
+      var(--rs-transition-interactive),
+      transform var(--rs-duration-normal) var(--rs-ease-out);
   }
 
   .jump-button:active {

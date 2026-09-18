@@ -122,4 +122,42 @@
   --rs-panel-backdrop-filter: blur(40px);
 }
 
+/* Appearance switch. Components transition their own colours at
+   --rs-duration-normal, but most of a page — text, borders, the ground itself —
+   carries no transition and lands a frame after the flip while the rest is still
+   fading. Crossfading one snapshot of the page puts all of it on the same clock.
+   Giving every element the transition instead means ~10k concurrent transitions
+   on a page this size, which renders slower than no animation at all.
+
+   Scoped to the attribute `ThemePreview` sets for the length of the switch, so
+   an app's own view transitions keep their timing. */
+html[data-rs-appearance-change]::view-transition-old(root),
+html[data-rs-appearance-change]::view-transition-new(root) {
+  animation-duration: var(--rs-duration-normal);
+  animation-timing-function: var(--rs-ease-out);
+  /* The UA crossfade blends `plus-lighter`, which suits two frames of the same
+     brightness; across a light/dark swap it blows out to white at the midpoint. */
+  mix-blend-mode: normal;
+}
+
+html[data-rs-appearance-change]::view-transition-old(root) {
+  animation-name: rs-appearance-out;
+}
+
+html[data-rs-appearance-change]::view-transition-new(root) {
+  animation-name: rs-appearance-in;
+}
+
+@keyframes rs-appearance-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes rs-appearance-in {
+  from {
+    opacity: 0;
+  }
+}
+
 /* Reduced motion: see the end of `effects.css`. */

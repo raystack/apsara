@@ -97,6 +97,12 @@ export const ROOT_ATTRIBUTE = 'data-rs-root';
 /** Stable override class for consumer stylesheets. */
 export const THEME_CLASS = 'rs-theme';
 
+/**
+ * Set on `<html>` for the length of an appearance switch, so the view-transition
+ * rules in `theme.css` apply to that crossfade and not to an app's own.
+ */
+export const APPEARANCE_CHANGE_ATTRIBUTE = 'data-rs-appearance-change';
+
 /** Bump when the stored shape changes. */
 export const STORAGE_VERSION = 1;
 

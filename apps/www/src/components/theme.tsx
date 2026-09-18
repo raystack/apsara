@@ -15,7 +15,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     <ThemePreview
       persistKey='apsara-docs-theme'
       persist={['appearance']}
-      disableTransitionOnChange
       className={styles.root}
     >
       {children}
