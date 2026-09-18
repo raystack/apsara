@@ -119,7 +119,7 @@
 
 :where([data-panel-background="translucent"]) {
   --rs-color-panel: var(--rs-color-panel-translucent);
-  --rs-panel-backdrop-filter: blur(64px);
+  --rs-panel-backdrop-filter: blur(40px);
 }
 
 /* Reduced motion: see the end of `effects.css`. */
