@@ -1,79 +1,237 @@
 ---
 title: Overview
-description: Understanding the Apsara theming system and the Theme component.
+description: Theming with ThemePreview. Tokens, seven settings, nested scopes, and portals that follow.
 ---
 
-import { switcherDemo, switcherSizeDemo } from "./demo.ts";
+import {
+  accentDemo,
+  appearanceDemo,
+  componentRadiusDemo,
+  controlledDemo,
+  layoutDemo,
+  nestingDemo,
+  panelBackgroundDemo,
+  panelDemo,
+  portalDemo,
+  radiusDemo,
+  scalingDemo,
+  switcherDemo
+} from "./demo.ts";
 
-Apsara's theming is built on CSS custom properties, called tokens. A token is a semantic variable that resolves to the right value for the active theme, so the UI follows along when someone switches between light and dark or you change the accent color. No code changes needed.
+<Demo data={panelDemo} />
 
-<Callout type="grey">
-  This page documents the original `Theme` component, which continues to ship
-  unchanged. New applications should use
-  [`ThemePreview`](/docs/theme/preview) — it server-renders, allows more than
-  one provider per page, works inside portals, and adds radius, scaling, panel
-  background and reduced-motion settings. It includes a migration guide.
+Apsara's theming is built on CSS custom properties, called tokens. `ThemePreview` mounts them on a real element, so the root theme, a nested scope and a portalled popup are all the same component. It server-renders, more than one can exist per page, and a popup opened inside a scope keeps that scope's theme.
 
-  This site itself now runs on `ThemePreview`, and the two do not compose: the
-  `ThemeSwitcher` examples below render, but they write to `<html>`, which the
-  page's own theme element overrides. Use the toggle in the header instead.
-</Callout>
-
-## Installation
-
-Wrap your application with the `Theme` component:
+## Usage
 
 ```tsx
-import { Theme } from "@raystack/apsara";
+import { ThemePreview } from "@raystack/apsara";
 
-function App() {
+export default function App() {
   return (
-    <Theme defaultTheme="system">
+    <ThemePreview persistKey="app-theme">
       <YourApp />
-    </Theme>
+    </ThemePreview>
   );
 }
 ```
 
-## Customization
+Tokens live on the element `ThemePreview` renders, so anything that reads `--rs-*` must be inside it. Portalled components re-emit the theme onto their popups; only your own portals need to move inside.
 
-The `Theme` component accepts props to control the visual identity of your application. Combine `style` variants with `accentColor` and `grayColor` to create distinct aesthetics, from sharp and technical to warm and editorial. The `defaultTheme` prop controls light/dark mode, with `system` respecting the user's OS preference.
+## Settings
+
+Every setting is a key of one object. Each key can be seeded, controlled or persisted on its own, and each becomes a data attribute on the theme element.
+
+| Setting | Values | Default | Attribute |
+|---|---|---|---|
+| `appearance` | `light`, `dark`, `system` | `system` | `data-theme` |
+| `accentColor` | `indigo`, `orange`, `mint` | `indigo` | `data-accent-color` |
+| `grayColor` | `gray`, `mauve`, `slate`, `sage`, `auto` | `auto` | `data-gray-color` |
+| `radius` | `none`, `small`, `medium`, `large`, `full` | `medium` | `data-radius` |
+| `scaling` | `0.9`, `0.95`, `1`, `1.05`, `1.1` | `1` | `data-scaling` |
+| `panelBackground` | `solid`, `translucent` | `solid` | `data-panel-background` |
+| `reducedMotion` | `true`, `false`, `system` | `system` | `data-reduced-motion` |
+
+`system` and `auto` are resolved before the attribute is written, so `data-theme` is always `light` or `dark`. Fonts are CSS variables, not a setting; see [Fonts](#fonts).
+
+### Appearance
+
+<Demo data={appearanceDemo} />
+
+### Accent color
+
+`grayColor: "auto"` pairs a gray to the accent.
+
+<Demo data={accentDemo} />
+
+### Radius
+
+A factor over a fixed base scale. Controls such as `Button` become pills only at `full`; round controls such as `Switch` stay round from `medium` up and square off at `none` and `small`. Surfaces never become pills.
+
+<Demo data={radiusDemo} />
+
+### Scaling
+
+A zoom: spacing, radius, type and line height scale together. Borders and font weights do not.
+
+<Demo data={scalingDemo} />
+
+### Panel background
+
+Overlay surfaces are opaque by default. `translucent` blurs what is behind dialogs, drawers, menus, popovers, selects, tooltips and toasts, and tints them with it: a 70% wash of the surface in light, and in dark a faint lift that lets the blur carry the panel.
+
+<Demo data={panelBackgroundDemo} />
+
+A translucent panel only reads as translucent against something other than itself. Over a plain page, which is the colour the panel is drawn from, it looks identical to `solid`.
+
+### Reduced motion
+
+`system` follows `prefers-reduced-motion`. `"true"` collapses the duration tokens, which stops transitions and any animation timed by a token.
 
 ```tsx
-// Clean, technical aesthetic
-<Theme style="modern" accentColor="indigo" grayColor="slate">
-
-// Warm, editorial feel
-<Theme style="traditional" accentColor="orange" grayColor="mauve">
-
-// Vibrant and fresh
-<Theme style="modern" accentColor="mint" grayColor="gray">
+<ThemePreview defaultValue={{ reducedMotion: "true" }}>
 ```
 
-See [API Reference](#api-reference) for all available props and options.
+## Nesting
+
+A nested `ThemePreview` inherits every key it does not set.
+
+<Demo data={nestingDemo} />
+
+A scope with its own `light` or `dark` appearance paints its background. One that only changes accent, gray, radius or scaling is transparent. `hasBackground` overrides either.
+
+<Demo data={layoutDemo} />
+
+### Portals
+
+Theme values travel through React context, so every portalling component re-emits them onto its popup. A menu opened inside a dark scope is dark, with nothing to configure.
+
+<Demo data={portalDemo} />
+
+### isRoot
+
+One theme per document owns the page colour scheme: the scrollbar, the overscroll area and native widget defaults. The first theme with no ancestor claims it. An embedded widget that has no ancestor theme but does not own the page must pass `isRoot={false}`.
+
+```tsx
+<ThemePreview isRoot={false} defaultValue={{ appearance: "dark" }}>
+  <Widget />
+</ThemePreview>
+```
+
+### render
+
+Merge the theme onto your own element instead of adding a wrapper:
+
+```tsx
+<ThemePreview render={<main className="page" />}>
+  <App />
+</ThemePreview>
+```
+
+## Controlled
+
+`defaultValue` seeds a key; `value` controls it. A controlled key always wins, is never persisted and is never written by the inline script. Control is per key.
+
+<Demo data={controlledDemo} />
+
+```tsx
+// Appearance from a cookie; accent stays adjustable and persisted
+<ThemePreview
+  value={{ appearance: appearanceFromCookie }}
+  defaultValue={{ accentColor: "mint" }}
+  persistKey="app-theme"
+>
+  <App />
+</ThemePreview>
+```
+
+## Persistence
+
+Off unless `persistKey` is set. A theme without one keeps its settings in memory, so scopes and embedded widgets never collide. `persist` narrows which keys the namespace stores.
+
+```tsx
+// Everything under one namespace
+<ThemePreview persistKey="app-theme" />
+
+// Only the appearance
+<ThemePreview persistKey="app-theme" persist={["appearance"]} />
+```
+
+Themes sharing a `persistKey` stay in step, across tabs as well. Writes merge into the stored object, so themes with different `persist` lists can share one key.
+
+## Server rendering
+
+Settings are props, so the server renders them. An inline script, the theme element's first child, patches in what the server cannot know before first paint: stored values, and the OS answer for a `system` appearance. A pinned appearance with no `persistKey` ships no script. Pass `nonce` if your CSP needs one.
+
+```tsx
+// Next.js App Router: app/layout.tsx
+import { ThemePreview } from "@raystack/apsara";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <ThemePreview persistKey="app-theme">{children}</ThemePreview>
+      </body>
+    </html>
+  );
+}
+```
+
+Nothing is written to `<html>`, so it needs no `suppressHydrationWarning`.
+
+## useThemePreview
+
+```tsx
+import { useThemePreview } from "@raystack/apsara";
+
+function AppearanceToggle() {
+  const { resolved, setValue } = useThemePreview();
+  const isDark = resolved.appearance === "dark";
+
+  return (
+    <button onClick={() => setValue({ appearance: isDark ? "light" : "dark" })}>
+      Toggle
+    </button>
+  );
+}
+```
+
+<auto-type-table path="./props.ts" name="UseThemePreviewReturn" />
+
+`value` is what was set, `system` and `auto` included; `resolved` is what is on screen. `root` is the same handle bound to the root provider, so a control inside a scope can change the page:
+
+```tsx
+const { root } = useThemePreview();
+root.setValue({ appearance: "dark" });
+```
+
+The hook throws outside a provider.
+
+### ThemePreviewSwitcher
+
+An icon button that flips between light and dark. It follows `resolved.appearance`.
+
+<Demo data={switcherDemo} />
+
+<auto-type-table path="./props.ts" name="ThemePreviewSwitcherProps" />
+
+## Per-component radius
+
+Components accept a `radius` prop with the theme's five values. It affects only that component and does not compound with the theme radius.
+
+<Demo data={componentRadiusDemo} />
+
+Available on `Button`, `IconButton`, `Badge`, `Callout`, `Chip`, `Input`, `TextArea`, `Image`, `Avatar`, and on the portalled parts `Dialog.Content`, `AlertDialog.Content`, `Drawer.Content`, `Popover.Content`, `Menu.Content`, `ContextMenu.Content`, `Select.Content`, `Combobox.Content`, `Tooltip.Content`, `PreviewCard.Content`, `Command.DialogContent` and `Tour.Content`. It goes on the portalled part, not the root: `<Popover.Content radius="none">`.
 
 ## Tokens
 
-Tokens follow two naming patterns:
+Tokens are named by what they mean, not what they look like. Semantic tokens carry a context-aware value; scale tokens carry a step in a numeric progression.
 
-**Semantic tokens** hold context-aware values that adapt to the theme:
 ```
---rs-{category}-{property}-{variant}-{state}
+--rs-{category}-{property}-{variant}-{state}    --rs-color-background-accent-emphasis
+--rs-{category}-{step}                          --rs-space-5, --rs-radius-3
 ```
-
-**Scale tokens** hold numerical progressions:
-```
---rs-{category}-{step}
-```
-
-**Examples:**
-- `--rs-color-foreground-base-primary`: primary text color
-- `--rs-color-background-accent-emphasis`: accent button background
-- `--rs-space-5`: 16px spacing
-- `--rs-radius-3`: medium border radius
-- `--rs-shadow-lifted`: elevated shadow
-
-**Using tokens in CSS:**
 
 ```css
 .custom-card {
@@ -85,301 +243,54 @@ Tokens follow two naming patterns:
 }
 ```
 
-**Token Categories:**
-- [Colors](/docs/theme/colors): foreground, background, border, and overlay colors
-- [Spacing](/docs/theme/spacing): consistent scale from 2px to 120px
-- [Radius](/docs/theme/radius): border radius that adapts to style variants
-- [Typography](/docs/theme/typography): font families, sizes, weights, and line heights
-- [Effects](/docs/theme/effects): shadows and blur for depth and elevation
+The full reference is split by category: [colors](/docs/theme/colors), [typography](/docs/theme/typography), [spacing](/docs/theme/spacing), [radius](/docs/theme/radius), [effects](/docs/theme/effects) and [icons](/docs/theme/icons).
 
-## Framework integration
+### Overriding
 
-**HTML attributes.** `Theme` sets data attributes on the document element for CSS targeting:
-- `data-theme`: current color scheme (`light` | `dark`)
-- `data-style`: active style variant (`modern` | `traditional`)
-- `data-accent-color`: active accent color (`indigo` | `orange` | `mint`)
-- `data-gray-color`: active gray variant (`gray` | `mauve` | `slate`)
+Every `--rs-*` declaration is wrapped in `:where()` and every theme element carries the `rs-theme` class, so one class selector overrides any token without `!important`:
 
-**SSR and flash prevention.** `Theme` includes an inline script that runs before React hydration to prevent flash of incorrect theme. For SSR frameworks, include the provider in your root layout:
+```css
+.rs-theme {
+  --rs-color-background-accent-emphasis: #6d28d9;
+  --rs-radius-3: 10px;
+}
 
-```tsx
-// Next.js App Router: app/layout.tsx
-import { Theme } from "@raystack/apsara";
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
-        <Theme>{children}</Theme>
-      </body>
-    </html>
-  );
+.marketing-page .rs-theme {
+  --rs-font-title: "Playfair Display", serif;
 }
 ```
 
-The `suppressHydrationWarning` is required because the theme script modifies the HTML element before React hydrates.
-
-## Scoped theming
-
-Themes are not limited to the document root. Any element with a `data-theme` attribute creates an isolated theme scope. Descendants resolve every design token from the nearest scoped ancestor. This enables theme preview cards, split-screen comparisons, and dark sidebars in light apps without any extra plumbing.
-
-### Bare attribute
-
-Scoping is implemented in CSS, so setting the attribute on any element opts in:
+Inline `style` works too:
 
 ```tsx
-<html data-theme="dark">
-  {/* Page is dark */}
-  <div data-theme="light">
-    {/* This subtree renders with light tokens */}
-    <Button>Light button inside dark page</Button>
-  </div>
-</html>
+<ThemePreview style={{ "--rs-space-5": "18px" }}>
 ```
 
-The package's stylesheet handles the rest: every `--rs-color-*` token, `color-scheme` for native form controls and scrollbars, and the smooth transition during theme switches all follow the scoped attribute.
+### Fonts
 
-### Nested `Theme`
+Three CSS variables, no prop:
 
-Render a `Theme` inside another `Theme` and the inner one switches to *scope mode*.
-
-For a typed convenience wrapper, nest `Theme`:
-
-```tsx
-import { Theme } from "@raystack/apsara";
-
-<Theme forcedTheme="dark">
-  <Card>Dark scoped card</Card>
-</Theme>
-```
-
-When `Theme` is rendered inside another `Theme`, it switches to scope mode: it writes `data-theme` (and optionally `data-accent-color`, `data-gray-color`, `data-style`) onto a wrapper `<div>` rather than the document root. `useTheme()` still reports the outer provider's state.
-
-### Inheritance rules
-
-Two rules cover every case:
-
-1. **Each prop inherits independently.** Any prop you don't pass to a nested `Theme` is inherited from the parent. Any prop you do pass overrides only that field. The rest still inherits.
-2. **`useTheme()` inside a scope talks to that scope only.** Calling `setTheme()` updates the nearest scope, never propagates outward. To target a specific outer scope (e.g., the root), use `useTheme({ storageKey })`. See [Targeting a specific scope](#targeting-a-specific-scope).
-
-### Activating a scope
-
-A nested `<Theme>` becomes an *active scope* (owns state, renders a wrapper, provides its own context) when you pass at least one of: `forcedTheme`, `defaultTheme`, `accentColor`, `grayColor`, `style`, or `storageKey`. A bare `<Theme>` with no props is a no-op pass-through. Children render with the parent's context.
-
-If you want a section to act as a scope but don't need to override any specific token, pass `defaultTheme` (seeds an initial scope theme):
-
-```tsx
-<Theme defaultTheme="dark">
-  {/* This is now a stateless scope. setTheme inside updates this scope only. */}
-</Theme>
-```
-
-### Composition examples
-
-The cases below assume a configured page-level `Theme` and progressively richer nested overrides.
-
-**Both fully configured, independent states**
-
-```tsx
-<Theme defaultTheme="dark" accentColor="orange" grayColor="mauve" style="traditional">
-  <Theme defaultTheme="light" accentColor="mint" grayColor="slate" style="modern">
-    <Card />
-  </Theme>
-</Theme>
-```
-
-- Page: dark + orange + mauve + traditional. Persisted under `storageKey="theme"`.
-- Scope: light + mint + slate + modern. Owns its state in memory (no `storageKey`, so not persisted).
-- `Card` renders with the scope's values.
-- Toggling the page does not move the scope; toggling the scope does not move the page.
-
-**Partial override, single prop**
-
-```tsx
-<Theme defaultTheme="dark" accentColor="orange" grayColor="mauve" style="traditional">
-  <Theme accentColor="mint">
-    <Card />
-  </Theme>
-</Theme>
-```
-
-What `Card` sees:
-
-| Field | Source | Value |
-|---|---|---|
-| `resolvedTheme` | inherited from page | `dark` |
-| `accentColor` | own (scope) | `mint` |
-| `grayColor` | inherited | `mauve` |
-| `style` | inherited | `traditional` |
-
-- The wrapper `<div>` gets `data-theme="dark" data-accent-color="mint" data-gray-color="mauve" data-style="traditional"` so CSS rules like `[data-accent-color='mint'][data-theme='dark']` match correctly.
-- If the page theme later flips to light, the scope follows (still inheriting `theme`). Accent stays `mint`.
-- If the scope's own `setTheme()` is called, the scope decouples from the page for theme only; non-overridden fields keep inheriting.
-
-**Display-locked region with `forcedTheme`**
-
-```tsx
-<Theme defaultTheme="dark">
-  <Theme forcedTheme="light">
-    <PreviewCard />
-  </Theme>
-</Theme>
-```
-
-- `PreviewCard` and its descendants always render with the light theme, regardless of any toggle.
-- Accent / gray / style still inherit from the page.
-- `setTheme()` inside still updates the scope's stored value, but `forcedTheme` always wins for display.
-
-**Persistent independent island with `storageKey`**
-
-```tsx
-<Theme defaultTheme="dark">
-  <Theme storageKey="sidebar-theme" defaultTheme="dark">
-    <Sidebar>
-      <ScopeToggle />   {/* setTheme here updates and persists the sidebar's own theme */}
-    </Sidebar>
-  </Theme>
-</Theme>
-```
-
-- Two independent persisted entries: `localStorage["theme"]` (page) and `localStorage["sidebar-theme"]` (sidebar).
-- Reloading the page restores both to their last-saved values.
-- A toggle inside the sidebar flips only the sidebar.
-
-**Empty nested, no scope created**
-
-```tsx
-<Theme defaultTheme="dark">
-  <Theme>     {/* no props → no-op pass-through */}
-    <Card />
-  </Theme>
-</Theme>
-```
-
-- The inner `Theme` does nothing: no wrapper, no new context.
-- `useTheme()` inside `Card` returns the page's state.
-- `setTheme()` inside `Card` flips the page.
-
-### Persistent scope
-
-Pass `storageKey` to a nested `Theme` and it becomes stateful, persisting the scope's theme to localStorage. Descendants read and update it through the same `useTheme()` hook. It returns the nearest provider's state, so inside a persistent scope it returns the scope's theme and setter:
-
-```tsx
-import { Theme, useTheme } from "@raystack/apsara";
-
-function ScopeToggle() {
-  const { theme, setTheme } = useTheme();
-
-  return (
-    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-      Toggle (currently {theme ?? "inherited"})
-    </button>
-  );
-}
-
-<Theme storageKey="dashboard-theme" defaultTheme="dark">
-  <ScopeToggle />
-  <Dashboard />
-</Theme>
-```
-
-**Behavior:**
-
-- On mount, the scope reads `localStorage[storageKey]`. If present, that value wins. Otherwise the scope uses `defaultTheme`. If neither is set, the scope inherits from its parent (no `data-theme` on the wrapper).
-- Inside the scope, `useTheme()` returns layered state: scope-owned fields (`theme`, `setTheme`) come from the scope; the rest (`themes`, `systemTheme`, etc.) are inherited from the root.
-- `setTheme(value)` updates state and writes to the scope's localStorage key.
-- `setTheme(undefined)` clears the storage entry and re-inherits from the parent.
-- Changes from other tabs propagate automatically via the `storage` event.
-- `forcedTheme`, if passed, wins over storage for display but is **not** persisted. It is a developer override, not a user choice.
-
-**Gotchas:**
-
-- Use a distinct `storageKey` per scope. Multiple scopes sharing one key is undefined behavior within the same tab.
-- There is no FOUC prevention for nested scopes. On reload, the scope renders with `defaultTheme` (or inherits) for one paint, then snaps to the saved value once React hydrates. For above-the-fold scopes you'll see a brief flash. The root provider's inline script protects `<html>` only; per-scope inline scripts are not emitted in this version.
-
-### Targeting a specific scope
-
-`useTheme()` always talks to the *nearest* scope. To target a specific outer scope (typically the root, so a deep button can flip the whole page), pass its `storageKey`:
-
-```tsx
-import { useTheme } from "@raystack/apsara";
-
-function PageThemeButton() {
-  // Reaches past nearer scopes to the root (whose default storageKey is "theme").
-  const { theme, setTheme } = useTheme({ storageKey: "theme" });
-  return (
-    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-      Flip page
-    </button>
-  );
-}
-```
-
-- If a matching scope is found, the hook returns its `theme` + `setTheme`; the rest of the fields still reflect the nearest scope.
-- If no scope with that `storageKey` exists in the ancestor tree, the hook falls back to the nearest scope (same as calling `useTheme()` with no argument).
-
-### Cheat sheet
-
-Every nesting case in one table.
-
-| What you want | What to pass on the nested `Theme` |
+| Token | Role |
 |---|---|
-| Section is purely styled, no own state | Don't nest. There's nothing to scope. |
-| Section has its own theme, in-memory only | `defaultTheme="dark"` (any value) |
-| Section is locked to a theme regardless of toggles | `forcedTheme="dark"` |
-| Section overrides only accent / gray / style | Just pass those props; theme inherits |
-| Section persists its own theme across reloads | `storageKey="some-key"` (+ optional `defaultTheme`) |
-| Flip the page theme from inside a scope | `useTheme({ storageKey: "theme" }).setTheme(…)` |
+| `--rs-font-body` | Body text |
+| `--rs-font-title` | Headings |
+| `--rs-font-mono` | Monospace |
 
-### Nested provider vs. bare attribute
+```css
+.rs-theme {
+  --rs-font-body: "Geist", system-ui, sans-serif;
+  --rs-font-title: "Geist", system-ui, sans-serif;
+}
+```
 
-- Use the **bare `data-theme` attribute** when you're already rendering a custom element and don't want another wrapper. The CSS handles everything, so components inside will theme correctly.
-- Use a **nested `Theme`** when you want typed props (`forcedTheme`, `accentColor`, etc.), automatic inheritance of unspecified fields, and `useTheme()` integration.
+Import one stylesheet: `@raystack/apsara/style.css` includes the font imports, `@raystack/apsara/style-no-fonts.css` leaves them out for self-hosted fonts. The type scale is tuned for Inter, so another font may need its line heights and tracking adjusted.
 
 ## API Reference
 
-The provider, the hook, and the ready-made switcher.
+### ThemePreview
 
-### Theme
+<auto-type-table path="./props.ts" name="ThemePreviewProps" />
 
-The `Theme` component wraps your application and manages theme state. It handles persisting the user's preference to localStorage, syncing with system preferences, and injecting the appropriate CSS variables into the document.
+### ThemeSettings
 
-<auto-type-table path="./props.ts" name="ThemeProps" />
-
-### useTheme
-
-The `useTheme` hook provides access to the current theme state and methods to change it. Use this to build theme toggles, read the resolved theme for conditional rendering, or sync with external systems.
-
-```tsx
-import { useTheme } from "@raystack/apsara";
-
-function ThemeToggle() {
-  const { theme, setTheme, resolvedTheme } = useTheme();
-
-  return (
-    <button onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
-      Toggle theme
-    </button>
-  );
-}
-```
-
-The hook accepts an optional options object to target a specific scope by its `storageKey` (see [Targeting a specific scope](#targeting-a-specific-scope)):
-
-<auto-type-table path="./props.ts" name="UseThemeOptions" />
-
-And returns:
-
-<auto-type-table path="./props.ts" name="UseThemeProps" />
-
-### ThemeSwitcher
-
-A ready-made icon button that toggles between light and dark. It calls `useTheme` internally, so it must render inside a `Theme` provider. The button is a native `<button>` with a descriptive `aria-label` ("Switch to light theme" / "Switch to dark theme"), so it works with keyboards and screen readers out of the box.
-
-<Demo data={switcherDemo} />
-
-The `size` prop sets the button's width and height in pixels:
-
-<Demo data={switcherSizeDemo} />
-
-<auto-type-table path="./props.ts" name="ThemeSwitcherProps" />
+<auto-type-table path="./props.ts" name="ThemeSettings" />

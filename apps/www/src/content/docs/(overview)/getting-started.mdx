@@ -48,23 +48,23 @@ import "@raystack/apsara/style.css";
 
 This single stylesheet includes all component styles and CSS custom properties (tokens) for theming.
 
-### 2. Add Theme
+### 2. Add ThemePreview
 
-Wrap your application with `Theme` to enable theming support:
+Wrap your application with `ThemePreview` to enable theming support:
 
 ```tsx
-import { Theme } from "@raystack/apsara";
+import { ThemePreview } from "@raystack/apsara";
 
 function App() {
   return (
-    <Theme defaultTheme="system">
+    <ThemePreview persistKey="app-theme">
       <YourApp />
-    </Theme>
+    </ThemePreview>
   );
 }
 ```
 
-The `defaultTheme` prop accepts `"light"`, `"dark"`, or `"system"` (follows OS preference).
+Tokens live on the element it renders, so anything that reads `--rs-*` has to be inside it. `persistKey` stores the user's choices; leave it off to keep them in memory. Seed any of the seven settings with `defaultValue`, for example `defaultValue={{ appearance: "dark" }}`.
 
 ### 3. Use components
 
@@ -96,23 +96,23 @@ Add the provider to your root layout:
 
 ```tsx
 // app/layout.tsx
-import { Theme } from "@raystack/apsara";
+import { ThemePreview } from "@raystack/apsara";
 import "@raystack/apsara/style.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body>
-        <Theme defaultTheme="system">
+        <ThemePreview persistKey="app-theme">
           {children}
-        </Theme>
+        </ThemePreview>
       </body>
     </html>
   );
 }
 ```
 
-The `suppressHydrationWarning` attribute is required because `Theme` injects a script to prevent theme flash during hydration.
+Settings are props, so the server renders them. An inline script patches in what it cannot know before first paint: stored values, and the OS answer for a `system` appearance. Nothing is written to `<html>`, so it needs no `suppressHydrationWarning`.
 
 ### Vite
 
@@ -122,15 +122,15 @@ Add the provider to your main entry file:
 // main.tsx
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { Theme } from "@raystack/apsara";
+import { ThemePreview } from "@raystack/apsara";
 import "@raystack/apsara/style.css";
 import App from "./App";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Theme defaultTheme="system">
+    <ThemePreview persistKey="app-theme">
       <App />
-    </Theme>
+    </ThemePreview>
   </React.StrictMode>
 );
 ```
@@ -172,17 +172,18 @@ function CopyButton({ value }: { value: string }) {
 }
 ```
 
-To read or change the active theme, use `useTheme` from the main entry:
+To read or change the active theme, use `useThemePreview` from the main entry:
 
 ```tsx
-import { Button, useTheme } from "@raystack/apsara";
+import { Button, useThemePreview } from "@raystack/apsara";
 
 function ThemeToggle() {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { resolved, setValue } = useThemePreview();
+  const isDark = resolved.appearance === "dark";
 
   return (
-    <Button onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
-      Toggle Theme
+    <Button onClick={() => setValue({ appearance: isDark ? "light" : "dark" })}>
+      Toggle theme
     </Button>
   );
 }
@@ -190,6 +191,6 @@ function ThemeToggle() {
 
 ## Next steps
 
-- [Theme Overview](/docs/theme/overview): configure colors, spacing, and style variants
+- [Theme Overview](/docs/theme/overview): tokens, the seven settings, and nested scopes
 - [Button](/docs/components/button): start with a common component
 - [DataView](/docs/dataview): build data-rich interfaces

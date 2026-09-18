@@ -1,124 +1,144 @@
-export type ThemeProps = {
+export type Appearance = 'light' | 'dark';
+export type AppearanceSetting = 'light' | 'dark' | 'system';
+export type AccentColor = 'indigo' | 'orange' | 'mint';
+export type GrayColorSetting = 'gray' | 'mauve' | 'slate' | 'sage' | 'auto';
+export type Radius = 'none' | 'small' | 'medium' | 'large' | 'full';
+export type Scaling = '0.9' | '0.95' | '1' | '1.05' | '1.1';
+export type PanelBackground = 'solid' | 'translucent';
+export type ReducedMotion = 'true' | 'false' | 'system';
+
+/** The theme settings. Every key is independent. */
+export type ThemeSettings = {
   /**
-   * Default theme on first load
+   * Colour scheme. `system` resolves against `prefers-color-scheme`.
    * @defaultValue "system"
    */
-  defaultTheme?: string;
+  appearance: AppearanceSetting;
 
   /**
-   * List of available theme names
-   * @defaultValue ["light", "dark"]
-   */
-  themes?: string[];
-
-  /** Force a specific theme, ignoring user preference */
-  forcedTheme?: string;
-
-  /**
-   * Enable system theme detection
-   * @defaultValue true
-   */
-  enableSystem?: boolean;
-
-  /**
-   * localStorage key for persisting theme
-   * @defaultValue "theme"
-   */
-  storageKey?: string;
-
-  /**
-   * HTML attribute to set on document element
-   * @defaultValue "data-theme"
-   */
-  attribute?: string | 'class';
-
-  /**
-   * Visual style variant
-   * @defaultValue "modern"
-   */
-  style?: 'modern' | 'traditional';
-
-  /**
-   * Primary accent color
+   * Accent ramp.
    * @defaultValue "indigo"
    */
-  accentColor?: 'indigo' | 'orange' | 'mint';
+  accentColor: AccentColor;
 
   /**
-   * Neutral gray color variant
-   * @defaultValue "gray"
+   * Gray ramp. `auto` pairs a complementary gray to the accent.
+   * @defaultValue "auto"
    */
-  grayColor?: 'gray' | 'mauve' | 'slate';
+  grayColor: GrayColorSetting;
 
   /**
-   * Disable CSS transitions when switching themes
+   * Corner radius, applied as a factor over a fixed base scale.
+   * @defaultValue "medium"
+   */
+  radius: Radius;
+
+  /**
+   * Zoom. Multiplies spacing, radius, type and line height together.
+   * @defaultValue "1"
+   */
+  scaling: Scaling;
+
+  /**
+   * Whether overlay surfaces are opaque or translucent.
+   * @defaultValue "solid"
+   */
+  panelBackground: PanelBackground;
+
+  /**
+   * Motion preference. A forced value collapses the duration tokens.
+   * @defaultValue "system"
+   */
+  reducedMotion: ReducedMotion;
+};
+
+export type ThemeSettingKey = keyof ThemeSettings;
+
+export type ThemePreviewProps = {
+  /** Seeds uncontrolled keys. A stored user choice overrides it. */
+  defaultValue?: Partial<ThemeSettings>;
+
+  /**
+   * Controlled keys, per key. A controlled key always wins and is never
+   * persisted.
+   */
+  value?: Partial<ThemeSettings>;
+
+  /**
+   * Fires when `setValue` requests a change. Controlled keys are reported but
+   * not applied; changes arriving from storage do not fire it.
+   */
+  onValueChange?: (
+    value: ThemeSettings,
+    changed: Partial<ThemeSettings>
+  ) => void;
+
+  /**
+   * Which settings this namespace covers.
+   * @defaultValue all seven keys
+   */
+  persist?: ThemeSettingKey[];
+
+  /** Storage namespace. Persistence is off unless this is set. */
+  persistKey?: string;
+
+  /**
+   * Whether this theme owns the document's colour scheme. An embedded widget
+   * with no ancestor theme should pass `false`.
+   * @defaultValue true when there is no ancestor theme
+   */
+  isRoot?: boolean;
+
+  /**
+   * Overrides the painting heuristic: true at the root or for a nested theme
+   * with its own `light` or `dark` appearance, false otherwise.
+   */
+  hasBackground?: boolean;
+
+  /**
+   * Suppresses the colour transition during an appearance switch.
    * @defaultValue false
    */
   disableTransitionOnChange?: boolean;
 
-  /**
-   * Set color-scheme CSS property for native elements
-   * @defaultValue true
-   */
-  enableColorScheme?: boolean;
-
-  /** Nonce string for CSP headers */
+  /** CSP nonce for the inline script. */
   nonce?: string;
 
-  /** Mapping of theme name to HTML attribute value */
-  value?: { [themeName: string]: string };
+  /** `asChild`-style escape hatch: merges the theme onto your own element. */
+  render?: React.ReactElement | ((props: object) => React.ReactElement);
 
-  /**
-   * Called when the active theme changes. `resolvedTheme` is the actual applied theme
-   * (`"light"`/`"dark"` when `theme` is `"system"`). Not fired on initial mount.
-   */
-  onThemeChange?: (theme: string, resolvedTheme: string) => void;
+  /** Extra classes. `rs-theme` is always present alongside them. */
+  className?: string;
 
-  /** React children */
   children?: React.ReactNode;
 };
 
-export type UseThemeProps = {
-  /** Current theme name (root: user preference; persistent scope: stored value) */
-  theme?: string;
-
-  /** Update the theme. Pass `undefined` in a persistent scope to clear it and re-inherit from the parent. */
-  setTheme: (theme: string | undefined) => void;
-
-  /** Resolved theme — what's actually applied (`"light"`/`"dark"`, or `forcedTheme` if set) */
-  resolvedTheme?: string;
-
-  /** System preference, regardless of current theme */
-  systemTheme?: 'light' | 'dark';
-
-  /** List of all available themes */
-  themes: string[];
-
-  /** Forced theme if set, otherwise undefined */
-  forcedTheme?: string;
-
-  /** Active style variant */
-  style?: 'modern' | 'traditional';
-
-  /** Active accent color */
-  accentColor?: 'indigo' | 'orange' | 'mint';
-
-  /** Active gray color */
-  grayColor?: 'gray' | 'mauve' | 'slate';
+/** The theme, as read and driven from anywhere inside a provider. */
+export type ThemeHandle = {
+  /** Settings as set, `system` and `auto` included. */
+  value: ThemeSettings;
+  /** Settings as applied, with `system` and `auto` resolved. */
+  resolved: ThemeSettings & { appearance: Appearance };
+  /** Partial settings. Controlled keys are reported, not applied. */
+  setValue: (next: Partial<ThemeSettings>) => void;
+  /** What the OS reports, whatever the current setting is. */
+  systemAppearance: Appearance;
 };
 
-export type UseThemeOptions = {
-  /**
-   * Target a scope (or the root) by its `storageKey` instead of the nearest
-   * provider. Useful for flipping the page-level theme from inside a nested scope.
-   */
-  storageKey?: string;
+export type UseThemePreviewReturn = ThemeHandle & {
+  /** The same handle bound to the root provider. */
+  root: ThemeHandle;
 };
 
-export type ThemeSwitcherProps = {
+export type ThemePreviewSwitcherProps = {
   /**
-   * Width and height of the switch button in pixels
+   * Square size of the button box, in pixels.
    * @defaultValue 30
    */
   size?: number;
+  /**
+   * Whether to flip the root theme rather than the nearest scope.
+   * @defaultValue "nearest"
+   */
+  target?: 'nearest' | 'root';
 };
