@@ -70,46 +70,6 @@ and [Icons](https://apsara.raystack.io/docs/theme/icons).
   `IconComponent`, `IconProps`, `IconProviderProps`, and `IconProvider`
   itself.
 
-### Theme — element-mounted `ThemePreview` (RFC 004)
-
-`ThemePreview` is the next `Theme`, shipping alongside the existing one so
-applications migrate at their own pace. It mounts every token-bearing
-attribute on a real element instead of `<html>`, so the root theme, a nested
-scope and a portal re-injection are the same component: server-renderable,
-more than one provider per page, and scoped themes that reach into portals.
-See [ThemePreview](https://apsara.raystack.io/docs/theme/preview), which
-includes the migration guide.
-
-#### New features
-
-- **`ThemePreview`** with seven independently seedable, controllable and
-  persistable settings: `appearance`, `accentColor`, `grayColor`, `radius`,
-  `scaling`, `panelBackground` and `reducedMotion`. Persistence is gated on
-  `persistKey`. A small pre-hydration script patches stored values, and a
-  `system` appearance, before first paint.
-- **Token layer rebuilt.** Every `--rs-*` declaration is wrapped in
-  `:where()`, so a consumer rule on the stable `.rs-theme` class wins without
-  `!important`. Spacing, effects and z-index move onto the theme selector so
-  a scope can change them. New `--rs-scaling`, a radius factor over a fixed
-  base scale replacing the two `data-style` scales, and panel, overlay and
-  backdrop-filter tokens.
-- **Per-component `radius`** on Button, IconButton, Badge, Callout, Chip,
-  Input, TextArea, Image, Avatar and the portalled `Content` sub-components.
-- **Round controls follow the theme radius.** `Switch` and the `Slider` track
-  and thumb are round from `medium` up and square at `none` and `small`, via
-  a new `--rs-radius-thumb` token. `Radio` stays round.
-- **`style-no-fonts.css`** is published alongside `style.css` for consumers
-  that self-host or already load the fonts.
-
-#### Changes for existing `Theme` users
-
-- **`:where()` changes who wins a tie.** Token declarations no longer carry
-  specificity, so a consumer rule on `:root` that used to lose to
-  `[data-theme="dark"]` now wins. Scope such overrides to `.rs-theme` or a
-  theme attribute if you relied on the old order.
-- **`Avatar` has no default `radius`** and follows the theme radius like every
-  other component. Pass `radius` to pin a value.
-
 ## 0.49.0
 
 ### Calendar / DatePicker / RangePicker improvements (PR #819)
