@@ -26,7 +26,7 @@ The input type decides what the chip edits: text, a number, a date, or a list of
 
 ### Input types
 
-FilterChip supports five input types, `select`, `multiselect`, `date`, `string`, and `number`, to handle various filtering needs. `multiselect` takes a `string[]` value and summarizes two or more selections as "N selected".
+FilterChip supports five input types, `select`, `multiselect`, `date`, `string`, and `number`, to handle various filtering needs. `multiselect` takes a `string[]` value and summarizes two or more selections as "N selected". `number` restricts both typed and pasted input to numeric characters, so a non-numeric keystroke or a mixed paste such as `12ab` is rejected outright, and passes a `number` rather than a string to `onValueChange` once the value parses.
 
 <Demo data={inputDemo} />
 
