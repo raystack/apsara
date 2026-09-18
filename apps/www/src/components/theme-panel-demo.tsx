@@ -101,25 +101,39 @@ function Sampler() {
 
       <Callout>Callouts follow the accent and the radius factor.</Callout>
 
-      <Flex gap={3}>
-        <Tooltip>
-          <Tooltip.Trigger
-            render={<Button variant='outline'>Tooltip</Button>}
-          />
-          <Tooltip.Content>Portalled, and still themed</Tooltip.Content>
-        </Tooltip>
+      {/* The page behind these popups is the colour the translucent panel mixes
+          from, so without something else under them `Panel` has no visible effect. */}
+      <Flex
+        direction='column'
+        align='start'
+        style={{
+          minHeight: 168,
+          padding: 'var(--rs-space-4)',
+          borderRadius: 'var(--rs-radius-3)',
+          background:
+            'repeating-linear-gradient(45deg, var(--rs-color-background-accent-emphasis) 0 120px, var(--rs-color-background-attention-emphasis) 120px 240px)'
+        }}
+      >
+        <Flex gap={3}>
+          <Tooltip>
+            <Tooltip.Trigger
+              render={<Button variant='outline'>Tooltip</Button>}
+            />
+            <Tooltip.Content>Portalled, and still themed</Tooltip.Content>
+          </Tooltip>
 
-        <Popover>
-          <Popover.Trigger
-            render={<Button variant='outline'>Popover</Button>}
-          />
-          <Popover.Content>
-            <Text>
-              Theme values cross the portal through context, so this popup
-              matches the scope it was opened from.
-            </Text>
-          </Popover.Content>
-        </Popover>
+          <Popover>
+            <Popover.Trigger
+              render={<Button variant='outline'>Popover</Button>}
+            />
+            <Popover.Content>
+              <Text>
+                Theme values cross the portal through context, so this popup
+                matches the scope it was opened from.
+              </Text>
+            </Popover.Content>
+          </Popover>
+        </Flex>
       </Flex>
     </Flex>
   );

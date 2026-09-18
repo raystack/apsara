@@ -93,12 +93,14 @@ export const panelBackgroundDemo = {
   code: `
   <Flex
     gap={5}
+    align="start"
     style={{
       width: "100%",
+      minHeight: "240px",
       padding: "var(--rs-space-7)",
       borderRadius: "var(--rs-radius-4)",
       background:
-        "linear-gradient(135deg, var(--rs-color-background-accent-emphasis), var(--rs-color-background-attention-emphasis))"
+        "repeating-linear-gradient(45deg, var(--rs-color-background-accent-emphasis) 0 120px, var(--rs-color-background-attention-emphasis) 120px 240px)"
     }}
   >
     {["solid", "translucent"].map(panelBackground => (
