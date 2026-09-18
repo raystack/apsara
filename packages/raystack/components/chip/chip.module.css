@@ -19,13 +19,69 @@
   -webkit-user-select: none;
 }
 
+/* Each color class supplies only tokens; the variant rules below consume them,
+ * so five colors cost one block each instead of a duplicated variant matrix. */
+.chip-color-neutral {
+  --chip-border: var(--rs-color-border-base-secondary);
+  /* Neutral outline hover changes text only, not the border. */
+  --chip-border-hover: var(--rs-color-border-base-secondary);
+  --chip-border-active: var(--rs-color-border-base-emphasis);
+  --chip-fg: var(--rs-color-foreground-base-secondary);
+  --chip-fg-hover: var(--rs-color-foreground-base-primary);
+  --chip-fg-active: var(--rs-color-foreground-base-primary);
+  /* Preserved as-is: a foreground token used as a border color. */
+  --chip-filled-border-hover: var(--rs-color-foreground-base-primary);
+  --chip-filled-fg-hover: var(--rs-color-foreground-base-primary);
+  --chip-filled-bg-active: var(--rs-color-background-neutral-primary);
+}
+
+.chip-color-accent {
+  --chip-border: var(--rs-color-border-accent-primary);
+  --chip-border-hover: var(--rs-color-border-accent-emphasis);
+  --chip-border-active: var(--rs-color-border-accent-emphasis);
+  --chip-fg: var(--rs-color-foreground-accent-primary);
+  --chip-fg-hover: var(--rs-color-foreground-accent-primary-hover);
+  --chip-fg-active: var(--rs-color-foreground-accent-primary);
+  --chip-filled-border-hover: var(--rs-color-border-accent-emphasis);
+  /* Accent filled hover changes the border only, not the text. */
+  --chip-filled-fg-hover: var(--rs-color-foreground-accent-primary);
+  --chip-filled-bg-active: var(--rs-color-background-accent-primary);
+}
+
 /* Variants */
 .chip-variant-outline {
   background: transparent;
+  border: 0.5px solid var(--chip-border);
+  color: var(--chip-fg);
+}
+
+.chip-variant-outline:hover {
+  border-color: var(--chip-border-hover);
+  color: var(--chip-fg-hover);
+}
+
+.chip-variant-outline:active,
+.chip-variant-outline[data-state="active"] {
+  border-color: var(--chip-border-active);
+  color: var(--chip-fg-active);
 }
 
 .chip-variant-filled {
   background: var(--rs-color-background-base-primary);
+  border: 0.5px solid var(--chip-border);
+  color: var(--chip-fg);
+}
+
+.chip-variant-filled:hover {
+  border-color: var(--chip-filled-border-hover);
+  color: var(--chip-filled-fg-hover);
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+.chip-variant-filled:active,
+.chip-variant-filled[data-state="active"] {
+  background: var(--chip-filled-bg-active);
+  color: var(--chip-fg-active);
 }
 
 /* Sizes */
@@ -35,74 +91,6 @@
 
 .chip-size-small {
   padding: var(--rs-space-1) var(--rs-space-2);
-}
-
-/* colors - Neutral */
-.chip-color-neutral.chip-variant-outline {
-  border: 0.5px solid var(--rs-color-border-base-secondary);
-  color: var(--rs-color-foreground-base-secondary);
-}
-
-.chip-color-neutral.chip-variant-outline:hover {
-  color: var(--rs-color-foreground-base-primary);
-}
-
-.chip-color-neutral.chip-variant-outline:active,
-.chip-color-neutral.chip-variant-outline[data-state="active"] {
-  border: 0.5px solid var(--rs-color-border-base-emphasis);
-  color: var(--rs-color-foreground-base-primary);
-}
-
-.chip-color-neutral.chip-variant-filled {
-  background: var(--rs-color-background-base-primary);
-  border: 0.5px solid var(--rs-color-border-base-secondary);
-  color: var(--rs-color-foreground-base-secondary);
-}
-
-.chip-color-neutral.chip-variant-filled:hover {
-  border-color: var(--rs-color-foreground-base-primary);
-  color: var(--rs-color-foreground-base-primary);
-  background: var(--rs-color-background-base-primary-hover);
-}
-
-.chip-color-neutral.chip-variant-filled:active,
-.chip-color-neutral.chip-variant-filled[data-state="active"] {
-  background: var(--rs-color-background-neutral-primary);
-  color: var(--rs-color-foreground-base-primary);
-}
-
-/* colors - Accent */
-.chip-color-accent.chip-variant-outline {
-  border: 0.5px solid var(--rs-color-border-accent-primary);
-  color: var(--rs-color-foreground-accent-primary);
-}
-
-.chip-color-accent.chip-variant-outline:hover {
-  border-color: var(--rs-color-border-accent-emphasis);
-  color: var(--rs-color-foreground-accent-primary-hover);
-}
-
-.chip-color-accent.chip-variant-outline:active,
-.chip-color-accent.chip-variant-outline[data-state="active"] {
-  border: 0.5px solid var(--rs-color-border-accent-emphasis);
-  color: var(--rs-color-foreground-accent-primary);
-}
-
-.chip-color-accent.chip-variant-filled {
-  background: var(--rs-color-background-base-primary);
-  border: 0.5px solid var(--rs-color-border-accent-primary);
-  color: var(--rs-color-foreground-accent-primary);
-}
-
-.chip-color-accent.chip-variant-filled:hover {
-  border-color: var(--rs-color-border-accent-emphasis);
-  background: var(--rs-color-background-base-primary-hover);
-}
-
-.chip-color-accent.chip-variant-filled:active,
-.chip-color-accent.chip-variant-filled[data-state="active"] {
-  background: var(--rs-color-background-accent-primary);
-  color: var(--rs-color-foreground-accent-primary);
 }
 
 /* Icons */
