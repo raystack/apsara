@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Chip } from '../chip';
 import styles from '../chip.module.css';
@@ -33,6 +34,19 @@ describe('Chip', () => {
 
       expect(screen.getByTestId('trailing-icon')).toBeInTheDocument();
       expect(screen.getByText('Chip with trailing icon')).toBeInTheDocument();
+    });
+
+    it('renders an icon-only chip with no children', () => {
+      render(
+        <Chip
+          leadingIcon={<span data-testid='leading-icon'>🏷️</span>}
+          aria-label='Filter'
+        />
+      );
+
+      const chip = screen.getByRole('status');
+      expect(chip).toHaveAttribute('aria-label', 'Filter');
+      expect(screen.getByTestId('leading-icon')).toBeInTheDocument();
     });
 
     it('applies custom className', () => {
@@ -101,6 +115,39 @@ describe('Chip', () => {
 
       const chip = screen.getByRole('status');
       expect(chip).toHaveClass(styles['chip-color-neutral']);
+    });
+  });
+
+  describe('Ref', () => {
+    it('attaches to the span on the default branch', () => {
+      const ref = createRef<HTMLSpanElement>();
+      render(<Chip ref={ref}>Test Chip</Chip>);
+
+      expect(ref.current?.tagName).toBe('SPAN');
+    });
+
+    it('attaches to the button on the interactive branch', () => {
+      const ref = createRef<HTMLButtonElement>();
+      render(
+        <Chip ref={ref} onClick={vi.fn()}>
+          Test Chip
+        </Chip>
+      );
+
+      expect(ref.current?.tagName).toBe('BUTTON');
+    });
+
+    it('stays a span when dismissible, even with onClick', () => {
+      // `isInteractive = !!onClick && !isDismissible` — pins the element-switch
+      // rule that the union ref type documents.
+      const ref = createRef<HTMLSpanElement>();
+      render(
+        <Chip ref={ref} isDismissible onClick={vi.fn()} onDismiss={vi.fn()}>
+          Test Chip
+        </Chip>
+      );
+
+      expect(ref.current?.tagName).toBe('SPAN');
     });
   });
 

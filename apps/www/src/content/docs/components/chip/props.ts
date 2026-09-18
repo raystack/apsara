@@ -45,4 +45,11 @@ export interface ChipProps {
 
   /** Custom accessibility label for the chip */
   'aria-label'?: string;
+
+  /**
+   * Ref to the rendered element. The chip is a `<button>` when `onClick` is set
+   * and it is not dismissible, and a `<span>` otherwise, so the ref accepts
+   * either.
+   */
+  ref?: React.Ref<HTMLSpanElement | HTMLButtonElement>;
 }

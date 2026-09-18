@@ -1,7 +1,7 @@
 'use client';
 
 import { cva, cx, type VariantProps } from 'class-variance-authority';
-import { ComponentProps, ReactNode } from 'react';
+import { ComponentProps, ReactNode, Ref } from 'react';
 
 import { XIcon } from '~/icons';
 import styles from './chip.module.css';
@@ -31,14 +31,21 @@ const chip = cva(styles.chip, {
   }
 });
 
-type ChipProps = ComponentProps<'span'> &
+export type ChipProps = Omit<ComponentProps<'span'>, 'ref' | 'children'> &
   VariantProps<typeof chip> & {
     trailingIcon?: ReactNode;
     leadingIcon?: ReactNode;
     isDismissible?: boolean;
-    children: ReactNode;
+    /** Optional: an icon-only chip passes `aria-label` instead. */
+    children?: ReactNode;
     onDismiss?: () => void;
     disabled?: boolean;
+    /**
+     * The chip renders a `<button>` when `onClick` is set and it is not
+     * dismissible, and a `<span>` otherwise — so the ref lands on whichever
+     * element that combination produced.
+     */
+    ref?: Ref<HTMLSpanElement | HTMLButtonElement>;
   };
 
 export const Chip = ({
