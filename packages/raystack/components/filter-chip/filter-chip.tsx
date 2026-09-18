@@ -50,6 +50,13 @@ const toDateValue = (value: unknown): Date | undefined => {
 };
 
 /**
+ * Matches a number *mid-typing*: the intermediate states a user passes through
+ * ('', '-', '1.', '-.5') stay editable, everything else is rejected. Applied on
+ * change rather than keydown so paste and IME input are covered too.
+ */
+const PARTIAL_NUMBER = /^-?\d*\.?\d*$/;
+
+/**
  * Subset of `DatePickerProps` that consumers may forward to the chip's
  * built-in DatePicker via `calendarProps`. `value`/`onSelect`/`defaultValue`
  * are owned by `FilterChip`; `children` would replace the input trigger and
@@ -118,6 +125,7 @@ export const FilterChip = ({
 
   const showOnRemove = typeof onRemove === 'function';
   const isMultiSelectColumn = columnType === FilterType.multiselect;
+  const isNumberColumn = columnType === FilterType.number;
 
   const handleOperationChange = useCallback(
     (operation: FilterOperation) => {
@@ -133,6 +141,26 @@ export const FilterChip = ({
       onValueChange?.(value, operation?.value ?? '');
     },
     [operation, onValueChange]
+  );
+
+  const handleTextInputChange = useCallback(
+    (raw: string) => {
+      if (!isNumberColumn) {
+        handleFilterValueChange(raw);
+        return;
+      }
+      // Rejecting without setting state means React re-renders the previous
+      // value, so the character never lands in the controlled input.
+      if (!PARTIAL_NUMBER.test(raw)) return;
+
+      setFilterValue(raw); // keep '-' and '1.' visible while typing
+      const parsed = Number(raw);
+      onValueChange?.(
+        raw === '' || Number.isNaN(parsed) ? raw : parsed,
+        operation?.value ?? ''
+      );
+    },
+    [isNumberColumn, handleFilterValueChange, onValueChange, operation]
   );
 
   const renderValueInput = () => {
@@ -205,7 +233,8 @@ export const FilterChip = ({
               variant={variant === 'text' ? 'borderless' : 'default'}
               classNames={{ container: styles.inputField }}
               value={filterValue}
-              onChange={e => handleFilterValueChange(e.target.value)}
+              inputMode={isNumberColumn ? 'decimal' : undefined}
+              onChange={e => handleTextInputChange(e.target.value)}
             />
           </div>
         );

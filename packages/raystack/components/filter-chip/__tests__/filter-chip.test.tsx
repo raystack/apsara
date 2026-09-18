@@ -125,6 +125,139 @@ describe('FilterChip', () => {
     });
   });
 
+  describe('Number Filter Type', () => {
+    const getInput = (container: HTMLElement) =>
+      container.querySelector(
+        `.${styles.inputFieldWrapper} input`
+      ) as HTMLInputElement;
+
+    it('renders input field for number type', () => {
+      const { container } = render(
+        <FilterChip label='Size' columnType={FilterType.number} />
+      );
+
+      expect(getInput(container)).toBeInTheDocument();
+    });
+
+    it('sets inputMode="decimal" for number and leaves string unset', () => {
+      const { container: numberContainer } = render(
+        <FilterChip label='Size' columnType={FilterType.number} />
+      );
+      const { container: stringContainer } = render(
+        <FilterChip label='Name' columnType={FilterType.string} />
+      );
+
+      expect(getInput(numberContainer)).toHaveAttribute('inputmode', 'decimal');
+      expect(getInput(stringContainer)).not.toHaveAttribute('inputmode');
+    });
+
+    it('emits a number, not a string, for numeric input', () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Size'
+          columnType={FilterType.number}
+          onValueChange={onValueChange}
+        />
+      );
+
+      fireEvent.change(getInput(container), { target: { value: '42' } });
+
+      expect(onValueChange).toHaveBeenCalledWith(42, expect.any(String));
+    });
+
+    it('rejects non-numeric input', () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Size'
+          columnType={FilterType.number}
+          onValueChange={onValueChange}
+        />
+      );
+
+      const input = getInput(container);
+      fireEvent.change(input, { target: { value: 'abc' } });
+
+      expect(onValueChange).not.toHaveBeenCalled();
+      expect(input).toHaveValue('');
+    });
+
+    it('rejects a partially numeric paste wholesale', () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Size'
+          columnType={FilterType.number}
+          onValueChange={onValueChange}
+        />
+      );
+
+      const input = getInput(container);
+      fireEvent.change(input, { target: { value: '12ab' } });
+
+      expect(onValueChange).not.toHaveBeenCalled();
+      expect(input).toHaveValue('');
+    });
+
+    it('keeps intermediate states typeable', () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Size'
+          columnType={FilterType.number}
+          onValueChange={onValueChange}
+        />
+      );
+
+      const input = getInput(container);
+
+      fireEvent.change(input, { target: { value: '-' } });
+      expect(input).toHaveValue('-');
+
+      fireEvent.change(input, { target: { value: '1.' } });
+      expect(input).toHaveValue('1.');
+
+      expect(onValueChange).toHaveBeenCalledTimes(2);
+    });
+
+    it('emits an empty string when the field is cleared', () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Size'
+          value={7}
+          columnType={FilterType.number}
+          onValueChange={onValueChange}
+        />
+      );
+
+      fireEvent.change(getInput(container), { target: { value: '' } });
+
+      expect(onValueChange).toHaveBeenCalledWith('', expect.any(String));
+    });
+
+    it('still emits the raw string for string columns', () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Name'
+          columnType={FilterType.string}
+          onValueChange={onValueChange}
+        />
+      );
+
+      fireEvent.change(getInput(container), {
+        target: { value: 'test value' }
+      });
+
+      expect(onValueChange).toHaveBeenCalledWith(
+        'test value',
+        expect.any(String)
+      );
+    });
+  });
+
   describe('Date Filter Type', () => {
     it('renders the date picker without crashing when no value is set', () => {
       // Regression: an unset date chip seeds its value with '' and forwarded
