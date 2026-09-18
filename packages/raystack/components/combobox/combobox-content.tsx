@@ -32,7 +32,7 @@ export const ComboboxContent = ({
   const { inputContainerRef } = useComboboxContext();
   const theme = useThemeInjection();
   return (
-    <ComboboxPrimitive.Portal>
+    <ComboboxPrimitive.Portal {...theme}>
       <ComboboxPrimitive.Positioner
         sideOffset={sideOffset}
         className={styles.positioner}

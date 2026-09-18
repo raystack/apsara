@@ -105,7 +105,7 @@ export function MenuContent({
   const theme = useThemeInjection();
 
   return (
-    <MenuPrimitive.Portal>
+    <MenuPrimitive.Portal {...theme}>
       <MenuPrimitive.Positioner
         data-slot='menu-positioner'
         className={styles.positioner}

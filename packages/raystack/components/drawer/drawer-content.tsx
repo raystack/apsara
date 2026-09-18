@@ -49,7 +49,7 @@ export function DrawerContent({
     ariaLabel ?? (ariaLabelledBy ? undefined : 'Drawer');
   const theme = useThemeInjection();
   return (
-    <DrawerPrimitive.Portal>
+    <DrawerPrimitive.Portal {...theme}>
       <DrawerPrimitive.Backdrop
         data-slot='drawer-backdrop'
         {...overlayProps}

@@ -36,7 +36,7 @@ export function TooltipContent({
 }: TooltipContentProps) {
   const theme = useThemeInjection();
   return (
-    <TooltipPrimitive.Portal>
+    <TooltipPrimitive.Portal {...theme}>
       <TooltipPrimitive.Positioner
         side='top'
         align='center'

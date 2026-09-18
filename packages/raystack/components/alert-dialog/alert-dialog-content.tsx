@@ -28,7 +28,7 @@ export const AlertDialogContent = ({
 }: AlertDialogContentProps) => {
   const theme = useThemeInjection();
   return (
-    <AlertDialogPrimitive.Portal>
+    <AlertDialogPrimitive.Portal {...theme}>
       <AlertDialogPrimitive.Backdrop
         data-slot='alert-dialog-backdrop'
         {...overlay}

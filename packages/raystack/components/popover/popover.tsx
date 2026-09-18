@@ -29,7 +29,7 @@ function PopoverContent({
 }: PopoverContentProps) {
   const theme = useThemeInjection();
   return (
-    <PopoverPrimitive.Portal>
+    <PopoverPrimitive.Portal {...theme}>
       <PopoverPrimitive.Positioner
         sideOffset={4}
         collisionPadding={3}

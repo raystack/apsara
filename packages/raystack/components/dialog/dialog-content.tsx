@@ -30,7 +30,7 @@ export function DialogContent({
 }: DialogContentProps) {
   const theme = useThemeInjection();
   return (
-    <DialogPrimitive.Portal>
+    <DialogPrimitive.Portal {...theme}>
       <DialogPrimitive.Backdrop
         data-slot='dialog-backdrop'
         {...overlay}

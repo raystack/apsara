@@ -49,7 +49,7 @@ export function CommandDialogContent({
   const theme = useThemeInjection();
 
   return (
-    <DialogPrimitive.Portal>
+    <DialogPrimitive.Portal {...theme}>
       <DialogPrimitive.Viewport
         data-slot='command-dialog-viewport'
         className={styles.viewport}

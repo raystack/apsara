@@ -50,7 +50,7 @@ export function ToastProvider({
   return (
     <ToastPrimitive.Provider toastManager={toastManager} {...props}>
       {children}
-      <ToastPrimitive.Portal>
+      <ToastPrimitive.Portal {...theme}>
         <ToastPrimitive.Viewport
           {...theme}
           className={cx(

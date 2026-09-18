@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { type ReactNode, useEffect } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { radiusClass } from '../../../shared/radius';
+import { Dialog } from '../../dialog';
 import { useThemePreview } from '../context';
 import { useThemeInjection } from '../portal';
 import type { ThemeSettings } from '../settings';
@@ -807,6 +808,55 @@ describe('the portal re-injector', () => {
     const portalled = screen.getByTestId('portalled');
     expect(portalled).not.toHaveClass('rs-theme');
     expect(portalled).not.toHaveAttribute('data-theme');
+  });
+
+  /* The backdrop is a sibling of the popup, not a descendant, so a theme on the
+     popup alone never reaches it and `--rs-color-overlay` resolves to nothing —
+     an invisible scrim. The portal node is the only ancestor they share. */
+  it('themes the parts that sit beside the popup, not just the popup', async () => {
+    const user = userEvent.setup();
+    render(
+      <ThemePreview defaultValue={{ appearance: 'dark' }}>
+        <Dialog>
+          <Dialog.Trigger render={<button type='button'>open</button>} />
+          <Dialog.Content>
+            <Dialog.Title>Titled</Dialog.Title>
+          </Dialog.Content>
+        </Dialog>
+      </ThemePreview>
+    );
+    await user.click(screen.getByRole('button', { name: 'open' }));
+
+    const backdrop = document.querySelector('[data-slot="dialog-backdrop"]');
+    expect(backdrop).not.toBeNull();
+    expect(backdrop?.closest('[data-theme]')).toHaveAttribute(
+      'data-theme',
+      'dark'
+    );
+  });
+
+  it('gives each open portal its own scope', async () => {
+    const user = userEvent.setup();
+    render(
+      <ThemePreview defaultValue={{ appearance: 'dark' }}>
+        <ThemePreview defaultValue={{ appearance: 'light' }}>
+          <Dialog>
+            <Dialog.Trigger render={<button type='button'>open</button>} />
+            <Dialog.Content>
+              <Dialog.Title>Titled</Dialog.Title>
+            </Dialog.Content>
+          </Dialog>
+        </ThemePreview>
+      </ThemePreview>
+    );
+    await user.click(screen.getByRole('button', { name: 'open' }));
+
+    // The trigger's scope wins over the page it is portalled past.
+    const backdrop = document.querySelector('[data-slot="dialog-backdrop"]');
+    expect(backdrop?.closest('[data-theme]')).toHaveAttribute(
+      'data-theme',
+      'light'
+    );
   });
 });
 

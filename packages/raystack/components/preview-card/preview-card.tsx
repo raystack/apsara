@@ -33,7 +33,7 @@ function PreviewCardContent({
 }: PreviewCardContentProps) {
   const theme = useThemeInjection();
   return (
-    <PreviewCardPrimitive.Portal>
+    <PreviewCardPrimitive.Portal {...theme}>
       <PreviewCardPrimitive.Positioner
         sideOffset={showArrow ? 10 : 4}
         collisionPadding={3}

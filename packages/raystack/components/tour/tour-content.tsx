@@ -109,7 +109,7 @@ export function TourContent({
         if (eventDetails.reason === 'escape-key') actions.stop();
       }}
     >
-      <PopoverPrimitive.Portal>
+      <PopoverPrimitive.Portal {...theme}>
         <PopoverPrimitive.Positioner
           data-slot='tour-positioner'
           anchor={detached ? centerAnchor : anchor}

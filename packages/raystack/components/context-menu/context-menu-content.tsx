@@ -105,7 +105,7 @@ export const ContextMenuContent = ({
   const theme = useThemeInjection();
 
   return (
-    <ContextMenuPrimitive.Portal>
+    <ContextMenuPrimitive.Portal {...theme}>
       <ContextMenuPrimitive.Positioner
         data-slot='context-menu-positioner'
         className={cx(styles.positioner)}
