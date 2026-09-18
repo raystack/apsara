@@ -55,6 +55,14 @@
   margin-right: var(--rs-space-3);
 }
 
+/* The slot sizes the icon, so an icon drawn at a fixed 16px zooms with the
+   theme instead of overflowing the slot below scaling 1. */
+.leading-icon > svg,
+.trailing-icon > svg {
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
+}
+
 .input-field {
   width: 100%;
   padding: 0 var(--rs-space-3);

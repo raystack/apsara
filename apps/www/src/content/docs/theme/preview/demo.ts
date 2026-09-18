@@ -295,5 +295,15 @@ export const componentRadiusDemo = {
 
 export const switcherDemo = {
   type: 'code',
-  code: `<ThemePreviewSwitcher />`
+  code: `
+  <ThemePreview
+    isRoot={false}
+    defaultValue={{ appearance: "light" }}
+    style={{ padding: "var(--rs-space-5)", borderRadius: "var(--rs-radius-4)" }}
+  >
+    <Flex gap={3} align="center">
+      <ThemePreviewSwitcher />
+      <Text size="small" variant="secondary">Flips this scope</Text>
+    </Flex>
+  </ThemePreview>`
 };

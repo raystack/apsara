@@ -26,6 +26,7 @@ import {
   TimelineScale
 } from '../data-view.types';
 import { useDataView } from '../hooks/useDataView';
+import { useScaling } from '../hooks/useScaling';
 import { orderByX } from '../utils/order-by-x';
 import { packLanes, packLanesBySortValue } from '../utils/pack-lanes';
 import {
@@ -431,10 +432,10 @@ export function DataViewTimeline<TData>({
   onVisibleRangeChange,
   actionsRef,
   lanePacking = 'auto',
-  estimatedRowHeight = DEFAULT_ROW_HEIGHT,
-  laneGap = DEFAULT_LANE_GAP,
-  minCardWidth = DEFAULT_MIN_CARD_WIDTH,
-  estimatedPointWidth = DEFAULT_POINT_WIDTH,
+  estimatedRowHeight: estimatedRowHeightProp,
+  laneGap: laneGapProp,
+  minCardWidth: minCardWidthProp,
+  estimatedPointWidth: estimatedPointWidthProp,
   virtualized = false,
   showGroupHeaders = true,
   classNames = {}
@@ -467,6 +468,17 @@ export function DataViewTimeline<TData>({
   );
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  // The defaults describe token-driven boxes, so they follow the theme zoom.
+  // An explicit prop is a pixel value the consumer chose, and is left alone.
+  const scaling = useScaling(scrollRef);
+  const estimatedRowHeight =
+    estimatedRowHeightProp ?? DEFAULT_ROW_HEIGHT * scaling;
+  const laneGap = laneGapProp ?? DEFAULT_LANE_GAP * scaling;
+  const minCardWidth = minCardWidthProp ?? DEFAULT_MIN_CARD_WIDTH * scaling;
+  const estimatedPointWidth =
+    estimatedPointWidthProp ?? DEFAULT_POINT_WIDTH * scaling;
+  const groupBandHeight = GROUP_BAND_HEIGHT * scaling;
 
   // Viewport fill. When the domain renders narrower than the scroll
   // container, the domain end extends so the axis/gridlines span the full
@@ -907,7 +919,7 @@ export function DataViewTimeline<TData>({
     for (const section of laidOutSections) {
       const sectionTop = y;
       const banded = showGroupHeaders && section.group !== null;
-      if (banded) y += GROUP_BAND_HEIGHT;
+      if (banded) y += groupBandHeight;
       y += laneGap;
       for (let i = 0; i < section.laneCount; i++) {
         const lane = section.laneOffset + i;
@@ -939,7 +951,7 @@ export function DataViewTimeline<TData>({
     const uniform =
       fixedLaneHeight && laneCount > 0 && laidOutSections.length === 1
         ? {
-            first: bands.length > 0 ? GROUP_BAND_HEIGHT + laneGap : laneGap,
+            first: bands.length > 0 ? groupBandHeight + laneGap : laneGap,
             pitch: estimatedRowHeight + laneGap,
             height: estimatedRowHeight
           }
@@ -962,6 +974,7 @@ export function DataViewTimeline<TData>({
     estimatedRowHeight,
     fixedLaneHeight,
     laneGap,
+    groupBandHeight,
     showGroupHeaders,
     measureVersion
   ]);
@@ -1823,7 +1836,7 @@ export function DataViewTimeline<TData>({
                   styles.timelineGroupHeader,
                   classNames.groupHeader
                 )}
-                style={{ height: GROUP_BAND_HEIGHT }}
+                style={{ height: groupBandHeight }}
                 data-slot='data-view-timeline-group-header'
               >
                 {/* Sticky-left so the label stays readable while panning. */}

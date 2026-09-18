@@ -38,7 +38,7 @@
 }
 
 .arrow svg {
-  color: var(--rs-color-background-base-primary);
+  color: var(--rs-color-panel);
 }
 
 .arrow {

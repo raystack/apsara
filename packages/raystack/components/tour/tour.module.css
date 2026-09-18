@@ -151,7 +151,7 @@
 
 .arrow svg {
   display: block;
-  color: var(--rs-color-background-base-primary);
+  color: var(--rs-color-panel);
 }
 
 .arrow[data-side="top"] {

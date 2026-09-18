@@ -107,6 +107,11 @@
   flex-shrink: 0;
 }
 
+.trigger-icon > svg {
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
+}
+
 .indicator {
   position: absolute;
   background-color: var(--rs-color-background-base-primary);

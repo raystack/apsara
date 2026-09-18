@@ -24,7 +24,7 @@
 }
 
 .arrow svg {
-  color: var(--rs-color-background-base-primary);
+  color: var(--rs-color-panel);
 }
 .arrow {
   z-index: var(--rs-z-index-portal);

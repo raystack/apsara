@@ -131,15 +131,21 @@ export default function ThemePanelDemo() {
     <ThemePreview
       isRoot={false}
       defaultValue={{ appearance: 'light' }}
+      hasBackground
       style={{
         padding: 'var(--rs-space-5)',
         border: '1px solid var(--rs-color-border-base-primary)',
         borderRadius: 'var(--rs-radius-4)'
       }}
     >
-      <Flex gap={7} wrap='wrap' align='start'>
+      <Flex gap={7} wrap='wrap' align='stretch'>
         <Controls />
-        <Separator orientation='vertical' />
+        {/* The separator's own `height: 100%` resolves to 0 against a
+            content-sized row, so let the stretch decide its height. */}
+        <Separator
+          orientation='vertical'
+          style={{ height: 'auto', alignSelf: 'stretch' }}
+        />
         <Sampler />
       </Flex>
     </ThemePreview>

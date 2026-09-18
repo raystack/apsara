@@ -164,6 +164,11 @@ button.selectValue:hover {
   max-height: var(--rs-space-4);
 }
 
+.leadingIcon > svg {
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
+}
+
 .inputFieldWrapper {
   padding: 0;
   min-width: 0;
@@ -172,8 +177,8 @@ button.selectValue:hover {
 
 .inputField {
   border-radius: 0;
-  min-height: 22px;
-  height: 22px;
+  min-height: calc(22px * var(--rs-scaling, 1));
+  height: calc(22px * var(--rs-scaling, 1));
   border: none;
   box-shadow: none;
 }
@@ -201,8 +206,8 @@ button.selectValue:hover {
   justify-content: space-between;
   align-items: center;
   width: fit-content;
-  height: 22px;
-  min-height: 22px;
+  height: calc(22px * var(--rs-scaling, 1));
+  min-height: calc(22px * var(--rs-scaling, 1));
   border: none;
   box-shadow: none;
 }

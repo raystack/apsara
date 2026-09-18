@@ -19,13 +19,15 @@
   outline-offset: var(--rs-focus-ring-offset-accent);
 }
 
+/* Thumb travel + thumb + inset, from the thumb's own tokens, so the thumb
+   stays inside the track at every scaling. */
 .switch.large {
-  width: 34px;
+  width: calc(var(--rs-space-5) * 2 + var(--rs-space-1));
   height: var(--rs-space-6);
 }
 
 .switch.small {
-  width: 26px;
+  width: calc(var(--rs-space-4) * 2 + var(--rs-space-1));
   height: var(--rs-space-5);
   --switch-radius: max(var(--rs-radius-1), var(--rs-radius-thumb, 9999px));
 }
