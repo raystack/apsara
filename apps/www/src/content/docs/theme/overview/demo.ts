@@ -91,45 +91,27 @@ export const scalingDemo = {
 export const panelBackgroundDemo = {
   type: 'code',
   code: `
-  <Flex
-    gap={5}
-    align="start"
-    style={{
-      width: "100%",
-      minHeight: "240px",
-      padding: "var(--rs-space-7)",
-      borderRadius: "var(--rs-radius-4)",
-      background:
-        "radial-gradient(70% 90% at 10% 10%, var(--rs-color-background-accent-emphasis), transparent 60%), radial-gradient(65% 85% at 95% 20%, var(--rs-color-background-danger-emphasis), transparent 60%), radial-gradient(90% 90% at 55% 110%, var(--rs-color-background-attention-emphasis), transparent 65%), var(--rs-color-background-accent-emphasis-hover)"
-    }}
-  >
+  <Flex gap={7} align="start" style={{ width: "100%" }}>
     {["solid", "translucent"].map(panelBackground => (
       <ThemePreview
         key={panelBackground}
         isRoot={false}
         defaultValue={{ panelBackground }}
         hasBackground={false}
-        style={{ flex: 1 }}
+        style={{ flex: 1, minWidth: 0 }}
       >
-        {/* The same two tokens every overlay surface uses */}
-        <Flex
-          direction="column"
-          gap={3}
-          align="start"
-          style={{
-            padding: "var(--rs-space-5)",
-            borderRadius: "var(--rs-radius-4)",
-            background: "var(--rs-color-panel)",
-            backdropFilter: "var(--rs-panel-backdrop-filter)"
-          }}
-        >
-          <Text weight="medium">{panelBackground}</Text>
+        <Flex direction="column" gap={4} align="start">
           <Popover>
-            <Popover.Trigger render={<Button variant="outline">Open popover</Button>} />
+            <Popover.Trigger render={<Button variant="outline">{panelBackground}</Button>} />
             <Popover.Content>
-              <Text size="small">The popup uses the same surface.</Text>
+              <Text size="small">The popup paints --rs-color-panel.</Text>
             </Popover.Content>
           </Popover>
+          <Text size="small" variant="secondary">
+            Open the popup: it covers this paragraph. On solid it hides the
+            words behind it, on translucent it blurs them and lets them tint
+            the surface.
+          </Text>
         </Flex>
       </ThemePreview>
     ))}
