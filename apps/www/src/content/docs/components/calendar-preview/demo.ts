@@ -428,7 +428,7 @@ function CalendarPreviewInvalidExample() {
               defaultMonth={new Date(2024, 3, 1)}
               defaultValue={new Date(2024, 3, 17)}
             >
-              <CalendarPreview.Trigger render={<Button variant="outline" />} />
+              <CalendarPreview.Trigger nativeButton render={<Button variant="outline" />} />
               <CalendarPreview.Content>
                 <CalendarPreview.Days />
               </CalendarPreview.Content>
@@ -618,7 +618,7 @@ function CalendarPreviewRangeInvalidExample() {
               defaultMonth={new Date(2024, 3, 1)}
               defaultValue={{ from: new Date(2024, 3, 10), to: new Date(2024, 3, 20) }}
             >
-              <CalendarPreview.Trigger render={<Button variant="outline" />}>
+              <CalendarPreview.Trigger nativeButton render={<Button variant="outline" />}>
                 10 Apr – 20 Apr
               </CalendarPreview.Trigger>
               <CalendarPreview.Content>

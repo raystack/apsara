@@ -774,3 +774,90 @@ describe('CalendarPreview picker props the review left open', () => {
     );
   });
 });
+
+/* Base UI moves focus to the first tabbable element in the popup, which around
+   a field is the previous-month button — so opening the picker took focus off
+   the field the user had just clicked and nothing they typed landed. */
+describe('CalendarPreview.Content initial focus', () => {
+  /* Long enough that Base UI's own initial-focus pass has certainly run — at
+     0ms these assertions pass whether or not focus would have moved. */
+  const settle = () => new Promise(resolve => setTimeout(resolve, 100));
+
+  it('leaves focus on the field the popover opened from', async () => {
+    const { input } = renderPicker();
+    input.focus();
+    fireEvent.focus(input);
+    await settle();
+
+    expect(isOpen()).toBe(true);
+    expect(document.activeElement).toBe(input);
+  });
+
+  it('still takes typed text once it is open', async () => {
+    const onValueChange = vi.fn();
+    const { input } = renderPicker({ onValueChange });
+    input.focus();
+    fireEvent.focus(input);
+    await settle();
+
+    fireEvent.change(input, { target: { value: '20/05/2027' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(onValueChange.mock.calls[0][0]).toEqual(new Date(2027, 4, 20));
+  });
+
+  it('keeps both range fields reachable, so a range fills by keyboard', async () => {
+    const utils = render(
+      <CalendarPreview selection='range' today={TODAY} defaultMonth={AUGUST}>
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input field='start' />
+          <CalendarPreview.Input field='end' />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Days />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+    const [start, end] = getAllSlots(
+      utils.container,
+      'calendar-preview-input'
+    ) as HTMLInputElement[];
+
+    start.focus();
+    fireEvent.focus(start);
+    await settle();
+    expect(document.activeElement).toBe(start);
+
+    fireEvent.change(start, { target: { value: '10 Aug 2026' } });
+    fireEvent.keyDown(start, { key: 'Enter' });
+    fireEvent.change(end, { target: { value: '20 Aug 2026' } });
+    fireEvent.keyDown(end, { key: 'Enter' });
+
+    expect(start.value).toBe('10 Aug 2026');
+    expect(end.value).toBe('20 Aug 2026');
+  });
+
+  /* The other half: with nothing to keep focus for, the popup takes it. */
+  it('still moves focus into the popup when the trigger wraps no input', async () => {
+    const utils = render(
+      <CalendarPreview today={TODAY} defaultMonth={AUGUST}>
+        <CalendarPreview.Trigger />
+        <CalendarPreview.Content>
+          <CalendarPreview.Days />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+    const trigger = getSlot(
+      utils.container,
+      'calendar-preview-trigger'
+    ) as HTMLElement;
+
+    trigger.focus();
+    await settle();
+    expect(document.activeElement).not.toBe(trigger);
+    expect(
+      getSlot(document.body, 'calendar-preview-content')?.contains(
+        document.activeElement
+      )
+    ).toBe(true);
+  });
+});

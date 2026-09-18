@@ -86,8 +86,8 @@ function PeriodView({
       (isScaleValue(value) ? value.date : dayKey(month, timeZone))
   );
 
-  const selectedKey =
-    scaleDraft?.date ?? (isScaleValue(value) ? value.date : null);
+  const selected = scaleDraft ?? (isScaleValue(value) ? value : null);
+  const selectedKey = selected?.scale === viewScale ? selected.date : null;
 
   const isActive = scale === viewScale;
 
@@ -95,20 +95,26 @@ function PeriodView({
      build no cells at all. The rest is date maths over every cell in the
      range — a year of months is 12 of them — and none of it moves when the
      selection does, so it is held rather than redone per render. */
-  const groups = useMemo(
-    () =>
-      isActive
-        ? years.map(year => ({
-            year,
-            cells: cellsFor(viewScale, year).map(cell => ({
-              ...cell,
-              produced: anchorOf(periodOf(cell.date, viewScale), trailingValue),
-              unavailable: !isPeriodAvailable(cell.date, viewScale)
-            }))
-          }))
-        : [],
-    [isActive, years, viewScale, trailingValue, isPeriodAvailable]
-  );
+  const groups = useMemo(() => {
+    if (!isActive) return [];
+    const all = years.map(year => ({
+      year,
+      cells: cellsFor(viewScale, year).map(cell => ({
+        ...cell,
+        produced: anchorOf(periodOf(cell.date, viewScale), trailingValue),
+        unavailable: !isPeriodAvailable(cell.date, viewScale)
+      }))
+    }));
+    /* `yearRange` stretches to cover the bounds so no year is unreachable,
+       which leaves the years outside them rendered as nothing but dead
+       buttons — a tab stop each, half the list under a mid-range `minDate`.
+       They go, unless that would empty the panel, which reads as broken
+       rather than bounded. */
+    const reachable = all.filter(group =>
+      group.cells.some(cell => !cell.unavailable)
+    );
+    return reachable.length > 0 ? reachable : all;
+  }, [isActive, years, viewScale, trailingValue, isPeriodAvailable]);
 
   /* Keyed on becoming active, not on mount: every view mounts at once, so a
      mount effect would fire with an empty ref. Scrolls the container, not

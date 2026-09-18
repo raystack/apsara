@@ -34,6 +34,16 @@ export interface CalendarPreviewTriggerProps
   extends useRender.ComponentProps<'div'> {
   /** Shown when there is no value and no children. */
   placeholder?: string;
+  /**
+   * Whether `render` produces a native `<button>`.
+   *
+   * Base UI supplies the button role, the tab stop and the key handling for
+   * anything that is not one, and warns in the console when it is told wrong —
+   * which a `render={<Button />}` trigger otherwise is, on every render.
+   *
+   * @defaultValue false, which is what the default `div` is
+   */
+  nativeButton?: boolean;
 }
 
 /**
@@ -55,6 +65,7 @@ export interface CalendarPreviewTriggerProps
  */
 export function CalendarPreviewTrigger({
   placeholder = 'Select date',
+  nativeButton = false,
   className,
   children,
   render,
@@ -69,6 +80,7 @@ export function CalendarPreviewTrigger({
     setOpen,
     shouldIgnoreFocusOpen,
     triggerRef,
+    setTriggerHasInput,
     disabled,
     readOnly
   } = useCalendarPreviewContext('CalendarPreview.Trigger');
@@ -81,6 +93,13 @@ export function CalendarPreviewTrigger({
   }, []);
 
   const inputContext = useMemo(() => ({ registerInput }), [registerInput]);
+
+  /* `.Content` is a sibling, so what this trigger wraps has to reach it through
+     the root rather than through the context below. */
+  useEffect(() => {
+    setTriggerHasInput(hasInput);
+    return () => setTriggerHasInput(false);
+  }, [hasInput, setTriggerHasInput]);
 
   /* Tracks the pointer, not the open state: Base UI owns whether the popover
      is open, and this only says whether a press is mid-flight. */
@@ -106,7 +125,7 @@ export function CalendarPreviewTrigger({
      renders by default, and this one is always a `div`. Consumer props stay
      last, inside the merge. */
   const triggerProps = {
-    nativeButton: false,
+    nativeButton,
     disabled,
     render: render ?? <div />,
     ref: mergedRef,
@@ -118,9 +137,9 @@ export function CalendarPreviewTrigger({
            second tab stop and a control inside a button role. Without an
            input the trigger IS the control, and Base UI adds no `tabIndex`
            to a rendered `div` — so it has to say so itself or no keyboard
-           ever reaches it. */
-        role: hasInput ? undefined : 'button',
-        tabIndex: hasInput ? -1 : 0,
+           ever reaches it. A real `button` arrives with both. */
+        role: hasInput || nativeButton ? undefined : 'button',
+        tabIndex: hasInput ? -1 : nativeButton ? undefined : 0,
         /* Merged to the right of `useClick`, so this runs first. Only the
            closing half goes, or a press could not reopen a field that never
            lost focus. */

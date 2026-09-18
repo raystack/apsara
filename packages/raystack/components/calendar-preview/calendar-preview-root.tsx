@@ -349,11 +349,15 @@ export function CalendarPreviewRoot({
 
   const [scaleDraft, setScaleDraft] = useState<ScaleValue | null>(null);
 
-  const scaleBeforeDraft = useRef<Scale | null>(null);
+  const draftOrigin = useRef<{
+    value: ScaleValue | null;
+    month: Date;
+    scale: Scale;
+  } | null>(null);
 
   const clearScaleDraft = useCallback(() => {
     setScaleDraft(null);
-    scaleBeforeDraft.current = null;
+    draftOrigin.current = null;
   }, []);
 
   /* An array carries the scale even when that scale is `'day'`. */
@@ -498,6 +502,12 @@ export function CalendarPreviewRoot({
     },
     []
   );
+
+  const [triggerHasInput, setTriggerHasInputState] = useState(false);
+
+  const setTriggerHasInput = useCallback((next: boolean) => {
+    setTriggerHasInputState(current => (current === next ? current : next));
+  }, []);
 
   /* A draft is a range half-built against the value it started from, so a
      value the consumer set behind it leaves the grid and both inputs showing
@@ -650,11 +660,22 @@ export function CalendarPreviewRoot({
   const switchScale = useCallback(
     (next: Scale) => {
       /* First switch of a run only: a second is still the same draft. */
-      if (scaleDraft === null) scaleBeforeDraft.current = scale;
+      if (scaleDraft === null) {
+        draftOrigin.current = { value: scaleValue, month, scale };
+      }
+      const origin = draftOrigin.current ?? { value: scaleValue, month, scale };
+
+      if (next === origin.scale) {
+        clearScaleDraft();
+        setMonth(origin.month);
+        setScale(next);
+        return;
+      }
+
       /* The month on screen, not today, or 2030 snaps back. */
-      const anchor = scaleValue ?? {
-        date: dayKey(month, timeZone),
-        scale
+      const anchor = origin.value ?? {
+        date: dayKey(origin.month, timeZone),
+        scale: origin.scale
       };
       setScaleDraft(convertScale(anchor, next, trailingValue));
       setMonth(parseKey(convertScale(anchor, next, false).date));
@@ -667,6 +688,7 @@ export function CalendarPreviewRoot({
       timeZone,
       scale,
       trailingValue,
+      clearScaleDraft,
       setMonth,
       setScale
     ]
@@ -715,11 +737,14 @@ export function CalendarPreviewRoot({
      root opened at, which a committed switch has already moved away from. */
   const dropDraft = useCallback(() => {
     if (scaleDraft === null) return;
+    const origin = draftOrigin.current;
+    /* The month moved with the draft, so leaving it where the run ended showed
+       a different month than the one the run started on. */
+    if (origin) setMonth(origin.month);
     settleScale(
-      scaleBeforeDraft.current ??
-        (isScaleValue(value) ? value.scale : scales[0])
+      origin?.scale ?? (isScaleValue(value) ? value.scale : scales[0])
     );
-  }, [scaleDraft, value, scales, settleScale]);
+  }, [scaleDraft, value, scales, settleScale, setMonth]);
 
   dropDraftRef.current = dropDraft;
 
@@ -837,6 +862,8 @@ export function CalendarPreviewRoot({
       setOpen,
       shouldIgnoreFocusOpen,
       triggerRef,
+      triggerHasInput,
+      setTriggerHasInput,
       defaultDate,
       reset,
       month,
@@ -876,6 +903,8 @@ export function CalendarPreviewRoot({
       open,
       setOpen,
       shouldIgnoreFocusOpen,
+      triggerHasInput,
+      setTriggerHasInput,
       defaultDate,
       reset,
       month,

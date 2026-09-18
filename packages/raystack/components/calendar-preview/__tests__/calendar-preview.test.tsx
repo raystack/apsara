@@ -336,16 +336,20 @@ describe('CalendarPreview.Reset', () => {
   /* Stays mounted with nothing to restore, rather than unmounting: removing
      the focused element sends focus to `<body>`, and removing a `flex: none`
      child re-flows the nav buttons sideways. */
-  it('stays mounted but disabled when the value equals the defaultDate', () => {
+  it('stays mounted and inert when the value equals the defaultDate', () => {
+    const onValueChange = vi.fn();
     const { container } = renderCalendar(undefined, {
       defaultDate: new Date(2026, 7, 20),
-      defaultValue: new Date(2026, 7, 20)
+      defaultValue: new Date(2026, 7, 20),
+      onValueChange
     });
 
-    const reset = getSlot(container, 'calendar-preview-reset');
+    const reset = getSlot(container, 'calendar-preview-reset') as HTMLElement;
     expect(reset).toBeInTheDocument();
-    expect(reset).toBeDisabled();
+    expect(reset).toHaveAttribute('aria-disabled', 'true');
     expect(reset).toHaveAttribute('data-restored');
+    fireEvent.click(reset);
+    expect(onValueChange).not.toHaveBeenCalled();
   });
 
   /* `{...props}` follows the computed `disabled`, so without pulling the
@@ -371,7 +375,7 @@ describe('CalendarPreview.Reset', () => {
       container,
       'calendar-preview-reset'
     ) as HTMLButtonElement;
-    expect(reset).toBeDisabled();
+    expect(reset).toHaveAttribute('aria-disabled', 'true');
 
     fireEvent.click(reset);
     expect(onValueChange).not.toHaveBeenCalled();
@@ -428,12 +432,12 @@ describe('CalendarPreview.Reset', () => {
     expect(details.toDate()).toEqual(new Date(2026, 7, 10));
   });
 
-  it('is disabled under a null defaultDate while nothing is selected', () => {
+  it('is inert under a null defaultDate while nothing is selected', () => {
     const { container } = renderCalendar(undefined, { defaultDate: null });
 
     const reset = getSlot(container, 'calendar-preview-reset');
     expect(reset).toBeInTheDocument();
-    expect(reset).toBeDisabled();
+    expect(reset).toHaveAttribute('aria-disabled', 'true');
     expect(reset).toHaveAttribute('data-restored');
   });
 
@@ -451,10 +455,12 @@ describe('CalendarPreview.Reset', () => {
 
     expect(onValueChange.mock.calls[0][0]).toEqual(new Date(2026, 7, 20));
     expect(dayCell(container, '20')).toHaveAttribute('data-selected');
-    /* Still there, now disabled -- there is nothing left to restore. */
+    /* Still there, now inert -- there is nothing left to restore. It keeps a
+       real tab stop, so the focus it was activated with survives. */
     const reset = getSlot(container, 'calendar-preview-reset');
     expect(reset).toBeInTheDocument();
-    expect(reset).toBeDisabled();
+    expect(reset).toHaveAttribute('aria-disabled', 'true');
+    expect(reset).not.toBeDisabled();
   });
 
   /* The reason the button stays mounted: it is usually the focused element

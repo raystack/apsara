@@ -45,16 +45,27 @@ export function CalendarPreviewReset({
               value.date === defaultDate.date &&
               value.scale === defaultDate.scale);
 
+  /* `restored` takes `aria-disabled`, not `disabled`: the button disables
+     itself the moment it is activated, and a disabled element cannot hold
+     focus — so a keyboard reset dropped the user on `<body>` in the middle of
+     the calendar, which is the thing staying mounted was meant to avoid.
+     Inertness that comes from outside is a real `disabled`; nothing moves
+     focus onto the button at that point. */
+  const inert = disabled || readOnly || disabledProp;
+
   return (
     <IconButton
       size={3}
       className={cx(styles['nav-button'], styles.reset, className)}
-      disabled={disabled || readOnly || restored || disabledProp}
+      disabled={inert}
+      aria-disabled={restored || undefined}
       data-slot='calendar-preview-reset'
       data-restored={restored || undefined}
       aria-label='Reset'
       onClick={event => {
         onClick?.(event);
+        /* `aria-disabled` is a claim, not a guard — the press still arrives. */
+        if (restored) return;
         reset();
       }}
       {...props}

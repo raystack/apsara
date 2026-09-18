@@ -77,6 +77,8 @@ export interface CalendarPreviewContextValue {
    */
   shouldIgnoreFocusOpen: () => boolean;
   triggerRef: RefObject<HTMLElement | null>;
+  triggerHasInput: boolean;
+  setTriggerHasInput: (hasInput: boolean) => void;
   /** Read even when `value` is controlled. */
   defaultDate: Date | CalendarPreviewDateRange | ScaleValue | null | undefined;
   /** A value reset — it never moves the view. */

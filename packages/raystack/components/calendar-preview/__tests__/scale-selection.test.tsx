@@ -667,12 +667,12 @@ describe('CalendarPreview.Reset at scale', () => {
     expect(reset(container)).not.toBeDisabled();
   });
 
-  it('stays mounted but disabled once the day and the scale both match', () => {
+  it('stays mounted but inert once the day and the scale both match', () => {
     const { container } = renderBody({
       defaultDate: QUARTER,
       value: QUARTER
     });
-    expect(reset(container)).toBeDisabled();
+    expect(reset(container)).toHaveAttribute('aria-disabled', 'true');
     expect(reset(container)).toHaveAttribute('data-restored');
   });
 
@@ -959,5 +959,187 @@ describe('CalendarPreview.Scale announces which scale is active', () => {
     const [day, quarter] = getAllSlots(container, 'calendar-preview-scale');
     expect(day).toHaveAttribute('aria-pressed', 'false');
     expect(quarter).toHaveAttribute('aria-pressed', 'true');
+  });
+});
+
+/* `convertScale` is lossy outward and does not undo, so a run of switches has
+   to convert from where it started rather than from the draft it last made. */
+describe('CalendarPreview scale switches round-trip', () => {
+  const caption = (container: HTMLElement) =>
+    getSlot(container, 'calendar-preview-caption')?.textContent;
+  const field = (container: HTMLElement) =>
+    (getSlot(container, 'calendar-preview-input') as HTMLInputElement).value;
+
+  it('restores the committed day after a trip through a coarser scale', () => {
+    const { container } = renderBody({
+      defaultValue: { date: '2026-08-15', scale: 'day' }
+    });
+    expect(field(container)).toBe('15 Aug 2026');
+    expect(caption(container)).toBe('Aug 2026');
+
+    switchTo(container, 'year');
+    expect(field(container)).toBe('2026');
+
+    switchTo(container, 'day');
+    expect(field(container)).toBe('15 Aug 2026');
+    expect(caption(container)).toBe('Aug 2026');
+  });
+
+  it('leaves an empty field empty, and the view where it was', () => {
+    const { container } = renderBody();
+    switchTo(container, 'year');
+    switchTo(container, 'day');
+    expect(field(container)).toBe('');
+    expect(caption(container)).toBe('Aug 2026');
+  });
+
+  it('reads each scale off the value, not off the scale before it', () => {
+    const { container } = renderBody({
+      defaultValue: { date: '2026-08-15', scale: 'day' }
+    });
+    switchTo(container, 'year');
+    /* Converting from the year draft would land on January. */
+    switchTo(container, 'month');
+    expect(field(container)).toBe('Aug 2026');
+  });
+
+  it('emits nothing across the whole round trip', () => {
+    const onValueChange = vi.fn();
+    const { container } = renderBody({
+      defaultValue: { date: '2026-08-15', scale: 'day' },
+      onValueChange
+    });
+    switchTo(container, 'year');
+    switchTo(container, 'quarter');
+    switchTo(container, 'day');
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it('puts the month back when the draft is dropped', () => {
+    const { container } = renderBody({
+      defaultValue: { date: '2026-08-15', scale: 'day' }
+    });
+    switchTo(container, 'year');
+    expect(caption(container)).toBeUndefined();
+
+    fireEvent.keyDown(
+      getSlot(container, 'calendar-preview-body') as HTMLElement,
+      {
+        key: 'Escape'
+      }
+    );
+    expect(field(container)).toBe('15 Aug 2026');
+    expect(caption(container)).toBe('Aug 2026');
+  });
+});
+
+/* The same day opens Q1, H1 and the year, so a cell has to match the scale the
+   value means as well as its date. */
+describe('CalendarPreview period cells match the value scale', () => {
+  const marked = (container: HTMLElement) =>
+    getAllSlots(container, 'calendar-preview-period')
+      .filter(cell => cell.hasAttribute('data-selected'))
+      .map(cell => cell.getAttribute('aria-label'));
+
+  it('does not light a quarter for a half-year value', () => {
+    const { container } = renderBody({
+      defaultScale: 'quarter',
+      value: { date: '2028-01-01', scale: 'halfYear' }
+    });
+    expect(marked(container)).toEqual([]);
+  });
+
+  it('does not light a quarter for a month or a year value', () => {
+    const month = renderBody({
+      defaultScale: 'quarter',
+      value: { date: '2029-01-01', scale: 'month' }
+    });
+    expect(marked(month.container)).toEqual([]);
+    month.unmount();
+
+    const year = renderBody({
+      defaultScale: 'quarter',
+      value: { date: '2029-01-01', scale: 'year' }
+    });
+    expect(marked(year.container)).toEqual([]);
+  });
+
+  it('still lights the cell whose own scale the value carries', () => {
+    const { container } = renderBody({
+      defaultScale: 'quarter',
+      value: { date: '2029-01-01', scale: 'quarter' }
+    });
+    expect(marked(container)).toEqual(['Q1 2029']);
+  });
+
+  it('still lights the draft a switch produces', () => {
+    const { container } = renderBody({
+      defaultValue: { date: '2026-08-15', scale: 'day' }
+    });
+    switchTo(container, 'quarter');
+    expect(marked(container)).toEqual(['Q3 2026']);
+  });
+});
+
+/* `yearRange` stretches to cover the bounds so no year is out of reach, which
+   leaves the years outside them as nothing but dead buttons — and every one is
+   a tab stop. */
+describe('CalendarPreview period lists drop unreachable years', () => {
+  const groupYears = (container: HTMLElement) =>
+    getAllSlots(container, 'calendar-preview-period-group').map(group =>
+      group.getAttribute('data-year')
+    );
+
+  it('leaves out the years with nothing selectable in them', () => {
+    const { container } = renderBody({
+      minDate: new Date(2026, 6, 15),
+      today: TODAY
+    });
+    switchTo(container, 'month');
+
+    const years = groupYears(container);
+    expect(years).not.toContain('2025');
+    expect(years).not.toContain('2016');
+    expect(years[0]).toBe('2026');
+    expect(years).toContain('2036');
+  });
+
+  /* A year the bound runs through keeps all twelve: half of it is selectable,
+     and hiding the rest would misreport where the bound falls. */
+  it('keeps every cell of a year the bound runs through', () => {
+    const { container } = renderBody({
+      minDate: new Date(2026, 6, 15),
+      today: TODAY
+    });
+    switchTo(container, 'month');
+
+    expect(period(container, 'Jan')).toBeInTheDocument();
+    expect(period(container, 'Jan')).toBeDisabled();
+    expect(period(container, 'Aug')).not.toBeDisabled();
+  });
+
+  it('drops nothing when there are no bounds', () => {
+    const { container } = renderBody({ today: TODAY });
+    switchTo(container, 'quarter');
+    expect(groupYears(container)).toHaveLength(21);
+  });
+
+  /* An empty panel reads as broken rather than bounded, so the dead list is
+     better than no list. */
+  it('keeps the dead years when every year is dead', () => {
+    const { container } = renderBody({
+      minDate: new Date(2026, 5, 1),
+      maxDate: new Date(2026, 7, 1),
+      today: TODAY
+    });
+    switchTo(container, 'year');
+
+    const years = groupYears(container);
+    expect(years.length).toBeGreaterThan(0);
+    expect(
+      getAllSlots(container, 'calendar-preview-period').every(cell =>
+        cell.hasAttribute('data-unavailable')
+      )
+    ).toBe(true);
   });
 });

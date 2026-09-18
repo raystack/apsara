@@ -300,7 +300,7 @@ describe('CalendarPreview range parts that read the value', () => {
       defaultDate: RANGE
     });
     const reset = getSlot(container, 'calendar-preview-reset') as HTMLElement;
-    expect(reset).toBeDisabled();
+    expect(reset).toHaveAttribute('aria-disabled', 'true');
     expect(reset).toHaveAttribute('data-restored');
   });
 

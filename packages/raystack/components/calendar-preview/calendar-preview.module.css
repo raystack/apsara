@@ -60,6 +60,23 @@
   cursor: not-allowed;
 }
 
+/* `.Reset` says it is off with `aria-disabled`, not `disabled`, so that it can
+   keep the focus it was activated with — which means the look `:disabled`
+   would have given it has to be spelled out. Both classes, to outweigh
+   `IconButton`'s own `:hover:not(:disabled)`. */
+.nav-button.reset[aria-disabled="true"] {
+  opacity: 0.5;
+  color: var(--rs-color-foreground-base-tertiary);
+  cursor: not-allowed;
+}
+
+.nav-button.reset[aria-disabled="true"]:hover,
+.nav-button.reset[aria-disabled="true"]:active {
+  background-color: transparent;
+  color: var(--rs-color-foreground-base-tertiary);
+  transform: none;
+}
+
 /* Takes the space left of the buttons, which group at the end. */
 .caption {
   flex: 1;
@@ -453,7 +470,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--rs-space-6);
-  padding-top: var(--rs-space-6);
+  padding-top: var(--rs-space-9);
 }
 
 @media (prefers-reduced-motion: no-preference) {

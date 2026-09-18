@@ -322,10 +322,11 @@ function CalendarPreviewWeeks(props: MonthGridProps) {
         aria-hidden='true'
       >
         <Skeleton
-          count={5}
+          count={6}
           height='var(--rs-space-5)'
           width='100%'
           containerClassName={styles['skeleton-rows']}
+          containerStyle={{ gap: undefined }}
         />
       </div>
     </div>
@@ -411,7 +412,6 @@ export function CalendarPreviewDay({
       {
         type: 'button',
         className: cx(
-          styles['day-button'],
           info != null && styles['day-button-with-info'],
           className
         ),
