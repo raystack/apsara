@@ -48,6 +48,44 @@
   --chip-filled-bg-active: var(--rs-color-background-accent-primary);
 }
 
+.chip-color-danger {
+  --chip-border: var(--rs-color-border-danger-primary);
+  --chip-border-hover: var(--rs-color-border-danger-emphasis);
+  --chip-border-active: var(--rs-color-border-danger-emphasis);
+  --chip-fg: var(--rs-color-foreground-danger-primary);
+  --chip-fg-hover: var(--rs-color-foreground-danger-primary-hover);
+  --chip-fg-active: var(--rs-color-foreground-danger-primary);
+  --chip-filled-border-hover: var(--rs-color-border-danger-emphasis);
+  --chip-filled-fg-hover: var(--rs-color-foreground-danger-primary);
+  --chip-filled-bg-active: var(--rs-color-background-danger-primary);
+}
+
+.chip-color-success {
+  --chip-border: var(--rs-color-border-success-primary);
+  --chip-border-hover: var(--rs-color-border-success-emphasis);
+  --chip-border-active: var(--rs-color-border-success-emphasis);
+  --chip-fg: var(--rs-color-foreground-success-primary);
+  --chip-fg-hover: var(--rs-color-foreground-success-primary-hover);
+  --chip-fg-active: var(--rs-color-foreground-success-primary);
+  --chip-filled-border-hover: var(--rs-color-border-success-emphasis);
+  --chip-filled-fg-hover: var(--rs-color-foreground-success-primary);
+  --chip-filled-bg-active: var(--rs-color-background-success-primary);
+}
+
+/* `warning` is the public prop name, backed by the `attention` tokens —
+ * same mapping Badge already ships. */
+.chip-color-warning {
+  --chip-border: var(--rs-color-border-attention-primary);
+  --chip-border-hover: var(--rs-color-border-attention-emphasis);
+  --chip-border-active: var(--rs-color-border-attention-emphasis);
+  --chip-fg: var(--rs-color-foreground-attention-primary);
+  --chip-fg-hover: var(--rs-color-foreground-attention-primary-hover);
+  --chip-fg-active: var(--rs-color-foreground-attention-primary);
+  --chip-filled-border-hover: var(--rs-color-border-attention-emphasis);
+  --chip-filled-fg-hover: var(--rs-color-foreground-attention-primary);
+  --chip-filled-bg-active: var(--rs-color-background-attention-primary);
+}
+
 /* Variants */
 .chip-variant-outline {
   background: transparent;

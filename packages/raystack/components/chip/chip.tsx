@@ -17,7 +17,10 @@ const chip = cva(styles.chip, {
     },
     color: {
       neutral: styles['chip-color-neutral'],
-      accent: styles['chip-color-accent']
+      accent: styles['chip-color-accent'],
+      danger: styles['chip-color-danger'],
+      success: styles['chip-color-success'],
+      warning: styles['chip-color-warning']
     }
   },
   defaultVariants: {

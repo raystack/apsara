@@ -81,7 +81,13 @@ describe('Chip', () => {
   });
 
   describe('Colors', () => {
-    const colors = ['neutral', 'accent'] as const;
+    const colors = [
+      'neutral',
+      'accent',
+      'danger',
+      'success',
+      'warning'
+    ] as const;
 
     it.each(colors)('renders %s color correctly', color => {
       render(<Chip color={color}>Test Chip</Chip>);
