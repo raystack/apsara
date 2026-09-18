@@ -116,6 +116,14 @@ describe('Chip', () => {
       expect(dismissButton).toHaveAttribute('type', 'button');
     });
 
+    it('uses the shared XIcon registry icon for the dismiss button', () => {
+      const { container } = render(<Chip isDismissible>Dismissible Chip</Chip>);
+
+      const icon = container.querySelector('[data-icon="XIcon"]');
+      expect(icon).toBeInTheDocument();
+      expect(icon).toHaveAttribute('data-slot', 'chip-dismiss-icon');
+    });
+
     it('calls onDismiss when dismiss button is clicked', () => {
       const onDismiss = vi.fn();
       render(

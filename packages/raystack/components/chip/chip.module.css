@@ -141,6 +141,12 @@
   height: var(--rs-space-4);
 }
 
+/* XIcon renders at 16px; the chip's icons are 12px (--rs-space-4). */
+.dismiss-icon {
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
+}
+
 .chip[data-disabled] {
   pointer-events: none;
   opacity: 0.5;
