@@ -15,7 +15,7 @@ import {
   useRef,
   useState
 } from 'react';
-
+import { useScaling } from '~/hooks/useScaling';
 import { Badge } from '../../badge';
 import styles from '../data-view.module.css';
 import {
@@ -26,7 +26,6 @@ import {
   TimelineScale
 } from '../data-view.types';
 import { useDataView } from '../hooks/useDataView';
-import { useScaling } from '../hooks/useScaling';
 import { orderByX } from '../utils/order-by-x';
 import { packLanes, packLanesBySortValue } from '../utils/pack-lanes';
 import {

@@ -11,7 +11,7 @@ import {
   useMemo,
   useRef
 } from 'react';
-
+import { useScaling } from '~/hooks/useScaling';
 import { Badge } from '../../badge';
 import { Skeleton } from '../../skeleton';
 import styles from '../data-view.module.css';
@@ -24,7 +24,6 @@ import {
 import { useDataView } from '../hooks/useDataView';
 import { useElementHeight } from '../hooks/useElementHeight';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
-import { useScaling } from '../hooks/useScaling';
 import { useStickyGroupAnchor } from '../hooks/useStickyGroupAnchor';
 import { useVirtualRows } from '../hooks/useVirtualRows';
 import { FilterSummary } from './clear-filters';
