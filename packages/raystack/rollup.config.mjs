@@ -8,6 +8,42 @@ import postcss from 'rollup-plugin-postcss';
 import preserveDirectives from 'rollup-plugin-preserve-directives';
 import tsconfigPaths from 'rollup-plugin-tsconfig-paths';
 
+/** Matches `@import url("https://fonts.googleapis.com/…");` in any quoting. */
+const FONT_IMPORT =
+  /@import\s+url\(\s*(['"]?)https:\/\/fonts\.googleapis\.com\/[^)'"]*\1\s*\)\s*;?/g;
+
+/**
+ * Emits `style-no-fonts.css` beside the extracted `style.css`, for consumers
+ * self-hosting Inter and JetBrains Mono. Derived from the finished asset
+ * rather than compiled a second time, so the two can only ever differ by the
+ * font imports. Order it after the `postcss()` that extracts `from`, whose
+ * own `generateBundle` is what puts that asset in the bundle.
+ */
+const emitFontFreeCss = ({ from, to }) => {
+  let emitted = false;
+  return {
+    name: 'apsara-font-free-css',
+    generateBundle(_options, bundle) {
+      const asset = bundle[from];
+      if (!asset) return;
+      const source = asset.source.toString();
+      const stripped = source.replace(FONT_IMPORT, '');
+      // Silence here would publish a `no-fonts` sheet that still calls out to
+      // Google, so a miss fails the build rather than writing a copy.
+      if (stripped === source) {
+        this.error(`${from} carries no Google Fonts @import to strip.`);
+      }
+      this.emitFile({ type: 'asset', fileName: to, source: stripped });
+      emitted = true;
+    },
+    closeBundle() {
+      if (!emitted) {
+        this.error(`${from} was never extracted, so ${to} is missing.`);
+      }
+    }
+  };
+};
+
 const createPlugins = ({ rootDir, declarationDir }) => [
   // Externalize all dependencies and peer dependencies
   // This must be placed before nodeResolve() to work correctly
@@ -62,7 +98,9 @@ const sharedWarningHandler = (warning, warn) => {
 const configs = [
   {
     inputPath: '.',
-    outputPath: 'dist'
+    outputPath: 'dist',
+    // The only entry that extracts the stylesheets.
+    extractsCss: true
   },
   {
     inputPath: './icons',
@@ -102,10 +140,15 @@ const rollupConfig = configs.map(conf => {
         preserveModulesRoot: conf.inputPath
       }
     ],
-    plugins: createPlugins({
-      rootDir: conf.inputPath,
-      declarationDir: conf.outputPath
-    }),
+    plugins: [
+      ...createPlugins({
+        rootDir: conf.inputPath,
+        declarationDir: conf.outputPath
+      }),
+      ...(conf.extractsCss
+        ? [emitFontFreeCss({ from: 'style.css', to: 'style-no-fonts.css' })]
+        : [])
+    ],
     onwarn: sharedWarningHandler
   };
 });
