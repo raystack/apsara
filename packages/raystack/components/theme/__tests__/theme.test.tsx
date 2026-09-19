@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { type ReactNode, type SVGProps, useEffect } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { XIcon } from '~/icons';
-import { radiusClass } from '../../../shared/radius';
+import { radiusStyle } from '../../../shared/radius';
 import { Dialog } from '../../dialog';
 import { useTheme } from '../context';
 import { useThemeInjection } from '../portal';
@@ -900,14 +900,17 @@ describe('the portal re-injector', () => {
 
 describe('the shared radius override', () => {
   it('maps each level to its own class', () => {
-    expect(radiusClass('none')).toBeTruthy();
-    expect(radiusClass('full')).toBeTruthy();
-    expect(radiusClass('small')).not.toBe(radiusClass('large'));
+    expect(radiusStyle({ radius: 'none' })).toBeTruthy();
+    expect(radiusStyle({ radius: 'full' })).toBeTruthy();
+    expect(radiusStyle({ radius: 'small' })).not.toBe(
+      radiusStyle({ radius: 'large' })
+    );
   });
 
   it('returns nothing when the prop is unset', () => {
-    expect(radiusClass(undefined)).toBeUndefined();
-    expect(radiusClass(null)).toBeUndefined();
+    expect(radiusStyle({ radius: undefined })).toBe('');
+    expect(radiusStyle({ radius: null })).toBe('');
+    expect(radiusStyle({})).toBe('');
   });
 });
 

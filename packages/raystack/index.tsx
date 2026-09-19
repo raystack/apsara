@@ -156,17 +156,11 @@ export {
   type ReducedMotion,
   type ResolvedThemeSettings,
   type Scaling,
-  THEME_DEFAULT_SETTINGS,
-  THEME_SETTING_KEYS,
-  THEME_SETTING_VALUES,
   Theme,
-  type ThemeContextValue,
   type ThemeHandle,
   type ThemeInjectionProps,
   type ThemeProps,
-  type ThemeRenderProp,
   type ThemeScriptParams,
-  type ThemeSettingKey,
   type ThemeSettings,
   ThemeSwitcher,
   type ThemeSwitcherProps,
@@ -200,4 +194,4 @@ export {
 } from './icons/create-icon';
 export * from './icons/icons';
 export type { IconName } from './icons/types';
-export { radiusClass } from './shared/radius';
+export { radiusStyle } from './shared/radius';

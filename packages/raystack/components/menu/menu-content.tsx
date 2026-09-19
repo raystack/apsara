@@ -6,7 +6,7 @@ import {
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { KeyboardEvent, useCallback, useRef } from 'react';
-import { type Radius, radiusClass } from '../../shared/radius';
+import { type Radius, radiusStyle } from '../../shared/radius';
 import { useThemeInjection } from '../theme/portal';
 import styles from './menu.module.css';
 import { useMenuContext } from './menu-root';
@@ -121,7 +121,7 @@ export function MenuContent({
             styles.content,
             autocomplete && styles.comboboxContainer,
             theme?.className,
-            radiusClass(radius),
+            radiusStyle({ radius }),
             className
           )}
           style={style}

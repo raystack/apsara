@@ -2,7 +2,7 @@
 
 import { Popover as PopoverPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { type Radius, radiusClass } from '../../shared/radius';
+import { type Radius, radiusStyle } from '../../shared/radius';
 import { useThemeInjection } from '../theme/portal';
 import styles from './popover.module.css';
 
@@ -43,7 +43,7 @@ function PopoverContent({
           className={cx(
             styles.popover,
             theme?.className,
-            radiusClass(radius),
+            radiusStyle({ radius }),
             className
           )}
           render={render}

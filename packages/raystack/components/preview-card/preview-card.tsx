@@ -2,7 +2,7 @@
 
 import { PreviewCard as PreviewCardPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { type Radius, radiusClass } from '../../shared/radius';
+import { type Radius, radiusStyle } from '../../shared/radius';
 import { useThemeInjection } from '../theme/portal';
 import styles from './preview-card.module.css';
 
@@ -47,7 +47,7 @@ function PreviewCardContent({
           className={cx(
             styles.popup,
             theme?.className,
-            radiusClass(radius),
+            radiusStyle({ radius }),
             className
           )}
           style={style}

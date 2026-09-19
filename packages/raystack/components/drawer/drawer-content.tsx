@@ -4,13 +4,14 @@ import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ReactNode } from 'react';
 import { XIcon } from '~/icons';
-import { type Radius, radiusClass } from '../../shared/radius';
+import { type Radius, radiusVariants } from '../../shared/radius';
 import { IconButton } from '../icon-button';
 import { useThemeInjection } from '../theme/portal';
 import styles from './drawer.module.css';
 
 const drawerPopup = cva(styles.drawerPopup, {
   variants: {
+    ...radiusVariants,
     side: {
       top: styles['drawerPopup-top'],
       bottom: styles['drawerPopup-bottom'],
@@ -63,7 +64,8 @@ export function DrawerContent({
           {...theme}
           className={drawerPopup({
             side,
-            className: cx(theme?.className, radiusClass(radius), className)
+            radius,
+            className: cx(theme?.className, className)
           })}
           aria-label={resolvedAriaLabel}
           aria-labelledby={ariaLabelledBy}

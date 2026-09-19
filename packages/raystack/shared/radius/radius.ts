@@ -1,3 +1,5 @@
+import { cva } from 'class-variance-authority';
+
 import styles from './radius.module.css';
 
 export const RADII = ['none', 'small', 'medium', 'large', 'full'] as const;
@@ -14,7 +16,9 @@ export const radiusClasses = {
 
 export const radiusVariants = { radius: radiusClasses };
 
-/** The class for a `radius` prop, or `undefined` when it is unset. */
-export function radiusClass(radius?: Radius | null): string | undefined {
-  return radius ? radiusClasses[radius] : undefined;
-}
+/**
+ * The `radius` override alone, for surfaces that carry no cva of their own.
+ * Returns `''` when `radius` is unset. Named `radiusStyle`, not `radius`,
+ * because every call site already binds a `radius` prop of its own.
+ */
+export const radiusStyle = cva('', { variants: radiusVariants });

@@ -52,8 +52,6 @@ export type ThemeSettings = {
   reducedMotion: ReducedMotion;
 };
 
-export type ThemeSettingKey = keyof ThemeSettings;
-
 export type ThemeProps = {
   /** Seeds uncontrolled keys. A stored user choice overrides it. */
   defaultValue?: Partial<ThemeSettings>;
@@ -77,7 +75,7 @@ export type ThemeProps = {
    * Which settings this namespace covers.
    * @defaultValue all seven keys
    */
-  persist?: ThemeSettingKey[];
+  persist?: (keyof ThemeSettings)[];
 
   /** Storage namespace. Persistence is off unless this is set. */
   persistKey?: string;

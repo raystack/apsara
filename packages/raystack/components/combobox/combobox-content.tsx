@@ -2,7 +2,7 @@
 
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { type Radius, radiusClass } from '../../shared/radius';
+import { type Radius, radiusStyle } from '../../shared/radius';
 import { useThemeInjection } from '../theme/portal';
 import styles from './combobox.module.css';
 import { useComboboxContext } from './combobox-root';
@@ -46,7 +46,7 @@ export const ComboboxContent = ({
           className={cx(
             styles.content,
             theme?.className,
-            radiusClass(radius),
+            radiusStyle({ radius }),
             className
           )}
           style={style}

@@ -9,7 +9,7 @@ import {
   useMemo,
   useRef
 } from 'react';
-import { type Radius, radiusClass } from '../../shared/radius';
+import { type Radius, radiusStyle } from '../../shared/radius';
 import { useThemeInjection } from '../theme/portal';
 import styles from './tour.module.css';
 import { useTourContext } from './tour-context';
@@ -127,7 +127,7 @@ export function TourContent({
             className={cx(
               styles.popup,
               theme?.className,
-              radiusClass(radius),
+              radiusStyle({ radius }),
               className
             )}
             style={style}

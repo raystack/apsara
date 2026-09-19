@@ -2,7 +2,7 @@
 
 import { AlertDialog as AlertDialogPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { type Radius, radiusClass } from '../../shared/radius';
+import { type Radius, radiusStyle } from '../../shared/radius';
 import styles from '../dialog/dialog.module.css';
 import { useThemeInjection } from '../theme/portal';
 
@@ -48,7 +48,7 @@ export const AlertDialogContent = ({
             styles.dialogContent,
             showNestedAnimation && styles.showNestedAnimation,
             theme?.className,
-            radiusClass(radius),
+            radiusStyle({ radius }),
             className
           )}
           data-slot='alert-dialog-content'

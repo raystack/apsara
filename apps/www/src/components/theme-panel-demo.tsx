@@ -18,13 +18,29 @@ import {
   Separator,
   Switch,
   Text,
-  THEME_SETTING_VALUES,
   Theme,
   type ThemeSettings,
   Tooltip,
   useTheme
 } from '@raystack/apsara';
 import { useState } from 'react';
+
+/**
+ * The legal values per setting, spelled out here rather than imported: the
+ * package exports the settings, not a catalogue of their values. `satisfies`
+ * keeps this honest — a value the type no longer allows fails the build.
+ */
+const SETTING_VALUES = {
+  appearance: ['light', 'dark', 'system'],
+  accentColor: ['indigo', 'orange', 'mint'],
+  grayColor: ['gray', 'mauve', 'slate', 'sage', 'auto'],
+  radius: ['none', 'small', 'medium', 'large', 'full'],
+  scaling: ['0.9', '0.95', '1', '1.05', '1.1'],
+  panelBackground: ['solid', 'translucent'],
+  reducedMotion: ['true', 'false', 'system']
+} as const satisfies {
+  [K in keyof ThemeSettings]: readonly ThemeSettings[K][];
+};
 
 function Controls() {
   const { value, resolved, setValue } = useTheme();
@@ -58,17 +74,13 @@ function Controls() {
 
   return (
     <Flex direction='column' gap={4} style={{ minWidth: 200 }}>
-      {field('Appearance', 'appearance', THEME_SETTING_VALUES.appearance)}
-      {field('Accent', 'accentColor', THEME_SETTING_VALUES.accentColor)}
-      {field('Gray', 'grayColor', THEME_SETTING_VALUES.grayColor)}
-      {field('Radius', 'radius', THEME_SETTING_VALUES.radius)}
-      {field('Scaling', 'scaling', THEME_SETTING_VALUES.scaling)}
-      {field('Panel', 'panelBackground', THEME_SETTING_VALUES.panelBackground)}
-      {field(
-        'Reduced motion',
-        'reducedMotion',
-        THEME_SETTING_VALUES.reducedMotion
-      )}
+      {field('Appearance', 'appearance', SETTING_VALUES.appearance)}
+      {field('Accent', 'accentColor', SETTING_VALUES.accentColor)}
+      {field('Gray', 'grayColor', SETTING_VALUES.grayColor)}
+      {field('Radius', 'radius', SETTING_VALUES.radius)}
+      {field('Scaling', 'scaling', SETTING_VALUES.scaling)}
+      {field('Panel', 'panelBackground', SETTING_VALUES.panelBackground)}
+      {field('Reduced motion', 'reducedMotion', SETTING_VALUES.reducedMotion)}
 
       <Separator />
       <Text size='mini' variant='secondary'>
