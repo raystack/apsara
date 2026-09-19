@@ -192,6 +192,12 @@ export interface PreviewCardContentProps {
 
   /** Content to render inside the preview card. */
   children?: React.ReactNode;
+
+  /**
+   * Corner radius for this card only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 }
 
 export interface PreviewCardViewportProps {

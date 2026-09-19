@@ -4,6 +4,7 @@ import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ComponentProps, SyntheticEvent, useRef, useState } from 'react';
 import { useIsomorphicLayoutEffect } from '~/hooks';
 
+import { radiusVariants } from '../../shared/radius';
 import styles from './image.module.css';
 
 const image = cva(styles.image, {
@@ -13,12 +14,7 @@ const image = cva(styles.image, {
       cover: styles['image-cover'],
       fill: styles['image-fill']
     },
-    radius: {
-      none: styles['image-radius-none'],
-      small: styles['image-radius-small'],
-      medium: styles['image-radius-medium'],
-      full: styles['image-radius-full']
-    }
+    ...radiusVariants
   },
   defaultVariants: {
     fit: 'cover',

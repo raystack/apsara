@@ -61,4 +61,10 @@ export type ButtonProps = {
 
   /** Additional CSS class names */
   className?: string;
+
+  /**
+   * Corner radius for this button only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 };

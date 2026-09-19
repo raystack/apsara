@@ -54,6 +54,7 @@ import {
 } from '../dataview-demo';
 import LinearMenuDemo from '../linear-menu-demo';
 import PopoverColorPicker from '../popover-color-picker';
+import ThemePanelDemo from '../theme-panel-demo';
 import TourDemo from '../tour-demo';
 import DemoPlayground from './demo-playground';
 import DemoPreview from './demo-preview';
@@ -88,6 +89,7 @@ export default function Demo(props: DemoProps) {
       ChipInputDemo,
       LinearMenuDemo,
       PopoverColorPicker,
+      ThemePanelDemo,
       TourDemo,
       NextLink,
       AlignCenter,

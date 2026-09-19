@@ -11,7 +11,7 @@ import {
   useMemo,
   useRef
 } from 'react';
-
+import { useScaling } from '~/hooks/useScaling';
 import { Badge } from '../../badge';
 import { Skeleton } from '../../skeleton';
 import styles from '../data-view.module.css';
@@ -80,9 +80,6 @@ export function DataViewList<TData, TValue = unknown>({
   const headersVisible = showHeaders ?? isTableVariant;
   const ariaRole = role ?? (isTableVariant ? 'table' : 'list');
   const dividers = showDividers ?? isTableVariant;
-  const effectiveRowHeight =
-    estimatedRowHeight ??
-    (isTableVariant ? DEFAULT_TABLE_ROW_HEIGHT : DEFAULT_LIST_ROW_HEIGHT);
 
   const visibleLeafColumns = table.getVisibleLeafColumns();
 
@@ -130,6 +127,15 @@ export function DataViewList<TData, TValue = unknown>({
   // Measure the column-header row so sticky group elements sit directly under it.
   const [headerMeasureRef, headerHeight] = useElementHeight();
 
+  // Rows are sized by tokens, so the estimates the virtualizer and the sticky
+  // group anchor run on follow the theme zoom. An explicit prop is left alone.
+  const scaling = useScaling(scrollRef);
+  const groupHeaderHeight = GROUP_HEADER_HEIGHT * scaling;
+  const effectiveRowHeight =
+    estimatedRowHeight ??
+    (isTableVariant ? DEFAULT_TABLE_ROW_HEIGHT : DEFAULT_LIST_ROW_HEIGHT) *
+      scaling;
+
   // Group offsets, needed for the sticky group anchor under virtualization.
   const group_by = tableQuery?.group_by?.[0];
   const isGrouped = Boolean(group_by) && group_by !== defaultGroupOption.id;
@@ -150,10 +156,10 @@ export function DataViewList<TData, TValue = unknown>({
           data: row.original as GroupedData<TData>
         });
       }
-      offset += isGroupHeader ? GROUP_HEADER_HEIGHT : effectiveRowHeight;
+      offset += isGroupHeader ? groupHeaderHeight : effectiveRowHeight;
     });
     return list;
-  }, [rows, effectiveRowHeight]);
+  }, [rows, effectiveRowHeight, groupHeaderHeight]);
 
   const { totalSize, items, measureRef } = useVirtualRows({
     enabled: virtualized,
@@ -162,7 +168,7 @@ export function DataViewList<TData, TValue = unknown>({
     estimatedRowHeight: effectiveRowHeight,
     estimateSize: row => {
       const isGroupHeader = row?.subRows && row.subRows.length > 0;
-      return isGroupHeader ? GROUP_HEADER_HEIGHT : effectiveRowHeight;
+      return isGroupHeader ? groupHeaderHeight : effectiveRowHeight;
     }
   });
 
@@ -515,7 +521,7 @@ export function DataViewList<TData, TValue = unknown>({
         {renderHeaderRow()}
         {virtualized ? renderVirtualBody() : renderFlatBody()}
         {renderLoaderRows()}
-        {/* Sentinel: triggers onLoadMore via IntersectionObserver in server mode. */}
+        {/* Sentinel: fires onLoadMore via IntersectionObserver in server mode. */}
         <div
           ref={sentinelRef}
           className={styles.listSentinel}
