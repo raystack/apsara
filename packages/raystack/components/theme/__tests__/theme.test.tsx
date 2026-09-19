@@ -1089,6 +1089,27 @@ describe('appearance transition', () => {
     expect(vt.startViewTransition).not.toHaveBeenCalled();
     vt.restore();
   });
+
+  it('skips the crossfade for a scope, which repaints no more than itself', async () => {
+    const user = userEvent.setup();
+    const vt = stubViewTransition();
+
+    const { container } = render(
+      <Theme>
+        <Theme isRoot={false}>
+          <Switcher to='dark' />
+        </Theme>
+      </Theme>
+    );
+    await act(async () => {
+      await user.click(screen.getByRole('button'));
+    });
+    expect(vt.startViewTransition).not.toHaveBeenCalled();
+    expect(document.documentElement).not.toHaveAttribute(marker);
+    expect(themeElement(container, 1)).toHaveAttribute('data-theme', 'dark');
+    expect(themeElement(container)).toHaveAttribute('data-theme', 'light');
+    vt.restore();
+  });
 });
 
 // ─── Mount reconciliation ───────────────────────────────────────────────────

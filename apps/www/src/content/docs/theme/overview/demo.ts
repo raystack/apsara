@@ -260,7 +260,9 @@ function ControlledScope() {
       </Theme>
     </Flex>
   );
-}`
+}
+
+render(<ControlledScope />);`
 };
 
 export const componentRadiusDemo = {

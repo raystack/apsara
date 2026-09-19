@@ -294,6 +294,8 @@ export function Theme({
   onValueChangeRef.current = onValueChange;
   const disableTransitionRef = useRef(disableTransitionOnChange);
   disableTransitionRef.current = disableTransitionOnChange;
+  const isRootRef = useRef(isRootTheme);
+  isRootRef.current = isRootTheme;
 
   const setValue = useCallback(
     (next: Partial<ThemeSettings>) => {
@@ -338,8 +340,14 @@ export function Theme({
         onValueChangeRef.current?.({ ...current, ...changed }, changed);
       };
 
-      // An appearance swap repaints the page; anything else is a local change.
-      if (changed.appearance === undefined || disableTransitionRef.current) {
+      // A root's appearance swap repaints the page, so it earns the crossfade.
+      // A scope repaints its own subtree, and `startViewTransition` snapshots
+      // the whole document, so it would freeze the page around an inset change.
+      if (
+        changed.appearance === undefined ||
+        disableTransitionRef.current ||
+        !isRootRef.current
+      ) {
         apply();
         return;
       }
