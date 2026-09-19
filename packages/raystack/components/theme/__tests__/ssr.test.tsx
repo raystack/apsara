@@ -127,7 +127,7 @@ describe('hydration', () => {
   });
 
   it('reconciles the element when no script ran to correct it', async () => {
-    // React does not fix attribute mismatches during hydration; the mount effect does.
+    // React never fixes attribute mismatches on hydration; the mount effect does.
     installMatchMedia(true);
 
     const tree = (

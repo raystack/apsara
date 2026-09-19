@@ -39,7 +39,7 @@
   --docs-subentry-tracking: var(--rs-letter-spacing-large);
   --docs-subentry-weight: var(--rs-font-weight-medium);
 
-  /* Prose. Looser leading than the product default, since this is read, not scanned. */
+  /* Prose. Looser leading than the product default: this is read, not scanned. */
   --docs-body-size: var(--rs-font-size-large);
   --docs-body-leading: var(--rs-line-height-large);
   --docs-body-tracking: var(--rs-letter-spacing-large);

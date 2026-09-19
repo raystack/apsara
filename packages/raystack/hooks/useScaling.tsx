@@ -6,15 +6,11 @@ import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 
 /**
  * The resolved `--rs-scaling` for a subtree, for geometry a component keeps in
- * JS rather than in CSS — virtualizer estimates, group-header offsets, lane
- * math. The token-driven CSS around it zooms with the theme on its own;
- * reading the factor here lets the JS side follow.
+ * JS rather than in CSS: virtualizer estimates, group-header offsets, lane math.
+ * 1 on the server and for the first render, since the element has to exist
+ * before the custom property can be resolved.
  *
- * Internal. Not exported from `hooks/index.tsx`, so it stays off the public
- * `@raystack/apsara/hooks` surface — import it by path.
- *
- * 1 on the server and for the first render; the element has to exist before
- * the custom property can be resolved.
+ * Internal: deliberately not exported from `hooks/index.tsx`.
  */
 export function useScaling(ref: RefObject<HTMLElement | null>): number {
   const [scaling, setScaling] = useState(1);

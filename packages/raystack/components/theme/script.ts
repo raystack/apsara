@@ -1,8 +1,7 @@
 /**
  * Pre-hydration script. Rendered as the theme element's first child, it patches
- * its own parent before first paint with what the server could not know: the
- * stored value of each persisted key, and the OS answer for a `system`
- * appearance that has nothing stored.
+ * its own parent before first paint with what the server could not know: stored
+ * values, and the OS answer for an unstored `system` appearance.
  */
 
 import {
@@ -34,11 +33,7 @@ export interface ThemeScriptParams {
   persistKey?: string;
   /** Keys read from storage: the namespace's uncontrolled, persisted settings. */
   keys: readonly ThemeSettingKey[];
-  /**
-   * The settings the server rendered from. A key with nothing stored falls
-   * back to this, which is how a seeded `system` appearance resolves against
-   * the OS before first paint.
-   */
+  /** What the server rendered from. A key with nothing stored falls back to it. */
   seed: ThemeSettings;
   /** Fallback selector target, in case `document.currentScript` is absent. */
   elementId: string;

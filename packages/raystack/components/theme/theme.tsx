@@ -82,19 +82,10 @@ export interface ThemeProps
   /** CSP nonce for the inline script. */
   nonce?: string;
   /**
-   * The icons inside Apsara's components, and the props applied to every icon.
-   *
-   * `components` replaces a drawing by key, as in `{ ErrorIcon: MyError }`. A
-   * partial map changes only the keys it names, and a nested `<Theme icons={…}>`
-   * layers on top of an outer one, per key.
-   *
-   * `props` applies to every icon built by `createIcon`, the consumer's own
-   * included, as in `{ strokeWidth: 2 }`. The props at the call site still win.
-   * Prefer the `data-icon` attribute and CSS where a style rule is enough,
-   * because CSS re-renders nothing.
-   *
-   * The map holds functions, so a React Server Component cannot pass it. Set it
-   * from a client component (the `providers.tsx` pattern).
+   * Icon overrides. `components` replaces a drawing by key, `props` applies to
+   * every icon built by `createIcon`. Both layer per key across nested themes,
+   * and call-site props still win. Holds functions, so pass it from a client
+   * component.
    */
   icons?: IconOptions;
   /** Replaces the mount element, merging the theme's props onto it. */
@@ -178,7 +169,6 @@ function renderThemeElement(
     return cloneElement(render, {
       ...props,
       ...own,
-      // Classes join, styles merge, refs compose; data attributes stay ours.
       className: cx(props.className as string, own.className as string),
       style: {
         ...(props.style as CSSProperties),
@@ -340,9 +330,8 @@ export function Theme({
         onValueChangeRef.current?.({ ...current, ...changed }, changed);
       };
 
-      // A root's appearance swap repaints the page, so it earns the crossfade.
-      // A scope repaints its own subtree, and `startViewTransition` snapshots
-      // the whole document, so it would freeze the page around an inset change.
+      // Only a root earns the crossfade: `startViewTransition` snapshots the
+      // whole document, so a scope would freeze the page around its own change.
       if (
         changed.appearance === undefined ||
         disableTransitionRef.current ||
@@ -405,9 +394,7 @@ export function Theme({
   const elementRef = useRef<HTMLElement | null>(null);
   const attributes = useMemo(() => settingsToAttributes(resolved), [resolved]);
 
-  // Mount the icon registry only when the consumer configures it, so a tree
-  // without icon overrides gains no provider and no extra render work. Nesting
-  // layers per icon key, the way a nested theme layers settings.
+  // Only when configured, so a tree without icon overrides gains no provider.
   const { components: iconComponents, props: iconProps } = icons ?? {};
   const content =
     iconComponents || iconProps ? (
@@ -418,8 +405,7 @@ export function Theme({
       children
     );
 
-  // Where no script ran, the server's guess survives hydration silently;
-  // one reconciliation on mount closes that.
+  // Where no script ran, the server's guess survives hydration silently.
   useEffect(() => {
     const element = elementRef.current;
     if (!element) return;
@@ -494,14 +480,10 @@ function prefersReducedMotion(setting: string): boolean {
 }
 
 /**
- * A theme switch repaints far more than the elements that own a transition, so
- * left alone a page arrives in waves — controls at 200ms, everything else on the
- * next frame. A view transition crossfades one snapshot of the page instead, so
- * all of it lands on the same clock; `theme.css` gives that crossfade the same
- * duration and easing the components use.
- *
- * The attribute scopes those rules to this transition, and `flushSync` puts the
- * new attributes in the DOM while the snapshot is still being captured.
+ * Lands a whole appearance switch on one clock: without it the page arrives in
+ * waves, as only the elements that own a transition animate. The attribute
+ * scopes `theme.css`'s crossfade rules to this transition, and `flushSync` puts
+ * the new attributes in the DOM while the snapshot is still being captured.
  */
 function crossfadeAppearance(apply: () => void, reducedMotion: string): void {
   if (typeof document === 'undefined') {
@@ -526,10 +508,9 @@ function crossfadeAppearance(apply: () => void, reducedMotion: string): void {
 }
 
 /**
- * Covers the changes `setValue` never sees — the OS flipping under `system`,
- * another tab writing storage — and suppresses motion entirely when that is what
- * was asked for. Those arrive mid-render, too late to capture a snapshot from,
- * so they take the components' own transitions rather than a crossfade.
+ * Suppresses motion for the changes `setValue` never sees: the OS flipping under
+ * `system`, another tab writing storage. They arrive mid-render, too late to
+ * capture a snapshot from, so they never get the crossfade.
  */
 function useAppearanceTransition(
   appearance: string,

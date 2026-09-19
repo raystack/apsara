@@ -15,11 +15,9 @@ export interface ThemeInjectionProps {
  * Spread first, then pass `className` yourself:
  * `<Popup {...theme} className={cx(theme?.className, className)} />`
  *
- * Spread it on the `Portal` as well as the popup. A Base UI portal renders its
- * own `<div>` under `<body>`, one per instance, so the theme reaches the parts
- * that are siblings of the popup rather than inside it — a dialog's backdrop
- * draws `--rs-color-overlay`, which is only declared under `[data-theme]`, and
- * without this resolves to nothing and leaves the scrim invisible.
+ * Spread it on the `Portal` too, not just the popup: parts that are siblings of
+ * the popup (a dialog's backdrop) draw tokens declared only under `[data-theme]`
+ * and render invisible without it.
  */
 export function useThemeInjection(): ThemeInjectionProps | undefined {
   const theme = useThemeContextOrNull();

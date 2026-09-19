@@ -48,10 +48,9 @@
   --rs-scaling: 1.1;
 }
 
-/* Radius. Three pill tokens: `--rs-radius-pill` rounds controls only at `full`;
+/* Three pill tokens: `--rs-radius-pill` rounds controls only at `full`;
    `--rs-radius-thumb` keeps round controls (Switch, Slider) round from `medium`
-   up and squares them at `none` and `small`, as Radix Themes does;
-   `--rs-radius-full` is the legacy pill token, fixed and ignoring the setting. */
+   up and squares them below; `--rs-radius-full` is the legacy fixed token. */
 :where([data-theme]) {
   --rs-radius-factor: 1;
   --rs-radius-pill: 0px;
@@ -105,9 +104,8 @@
   --rs-panel-backdrop-filter: none;
 }
 
-/* Radix Themes' two translucent panels: a 70% wash of the surface in light,
-   and in dark a faint white lift over the blur rather than a wash, because a
-   dark panel mixed with the dark page behind it reads as neither. */
+/* In dark, a faint white lift over the blur rather than a wash: a dark panel
+   mixed with the dark page behind it reads as neither. */
 :where([data-theme="dark"]) {
   --rs-color-panel-translucent: var(--rs-color-overlay-base-a1);
 }
@@ -122,15 +120,11 @@
   --rs-panel-backdrop-filter: blur(40px);
 }
 
-/* Appearance switch. Components transition their own colours at
-   --rs-duration-normal, but most of a page — text, borders, the ground itself —
-   carries no transition and lands a frame after the flip while the rest is still
-   fading. Crossfading one snapshot of the page puts all of it on the same clock.
-   Giving every element the transition instead means ~10k concurrent transitions
-   on a page this size, which renders slower than no animation at all.
-
-   Scoped to the attribute `Theme` sets for the length of the switch, so
-   an app's own view transitions keep their timing. */
+/* Appearance switch. Most of a page carries no transition and lands a frame
+   after the flip while the components are still fading, so crossfading one
+   snapshot puts all of it on the same clock. (Giving every element a transition
+   instead means ~10k concurrent ones, slower than no animation at all.) Scoped
+   to the attribute `Theme` sets, so an app's own view transitions keep theirs. */
 html[data-rs-appearance-change]::view-transition-old(root),
 html[data-rs-appearance-change]::view-transition-new(root) {
   animation-duration: var(--rs-duration-normal);

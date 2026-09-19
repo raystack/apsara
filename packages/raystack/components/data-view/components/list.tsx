@@ -521,7 +521,7 @@ export function DataViewList<TData, TValue = unknown>({
         {renderHeaderRow()}
         {virtualized ? renderVirtualBody() : renderFlatBody()}
         {renderLoaderRows()}
-        {/* Sentinel: triggers onLoadMore via IntersectionObserver in server mode. */}
+        {/* Sentinel: fires onLoadMore via IntersectionObserver in server mode. */}
         <div
           ref={sentinelRef}
           className={styles.listSentinel}

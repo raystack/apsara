@@ -50,8 +50,6 @@ function readProbe(label = 'probe'): {
   return JSON.parse(screen.getByTestId(label).textContent as string);
 }
 
-// ─── Attributes ─────────────────────────────────────────────────────────────
-
 describe('Theme attributes', () => {
   it('writes every setting as a data attribute on its own element', () => {
     const { container } = render(<Theme>content</Theme>);
@@ -93,8 +91,6 @@ describe('Theme attributes', () => {
     expect(scope).toHaveAttribute('data-radius', 'large');
   });
 });
-
-// ─── Root marker and background ─────────────────────────────────────────────
 
 describe('the root marker', () => {
   it('marks a theme with no ancestor', () => {
@@ -196,8 +192,6 @@ describe('hasBackground', () => {
   });
 });
 
-// ─── Controlled and uncontrolled ────────────────────────────────────────────
-
 describe('controlled versus uncontrolled precedence', () => {
   it('a controlled key ignores a stored value', () => {
     entries.set('app', storedEntry({ appearance: 'dark' }));
@@ -259,8 +253,6 @@ describe('controlled versus uncontrolled precedence', () => {
     });
   });
 });
-
-// ─── Persistence ────────────────────────────────────────────────────────────
 
 describe('persistence', () => {
   it('does not touch storage without a persistKey', async () => {
@@ -448,8 +440,6 @@ describe('persistence', () => {
   });
 });
 
-// ─── Resolution ─────────────────────────────────────────────────────────────
-
 describe('resolution', () => {
   it('resolves `system` against the OS', () => {
     installMatchMedia(true);
@@ -512,8 +502,6 @@ describe('resolution', () => {
   });
 });
 
-// ─── The hook ───────────────────────────────────────────────────────────────
-
 describe('useTheme', () => {
   it('throws outside a provider', () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => {
@@ -566,8 +554,6 @@ describe('useTheme', () => {
     expect(screen.getByTestId('root')).toHaveTextContent('mint');
   });
 });
-
-// ─── onValueChange ──────────────────────────────────────────────────────────
 
 describe('onValueChange', () => {
   it('fires with the full next settings and the changed subset', async () => {
@@ -673,8 +659,6 @@ describe('onValueChange', () => {
   });
 });
 
-// ─── Storage unavailable ────────────────────────────────────────────────────
-
 describe('when storage is unavailable', () => {
   it('still applies a persisted setting, in memory', async () => {
     installThrowingLocalStorage();
@@ -701,8 +685,6 @@ describe('when storage is unavailable', () => {
     expect(themeElement(container)).toHaveAttribute('data-theme', 'dark');
   });
 });
-
-// ─── The render prop ────────────────────────────────────────────────────────
 
 describe('render', () => {
   it('merges the theme onto a caller-supplied element', () => {
@@ -762,8 +744,6 @@ describe('render', () => {
   });
 });
 
-// ─── Portals ────────────────────────────────────────────────────────────────
-
 describe('the portal re-injector', () => {
   function Portalled({ children }: { children?: ReactNode }) {
     const theme = useThemeInjection();
@@ -796,9 +776,8 @@ describe('the portal re-injector', () => {
     expect(portalled).not.toHaveAttribute('data-theme');
   });
 
-  /* The backdrop is a sibling of the popup, not a descendant, so a theme on the
-     popup alone never reaches it and `--rs-color-overlay` resolves to nothing —
-     an invisible scrim. The portal node is the only ancestor they share. */
+  // The backdrop is a sibling of the popup, so the portal node is the only
+  // ancestor they share.
   it('themes the parts that sit beside the popup, not just the popup', async () => {
     const user = userEvent.setup();
     render(
@@ -821,8 +800,8 @@ describe('the portal re-injector', () => {
     );
   });
 
-  /* Both portals land under <body> as siblings, so the inner dialog gets its
-     theme from the React tree it was declared in, not from where it renders. */
+  // Both portals land under <body> as siblings, so the inner dialog takes its
+  // theme from where it was declared, not from where it renders.
   it('keeps a nested dialog on its own scope, not the dialog that opened it', async () => {
     const user = userEvent.setup();
     render(
@@ -896,8 +875,6 @@ describe('the portal re-injector', () => {
   });
 });
 
-// ─── Per-component radius ───────────────────────────────────────────────────
-
 describe('the shared radius override', () => {
   it('maps each level to its own class', () => {
     expect(radiusStyle({ radius: 'none' })).toBeTruthy();
@@ -913,8 +890,6 @@ describe('the shared radius override', () => {
     expect(radiusStyle({})).toBe('');
   });
 });
-
-// ─── Transitions ────────────────────────────────────────────────────────────
 
 describe('disableTransitionOnChange', () => {
   it('suppresses transitions across an appearance switch', async () => {
@@ -1115,8 +1090,6 @@ describe('appearance transition', () => {
   });
 });
 
-// ─── Mount reconciliation ───────────────────────────────────────────────────
-
 describe('mount reconciliation', () => {
   it('leaves the element alone when nothing drifted', () => {
     const observed: string[] = [];
@@ -1136,11 +1109,8 @@ describe('mount reconciliation', () => {
   });
 });
 
-// ─── Icons ──────────────────────────────────────────────────────────────────
-
-// The registry itself is tested in `icons/__tests__/registry.test.tsx`. These
-// cover the wiring: that `<Theme>` mounts the IconProvider, and only when the
-// consumer configures it.
+// The registry itself is tested in `icons/__tests__/registry.test.tsx`; these
+// cover the wiring only.
 describe('icons', () => {
   const StubIcon = (props: SVGProps<SVGSVGElement>) => (
     <svg {...props} data-testid='stub' />

@@ -26,9 +26,8 @@ import {
 import { useState } from 'react';
 
 /**
- * The legal values per setting, spelled out here rather than imported: the
- * package exports the settings, not a catalogue of their values. `satisfies`
- * keeps this honest — a value the type no longer allows fails the build.
+ * Spelled out rather than imported: the package exports the settings, not a
+ * catalogue of their values. `satisfies` fails the build if one drifts.
  */
 const SETTING_VALUES = {
   appearance: ['light', 'dark', 'system'],
@@ -211,8 +210,7 @@ export default function ThemePanelDemo() {
     >
       <Flex gap={7} wrap='wrap' align='stretch'>
         <Controls />
-        {/* The separator's own `height: 100%` resolves to 0 against a
-            content-sized row, so let the stretch decide its height. */}
+        {/* Its own `height: 100%` resolves to 0 against a content-sized row. */}
         <Separator
           orientation='vertical'
           style={{ height: 'auto', alignSelf: 'stretch' }}

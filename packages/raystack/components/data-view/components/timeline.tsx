@@ -41,13 +41,9 @@ import { FilterSummary } from './clear-filters';
 const DEFAULT_ROW_HEIGHT = 66;
 const DEFAULT_LANE_GAP = 16;
 /**
- * Height (px) of a group section's header band: `DataView.List`'s group header
- * box exactly, `--rs-space-3` padding above and below a small `Badge` (8 + 22
- * + 8), so the band reads identically when switching between the two
- * renderers. Fixed rather than measured because lane tops are derived from it,
- * so a content-driven height would feed back into the geometry it seeds. (List
- * only needs its own 36 as a virtualizer estimate, which it corrects by
- * measuring after paint; the timeline has no such correction pass.)
+ * Height (px) of a group section's header band, matching `DataView.List`'s.
+ * Fixed rather than measured: lane tops derive from it, so a content-driven
+ * height would feed back into the geometry it seeds.
  */
 const GROUP_BAND_HEIGHT = 38;
 const DEFAULT_MIN_CARD_WIDTH = 60;
@@ -65,25 +61,17 @@ const MOMENTUM_MIN_SPEED = 0.05;
 const MOMENTUM_MAX_SPEED = 4;
 /** Exponential decay constant (ms) of the post-release glide. */
 const MOMENTUM_DECAY_TAU = 325;
-/** Releasing this long (ms) after the last move means "held still", so there is no glide. */
+/** Released this long (ms) after the last move counts as "held still": no glide. */
 const MOMENTUM_STALE_MS = 80;
 /**
- * Breathing room between an edge-aligned scroll target ('start'/'end') and
- * the viewport edge, since a card flush against the edge reads as clipped. The
- * domain clamp wins when there's no room, so targets at the domain edges
- * still sit flush instead of revealing space past the domain.
+ * Breathing room between an edge-aligned scroll target and the viewport edge,
+ * since a card flush against the edge reads as clipped. The domain clamp wins
+ * when there's no room.
  */
 const SCROLL_EDGE_INSET_PX = 24;
 
 const clampSpeed = (v: number) =>
   Math.max(-MOMENTUM_MAX_SPEED, Math.min(v, MOMENTUM_MAX_SPEED));
-
-/**
- * `lo + ((hi - lo) >> 1)` rather than `(lo + hi) >> 1` throughout: `>>` coerces
- * to int32, so the latter wraps to a negative midpoint once `lo + hi` passes
- * 2^31. These lists can't approach that, but the two forms cost the same and
- * mixing them in one file reads as though one of them were load-bearing.
- */
 
 /** First index in `list` (ascending by `x`) with `x >= value`. */
 function lowerBoundByX(list: readonly { x: number }[], value: number): number {
@@ -110,10 +98,8 @@ function upperBoundByX(list: readonly { x: number }[], value: number): number {
 }
 
 /**
- * First box whose bottom edge reaches `value`, over parallel top/height
- * arrays. Used for lanes and for group-section slots: both stack without
- * overlapping, so tops *and* bottoms ascend, which holds for the measured
- * (variable-height) lane geometry as well as the fixed pitch.
+ * First box whose bottom edge reaches `value`, over parallel top/height arrays.
+ * Lanes and group slots both stack without overlapping, so bottoms ascend too.
  */
 function lowerBoundByBottom(
   tops: readonly number[],
@@ -145,30 +131,20 @@ function upperBoundByTop(tops: readonly number[], value: number): number {
 /** Lane runs at or below this length scan faster than they binary-search. */
 const LANE_SCAN_MAX = 8;
 
-/**
- * Overscan floor, in px, on each side of the viewport. Also sets how far the
- * pane may travel before the culling window is recomputed. See `readViewport`.
- */
+/** Overscan floor (px) per side. Also gates recomputes; see `readViewport`. */
 const MIN_OVERSCAN_PX = 200;
 
 /**
  * Overscan as a fraction of the viewport, per side. The mounted set covers
- * `(1 + 2r)²` viewports of canvas, so the cost of a commit grows with the
- * *square* of this while the distance it buys before the next commit grows
- * only linearly. A full viewport each side (r = 1) mounts 9 viewports' worth
- * to save one viewport of travel. Half is the better trade: 4 viewports
- * mounted, commits roughly twice as cheap, twice as often.
+ * `(1 + 2r)²` viewports, so commit cost grows with the square of this while the
+ * travel it buys grows only linearly. Half mounts 4 viewports' worth.
  */
 const OVERSCAN_RATIO = 0.5;
 
-/** Overscan for one axis, given that axis's viewport extent. */
 const overscanFor = (extent: number) =>
   Math.max(extent * OVERSCAN_RATIO, MIN_OVERSCAN_PX);
 
-/**
- * Lane tops as an arithmetic series, when the stack is uninterrupted enough to
- * have one. See where it's built in the geometry memo.
- */
+/** Lane tops as an arithmetic series, when the stack is uninterrupted. */
 interface UniformPitch {
   /** Top of lane 0. */
   first: number;
@@ -179,9 +155,8 @@ interface UniformPitch {
 }
 
 /**
- * Lanes intersecting the vertical window `[min, max]`, as a `[start, end)`
- * range. Uniform geometry inverts the series arithmetically in O(1), with no search
- * at all; anything else binary-searches the lane boxes.
+ * Lanes intersecting the vertical window, as `[start, end)`. Uniform geometry
+ * inverts the series in O(1); anything else binary-searches the lane boxes.
  */
 function resolveLaneRange(
   min: number,
@@ -208,10 +183,7 @@ function resolveLaneRange(
   };
 }
 
-/**
- * First slot in one lane's run of the card index (`[from, to)` of `items`,
- * ascending by x) whose card starts at or past `value`.
- */
+/** First slot in a lane's run of the card index starting at or past `value`. */
 function lowerBoundLaneCard(
   cards: readonly { x: number }[],
   items: Int32Array,
@@ -236,9 +208,9 @@ interface TimedItem<TData> {
   /** Null when `endField` is omitted (point marker). */
   endTime: number | null;
   /**
-   * Bucket the row falls in under `lanePacking="one-per-sort-value"`. Its
-   * `laneField` value as a string, or null for no usable value (that bucket
-   * lanes last). Null throughout for every other packing mode.
+   * Lane bucket under `lanePacking="one-per-sort-value"`: the `laneField` value
+   * as a string, or null for no usable value (that bucket lanes last). Null
+   * throughout for every other packing mode.
    */
   laneKey: string | null;
 }
@@ -254,9 +226,8 @@ interface PositionedItem<TData> extends TimedItem<TData> {
 }
 
 /**
- * A positioned row with its lane resolved, ready to render. The lane fields
- * are filled in after packing rather than at construction (see the `cards`
- * memo), so they are mutable and zero until then.
+ * A positioned row with its lane resolved. The lane fields are filled in by the
+ * `cards` memo after packing, so they are mutable and zero until then.
  */
 interface LaidOutCard<TData> extends PositionedItem<TData> {
   /** Section-relative: what `renderCard` sees as `context.laneIndex`. */
@@ -265,11 +236,7 @@ interface LaidOutCard<TData> extends PositionedItem<TData> {
   lane: number;
 }
 
-/**
- * One vertical section of the canvas. `group` is the row model's group row
- * (`groupData` entry) when `group_by` is active, null for the implicit
- * single section of an ungrouped timeline.
- */
+/** One vertical section of the canvas. `group` is null when ungrouped. */
 interface TimelineSection<TData, TItem> {
   key: string;
   group: GroupedData<TData> | null;
@@ -289,10 +256,7 @@ interface TimelineCardViewProps<TData> {
   /** Null when `endField` is omitted (point marker). */
   endTime: number | null;
   renderCard: DataViewTimelineProps<TData>['renderCard'];
-  /**
-   * False under a fixed lane pitch (virtualized), where nothing consumes the
-   * measurement, and skipping it drops one ResizeObserver per rendered card.
-   */
+  /** False under a fixed lane pitch, which drops one ResizeObserver per card. */
   measure: boolean;
   /** Reports the wrapper's rendered height so lanes can size to content. */
   onMeasure: (rowId: string, height: number) => void;
@@ -301,11 +265,10 @@ interface TimelineCardViewProps<TData> {
 }
 
 /**
- * Memoized positioning wrapper for one card. Isolates `renderCard` from the
- * root's per-frame re-renders (hover cursor, viewport tracking). A card only
- * re-renders when its own row or geometry changes. All props except `row`,
- * `renderCard`, `onMeasure`, and `onRowClick` are primitives, so the default
- * shallow compare holds as long as those identities are stable across renders.
+ * Memoized positioning wrapper for one card, isolating `renderCard` from the
+ * root's per-frame re-renders. Every prop but `row`, `renderCard`, `onMeasure`
+ * and `onRowClick` is primitive, so the shallow compare holds while those four
+ * keep their identity.
  */
 function TimelineCardViewInner<TData>({
   row,
@@ -326,9 +289,8 @@ function TimelineCardViewInner<TData>({
   const elementRef = useRef<HTMLDivElement | null>(null);
   const rowId = row.id;
 
-  // Height is content-driven (same contract as `DataView.List` rows):
-  // measure after paint and on resize, and report up so the lane layout can
-  // replace its `estimatedRowHeight` seed with the real value.
+  // Content-driven height: report up so the lane layout can replace its
+  // `estimatedRowHeight` seed with the real value.
   useEffect(() => {
     const el = elementRef.current;
     if (!el || !measure) return;
@@ -404,11 +366,9 @@ function cursorLabel(time: number, scale: TimelineScale): string {
 }
 
 /**
- * Time-positioned card renderer. The Timeline owns the time scale (date → x,
- * span → width), lane packing, the sticky two-tier axis (ticks, month/year
- * bands, today + custom markers, gridlines), and native x/y scrolling. The
- * card interior is entirely consumer-owned via `renderCard`, analogous to how
- * `columns[].cell` owns cell interiors in `DataView.List`.
+ * Time-positioned card renderer. Owns the time scale, lane packing, the sticky
+ * two-tier axis and native x/y scrolling; the card interior is consumer-owned
+ * via `renderCard`, as `columns[].cell` owns cell interiors in `DataView.List`.
  */
 export function DataViewTimeline<TData>({
   name,
@@ -448,19 +408,16 @@ export function DataViewTimeline<TData>({
     tableQuery
   } = useDataView<TData>();
 
-  // Register per-view field override so the toolbar's effectiveFields reflects
-  // this renderer's metadata while it's the active view.
+  // Per-view field override, so the toolbar reflects this renderer's metadata.
   useEffect(() => {
     if (!name || !fieldsOverride) return;
     return registerFieldsForView(name, fieldsOverride);
   }, [name, fieldsOverride, registerFieldsForView]);
 
-  // Multi-view gate. When `name` is set, render only when this is the active
-  // view. When unset (single-renderer mode), always render.
+  // Multi-view gate: with no `name`, this is the only renderer, so always render.
   const isActive = !name || activeView === undefined || activeView === name;
 
-  // Clamped: a zero/negative width would zero out px density and hang the
-  // viewport-fill loop in createTimeScale (see the guard there).
+  // Clamped: a zero width zeroes px density and hangs createTimeScale's fill loop.
   const effectiveUnitWidth = Math.max(
     1,
     unitWidth ?? TIMELINE_DEFAULT_UNIT_WIDTH[scale]
@@ -479,10 +436,8 @@ export function DataViewTimeline<TData>({
     estimatedPointWidthProp ?? DEFAULT_POINT_WIDTH * scaling;
   const groupBandHeight = GROUP_BAND_HEIGHT * scaling;
 
-  // Viewport fill. When the domain renders narrower than the scroll
-  // container, the domain end extends so the axis/gridlines span the full
-  // visible width (see `minWidth` in createTimeScale). Extension only ever
-  // widens, so an explicit `range` wider than the container is untouched.
+  // Viewport fill: a domain narrower than the container extends so the axis
+  // spans the full width. It only ever widens, so a wider `range` is untouched.
   const [containerWidth, setContainerWidth] = useState(0);
   useLayoutEffect(() => {
     const el = scrollRef.current;
@@ -505,13 +460,10 @@ export function DataViewTimeline<TData>({
   const rowModel = table?.getRowModel();
   const { rows = [] } = rowModel || {};
 
-  // Sections walked out of the row model exactly as `DataView.List` reads it: a
-  // row with `subRows` is a group header (its `original` is the `groupData`
-  // entry), the leaf rows after it are that group's rows. Section order,
-  // labels, and counts therefore match List for free, in client *and* server
-  // mode, since the root groups unconditionally. Ungrouped data has no group
-  // rows, so the walk yields one implicit section with no band and the
-  // geometry below degenerates to the flat single-section layout.
+  // Walked exactly as `DataView.List` reads the row model — a row with
+  // `subRows` is a group header, the leaf rows after it are its rows — so
+  // section order, labels and counts match List for free. Ungrouped data has no
+  // group rows, so this yields one implicit section with no band.
   const sections = useMemo(() => {
     const list: TimelineSection<TData, Row<TData>>[] = [];
     for (const row of rows) {
@@ -533,30 +485,24 @@ export function DataViewTimeline<TData>({
     return list;
   }, [rows]);
 
-  // `one-per-sort-value` lanes by the field the view is *sorted* by: the row model
-  // already arrives grouped and ranked by it, so lane membership and lane order
-  // both fall out of the active sort, so there is no second ordering vocabulary, and the
-  // Ordering control repositions lanes live. Falls back to 'auto' if the query
-  // somehow carries no sort (the root requires `defaultSort`, so this is a
-  // guard rather than a mode).
+  // `one-per-sort-value` lanes by the *sorted* field: the row model already
+  // arrives ranked by it, so lane membership and order both fall out of the
+  // active sort, and the Ordering control repositions lanes live.
   const laneField = tableQuery.sort?.[0]?.name;
   const sortValueLanes =
     lanePacking === 'one-per-sort-value' && laneField !== undefined;
 
-  // Resolved once per render rather than once per row: `row.getValue` re-reads
-  // the column through `table.getColumn` on every call, and a miss is never
-  // cached (`_valuesCache` is written only after the lookup succeeds), so a sort
-  // key naming no field logged one `[Table] Column with id ... does not exist.`
-  // per row per recompute. Looked up on the flat column list instead of through
-  // `table.getColumn`, which logs that error itself. The warning below says the
-  // same thing and names the fix. Hidden columns are included, so a sorted field
-  // the user has toggled off still lanes.
+  // Resolved once per render, not once per row: `row.getValue` re-looks-up the
+  // column every call and never caches a miss, so a sort key naming no field
+  // logged one TanStack error per row per recompute. Read off the flat column
+  // list (`table.getColumn` logs that error itself); hidden columns included, so
+  // a sorted field the user toggled off still lanes.
   const laneColumn = sortValueLanes
     ? table?.getAllFlatColumns().find(column => column.id === laneField)
     : undefined;
 
-  // A sort key with no column behind it reads as undefined on every row, which
-  // would silently collapse the timeline onto the single no-value lane.
+  // A sort key with no column reads undefined on every row, silently collapsing
+  // the timeline onto the one no-value lane.
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') return;
     if (!sortValueLanes || !table || laneColumn) return;
@@ -585,17 +531,14 @@ export function DataViewTimeline<TData>({
           endTime = toTimestamp(original?.[endField]);
           if (endTime !== null && endTime < startTime) endTime = startTime;
         }
-        // Lane bucket: the sorted-by field's value. Resolved here so packing
-        // below is pure geometry. Only a primitive identifies a lane; anything
-        // else (an object, an array) shares the no-value lane rather than
+        // Resolved here so packing below is pure geometry. Only a primitive
+        // identifies a lane; anything else shares the no-value lane rather than
         // collapsing into one "[object Object]" bucket.
         let laneKey: string | null = null;
         if (sortValueLanes) {
-          // Read through the row, not `original`: TanStack treats a dotted
-          // `accessorKey` as a path, so `original['meta.rank']` is undefined
-          // for the very key it sorted by, so every row would look valueless and
-          // pile onto one lane. `getValue` yields exactly what the sort saw, and
-          // is skipped outright when the key names no column (see `laneColumn`).
+          // Through the row, not `original`: TanStack treats a dotted
+          // `accessorKey` as a path, so `original['meta.rank']` is undefined for
+          // the very key it sorted by. `getValue` yields what the sort saw.
           const value = laneColumn
             ? row.getValue(laneField as string)
             : undefined;
@@ -627,9 +570,8 @@ export function DataViewTimeline<TData>({
   }, [sections, startField, endField, sortValueLanes, laneField, laneColumn]);
 
   // Data extent, for the domain below. Grouping never changes the time domain.
-  // Reduced in place rather than through a flattened copy: the extent is two
-  // numbers, and materialising every row again to find them doubled the
-  // pipeline's peak allocation for nothing.
+  // Reduced in place: flattening every row again to find two numbers doubled
+  // the pipeline's peak allocation for nothing.
   const dataExtent = useMemo(() => {
     let min = Infinity;
     let max = -Infinity;
@@ -646,9 +588,7 @@ export function DataViewTimeline<TData>({
   const todayTime = useMemo(() => {
     if (today === false) return null;
     if (today === true) {
-      // Day precision: aligns the line with its day tick and keeps SSR and
-      // client renders consistent (no per-ms Date.now() drift → no hydration
-      // mismatch).
+      // Day precision, so the line sits on its tick and SSR and client agree.
       const now = new Date();
       now.setHours(0, 0, 0, 0);
       return now.getTime();
@@ -664,9 +604,8 @@ export function DataViewTimeline<TData>({
     [markers]
   );
 
-  // Domain: explicit `range` wins; otherwise the extent of data + today +
-  // markers. With nothing to show (e.g. initial server load), fall back to a
-  // window centered on today so the axis and skeletons still render.
+  // Explicit `range` wins; otherwise data + today + markers. With nothing to
+  // show, fall back to a window on today so the axis and skeletons still render.
   const domain = useMemo(() => {
     if (range) {
       const a = toTimestamp(range[0]);
@@ -713,13 +652,10 @@ export function DataViewTimeline<TData>({
   // snapping) stays at full `scale`-unit granularity.
   const gridlineEvery = Math.max(1, Math.floor(gridlineInterval));
 
-  // Card geometry, per section. `renderWidth` is null for point markers (no
-  // endField), so the wrapper sizes to its content instead of the time span. Rows
-  // entirely outside the domain are dropped: with an explicit `range`, fetched
-  // data routinely extends past the window (e.g. whole-month API buckets), and
-  // those rows must not render beyond the axis or occupy lanes. A section left
-  // with no cards is dropped entirely (no band, no empty strip), the same way
-  // the ungrouped timeline silently culls out-of-domain rows.
+  // Card geometry, per section. Rows entirely outside the domain are dropped:
+  // with an explicit `range`, fetched data routinely extends past the window
+  // (whole-month API buckets), and must not render beyond the axis or occupy
+  // lanes. A section left with no cards is dropped entirely.
   const positionedSections = useMemo(() => {
     const list: TimelineSection<TData, LaidOutCard<TData>>[] = [];
     for (const section of timedSections) {
@@ -736,13 +672,11 @@ export function DataViewTimeline<TData>({
             : 0;
         const renderWidth =
           item.endTime !== null ? Math.max(spanWidth, MIN_RENDER_WIDTH) : null;
-        // Point cards (no endField) size to their content, so the packer can't
-        // know their width, so `estimatedPointWidth` stands in for lane packing
-        // and culling so wide chips don't overlap within a lane.
+        // Point cards size to their content, so the packer can't know their
+        // width; `estimatedPointWidth` stands in so wide chips don't overlap.
         const packWidth = renderWidth ?? estimatedPointWidth;
-        // Lane fields are declared here, filled by the `cards` memo once
-        // packing has run: one object per card for the whole pipeline, and one
-        // hidden class for V8 rather than a reshape halfway through.
+        // Declared here, filled by the `cards` memo once packing has run, so
+        // V8 sees one hidden class rather than a reshape halfway through.
         items.push({
           ...item,
           x,
@@ -759,10 +693,9 @@ export function DataViewTimeline<TData>({
     return list;
   }, [timedSections, timeScale, estimatedPointWidth]);
 
-  // Lane assignment runs per section, so a card only ever shares a lane with
-  // cards in its own group. Section-relative lanes are what `renderCard` sees
-  // (`context.laneIndex`); `laneOffset` maps them into one global lane list for
-  // the vertical geometry below.
+  // Per section, so a card only shares a lane within its own group. Section-
+  // relative lanes are what `renderCard` sees; `laneOffset` maps them into the
+  // one global lane list the vertical geometry below runs on.
   const { laidOutSections, laneCount } = useMemo(() => {
     let offset = 0;
     const list = positionedSections.map(section => {
@@ -793,20 +726,14 @@ export function DataViewTimeline<TData>({
     return { laidOutSections: list, laneCount: offset };
   }, [positionedSections, lanePacking, sortValueLanes, laneField]);
 
-  /**
-   * Virtualizing vertically means a card off-screen never mounts and so never
-   * measures, leaving lanes to resize under the user as they scroll. Lanes
-   * therefore take `estimatedRowHeight` as their exact height while
-   * virtualized: geometry stays stable, and cards taller than it overflow
-   * their lane rather than growing it.
-   */
+  // An off-screen card never mounts and so never measures, which would resize
+  // lanes under the user mid-scroll. Virtualized lanes therefore take
+  // `estimatedRowHeight` exactly, and a taller card overflows rather than grows.
   const fixedLaneHeight = virtualized;
 
-  // Measured card heights by row id, `estimatedRowHeight` standing in until a
-  // card reports (same estimate-then-measure contract as `DataView.List`).
-  // Kept in a ref, since measurements arrive per card per paint, and a version
-  // counter batches them into one lane-geometry recompute. Entries survive
-  // virtualization unmounts so scrolling back doesn't shift lanes.
+  // Measured card heights by row id. Kept in a ref because measurements arrive
+  // per card per paint; the version counter batches them into one recompute.
+  // Entries survive unmounts so scrolling back doesn't shift lanes.
   const measuredHeightsRef = useRef<Map<string, number>>(new Map());
   const [measureVersion, setMeasureVersion] = useState(0);
   const handleCardMeasure = useCallback((rowId: string, height: number) => {
@@ -818,30 +745,20 @@ export function DataViewTimeline<TData>({
     setMeasureVersion(version => version + 1);
   }, []);
 
-  // All sections' cards flattened and sorted ascending by x, which is what
-  // lets per-frame culling search for its window instead of scanning every
-  // item. Lane semantics (packing order, one-per-row row order) are unaffected
-  // Lanes are assigned before the sort.
-  //
-  // DOM order is chronological, except under vertical culling: that path emits
-  // lane by lane, so cards come out grouped by lane and chronological within
-  // one. Cards are absolutely positioned, so this is invisible on screen; it
-  // only reorders how a screen reader walks the `role="list"`, which
-  // virtualization already leaves partial.
+  // Flattened and sorted ascending by x, so per-frame culling can search for
+  // its window instead of scanning every item. Lanes are assigned before the
+  // sort, so lane semantics are unaffected.
   const { cards, maxPackWidth } = useMemo(() => {
     const list: LaidOutCard<TData>[] = [];
-    // Lanes are written onto the positioned items rather than spread into new
-    // objects: those items are built by `positionedSections` for this pipeline
-    // alone and never escape it, and at 50k rows the copy was an extra 50k
-    // allocations for two integer fields. Assignment is idempotent, so a
-    // recompute that reuses the same `positionedSections` writes the same
-    // values back.
+    // Written in place rather than spread into new objects: the items never
+    // escape this pipeline, and at 50k rows the copy cost 50k allocations for
+    // two integer fields. Assignment is idempotent across recomputes.
     for (const section of laidOutSections) {
       for (let index = 0; index < section.items.length; index++) {
         const item = section.items[index];
-        // Section-relative (renderCard's `context.laneIndex`) …
+        // Section-relative is renderCard's `context.laneIndex`; global indexes
+        // `laneTops` at render time.
         item.laneIndex = section.lanes[index];
-        // … and global, for the lane-top lookup at render time.
         item.lane = section.laneOffset + section.lanes[index];
         list.push(item);
       }
@@ -849,8 +766,8 @@ export function DataViewTimeline<TData>({
     // Counting sort rather than `Array#sort`. See `orderByX`.
     const order = orderByX(list);
     const sorted = new Array<LaidOutCard<TData>>(list.length);
-    // Widest card, folded into this pass: culling widens its left bound by it,
-    // because x is ordered and width isn't.
+    // Widest card: culling widens its left bound by it, since x is ordered and
+    // width isn't.
     let widest = 0;
     for (let i = 0; i < order.length; i++) {
       const item = list[order[i]];
@@ -860,10 +777,9 @@ export function DataViewTimeline<TData>({
     return { cards: sorted, maxPackWidth: widest };
   }, [laidOutSections]);
 
-  // Drop measurements for rows that left the data set so a shrunk lane
-  // doesn't stay sized to a card that no longer exists. Under a fixed pitch
-  // nothing reads the map and cards never report into it, so the whole
-  // O(rows) sweep, and the row-id Set it builds, is skipped.
+  // Drop measurements for departed rows, so a shrunk lane doesn't stay sized to
+  // a card that no longer exists. Under a fixed pitch nothing reads the map, so
+  // the whole O(rows) sweep is skipped.
   useEffect(() => {
     if (fixedLaneHeight) return;
     const ids = new Set(cards.map(item => item.row.id));
@@ -878,11 +794,9 @@ export function DataViewTimeline<TData>({
     if (changed) setMeasureVersion(version => version + 1);
   }, [cards, fixedLaneHeight]);
 
-  // Vertical geometry. Each lane is as tall as its tallest card, using the measured
-  // height when known and `estimatedRowHeight` until then, so lane tops are
-  // cumulative rather than a fixed pitch. Sections stack: band, then that
-  // section's lanes, then the next section's band. `groupBands` carries each
-  // band's slot (top + full section height) for the sticky pin below.
+  // Vertical geometry. Each lane is as tall as its tallest card, so lane tops
+  // are cumulative rather than a fixed pitch. Sections stack band-then-lanes,
+  // and `groupBands` carries each band's slot for the sticky pin below.
   const {
     laneTops,
     laneHeights,
@@ -896,10 +810,9 @@ export function DataViewTimeline<TData>({
     void measureVersion;
     const measured = measuredHeightsRef.current;
     const heights = new Array<number>(laneCount).fill(estimatedRowHeight);
-    // Measured lanes only outside virtualization: a culled card never reports
-    // a height, so lanes would resize as the user scrolls and shift every lane
-    // below them. The fixed pitch also drops this pass from O(cards) to
-    // O(lanes), and stops depending on the measurements entirely.
+    // Measured lanes only outside virtualization: a culled card never reports a
+    // height, so lanes would resize mid-scroll. The fixed pitch also drops this
+    // pass from O(cards) to O(lanes).
     if (!fixedLaneHeight) {
       heights.fill(0);
       for (const item of cards) {
@@ -927,9 +840,8 @@ export function DataViewTimeline<TData>({
         tops[lane] = y;
         y += heights[lane] + laneGap;
       }
-      // Slots are contiguous (each spans its whole section, trailing gap
-      // included), so a pinned band is pushed out by the next section's band
-      // exactly as that one arrives at the pin line.
+      // Slots are contiguous, so a pinned band is pushed out by the next
+      // section's exactly as that one reaches the pin line.
       if (banded && section.group) {
         bands.push({
           key: section.key,
@@ -942,11 +854,9 @@ export function DataViewTimeline<TData>({
     // Nothing positioned (all rows culled, or loading with no rows yet): keep
     // reserving one lane's worth of canvas so the pane doesn't collapse.
     if (laneCount === 0) y = estimatedRowHeight + laneGap * 2;
-    // Lane tops are an arithmetic series only when nothing interrupts the
-    // stack: one section (a second one inserts its own leading gap) and no
-    // band above it. That's the shape that scales to thousands of lanes, and
-    // it lets vertical culling map a scroll offset straight to a lane index;
-    // anything else falls back to a binary search over `tops`.
+    // An arithmetic series only when nothing interrupts the stack: one section,
+    // no band above it. That shape lets vertical culling map a scroll offset
+    // straight to a lane index; anything else binary-searches `tops`.
     const uniform =
       fixedLaneHeight && laneCount > 0 && laidOutSections.length === 1
         ? {
@@ -960,8 +870,7 @@ export function DataViewTimeline<TData>({
       laneHeights: heights,
       uniformPitch: uniform,
       groupBands: bands,
-      // Slot boxes as parallel arrays, so culling them reuses the same box
-      // search as the lanes instead of rebuilding these every frame.
+      // Parallel arrays, so culling reuses the same box search as the lanes.
       groupBandTops: bands.map(band => band.top),
       groupBandHeights: bands.map(band => band.height),
       canvasHeight: y
@@ -979,16 +888,11 @@ export function DataViewTimeline<TData>({
   ]);
 
   /**
-   * Cards grouped by lane, in CSR form: `items` holds card indices bucketed by
-   * lane, `starts[lane]` to `starts[lane + 1]` delimiting each lane's run. Two
-   * counting passes, one flat `Int32Array`, no per-lane array allocation.
-   *
-   * This is what keeps a frame proportional to what's on screen: culling walks
-   * only the lanes the viewport covers and binary-searches the x window inside
-   * each, instead of scanning a slice of every card in the time window. Built
-   * from the x-ascending `cards`, and the scatter is stable, so each lane's run
-   * is x-ascending too. Per-lane `maxPackWidths` narrows the left-overhang
-   * allowance to that lane's widest card rather than the whole canvas's.
+   * Cards grouped by lane in CSR form: `items` holds card indices bucketed by
+   * lane, `starts[lane]`..`starts[lane + 1]` delimiting each run. This is what
+   * keeps a frame proportional to what's on screen — culling walks only the
+   * lanes the viewport covers and binary-searches x inside each. The scatter is
+   * stable over the x-ascending `cards`, so each run is x-ascending too.
    */
   const laneIndex = useMemo(() => {
     if (!virtualized || laneCount === 0 || cards.length === 0) return null;
@@ -1039,9 +943,8 @@ export function DataViewTimeline<TData>({
     return list;
   }, [todayTime, markers, timeScale]);
 
-  // Viewport tracking. Drives horizontal culling (`virtualized`) and
-  // `onVisibleRangeChange`. rAF-throttled so the state update runs at most
-  // once per frame regardless of scroll event rate.
+  // Drives culling and `onVisibleRangeChange`, rAF-throttled to one state
+  // update per frame regardless of scroll event rate.
   const needsViewport = virtualized || Boolean(onVisibleRangeChange);
   const [viewport, setViewport] = useState<{
     left: number;
@@ -1050,11 +953,7 @@ export function DataViewTimeline<TData>({
     height: number;
   } | null>(null);
   const rafIdRef = useRef<number | null>(null);
-  /**
-   * The pane's live client box, unquantized. `viewport` state lags it on
-   * purpose (see below); anything needing the true offset, such as the visible-range
-   * callback, reads this instead.
-   */
+  /** The live client box. `viewport` state lags it on purpose (see below). */
   const viewportRef = useRef<{
     left: number;
     width: number;
@@ -1077,12 +976,10 @@ export function DataViewTimeline<TData>({
       // A resize invalidates the window outright.
       if (prev.width !== next.width || prev.height !== next.height) return next;
       // Otherwise hold the last window until the pane has travelled half its
-      // overscan. Scrolling is compositor work the browser does for free;
-      // committing state on every pixel drags React into all 60 frames a
-      // second to rebuild a slice that is nearly always identical. Overscan is
-      // half a viewport on each side (`OVERSCAN_RATIO`), so half of that is
-      // spare coverage: the rendered set still spans the visible window with
-      // an overscan/2 margin at the moment of the next commit.
+      // overscan: scrolling is free compositor work, and committing on every
+      // pixel drags React into all 60 frames to rebuild a near-identical slice.
+      // Half the overscan is spare coverage, so the rendered set still spans the
+      // visible window at the moment of the next commit.
       const slackX = overscanFor(prev.width) / 2;
       const slackY = overscanFor(prev.height) / 2;
       if (
@@ -1095,10 +992,8 @@ export function DataViewTimeline<TData>({
     });
   }, []);
 
-  // Hover cursor: a crosshair line snapped to the sub-interval (tick unit)
-  // under the pointer, with a date badge pinned to the axis. Updates are
-  // rAF-throttled and recomputed on scroll too (the content moves under a
-  // stationary pointer).
+  // Crosshair snapped to the tick unit under the pointer. Recomputed on scroll
+  // too, since the content moves under a stationary pointer.
   const [cursorTime, setCursorTime] = useState<number | null>(null);
   const pointerXRef = useRef<number | null>(null);
   const cursorRafRef = useRef<number | null>(null);
@@ -1140,9 +1035,8 @@ export function DataViewTimeline<TData>({
     setCursorTime(null);
   }, []);
 
-  // Drag-to-pan: press the background and drag to scroll both axes. Mouse
-  // only: touch already pans via native scrolling, and starting only on the
-  // background keeps cards (row click) and footer controls interactive.
+  // Drag-to-pan, mouse only: touch already pans natively, and starting only on
+  // the background keeps cards and footer controls interactive.
   const dragRef = useRef<{
     pointerId: number;
     startX: number;
@@ -1157,8 +1051,7 @@ export function DataViewTimeline<TData>({
   } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  // Post-release glide: the pan carries its release velocity and decays
-  // exponentially instead of stopping dead. Any new interaction cancels it.
+  // Post-release glide: carries the release velocity, decaying exponentially.
   const momentumRafRef = useRef<number | null>(null);
 
   const stopMomentum = useCallback(() => {
@@ -1204,7 +1097,7 @@ export function DataViewTimeline<TData>({
 
   const handleDragPointerDown = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
-      // Any press grabs the content, even ones that don't start a pan.
+      // Any press stops the glide, even ones that don't start a pan.
       stopMomentum();
       if (event.pointerType !== 'mouse' || event.button !== 0) return;
       const el = scrollRef.current;
@@ -1236,7 +1129,7 @@ export function DataViewTimeline<TData>({
       } catch {
         /* noop */
       }
-      // Panning, not selecting, so suppress native text-selection drag.
+      // Panning, not selecting.
       event.preventDefault();
     },
     [stopMomentum]
@@ -1287,10 +1180,8 @@ export function DataViewTimeline<TData>({
     [startMomentum]
   );
 
-  // Last known scroll offsets, stashed on every scroll (and on programmatic
-  // scrolls) so the position survives the DOM being unmounted while hidden
-  // (inactive view / no data) and restored on re-activation, instead of the
-  // recreated DOM stranding the user at scroll 0 (the domain start).
+  // Stashed on every scroll so the position survives the DOM being unmounted
+  // while hidden, instead of stranding a returning user at the domain start.
   const savedScrollRef = useRef<{ left: number; top: number } | null>(null);
 
   const handleScroll = useCallback(() => {
@@ -1338,26 +1229,17 @@ export function DataViewTimeline<TData>({
     });
     observer.observe(el);
     return () => observer.disconnect();
-    // `hasData` re-runs the attempt when the renderer mounts its DOM.
   }, [needsViewport, isActive, hasData, readViewport]);
 
-  // Reads the *measured* offset, not the quantized `viewport` state: culling
-  // can coast on a stale window because it overscans, but a consumer fetching
-  // by visible range cannot, since it would be handed a window the user scrolled
-  // past. Running off the ref also keeps this off React's critical path
-  // entirely: a timeline with only `onVisibleRangeChange` set now re-renders
-  // on nothing at all while scrolling.
+  // Reads the *measured* offset, not the quantized `viewport` state: culling can
+  // coast on a stale window because it overscans, but a consumer fetching by
+  // visible range would be handed a window the user already scrolled past.
   //
-  // Deduped within one pixel of time, because `timeScale` identity churn (a resize, a
-  // domain rebuild from streamed-in rows) must not re-fire consumers with an
-  // unchanged window; each fire typically triggers a fetch check. Exact
-  // equality is too strict for "unchanged": the px→time→px round-trip of
-  // scroll anchoring isn't bit-exact in floats, and browsers quantize an
-  // anchored scrollLeft to device pixels, and either can drift the recomputed
-  // edges without the window visibly moving. Anything under one pixel's worth
-  // of time is that noise, not a scroll (the baseline is the last *notified*
-  // window, so slow sub-pixel scrolling still accumulates past the threshold
-  // and fires).
+  // Deduped within one pixel of time, since `timeScale` identity churn must
+  // not re-fire consumers with an unchanged window. Exact equality is too strict:
+  // the px→time→px round-trip of scroll anchoring isn't bit-exact, and browsers
+  // quantize an anchored scrollLeft to device pixels. The baseline is the last
+  // *notified* window, so slow sub-pixel scrolling still accumulates and fires.
   const lastNotifiedRangeRef = useRef<{ from: number; to: number } | null>(
     null
   );
@@ -1388,9 +1270,8 @@ export function DataViewTimeline<TData>({
     notifyVisibleRange();
   }, [notifyVisibleRange]);
 
-  // Time-target resolution shared by `defaultScrollTo` and the imperative
-  // handle. 'today' resolves to the today-line when shown, else the actual
-  // current date. Both get clamped into the domain by `scrollToTime`.
+  // Shared by `defaultScrollTo` and the imperative handle. `scrollToTime`
+  // clamps whatever comes back into the domain.
   const resolveScrollTarget = useCallback(
     (target: NonNullable<DataViewTimelineProps<TData>['defaultScrollTo']>) => {
       if (target === 'start') return timeScale.t0;
@@ -1406,9 +1287,8 @@ export function DataViewTimeline<TData>({
     [timeScale, todayTime]
   );
 
-  // Programmatic scroll. Clamps the target into the domain, aligns it in the
-  // viewport, and cancels any in-flight momentum glide. Direct scrollLeft
-  // assignment for 'auto' keeps jsdom (no Element.scrollTo) working.
+  // Direct scrollLeft assignment for 'auto' keeps jsdom, which has no
+  // `Element.scrollTo`, working.
   const scrollToTime = useCallback(
     (
       time: number,
@@ -1428,9 +1308,8 @@ export function DataViewTimeline<TData>({
         0,
         Math.min(targetX, timeScale.totalWidth - el.clientWidth)
       );
-      // Stash eagerly, since programmatic scrolls must survive a view switch even
-      // when no scroll event follows (e.g. the target equals the current
-      // position, or jsdom).
+      // Eagerly, since no scroll event follows when the target is already the
+      // current position.
       savedScrollRef.current = { left, top: el.scrollTop };
       if (behavior === 'smooth' && typeof el.scrollTo === 'function') {
         el.scrollTo({ left, behavior: 'smooth' });
@@ -1441,15 +1320,11 @@ export function DataViewTimeline<TData>({
     [timeScale, stopMomentum]
   );
 
-  // Filter/search-driven auto-scroll (`scrollToResults`). Applying a filter
-  // while scrolled away from the matches would leave the user parked on empty
-  // canvas. When the query changes and no matching card intersects the
-  // viewport, bring the earliest match into view. A query change that keeps a
-  // card on screen doesn't move the view. Compared by value: `tableQuery`
-  // identity churns on unrelated updates (sort, grouping); the ref seeds with
-  // the mount-time key so the initial position stays `defaultScrollTo`'s job.
-  // Memoized on the two inputs it serializes: this ran on every render, and
-  // scrolling now renders whenever the culling window commits.
+  // Filtering while scrolled away from the matches would park the user on empty
+  // canvas, so bring the earliest match into view when nothing intersects.
+  // Compared by value, since `tableQuery` identity churns on sort and grouping;
+  // the ref seeds with the mount-time key so the initial position stays
+  // `defaultScrollTo`'s job.
   const queryKey = useMemo(
     () =>
       JSON.stringify({
@@ -1514,18 +1389,14 @@ export function DataViewTimeline<TData>({
     [resolveScrollTarget, scrollToTime, timeScale]
   );
 
-  // Initial scroll position. Runs when the renderer (re)mounts its DOM. The
-  // first activation applies `defaultScrollTo`; re-activations restore the
-  // stashed position, because the recreated scroll container starts back at
-  // (0, 0), and without the restore a returning user would land at the domain
-  // start instead of where they left off.
+  // First activation applies `defaultScrollTo`; re-activations restore the
+  // stashed position, since the recreated container starts back at (0, 0).
   const didInitScrollRef = useRef(false);
   // biome-ignore lint/correctness/useExhaustiveDependencies: `isActive`/`hasData` re-run the attempt when the renderer (re)mounts its DOM (the ref is null while hidden).
   useLayoutEffect(() => {
     const el = scrollRef.current;
     if (!el) {
-      // Hidden (inactive view or no data): the DOM is gone, so arm the next
-      // activation to restore or re-init.
+      // Hidden: the DOM is gone, so arm the next activation.
       didInitScrollRef.current = false;
       return;
     }
@@ -1545,10 +1416,8 @@ export function DataViewTimeline<TData>({
             : 'center';
       scrollToTime(time, align, 'auto');
     }
-    // This effect runs after the viewport-tracking one, so the offset it just
-    // set is newer than the tracked viewport. Re-read before paint, otherwise
-    // the first frame culls against scroll 0 (the domain start) and renders a
-    // window the user is not looking at.
+    // Runs after the viewport-tracking effect, so re-read before paint or the
+    // first frame culls against scroll 0.
     readViewport();
   }, [
     defaultScrollTo,
@@ -1560,9 +1429,8 @@ export function DataViewTimeline<TData>({
     hasData
   ]);
 
-  // Scroll anchoring. When the time domain shifts (rows prepended by
-  // range-window fetching, `range` extended, zoom change), keep the time under
-  // the viewport's left edge stable instead of letting content jump.
+  // When the domain shifts (rows prepended, `range` extended, zoom), hold the
+  // time under the viewport's left edge stable instead of letting content jump.
   const scrollAnchorRef = useRef<{ t0: number; pxPerMs: number } | null>(null);
   useLayoutEffect(() => {
     const el = scrollRef.current;
@@ -1574,8 +1442,7 @@ export function DataViewTimeline<TData>({
     ) {
       const leftEdgeTime = prev.t0 + el.scrollLeft / prev.pxPerMs;
       el.scrollLeft = Math.max(0, timeScale.x(leftEdgeTime));
-      // Anchoring moved the content under the culling window, so resync it in
-      // the same layout pass rather than a frame later.
+      // Resync in the same layout pass rather than a frame later.
       readViewport();
     }
     scrollAnchorRef.current = {
@@ -1585,11 +1452,9 @@ export function DataViewTimeline<TData>({
   }, [timeScale, readViewport]);
 
   if (!isActive) return null;
-  // Render nothing when there's truly no data and no loading. The sibling
-  // `<DataView.EmptyState>` / `<DataView.ZeroState>` handle messaging.
+  // The sibling `<DataView.EmptyState>` / `<DataView.ZeroState>` handle messaging.
   if (!hasData) return null;
 
-  // Horizontal culling window: half a viewport on each side as overscan.
   const overscan = viewport ? overscanFor(viewport.width) : 0;
   const cullRange =
     virtualized && viewport
@@ -1598,9 +1463,8 @@ export function DataViewTimeline<TData>({
           max: viewport.left + viewport.width + overscan
         }
       : null;
-  // Vertical window, same overscan rule. Only when the pane reports a height:
-  // an unmeasured container (jsdom, SSR) would otherwise cull to a sliver of
-  // lanes, so it keeps the horizontal-only behaviour instead.
+  // Only when the pane reports a height: an unmeasured container (jsdom, SSR)
+  // would otherwise cull to a sliver of lanes.
   const verticalOverscan = viewport ? overscanFor(viewport.height) : 0;
   const verticalRange =
     cullRange && viewport && viewport.height > 0
@@ -1621,18 +1485,11 @@ export function DataViewTimeline<TData>({
       : null;
 
   /**
-   * Vertical span for the grid, marker, and cursor lines.
-   *
-   * The stylesheet pins them `top: 0; bottom: 0`, so each is a one-pixel-wide
-   * element as tall as the whole canvas: 28,798px at 10k rows, 139,170px at
-   * 50k. Rasterizing a dashed sub-pixel border over that height costs the same
-   * whether one card is on screen or four hundred, which is why culling their
-   * *count* (183 -> 31) never moved frame time. Clamped to the vertical window
-   * they cost what a viewport costs. Measured on a 10k-row canvas: p95 frame
-   * 291.7ms -> 20.9ms, frames over 50ms 40 -> 0.
-   *
-   * Only under `virtualized`, since `needsViewport` leaves `viewport` null
-   * otherwise, and lines then keep their full-canvas span as before.
+   * Vertical span for the grid, marker and cursor lines. The stylesheet pins
+   * them `top: 0; bottom: 0`, so each rasterizes a dashed border over the whole
+   * canvas — 139,170px at 50k rows — which costs the same however few cards are
+   * on screen. Clamping to the vertical window is what makes them cost a
+   * viewport instead (p95 frame 291.7ms -> 20.9ms on 10k rows).
    */
   const lineTop = verticalRange ? Math.max(0, verticalRange.min) : 0;
   const lineSpan = verticalRange
@@ -1643,22 +1500,15 @@ export function DataViewTimeline<TData>({
           Math.min(canvasHeight, verticalRange.max) - lineTop
         ),
         // `top` + `height` + the stylesheet's `bottom: 0` over-constrains the
-        // box; releasing `bottom` is what lets `height` win.
+        // box; releasing `bottom` lets `height` win.
         bottom: 'auto' as const
       }
     : null;
 
-  // Visible cards. Two paths, both O(what's rendered) rather than O(cards):
-  //
-  // - With a lane range, walk only the lanes the viewport covers and binary
-  //   search the x window inside each lane's run of the index. Visible lanes
-  //   are bounded by the pane's height over the lane pitch (~10-20), so this
-  //   stays flat no matter how many lanes exist below.
-  // - Without one (unmeasured height), the old global slice over the
-  //   x-ascending `cards`.
-  //
-  // Both widen the left bound by the widest card, since x is ordered and width isn't,
-  // so every candidate still gets an exact right-edge check.
+  // Two paths, both O(what's rendered): with a lane range, walk only the lanes
+  // the viewport covers and search x inside each lane's run; without one
+  // (unmeasured height), slice the x-ascending `cards` globally. Both widen
+  // the left bound by the widest card, so candidates need a right-edge check.
   let cardSlice: LaidOutCard<TData>[];
   if (cullRange && laneRange && laneIndex) {
     const { starts, items, maxPackWidths } = laneIndex;
@@ -1668,8 +1518,7 @@ export function DataViewTimeline<TData>({
       const to = starts[lane + 1];
       if (from === to) continue;
       const left = cullRange.min - maxPackWidths[lane];
-      // A short run (`one-per-row` gives every lane exactly one card) scans
-      // faster than it searches.
+      // A short run scans faster than it searches.
       let i =
         to - from > LANE_SCAN_MAX
           ? lowerBoundLaneCard(cards, items, from, to, left)
@@ -1690,18 +1539,15 @@ export function DataViewTimeline<TData>({
   } else {
     cardSlice = cards;
   }
-  // Axis chrome, culled to the same window as the cards. A year at day scale
-  // is ~180 tick labels and 12 bands; a decade is ten times that, all of it
-  // mounted for a viewport showing a few weeks.
+  // Axis chrome, culled to the same window as the cards.
   const visibleTicks = cullRange
     ? ticks.slice(
         lowerBoundByX(ticks, cullRange.min),
         upperBoundByX(ticks, cullRange.max)
       )
     : ticks;
-  // Bands tile the domain edge to edge, so the one straddling the left bound
-  // starts before it, so step back one from the first band past the bound rather
-  // than widening by a max width the way the cards do.
+  // Bands tile edge to edge, so the one straddling the left bound starts before
+  // it: step back one rather than widening by a max width as the cards do.
   const visibleBands = cullRange
     ? bands.slice(
         Math.max(0, upperBoundByX(bands, cullRange.min) - 1),
@@ -1714,10 +1560,8 @@ export function DataViewTimeline<TData>({
         marker => marker.x >= cullRange.min && marker.x <= cullRange.max
       )
     : resolvedMarkers;
-  // Group slots stack the same way lanes do: ascending, contiguous, each
-  // spanning its whole section, so the vertical window slices them directly.
-  // The section under the pin line always intersects the window, which is what
-  // keeps its sticky band pinned.
+  // Slots stack like lanes — ascending and contiguous — so the vertical window
+  // slices them directly, and the section under the pin line always intersects.
   const visibleGroupBands = verticalRange
     ? groupBands.slice(
         lowerBoundByBottom(groupBandTops, groupBandHeights, verticalRange.min),
@@ -1733,9 +1577,7 @@ export function DataViewTimeline<TData>({
   return (
     <div
       ref={scrollRef}
-      // Keyboard access to the pan surface: focusable so arrow/page keys
-      // scroll natively (drag-to-pan is pointer-only), and a labelled region
-      // so screen readers announce what the scrollable area is.
+      // Focusable so arrow/page keys scroll natively; drag-to-pan is pointer-only.
       role='region'
       aria-label={ariaLabel ?? 'Timeline'}
       tabIndex={0}
@@ -1811,12 +1653,8 @@ export function DataViewTimeline<TData>({
         ) : null}
       </div>
 
-      {/* Group section bands. Kept outside the canvas for two reasons: the
-          canvas is `role="list"` (only cards belong in it), and its
-          `overflow: hidden` would neutralize the sticky positioning below.
-          The layer is absolute inside the scroll container, so it scrolls with
-          the content while each band sticks vertically within its own section
-          slot, pinned under the axis and pushed out by the next section's band. */}
+      {/* Outside the canvas: that is `role="list"`, and its `overflow: hidden`
+          would neutralize the sticky positioning below. */}
       {groupBands.length > 0 ? (
         <div
           className={styles.timelineGroupLayer}

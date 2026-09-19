@@ -13,11 +13,9 @@ const FONT_IMPORT =
   /@import\s+url\(\s*(['"]?)https:\/\/fonts\.googleapis\.com\/[^)'"]*\1\s*\)\s*;?/g;
 
 /**
- * Emits `style-no-fonts.css` beside the extracted `style.css`, for consumers
- * self-hosting Inter and JetBrains Mono. Derived from the finished asset
- * rather than compiled a second time, so the two can only ever differ by the
- * font imports. Order it after the `postcss()` that extracts `from`, whose
- * own `generateBundle` is what puts that asset in the bundle.
+ * Emits `style-no-fonts.css` for consumers self-hosting the fonts. Derived from
+ * the finished asset rather than compiled again, so the two can only differ by
+ * the font imports. Must be ordered after the `postcss()` that extracts `from`.
  */
 const emitFontFreeCss = ({ from, to }) => {
   let emitted = false;
@@ -28,8 +26,8 @@ const emitFontFreeCss = ({ from, to }) => {
       if (!asset) return;
       const source = asset.source.toString();
       const stripped = source.replace(FONT_IMPORT, '');
-      // Silence here would publish a `no-fonts` sheet that still calls out to
-      // Google, so a miss fails the build rather than writing a copy.
+      // A miss fails the build rather than publishing a `no-fonts` sheet that
+      // still calls out to Google.
       if (stripped === source) {
         this.error(`${from} carries no Google Fonts @import to strip.`);
       }

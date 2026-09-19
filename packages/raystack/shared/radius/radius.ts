@@ -17,8 +17,7 @@ export const radiusClasses = {
 export const radiusVariants = { radius: radiusClasses };
 
 /**
- * The `radius` override alone, for surfaces that carry no cva of their own.
- * Returns `''` when `radius` is unset. Named `radiusStyle`, not `radius`,
- * because every call site already binds a `radius` prop of its own.
+ * The `radius` override alone, for surfaces with no cva of their own; `''` when
+ * unset. Not named `radius`, since every call site already binds that prop.
  */
 export const radiusStyle = cva('', { variants: radiusVariants });

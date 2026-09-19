@@ -37,7 +37,6 @@ function readRaw(persistKey: string): string | null {
   }
 }
 
-// Tolerates any stored shape; `null` when nothing usable is there.
 function readEntry(raw: string | null): StoredEntry | null {
   if (!raw) return null;
   let parsed: unknown;
@@ -95,7 +94,7 @@ export function writeStoredSettings(
 ): boolean {
   if (typeof window === 'undefined') return false;
   const existing = readEntry(readRaw(persistKey));
-  // Never downgrade: rewriting a newer entry would destroy what that build owns.
+  // Never downgrade: it would destroy fields a newer build owns.
   if (existing && existing.v > STORAGE_VERSION) return false;
   const settings = existing?.settings ?? {};
   let changed = false;
