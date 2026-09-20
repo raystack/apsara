@@ -13,8 +13,10 @@ and [Icons](https://apsara.raystack.io/docs/theme/icons).
 
 #### Breaking changes
 
-- **`lucide-react` is a new peer dependency**, range `>=0.500.0 <1.0.0`.
-  Install it.
+- **`lucide-react` is a new peer dependency**, range `>=0.500.0 <2.0.0`,
+  so both the 0.x and 1.x lines satisfy it. Install it. Note that lucide
+  dropped its brand icons in 1.0, so a name like `Github` no longer
+  exists there — none of Apsara's 31 keys draw one.
 - **`@radix-ui/react-icons` is no longer a dependency.** If your own code
   imports from it, keep it in your own `dependencies`.
 - **`@raystack/apsara/icons` exports icon components, not raw SVG
