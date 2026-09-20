@@ -105,7 +105,7 @@
     "dotenv": "^17.2.2",
     "identity-obj-proxy": "^3.0.0",
     "jsdom": "^26.1.0",
-    "lucide-react": "^0.548.0",
+    "lucide-react": "^1.45.0",
     "postcss": "^8.4.24",
     "postcss-import": "^16.1.0",
     "postcss-modules": "^6.0.0",
@@ -142,7 +142,7 @@
   },
   "peerDependencies": {
     "@types/react": "^19",
-    "lucide-react": ">=0.500.0 <1.0.0",
+    "lucide-react": ">=0.500.0 <2.0.0",
     "react": "^19",
     "react-dom": "^19"
   },
