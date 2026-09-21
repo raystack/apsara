@@ -1,6 +1,11 @@
 {
   "name": "@raystack/apsara",
   "version": "0.48.0",
+  "browserslist": [
+    "defaults",
+    "safari >= 15",
+    "ios_saf >= 15"
+  ],
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "engines": {
@@ -28,6 +33,7 @@
       "require": "./dist/hooks/index.cjs"
     },
     "./style.css": "./dist/style.css",
+    "./style-no-fonts.css": "./dist/style-no-fonts.css",
     "./normalize.css": "./dist/normalize.css"
   },
   "files": [
@@ -95,10 +101,11 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitest/ui": "^3.2.4",
+    "autoprefixer": "^10.4.21",
     "dotenv": "^17.2.2",
     "identity-obj-proxy": "^3.0.0",
     "jsdom": "^26.1.0",
-    "lucide-react": "^0.548.0",
+    "lucide-react": "^1.45.0",
     "postcss": "^8.4.24",
     "postcss-import": "^16.1.0",
     "postcss-modules": "^6.0.0",
@@ -135,7 +142,7 @@
   },
   "peerDependencies": {
     "@types/react": "^19",
-    "lucide-react": ">=0.500.0 <1.0.0",
+    "lucide-react": ">=0.500.0 <2.0.0",
     "react": "^19",
     "react-dom": "^19"
   },

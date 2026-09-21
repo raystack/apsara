@@ -2,12 +2,13 @@
 
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ComponentProps, ReactNode, Ref } from 'react';
-
 import { XIcon } from '~/icons';
+import { radiusVariants } from '../../shared/radius';
 import styles from './chip.module.css';
 
 const chip = cva(styles.chip, {
   variants: {
+    ...radiusVariants,
     variant: {
       outline: styles['chip-variant-outline'],
       filled: styles['chip-variant-filled']
@@ -50,6 +51,7 @@ export type ChipProps = Omit<ComponentProps<'span'>, 'ref' | 'children'> &
 
 export const Chip = ({
   variant,
+  radius,
   size,
   color,
   trailingIcon,
@@ -131,6 +133,7 @@ export const Chip = ({
         role={role}
         className={chip({
           variant,
+          radius,
           size,
           color,
           className: cx(styles['chip-interactive'], className)
@@ -149,7 +152,7 @@ export const Chip = ({
       data-slot='chip'
       {...props}
       {...sharedProps}
-      className={chip({ variant, size, color, className })}
+      className={chip({ variant, size, color, radius, className })}
       role={role ?? 'status'}
       onClick={disabled ? undefined : onClick}
     >

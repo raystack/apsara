@@ -54,4 +54,10 @@ export interface DrawerContentProps {
 
   /** Additional inline styles. */
   style?: React.CSSProperties;
+
+  /**
+   * Corner radius for this drawer only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 }

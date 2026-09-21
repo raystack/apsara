@@ -185,6 +185,12 @@ export interface TourContentProps {
 
   /** Static nodes, or a render function receiving the active step and actions. */
   children?: React.ReactNode | ((props: unknown) => React.ReactNode);
+
+  /**
+   * Corner radius for this card only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 }
 
 export interface TourOverlayProps {

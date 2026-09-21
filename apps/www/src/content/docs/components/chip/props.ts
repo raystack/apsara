@@ -47,6 +47,12 @@ export interface ChipProps {
   'aria-label'?: string;
 
   /**
+   * Corner radius for this chip only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
+
+  /**
    * Ref to the rendered element. The chip is a `<button>` when `onClick` is set
    * and it is not dismissible, and a `<span>` otherwise, so the ref accepts
    * either.
