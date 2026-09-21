@@ -157,4 +157,10 @@ export interface CommandDialogContentProps {
 
   /** Explicit width for the dialog popup. */
   width?: string | number;
+
+  /**
+   * Corner radius for this palette only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 }

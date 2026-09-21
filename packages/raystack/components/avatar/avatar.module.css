@@ -16,10 +16,6 @@
   --fallback-letter-spacing: 0.03em;
 }
 
-.avatar.avatar-full {
-  border-radius: var(--rs-radius-full);
-}
-
 .avatar-disabled {
   opacity: 0.5;
 }
@@ -260,7 +256,8 @@
   height: var(--rs-space-5, 16px);
   --fallback-font-size: calc(var(--rs-space-5, 16px) * 0.4);
   --fallback-letter-spacing: 0.05em;
-  border-radius: var(--rs-radius-2);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
+  --rs-radius-step: 4px;
 }
 
 .avatar-size-2 {
@@ -268,7 +265,8 @@
   height: var(--rs-space-6, 20px);
   --fallback-font-size: calc(var(--rs-space-6, 20px) * 0.4);
   --fallback-letter-spacing: 0.05em;
-  border-radius: var(--rs-radius-2);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
+  --rs-radius-step: 4px;
 }
 
 .avatar-size-3 {
@@ -276,7 +274,8 @@
   height: var(--rs-space-7, 24px);
   --fallback-font-size: calc(var(--rs-space-7, 24px) * 0.4);
   --fallback-letter-spacing: 0.04em;
-  border-radius: var(--rs-radius-2);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
+  --rs-radius-step: 4px;
 }
 
 .avatar-size-4 {
@@ -284,7 +283,8 @@
   height: var(--rs-space-8, 28px);
   --fallback-font-size: calc(var(--rs-space-8, 28px) * 0.35);
   --fallback-letter-spacing: 0.04em;
-  border-radius: var(--rs-radius-2);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
+  --rs-radius-step: 4px;
 }
 
 .avatar-size-5 {
@@ -292,7 +292,8 @@
   height: var(--rs-space-9, 32px);
   --fallback-font-size: calc(var(--rs-space-9, 32px) * 0.4);
   --fallback-letter-spacing: 0.03em;
-  border-radius: var(--rs-radius-2);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
+  --rs-radius-step: 4px;
 }
 
 .avatar-size-6 {
@@ -300,7 +301,8 @@
   height: var(--rs-space-10, 40px);
   --fallback-font-size: calc(var(--rs-space-10, 40px) * 0.35);
   --fallback-letter-spacing: 0.02em;
-  border-radius: var(--rs-radius-4);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-4));
+  --rs-radius-step: 8px;
 }
 
 .avatar-size-7 {
@@ -308,7 +310,8 @@
   height: var(--rs-space-11, 48px);
   --fallback-font-size: calc(var(--rs-space-11, 48px) * 0.35);
   --fallback-letter-spacing: 0.01em;
-  border-radius: var(--rs-radius-4);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-4));
+  --rs-radius-step: 8px;
 }
 
 .avatar-size-8 {
@@ -316,7 +319,8 @@
   height: var(--rs-space-12, 56px);
   --fallback-font-size: calc(var(--rs-space-12, 56px) * 0.3);
   --fallback-letter-spacing: 0.01em;
-  border-radius: var(--rs-radius-4);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-4));
+  --rs-radius-step: 8px;
 }
 
 .avatar-size-9 {
@@ -324,7 +328,8 @@
   height: var(--rs-space-13, 64px);
   --fallback-font-size: calc(var(--rs-space-13, 64px) * 0.3);
   --fallback-letter-spacing: 0em;
-  border-radius: var(--rs-radius-4);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-4));
+  --rs-radius-step: 8px;
 }
 
 .avatar-size-10 {
@@ -332,7 +337,8 @@
   height: var(--rs-space-14, 72px);
   --fallback-font-size: calc(var(--rs-space-14, 72px) * 0.3);
   --fallback-letter-spacing: 0em;
-  border-radius: var(--rs-radius-5);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-5));
+  --rs-radius-step: 12px;
 }
 
 .avatar-size-11 {
@@ -340,7 +346,8 @@
   height: var(--rs-space-15, 80px);
   --fallback-font-size: calc(var(--rs-space-15, 80px) * 0.3);
   --fallback-letter-spacing: 0em;
-  border-radius: var(--rs-radius-5);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-5));
+  --rs-radius-step: 12px;
 }
 
 .avatar-size-12 {
@@ -348,7 +355,8 @@
   height: var(--rs-space-16, 96px);
   --fallback-font-size: calc(var(--rs-space-16, 96px) * 0.3);
   --fallback-letter-spacing: -0.005em;
-  border-radius: var(--rs-radius-5);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-5));
+  --rs-radius-step: 12px;
 }
 
 .avatar-size-13 {
@@ -356,7 +364,8 @@
   height: var(--rs-space-17, 120px);
   --fallback-font-size: calc(var(--rs-space-17, 120px) * 0.3);
   --fallback-letter-spacing: -0.01em;
-  border-radius: var(--rs-radius-5);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-5));
+  --rs-radius-step: 12px;
 }
 
 /* Avatar Group Styles */

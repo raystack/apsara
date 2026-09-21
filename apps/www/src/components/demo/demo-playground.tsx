@@ -16,6 +16,7 @@ import { useDemoContext } from './demo-context';
 import DemoControls from './demo-controls';
 import DemoPreview from './demo-preview';
 import DemoTitle from './demo-title';
+import { needsNoInline } from './no-inline';
 import styles from './styles.module.css';
 import {
   ComponentPropsType,
@@ -131,7 +132,12 @@ export default function DemoPlayground({
               </IconButton>
             </Flex>
           </Dialog.Header>
-          <LiveProvider code={code} scope={scope} disabled>
+          <LiveProvider
+            code={code}
+            scope={scope}
+            noInline={needsNoInline(code)}
+            disabled
+          >
             <div
               className={cx(styles.container, styles.playgroundContent)}
               data-demo

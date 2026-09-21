@@ -1,64 +1,74 @@
 # Theming
 
-Use this for anything involving the `Theme` provider, light/dark mode, accent/gray colors, the modern/traditional style variant, reading or changing the theme at runtime, or scoping a theme to part of the tree.
+Use this for anything involving the `Theme` component, light/dark mode, accent/gray colors, radius, scaling, panel background, reduced motion, reading or changing the theme at runtime, or scoping a theme to part of the tree.
 
-## The `Theme` provider
+## The `Theme` component
 
-`Theme` (aliased as the deprecated `ThemeProvider`) configures the active theme and writes `data-*` attributes that the token CSS keys off. Mount it once near the root (see `setup.md`). It can also be nested to scope a theme to a subtree (see "Scoped themes" below).
+`Theme` renders an element that carries every token-bearing `data-*` attribute, and the token CSS keys off those attributes. Mount it once near the root (see `setup.md`). It can also be nested to scope a theme to a subtree, and a portalled popup re-emits the scope it was opened in, so scoping works everywhere.
+
+Tokens live on that element, so **anything reading `--rs-*` must be inside it**. Nothing is written to `<html>`.
 
 ```tsx
 import { Theme } from "@raystack/apsara";
 
 <Theme
-  defaultTheme="system"   // "light" | "dark" | "system"
-  accentColor="indigo"    // "indigo" (default) | "orange" | "mint"
-  grayColor="gray"        // "gray" (default) | "mauve" | "slate" | "sage"
-  style="modern"          // "modern" (default) | "traditional"
+  persistKey="app-theme"
+  defaultValue={{ appearance: "system", accentColor: "indigo" }}
 >
   <App />
 </Theme>
 ```
 
+### Settings
+
+One object, seven keys. Each can be seeded, controlled or persisted on its own, and each becomes a data attribute on the theme element.
+
+| Setting | Values | Default | Attribute |
+|---|---|---|---|
+| `appearance` | `light`, `dark`, `system` | `system` | `data-theme` |
+| `accentColor` | `indigo`, `orange`, `mint` | `indigo` | `data-accent-color` |
+| `grayColor` | `gray`, `mauve`, `slate`, `sage`, `auto` | `auto` | `data-gray-color` |
+| `radius` | `none`, `small`, `medium`, `large`, `full` | `medium` | `data-radius` |
+| `scaling` | `0.9`, `0.95`, `1`, `1.05`, `1.1` | `1` | `data-scaling` |
+| `panelBackground` | `solid`, `translucent` | `solid` | `data-panel-background` |
+| `reducedMotion` | `true`, `false`, `system` | `system` | `data-reduced-motion` |
+
+`system` and `auto` are resolved before the attribute is written, so `data-theme` is always `light` or `dark` and `data-gray-color` is never `auto`. `grayColor: "auto"` pairs a gray to the accent (indigo→slate, orange→mauve, mint→sage).
+
+Fonts are **not** a setting. They are the `--rs-font-body` / `--rs-font-title` / `--rs-font-mono` CSS variables; redeclare them on `.rs-theme`.
+
 ### Props
 
-| Prop | Type | Default | Notes |
-|---|---|---|---|
-| `defaultTheme` | `string` | `"system"` (or `"light"` if `enableSystem` is false) | Initial theme when nothing is stored. |
-| `forcedTheme` | `string` | — | Locks the page to a theme; ignores storage and system. |
-| `enableSystem` | `boolean` | `true` | Follow `prefers-color-scheme` when theme is `"system"`. |
-| `enableColorScheme` | `boolean` | `true` | Sets `color-scheme` so native UI (scrollbars, inputs) matches. |
-| `disableTransitionOnChange` | `boolean` | `false` | Suppress CSS transitions during a theme switch (no flicker). |
-| `storageKey` | `string` | `"theme"` | localStorage key for the persisted choice. |
-| `themes` | `string[]` | `["light","dark"]` | Allowed theme names. |
-| `attribute` | `string \| "class"` | `"data-theme"` | Which HTML attribute reflects the theme. |
-| `value` | `Record<string,string>` | — | Map theme name → attribute value. |
-| `nonce` | `string` | — | CSP nonce for the inline no-flash script. |
-| `style` | `"modern" \| "traditional"` | `"modern"` | Style variant — controls radius scale and fonts. |
-| `accentColor` | `"indigo" \| "orange" \| "mint"` | `"indigo"` | Brand accent ramp. |
-| `grayColor` | `"gray" \| "mauve" \| "slate" \| "sage"` | `"gray"` | Neutral ramp. |
-| `onThemeChange` | `(theme, resolvedTheme) => void` | — | Fires on change (not on initial mount). `resolvedTheme` is `"light"`/`"dark"` when theme is `"system"`. |
+| Prop | Type | Notes |
+|---|---|---|
+| `defaultValue` | `Partial<ThemeSettings>` | Seeds uncontrolled keys. A stored user choice overrides it. |
+| `value` | `Partial<ThemeSettings>` | Per-key control. A controlled key always wins and is never persisted. |
+| `onValueChange` | `(value, changed) => void` | Fires when `setValue` requests a change. Controlled keys are reported but not applied; storage-driven changes do not fire it. |
+| `persist` | `ThemeSettingKey[]` | Which settings the namespace covers. Defaults to all seven. |
+| `persistKey` | `string` | Storage namespace. **Persistence is off unless this is set.** |
+| `isRoot` | `boolean` | Whether this theme owns the document's color scheme. Defaults to true when there is no ancestor theme; an embedded widget should pass `false`. |
+| `hasBackground` | `boolean` | Overrides the paint heuristic (true at the root and for a nested theme with its own `light`/`dark`, false otherwise). |
+| `disableTransitionOnChange` | `boolean` | Suppresses the crossfade during an appearance switch. |
+| `nonce` | `string` | CSP nonce for the inline script. |
+| `icons` | `IconOptions` | Replaces the drawings inside Apsara's components and sets the props every icon receives. See `components.md` and the Icons docs. |
+| `render` | element or function | `asChild`-style escape hatch; merges the theme onto your own element. |
+| `className`, `style` | — | The stable `rs-theme` class is always present alongside your classes. |
 
-These attributes land on `<html>` (root provider) and drive the tokens:
-
-| Attribute | Values |
-|---|---|
-| `data-theme` | `light`, `dark` |
-| `data-style` | `modern`, `traditional` |
-| `data-accent-color` | `indigo`, `orange`, `mint` |
-| `data-gray-color` | `gray`, `mauve`, `slate`, `sage` |
+Control is per key: drive `appearance` from a cookie while leaving accent and radius uncontrolled and persisted.
 
 ## Reading & changing the theme: `useTheme`
 
-Exported from both `@raystack/apsara` and `@raystack/apsara/hooks`. Must be called under a `Theme` provider.
+Must be called inside a `Theme`. It **throws** outside one, because no color token resolves there.
 
 ```tsx
 import { useTheme } from "@raystack/apsara";
 
-function ThemeToggle() {
-  const { theme, resolvedTheme, setTheme } = useTheme();
+function AppearanceToggle() {
+  const { resolved, setValue } = useTheme();
+  const isDark = resolved.appearance === "dark";
   return (
-    <Button onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
-      {resolvedTheme === "dark" ? "Light" : "Dark"} mode
+    <Button onClick={() => setValue({ appearance: isDark ? "light" : "dark" })}>
+      {isDark ? "Light" : "Dark"} mode
     </Button>
   );
 }
@@ -66,53 +76,63 @@ function ThemeToggle() {
 
 Returned values:
 
-- `theme` — the active selection (may be `"system"`).
-- `resolvedTheme` — the actually applied theme: `forcedTheme` if set; otherwise `"light"`/`"dark"` (resolving `"system"`); otherwise equals `theme`. **Use this for conditional UI**, not `theme`.
-- `systemTheme` — OS preference (`"light"`/`"dark"`) when `enableSystem`.
-- `setTheme(name)` — update + persist the nearest scope's theme. At the root this persists the user's choice. Passing `undefined` inside a scope clears that scope's storage and re-inherits from the parent.
-- `style`, `accentColor`, `grayColor` — the nearest provider's effective values.
-- `forcedTheme`, `themes`.
-
-`useTheme({ storageKey })` targets a specific provider (the root or a named scope) instead of the nearest one — useful for flipping the page theme from inside a scoped subtree.
+- `value` — settings as set, `system` and `auto` included.
+- `resolved` — settings as applied, with `appearance` resolved against the OS and `grayColor` against the accent. **Use this for conditional UI**, not `value`.
+- `setValue(partial)` — applies a partial settings object. Controlled keys are reported to `onValueChange` but not applied.
+- `systemAppearance` — what the OS reports, whatever the current setting is.
+- `root` — the same handle bound to the root provider, for flipping the page theme from inside a scope.
 
 ## `ThemeSwitcher`
 
-A minimal prebuilt sun/moon toggle button (toggles light↔dark via `useTheme`):
+A prebuilt sun/moon icon button that flips light↔dark. It reads `resolved`, so `system` shows what is actually on screen.
 
 ```tsx
 import { ThemeSwitcher } from "@raystack/apsara";
 
-<ThemeSwitcher size={30} />
+<ThemeSwitcher size={30} />          // flips the nearest scope
+<ThemeSwitcher target="root" />      // flips the page
 ```
 
-For anything richer (system option, accent pickers), build your own control on top of `useTheme`.
+For anything richer (a system option, accent pickers), build your own control on `useTheme`.
 
 ## Scoped (nested) themes
 
-Nesting `<Theme>` scopes overrides to a subtree without affecting the rest of the page. A scope renders a wrapper `<div>` carrying the layered `data-*` attributes, and `useTheme()` inside it sees the scope's effective values.
+Nesting `Theme` scopes overrides to a subtree. A nested theme inherits every key it does not set, and `useTheme()` inside it sees the scope's effective values.
 
 ```tsx
-<Theme defaultTheme="dark">
+<Theme persistKey="app-theme">
   <App />
 
-  {/* This panel is always light + orange accent, regardless of the page theme */}
-  <Theme forcedTheme="light" accentColor="orange">
+  {/* Always light + orange, regardless of the page theme */}
+  <Theme value={{ appearance: "light", accentColor: "orange" }}>
     <PromoPanel />
   </Theme>
 </Theme>
 ```
 
-- A scope with a `storageKey` persists and registers itself, so `useTheme({ storageKey })` can address it.
-- A stateless scope with no overrides is a transparent pass-through (no wrapper, no extra context).
-- `setTheme` from a scope updates only that scope and never propagates outward.
+- Scaling does not compound: `0.9` inside `0.9` is `0.9`, not `0.81`.
+- A nested theme paints a background only when it sets its own `light` or `dark`; one that only re-tints stays transparent. Override with `hasBackground`.
+- A popup (Popover, Select, Menu, Tooltip, Dialog…) opened inside a scope carries that scope's theme onto the portalled element.
+- Persistence is per `persistKey`, so a scope, a widget and a second root each keep their own state by default. Two themes sharing a key stay in step.
+
+## Persistence and first paint
+
+Set `persistKey` to persist; without it settings live in memory only. `persist` narrows which keys the namespace covers.
+
+```tsx
+<Theme persistKey="app-theme" persist={["appearance"]} />
+```
+
+A theme with a `persistKey` emits a small inline script as its first child, which patches its own element before the rest of the page is parsed — no flash, and nothing written to `<html>`. Accent, gray, radius, scaling and panel background server-render correctly on the first byte, so the script usually covers `appearance` alone. `<html>` does **not** need `suppressHydrationWarning`.
 
 ## Custom accent / palette beyond the presets
 
-The built-in `accentColor`/`grayColor` presets cover the common cases. To go further, override the `--rs-*` color tokens under a theme selector in your own CSS (see `tokens.md` for the variable names and `styling.md` for override patterns). Prefer overriding **semantic** tokens (`--rs-color-background-accent-emphasis`) over raw scale steps.
+The built-in `accentColor`/`grayColor` presets cover the common cases. To go further, override the `--rs-*` color tokens on `.rs-theme` in your own CSS (see `tokens.md` for names and `styling.md` for patterns). Every `--rs-*` declaration is wrapped in `:where()`, so one class selector wins without `!important`. Prefer **semantic** tokens (`--rs-color-background-accent-emphasis`) over raw scale steps.
 
 ## Theming pitfalls
 
-- Conditional rendering should branch on `resolvedTheme`, not `theme` (which can be `"system"`).
-- `setTheme(undefined)` is a no-op at the root; inside a persistent scope it clears + re-inherits.
-- Next.js: missing `suppressHydrationWarning` on `<html>` causes hydration warnings because the no-flash script pre-sets attributes (see `setup.md`).
-- Changing `accentColor`/`grayColor`/`style` at runtime just swaps `data-*` attributes — all themed tokens update automatically; you don't need to re-import CSS.
+- Conditional rendering should branch on `resolved`, not `value` (which can hold `system`/`auto`).
+- `useTheme` throws outside a provider — it is not a no-op. Anything calling it must be inside `Theme`.
+- Tokens are not on `<html>`. CSS that declares custom properties on `:root` from `--rs-*` values, and hand-rolled portals rendered outside the tree, resolve to nothing.
+- `:where()` means token declarations carry no specificity, so a consumer rule on `:root` now beats them. Scope overrides to `.rs-theme`.
+- Changing `accentColor`/`grayColor`/`radius`/`scaling` at runtime just swaps `data-*` attributes — every token updates automatically, with no CSS re-import.
