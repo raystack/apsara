@@ -7,6 +7,113 @@ One section per release, newest first, with only the changes that need action
 from you. The full record of every release, features and fixes included, is
 on [GitHub releases](https://github.com/raystack/apsara/releases).
 
+## 2.0: `Theme` is rewritten
+
+`Theme` used to put its tokens on `<html>` from an effect, so it could not
+server-render and only one could exist per page. It now mounts them on an
+element it renders, which makes a scope, a portalled popup and the root the same
+component, and adds radius, scaling, panel background and reduced-motion
+settings. See [Theme](/docs/theme/overview).
+
+The component keeps its name but not its props, so migrate the whole
+application at once rather than file by file.
+
+### 1. Reshape the props
+
+```tsx
+// Before
+<Theme
+  defaultTheme="system"
+  storageKey="theme"
+  style="modern"
+  accentColor="orange"
+  grayColor="mauve"
+  onThemeChange={(theme, resolved) => track(resolved)}
+>
+  <App />
+</Theme>
+
+// After
+<Theme
+  persistKey="theme"
+  defaultValue={{
+    appearance: "system",
+    accentColor: "orange",
+    grayColor: "mauve"
+  }}
+  onValueChange={(value, changed) => {
+    if (changed.appearance) track(value.appearance);
+  }}
+>
+  <App />
+</Theme>
+```
+
+`persistKey` now gates persistence rather than only naming it: without one,
+nothing is stored. It also ignores the bare theme name the old `Theme` wrote, so
+a returning user starts from the seed once.
+
+### 2. Rename the props
+
+| Removed | Replacement |
+|---|---|
+| `theme`, `forcedTheme` | `value.appearance` |
+| `defaultTheme` | `defaultValue.appearance` |
+| `accentColor`, `grayColor` as flat props | `defaultValue.accentColor`, `defaultValue.grayColor` |
+| `style` | `radius` plus the `--rs-font-*` tokens |
+| `onThemeChange` | `onValueChange` |
+| `enableSystem` | `appearance: "system"` |
+| `enableColorScheme` | Handled by the stylesheet |
+| `storageKey` | `persistKey` |
+| `themes`, `attribute`, `value` as a name-to-attribute map | None. Arbitrary named themes are not supported |
+| `ThemeProvider` alias | `Theme` |
+
+`icons` is unchanged, and `ThemeSwitcher` keeps its name.
+
+`style="modern" | "traditional"` becomes a radius level plus a font pair:
+`defaultValue={{ radius: "large" }}` with `--rs-font-title` and `--rs-font-body`
+set in CSS. The `data-style` attribute and the Lora / Josefin Sans pairing it
+selected are gone, along with the `--rs-font-lora` and `--rs-font-josefin-sans`
+tokens.
+
+### 3. Reshape the hook
+
+`useTheme` keeps its name and returns a different shape.
+
+| Removed | Replacement |
+|---|---|
+| `useTheme().theme` / `.setTheme` / `.resolvedTheme` / `.systemTheme` | `value` / `setValue` / `resolved` / `systemAppearance` |
+| `useTheme().themes` / `.forcedTheme` / `.style` / `.scopes` | None |
+| `useTheme({ storageKey })` | `useTheme().root` |
+
+```tsx
+// Before: force dark for a subtree
+<Theme forcedTheme="dark"><Sidebar /></Theme>
+// After
+<Theme value={{ appearance: "dark" }}><Sidebar /></Theme>
+
+// Before: flip the page theme from inside a scope
+const { setTheme } = useTheme({ storageKey: "theme" });
+// After
+const { root } = useTheme();
+root.setValue({ appearance: "dark" });
+```
+
+`useTheme` throws outside a provider instead of returning a no-op.
+
+### 4. Move anything that reads tokens inside the provider
+
+Tokens are no longer on `<html>`, so consumer CSS that declared custom
+properties on `:root` from `--rs-*` values, and hand-rolled portals that
+rendered outside the provider, have to move inside it. `<html>` no longer needs
+`suppressHydrationWarning`.
+
+<Callout type="grey">
+  `Image` and `Avatar` now use the shared five radius values. `Image` gains
+  `large`. `Avatar` has no default radius and follows the theme, so pass
+  `radius="full"` to keep circles.
+</Callout>
+
 ## 1.6: lucide replaces the radix icons
 
 Apsara used to draw its icons with [`@radix-ui/react-icons`](https://www.radix-ui.com/icons).

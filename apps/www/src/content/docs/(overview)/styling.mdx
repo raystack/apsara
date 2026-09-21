@@ -160,7 +160,7 @@ Coverage: every Apsara component exposes `data-slot` on every element it renders
 
 ## Theming with data attributes
 
-The `Theme` component sets data attributes on the root `<html>` element. Use these to conditionally style elements based on the active theme:
+`Theme` writes one data attribute per setting onto the element it renders. Match an ancestor rather than `<html>`, so a nested scope styles correctly too:
 
 ```css
 /* Dark mode specific styles */
@@ -168,9 +168,9 @@ The `Theme` component sets data attributes on the root `<html>` element. Use the
   border-color: var(--rs-color-border-base-tertiary);
 }
 
-/* Traditional style variant */
-[data-style="traditional"] .custom-heading {
-  font-family: var(--rs-font-family-serif);
+/* Only when the theme squares its corners */
+[data-radius="none"] .custom-heading {
+  letter-spacing: 0;
 }
 ```
 
@@ -179,9 +179,12 @@ Available theme attributes:
 | Attribute | Values |
 |-----------|--------|
 | `data-theme` | `light`, `dark` |
-| `data-style` | `modern`, `traditional` |
 | `data-accent-color` | `indigo`, `orange`, `mint` |
 | `data-gray-color` | `gray`, `mauve`, `slate`, `sage` |
+| `data-radius` | `none`, `small`, `medium`, `large`, `full` |
+| `data-scaling` | `0.9`, `0.95`, `1`, `1.05`, `1.1` |
+| `data-panel-background` | `solid`, `translucent` |
+| `data-reduced-motion` | `true`, `false` |
 
 ## Writing component styles
 

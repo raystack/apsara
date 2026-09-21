@@ -9,7 +9,7 @@ import {
   useState
 } from 'react';
 import { InfoIcon, XIcon } from '~/icons';
-
+import { radiusVariants } from '../../shared/radius';
 import { IconButton } from '../icon-button';
 import styles from './callout.module.css';
 
@@ -18,6 +18,7 @@ const EXIT_MS = 200;
 
 const callout = cva(styles.callout, {
   variants: {
+    ...radiusVariants,
     type: {
       grey: styles['callout-grey'],
       success: styles['callout-success'],
@@ -60,6 +61,7 @@ export function Callout({
   className,
   type = 'grey',
   variant,
+  radius,
   highContrast,
   children,
   action,
@@ -97,7 +99,13 @@ export function Callout({
         data-slot='callout-transition-body'
       >
         <div
-          className={callout({ type, variant, highContrast, className })}
+          className={callout({
+            type,
+            variant,
+            radius,
+            highContrast,
+            className
+          })}
           role={role}
           aria-live={type === 'alert' ? 'assertive' : 'polite'}
           data-slot='callout'
