@@ -154,7 +154,8 @@ Reads the enclosing root's state, for building parts the library does not ship. 
 ```tsx
 import { useCalendar } from '@raystack/apsara'
 
-const { value, setValue, scale, month, setMonth, isDateUnavailable } = useCalendar()
+const { value, setValue, scale, draft, month, setMonth, isDateUnavailable } =
+  useCalendar()
 ```
 
 Calling it outside a `CalendarPreview` throws, naming the part that asked. `scale` is

@@ -1,11 +1,14 @@
 'use client';
 
-import { useCalendarPreviewContext } from './calendar-preview-context';
+import {
+  type CalendarPreviewDraftRange,
+  useCalendarPreviewContext
+} from './calendar-preview-context';
 import {
   type CalendarPreviewValue,
   monthAnchor
 } from './calendar-preview-root';
-import type { Scale } from './lib/scale';
+import type { Scale, ScaleValue } from './lib/scale';
 
 export interface UseCalendarReturn {
   /* Holds a range at `selection='range'`. */
@@ -14,6 +17,10 @@ export interface UseCalendarReturn {
   setValue: (value: CalendarPreviewValue) => void;
   /* Read-only by decision: switching scale is `.Scales` and `.Scale`. */
   scale: Scale;
+  /** Never emitted. */
+  draft: CalendarPreviewDraftRange | null;
+  /** Never emitted. */
+  scaleDraft: ScaleValue | null;
   month: Date;
   /** Bounds never clamp the view. */
   setMonth: (month: Date) => void;
@@ -25,8 +32,16 @@ export interface UseCalendarReturn {
  * not ship. Deliberately narrow — everything returned here is semver-covered.
  */
 export function useCalendar(): UseCalendarReturn {
-  const { value, setValue, scale, month, setMonth, isDateUnavailable } =
-    useCalendarPreviewContext('useCalendar');
+  const {
+    value,
+    setValue,
+    scale,
+    draft,
+    scaleDraft,
+    month,
+    setMonth,
+    isDateUnavailable
+  } = useCalendarPreviewContext('useCalendar');
 
   return {
     value,
@@ -40,6 +55,8 @@ export function useCalendar(): UseCalendarReturn {
         ? setValue(null, 'clear', monthAnchor(value) ?? new Date())
         : setValue(next, 'select', monthAnchor(next) ?? new Date()),
     scale,
+    draft,
+    scaleDraft,
     month,
     setMonth,
     isDateUnavailable

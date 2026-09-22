@@ -309,6 +309,12 @@ export interface UseCalendarReturn {
    */
   scale: 'day' | 'month' | 'quarter' | 'halfYear' | 'year';
 
+  /** The range mid-build, at `selection="range"`. Never emitted. */
+  draft: { from?: Date; to?: Date } | null;
+
+  /** The period a scale switch is holding, uncommitted. Never emitted. */
+  scaleDraft: { date: string; scale: Scale } | null;
+
   /** The first month currently displayed. */
   month: Date;
 

@@ -1584,6 +1584,51 @@ describe('useCalendar', () => {
     fireEvent.click(screen.getByText('clear'));
     expect(screen.getByTestId('value')).toHaveTextContent('none');
   });
+
+  it('reads the half-built range', () => {
+    function DraftProbe() {
+      const { draft } = useCalendar();
+      return (
+        <span data-testid='draft'>
+          {draft?.from ? String(draft.from.getDate()) : 'none'}
+        </span>
+      );
+    }
+    const { container } = render(
+      <CalendarPreview today={TODAY} defaultMonth={AUGUST} selection='range'>
+        <DraftProbe />
+        <CalendarPreview.Days />
+      </CalendarPreview>
+    );
+    expect(screen.getByTestId('draft')).toHaveTextContent('none');
+    fireEvent.click(dayCell(container, '10'));
+    expect(screen.getByTestId('draft')).toHaveTextContent('10');
+  });
+
+  it('reads the period a scale switch is holding', () => {
+    function ScaleDraftProbe() {
+      const { scaleDraft } = useCalendar();
+      return (
+        <span data-testid='scale-draft'>{scaleDraft?.date ?? 'none'}</span>
+      );
+    }
+    const { container } = render(
+      <CalendarPreview
+        today={TODAY}
+        defaultMonth={AUGUST}
+        scales={['day', 'quarter']}
+      >
+        <ScaleDraftProbe />
+        <CalendarPreview.Body />
+      </CalendarPreview>
+    );
+    expect(screen.getByTestId('scale-draft')).toHaveTextContent('none');
+    const chip = getAllSlots(container, 'calendar-preview-scale').find(
+      node => node.getAttribute('data-scale') === 'quarter'
+    );
+    fireEvent.click(chip as HTMLElement);
+    expect(screen.getByTestId('scale-draft')).toHaveTextContent('2026-07-01');
+  });
 });
 
 describe('CalendarPreview week numbers and the padded row', () => {

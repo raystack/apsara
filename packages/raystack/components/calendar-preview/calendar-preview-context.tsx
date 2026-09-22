@@ -76,6 +76,8 @@ export interface CalendarPreviewContextValue {
    * clears. Tracks the last close reason, never the open state.
    */
   shouldIgnoreFocusOpen: () => boolean;
+  /** False after an outside press. */
+  shouldRestoreFinalFocus: () => boolean;
   triggerRef: RefObject<HTMLElement | null>;
   triggerHasInput: boolean;
   setTriggerHasInput: (hasInput: boolean) => void;

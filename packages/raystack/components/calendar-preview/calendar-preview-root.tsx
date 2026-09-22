@@ -347,7 +347,16 @@ export function CalendarPreviewRoot({
     state: 'scale'
   });
 
-  const [scaleDraft, setScaleDraft] = useState<ScaleValue | null>(null);
+  const [scaleDraft, setScaleDraftState] = useState<ScaleValue | null>(null);
+
+  /* Escape drops the draft twice in one event — `.Body`, then the close it
+     bubbles into — and state is a render behind on the second. */
+  const scaleDraftRef = useRef<ScaleValue | null>(null);
+
+  const setScaleDraft = useCallback((next: ScaleValue | null) => {
+    scaleDraftRef.current = next;
+    setScaleDraftState(next);
+  }, []);
 
   const draftOrigin = useRef<{
     value: ScaleValue | null;
@@ -358,7 +367,7 @@ export function CalendarPreviewRoot({
   const clearScaleDraft = useCallback(() => {
     setScaleDraft(null);
     draftOrigin.current = null;
-  }, []);
+  }, [setScaleDraft]);
 
   /* An array carries the scale even when that scale is `'day'`. */
   const carriesScale = Array.isArray(scalesProp) || scalesProp !== 'day';
@@ -460,10 +469,14 @@ export function CalendarPreviewRoot({
   /* `dropDraft` closes over state declared further down. */
   const dropDraftRef = useRef<(() => void) | null>(null);
 
+  const dismissedByOutsidePress = useRef(false);
+
   const setOpen = useCallback(
     (next: boolean, details: CalendarPreviewOpenChangeDetails) => {
       if (!next) {
-        armFocusGuard(details.reason === REASONS.outsidePress);
+        const outside = details.reason === REASONS.outsidePress;
+        dismissedByOutsidePress.current = outside;
+        armFocusGuard(outside);
         /* A draft belongs to the open popover; a commit has already cleared
            it, so this finds nothing left to drop. */
         dropDraftRef.current?.();
@@ -472,6 +485,14 @@ export function CalendarPreviewRoot({
       onOpenChange?.(next, details);
     },
     [setOpenUnwrapped, onOpenChange, armFocusGuard]
+  );
+
+  /* Base UI hands the return focus to the trigger's first tabbable child when
+     the trigger itself is not tabbable, which is the `.Input`. Escape still
+     restores, or a keyboard user is left on `body`. */
+  const shouldRestoreFinalFocus = useCallback(
+    () => !dismissedByOutsidePress.current,
+    []
   );
 
   const shouldIgnoreFocusOpen = useCallback(() => {
@@ -690,7 +711,8 @@ export function CalendarPreviewRoot({
       trailingValue,
       clearScaleDraft,
       setMonth,
-      setScale
+      setScale,
+      setScaleDraft
     ]
   );
 
@@ -736,7 +758,7 @@ export function CalendarPreviewRoot({
   /* The scale the run started from, not `scales[0]`: that is the default the
      root opened at, which a committed switch has already moved away from. */
   const dropDraft = useCallback(() => {
-    if (scaleDraft === null) return;
+    if (scaleDraftRef.current === null) return;
     const origin = draftOrigin.current;
     /* The month moved with the draft, so leaving it where the run ended showed
        a different month than the one the run started on. */
@@ -744,7 +766,7 @@ export function CalendarPreviewRoot({
     settleScale(
       origin?.scale ?? (isScaleValue(value) ? value.scale : scales[0])
     );
-  }, [scaleDraft, value, scales, settleScale, setMonth]);
+  }, [value, scales, settleScale, setMonth]);
 
   dropDraftRef.current = dropDraft;
 
@@ -861,6 +883,7 @@ export function CalendarPreviewRoot({
       open,
       setOpen,
       shouldIgnoreFocusOpen,
+      shouldRestoreFinalFocus,
       triggerRef,
       triggerHasInput,
       setTriggerHasInput,
@@ -903,6 +926,7 @@ export function CalendarPreviewRoot({
       open,
       setOpen,
       shouldIgnoreFocusOpen,
+      shouldRestoreFinalFocus,
       triggerHasInput,
       setTriggerHasInput,
       defaultDate,

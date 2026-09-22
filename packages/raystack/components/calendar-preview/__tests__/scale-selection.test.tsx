@@ -304,6 +304,46 @@ describe('CalendarPreview settles the scale out loud', () => {
   });
 });
 
+describe('CalendarPreview settles the scale once when Escape both drops and closes', () => {
+  function renderPicker(props = {}) {
+    return render(
+      <CalendarPreview
+        today={TODAY}
+        scales={ALL}
+        defaultMonth={TODAY}
+        {...props}
+      >
+        <CalendarPreview.Trigger>
+          <CalendarPreview.Input />
+        </CalendarPreview.Trigger>
+        <CalendarPreview.Content>
+          <CalendarPreview.Body />
+        </CalendarPreview.Content>
+      </CalendarPreview>
+    );
+  }
+
+  it('reports the settled scale once', () => {
+    const onScaleChange = vi.fn();
+    const { container } = renderPicker({
+      value: { date: '2026-08-20', scale: 'day' },
+      onScaleChange
+    });
+    fireEvent.focus(
+      getSlot(container, 'calendar-preview-input') as HTMLElement
+    );
+    switchTo(document.body, 'quarter');
+    onScaleChange.mockClear();
+
+    fireEvent.keyDown(
+      getSlot(document.body, 'calendar-preview-body') as HTMLElement,
+      { key: 'Escape' }
+    );
+    expect(onScaleChange).toHaveBeenCalledTimes(1);
+    expect(onScaleChange).toHaveBeenCalledWith('day');
+  });
+});
+
 describe('CalendarPreview.Scales', () => {
   it('renders nothing when only one scale is offered', () => {
     const { container } = render(

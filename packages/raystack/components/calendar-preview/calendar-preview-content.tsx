@@ -19,15 +19,15 @@ export function CalendarPreviewContent({
   children,
   ...props
 }: CalendarPreviewContentProps) {
-  const { triggerHasInput } = useCalendarPreviewContext(
-    'CalendarPreview.Content'
-  );
+  const { triggerHasInput, shouldRestoreFinalFocus } =
+    useCalendarPreviewContext('CalendarPreview.Content');
 
   return (
     <Popover.Content
       className={cx(styles.content, className)}
       data-slot='calendar-preview-content'
       initialFocus={triggerHasInput ? false : undefined}
+      finalFocus={triggerHasInput ? shouldRestoreFinalFocus : undefined}
       {...props}
     >
       {children}

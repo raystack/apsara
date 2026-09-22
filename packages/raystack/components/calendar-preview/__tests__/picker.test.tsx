@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { getAllSlots, getSlot } from '~/test-utils/data-slots';
 import { Field } from '../../field';
@@ -622,6 +622,60 @@ describe('CalendarPreview.Trigger and the focus a dismissal gives back', () => {
 
     fireEvent.focus(input);
     expect(isOpen()).toBe(false);
+  });
+
+  /* Base UI restores focus after an outside press only where
+     `focus({ preventScroll })` is supported, and jsdom ignores the options
+     object outright, so the assertion below cannot fail without this. */
+  const withPreventScroll = () => {
+    const focus = HTMLElement.prototype.focus;
+    HTMLElement.prototype.focus = function patched(options?: FocusOptions) {
+      void options?.preventScroll;
+      return focus.call(this);
+    };
+    return () => {
+      HTMLElement.prototype.focus = focus;
+    };
+  };
+
+  const pressOutsideOff = (input: HTMLInputElement) => {
+    fireEvent.pointerDown(document.body);
+    input.blur();
+    fireEvent.mouseDown(document.body);
+    fireEvent.click(document.body);
+  };
+
+  it('leaves focus where an outside press put it', async () => {
+    const restore = withPreventScroll();
+    try {
+      const { input } = renderPicker();
+      input.focus();
+      fireEvent.focus(input);
+      expect(isOpen()).toBe(true);
+
+      pressOutsideOff(input);
+      expect(isOpen()).toBe(false);
+      await act(async () => {
+        await Promise.resolve();
+      });
+      expect(document.activeElement).not.toBe(input);
+    } finally {
+      restore();
+    }
+  });
+
+  it('gives focus back to the input on Escape', async () => {
+    const { input } = renderPicker();
+    input.focus();
+    fireEvent.focus(input);
+    expect(isOpen()).toBe(true);
+
+    fireEvent.keyDown(input, { key: 'Escape' });
+    expect(isOpen()).toBe(false);
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(document.activeElement).toBe(input);
   });
 
   it('releases the guard on the next press when no focus comes back', () => {
