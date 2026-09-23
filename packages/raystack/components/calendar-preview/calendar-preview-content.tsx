@@ -8,12 +8,6 @@ export type CalendarPreviewContentProps = ComponentProps<
   typeof Popover.Content
 >;
 
-/**
- * The portaled popover surface.
- *
- * Dismissal is Base UI's: outside press, escape and focus-out are all handled
- * by `Popover.Root`, so nothing in this directory listens on the document.
- */
 export function CalendarPreviewContent({
   className,
   children,

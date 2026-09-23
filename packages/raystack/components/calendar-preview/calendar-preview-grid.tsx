@@ -94,9 +94,7 @@ export interface CalendarPreviewGridProps
   /**
    * Render the days either side of the month.
    *
-   * Off, unlike the current `DatePicker`: reference A ends every grid on the
-   * last day of its month and leaves the leading cells blank. The cells are
-   * still rendered, so the week rows keep their shape — they are just empty.
+   * The cells are still rendered when off, so the week rows keep their shape.
    *
    * @defaultValue false
    */

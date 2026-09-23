@@ -292,8 +292,8 @@ export function CalendarPreviewRoot({
 }: CalendarPreviewProps) {
   const today = useMemo(() => todayProp ?? new Date(), [todayProp]);
 
-  /* The public props are discriminated on `selection`; the implementation is
-     shared and works in the widened value. This is the one seam between them. */
+  /* The one seam between the discriminated props and the widened value the
+     implementation shares. */
   const emit = onValueChange as
     | ((
         value: CalendarPreviewValue,
@@ -564,17 +564,7 @@ export function CalendarPreviewRoot({
     [timeZone, isDateUnavailable]
   );
 
-  /*
-   * The from/to machine:
-   *   nothing drafted    -> set from, advance to the end input
-   *   to only            -> fills the from, completing unless the click
-   *                         crosses it or the span is unavailable
-   *   from, day earlier  -> that day becomes the new from
-   *   from, day later    -> completes and emits
-   *   from and to        -> restart from the new day
-   *
-   * It lives on the root because `.Grid` and a typed `.Input` both drive it.
-   */
+  /* On the root, not `.Grid`: a typed `.Input` drives the same machine. */
   const selectDay = useCallback(
     (date: Date) => {
       if (readOnly || disabled) return;
