@@ -344,6 +344,46 @@ describe('CalendarPreview settles the scale once when Escape both drops and clos
   });
 });
 
+describe('CalendarPreview settles the view on what a typed date commits', () => {
+  const input = (container: HTMLElement) =>
+    getSlot(container, 'calendar-preview-input') as HTMLInputElement;
+
+  const marked = (container: HTMLElement) =>
+    getAllSlots(container, 'calendar-preview-period')
+      .filter(cell => cell.hasAttribute('data-selected'))
+      .map(cell => cell.textContent);
+
+  it('moves to day scale when a day is typed on a period view', () => {
+    const onScaleChange = vi.fn();
+    const { container } = renderBody({
+      defaultScale: 'quarter',
+      onScaleChange
+    });
+
+    fireEvent.change(input(container), { target: { value: '2 May 2026' } });
+    fireEvent.keyDown(input(container), { key: 'Enter' });
+
+    expect(onScaleChange).toHaveBeenLastCalledWith('day');
+    expect(getSlot(container, 'calendar-preview')).toHaveAttribute(
+      'data-scale',
+      'day'
+    );
+  });
+
+  it('moves to the typed period and marks its cell', () => {
+    const { container } = renderBody({ defaultScale: 'day' });
+
+    fireEvent.change(input(container), { target: { value: 'Q2 2026' } });
+    fireEvent.keyDown(input(container), { key: 'Enter' });
+
+    expect(getSlot(container, 'calendar-preview')).toHaveAttribute(
+      'data-scale',
+      'quarter'
+    );
+    expect(marked(container)).toEqual(['Q2']);
+  });
+});
+
 describe('CalendarPreview.Scales', () => {
   it('renders nothing when only one scale is offered', () => {
     const { container } = render(
@@ -426,8 +466,34 @@ describe('CalendarPreview.Input at scale', () => {
     const { container } = renderBody();
     expect(input(container)).toHaveAttribute(
       'placeholder',
-      'Try: 15 Aug 2026, May 2027, Q4'
+      'Try: 15 Aug 2026, Aug 2026, Q3 2026'
     );
+  });
+
+  /* A hardcoded list suggested a day format to a field that rejects one. */
+  it('suggests only the scales the root offers', () => {
+    const { container } = renderBody({ scales: ['month', 'quarter', 'year'] });
+    expect(input(container)).toHaveAttribute(
+      'placeholder',
+      'Try: Aug 2026, Q3 2026, 2026'
+    );
+  });
+
+  it('suggests the single scale a one-scale root takes', () => {
+    const { container } = renderBody({ scales: 'quarter' });
+    expect(input(container)).toHaveAttribute('placeholder', 'Try: Q3 2026');
+  });
+
+  it('every suggestion is a format the field accepts', () => {
+    const { container } = renderBody({ scales: ['month', 'quarter', 'year'] });
+    const suggestions = (
+      input(container).getAttribute('placeholder') ?? ''
+    ).replace('Try: ', '');
+
+    for (const text of suggestions.split(', ')) {
+      fireEvent.change(input(container), { target: { value: text } });
+      expect(input(container)).not.toHaveAttribute('aria-invalid');
+    }
   });
 
   it('moves the scale to match what was typed', () => {

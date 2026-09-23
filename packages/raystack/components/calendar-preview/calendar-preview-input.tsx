@@ -103,6 +103,7 @@ export function CalendarPreviewInput({
     clearEndpoint,
     draft,
     activeField,
+    open,
     setActiveField,
     setFieldReadOnly
   } = useCalendarPreviewContext('CalendarPreview.Input');
@@ -282,10 +283,17 @@ export function CalendarPreviewInput({
   const committedText = endpoint
     ? formatValue(endpoint, isScaleValue(endpoint) ? endpoint.scale : scale)
     : '';
+  /* Built from the scales this root actually offers, through the same
+     formatter that renders a committed value — a hardcoded list suggested
+     `15 Aug 2026` to a field that only takes months and quarters. */
+  const carriesScale = scales.length > 1 || scales[0] !== 'day';
   const resolvedPlaceholder =
     placeholder ??
-    (scales.length > 1
-      ? 'Try: 15 Aug 2026, May 2027, Q4'
+    (carriesScale
+      ? `Try: ${scales
+          .slice(0, 3)
+          .map(one => formatValue(today, one))
+          .join(', ')}`
       : isRange
         ? field === 'start'
           ? 'Select start date'
@@ -298,7 +306,15 @@ export function CalendarPreviewInput({
       data-slot='calendar-preview-input'
       placeholder={resolvedPlaceholder}
       data-field={isRange ? field : undefined}
-      data-active={isRange && activeField === field ? 'true' : undefined}
+      /* `Input` paints `data-active` with the same accent border as focus, so
+         marking the next endpoint while the popover is shut left the start
+         field looking permanently focused. An inline range has no popover to
+         open, and is always live. */
+      data-active={
+        isRange && activeField === field && (open || trigger === null)
+          ? 'true'
+          : undefined
+      }
       onFocus={event => {
         onFocus?.(event);
         if (isRange) setActiveField(field);

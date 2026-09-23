@@ -128,17 +128,42 @@ describe('CalendarPreview range inputs', () => {
     expect(end).toHaveAttribute('placeholder', 'Select end date');
   });
 
+  /* `Input` paints `data-active` with the focus border, so marking an endpoint
+     behind a shut popover left the start field looking focused on load. */
+  it('marks no endpoint while the popover is shut', () => {
+    const { container } = renderRange({}, picker);
+    const [start, end] = inputs(container);
+    expect(start).not.toHaveAttribute('data-active');
+    expect(end).not.toHaveAttribute('data-active');
+  });
+
   it('advances the active endpoint to the end after the first click', () => {
     const { container } = renderRange({}, picker);
     const [start, end] = inputs(container);
+
+    fireEvent.focus(start);
     expect(start).toHaveAttribute('data-active', 'true');
     expect(end).not.toHaveAttribute('data-active');
 
-    fireEvent.focus(start);
     fireEvent.click(day(document.body, '10'));
 
     expect(end).toHaveAttribute('data-active', 'true');
     expect(start).not.toHaveAttribute('data-active');
+  });
+
+  /* An inline range has no popover to open, so it is always live. */
+  it('marks the active endpoint with no trigger in the tree', () => {
+    const { container } = renderRange(
+      {},
+      <>
+        <CalendarPreview.Input field='start' />
+        <CalendarPreview.Input field='end' />
+        <CalendarPreview.Days />
+      </>
+    );
+    const [start, end] = inputs(container);
+    expect(start).toHaveAttribute('data-active', 'true');
+    expect(end).not.toHaveAttribute('data-active');
   });
 
   it('shows each endpoint in its own field', () => {

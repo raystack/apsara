@@ -166,7 +166,8 @@ interface CalendarPreviewSharedProps
   /** Called when the view moves. */
   onMonthChange?: (month: Date) => void;
   /**
-   * The years the caption's year column offers.
+   * The years the period views and the caption's year column offer. Passing it
+   * replaces the default, so a bound outside it stays unreachable.
    * @defaultValue ten years either side of `today`, widened to cover any bound
    */
   yearRange?: { from: number; to: number };
@@ -372,6 +373,11 @@ export function CalendarPreviewRoot({
   /* An array carries the scale even when that scale is `'day'`. */
   const carriesScale = Array.isArray(scalesProp) || scalesProp !== 'day';
 
+  /* A typed date commits a day the grid may not be showing, which leaves the
+     selection off-screen and no cell marked. A click needs nothing: the cell
+     it landed on is already in view. */
+  const revealMonthRef = useRef<((date: Date) => void) | null>(null);
+
   const setMonth = useCallback(
     (next: Date) => {
       setMonthUnwrapped(next);
@@ -428,6 +434,10 @@ export function CalendarPreviewRoot({
         scaleChanged(value, 'day') ? 'scale' : reason,
         date
       );
+      /* A typed day lands while the view sits on a coarser scale, which then
+         has no cell to mark. The view follows what was committed. */
+      settleScaleRef.current?.('day');
+      revealMonthRef.current?.(date);
     },
     [carriesScale, timeZone, value, setValue, clearScaleDraft]
   );
@@ -466,8 +476,9 @@ export function CalendarPreviewRoot({
       leaving || !triggerRef.current?.contains(document.activeElement);
   }, []);
 
-  /* `dropDraft` closes over state declared further down. */
+  /* `dropDraft` and `settleScale` close over state declared further down. */
   const dropDraftRef = useRef<(() => void) | null>(null);
+  const settleScaleRef = useRef<((scale: Scale) => void) | null>(null);
 
   const dismissedByOutsidePress = useRef(false);
 
@@ -722,6 +733,8 @@ export function CalendarPreviewRoot({
         scaleChanged(value, next) ? 'scale' : 'select',
         parseKey(key)
       );
+      settleScaleRef.current?.(next);
+      revealMonthRef.current?.(parseKey(key));
     },
     [
       trailingValue,
@@ -759,6 +772,14 @@ export function CalendarPreviewRoot({
   }, [value, scales, settleScale, setMonth]);
 
   dropDraftRef.current = dropDraft;
+  settleScaleRef.current = settleScale;
+  revealMonthRef.current = (date: Date) => {
+    if (
+      dayKey(date, timeZone).slice(0, 7) === dayKey(month, timeZone).slice(0, 7)
+    )
+      return;
+    setMonth(date);
+  };
 
   /* Bounds only, never `isDateUnavailable` — the prop documents why. */
   const isPeriodAvailable = useCallback(
