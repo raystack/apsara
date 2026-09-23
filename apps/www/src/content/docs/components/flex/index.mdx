@@ -9,13 +9,14 @@ import { playground, basicDemo,
   justifyDemo,
   alignDemo,
   wrapDemo,
+  inlineDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
 
 ## Overview
 
-`Flex` is the workhorse layout primitive: a `div` with `display: flex` and props for `direction`, `align`, `justify`, `wrap`, and `gap`, so you rarely write flexbox CSS by hand. By default it lays children out in a row (`direction="row"`, `align="stretch"`, `justify="start"`, `wrap="noWrap"`). Reach for it whenever you're stacking or spacing things along one axis: toolbars, form rows, sidebars. For two-dimensional layouts use [Grid](/docs/components/grid), and for a page-width wrapper use [Container](/docs/components/container).
+`Flex` is the workhorse layout primitive: a `div` with `display: flex` and props for `direction`, `align`, `justify`, `wrap`, `gap`, and `inline`, so you rarely write flexbox CSS by hand. By default it lays children out in a row (`direction="row"`, `align="stretch"`, `justify="start"`, `wrap="noWrap"`). Reach for it whenever you're stacking or spacing things along one axis: toolbars, form rows, sidebars. For two-dimensional layouts use [Grid](/docs/components/grid), and for a page-width wrapper use [Container](/docs/components/container).
 
 ## Anatomy
 
@@ -57,9 +58,15 @@ Nest Flex containers to compose a layout: here an outer row, the default directi
 
 ### Wrap
 
-`nowrap` is the default, so children shrink rather than move to a new line. Set `wrap` when the item count is unbounded, like a row of tags.
+`noWrap` is the default, so children shrink rather than move to a new line. Set `wrap` when the item count is unbounded, like a row of tags.
 
 <Demo data={wrapDemo} />
+
+### Inline
+
+`Flex` is block-level by default, so it takes the full width of its parent. Set `inline` to render `display: inline-flex` instead: the container shrinks to its content and flows with the surrounding text, which suits a group of badges or an icon and label inside a sentence.
+
+<Demo data={inlineDemo} />
 
 ## API Reference
 
