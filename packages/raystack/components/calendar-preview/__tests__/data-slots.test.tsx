@@ -198,6 +198,7 @@ describe('CalendarPreview data-slot contract', () => {
       'calendar-preview-caption-popup',
       'calendar-preview-caption-months',
       'calendar-preview-caption-month',
+      'calendar-preview-caption-divider',
       'calendar-preview-caption-years',
       'calendar-preview-caption-year'
     ]);

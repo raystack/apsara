@@ -116,6 +116,7 @@ Children replace the content a part computes from context.
       <CalendarPreview.Scales>
         <CalendarPreview.Scale value="day" />
       </CalendarPreview.Scales>
+      <CalendarPreview.Reset />
       <CalendarPreview.Separator />
 
       <CalendarPreview.Panel>
@@ -139,6 +140,8 @@ Children replace the content a part computes from context.
   <CalendarPreview.Footer />
 </CalendarPreview>
 ```
+
+`.Reset` appears twice because exactly one of the two renders: `.Header` holds it at day scale, `.Body` at every coarser scale, where there is no `.Header`.
 
 Every part renders its own default, so none of this is required. `.Grid` renders the day cells itself and takes no children — `.Day` and `.Weekday` are overrides passed through `components`:
 
@@ -215,6 +218,8 @@ Restores `defaultDate`, reporting `reason: 'reset'`. Carries `data-restored` whi
 ### CalendarPreview.Scales / CalendarPreview.Scale
 
 The scale switcher, built on Apsara `Tabs`. Renders nothing when only one scale is offered. `.Scale` is only needed to relabel or reorder.
+
+<auto-type-table path="./props.ts" name="CalendarPreviewScaleProps" />
 
 ### CalendarPreview.Panel
 
@@ -335,6 +340,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `calendar-preview-caption-popup` | The month and year scroller (when `dropdown` is open) |
 | `calendar-preview-caption-months` | The month column of the scroller |
 | `calendar-preview-caption-month` | One month in the scroller |
+| `calendar-preview-caption-divider` | The rule between the scroller's two columns |
 | `calendar-preview-caption-years` | The year column of the scroller |
 | `calendar-preview-caption-year` | One year in the scroller |
 | `calendar-preview-reset` | The reset button |

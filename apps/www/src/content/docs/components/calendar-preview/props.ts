@@ -117,12 +117,16 @@ export interface CalendarPreviewProps {
 
   /**
    * Renders a value for display — every trigger, input and annotation goes
-   * through it. Defaults to `DD MMM YYYY` at day scale, and the period's own
-   * shorthand above it.
+   * through it. The root passes `timeZone` through as the third argument, so a
+   * formatter that reads calendar fields off the `Date` must use it or it will
+   * render the neighbouring day. Defaults to `DD MMM YYYY` at day scale, and
+   * the period's own shorthand above it.
+   * @example formatValue={(value, scale, timeZone) => format(value, timeZone)}
    */
   formatValue?: (
     value: Date | { date: string; scale: Scale },
-    scale: Scale
+    scale: Scale,
+    timeZone?: string
   ) => string;
 
   /**
@@ -282,6 +286,14 @@ export interface CalendarPreviewBodyProps {
    * @default false
    */
   showIcon?: boolean;
+}
+
+export interface CalendarPreviewScaleProps {
+  /** Which scale this chip selects. Required — a chip addresses one scale. */
+  value: Scale;
+
+  /** Merged with the part's own classes. */
+  className?: string;
 }
 
 export interface CalendarPreviewFooterProps {
