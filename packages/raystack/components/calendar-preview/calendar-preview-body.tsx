@@ -1,5 +1,6 @@
 import { mergeProps, useRender } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import type { ReactNode } from 'react';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
 import { CalendarPreviewInput } from './calendar-preview-input';
@@ -9,9 +10,20 @@ import { CalendarPreviewReset } from './calendar-preview-reset';
 import { CalendarPreviewScales } from './calendar-preview-scales';
 import { CalendarPreviewSeparator } from './calendar-preview-separator';
 
-export type CalendarPreviewBodyProps = useRender.ComponentProps<'div'>;
+export interface CalendarPreviewBodyProps
+  extends useRender.ComponentProps<'div'> {
+  /** The field label. Omitted, no label renders. */
+  label?: ReactNode;
+  /**
+   * Whether the field carries the calendar glyph.
+   * @defaultValue false
+   */
+  showIcon?: boolean;
+}
 
 export function CalendarPreviewBody({
+  label,
+  showIcon = false,
   className,
   children,
   render,
@@ -36,8 +48,9 @@ export function CalendarPreviewBody({
         },
         children: children ?? (
           <>
-            <CalendarPreviewLabel />
-            <CalendarPreviewInput />
+            <CalendarPreviewLabel>{label}</CalendarPreviewLabel>
+            {/* `undefined` leaves `.Input` to say what the glyph is. */}
+            <CalendarPreviewInput trailingIcon={showIcon ? undefined : null} />
             <CalendarPreviewScales />
             {/* `.Reset` rides in `.Header`, which only the day view mounts, so
                 a period scale would otherwise have no way back to the default. */}

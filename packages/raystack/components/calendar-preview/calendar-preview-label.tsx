@@ -11,7 +11,7 @@ export function CalendarPreviewLabel({
   ref,
   ...props
 }: CalendarPreviewLabelProps) {
-  return useRender({
+  const element = useRender({
     defaultTagName: 'span',
     ref,
     render,
@@ -19,11 +19,13 @@ export function CalendarPreviewLabel({
       {
         className: cx(styles.label, className),
         'data-slot': 'calendar-preview-label',
-        children: children ?? 'Date'
+        children
       } as useRender.ComponentProps<'span'>,
       props
     )
   });
+
+  return children == null && render == null ? null : element;
 }
 
 CalendarPreviewLabel.displayName = 'CalendarPreview.Label';
