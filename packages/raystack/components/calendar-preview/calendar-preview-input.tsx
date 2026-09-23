@@ -20,37 +20,19 @@ export type CalendarPreviewInputInvalidReason =
 export type CalendarPreviewInputValidity = {
   valid: boolean;
   reason?: CalendarPreviewInputInvalidReason;
-  /**
-   * The message to show, already resolved against `errorMessages`. Absent
-   * while valid, so it can be handed straight to `Field`'s `error`.
-   */
   message?: string;
 };
 
 export interface CalendarPreviewInputProps
   extends Omit<ComponentProps<typeof Input>, 'value' | 'defaultValue'> {
-  /** Called when the typed text starts or stops being a usable date. */
   onValidityChange?: (validity: CalendarPreviewInputValidity) => void;
-  /**
-   * Which endpoint this field addresses, at `selection='range'`. Two inputs,
-   * each addressable — rather than one bag of props per endpoint.
-   */
   field?: CalendarPreviewField;
-  /**
-   * Replaces the message for one or more reasons; anything left out keeps the
-   * default. That default is one flat string because only the consumer knows
-   * the field's bounds — a built-in message cannot say which dates would be
-   * accepted.
-   *
-   * @defaultValue `'Invalid input'` for every reason
-   */
+  /** @defaultValue `'Invalid input'`, except out-of-order, which words itself */
   errorMessages?: Partial<Record<CalendarPreviewInputInvalidReason, string>>;
 }
 
 const DEFAULT_INVALID_MESSAGE = 'Invalid input';
 
-/* The one reason the component can word itself: it needs no knowledge of the
-   field's bounds. */
 const DEFAULT_OUT_OF_ORDER: Record<CalendarPreviewField, string> = {
   start: 'Start date cannot be after the end date',
   end: 'End date cannot be before the start date'
@@ -58,13 +40,6 @@ const DEFAULT_OUT_OF_ORDER: Record<CalendarPreviewField, string> = {
 
 const VALID: CalendarPreviewInputValidity = { valid: true };
 
-/**
- * The typed date field.
- *
- * It never touches open state — `.Trigger` owns that. Typing sets a draft and
- * emits nothing; Enter and blur commit, and Base UI's outside press closes the
- * popover, which blurs and therefore commits too.
- */
 export function CalendarPreviewInput({
   field = 'start',
   placeholder,
@@ -116,26 +91,18 @@ export function CalendarPreviewInput({
     return () => trigger?.registerInput(false);
   }, [trigger]);
 
-  /* The grid has to know which endpoint refuses a write, and `readOnly` is
-     this input's prop, so it registers rather than the root guessing. */
   useEffect(() => {
     if (!isRange) return;
     setFieldReadOnly(field, Boolean(readOnlyProp));
     return () => setFieldReadOnly(field, false);
   }, [isRange, field, readOnlyProp, setFieldReadOnly]);
 
-  /* Null means "show the committed value"; a string is the user's draft. */
   const [text, setText] = useState<string | null>(null);
   const [validity, setValidity] = useState<CalendarPreviewInputValidity>(VALID);
 
   const committed = useRef(value);
 
-  /* Retained text is judged against things outside it — the partner endpoint
-     and the bounds — and both move while it sits there. Without this, an end
-     rejected for crossing a 10 Apr start stayed marked invalid after the start
-     moved to the 1st, and a draft kept its verdict when `minDate` changed
-     under it. Runs every render and compares rather than listing deps:
-     `resolve` closes over the whole context and is rebuilt each time. */
+  /* The partner endpoint and the bounds both move while retained text sits there. */
   const judgedAgainst = useRef<unknown[]>([]);
   useEffect(() => {
     const partner = isRange
@@ -153,7 +120,6 @@ export function CalendarPreviewInput({
       (item, index) => item !== judgedAgainst.current[index]
     );
     judgedAgainst.current = next;
-    /* A value change replaces the text outright, which the effect below owns. */
     if (!moved || text === null || committed.current !== value) return;
     const trimmed = text.trim();
     if (trimmed === '') return;
@@ -161,8 +127,6 @@ export function CalendarPreviewInput({
     report('valid' in resolved ? resolved : VALID);
   });
 
-  /* A value this field did not type replaces whatever it was drafting, or a
-     rejected draft outlives the day the user went on to click. */
   useEffect(() => {
     if (committed.current === value) return;
     committed.current = value;
@@ -172,8 +136,6 @@ export function CalendarPreviewInput({
     onValidityChange?.(VALID);
   }, [value, validity.valid, onValidityChange]);
 
-  /* Derived from the reason rather than returned alongside it, so the reason
-     stays the single source of truth. */
   const withMessage = (
     validity: CalendarPreviewInputValidity
   ): CalendarPreviewInputValidity =>
@@ -204,9 +166,6 @@ export function CalendarPreviewInput({
   const resolve = (
     text: string
   ): CalendarPreviewInputValidity | { date: Date; scale: Scale } => {
-    /* The root's clock and its edge, so what the parser reports is what the
-       commit writes — reading them off the wall clock is how `Q4` landed in
-       the wrong year. */
     const parsed = parseScaleInput(text, {
       referenceDate: today,
       trailing: trailingValue
@@ -230,9 +189,6 @@ export function CalendarPreviewInput({
       return { valid: false, reason: 'out-of-bounds' };
     }
     if (isDateUnavailable(date)) return { valid: false, reason: 'unavailable' };
-    /* The checks above read one date on its own and cannot see the partner. A
-       grid click restarts instead of rejecting, on purpose. Equal days are a
-       valid range. */
     const partner = field === 'start' ? draft?.to : draft?.from;
     if (isRange && partner) {
       const typed = dayKey(date, timeZone);
@@ -263,8 +219,6 @@ export function CalendarPreviewInput({
     }
     const resolved = resolve(trimmed);
     if ('valid' in resolved) return;
-    /* A typed endpoint writes the field it was typed into; only a click means
-       "the next endpoint". */
     if (isRange) setEndpoint(field, resolved.date);
     else if (resolved.scale !== 'day')
       selectPeriod(resolved.date, resolved.scale);
@@ -278,14 +232,10 @@ export function CalendarPreviewInput({
   const endpoint = isRange
     ? ((field === 'start' ? draft?.from : draft?.to) ?? null)
     : (scaleDraft ?? (isRangeValue(value) ? null : value));
-  /* A period reads back at its own scale, as `.Trigger` does: the view can sit
-     on days while the committed value is a quarter. */
   const committedText = endpoint
     ? formatValue(endpoint, isScaleValue(endpoint) ? endpoint.scale : scale)
     : '';
-  /* Built from the scales this root actually offers, through the same
-     formatter that renders a committed value — a hardcoded list suggested
-     `15 Aug 2026` to a field that only takes months and quarters. */
+  /* From the scales this root offers, so it cannot suggest a format the parser rejects. */
   const carriesScale = scales.length > 1 || scales[0] !== 'day';
   const resolvedPlaceholder =
     placeholder ??
@@ -306,10 +256,7 @@ export function CalendarPreviewInput({
       data-slot='calendar-preview-input'
       placeholder={resolvedPlaceholder}
       data-field={isRange ? field : undefined}
-      /* `Input` paints `data-active` with the same accent border as focus, so
-         marking the next endpoint while the popover is shut left the start
-         field looking permanently focused. An inline range has no popover to
-         open, and is always live. */
+      /* `Input` paints `data-active` as focus, so a shut popover must not mark an endpoint. */
       data-active={
         isRange && activeField === field && (open || trigger === null)
           ? 'true'
@@ -322,11 +269,7 @@ export function CalendarPreviewInput({
       trailingIcon={trailingIcon}
       disabled={disabled}
       readOnly={readOnly || readOnlyProp}
-      /* Input paints its error border from `data-invalid`, so marking only
-         `aria-invalid` reached assistive tech and left the field looking
-         untouched. Spread rather than set to `undefined`: these props land
-         after Field's, and an explicit `undefined` erases the invalid state
-         Field sets for errors this input knows nothing about. */
+      /* Spread, not set: an explicit `undefined` would erase Field's own invalid state. */
       {...(validity.valid
         ? {}
         : { 'aria-invalid': true, 'data-invalid': true })}

@@ -14,15 +14,11 @@ import { CalendarPreviewHeader } from './calendar-preview-header';
 
 export interface CalendarPreviewDaysProps
   extends useRender.ComponentProps<'div'> {
-  /**
-   * How many months the grid shows side by side.
-   * @defaultValue 1
-   */
+  /** @defaultValue 1 */
   numberOfMonths?: number;
 }
 
-/* Owns what the header and grid share, so two day views in one tree cannot
-   disable each other's navigation. */
+/* Owns what the header and grid share, so two day views cannot disable each other. */
 export function CalendarPreviewDays({
   numberOfMonths = 1,
   className,
@@ -52,8 +48,7 @@ export function CalendarPreviewDays({
         'data-disabled': disabled || undefined,
         'data-readonly': readOnly || undefined,
         'data-busy': busy || undefined,
-        /* Several months caption themselves inside the grid, so a `.Header`
-           here would be a second, redundant row. */
+        /* Several months caption themselves inside the grid, so a `.Header` here would duplicate. */
         children: children ?? (
           <>
             {numberOfMonths <= 1 && <CalendarPreviewHeader />}

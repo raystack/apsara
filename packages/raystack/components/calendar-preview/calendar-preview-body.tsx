@@ -12,12 +12,8 @@ import { CalendarPreviewSeparator } from './calendar-preview-separator';
 
 export interface CalendarPreviewBodyProps
   extends useRender.ComponentProps<'div'> {
-  /** The field label. Omitted, no label renders. */
   label?: ReactNode;
-  /**
-   * Whether the field carries the calendar glyph.
-   * @defaultValue false
-   */
+  /** @defaultValue false */
   showIcon?: boolean;
 }
 
@@ -49,11 +45,8 @@ export function CalendarPreviewBody({
         children: children ?? (
           <>
             <CalendarPreviewLabel>{label}</CalendarPreviewLabel>
-            {/* `undefined` leaves `.Input` to say what the glyph is. */}
             <CalendarPreviewInput trailingIcon={showIcon ? undefined : null} />
             <CalendarPreviewScales />
-            {/* `.Reset` rides in `.Header`, which only the day view mounts, so
-                a period scale would otherwise have no way back to the default. */}
             {scale !== 'day' && <CalendarPreviewReset />}
             <CalendarPreviewSeparator />
             <CalendarPreviewPanel />

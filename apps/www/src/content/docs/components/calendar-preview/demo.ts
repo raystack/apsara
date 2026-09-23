@@ -3,8 +3,6 @@
 import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-/* The grid props drive the playground rather than the root's, because they
-   are what visibly changes: the root's state props need a value to show. */
 export const getCode = (props: ComponentPropsType) => {
   return `<CalendarPreview defaultMonth={new Date(2024, 3, 1)}>
               <CalendarPreview.Days>

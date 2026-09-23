@@ -94,9 +94,7 @@ export function CalendarPreviewScale({
         className,
         'data-slot': 'calendar-preview-scale',
         'data-scale': value,
-        /* `.Scales` renders real `Tabs`; this one is a button a consumer has
-           placed themselves, so it says it is pressed rather than claiming a
-           `tab` role with no tablist around it. */
+        /* Says it is pressed rather than claiming a `tab` role with no tablist around it. */
         'aria-pressed': scale === value,
         'data-active': scale === value || undefined,
         disabled,

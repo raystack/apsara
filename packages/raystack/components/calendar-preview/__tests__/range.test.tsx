@@ -55,7 +55,6 @@ describe('CalendarPreview range machine', () => {
     fireEvent.click(day(container, '20'));
     fireEvent.click(day(container, '10'));
     expect(onValueChange).not.toHaveBeenCalled();
-    /* The earlier day became the new start, so a later click completes. */
     fireEvent.click(day(container, '15'));
     expect(onValueChange.mock.calls[0][0]).toEqual({
       from: new Date(2026, 7, 10),
@@ -128,8 +127,7 @@ describe('CalendarPreview range inputs', () => {
     expect(end).toHaveAttribute('placeholder', 'Select end date');
   });
 
-  /* `Input` paints `data-active` with the focus border, so marking an endpoint
-     behind a shut popover left the start field looking focused on load. */
+  /* `Input` paints `data-active` as focus, so a shut popover must mark nothing. */
   it('marks no endpoint while the popover is shut', () => {
     const { container } = renderRange({}, picker);
     const [start, end] = inputs(container);
@@ -176,7 +174,6 @@ describe('CalendarPreview range inputs', () => {
     expect(end.value).toBe('20 Aug 2026');
   });
 
-  /* `lock` is gone: a read-only endpoint is one read-only `.Input`. */
   it('never lets a grid click rewrite a read-only endpoint', () => {
     const onValueChange = vi.fn();
     const { container } = renderRange(
@@ -195,8 +192,6 @@ describe('CalendarPreview range inputs', () => {
       </>
     );
     fireEvent.focus(inputs(container)[1]);
-    /* A click that would restart the range has to rewrite `from`, which is
-       read-only, so nothing moves. */
     fireEvent.click(day(document.body, '5'));
     expect(onValueChange).not.toHaveBeenCalled();
   });
@@ -293,8 +288,6 @@ describe('CalendarPreview range parts that read the value', () => {
     </>
   );
 
-  /* `.Days` renders `.Header` renders `.Reset`, so this is the default
-     composition — it threw on `dayKey(range)` before the shape guard. */
   it('renders the default composition with a range value and a defaultDate', () => {
     expect(() =>
       renderRange({ defaultValue: RANGE, defaultDate: RANGE.from })
@@ -329,7 +322,6 @@ describe('CalendarPreview range parts that read the value', () => {
     expect(reset).toHaveAttribute('data-restored');
   });
 
-  /* Both edges have to match — a shared start is not a restored range. */
   it('is not restored when only one edge matches the default', () => {
     const { container } = renderRange({
       defaultValue: RANGE,
@@ -338,7 +330,6 @@ describe('CalendarPreview range parts that read the value', () => {
     expect(getSlot(container, 'calendar-preview-reset')).not.toBeDisabled();
   });
 
-  /* Clearing is shape-agnostic, so a `null` default keeps working. */
   it('keeps .Reset for a null defaultDate, and clears the range', () => {
     const onValueChange = vi.fn();
     const { container } = renderRange({
@@ -522,7 +513,6 @@ describe('CalendarPreview range order validation', () => {
     );
   });
 
-  /* The grid keeps its restart rule — only typing is strict. */
   it('still lets a grid click restart the range from an earlier day', () => {
     const onValueChange = vi.fn();
     const { container } = renderRange({ defaultValue: RANGE, onValueChange });
@@ -753,7 +743,6 @@ describe('CalendarPreview range endpoints the review left open', () => {
     fireEvent.keyDown(input, { key: 'Enter' });
   };
 
-  /* A click means "the next endpoint"; typing means the field typed into. */
   it('keeps a typed end in the end field when there is no start yet', () => {
     const { start, end } = renderFields();
     type(end, '20 Aug 2026');
@@ -772,8 +761,6 @@ describe('CalendarPreview range endpoints the review left open', () => {
     });
   });
 
-  /* The verdict on retained text depends on the partner, so it has to be
-     re-read when the partner moves rather than left where it was. */
   it('clears a crossing end once the start moves behind it', () => {
     const { container, end } = renderFields();
     fireEvent.click(day(container, '10'));
@@ -785,7 +772,6 @@ describe('CalendarPreview range endpoints the review left open', () => {
     expect(end).not.toHaveAttribute('data-invalid');
   });
 
-  /* A draft is half a range built against the value it started from. */
   it('drops a half-built draft when the consumer moves the value', () => {
     const { container, rerender, start, end } = renderFields({
       value: null
@@ -812,8 +798,6 @@ describe('CalendarPreview range endpoints the review left open', () => {
     expect(end.value).toBe('07 Aug 2026');
   });
 
-  /* Emptying one field writes a draft and clears the value in the same pass,
-     and that draft is the whole point of it. */
   it('keeps the draft that emptying one field leaves behind', () => {
     const { start, end } = renderFields({
       defaultValue: { from: new Date(2026, 7, 10), to: new Date(2026, 7, 20) }

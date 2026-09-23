@@ -33,8 +33,6 @@ describe('CalendarPreview picker composition', () => {
     const { container, input } = renderPicker();
     expect(getSlot(container, 'calendar-preview-trigger')).toBeInTheDocument();
     expect(input).toBeInTheDocument();
-    /* The trigger wraps a control, and a control inside a button is not
-       focusable on its own. */
     expect(getSlot(container, 'calendar-preview-trigger')?.tagName).not.toBe(
       'BUTTON'
     );
@@ -53,7 +51,6 @@ describe('CalendarPreview picker composition', () => {
     fireEvent.focus(input);
     expect(onOpenChange).toHaveBeenCalledTimes(1);
     expect(onOpenChange.mock.calls[0][0]).toBe(true);
-    /* Base UI's own reason, forwarded rather than re-declared. */
     expect(onOpenChange.mock.calls[0][1].reason).toBe('trigger-focus');
   });
 
@@ -92,8 +89,6 @@ describe('CalendarPreview picker composition', () => {
     expect(isOpen()).toBe(true);
   });
 
-  /* Focus never leaves the input in this composition, so no focus event
-     follows the close for the reopen guard to consume. */
   it('opens on focus again after Escape closed it', () => {
     const { input } = renderPicker();
     /* Real focus, so the guard can see where it is; the event drives it. */
@@ -182,8 +177,6 @@ describe('CalendarPreview.Input commit', () => {
     expect(onValueChange.mock.calls[0][0]).toEqual(expected);
   });
 
-  /* Coarser scales parse, but have nowhere to go until the scale switcher
-     lands, so they must not commit a day the user never typed. */
   it('refuses a coarser scale until the scale views ship', () => {
     const onValueChange = vi.fn();
     const onValidityChange = vi.fn();
@@ -302,9 +295,6 @@ describe('CalendarPreview.Input validity', () => {
   });
 });
 
-/* `aria-invalid` alone reached only assistive tech: Input paints its error
-   border from `data-invalid`, so a sighted user saw an untouched field. These
-   pin both attributes together -- dropping either one silently restores that. */
 describe('CalendarPreview.Input invalid marking', () => {
   it('marks nothing before anything is typed', () => {
     const { input } = renderPicker();
@@ -327,9 +317,6 @@ describe('CalendarPreview.Input invalid marking', () => {
     expect(input).toHaveAttribute('aria-invalid', 'true');
   });
 
-  /* Input paints the border from `:has(.input-field[data-invalid])`, so what
-     the style depends on is the marked input sitting inside the container --
-     not the slot name, which this part overrides with its own. */
   it('marks the input inside the container the border is keyed on', () => {
     const { container, input } = renderPicker();
     fireEvent.change(input, { target: { value: 'not a date' } });
@@ -354,8 +341,6 @@ describe('CalendarPreview.Input invalid marking', () => {
     expect(input).not.toHaveAttribute('data-invalid');
   });
 
-  /* A failed commit keeps the draft rather than discarding the typing, so the
-     mark has to survive the blur that failed to commit it. */
   it('stays marked after a blur that could not commit', () => {
     const { input } = renderPicker({ defaultValue: new Date(2026, 7, 20) });
     fireEvent.change(input, { target: { value: 'garbage' } });
@@ -370,9 +355,6 @@ describe('CalendarPreview.Input invalid marking', () => {
     expect(input).not.toHaveAttribute('data-invalid');
   });
 
-  /* Field marks its control invalid for errors this input cannot see — a
-     failed submit, a server response. Setting the attributes to `undefined`
-     while valid erased that, because these props land after Field's. */
   it('leaves an error Field set alone while its own text is valid', () => {
     const { container } = render(
       <Field error='Server said no'>
@@ -430,8 +412,6 @@ describe('CalendarPreview.Input error messages', () => {
     });
   });
 
-  /* A partial override is the common case: one reason worded for the field,
-     the rest left alone. */
   it('leaves the reasons it was not given on the default', () => {
     const onValidityChange = vi.fn();
     const { input } = renderPicker(
@@ -451,8 +431,6 @@ describe('CalendarPreview.Input error messages', () => {
     );
   });
 
-  /* The reason is unchanged across these keystrokes, so only a message that
-     is part of the comparison makes this re-fire. */
   it('re-reports when only the message changed', () => {
     const onValidityChange = vi.fn();
     const { rerender, input } = renderPicker(
@@ -624,9 +602,7 @@ describe('CalendarPreview.Trigger and the focus a dismissal gives back', () => {
     expect(isOpen()).toBe(false);
   });
 
-  /* Base UI restores focus after an outside press only where
-     `focus({ preventScroll })` is supported, and jsdom ignores the options
-     object outright, so the assertion below cannot fail without this. */
+  /* jsdom ignores `focus({ preventScroll })`, without which the assertion cannot fail. */
   const withPreventScroll = () => {
     const focus = HTMLElement.prototype.focus;
     HTMLElement.prototype.focus = function patched(options?: FocusOptions) {
@@ -725,9 +701,6 @@ describe('CalendarPreview.Trigger beside a Body that owns the input', () => {
 });
 
 describe('CalendarPreview picker props the review left open', () => {
-  /* `onValueChange` is inherited from `Input`, so a consumer passing it used
-     to replace the handler that keeps the draft — and Enter then committed
-     nothing at all. */
   it('composes a consumer onValueChange rather than replacing it', () => {
     const onInputValueChange = vi.fn();
     const onValueChange = vi.fn();
@@ -745,8 +718,6 @@ describe('CalendarPreview picker props the review left open', () => {
     expect(onValueChange.mock.calls[0][0]).toEqual(new Date(2027, 4, 20));
   });
 
-  /* Retained text is judged against the bounds, and the bounds can move while
-     it sits there. */
   it('re-judges drafted text when the bounds move under it', () => {
     const { input, rerender } = renderPicker({
       minDate: new Date(2026, 7, 10)
@@ -804,8 +775,6 @@ describe('CalendarPreview picker props the review left open', () => {
     expect(onValidityChange).toHaveBeenLastCalledWith({ valid: true });
   });
 
-  /* Without an `.Input` the trigger is the control, so it carries the tab
-     stop — Base UI adds none to a rendered `div`. */
   it('gives a trigger with no input a tab stop of its own', () => {
     const { container } = render(
       <CalendarPreview today={TODAY} defaultMonth={AUGUST}>
@@ -829,12 +798,7 @@ describe('CalendarPreview picker props the review left open', () => {
   });
 });
 
-/* Base UI moves focus to the first tabbable element in the popup, which around
-   a field is the previous-month button — so opening the picker took focus off
-   the field the user had just clicked and nothing they typed landed. */
 describe('CalendarPreview.Content initial focus', () => {
-  /* Long enough that Base UI's own initial-focus pass has certainly run — at
-     0ms these assertions pass whether or not focus would have moved. */
   const settle = () => new Promise(resolve => setTimeout(resolve, 100));
 
   it('leaves focus on the field the popover opened from', async () => {
@@ -890,7 +854,6 @@ describe('CalendarPreview.Content initial focus', () => {
     expect(end.value).toBe('20 Aug 2026');
   });
 
-  /* The other half: with nothing to keep focus for, the popup takes it. */
   it('still moves focus into the popup when the trigger wraps no input', async () => {
     const utils = render(
       <CalendarPreview today={TODAY} defaultMonth={AUGUST}>

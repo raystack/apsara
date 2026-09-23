@@ -18,14 +18,11 @@ export type CalendarPreviewPeriodViewProps = useRender.ComponentProps<'div'>;
 interface Cell {
   key: string;
   label: string;
-  /* A timeless day, not an instant: "August 2026" is a calendar period, and
-     keying it from a local `Date` read it a month early west of the zone. */
   date: DayKey;
 }
 
 const MONTHS = monthShortNames();
 
-/* A month out of `dayKeyFromParts`' range has no cell rather than a bad one. */
 function cellsFor(scale: Scale, year: number): Cell[] {
   const at = (key: string, label: string, month: number): Cell | null => {
     const date = dayKeyFromParts(year, month, 1);
@@ -91,10 +88,7 @@ function PeriodView({
 
   const isActive = scale === viewScale;
 
-  /* All five views mount at once and four render nothing, so the inactive ones
-     build no cells at all. The rest is date maths over every cell in the
-     range — a year of months is 12 of them — and none of it moves when the
-     selection does, so it is held rather than redone per render. */
+  /* All five views mount at once, so the inactive ones build no cells. */
   const groups = useMemo(() => {
     if (!isActive) return [];
     const all = years.map(year => ({
@@ -105,20 +99,14 @@ function PeriodView({
         unavailable: !isPeriodAvailable(cell.date, viewScale)
       }))
     }));
-    /* `yearRange` stretches to cover the bounds so no year is unreachable,
-       which leaves the years outside them rendered as nothing but dead
-       buttons — a tab stop each, half the list under a mid-range `minDate`.
-       They go, unless that would empty the panel, which reads as broken
-       rather than bounded. */
+    /* Years outside the bounds would be dead tab stops, unless dropping them empties the panel. */
     const reachable = all.filter(group =>
       group.cells.some(cell => !cell.unavailable)
     );
     return reachable.length > 0 ? reachable : all;
   }, [isActive, years, viewScale, trailingValue, isPeriodAvailable]);
 
-  /* Keyed on becoming active, not on mount: every view mounts at once, so a
-     mount effect would fire with an empty ref. Scrolls the container, not
-     `scrollIntoView`, which would move the popover with it. */
+  /* On becoming active, not on mount: a mount effect fires with an empty ref. */
   const activeRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!isActive) return;

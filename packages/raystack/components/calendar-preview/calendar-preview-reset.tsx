@@ -11,8 +11,7 @@ import { dayKey } from './date-adapter';
 
 export type CalendarPreviewResetProps = ComponentProps<typeof IconButton>;
 
-/* Stays mounted and disabled rather than unmounting: that would send focus to
-   `<body>` mid-calendar, and drop a `flex: none` child holding the nav. */
+/* Unmounting would send focus to `<body>` and drop the nav's `flex: none` child. */
 export function CalendarPreviewReset({
   className,
   children,
@@ -23,8 +22,6 @@ export function CalendarPreviewReset({
   const { value, defaultDate, reset, disabled, readOnly, timeZone } =
     useCalendarPreviewContext('CalendarPreview.Reset');
 
-  /* No `defaultDate` means the part has no job at all, which is a different
-     thing from having nothing to restore right now — `null` is a default. */
   if (defaultDate === undefined) return null;
 
   const sameDay = (a: Date, b: Date) =>
@@ -45,12 +42,7 @@ export function CalendarPreviewReset({
               value.date === defaultDate.date &&
               value.scale === defaultDate.scale);
 
-  /* `restored` takes `aria-disabled`, not `disabled`: the button disables
-     itself the moment it is activated, and a disabled element cannot hold
-     focus — so a keyboard reset dropped the user on `<body>` in the middle of
-     the calendar, which is the thing staying mounted was meant to avoid.
-     Inertness that comes from outside is a real `disabled`; nothing moves
-     focus onto the button at that point. */
+  /* `aria-disabled`, not `disabled`: a disabled element cannot hold the focus it was activated with. */
   const inert = disabled || readOnly || disabledProp;
 
   return (

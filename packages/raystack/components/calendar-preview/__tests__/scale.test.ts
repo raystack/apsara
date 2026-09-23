@@ -136,11 +136,6 @@ describe('anchorOf', () => {
 });
 
 describe('convertScale — every direction', () => {
-  /*
-   * The anchor is 15 August 2026, which sits in August, Q3, H2 and 2026. Every
-   * cell is the period of the target scale containing that anchor, read at the
-   * stated edge.
-   */
   const leading: Record<Scale, string> = {
     day: '2026-08-15',
     month: '2026-08-01',
@@ -296,8 +291,6 @@ describe('isAvailable', () => {
     });
 
     it('tests the produced date, not the period start', () => {
-      /* Every period above starts before the bound; only the produced date
-       * separates them. */
       for (const [day, scale] of [
         ['2026-01-01', 'halfYear'],
         ['2026-07-01', 'month'],

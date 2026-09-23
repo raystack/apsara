@@ -22,20 +22,10 @@ import {
   shiftMonths
 } from './date-adapter';
 
-/* Two elements, so two prop shapes: a plain caption is a `span`, one that
-   opens the scroller is a `button`. */
 export type CalendarPreviewCaptionProps =
   | ({ dropdown?: false } & useRender.ComponentProps<'span'>)
   | ({ dropdown: true } & useRender.ComponentProps<'button'>);
 
-/**
- * The label above the grid. Children replace it entirely, so
- * `<CalendarPreview.Caption>Q3 2026</CalendarPreview.Caption>` works.
- *
- * With `dropdown` it opens our own month and year scroller. No `Select` may be
- * mounted here — one is what makes the popover dismissal loop return. Picking
- * moves the view; it never selects a value.
- */
 export function CalendarPreviewCaption(props: CalendarPreviewCaptionProps) {
   return props.dropdown ? (
     <CaptionDropdown {...props} />
@@ -183,8 +173,7 @@ function CaptionColumn({
 }) {
   const activeRef = useRef<HTMLButtonElement>(null);
 
-  /* A twenty-year column otherwise opens scrolled to the wrong end. Optional
-     call: jsdom does not implement scrollIntoView. */
+  /* A twenty-year column otherwise opens scrolled to the wrong end. */
   useEffect(() => {
     activeRef.current?.scrollIntoView?.({ block: 'center' });
   }, []);

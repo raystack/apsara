@@ -43,8 +43,7 @@ describe('CalendarPreview data-slot contract', () => {
         .map(element => element.getAttribute('data-slot') ?? '')
         .filter(name => name.startsWith('calendar-preview'))
     );
-    /* Fails on a typo or an undocumented addition as loudly as on a rename,
-       which is the point: slot names are semver-covered public API. */
+    /* Slot names are semver-covered public API. */
     expect([...rendered].sort()).toEqual(
       [
         'calendar-preview',
@@ -65,9 +64,6 @@ describe('CalendarPreview data-slot contract', () => {
     );
   });
 
-  /* The inventory above renders the default grid, so a slot that only appears
-     under a prop cannot be caught by it. `showWeekNumber` shipped with two
-     elements carrying an empty `data-slot` for exactly that reason. */
   it('renders exactly the documented slots with the optional columns on', () => {
     const { container } = renderCalendar(
       <CalendarPreview.Days>
@@ -98,8 +94,6 @@ describe('CalendarPreview data-slot contract', () => {
     );
   });
 
-  /* No element may ship a blank slot: `[data-slot]` is the styling and
-     testing contract, and an empty one silently opts out of it. */
   it('never renders an empty data-slot', () => {
     const { container } = renderCalendar(
       <CalendarPreview.Days>
@@ -130,8 +124,6 @@ describe('CalendarPreview data-slot contract', () => {
       'calendar-preview-weekday',
       'calendar-preview-day'
     ]);
-    /* The single-month header is the one slot this layout must not render —
-       each month captions itself instead. */
     expect(getSlot(container, 'calendar-preview-header')).toBeNull();
   });
 
@@ -244,8 +236,6 @@ describe('CalendarPreview state attributes', () => {
     );
   });
 
-  /* The root says what scale is committed; the cells say it per cell. Nothing
-     in between repeats it. */
   it('carries the scale on the root and on every cell, and nowhere between', () => {
     const { container } = renderCalendar();
     expect(getSlot(container, 'calendar-preview')).toHaveAttribute(
@@ -295,8 +285,7 @@ describe('CalendarPreview state attributes', () => {
 
   it('renders no outside days by default', () => {
     const { container } = renderCalendar();
-    /* August 2026 starts on a Saturday, so a grid that showed outside days
-       would open with five of them. Reference A leaves those cells blank. */
+    /* August 2026 starts on a Saturday, so outside days would show five. */
     const outside = getAllSlots(container, 'calendar-preview-day').filter(
       cell => cell.hasAttribute('data-outside')
     );

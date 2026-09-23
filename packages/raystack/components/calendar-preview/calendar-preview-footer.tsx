@@ -8,8 +8,6 @@ import styles from './calendar-preview.module.css';
 
 export type CalendarPreviewFooterProps = ComponentProps<typeof Flex>;
 
-/* A bare string is wrapped in `Text` so the common case needs no knowledge of
-   the type scale; anything else renders as given. */
 export function CalendarPreviewFooter({
   className,
   children,

@@ -148,8 +148,6 @@ describe('CalendarPreview availability differs by field', () => {
   });
 });
 
-/* The suite runs at TZ=UTC, so a cell built from a local `Date` keyed a day
-   early west of UTC and a period late east of it. */
 describe('CalendarPreview periods ignore the time zone', () => {
   it.each([
     ['Pacific/Niue'],
@@ -199,8 +197,6 @@ describe('CalendarPreview opens at the committed scale', () => {
   });
 });
 
-/* `.Reset` rides in `.Header`, which only the day view mounts, so a period
-   scale had no way back to the default at all. */
 describe('CalendarPreview.Reset is reachable at every scale', () => {
   const QUARTER = { date: '2026-07-01', scale: 'quarter' } as const;
 
@@ -234,8 +230,6 @@ describe('CalendarPreview.Reset is reachable at every scale', () => {
 });
 
 describe('CalendarPreview reads a period at its own scale', () => {
-  /* The view opens on `scales[0]`, so a committed quarter is shown while the
-     day grid is up; formatting it at the view's scale called it a day. */
   it('agrees between .Trigger and .Input on a committed period', () => {
     const { container } = render(
       <CalendarPreview
@@ -279,8 +273,7 @@ describe('CalendarPreview settles the scale out loud', () => {
     expect(onScaleChange).toHaveBeenLastCalledWith('day');
   });
 
-  /* A controlled `scale` moves only when the consumer is told to move it, so
-     settling through the raw setter left the switcher stuck on the draft. */
+  /* The raw setter left a controlled switcher stuck on the draft. */
   it('moves a controlled scale back when the draft is dropped', () => {
     function Controlled() {
       const [scale, setScale] = useState<Scale>('day');
@@ -634,8 +627,6 @@ describe('CalendarPreview scale anchors on the visible month', () => {
   });
 });
 
-/* A click and a typed day are the same intent, so they must commit the same
-   shape: the grid honoured the root's arm and the input wrote a bare Date. */
 describe('CalendarPreview commits a day at one shape', () => {
   const typeDay = (container: HTMLElement) => {
     const input = getSlot(
@@ -902,8 +893,6 @@ describe('CalendarPreview.Input reads the root clock', () => {
     });
   });
 
-  /* The end root of a scale pair: single selection, its own `scales`, its own
-     `trailingValue`. The parser hands back the first day either way. */
   it('commits a typed period at the trailing edge of an end root', () => {
     const onValueChange = vi.fn();
     const { container } = render(
@@ -989,8 +978,6 @@ describe('CalendarPreview drops a scale draft when the popover closes', () => {
     return { ...utils, input };
   }
 
-  /* `.Body` carries an Escape handler; this composition does not, which is
-     why the root has to drop the draft rather than the part. */
   it('restores the field and the scale when Escape closes a bare panel', () => {
     const { container, input } = renderScalePicker({
       value: { date: '2026-08-20', scale: 'day' }
@@ -1068,8 +1055,6 @@ describe('CalendarPreview.Scale announces which scale is active', () => {
   });
 });
 
-/* `convertScale` is lossy outward and does not undo, so a run of switches has
-   to convert from where it started rather than from the draft it last made. */
 describe('CalendarPreview scale switches round-trip', () => {
   const caption = (container: HTMLElement) =>
     getSlot(container, 'calendar-preview-caption')?.textContent;
@@ -1104,7 +1089,6 @@ describe('CalendarPreview scale switches round-trip', () => {
       defaultValue: { date: '2026-08-15', scale: 'day' }
     });
     switchTo(container, 'year');
-    /* Converting from the year draft would land on January. */
     switchTo(container, 'month');
     expect(field(container)).toBe('Aug 2026');
   });
@@ -1139,8 +1123,6 @@ describe('CalendarPreview scale switches round-trip', () => {
   });
 });
 
-/* The same day opens Q1, H1 and the year, so a cell has to match the scale the
-   value means as well as its date. */
 describe('CalendarPreview period cells match the value scale', () => {
   const marked = (container: HTMLElement) =>
     getAllSlots(container, 'calendar-preview-period')
@@ -1187,9 +1169,6 @@ describe('CalendarPreview period cells match the value scale', () => {
   });
 });
 
-/* `yearRange` stretches to cover the bounds so no year is out of reach, which
-   leaves the years outside them as nothing but dead buttons — and every one is
-   a tab stop. */
 describe('CalendarPreview period lists drop unreachable years', () => {
   const groupYears = (container: HTMLElement) =>
     getAllSlots(container, 'calendar-preview-period-group').map(group =>
@@ -1210,8 +1189,6 @@ describe('CalendarPreview period lists drop unreachable years', () => {
     expect(years).toContain('2036');
   });
 
-  /* A year the bound runs through keeps all twelve: half of it is selectable,
-     and hiding the rest would misreport where the bound falls. */
   it('keeps every cell of a year the bound runs through', () => {
     const { container } = renderBody({
       minDate: new Date(2026, 6, 15),
@@ -1230,8 +1207,6 @@ describe('CalendarPreview period lists drop unreachable years', () => {
     expect(groupYears(container)).toHaveLength(21);
   });
 
-  /* An empty panel reads as broken rather than bounded, so the dead list is
-     better than no list. */
   it('keeps the dead years when every year is dead', () => {
     const { container } = renderBody({
       minDate: new Date(2026, 5, 1),

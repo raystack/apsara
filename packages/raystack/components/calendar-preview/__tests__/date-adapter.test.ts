@@ -36,10 +36,7 @@ describe('dayKey', () => {
     expect(dayKey(instant, 'America/New_York')).toBe('2026-08-31');
   });
 
-  /* `Date.UTC(0, 0, 1)` means 1900, so the far years are set explicitly. Two
-     builders, because a zone-less `dayKey` reads local: an instant built in UTC
-     lands on the neighbouring year either side of the line, which is what the
-     suite's pinned `TZ` used to paper over. */
+  /* `Date.UTC(0, 0, 1)` means 1900, and a zone-less `dayKey` reads local. */
   const atLocalYear = (year: number): Date => {
     const date = new Date(2000, 0, 1);
     date.setFullYear(year, 0, 1);
@@ -240,8 +237,6 @@ describe('monthShortNames', () => {
     expect(names[11]).toBe('Dec');
   });
 
-  /* The caption's month column shows these, so the parser has to take them
-     back — the same contract the full names carry. */
   it('round-trips through monthFromName', () => {
     monthShortNames().forEach((name, index) => {
       expect(monthFromName(name)).toBe(index + 1);
