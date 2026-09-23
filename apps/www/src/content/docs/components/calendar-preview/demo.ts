@@ -639,7 +639,7 @@ export const scaleDemo = {
               defaultMonth={new Date(2026, 7, 1)}
               defaultScale="quarter"
             >
-              <CalendarPreview.Body />
+              <CalendarPreview.Body showIcon />
             </CalendarPreview>`
     },
     {
@@ -648,7 +648,7 @@ export const scaleDemo = {
               scales={['day', 'month', 'quarter', 'halfYear', 'year']}
               defaultMonth={new Date(2026, 7, 1)}
             >
-              <CalendarPreview.Body />
+              <CalendarPreview.Body showIcon />
             </CalendarPreview>`
     },
     {
@@ -659,14 +659,14 @@ export const scaleDemo = {
             >
               <CalendarPreview.Trigger placeholder="Add start date" />
               <CalendarPreview.Content>
-                <CalendarPreview.Body />
+                <CalendarPreview.Body showIcon />
               </CalendarPreview.Content>
             </CalendarPreview>`
     },
     {
       name: 'Periods only',
       code: `<CalendarPreview scales={['month', 'quarter', 'year']} defaultScale="month">
-              <CalendarPreview.Body />
+              <CalendarPreview.Body showIcon />
             </CalendarPreview>`
     },
     {
@@ -683,7 +683,7 @@ export const scaleDemo = {
               trailingValue
               minDate={new Date(2026, 6, 15)}
             >
-              <CalendarPreview.Body />
+              <CalendarPreview.Body showIcon />
             </CalendarPreview>`
     },
     {
@@ -700,7 +700,7 @@ function CalendarPreviewTrailingExample() {
         <CalendarPreview scales={scales} value={start} onValueChange={setStart}>
           <CalendarPreview.Trigger placeholder="Add start date" />
           <CalendarPreview.Content>
-            <CalendarPreview.Body />
+            <CalendarPreview.Body showIcon />
           </CalendarPreview.Content>
         </CalendarPreview>
 
@@ -709,7 +709,7 @@ function CalendarPreviewTrailingExample() {
         <CalendarPreview scales={scales} trailingValue value={end} onValueChange={setEnd}>
           <CalendarPreview.Trigger placeholder="Add end date" />
           <CalendarPreview.Content>
-            <CalendarPreview.Body />
+            <CalendarPreview.Body showIcon />
           </CalendarPreview.Content>
         </CalendarPreview>
       </Flex>
@@ -731,9 +731,13 @@ export const scalePairDemo = {
         scales={['day', 'month', 'quarter', 'halfYear', 'year']}
         defaultValue={{ date: '2026-08-01', scale: 'day' }}
       >
-        <CalendarPreview.Trigger placeholder="Add start date" />
+        <CalendarPreview.Trigger
+          render={<Button variant="outline" size="small" />}
+          nativeButton
+          placeholder="Add start date"
+        />
         <CalendarPreview.Content>
-          <CalendarPreview.Body />
+          <CalendarPreview.Body showIcon label="Start date" />
         </CalendarPreview.Content>
       </CalendarPreview>
 
@@ -745,9 +749,13 @@ export const scalePairDemo = {
         minDate={new Date(2026, 7, 1)}
         defaultValue={{ date: '2026-09-30', scale: 'quarter' }}
       >
-        <CalendarPreview.Trigger placeholder="Add end date" />
+        <CalendarPreview.Trigger
+          render={<Button variant="outline" size="small" />}
+          nativeButton
+          placeholder="Add end date"
+        />
         <CalendarPreview.Content>
-          <CalendarPreview.Body />
+          <CalendarPreview.Body showIcon label="End date" />
         </CalendarPreview.Content>
       </CalendarPreview>
     </Flex>`

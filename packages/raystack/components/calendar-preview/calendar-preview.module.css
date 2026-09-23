@@ -1,13 +1,9 @@
-/* Hugs its content and stacks its parts, so `.Days` and `.Footer` sit one
-   above the other whatever the surrounding layout does. */
 .root {
   display: flex;
   flex-direction: column;
   width: fit-content;
 }
 
-/* The day view hugs its content — no reserved height, so the surface around it
-   can size itself instead of being padded out to a fixed number. */
 .days {
   display: flex;
   flex-direction: column;
@@ -30,7 +26,6 @@
   margin-bottom: var(--rs-space-3);
 }
 
-/* `showWeekNumber` is a `.Grid` prop, so the header asks the rendered grid. */
 .days:has(.week-number-header) .header {
   padding-inline-start: var(--rs-space-10);
 }
@@ -40,30 +35,11 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
-.header .nav-button,
-.month-header .nav-button {
-  width: var(--rs-space-8);
-  height: var(--rs-space-7);
-  padding: 0;
-}
-
-.header .nav-button > div,
-.header .nav-button > div > *,
-.month-header .nav-button > div,
-.month-header .nav-button > div > * {
-  width: var(--rs-space-4);
-  height: var(--rs-space-4);
-}
-
 .nav-button:disabled {
   color: var(--rs-color-foreground-base-tertiary);
   cursor: not-allowed;
 }
 
-/* `.Reset` says it is off with `aria-disabled`, not `disabled`, so that it can
-   keep the focus it was activated with — which means the look `:disabled`
-   would have given it has to be spelled out. Both classes, to outweigh
-   `IconButton`'s own `:hover:not(:disabled)`. */
 .nav-button.reset[aria-disabled="true"] {
   opacity: 0.5;
   color: var(--rs-color-foreground-base-tertiary);
@@ -77,7 +53,6 @@
   transform: none;
 }
 
-/* Takes the space left of the buttons, which group at the end. */
 .caption {
   flex: 1;
   text-align: start;
@@ -90,7 +65,6 @@
   -webkit-user-select: none;
 }
 
-/* `flex: none` undoes `.caption`'s stretch, so the chip hugs its label. */
 .caption-trigger {
   display: inline-flex;
   flex: none;
@@ -101,14 +75,15 @@
   padding: var(--rs-space-2) var(--rs-space-3);
   border: none;
   border-radius: var(--rs-radius-2);
-  background: var(--rs-color-background-neutral-secondary);
+  background: transparent;
   color: inherit;
   font-family: inherit;
   cursor: pointer;
 }
 
-.caption-trigger:hover:not(:disabled) {
-  background: var(--rs-color-background-neutral-secondary-hover);
+.caption-trigger:hover:not(:disabled),
+.caption-trigger:active:not(:disabled) {
+  background: var(--rs-color-background-base-primary-hover);
 }
 
 .caption-trigger:focus-visible {
@@ -125,33 +100,44 @@
   z-index: 1;
 }
 
-/* Plain buttons, not a Select: a portalled listbox would read as outside the
-   surrounding popover. */
 .caption-popup {
   display: flex;
-  gap: var(--rs-space-2);
-  padding: var(--rs-space-2);
-  border: 1px solid var(--rs-color-border-base-primary);
-  border-radius: var(--rs-radius-4);
+  overflow: hidden;
+  border: 0.5px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-2);
   background: var(--rs-color-background-base-primary);
   box-shadow: var(--rs-shadow-lifted);
 }
 
 .caption-popup .caption-divider[data-orientation="vertical"] {
+  width: 0.5px;
   height: auto;
   align-self: stretch;
 }
 
+.caption-popup .caption-scroller {
+  flex: none;
+  width: auto;
+}
+
+.caption-scroller [data-slot="scroll-area-viewport"] {
+  max-height: calc(var(--rs-space-10) * 6);
+}
+
 .caption-column {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: var(--rs-space-1);
-  overflow-y: auto;
-  /* Six rows of the day-cell height; taller lists scroll. */
-  max-height: calc(var(--rs-space-10) * 6);
+  gap: var(--rs-space-2);
   padding: var(--rs-space-2);
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+}
+
+.caption-column[data-slot="calendar-preview-caption-months"] {
+  width: var(--rs-space-12);
+}
+
+.caption-column[data-slot="calendar-preview-caption-years"] {
+  width: var(--rs-space-13);
 }
 
 .caption-option {
@@ -178,8 +164,6 @@
   outline-offset: var(--rs-focus-ring-offset-inset);
 }
 
-/* Grey, not accent: the scroller marks which month and year are in view, which
-   is a different thing from the selected day the grid fills in accent. */
 .caption-option[data-active] {
   background: var(--rs-color-background-neutral-secondary);
   color: var(--rs-color-foreground-base-primary);
@@ -189,7 +173,6 @@
   flex: none;
 }
 
-/* Both nav tracks stay reserved, so the caption centres on its grid. */
 .month-header {
   display: grid;
   grid-template-columns: var(--rs-space-8) 1fr var(--rs-space-8);
@@ -203,25 +186,14 @@
   grid-column: 1;
 }
 
-.root {
-  --rs-caption-inset: calc((var(--rs-space-10) - var(--rs-space-6)) / 2);
-}
-
-.header .caption:not([data-dropdown]) {
-  padding-inline-start: var(--rs-caption-inset);
-}
-
-.header .caption[data-dropdown] {
-  margin-inline-start: calc(var(--rs-caption-inset) - var(--rs-space-3));
-}
-
-.body .label,
+.header .caption:not([data-dropdown]),
 .panel .header .caption:not([data-dropdown]) {
-  padding-inline-start: var(--rs-caption-inset);
+  padding-inline-start: var(--rs-space-4);
 }
 
+.header .caption[data-dropdown],
 .panel .header .caption[data-dropdown] {
-  margin-inline-start: 0;
+  margin-inline-start: var(--rs-space-2);
 }
 
 .month-header-caption {
@@ -267,7 +239,6 @@
   position: relative;
 }
 
-/* The UA's 2px border-spacing would leave the header wider than its columns. */
 .weeks table {
   border-spacing: 0;
 }
@@ -356,8 +327,6 @@
   visibility: hidden;
 }
 
-/* Sits between the cell and the button, so it has to pass the cell's box
-   through: `.day-button` inherits its radius and sizes against it. */
 .day-trigger {
   display: block;
   width: 100%;
@@ -393,8 +362,6 @@
   cursor: not-allowed;
 }
 
-/* The same border hover paints, so the two rings match. An outline on the
-   button cannot: its radius grows outward and misses the arc by a pixel. */
 .day:has(.day-button:focus-visible) {
   border-color: var(--rs-color-border-accent-emphasis);
 }
@@ -403,7 +370,6 @@
   outline: none;
 }
 
-/* Today's dot sits under the number, and rides up when a day carries info. */
 .day-button[data-today]::after {
   content: "";
   position: absolute;
@@ -452,7 +418,7 @@
 .skeleton {
   position: absolute;
   inset: 0;
-  /* Solid backing so the grid underneath doesn't ghost through mid-fade. */
+
   background: var(--rs-color-background-base-primary);
   opacity: 0;
   visibility: hidden;
@@ -462,7 +428,6 @@
 .skeleton[data-visible] {
   opacity: 1;
   visibility: visible;
-  /* Block clicks on the day grid underneath while loading. */
   pointer-events: auto;
 }
 
@@ -475,14 +440,12 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .skeleton {
-    /* Exiting: fade opacity, then flip visibility after the fade. */
     transition:
       opacity var(--rs-duration-fast) var(--rs-ease-out),
       visibility 0s linear var(--rs-duration-fast);
   }
 
   .skeleton[data-visible] {
-    /* Entering: visibility flips immediately, opacity fades in. */
     transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
   }
 }
@@ -492,7 +455,6 @@
   margin-top: var(--rs-space-2);
 }
 
-/* The trigger is a plain box: it wraps `.Input`, which draws its own field. */
 .trigger {
   display: inline-flex;
   align-items: center;
@@ -502,7 +464,6 @@
   cursor: not-allowed;
 }
 
-/* Opts out of the shared popover's `max-width: 18rem`, which cropped Saturday. */
 .content {
   padding: 0;
   width: max-content;
@@ -513,14 +474,11 @@
   width: 100%;
 }
 
-/* Drawn on the cell, not the button, so neighbours meet with no seam. */
 .range-middle {
   background: var(--rs-color-background-neutral-secondary);
   border-radius: 0;
 }
 
-/* RDP marks every day of a range `selected`; on the grey track they keep the
-   ordinary colour rather than the accent pill's white. */
 .range-middle .day-button {
   background: transparent;
   color: var(--rs-color-foreground-base-primary);
@@ -531,8 +489,6 @@
   background: var(--rs-color-background-neutral-secondary);
 }
 
-/* A half-open range has one endpoint and no band to join, so it keeps the
-   plain selected pill instead of a flat edge. */
 .range-start:not(.range-end) {
   border-start-start-radius: var(--rs-radius-5);
   border-end-start-radius: var(--rs-radius-5);
@@ -559,20 +515,31 @@
   background-color: var(--rs-color-foreground-base-emphasis);
 }
 
-/* Two fields side by side, sharing the trigger's width. */
 .body {
   display: flex;
   flex-direction: column;
   gap: var(--rs-space-3);
-  padding: var(--rs-space-3);
+  padding: var(--rs-space-3) var(--rs-space-4);
   width: max-content;
 }
 
 .label {
   color: var(--rs-color-foreground-base-secondary);
-  font-size: var(--rs-font-size-micro);
-  line-height: var(--rs-line-height-micro);
-  letter-spacing: var(--rs-letter-spacing-micro);
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+}
+
+.body .label {
+  margin-bottom: calc(var(--rs-space-2) - var(--rs-space-3));
+}
+
+.body [data-slot="input-container"] {
+  box-sizing: border-box;
+  height: var(--rs-space-9);
+  border-width: 0.5px;
+  border-color: var(--rs-color-border-base-tertiary);
 }
 
 .separator {
@@ -584,17 +551,21 @@
   display: flex;
 }
 
-/* A fifth of the row does not hold "Half-year". Scoped to beat `Tabs`' flex. */
-.scales .scale {
-  flex: 1 1 auto;
+.scales [data-slot="tabs-list"] {
+  width: auto;
+  gap: var(--rs-space-3);
+  padding: 0;
 }
 
-/* The anchor for all five views, so the popover stops resizing. */
+.scales .scale {
+  flex: 1 1 auto;
+  padding-inline: var(--rs-space-2);
+}
+
 .panel {
   width: calc(var(--rs-space-10) * 7);
 }
 
-/* Under the switcher it is one view of five, so it drops its own inset. */
 .panel .days {
   width: 100%;
   padding: 0;
@@ -611,8 +582,6 @@
   flex: 1;
 }
 
-/* The day view hugs; every period list is a fixed box that scrolls as one, so
-   the year headings scroll with their cells rather than pinning. */
 .panel[data-scale="day"] {
   display: block;
 }
@@ -628,31 +597,36 @@
 .period-group {
   display: flex;
   flex-direction: column;
-  gap: var(--rs-space-2);
+  gap: var(--rs-space-3);
 }
 
 .period-year {
   color: var(--rs-color-foreground-base-secondary);
-  font-size: var(--rs-font-size-micro);
-  line-height: var(--rs-line-height-micro);
-  letter-spacing: var(--rs-letter-spacing-micro);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
 }
 
 .period-cells {
   display: grid;
   grid-template-columns: repeat(var(--rs-period-columns), 1fr);
-  gap: var(--rs-space-2);
+  gap: var(--rs-space-4);
 }
 
 .period {
-  padding: var(--rs-space-2) var(--rs-space-3);
-  border: 1px solid var(--rs-color-border-base-primary);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--rs-space-2);
+  border: 0.5px solid var(--rs-color-border-base-primary);
   border-radius: var(--rs-radius-2);
   background: transparent;
-  color: var(--rs-color-foreground-base-primary);
-  font-size: var(--rs-font-size-small);
-  line-height: var(--rs-line-height-small);
-  letter-spacing: var(--rs-letter-spacing-small);
+  color: var(--rs-color-foreground-base-secondary);
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
   cursor: pointer;
 }
 
@@ -666,7 +640,9 @@
 }
 
 .period[data-selected] {
-  background: var(--rs-color-background-neutral-secondary);
+  border-color: var(--rs-color-border-base-secondary);
+  background: var(--rs-color-background-neutral-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .period[data-unavailable] {
