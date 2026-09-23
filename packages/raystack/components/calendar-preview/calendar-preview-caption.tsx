@@ -7,7 +7,9 @@ import {
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { type ReactNode, useEffect, useRef } from 'react';
+import { ScrollArea } from '../scroll-area';
 import { Separator } from '../separator';
+import { useThemeInjection } from '../theme/portal';
 import styles from './calendar-preview.module.css';
 import {
   useCalendarPreviewContext,
@@ -92,6 +94,7 @@ function CaptionDropdown({
     'CalendarPreview.Caption'
   );
   const label = useCaptionLabel();
+  const theme = useThemeInjection();
 
   const activeMonth = month.getMonth();
   const activeYear = month.getFullYear();
@@ -113,7 +116,7 @@ function CaptionDropdown({
       >
         {children ?? label}
       </PopoverPrimitive.Trigger>
-      <PopoverPrimitive.Portal>
+      <PopoverPrimitive.Portal {...theme}>
         <PopoverPrimitive.Positioner
           sideOffset={4}
           align='start'
@@ -121,7 +124,8 @@ function CaptionDropdown({
           data-slot='calendar-preview-caption-positioner'
         >
           <PopoverPrimitive.Popup
-            className={styles['caption-popup']}
+            {...theme}
+            className={cx(theme?.className, styles['caption-popup'])}
             data-slot='calendar-preview-caption-popup'
           >
             <CaptionColumn
@@ -186,26 +190,28 @@ function CaptionColumn({
   }, []);
 
   return (
-    <div
-      className={styles['caption-column']}
-      data-slot={slot}
-      role='group'
-      aria-label={label}
-    >
-      {options.map(option => (
-        <button
-          key={option.key}
-          type='button'
-          ref={option.active ? activeRef : undefined}
-          className={styles['caption-option']}
-          data-slot={optionSlot}
-          data-active={option.active || undefined}
-          aria-current={option.active || undefined}
-          onClick={option.onSelect}
-        >
-          {option.text}
-        </button>
-      ))}
-    </div>
+    <ScrollArea className={styles['caption-scroller']}>
+      <div
+        className={styles['caption-column']}
+        data-slot={slot}
+        role='group'
+        aria-label={label}
+      >
+        {options.map(option => (
+          <button
+            key={option.key}
+            type='button'
+            ref={option.active ? activeRef : undefined}
+            className={styles['caption-option']}
+            data-slot={optionSlot}
+            data-active={option.active || undefined}
+            aria-current={option.active || undefined}
+            onClick={option.onSelect}
+          >
+            {option.text}
+          </button>
+        ))}
+      </div>
+    </ScrollArea>
   );
 }
