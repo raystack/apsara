@@ -76,7 +76,8 @@ export interface CalendarPreviewProps {
   onMonthChange?: (month: Date) => void;
 
   /**
-   * The years the caption's year column offers.
+   * The years the period views and the caption's year column offer. Passing it
+   * replaces the default, so a bound outside it stays unreachable.
    * Defaults to ten years either side of `today`, widened to cover any bound.
    */
   yearRange?: { from: number; to: number };
@@ -272,6 +273,17 @@ export interface CalendarPreviewNavProps {
   className?: string;
 }
 
+export interface CalendarPreviewBodyProps {
+  /** The field label, passed to `.Label`. Omitted, no label renders. */
+  label?: ReactNode;
+
+  /**
+   * Whether the field carries the calendar glyph.
+   * @default false
+   */
+  showIcon?: boolean;
+}
+
 export interface CalendarPreviewFooterProps {
   /** Merged with the part's own classes. */
   className?: string;
@@ -337,9 +349,38 @@ export interface CalendarPreviewChangeDetails {
   toDate: () => Date;
 }
 
+export interface CalendarPreviewTriggerProps {
+  /**
+   * Shown when there is no value and no children.
+   * @default "Select date"
+   */
+  placeholder?: string;
+
+  /**
+   * Replaces the rendered element. The trigger is a `div` by default, so a
+   * control inside it stays focusable.
+   * @default <div />
+   */
+  render?: ReactNode;
+
+  /**
+   * Whether `render` produces a native `<button>`. Tell it, or Base UI adds a
+   * role and a tab stop the element already has.
+   * @default false
+   */
+  nativeButton?: boolean;
+}
+
 export interface CalendarPreviewInputProps {
   /**
-   * Placeholder shown when there is no value.
+   * Which endpoint this field addresses, at `selection="range"`.
+   * @default "start"
+   */
+  field?: 'start' | 'end';
+
+  /**
+   * Placeholder shown when there is no value. Beyond day scale it is built
+   * from the scales the root offers.
    * @default "Select date"
    */
   placeholder?: string;
