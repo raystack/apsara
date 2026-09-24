@@ -1,7 +1,7 @@
 'use client';
 
 import { type ReactNode, useEffect, useRef } from 'react';
-import { isTriggerCharacter } from '../editor/mention';
+import { isTriggerCharacter } from '../editor/core/mention';
 import { usePromptInputContext } from './prompt-input-context';
 import type {
   PromptInputMentionItem,

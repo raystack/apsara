@@ -4,9 +4,9 @@ import {
   isTriggerCharacter,
   type MentionAttrs,
   serializeMention
-} from './mention';
+} from '../mention';
 import {
-  editorSchema,
+  composerSchema,
   hardBreakType,
   mentionType,
   paragraphType
@@ -88,7 +88,7 @@ export function inlineFragmentFromText(text: string): Fragment {
   const lines = text.split('\n');
   lines.forEach((line, index) => {
     if (index > 0) nodes.push(hardBreakType.create());
-    if (line) nodes.push(editorSchema.text(line));
+    if (line) nodes.push(composerSchema.text(line));
   });
   return Fragment.fromArray(nodes);
 }
@@ -105,7 +105,7 @@ export function docFromMarkup(markup: string): PMNode {
 
   const flush = () => {
     if (!literal) return;
-    nodes.push(editorSchema.text(literal));
+    nodes.push(composerSchema.text(literal));
     literal = '';
   };
 
@@ -134,7 +134,7 @@ export function docFromMarkup(markup: string): PMNode {
   }
   flush();
 
-  return editorSchema.topNodeType.create(
+  return composerSchema.topNodeType.create(
     null,
     paragraphType.create(null, Fragment.fromArray(nodes))
   );
@@ -142,7 +142,7 @@ export function docFromMarkup(markup: string): PMNode {
 
 /** A document holding a plain string, with no markup interpretation at all. */
 export function docFromText(text: string): PMNode {
-  return editorSchema.topNodeType.create(
+  return composerSchema.topNodeType.create(
     null,
     paragraphType.create(null, inlineFragmentFromText(text))
   );

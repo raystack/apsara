@@ -5,9 +5,8 @@ import {
   TextSelection
 } from 'prosemirror-state';
 import { Decoration, DecorationSet, type EditorView } from 'prosemirror-view';
-import styles from './editor.module.css';
+import styles from './editor-core.module.css';
 import type { MentionAttrs } from './mention';
-import { editorSchema, mentionType } from './schema';
 
 /** The active trigger and the query the user is typing after it. */
 export interface SuggestionState {
@@ -29,9 +28,21 @@ interface SuggestionPluginState {
   dismissed: { from: number; query: string } | null;
 }
 
+/** One character that opens a menu, and the rules for its query. */
+export interface SuggestionTrigger {
+  char: string;
+  /**
+   * The number of spaces the query can hold before the menu closes. With no
+   * limit, a menu part decides when a spaced query ends.
+   */
+  maxSpaces?: number;
+  /** Class for the inline decoration on the trigger and its query. */
+  className?: string;
+}
+
 export interface SuggestionPluginOptions {
-  /** Trigger characters that are currently registered. */
-  getTriggers: () => string[];
+  /** Triggers that are currently registered. */
+  getTriggers: () => SuggestionTrigger[];
   /** Notified whenever the active query changes. */
   onStateChange: (state: SuggestionState | null) => void;
   /**
@@ -65,11 +76,14 @@ function isBoundary(char: string): boolean {
  */
 function detect(
   selection: TextSelection,
-  triggers: string[]
+  triggers: SuggestionTrigger[]
 ): SuggestionState | null {
   if (!selection.empty || triggers.length === 0) return null;
   const $from = selection.$from;
   if (!$from.parent.isTextblock) return null;
+  // Code is literal: a `/` or `@` inside it is never a trigger.
+  if ($from.parent.type.spec.code) return null;
+  if ($from.marks().some(mark => mark.type.spec.code)) return null;
 
   const before = $from.parent.textBetween(
     0,
@@ -83,7 +97,7 @@ function detect(
   for (let index = before.length - 1; index >= stop; index -= 1) {
     const char = before[index];
     if (char === OBJECT) break;
-    if (triggers.includes(char)) {
+    if (triggers.some(trigger => trigger.char === char)) {
       if (!isBoundary(index === 0 ? '' : before[index - 1])) continue;
       return {
         trigger: char,
@@ -106,7 +120,8 @@ function detect(
 function carry(
   active: SuggestionState,
   from: number,
-  state: EditorState
+  state: EditorState,
+  triggers: SuggestionTrigger[]
 ): SuggestionState | null {
   if (!state.selection.empty) return null;
   const to = state.selection.from;
@@ -123,6 +138,15 @@ function carry(
 
   const query = state.doc.textBetween(from + 1, to, OBJECT, OBJECT);
   if (query.includes(OBJECT)) return null;
+
+  const trigger = triggers.find(entry => entry.char === active.trigger);
+  if (!trigger) return null;
+  if (
+    trigger.maxSpaces !== undefined &&
+    (query.match(/\s/g)?.length ?? 0) > trigger.maxSpaces
+  ) {
+    return null;
+  }
 
   return { trigger: active.trigger, query, from, to };
 }
@@ -173,11 +197,14 @@ export function suggestionPlugin(options: SuggestionPluginOptions): Plugin {
           };
         }
 
+        const triggers = options.getTriggers();
+
         if (previous.active) {
           const carried = carry(
             previous.active,
             tr.mapping.map(previous.active.from, -1),
-            next
+            next,
+            triggers
           );
           if (carried) return { active: carried, dismissed };
         }
@@ -186,7 +213,7 @@ export function suggestionPlugin(options: SuggestionPluginOptions): Plugin {
 
         const detected =
           next.selection instanceof TextSelection
-            ? detect(next.selection, options.getTriggers())
+            ? detect(next.selection, triggers)
             : null;
 
         if (
@@ -226,9 +253,12 @@ export function suggestionPlugin(options: SuggestionPluginOptions): Plugin {
       decorations(state) {
         const active = suggestionPluginKey.getState(state)?.active;
         if (!active) return null;
+        const trigger = options
+          .getTriggers()
+          .find(entry => entry.char === active.trigger);
         return DecorationSet.create(state.doc, [
           Decoration.inline(active.from, active.to, {
-            class: styles.activeSuggestion
+            class: trigger?.className ?? styles.activeSuggestion
           })
         ]);
       }
@@ -281,12 +311,15 @@ export function insertMention(
     to: state.selection.to
   };
 
+  const mentionType = state.schema.nodes.mention;
+  if (!mentionType) return;
+
   const tr = state.tr;
   const nodes = [mentionType.create(attrs)];
   // Skip the trailing space when the caret already sits in front of one, so
   // picking a mention mid-sentence does not leave a gap.
   const spaced = isWhitespaceAt(state, target.to);
-  if (!spaced) nodes.push(editorSchema.text(' '));
+  if (!spaced) nodes.push(state.schema.text(' '));
 
   tr.replaceWith(target.from, target.to, nodes);
   const caret = Math.min(target.from + (spaced ? 1 : 2), tr.doc.content.size);

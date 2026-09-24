@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, type RefObject, useContext } from 'react';
-import type { EditorMention } from '../editor/mention';
+import type { EditorMention } from '../editor/core/mention';
 import type {
   PromptInputMentionItem,
   PromptInputMentionRegistry

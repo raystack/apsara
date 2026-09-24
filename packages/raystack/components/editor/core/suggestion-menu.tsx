@@ -2,10 +2,10 @@
 
 import { cx } from 'class-variance-authority';
 import type { CSSProperties, ReactNode } from 'react';
-import { Cell } from '../menu/cell';
-import { Popover } from '../popover';
-import { Skeleton } from '../skeleton';
-import styles from './editor.module.css';
+import { Cell } from '../../menu/cell';
+import { Popover } from '../../popover';
+import { Skeleton } from '../../skeleton';
+import styles from './editor-core.module.css';
 
 export interface SuggestionMenuItem {
   id: string;
@@ -19,9 +19,9 @@ export interface SuggestionMenuItem {
 }
 
 /** Rendered in first-appearance order; the leading group has no label. */
-export interface SuggestionGroup {
+export interface SuggestionGroup<Item = SuggestionMenuItem> {
   label?: string;
-  items: SuggestionMenuItem[];
+  items: Item[];
 }
 
 /** A zero-width caret rect, re-measured by the positioner as the caret moves. */
