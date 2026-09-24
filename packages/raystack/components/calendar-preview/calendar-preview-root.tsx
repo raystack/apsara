@@ -1,23 +1,24 @@
 'use client';
 
 import { mergeProps, Popover, useRender } from '@base-ui/react';
-import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import { REASONS } from '@base-ui/react/internals/reasons';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styles from './calendar-preview.module.css';
 import {
   type CalendarPreviewChangeDetails,
   type CalendarPreviewChangeReason,
+  CalendarPreviewContext,
   type CalendarPreviewContextValue,
   type CalendarPreviewDateRange,
   type CalendarPreviewDraftRange,
   type CalendarPreviewField,
   type CalendarPreviewOpenChangeDetails,
-  CalendarPreviewProvider
+  type CalendarPreviewValue
 } from './calendar-preview-context';
 import {
+  anyDayBetween,
   dayKey,
   formatDayLabel,
   formatMonthLabel,
@@ -26,171 +27,153 @@ import {
   yearOf
 } from './date-adapter';
 import {
-  type CalendarPreviewScale,
-  type CalendarPreviewScaleValue,
-  periodOf
+  anchorOf,
+  convertScale,
+  isAvailable,
+  isScale,
+  periodOf,
+  type Scale,
+  type ScaleValue
 } from './lib/scale';
 
 const DEFAULT_YEAR_SPAN = 10;
 
-function isRange(value: unknown): value is CalendarPreviewDateRange {
+export function isRange(value: unknown): value is CalendarPreviewDateRange {
   return value != null && typeof value === 'object' && 'from' in value;
 }
 
-/* The day the view should open on, whichever selection shape the value is. */
-function monthAnchor(
+export function monthAnchor(
   value: CalendarPreviewValue | undefined
 ): Date | undefined {
   if (!value) return undefined;
-  return isRange(value) ? value.from : value;
+  if (isRange(value)) return value.from;
+  return value instanceof Date ? value : parseKey(value.date);
 }
 
-/* `defaultValue` is omitted because `HTMLAttributes` already declares it as a
-   form value, which is not what it means here. */
-export type CalendarPreviewValue = Date | CalendarPreviewDateRange | null;
+export type { CalendarPreviewValue };
 
-/* Selection arms are discriminated on `selection`, so a single-day consumer
-   keeps a `Date | null` callback and a range consumer gets a range that has
-   both edges. One shared `value` type would widen both. */
+export function isScaleValue(
+  value: CalendarPreviewValue | undefined
+): value is ScaleValue {
+  return value != null && !(value instanceof Date) && 'date' in value;
+}
+
 interface CalendarPreviewSingleProps {
   selection?: 'single';
-  /** The selected day (controlled). */
+  scales?: 'day';
   value?: Date | null;
-  /** The initially selected day (uncontrolled). */
   defaultValue?: Date | null;
   onValueChange?: (
     value: Date | null,
     details: CalendarPreviewChangeDetails
   ) => void;
-  /**
-   * The day `.Reset` restores, read even when `value` is controlled — which
-   * `defaultValue` is not. `null` is a default of *nothing selected*, so
-   * `.Reset` clears; omitting it renders no button at all.
-   */
+  /** `.Reset`'s target, read even when controlled. `null` clears; omitted hides it. */
   defaultDate?: Date | null;
 }
 
 interface CalendarPreviewRangeProps {
   selection: 'range';
-  /** The selected range (controlled). Both edges, or nothing. */
+  scales?: 'day';
   value?: CalendarPreviewDateRange | null;
-  /** The initial range (uncontrolled). */
   defaultValue?: CalendarPreviewDateRange | null;
-  /**
-   * Fires on a **complete** range or not at all. The half-built state stays
-   * internal, so there is no partial `{ from?, to? }` to gate on.
-   */
   onValueChange?: (
     value: CalendarPreviewDateRange | null,
     details: CalendarPreviewChangeDetails
   ) => void;
-  /**
-   * The range `.Reset` restores, read even when `value` is controlled — which
-   * `defaultValue` is not. `null` is a default of *nothing selected*, so
-   * `.Reset` clears; omitting it renders no button at all.
-   */
+  /** `.Reset`'s target, read even when controlled. `null` clears; omitted hides it. */
   defaultDate?: CalendarPreviewDateRange | null;
+}
+
+/* On the SHAPE of `scales`, so `scales={['day']}` takes this arm and `scales='day'` does not. */
+interface CalendarPreviewScaleAwareProps {
+  selection?: 'single';
+  scales: Exclude<Scale, 'day'> | Scale[];
+  value?: ScaleValue | null;
+  defaultValue?: ScaleValue | null;
+  onValueChange?: (
+    value: ScaleValue | null,
+    details: CalendarPreviewChangeDetails
+  ) => void;
+  /** `.Reset`'s target, read even when controlled. */
+  defaultDate?: ScaleValue | null;
 }
 
 export type CalendarPreviewProps = (
   | CalendarPreviewSingleProps
   | CalendarPreviewRangeProps
+  | CalendarPreviewScaleAwareProps
 ) &
   CalendarPreviewSharedProps;
 
 interface CalendarPreviewSharedProps
   extends Omit<useRender.ComponentProps<'div'>, 'defaultValue' | 'onChange'> {
-  /** Whether the popover is open (controlled). Ignored by an inline calendar. */
+  /** @defaultValue the first of `scales` */
+  defaultScale?: Scale;
+  scale?: Scale;
+  onScaleChange?: (scale: Scale) => void;
+  /** A period emits its last day, not its first. @defaultValue false */
+  trailingValue?: boolean;
   open?: boolean;
   /** @defaultValue false */
   defaultOpen?: boolean;
-  /** Base UI's typed details, forwarded unchanged. */
   onOpenChange?: (
     open: boolean,
     details: CalendarPreviewOpenChangeDetails
   ) => void;
 
-  /** The first month the grid displays (controlled). */
   month?: Date;
-  /**
-   * The month the grid opens on.
-   * @defaultValue the month of `value`, else `today`
-   */
+  /** @defaultValue the month of `value`, else `today` */
   defaultMonth?: Date;
-  /** Called when the view moves. */
   onMonthChange?: (month: Date) => void;
   /**
-   * The years the caption's year column offers.
+   * The years the period views and the caption's year column offer. Passing it
+   * replaces the default, so a bound outside it stays unreachable.
    * @defaultValue ten years either side of `today`, widened to cover any bound
    */
   yearRange?: { from: number; to: number };
 
-  /** Earliest selectable day, inclusive. Never clamps navigation. */
+  /** Never clamps navigation. A period is tested against the day it emits. */
   minDate?: Date;
-  /** Latest selectable day, inclusive. Never clamps navigation. */
   maxDate?: Date;
-  /** Reject individual days. Applied on top of `minDate` / `maxDate`. */
+  /* Day scale only: a day predicate has no single lift to a period. */
   isDateUnavailable?: (date: Date) => boolean;
 
-  /**
-   * Renders a value for display.
-   * @defaultValue `DD/MM/YYYY` at day scale
-   */
+  /** @defaultValue `DD MMM YYYY` at day scale, the period's shorthand above it */
   formatValue?: (
-    value: Date | CalendarPreviewScaleValue,
-    scale: CalendarPreviewScale
+    value: Date | ScaleValue,
+    scale: Scale,
+    timeZone?: string
   ) => string;
 
   /**
-   * The zone the grid reads days in. Forwarded to the grid; this family does
-   * no conversion of its own (RFC 005).
-   *
-   * Every `Date` prop and every `Date` handed back is therefore an **instant**,
-   * not a calendar day, and the calendar shows the day that instant falls on
-   * in this zone. At a far offset that is not the day the local fields spell:
-   * with `timeZone="Pacific/Niue"`, a `defaultMonth` of `new Date(2026, 7, 1)`
-   * is 31 July there, and the grid opens on July. Build `Date`s for a zoned
-   * calendar from a known instant — `new Date(Date.UTC(…))` — rather than from
-   * local calendar fields.
-   *
-   * `onValueChange` receives whatever the grid produced, which is a `TZDate`
-   * when this is set. It is a `Date` subclass carrying the same instant, so
-   * `getTime()` and comparisons are unaffected; only its field getters read in
-   * this zone.
+   * Every `Date` is an instant, not a calendar day, so at a far offset it is
+   * not the day its local fields spell — build them from `Date.UTC`.
    */
   timeZone?: string;
-  /**
-   * Today, injectable so a calendar renders deterministically in tests.
-   * @defaultValue `new Date()`
-   */
+  /** Injectable so tests render deterministically. @defaultValue `new Date()` */
   today?: Date;
-  /**
-   * Whether clicking the selected day deselects it.
-   * @defaultValue true
-   */
+  /** Click-to-deselect is day scale only; a period re-commits. @defaultValue true */
   clearable?: boolean;
-  /**
-   * Whether the whole calendar is inert and every day is disabled.
-   * @defaultValue false
-   */
+  /** @defaultValue false */
   disabled?: boolean;
-  /**
-   * Whether the value can be read and navigated but not changed.
-   * @defaultValue false
-   */
+  /** @defaultValue false */
   readOnly?: boolean;
 }
 
-/* Exported for its tests; `formatValue` replaces it wholesale. */
+function scaleChanged(value: CalendarPreviewValue, next: Scale): boolean {
+  return isScaleValue(value) && value.scale !== next;
+}
+
 export function defaultFormatValue(
-  value: Date | CalendarPreviewScaleValue,
-  scale: CalendarPreviewScale
+  value: Date | ScaleValue,
+  scale: Scale,
+  timeZone?: string
 ): string {
   const date = value instanceof Date ? value : parseKey(value.date);
-  if (scale === 'day') return formatDayLabel(date);
-  if (scale === 'month') return formatMonthLabel(date);
+  if (scale === 'day') return formatDayLabel(date, timeZone);
+  if (scale === 'month') return formatMonthLabel(date, timeZone);
 
-  const key = dayKey(date);
+  const key = dayKey(date, timeZone);
   const year = yearOf(key);
   if (scale === 'year') return String(year);
   const month = monthOf(key);
@@ -200,6 +183,11 @@ export function defaultFormatValue(
 
 export function CalendarPreviewRoot({
   selection = 'single',
+  scales: scalesProp = 'day',
+  scale: scaleProp,
+  defaultScale,
+  onScaleChange,
+  trailingValue = false,
   value: valueProp,
   defaultValue = null,
   onValueChange,
@@ -214,7 +202,7 @@ export function CalendarPreviewRoot({
   maxDate,
   isDateUnavailable: isDateUnavailableProp,
   defaultDate,
-  formatValue = defaultFormatValue,
+  formatValue: formatValueProp = defaultFormatValue,
   timeZone,
   today: todayProp,
   clearable = true,
@@ -228,8 +216,6 @@ export function CalendarPreviewRoot({
 }: CalendarPreviewProps) {
   const today = useMemo(() => todayProp ?? new Date(), [todayProp]);
 
-  /* The public props are discriminated on `selection`; the implementation is
-     shared and works in the widened value. This is the one seam between them. */
   const emit = onValueChange as
     | ((
         value: CalendarPreviewValue,
@@ -246,10 +232,7 @@ export function CalendarPreviewRoot({
 
   const [month, setMonthUnwrapped] = useControlled<Date>({
     controlled: monthProp,
-    /* `valueProp` before `defaultValue`: `defaultValue` is forced to null the
-       moment `value` is controlled, so reading it alone opened a controlled
-       calendar on today's month with the selection off-screen — against this
-       prop's own documented default. */
+    /* `valueProp` first: `defaultValue` is nulled once `value` is controlled. */
     default:
       defaultMonth ??
       monthAnchor(valueProp) ??
@@ -259,14 +242,52 @@ export function CalendarPreviewRoot({
     state: 'month'
   });
 
-  /* Uncontrolled until the scale switcher lands in PR 5. The state lives here
-     now so the parts and `useCalendar()` read it from one place either way. */
-  const [scale, setScaleUnwrapped] = useControlled<CalendarPreviewScale>({
-    controlled: undefined,
-    default: 'day',
+  const scales = useMemo<readonly Scale[]>(() => {
+    const list = (Array.isArray(scalesProp) ? scalesProp : [scalesProp]).filter(
+      isScale
+    );
+    return list.length > 0 ? Array.from(new Set(list)) : ['day'];
+  }, [scalesProp]);
+
+  const [scale, setScaleUnwrapped] = useControlled<Scale>({
+    controlled: scaleProp,
+    /* The value's own scale, or a quarter opens on the day grid unmarked. */
+    default:
+      defaultScale ??
+      (isScaleValue(valueProp)
+        ? valueProp.scale
+        : isScaleValue(defaultValue)
+          ? defaultValue.scale
+          : scales[0]),
     name: 'CalendarPreview',
     state: 'scale'
   });
+
+  const [scaleDraft, setScaleDraftState] = useState<ScaleValue | null>(null);
+
+  /* Escape drops the draft twice in one event; state is a render behind. */
+  const scaleDraftRef = useRef<ScaleValue | null>(null);
+
+  const setScaleDraft = useCallback((next: ScaleValue | null) => {
+    scaleDraftRef.current = next;
+    setScaleDraftState(next);
+  }, []);
+
+  const draftOrigin = useRef<{
+    value: ScaleValue | null;
+    month: Date;
+    scale: Scale;
+  } | null>(null);
+
+  const clearScaleDraft = useCallback(() => {
+    setScaleDraft(null);
+    draftOrigin.current = null;
+  }, [setScaleDraft]);
+
+  const carriesScale = Array.isArray(scalesProp) || scalesProp !== 'day';
+
+  /* A typed date can land outside the visible month; a click cannot. */
+  const revealMonthRef = useRef<((date: Date) => void) | null>(null);
 
   const setMonth = useCallback(
     (next: Date) => {
@@ -276,10 +297,8 @@ export function CalendarPreviewRoot({
     [setMonthUnwrapped, onMonthChange]
   );
 
-  /* The inertness guard lives here rather than in the grid's click handler:
-     `useCalendar().setValue` and `reset()` reach this same function, and a
-     guard further out would leave both of them able to write to a calendar
-     the consumer asked to be read-only. */
+  const emitted = useRef<CalendarPreviewValue>(value);
+
   const setValue = useCallback(
     (
       next: CalendarPreviewValue,
@@ -287,14 +306,38 @@ export function CalendarPreviewRoot({
       occasion: Date
     ) => {
       if (readOnly || disabled) return;
+      emitted.current = next;
       setValueUnwrapped(next);
       emit?.(next, {
         reason,
-        period: periodOf(occasion, scale, timeZone),
+        period: periodOf(
+          dayKey(occasion, timeZone),
+          isScaleValue(next) ? next.scale : scale
+        ),
         toDate: () => occasion
       });
     },
     [setValueUnwrapped, emit, scale, timeZone, readOnly, disabled]
+  );
+
+  const commitDay = useCallback(
+    (date: Date, reason: CalendarPreviewChangeReason) => {
+      const key = dayKey(date, timeZone);
+      clearScaleDraft();
+      if (!carriesScale) {
+        setValue(date, reason, date);
+        return;
+      }
+      setValue(
+        { date: key, scale: 'day' },
+        scaleChanged(value, 'day') ? 'scale' : reason,
+        date
+      );
+      /* The view follows what was committed, or it has no cell to mark. */
+      settleScaleRef.current?.('day');
+      revealMonthRef.current?.(date);
+    },
+    [carriesScale, timeZone, value, setValue, clearScaleDraft]
   );
 
   const [open, setOpenUnwrapped] = useControlled<boolean>({
@@ -304,27 +347,52 @@ export function CalendarPreviewRoot({
     state: 'open'
   });
 
-  /* Escape, a press on the trigger, and completing a range all leave focus on
-     the trigger, so the focus event that follows would immediately undo the
-     close. Recording the reason lets `.Trigger` swallow exactly that one focus
-     — the rule floating-ui's own `useFocus` applies, plus `closePress`, which
-     is ours because auto-closing on completion is. */
   const focusOpenBlocked = useRef(false);
+  const triggerRef = useRef<HTMLElement | null>(null);
+
+  /* The restore trails the close by the exit transition, so nothing timed is safe. */
+  useEffect(() => {
+    const release = () => {
+      focusOpenBlocked.current = false;
+    };
+    document.addEventListener('pointerdown', release, true);
+    document.addEventListener('keydown', release, true);
+    return () => {
+      document.removeEventListener('pointerdown', release, true);
+      document.removeEventListener('keydown', release, true);
+    };
+  }, []);
+
+  const armFocusGuard = useCallback((leaving: boolean) => {
+    /* Read on pointerdown, before focus has moved, so only the reason says it is leaving. */
+    focusOpenBlocked.current =
+      leaving || !triggerRef.current?.contains(document.activeElement);
+  }, []);
+
+  /* `dropDraft` and `settleScale` close over state declared further down. */
+  const dropDraftRef = useRef<(() => void) | null>(null);
+  const settleScaleRef = useRef<((scale: Scale) => void) | null>(null);
+
+  const dismissedByOutsidePress = useRef(false);
 
   const setOpen = useCallback(
     (next: boolean, details: CalendarPreviewOpenChangeDetails) => {
-      if (
-        !next &&
-        (details.reason === REASONS.escapeKey ||
-          details.reason === REASONS.triggerPress ||
-          details.reason === REASONS.closePress)
-      ) {
-        focusOpenBlocked.current = true;
+      if (!next) {
+        const outside = details.reason === REASONS.outsidePress;
+        dismissedByOutsidePress.current = outside;
+        armFocusGuard(outside);
+        dropDraftRef.current?.();
       }
       setOpenUnwrapped(next);
       onOpenChange?.(next, details);
     },
-    [setOpenUnwrapped, onOpenChange]
+    [setOpenUnwrapped, onOpenChange, armFocusGuard]
+  );
+
+  /* Base UI returns focus to the trigger's first tabbable child — the `.Input`. */
+  const shouldRestoreFinalFocus = useCallback(
+    () => !dismissedByOutsidePress.current,
+    []
   );
 
   const shouldIgnoreFocusOpen = useCallback(() => {
@@ -334,8 +402,11 @@ export function CalendarPreviewRoot({
   }, []);
 
   const setScale = useCallback(
-    (next: CalendarPreviewScale) => setScaleUnwrapped(next),
-    [setScaleUnwrapped]
+    (next: Scale) => {
+      setScaleUnwrapped(next);
+      onScaleChange?.(next);
+    },
+    [setScaleUnwrapped, onScaleChange]
   );
 
   const [draft, setDraft] = useState<CalendarPreviewDraftRange | null>(null);
@@ -353,27 +424,85 @@ export function CalendarPreviewRoot({
     []
   );
 
-  /*
-   * The from/to machine, unchanged from the shipped picker:
-   *   no from            -> set from, advance to the end input
-   *   from, day earlier  -> that day becomes the new from
-   *   from, day later    -> completes, emits, closes
-   *   from and to        -> restart from the new day
-   *
-   * It lives on the root because completing a range both writes the value and
-   * closes the popover, and closing has to go through `setOpen` so a consumer
-   * controlling `open` is not fought.
-   */
+  const [triggerHasInput, setTriggerHasInputState] = useState(false);
+
+  const setTriggerHasInput = useCallback((next: boolean) => {
+    setTriggerHasInputState(current => (current === next ? current : next));
+  }, []);
+
+  useEffect(() => {
+    if (value === emitted.current) return;
+    emitted.current = value;
+    setDraft(null);
+    setActiveField('start');
+  }, [value]);
+
+  /* Day-keys, so a `minDate` carrying a time of day leaves its own day selectable. */
+  const isDateUnavailable = useCallback(
+    (date: Date) => {
+      const key = dayKey(date, timeZone);
+      if (minDate && key < dayKey(minDate, timeZone)) return true;
+      if (maxDate && key > dayKey(maxDate, timeZone)) return true;
+      return isDateUnavailableProp?.(date) ?? false;
+    },
+    [minDate, maxDate, isDateUnavailableProp, timeZone]
+  );
+
+  const spans = useCallback(
+    (from: Date, to: Date) =>
+      anyDayBetween(
+        dayKey(from, timeZone),
+        dayKey(to, timeZone),
+        isDateUnavailable
+      ),
+    [timeZone, isDateUnavailable]
+  );
+
   const selectDay = useCallback(
     (date: Date) => {
       if (readOnly || disabled) return;
 
       if (selection === 'single') {
-        const isSame =
-          value instanceof Date &&
-          dayKey(value, timeZone) === dayKey(date, timeZone);
-        if (isSame && clearable) setValue(null, 'clear', date);
-        else setValue(date, 'select', date);
+        const key = dayKey(date, timeZone);
+        const current = isScaleValue(value)
+          ? value.date
+          : value instanceof Date
+            ? dayKey(value, timeZone)
+            : null;
+        if (current === key && clearable) {
+          clearScaleDraft();
+          setValue(null, 'clear', date);
+          return;
+        }
+        commitDay(date, 'select');
+        return;
+      }
+
+      const fixed = fieldReadOnly.start
+        ? (draft?.from ?? (isRange(value) ? value.from : undefined))
+        : undefined;
+      if (fixed) {
+        if (fieldReadOnly.end) return;
+        if (dayKey(date, timeZone) < dayKey(fixed, timeZone)) return;
+        if (spans(fixed, date)) return;
+        setDraft(null);
+        setActiveField('start');
+        setValue({ from: fixed, to: date }, 'select', date);
+        return;
+      }
+
+      const lone = draft && !draft.from ? draft.to : undefined;
+      if (lone) {
+        if (fieldReadOnly.start) return;
+        const ordered = dayKey(date, timeZone) <= dayKey(lone, timeZone);
+        if (!ordered || spans(date, lone)) {
+          setDraft({ from: date });
+          setActiveField('end');
+          return;
+        }
+        setDraft(null);
+        setActiveField('start');
+        setValue({ from: date, to: lone }, 'select', date);
         return;
       }
 
@@ -392,13 +521,13 @@ export function CalendarPreviewRoot({
       }
 
       if (fieldReadOnly.end) return;
+      if (spans(from, date)) {
+        setDraft({ from: date });
+        return;
+      }
       setDraft(null);
       setActiveField('start');
       setValue({ from, to: date }, 'select', date);
-      setOpen(
-        false,
-        createChangeEventDetails(REASONS.closePress, undefined, undefined)
-      );
     },
     [
       selection,
@@ -406,16 +535,131 @@ export function CalendarPreviewRoot({
       draft,
       fieldReadOnly,
       clearable,
+      commitDay,
+      clearScaleDraft,
       timeZone,
       readOnly,
       disabled,
-      setValue,
-      setOpen
+      spans,
+      setValue
     ]
   );
 
-  /* A click means "the next endpoint"; typing into a field means that field,
-     so a typed date cannot go through `selectDay`. */
+  const scaleValue = useMemo<ScaleValue | null>(() => {
+    if (scaleDraft) return scaleDraft;
+    if (value instanceof Date) return { date: dayKey(value, timeZone), scale };
+    if (isScaleValue(value)) return value;
+    return null;
+  }, [scaleDraft, value, scale, timeZone]);
+
+  const switchScale = useCallback(
+    (next: Scale) => {
+      if (scaleDraft === null) {
+        draftOrigin.current = { value: scaleValue, month, scale };
+      }
+      const origin = draftOrigin.current ?? { value: scaleValue, month, scale };
+
+      if (next === origin.scale) {
+        clearScaleDraft();
+        setMonth(origin.month);
+        setScale(next);
+        return;
+      }
+
+      const anchor = origin.value ?? {
+        date: dayKey(origin.month, timeZone),
+        scale: origin.scale
+      };
+      setScaleDraft(convertScale(anchor, next, trailingValue));
+      setMonth(parseKey(convertScale(anchor, next, false).date));
+      setScale(next);
+    },
+    [
+      scaleValue,
+      scaleDraft,
+      month,
+      timeZone,
+      scale,
+      trailingValue,
+      clearScaleDraft,
+      setMonth,
+      setScale,
+      setScaleDraft
+    ]
+  );
+
+  const selectPeriod = useCallback(
+    (date: Date | string, next: Scale) => {
+      if (readOnly || disabled) return;
+      const key = anchorOf(
+        periodOf(
+          typeof date === 'string' ? date : dayKey(date, timeZone),
+          next
+        ),
+        trailingValue
+      );
+      clearScaleDraft();
+      setValue(
+        { date: key, scale: next },
+        scaleChanged(value, next) ? 'scale' : 'select',
+        parseKey(key)
+      );
+      settleScaleRef.current?.(next);
+      revealMonthRef.current?.(parseKey(key));
+    },
+    [
+      trailingValue,
+      timeZone,
+      readOnly,
+      disabled,
+      value,
+      setValue,
+      clearScaleDraft
+    ]
+  );
+
+  /* Through `setScale`: a controlled `scale` moves only when told. */
+  const settleScale = useCallback(
+    (next: Scale) => {
+      clearScaleDraft();
+      if (next !== scale) setScale(next);
+    },
+    [scale, setScale, clearScaleDraft]
+  );
+
+  const dropDraft = useCallback(() => {
+    if (scaleDraftRef.current === null) return;
+    const origin = draftOrigin.current;
+    if (origin) setMonth(origin.month);
+    settleScale(
+      origin?.scale ?? (isScaleValue(value) ? value.scale : scales[0])
+    );
+  }, [value, scales, settleScale, setMonth]);
+
+  dropDraftRef.current = dropDraft;
+  settleScaleRef.current = settleScale;
+  revealMonthRef.current = (date: Date) => {
+    if (
+      dayKey(date, timeZone).slice(0, 7) === dayKey(month, timeZone).slice(0, 7)
+    )
+      return;
+    setMonth(date);
+  };
+
+  const isPeriodAvailable = useCallback(
+    (date: Date | string, next: Scale) =>
+      isAvailable(
+        typeof date === 'string' ? date : dayKey(date, timeZone),
+        next,
+        {
+          trailing: trailingValue,
+          min: minDate && dayKey(minDate, timeZone),
+          max: maxDate && dayKey(maxDate, timeZone)
+        }
+      ),
+    [trailingValue, minDate, maxDate, timeZone]
+  );
+
   const setEndpoint = useCallback(
     (field: CalendarPreviewField, date: Date) => {
       if (readOnly || disabled || fieldReadOnly[field]) return;
@@ -424,49 +668,42 @@ export function CalendarPreviewRoot({
       const from = field === 'start' ? date : base?.from;
       const to = field === 'end' ? date : base?.to;
 
-      /* An ordered pair completes. Anything else — one edge still missing, or
-         a typed day that crossed its partner — restarts from that day. */
       if (from && to && dayKey(from, timeZone) <= dayKey(to, timeZone)) {
         setDraft(null);
         setActiveField('start');
         setValue({ from, to }, 'input', date);
         return;
       }
-      setDraft({ from: date });
-      setActiveField('end');
+      setDraft(field === 'start' ? { from: date } : { to: date });
+      setActiveField(field === 'start' ? 'end' : 'start');
     },
     [value, draft, fieldReadOnly, timeZone, readOnly, disabled, setValue]
   );
 
-  /* `'reset'`, not `'select'`: restoring the default is not a pick, and a
-     consumer that logs or validates on selection needs to tell them apart. */
+  const clearEndpoint = useCallback(
+    (field: CalendarPreviewField) => {
+      if (readOnly || disabled || fieldReadOnly[field]) return;
+      const base = draft ?? (isRange(value) ? value : null);
+      const kept = field === 'start' ? { to: base?.to } : { from: base?.from };
+      setDraft(kept.from || kept.to ? kept : null);
+      setActiveField(field);
+      if (isRange(value)) setValue(null, 'clear', monthAnchor(value) ?? today);
+    },
+    [value, draft, fieldReadOnly, readOnly, disabled, setValue, today]
+  );
+
   const reset = useCallback(() => {
     if (defaultDate === undefined) return;
-    /* A `null` default clears, and reports the day it cleared: `'reset'` would
-       claim a day was restored when none was. */
+    settleScale(isScaleValue(defaultDate) ? defaultDate.scale : scales[0]);
     if (defaultDate === null) {
       if (value == null) return;
       setValue(null, 'clear', monthAnchor(value) ?? today);
       return;
     }
-    /* `occasion` is one day, so a range reports the day it starts on. */
     setValue(defaultDate, 'reset', monthAnchor(defaultDate) ?? today);
-  }, [defaultDate, value, setValue, today]);
+  }, [defaultDate, value, scales, settleScale, setValue, today]);
 
-  /* Day-keys, not instants: a `minDate` carrying a time of day still leaves
-     its own day selectable, which the current family gets wrong. */
-  const isDateUnavailable = useCallback(
-    (date: Date) => {
-      const key = dayKey(date, timeZone);
-      if (minDate && key < dayKey(minDate, timeZone)) return true;
-      if (maxDate && key > dayKey(maxDate, timeZone)) return true;
-      return isDateUnavailableProp?.(date) ?? false;
-    },
-    [minDate, maxDate, isDateUnavailableProp, timeZone]
-  );
-
-  /* A year the user can never scroll to is a trap, so the span stretches to
-     cover the bounds even though bounds never clamp navigation. */
+  /* Stretches to cover the bounds; a year you cannot scroll to is a trap. */
   const yearRange = useMemo(() => {
     if (yearRangeProp) return yearRangeProp;
     const base = today.getFullYear();
@@ -476,13 +713,29 @@ export function CalendarPreviewRoot({
     return { from: Math.min(...years), to: Math.max(...years) };
   }, [yearRangeProp, today, minDate, maxDate]);
 
-  const context = useMemo<CalendarPreviewContextValue<CalendarPreviewValue>>(
+  /* Bound here, or a `formatValue` without `timeZone` renders the neighbouring day. */
+  const formatValue = useCallback(
+    (value: Date | ScaleValue, scale: Scale) =>
+      formatValueProp(value, scale, timeZone),
+    [formatValueProp, timeZone]
+  );
+
+  const context = useMemo<CalendarPreviewContextValue>(
     () => ({
       value,
       setValue,
+      scales,
+      trailingValue,
+      scaleDraft,
+      switchScale,
+      selectPeriod,
+      dropDraft,
+      isPeriodAvailable,
       selection,
       selectDay,
+      commitDay,
       setEndpoint,
+      clearEndpoint,
       draft: draft ?? (isRange(value) ? value : null),
       activeField,
       setActiveField,
@@ -491,6 +744,10 @@ export function CalendarPreviewRoot({
       open,
       setOpen,
       shouldIgnoreFocusOpen,
+      shouldRestoreFinalFocus,
+      triggerRef,
+      triggerHasInput,
+      setTriggerHasInput,
       defaultDate,
       reset,
       month,
@@ -511,9 +768,18 @@ export function CalendarPreviewRoot({
     [
       value,
       setValue,
+      scales,
+      trailingValue,
+      scaleDraft,
+      switchScale,
+      selectPeriod,
+      dropDraft,
+      isPeriodAvailable,
       selection,
       selectDay,
+      commitDay,
       setEndpoint,
+      clearEndpoint,
       draft,
       activeField,
       fieldReadOnly,
@@ -521,6 +787,9 @@ export function CalendarPreviewRoot({
       open,
       setOpen,
       shouldIgnoreFocusOpen,
+      shouldRestoreFinalFocus,
+      triggerHasInput,
+      setTriggerHasInput,
       defaultDate,
       reset,
       month,
@@ -540,9 +809,6 @@ export function CalendarPreviewRoot({
     ]
   );
 
-  /* A real element, not a bare provider: `.Days` and `.Footer` are in-flow
-     siblings, and without a box of their own they inherit whatever the
-     surrounding layout does — sitting side by side inside a flex row. */
   const element = useRender({
     defaultTagName: 'div',
     ref,
@@ -560,16 +826,13 @@ export function CalendarPreviewRoot({
     )
   });
 
-  /* Base UI owns dismissal — outside press, escape and focus-out all come from
-     `Popover.Root`, which is why no file here has an outside-click listener. */
+  /* Base UI owns dismissal, which is why no file here listens for outside clicks. */
   return (
-    <CalendarPreviewProvider
-      value={context as CalendarPreviewContextValue<unknown>}
-    >
+    <CalendarPreviewContext value={context}>
       <Popover.Root open={open} onOpenChange={setOpen}>
         {element}
       </Popover.Root>
-    </CalendarPreviewProvider>
+    </CalendarPreviewContext>
   );
 }
 

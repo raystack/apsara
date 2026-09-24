@@ -1,35 +1,23 @@
-/* The only module in `calendar-preview/` that may import a date library.
-   Importing one elsewhere re-opens the import-order failure `dayjs.extend()`
-   caused, and costs the swappability the RFC keeps for Temporal. */
+/* The only module here that may import a date library, so it stays swappable. */
 import { TZDate } from '@date-fns/tz';
 import {
+  addDays,
   addMonths,
   endOfMonth,
-  endOfQuarter,
-  endOfYear,
   format,
   isValid,
   parse,
-  startOfMonth,
-  startOfQuarter,
-  startOfYear
+  startOfMonth
 } from 'date-fns';
 
-/* Lexicographic order is chronological order, so `lib/` orders days as
-   strings — no library call, and no drift by timezone. */
 export type DayKey = string;
 
-/* `uuuu`, not `yyyy`: `yyyy` is year-of-era, so JS year 0 formats as `'0001'`
- * and collides with year 1. `uuuu` is the astronomical year and round-trips. */
+/* `uuuu`, not `yyyy`: year-of-era formats JS year 0 as `'0001'`. */
 const DAY_KEY_FORMAT = 'uuuu-MM-dd';
 const DAY_KEY_SHAPE = /^\d{4}-\d{2}-\d{2}$/;
 
-/* Every token in DAY_KEY_FORMAT comes from the input, so no field is ever
-   inherited from this reference. */
 const PARSE_REFERENCE = new Date(2000, 0, 1);
 
-/* Passing `timeZone` is what keeps a grid rendered in that zone from keying
-   its cells a day off — the current family's tooltip/`dateInfo` bug. */
 export function dayKey(date: Date, timeZone?: string): DayKey {
   const key = format(zoned(date, timeZone), DAY_KEY_FORMAT);
   if (!DAY_KEY_SHAPE.test(key)) {
@@ -38,19 +26,11 @@ export function dayKey(date: Date, timeZone?: string): DayKey {
   return key;
 }
 
-/* Not for ordering two days: an epoch carries a time and an offset, so two
-   Dates on the same calendar day can order either way. Compare dayKeys. */
-export function epoch(date: Date): number {
-  return date.getTime();
-}
-
-/** Whether `value` is a real calendar day. `'2027-02-29'` is not. */
 export function isDayKey(value: string): boolean {
   return DAY_KEY_SHAPE.test(value) && isValid(parseStrict(value));
 }
 
-/* Throws rather than returning null: callers handling typed input gate on
-   isDayKey or build with dayKeyFromParts, so a throw here is a real bug. */
+/* Throws: callers gate on isDayKey first, so reaching here is a real bug. */
 export function parseKey(key: DayKey): Date {
   if (!DAY_KEY_SHAPE.test(key)) {
     throw new RangeError(`Not a YYYY-MM-DD day: ${JSON.stringify(key)}`);
@@ -62,8 +42,6 @@ export function parseKey(key: DayKey): Date {
   return date;
 }
 
-/* `month` is 1-12. Validates against the real calendar, so 31 April is
-   rejected rather than rolled forward the way `new Date` would. */
 export function dayKeyFromParts(
   year: number,
   month: number,
@@ -83,32 +61,14 @@ export function endOfMonthKey(key: DayKey): DayKey {
   return dayKey(endOfMonth(parseKey(key)));
 }
 
-export function startOfQuarterKey(key: DayKey): DayKey {
-  return dayKey(startOfQuarter(parseKey(key)));
-}
-
-export function endOfQuarterKey(key: DayKey): DayKey {
-  return dayKey(endOfQuarter(parseKey(key)));
-}
-
-export function startOfYearKey(key: DayKey): DayKey {
-  return dayKey(startOfYear(parseKey(key)));
-}
-
-export function endOfYearKey(key: DayKey): DayKey {
-  return dayKey(endOfYear(parseKey(key)));
-}
-
 export function yearOf(key: DayKey): number {
   return Number(key.slice(0, 4));
 }
 
-/** The calendar month of `key`, 1-12. */
 export function monthOf(key: DayKey): number {
   return Number(key.slice(5, 7));
 }
 
-/* Accepts both the full and three-letter forms. */
 export function monthFromName(name: string): number | null {
   for (const pattern of ['MMMM', 'MMM']) {
     const date = parse(name, pattern, PARSE_REFERENCE);
@@ -117,41 +77,48 @@ export function monthFromName(name: string): number | null {
   return null;
 }
 
-/* Normalising to the first stops repeated navigation drifting: stepping on
-   from 31 January would clamp to the 28th and stay there. */
+export function anyDayBetween(
+  from: DayKey,
+  to: DayKey,
+  match: (date: Date) => boolean
+): boolean {
+  let cursor = from;
+  while (cursor <= to) {
+    const date = parseKey(cursor);
+    if (match(date)) return true;
+    cursor = dayKey(addDays(date, 1));
+  }
+  return false;
+}
+
+/* Normalising to the first, or stepping on from 31 January clamps to the 28th. */
 export function shiftMonths(date: Date, delta: number): Date {
   return addMonths(startOfMonth(date), delta);
 }
 
-/** The first day of a calendar month. `monthIndex` is 0-11, as on `Date`. */
 export function monthStart(year: number, monthIndex: number): Date {
   return new Date(year, monthIndex, 1);
 }
 
-/* Day-first, matching what `lib/parse.ts` accepts, so a rendered value can be
-   typed straight back in. */
 export function formatDayLabel(date: Date, timeZone?: string): string {
-  return format(zoned(date, timeZone), 'dd/MM/yyyy');
+  return format(zoned(date, timeZone), 'dd MMM yyyy');
 }
 
 export function formatMonthLabel(date: Date, timeZone?: string): string {
   return format(zoned(date, timeZone), 'MMM yyyy');
 }
 
-/* Identical to formatMonthLabel today, kept separate because they answer
-   different questions: what the grid shows, versus what a value means. */
+/* Kept separate: what the grid shows versus what a value means. */
 export function formatCaptionLabel(date: Date, timeZone?: string): string {
   return format(zoned(date, timeZone), 'MMM yyyy');
 }
 
-/* Three letters, against react-day-picker's two-letter default — the frames
-   spell them `Sun Mon Tue`. */
+/* Three letters, against RDP's two-letter default. */
 export function formatWeekdayLabel(date: Date, timeZone?: string): string {
   return format(zoned(date, timeZone), 'EEE');
 }
 
-/* Same locale as monthFromName parses, so the caption's month column and the
-   input parser cannot disagree about a name. */
+/* Same locale as monthFromName, so the column and the parser cannot disagree. */
 export function monthShortNames(): string[] {
   return MONTH_INDEXES.map(index => format(new Date(2001, index, 1), 'MMM'));
 }

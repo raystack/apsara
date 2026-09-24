@@ -1,72 +1,28 @@
-/*
- * Turning a typed string into a `CalendarPreviewScaleValue` — pure functions, no React, no UI.
- *
- * Recognition is deliberately narrow: every accepted shape is pinned by a
- * regular expression before any date maths runs, so a near-miss is rejected
- * rather than coerced. The failure mode this replaces is dayjs'
- * `customParseFormat`, lenient enough to read `20/05/27` as the year 27.
- * Anything unrecognised returns `null` and the caller keeps its previous value.
- */
+/* Pinned by a regex before any date maths — dayjs read `20/05/27` as year 27. */
 import { dayKeyFromParts, isDayKey, monthFromName } from '../date-adapter';
-import { anchorOf, type CalendarPreviewScaleValue, periodOf } from './scale';
+import { anchorOf, periodOf, type ScaleValue } from './scale';
 
 export interface ParseScaleInputOptions {
-  /**
-   * The year a bare `Q4`, `H1` or `May` resolves into. Defaults to now.
-   *
-   * See {@link parseScaleInput} for the inference rule.
-   */
   referenceDate?: Date;
-  /**
-   * Which edge of the parsed period to emit — the root's `trailingValue`.
-   *
-   * @defaultValue false
-   */
+  /** @defaultValue false */
   trailing?: boolean;
 }
 
-/* Day and month accept 1-2 digits so `5/5/2027` works; the year is pinned at
- * exactly 4 so a two-digit year is rejected rather than read as year 27. */
+/* The year is pinned at 4 digits, or `20/05/27` reads as year 27. */
 const DAY_SLASHED = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+/* The form `formatDayLabel` renders, so a displayed value types back in. */
+const DAY_NAMED = /^(\d{1,2})\s+([A-Za-z]{3,9})\s+(\d{4})$/;
 const DAY_ISO = /^\d{4}-\d{2}-\d{2}$/;
 const MONTH_NAMED = /^([A-Za-z]{3,9})(?:\s+(\d{4}))?$/;
 const QUARTER = /^[Qq]([1-4])(?:\s+(\d{4}))?$/;
 const HALF_YEAR = /^[Hh]([12])(?:\s+(\d{4}))?$/;
 const YEAR = /^(\d{4})$/;
 
-/**
- * Read a typed string as a date at whichever scale it names, or `null`.
- *
- * Accepted shapes — surrounding and repeated whitespace is ignored, and month
- * names are case-insensitive:
- *
- * | Input | Scale | Notes |
- * |---|---|---|
- * | `20/05/2027`, `5/5/2027` | `day` | `dd/MM/yyyy`, day first |
- * | `2027-05-20` | `day` | the canonical stored form, so it round-trips |
- * | `May 2027`, `September 2027`, `Sep 2027` | `month` | |
- * | `May` | `month` | year inferred |
- * | `Q4 2026`, `Q4` | `quarter` | |
- * | `H1 2026`, `H1` | `halfYear` | H1 is Jan-Jun, H2 is Jul-Dec |
- * | `2025` | `year` | exactly four digits |
- *
- * **Year inference.** A bare `Q4`, `H1` or `May` resolves inside the calendar
- * year of `referenceDate`, and never rolls forward: `Q1` typed in December
- * 2026 is Q1 **2026**. Rolling forward would make the same string mean
- * different years either side of midnight on 31 December.
- *
- * The returned date is the period's edge under `trailing`, matching what
- * clicking that period in the calendar would commit — so typing `Q4 2026` and
- * clicking Q4 2026 in an end field both yield `2026-12-31`.
- *
- * Rejected, among anything else unrecognised: a two-digit year (`20/05/27`), a
- * month/year pair with no day (`05/2027`), a day that does not exist
- * (`31/04/2027`, `29/02/2027`), and an out-of-range period (`Q5`, `H3`).
- */
+/* Never rolls forward, or a string means different years either side of 31 December. */
 export function parseScaleInput(
   input: string,
   options: ParseScaleInputOptions = {}
-): CalendarPreviewScaleValue | null {
+): ScaleValue | null {
   const { referenceDate, trailing = false } = options;
   const text = input.trim().replace(/\s+/g, ' ');
   if (text === '') return null;
@@ -77,6 +33,18 @@ export function parseScaleInput(
       Number(slashed[3]),
       Number(slashed[2]),
       Number(slashed[1])
+    );
+    return key === null ? null : { date: key, scale: 'day' };
+  }
+
+  const namedDay = DAY_NAMED.exec(text);
+  if (namedDay) {
+    const month = monthFromName(namedDay[2]);
+    if (month === null) return null;
+    const key = dayKeyFromParts(
+      Number(namedDay[3]),
+      month,
+      Number(namedDay[1])
     );
     return key === null ? null : { date: key, scale: 'day' };
   }
@@ -117,14 +85,13 @@ function yearFrom(matched: string | undefined, reference?: Date): number {
   return (reference ?? new Date()).getFullYear();
 }
 
-/* `month` is the period's first month, so the first of it always exists and
-   always lands inside the period — the edge maths is then `scale.ts`'s. */
+/* The period's first month, so its first day always lands inside the period. */
 function at(
   year: number,
   month: number,
-  scale: CalendarPreviewScaleValue['scale'],
+  scale: ScaleValue['scale'],
   trailing: boolean
-): CalendarPreviewScaleValue | null {
+): ScaleValue | null {
   const inside = dayKeyFromParts(year, month, 1);
   if (inside === null) return null;
   return { date: anchorOf(periodOf(inside, scale), trailing), scale };

@@ -16,8 +16,7 @@ import { shiftMonths } from './date-adapter';
 
 export type CalendarPreviewHeaderProps = useRender.ComponentProps<'div'>;
 
-/* Single-month only, and source order is tab order, so the row needs no CSS
-   reordering. Several months caption themselves inside `.Grid`. */
+/* Source order is tab order, so the row needs no CSS reordering. */
 export function CalendarPreviewHeader({
   className,
   children,

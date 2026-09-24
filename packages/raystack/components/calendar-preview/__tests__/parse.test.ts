@@ -24,6 +24,20 @@ describe('parseScaleInput — day', () => {
     });
   });
 
+  it.each([
+    ['15 Aug 2026', '2026-08-15'],
+    ['15 August 2026', '2026-08-15'],
+    ['5 Jan 2027', '2027-01-05'],
+    ['01 Sep 2026', '2026-09-01']
+  ])('round-trips the rendered day form %s', (input, expected) => {
+    expect(parseScaleInput(input)?.date).toBe(expected);
+    expect(parseScaleInput(input)?.scale).toBe('day');
+  });
+
+  it('rejects a day-named form with an impossible day', () => {
+    expect(parseScaleInput('31 Feb 2026')).toBeNull();
+  });
+
   it('accepts 29 February in a leap year', () => {
     expect(parseScaleInput('29/02/2028', IN_2026)).toEqual({
       date: '2028-02-29',
@@ -127,11 +141,6 @@ describe('parseScaleInput — year', () => {
   });
 });
 
-/*
- * The rule, stated once: a bare period resolves inside the reference year and
- * never rolls forward. `Q1` typed in September 2026 is Q1 2026 — already past
- * — not Q1 2027.
- */
 describe('parseScaleInput — year inference for a bare period', () => {
   it.each([
     ['Q4', { date: '2026-10-01', scale: 'quarter' }],
@@ -176,8 +185,7 @@ describe('parseScaleInput — year inference for a bare period', () => {
   });
 
   it('returns null rather than throwing when the reference year has no key', () => {
-    /* A `DayKey` holds four digits. A reference outside that is rejected the
-     * same way any other unreadable input is, so the caller keeps its value. */
+    /* A `DayKey` holds four digits; anything outside is unreadable input. */
     expect(
       parseScaleInput('Q4', { referenceDate: new Date(12026, 0, 1) })
     ).toBeNull();

@@ -35,23 +35,20 @@ import {
   CalendarPreviewNextMonth,
   CalendarPreviewPrevMonth
 } from './calendar-preview-header';
-import { formatCaptionLabel, formatWeekdayLabel } from './date-adapter';
+import { isScaleValue } from './calendar-preview-root';
+import {
+  formatCaptionLabel,
+  formatWeekdayLabel,
+  parseKey
+} from './date-adapter';
 
-/* The only file that may import react-day-picker. It runs with
-   `hideNavigation` and `captionLayout='label'` so it never mounts a `Select`,
-   and the selection props come from root context rather than from
-   `CalendarPreviewGridProps` — which is what lets `...props` stay last. */
-/* Split in two on purpose. Every day button and its tooltip wrapper consume
-   the day-facing half, so it is memoized — an unstable value there re-renders
-   all 42 cells per month on any grid render. The root half carries
-   `rootProps`, a fresh rest-spread every render that cannot be memoized
-   without going stale; it has exactly one consumer, so its instability costs
-   one element instead of 42. */
+/* The only file that may import react-day-picker, and it never mounts a `Select`. */
 interface GridContextValue {
   dateInfo?: (date: Date) => ReactNode;
   tooltipMessages?: (date: Date) => ReactNode;
   showTooltip: boolean;
   loading: boolean;
+  showOutsideDays: boolean;
 }
 
 interface GridRootContextValue {
@@ -81,48 +78,18 @@ function useGridRootContext(part: string): GridRootContextValue {
 
 export interface CalendarPreviewGridProps
   extends useRender.ComponentProps<'div'> {
-  /**
-   * Always render six week rows, so the grid height never jumps between a
-   * 4-, 5- and 6-row month.
-   *
-   * On by default. Phases 3-4 put this calendar in a popover, where a grid
-   * that changes height on navigation resizes the surface under the user's
-   * cursor. Opt out with `fixedWeeks={false}` where the calendar is inline
-   * and the trailing blank row is not wanted.
-   *
-   * @defaultValue true
-   */
+  /** @defaultValue true */
   fixedWeeks?: boolean;
-  /**
-   * Render the days either side of the month.
-   *
-   * Off, unlike the current `DatePicker`: reference A ends every grid on the
-   * last day of its month and leaves the leading cells blank. The cells are
-   * still rendered, so the week rows keep their shape — they are just empty.
-   *
-   * @defaultValue false
-   */
+  /** @defaultValue false */
   showOutsideDays?: boolean;
-  /** Render a week-number column. */
   showWeekNumber?: boolean;
-  /** First day of the week, 0 (Sunday) to 6. */
   weekStartsOn?: DayPickerProps['weekStartsOn'];
-  /** Extra day modifiers, passed through to react-day-picker. */
   modifiers?: DayPickerProps['modifiers'];
-  /** Override react-day-picker's component slots. */
   components?: Partial<CustomComponents>;
-  /**
-   * Extra content for a day, rendered above the date number.
-   *
-   * A function, not a record: the record form keyed cells by a formatted
-   * string and silently missed every day once a `timeZone` shifted the key.
-   */
   dateInfo?: (date: Date) => ReactNode;
-  /** Whether day tooltips are shown at all. @defaultValue false */
+  /** @defaultValue false */
   showTooltip?: boolean;
-  /** The tooltip for a day, or nothing. A function, for the same reason. */
   tooltipMessages?: (date: Date) => ReactNode;
-  /** Cover the grid with a skeleton and stop navigation. */
   loading?: boolean;
 }
 
@@ -140,10 +107,6 @@ export function CalendarPreviewGrid({
   className,
   render,
   ref,
-  /* Swallowed, not forwarded: `.Grid` renders the day cells from context, and
-     `props` is spread last into the day-picker root, so a stray child would
-     win over them and blank the calendar. `.Day` / `.Weekday` are `components`
-     overrides, not children. */
   children: _children,
   ...props
 }: CalendarPreviewGridProps) {
@@ -164,20 +127,22 @@ export function CalendarPreviewGrid({
   const days = useCalendarPreviewDaysContext();
   const setBusy = days?.setBusy;
 
-  /* The header is a sibling, so loading has to reach their common parent for
-     navigation to go inert with it. */
   useEffect(() => {
     if (!setBusy) return;
     setBusy(loading);
     return () => setBusy(false);
   }, [loading, setBusy]);
 
-  /* `dateInfo` and `tooltipMessages` are functions, so a consumer passing
-     inline arrows still invalidates this every render — which is why the docs
-     ask for them to be memoized at the call site. */
+  /* Inline arrows invalidate this every render, which is why the docs ask for memoized ones. */
   const gridContext = useMemo<GridContextValue>(
-    () => ({ dateInfo, tooltipMessages, showTooltip, loading }),
-    [dateInfo, tooltipMessages, showTooltip, loading]
+    () => ({
+      dateInfo,
+      tooltipMessages,
+      showTooltip,
+      loading,
+      showOutsideDays
+    }),
+    [dateInfo, tooltipMessages, showTooltip, loading, showOutsideDays]
   );
 
   const gridRootContext: GridRootContextValue = {
@@ -188,8 +153,12 @@ export function CalendarPreviewGrid({
 
   const months = days?.numberOfMonths ?? 1;
 
-  /* Several months have no single header to caption them, so each month
-     captions itself and `.Days` renders no `.Header` above. */
+  const selected = isScaleValue(value)
+    ? parseKey(value.date)
+    : value instanceof Date
+      ? value
+      : undefined;
+
   const slots = useMemo(
     () => ({
       Root: CalendarPreviewGridRoot,
@@ -204,11 +173,6 @@ export function CalendarPreviewGrid({
     [components, months]
   );
 
-  /* Every click goes to the root, which owns both the single commit and the
-     from/to machine — completing a range has to close the popover, and that
-     must travel through the root's open state rather than from in here. It
-     also keeps the `readOnly` / `disabled` guard in one place, so every path
-     in and out of the calendar inherits the same one. */
   const handleSelect = useCallback(
     (_selected: unknown, triggerDate: Date) => {
       selectDay(triggerDate);
@@ -216,9 +180,6 @@ export function CalendarPreviewGrid({
     [selectDay]
   );
 
-  /* `mode`, `required`, `selected` and `onSelect` stay on the elements below:
-     RDP discriminates its union on the literal `required`, which a `boolean`
-     cannot narrow, so both arms are written out rather than cast away. */
   const base = {
     month,
     onMonthChange: setMonth,
@@ -252,7 +213,7 @@ export function CalendarPreviewGrid({
             {...base}
             mode='range'
             required={false}
-            selected={draft ?? undefined}
+            selected={draft ? { from: draft.from, to: draft.to } : undefined}
             onSelect={handleSelect}
           />
         ) : clearable ? (
@@ -260,7 +221,7 @@ export function CalendarPreviewGrid({
             {...base}
             mode='single'
             required={false}
-            selected={(value as Date | null) ?? undefined}
+            selected={selected}
             onSelect={handleSelect}
           />
         ) : (
@@ -268,7 +229,7 @@ export function CalendarPreviewGrid({
             {...base}
             mode='single'
             required
-            selected={(value as Date | null) ?? undefined}
+            selected={selected}
             onSelect={handleSelect}
           />
         )}
@@ -279,8 +240,7 @@ export function CalendarPreviewGrid({
 
 CalendarPreviewGrid.displayName = 'CalendarPreview.Grid';
 
-/* `<DayPicker>` forwards only `className`, `style` and `data-*` to its root,
-   so `render`, `ref` and the consumer's props have to land here instead. */
+/* `<DayPicker>` forwards only `className`, `style` and `data-*` to its root. */
 function CalendarPreviewGridRoot({ rootRef, ...rootProps }: RootProps) {
   const {
     rootRender,
@@ -313,24 +273,21 @@ function CalendarPreviewWeeks(props: MonthGridProps) {
         aria-hidden='true'
       >
         <Skeleton
-          count={5}
+          count={6}
           height='var(--rs-space-5)'
           width='100%'
           containerClassName={styles['skeleton-rows']}
+          containerStyle={{ gap: undefined }}
         />
       </div>
     </div>
   );
 }
 
-/* Three fixed grid columns rather than spacer elements: the empty nav track is
-   still reserved when a month carries no button, so every caption centres on
-   its own grid instead of drifting toward the buttonless side. */
 function CalendarPreviewMonthCaption({
   calendarMonth,
   displayIndex,
-  /* The class react-day-picker passes here hides the caption, which is what
-     the single-month layout wants and this header must not be. */
+  /* The class RDP passes here hides the caption, which this header must not be. */
   className: _className,
   ...props
 }: MonthCaptionProps) {
@@ -363,8 +320,6 @@ export interface CalendarPreviewDayProps
   extends DayButtonProps,
     Pick<useRender.ComponentProps<'button'>, 'render' | 'ref'> {}
 
-/* At day scale the draft is the roving-focus cell — arrowed to, not entered.
-   PR 5's scale-switch draft writes the same attribute. */
 export function CalendarPreviewDay({
   day,
   modifiers,
@@ -379,11 +334,7 @@ export function CalendarPreviewDay({
     'CalendarPreview.Day'
   );
 
-  /* Replacing react-day-picker's `DayButton` also replaces the effect it uses
-     to move DOM focus, which lives on that component rather than in the
-     library's keyboard handler. Without this, an arrow key moves RDP's focus
-     target and the `data-draft` marker while focus stays put — so the next
-     Enter commits the day the user navigated away from. */
+  /* Replacing RDP's `DayButton` also replaces the effect that moves DOM focus. */
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const mergedRef = useMergedRefs(buttonRef, ref);
 
@@ -402,7 +353,6 @@ export function CalendarPreviewDay({
       {
         type: 'button',
         className: cx(
-          styles['day-button'],
           info != null && styles['day-button-with-info'],
           className
         ),
@@ -436,23 +386,25 @@ export function CalendarPreviewDay({
         )
       } as useRender.ComponentProps<'button'>,
       props,
-      /* After the spread, unlike everything else here. RDP sets
-         `aria-disabled` per day and passes `undefined` for an available one,
-         which would erase this — and `readOnly` is root state that has to win
-         over a per-day value. It is not `disabled`: a read-only grid stays
-         focusable and arrow-navigable, which is the whole difference. */
+      /* After the spread: RDP passes `undefined` per available day, which would erase this. */
       readOnly
         ? ({ 'aria-disabled': true } as useRender.ComponentProps<'button'>)
         : {}
     )
   });
 
-  /* The wrapper is unconditional. Two reasons, both measured: a disabled
-     button fires no pointer events, so hanging the trigger on the day itself
-     hid exactly the tooltip a blocked day needs; and returning `button` bare
-     when there is no message changes the element type at that position, which
-     tears down the DOM node and drops focus the moment `showTooltip` or a
-     per-day message flips. */
+  /* The span, not the day: a disabled button fires no pointer events. */
+  if (!showTooltip) {
+    return (
+      <span
+        className={styles['day-trigger']}
+        data-slot='calendar-preview-day-trigger'
+      >
+        {button}
+      </span>
+    );
+  }
+
   return (
     <Tooltip>
       <Tooltip.Trigger
@@ -502,31 +454,30 @@ export function CalendarPreviewWeekday({
 
 CalendarPreviewWeekday.displayName = 'CalendarPreview.Weekday';
 
-/* `showWeekNumber` renders these two, and RFC 005 asks for a `data-slot` on
-   every rendered element. Overridden only to carry the slot — the classes
-   already arrive through `GRID_CLASS_NAMES`. */
-function CalendarPreviewWeekNumber({ week: _week, ...props }: WeekNumberProps) {
-  return <th data-slot='calendar-preview-week-number' {...props} />;
+function CalendarPreviewWeekNumber({
+  week,
+  children,
+  ...props
+}: WeekNumberProps) {
+  const { showOutsideDays } = useGridContext('CalendarPreview.Grid');
+  /* A padding row's number counts a week the grid never showed. */
+  const counts = showOutsideDays || week.days.some(day => !day.outside);
+  return (
+    <th data-slot='calendar-preview-week-number' {...props}>
+      {counts ? children : null}
+    </th>
+  );
 }
 
 function CalendarPreviewWeekNumberHeader(props: WeekNumberHeaderProps) {
   return <th data-slot='calendar-preview-week-number-header' {...props} />;
 }
 
-/* Three-letter names from the adapter rather than react-day-picker's
-   two-letter default, because the frames spell them `Sun Mon Tue`.
-
-   English only, and deliberately so for now: there is no `locale` prop on this
-   family yet, so every `format()` call falls back to date-fns' `en-US`, and
-   the nav, reset and caption labels are hardcoded literals besides. Adding
-   `locale` means threading it through `date-adapter` and adding a label bag
-   for the literals — a change to make once, not one to half-make here. */
 const GRID_FORMATTERS: DayPickerProps['formatters'] = {
   formatWeekdayName: date => formatWeekdayLabel(date)
 };
 
-/* month_caption is hidden, not removed: `.Header` owns the visible caption,
-   and RDP still labels each table through it. */
+/* Hidden, not removed: RDP still labels each table through it. */
 const GRID_CLASS_NAMES: DayPickerProps['classNames'] = {
   months: styles.months,
   month: styles.month,
