@@ -21,7 +21,7 @@
   oversight.
 */
 
-:root {
+.rs-theme {
   --docs-bg-outside: var(--rs-color-background-base-secondary);
   --docs-bg-shell: var(--rs-color-background-base-secondary);
   --docs-bg-surface: var(--rs-color-background-base-primary);

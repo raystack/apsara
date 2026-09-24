@@ -12,10 +12,10 @@ export interface ImageProps {
   fit?: 'contain' | 'cover' | 'fill';
 
   /**
-   * Border radius style
-   * @deafult none
+   * Corner radius for this image only. Overrides the theme's `radius`.
+   * @defaultValue "none"
    */
-  radius?: 'none' | 'small' | 'medium' | 'full';
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 
   /** URL of fallback image to show on error */
   fallback?: string;

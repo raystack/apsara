@@ -129,9 +129,9 @@ All components import from the root: `import { Button, Dialog } from "@raystack/
 
 | Export | Purpose |
 |---|---|
-| `Theme` (alias `ThemeProvider`, deprecated) | Theme provider — wrap the app. See `theming.md`. |
+| `Theme` | Theme element — wrap the app, nest to scope. See `theming.md`. |
 | `ThemeSwitcher` | Prebuilt light/dark toggle button |
-| `useTheme` | Hook to read/set theme (also at `@raystack/apsara/hooks`) |
+| `useTheme` | Hook to read/set the theme; throws outside a `Theme` |
 
 ## Notes
 
