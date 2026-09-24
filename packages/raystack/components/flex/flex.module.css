@@ -3,6 +3,10 @@
   display: flex;
 }
 
+.flex-inline {
+  display: inline-flex;
+}
+
 .direction-row {
   flex-direction: row;
 }
