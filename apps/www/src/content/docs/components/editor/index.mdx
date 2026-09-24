@@ -1,0 +1,268 @@
+---
+title: Editor
+description: A rich text editor with a floating toolbar, a fixed toolbar, a slash menu and mentions, built on ProseMirror.
+source: packages/raystack/components/editor
+tag: new
+---
+
+import { preview, playground, fixedToolbarDemo, commentBoxDemo, mentionsDemo, slashItemsDemo, controlledDemo, markdownDemo, readOnlyDemo, customControlDemo } from "./demo.ts";
+
+<Demo data={preview} />
+
+## Anatomy
+
+Import and assemble the editor. The root owns the editor state, so a toolbar can sit anywhere inside it, above or below the content.
+
+```tsx
+import { Editor, Toolbar } from '@raystack/apsara'
+
+<Editor>
+  <Editor.Toolbar>
+    <Editor.HistoryButton action="undo" />
+    <Editor.HeadingMenu />
+    <Editor.ListMenu />
+    <Editor.BlockButton block="blockquote" />
+    <Toolbar.Separator />
+    <Editor.MarkButton mark="bold" />
+    <Editor.LinkButton />
+  </Editor.Toolbar>
+  <Editor.Content />
+  <Editor.FloatingToolbar>
+    <Editor.MarkButton mark="bold" />
+  </Editor.FloatingToolbar>
+  <Editor.SlashMenu />
+  <Editor.Mentions />
+</Editor>
+```
+
+The controls work the same in `Editor.Toolbar` and `Editor.FloatingToolbar`, so you build either toolbar from the same parts. Use `Toolbar.Group` and `Toolbar.Separator` to group them.
+
+## Playground
+
+<Demo data={playground} />
+
+## API Reference
+
+### Root
+
+Groups all parts and owns the editor state. Renders a `div` with `data-focused`, `data-empty`, `data-disabled` and `data-readonly`.
+
+<auto-type-table path="./props.ts" name="EditorProps" />
+
+### Content
+
+The editable document. It renders the ProseMirror view with `role="textbox"` and `aria-multiline`. Give it an accessible name with `aria-label`.
+
+<auto-type-table path="./props.ts" name="EditorContentProps" />
+
+### Toolbar
+
+A toolbar that stays in place. It renders an Apsara `Toolbar` and takes its props. It does not render when the editor is read only.
+
+<auto-type-table path="./props.ts" name="EditorToolbarProps" />
+
+### FloatingToolbar
+
+A toolbar that shows above a text selection while the editor has focus. It waits for the mouse button to come up, and it shows at once for a keyboard selection. Escape hides it until the selection changes.
+
+<auto-type-table path="./props.ts" name="EditorFloatingToolbarProps" />
+
+### MarkButton
+
+Toggles a mark. The button is pressed when the selection has the mark, and it is disabled where the mark is not allowed, for example in a code block.
+
+<auto-type-table path="./props.ts" name="EditorMarkButtonProps" />
+
+### BlockButton
+
+Toggles a quote, a code block or a list, or inserts a divider.
+
+<auto-type-table path="./props.ts" name="EditorBlockButtonProps" />
+
+### HeadingMenu
+
+A menu with regular text and the headings. The trigger shows the current style, and each row shows its shortcut.
+
+<auto-type-table path="./props.ts" name="EditorHeadingMenuProps" />
+
+### ListMenu
+
+A menu with the list types. The trigger icon follows the active list.
+
+<auto-type-table path="./props.ts" name="EditorListMenuProps" />
+
+### LinkButton
+
+Adds, edits or removes a link. In the floating toolbar the URL field replaces the buttons. In the fixed toolbar it opens in a popover. `Mod-k` opens the same field. Only `http`, `https`, `mailto` and relative links are allowed.
+
+<auto-type-table path="./props.ts" name="EditorLinkButtonProps" />
+
+### HistoryButton
+
+Undoes or redoes. It is disabled when there is nothing to undo or redo.
+
+<auto-type-table path="./props.ts" name="EditorHistoryButtonProps" />
+
+### SlashMenu
+
+A menu of block commands that opens on `/` at the start of a block or after a space. It filters on the label and the keywords, and a space in the query closes it. Picking a command removes the typed `/query`, and one undo brings it back.
+
+<auto-type-table path="./props.ts" name="EditorSlashMenuProps" />
+
+<auto-type-table path="./props.ts" name="EditorSlashItem" />
+
+### Mentions
+
+A menu that inserts a mention chip. It takes the same props as `PromptInput.Mentions`. Mount one per trigger, for example `@` for people and `#` for issues.
+
+<auto-type-table path="./props.ts" name="EditorMentionsProps" />
+
+<auto-type-table path="./props.ts" name="EditorMentionItem" />
+
+### Hooks
+
+`useEditor()` returns the editor API inside `<Editor>`. `useEditorState(selector, isEqual?)` selects a value from the ProseMirror state and re-renders only when that value changes. `actionsRef` gives you the same API from outside the editor.
+
+<auto-type-table path="./props.ts" name="EditorApi" />
+
+<auto-type-table path="./props.ts" name="EditorCommands" />
+
+### Change details
+
+The second argument of `onValueChange`. The methods convert the doc from that change each time you call them, so call a method only when you need its result.
+
+<auto-type-table path="./props.ts" name="EditorChangeDetails" />
+
+### Markdown
+
+`MarkdownAdapter.create(options)` returns an adapter for the `markdown` prop. `MarkdownAdapter.toEditor(markdown)` and `MarkdownAdapter.fromEditor(value)` convert without an editor, for example on the server. An app that never imports `MarkdownAdapter` ships no Markdown code.
+
+<auto-type-table path="./props.ts" name="MarkdownAdapterOptions" />
+
+## Examples
+
+### Fixed toolbar
+
+A toolbar above the content, like a document editor.
+
+<Demo data={fixedToolbarDemo} />
+
+### Comment box
+
+`formats` limits the nodes and marks, and input rules and paste follow it. `details.empty` gates the submit button, and `actionsRef` reads and clears the editor.
+
+<Demo data={commentBoxDemo} />
+
+### Mentions
+
+Two triggers: `@` filters a list, and `#` searches asynchronously. `onSearch` gets an `AbortSignal` for requests that a newer query replaces.
+
+<Demo data={mentionsDemo} />
+
+### Custom slash commands
+
+Spread `defaultSlashItems` and add your own. `run` gets the editor API after the menu removes the typed query.
+
+<Demo data={slashItemsDemo} />
+
+### Controlled
+
+`onValueChange` emits editor JSON, and `details.getHTML()` converts it to HTML. Pass the emitted value back to `value`, and the editor keeps its selection.
+
+<Demo data={controlledDemo} />
+
+### Markdown
+
+With the `markdown` prop, `value` can be a Markdown string, pasted plain-text Markdown turns into rich content, and `details.getMarkdown()` returns Markdown. The editor still emits JSON.
+
+<Demo data={markdownDemo} />
+
+### Read only
+
+`readOnly` renders the content and hides the toolbars and menus. Use `editorToHTML(value)` to render stored content without an editor, for example on the server.
+
+<Demo data={readOnlyDemo} />
+
+### Custom control
+
+Build your own control with `useEditor` and `useEditorState`. Prevent the default on mouse down, so a click does not move the selection.
+
+<Demo data={customControlDemo} />
+
+## Data model
+
+The value is ProseMirror JSON, the output of `doc.toJSON()`. Node and mark names match Tiptap, so content from Tiptap loads as is.
+
+| Name | Kind | Attributes | Markdown |
+|------|------|------------|----------|
+| `paragraph` | block | | text |
+| `heading` | block | `level`: 1 to 4 | `#` to `####` |
+| `blockquote` | block | | `>` |
+| `codeBlock` | block | `language` | fenced code |
+| `bulletList`, `listItem` | block | | `-` |
+| `orderedList` | block | `start` | `1.` |
+| `taskList`, `taskItem` | block | `checked` | `- [ ]` |
+| `horizontalRule` | block | | `---` |
+| `hardBreak` | inline | | trailing `\` |
+| `mention` | inline | `id`, `label`, `type`, `trigger` | `@[label](type:id)` |
+| `bold`, `italic`, `strike`, `code` | mark | | `**`, `_`, `~~`, `` ` `` |
+| `underline` | mark | | `<u>` |
+| `link` | mark | `href` | `[text](href)` |
+
+On load, a node the schema does not have becomes a paragraph with its text, and an unknown mark is dropped.
+
+Typing shortcuts: `#` to `####` and a space make a heading, `-` or `*` a bulleted list, `1.` a numbered list, `[]` a checklist, `>` a quote, ` ``` ` a code block, and `---` a divider. `**bold**`, `_italic_`, `` `code` `` and `~~strike~~` apply marks. Backspace right after a shortcut undoes it.
+
+## Keyboard shortcuts
+
+`Mod` is Cmd on macOS and Ctrl elsewhere. Override or turn off a key with the `shortcuts` prop. Tooltips and menu rows show the key you set.
+
+| Action | Key |
+|--------|-----|
+| Bold | `Mod-b` |
+| Italic | `Mod-i` |
+| Underline | `Mod-u` |
+| Strikethrough | `Mod-Shift-x` |
+| Inline code | `Mod-e` |
+| Link | `Mod-k` |
+| Text | `Mod-Alt-0` |
+| Heading 1 to 4 | `Mod-Alt-1` to `Mod-Alt-4` |
+| Bulleted list | `Mod-Shift-8` |
+| Numbered list | `Mod-Shift-9` |
+| Checklist | `Mod-Shift-7` |
+| Quote | `Alt-Shift-.` |
+| Code block | `Mod-Shift-\` |
+| Undo, redo | `Mod-z`, `Mod-Shift-z` |
+| Focus the toolbar | `Alt-F10` |
+
+In a list, Enter splits the item, and Tab and Shift+Tab indent and outdent it. Shift+Enter adds a line break.
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `editor` | The root element |
+| `editor-content` | `Editor.Content` |
+| `editor-toolbar` | `Editor.Toolbar` |
+| `editor-floating-toolbar` | The toolbar inside `Editor.FloatingToolbar` |
+| `editor-mark-button` | `Editor.MarkButton` |
+| `editor-block-button` | `Editor.BlockButton` |
+| `editor-heading-menu` | The `Editor.HeadingMenu` trigger |
+| `editor-list-menu` | The `Editor.ListMenu` trigger |
+| `editor-link-button` | `Editor.LinkButton` |
+| `editor-link-form` | The URL form of `Editor.LinkButton` |
+| `editor-link-input` | The URL field |
+| `editor-history-button` | `Editor.HistoryButton` |
+| `editor-slash-menu` | The `Editor.SlashMenu` listbox |
+| `editor-mention-menu` | The `Editor.Mentions` listbox |
+
+## Accessibility
+
+- The content is a `textbox` with `aria-multiline`. While a menu is open it also has `aria-expanded`, `aria-controls` and `aria-activedescendant`, and focus stays in the text.
+- The toolbars have `role="toolbar"` and move focus with the arrow keys. `Alt-F10` moves focus from the text to the toolbar, and Escape in the floating toolbar returns focus to the text.
+- Toggle buttons use `aria-pressed`. Each control's accessible name is its label, and the tooltip adds the shortcut.
+- Heading and list menu rows use `menuitemradio` with `aria-checked`.
+- The slash and mention menus use `listbox` and `option` roles.
+- Checklist checkboxes are real `input` elements.
