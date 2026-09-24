@@ -35,27 +35,27 @@ import "@raystack/apsara/style.css";
 
 ## 3. Wrap the app in `<Theme>`
 
-The `Theme` provider applies `data-theme` / `data-style` / `data-accent-color` / `data-gray-color` to the document and injects a small inline script that sets them **before paint** to avoid a flash of the wrong theme. Tokens only resolve correctly inside it.
+`Theme` renders an element carrying `data-theme` / `data-accent-color` / `data-gray-color` / `data-radius` / `data-scaling` / `data-panel-background` / `data-reduced-motion`, and every `--rs-*` token is declared under those attributes. **Tokens only resolve inside it**, so it has to wrap anything that reads them.
 
 ```tsx
 import { Theme } from "@raystack/apsara";
 
 function App() {
   return (
-    <Theme defaultTheme="system">
+    <Theme persistKey="app-theme" defaultValue={{ appearance: "system" }}>
       <YourApp />
     </Theme>
   );
 }
 ```
 
-`defaultTheme` accepts `"light"`, `"dark"`, or `"system"` (follows OS preference). See `theming.md` for the full prop list (accent color, gray color, style variant, storage key, forced theme, etc.).
+`defaultValue` seeds the seven settings; `appearance` accepts `"light"`, `"dark"` or `"system"` (follows OS preference). `persistKey` turns on persistence and names its storage entry — without it, settings live in memory only. See `theming.md` for the full settings and prop list.
 
 ## Framework wiring
 
 ### Next.js (App Router)
 
-Put the CSS import and provider in the root layout. `suppressHydrationWarning` on `<html>` is **required** because the no-flash script mutates `<html>` attributes before React hydrates.
+Put the CSS import and the theme in the root layout. `suppressHydrationWarning` on `<html>` is **not** needed: nothing is written to `<html>`, and `Theme` marks its own element.
 
 ```tsx
 // app/layout.tsx
@@ -64,9 +64,9 @@ import "@raystack/apsara/style.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body>
-        <Theme defaultTheme="system">{children}</Theme>
+        <Theme persistKey="app-theme">{children}</Theme>
       </body>
     </html>
   );
@@ -74,7 +74,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ```
 
 Notes for the App Router:
-- The CSS import and `Theme` can live in a server component (layout); `Theme` itself is a client component (`"use client"`) and handles that boundary internally.
+- The CSS import and `Theme` can live in a server component (layout); `Theme` itself is a client component (`"use client"`) and handles that boundary internally. It server-renders its attributes on the first byte.
+- Passing `icons` requires a client component, because an override map is an object of functions. Move the theme into a `providers.tsx` marked `'use client'` in that case.
 - Interactive Apsara components are client components — render them within client boundaries as usual.
 
 ### Vite / CRA / SPA
@@ -91,7 +92,7 @@ import App from "./App";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Theme defaultTheme="system">
+    <Theme persistKey="app-theme">
       <App />
     </Theme>
   </React.StrictMode>
@@ -102,16 +103,16 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 
 | Import | Contents |
 |---|---|
-| `@raystack/apsara` | All components, the `Theme` provider, `toastManager`/`useToastManager`, type exports |
-| `@raystack/apsara/icons` | Icon set (re-exports + Apsara icons) |
-| `@raystack/apsara/hooks` | Utility hooks (e.g. `useTheme`) |
+| `@raystack/apsara` | All components, `Theme`/`useTheme`/`ThemeSwitcher`, `toastManager`/`useToastManager`, type exports |
+| `@raystack/apsara/icons` | The 31 icons Apsara's components draw, plus `createIcon` |
+| `@raystack/apsara/hooks` | Utility hooks (`useCopyToClipboard`, `useDebouncedState`, `useIsomorphicLayoutEffect`, `useMouse`) |
 | `@raystack/apsara/style.css` | The full stylesheet (required) |
 | `@raystack/apsara/normalize.css` | Optional CSS reset |
 
 ```tsx
 import { Button } from "@raystack/apsara";
 import { MagnifyingGlassIcon, Cross2Icon } from "@raystack/apsara/icons";
-import { useTheme } from "@raystack/apsara/hooks"; // also re-exported from the root
+import { useCopyToClipboard } from "@raystack/apsara/hooks";
 ```
 
 > `@raystack/apsara/v1` is an alias of the root entry kept for compatibility; new code should import from `@raystack/apsara`.
@@ -137,6 +138,6 @@ export function Example() {
 ## Setup troubleshooting
 
 - **Components render unstyled / tokens are blank** → `style.css` isn't imported, or it's imported after a CSS reset that overrides it. Import it once at the root.
-- **Colors don't change with light/dark, or `var(--rs-color-*)` resolves to nothing** → the tree isn't wrapped in `<Theme>`, so `data-theme` is never set on the document.
-- **Theme flashes wrong on first paint (Next.js)** → missing `suppressHydrationWarning` on `<html>`, or `Theme` isn't high enough in the tree.
-- **Hydration mismatch warnings around theme** → expected without `suppressHydrationWarning`; add it to `<html>`.
+- **Colors don't change with light/dark, or `var(--rs-color-*)` resolves to nothing** → the element isn't inside `<Theme>`. Tokens are declared on the theme element, not `<html>`, so anything outside it — including a hand-rolled portal into `document.body` — has no colors at all.
+- **`useTheme` throws** → it is being called outside a `<Theme>`. That is deliberate; move the caller inside.
+- **Theme flashes wrong on first paint** → `Theme` has no `persistKey`, so it emits no pre-hydration script, or it isn't high enough in the tree.

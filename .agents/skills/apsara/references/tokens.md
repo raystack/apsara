@@ -119,17 +119,21 @@ Use for padding, margin, and gap. Values are in `px`.
 
 ## Radius — `--rs-radius-*`
 
-Radius depends on `data-style`. `modern` is the default; `traditional` is rounder.
+Each step is `base × scaling × radius factor`. The factor comes from the theme's `radius` setting: `none` → 0, `small` → 0.75, `medium` → 1 (default), `large` and `full` → 1.5. The values below are the defaults, at `radius="medium"` and `scaling="1"`.
 
-| Token | `modern` | `traditional` |
+| Token | Default | Base |
 |---|---|---|
-| `--rs-radius-1` | 2px | 8px |
-| `--rs-radius-2` | 4px | 16px |
-| `--rs-radius-3` | 6px | 20px |
-| `--rs-radius-4` | 8px | 24px |
-| `--rs-radius-5` | 12px | 32px |
-| `--rs-radius-6` | 16px | 40px |
-| `--rs-radius-full` | 800px | 1600px |
+| `--rs-radius-1` | 2px | 2px |
+| `--rs-radius-2` | 4px | 4px |
+| `--rs-radius-3` | 6px | 6px |
+| `--rs-radius-4` | 8px | 8px |
+| `--rs-radius-5` | 12px | 12px |
+| `--rs-radius-6` | 16px | 16px |
+| `--rs-radius-full` | 800px | fixed — follows neither factor |
+
+Two more pill tokens follow the setting directly: `--rs-radius-pill` is `9999px` only at `radius="full"` and `0` otherwise, so controls become pills only there; `--rs-radius-thumb` keeps round controls (`Switch`, `Slider`) round from `medium` up and squares them at `none` and `small`.
+
+Individual components take a `radius` prop that overrides the theme for that component alone, without compounding with it.
 
 ---
 
@@ -213,18 +217,23 @@ Tokens: `--rs-font-size-t{1..4}`, `--rs-line-height-t{1..4}`, `--rs-letter-spaci
 
 ## Theme `data-*` attributes (for state/theme-conditional CSS)
 
-Set by `<Theme>` on the document root (and on scope wrappers):
+Set by `<Theme>` on the element it renders (the root theme and every nested scope alike):
 
 | Attribute | Values |
 |---|---|
 | `data-theme` | `light`, `dark` |
-| `data-style` | `modern`, `traditional` |
 | `data-accent-color` | `indigo`, `orange`, `mint` |
 | `data-gray-color` | `gray`, `mauve`, `slate`, `sage` |
+| `data-radius` | `none`, `small`, `medium`, `large`, `full` |
+| `data-scaling` | `0.9`, `0.95`, `1`, `1.05`, `1.1` |
+| `data-panel-background` | `solid`, `translucent` |
+| `data-reduced-motion` | `true`, `false`, `system` |
+
+`system` and `auto` never reach the DOM: they are resolved first, so `data-theme` is always `light` or `dark`.
 
 ```css
 [data-theme="dark"] .custom-card { border-color: var(--rs-color-border-base-tertiary); }
-[data-style="traditional"] .hero { font-family: var(--rs-font-title); }
+[data-accent-color="orange"] .hero { color: var(--rs-color-foreground-accent-primary); }
 ```
 
 ## Token usage rules
