@@ -18,8 +18,6 @@ dist
 .DS_Store
 *.pem
 
-www-old/
-
 # debug
 npm-debug.log*
 yarn-debug.log*
@@ -46,3 +44,8 @@ yarn-error.log*
 
 # Playwright MCP session logs
 .playwright-mcp/
+
+# Claude Code local files
+.claude/settings.local.json
+.claude/worktrees/
+CLAUDE.local.md

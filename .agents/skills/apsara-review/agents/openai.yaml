@@ -1,0 +1,6 @@
+interface:
+  display_name: 'Apsara Review'
+  short_description: 'Review Apsara diffs for bugs, tests, cleanup, docs'
+  default_prompt: 'Use $apsara-review to review my current diff.'
+policy:
+  allow_implicit_invocation: false

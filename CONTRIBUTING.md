@@ -1,319 +1,175 @@
 # Contributing to Apsara
 
-Thank you for your interest in contributing to Apsara! This guide will help you understand how to contribute effectively to this project.
+Thanks for contributing. This guide covers how to send a change and how releases work.
 
-## Table of Contents
+- Setup, scripts, and the project layout are in [DEVELOPMENT.md](./DEVELOPMENT.md).
+- Code, styling, docs, test, and writing rules are in [AGENTS.md](./AGENTS.md). They apply to people and AI agents.
 
-- [Contributing to Apsara](#contributing-to-apsara)
-  - [Table of Contents](#table-of-contents)
-  - [Getting Started](#getting-started)
-  - [Development Workflow](#development-workflow)
-  - [Code Style Guidelines](#code-style-guidelines)
-  - [Component Development](#component-development)
-  - [Documentation Development](#documentation-development)
-    - [Component Documentation Format](#component-documentation-format)
-    - [Working with Documentation](#working-with-documentation)
-  - [VS Code Extension Development](#vs-code-extension-development)
-    - [Working with the VS Code Extension](#working-with-the-vs-code-extension)
-  - [Pull Request Process](#pull-request-process)
-    - [Pull Request Guidelines](#pull-request-guidelines)
-  - [Commit Convention](#commit-convention)
-  - [Release Process](#release-process)
-    - [Release Types](#release-types)
-    - [Creating a Release](#creating-a-release)
-      - [For Maintainers](#for-maintainers)
-    - [Release Workflow Details](#release-workflow-details)
-    - [NPM Publishing](#npm-publishing)
-    - [Canary Releases](#canary-releases)
-  - [Project Documentation](#project-documentation)
-  - [Getting Help](#getting-help)
-  - [Code of Conduct](#code-of-conduct)
+## Contents
 
-## Getting Started
+- [Sending a pull request](#sending-a-pull-request)
+  - [Title](#title)
+  - [Description](#description)
+  - [Open-source-friendly names](#open-source-friendly-names)
+  - [Before you open it](#before-you-open-it)
+  - [CI checks](#ci-checks)
+- [Commit convention](#commit-convention)
+- [Releases](#releases)
+  - [Canary releases](#canary-releases)
+- [Project docs](#project-docs)
+- [Getting help](#getting-help)
+- [Code of conduct](#code-of-conduct)
 
-Before contributing, please review our [Development Guide](./DEVELOPMENT.md) to set up your local development environment.
+## Sending a pull request
 
-Quick setup:
-```bash
-git clone https://github.com/raystack/apsara.git
-cd apsara
-pnpm install
-pnpm dev
+Pull requests are welcome. For a large change, open an issue first to discuss it with the maintainers.
+
+Keep pull requests small, with one feature or fix in each. Two small PRs are easier to review than one big one.
+
+1. Fork the repository.
+
+2. Clone your fork and add the upstream remote:
+
+   ```bash
+   git clone https://github.com/<your-username>/apsara.git
+   cd apsara
+   git remote add upstream https://github.com/raystack/apsara.git
+   ```
+
+3. Sync your local `main` with upstream:
+
+   ```bash
+   git checkout main
+   git pull upstream main
+   ```
+
+4. Install the dependencies with pnpm (npm and yarn are not supported):
+
+   ```bash
+   pnpm install
+   ```
+
+5. Create a branch named `<type>/<name>`, using the types from the [commit convention](#commit-convention):
+
+   ```bash
+   git checkout -b feat/flex-inline
+   ```
+
+6. Make your changes, commit, and push to your fork:
+
+   ```bash
+   git push -u origin HEAD
+   ```
+
+7. Open a pull request against `main` on [the repository](https://github.com/raystack/apsara).
+
+A maintainer reviews the PR, then merges it, asks for changes, or closes it with an explanation. PRs are squash-merged, so the PR title becomes the commit message on `main`.
+
+### Title
+
+Use the [commit convention](#commit-convention): `<type>: [<component>] <summary>`, for example `feat: [flex] add inline prop for inline-flex`. The title describes the whole change, not the last commit.
+
+### Description
+
+- Write a `## Summary` with up to 5 bullets. Each bullet says what changed and why.
+- Link the issue with `Closes #<issue>`, so it closes when the PR merges.
+- Add screenshots or a short video for visual changes.
+- Do not add a test plan, a checklist, a list of changed files, or empty sections. Add another section only when a reviewer needs it, for example a migration note for a breaking change.
+
+```md
+## Summary
+- Add `inline` prop to `Flex` that renders `display: inline-flex` (off by default).
+- Fix documented `wrap` values to match the component (`noWrap`, `wrapReverse`).
+
+Closes #617
 ```
 
-## Development Workflow
+### Open-source-friendly names
 
-1. **Create a feature branch**:
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
+Apsara is a public repo. Anyone can read PR titles, descriptions, branch names, and commit messages, so they must make sense to someone outside your team.
 
-2. **Start the development server**:
-   ```bash
-   # Start both library development and documentation site
-   pnpm start
-   
-   # Or start just the library development server
-   pnpm dev
-   ```
+- Do not include internal tracker IDs (such as `ABC-123`), tracker links, or tracker-generated branch names.
+- Do not mention internal projects, customers, private URLs, or internal chat threads.
+- Link GitHub issues only.
+- Choose the branch name before the first push. A closed PR keeps its branch name, and preview deployment comments include it.
 
-3. **Make your changes** in the appropriate directories:
-   - **Components**: `packages/raystack/components/`
-   - **Documentation**: `apps/www/src/content/docs/`
+### Before you open it
 
-4. **Test your changes**:
-   ```bash
-   # Run tests with Vitest
-   pnpm test:apsara
-   
-   # Run tests in watch mode
-   cd packages/raystack && pnpm test:watch
-   
-   # Build to ensure no build errors
-   pnpm build
-   ```
+- Tests pass: `pnpm test:apsara`.
+- Lint passes: `pnpm lint`. CI does not run lint, so check it locally.
+- The change adds no type errors: `pnpm exec tsc --noEmit` in `packages/raystack`. CI does not run this either.
+- The library builds: `pnpm build:apsara`.
+- New or changed behavior has tests.
+- The docs page is up to date: `index.mdx`, `demo.ts`, and `props.ts` in `apps/www/src/content/docs/components/<name>/`.
+- The branch is up to date with `main`.
 
-5. **Format your code**:
-   ```bash
-   pnpm format
-   ```
+Do not worry if you miss a step. CI and the maintainers will help.
 
-6. **Commit your changes** following conventional commit format:
-   ```bash
-   git add .
-   git commit -m "feat: add amazing new feature"
-   ```
+### CI checks
 
-## Code Style Guidelines
+- PR Title: checks that the title follows the [commit convention](#commit-convention). It runs again when you edit the title.
+- Tests: runs the Vitest suite and builds the library on Node 22 and 24. To reproduce it, run `pnpm test:apsara` and `pnpm build:apsara`.
+- Canary Release: publishes a preview build to [pkg.pr.new](https://pkg.pr.new) and comments the install command on the PR. See [Canary releases](#canary-releases).
+- Vercel: deploys a preview of the docs site with your changes.
 
-- Use TypeScript for all new code
-- Follow existing component patterns
-- Use Biome for code formatting: `pnpm format`
-- Write tests for new components and features
+## Commit convention
 
-## Component Development
-
-1. Create components in `packages/raystack/components/`
-2. Follow the existing component structure:
-   ```
-   component-name/
-   ├── index.tsx        # Export barrel file
-   ├── component-name.tsx # Main component
-   ├── component-name.module.css # Styles
-   └── __tests__/         # Tests
-       └── component-name.test.tsx
-   ```
-
-3. Export new components from `packages/raystack/index.tsx`
-4. Update the component documentation in `apps/www/src/content/docs`
-
-## Documentation Development
-
-The project includes a documentation website for the library `apps/www`:
-
-- Built with Next.js and Fumadocs
-- Uses MDX for component documentation
-
-### Component Documentation Format
-
-Each component folder in `apps/www/src/content/docs/` contains:
-
-```
-component-name/
-├── index.mdx    # Main documentation with examples and usage
-├── props.ts     # TypeScript definitions for component props
-└── demo.ts      # Code for interactive playground and examples
-```
-
-### Working with Documentation
-
-1. **Adding new component docs**:
-   - Create a new folder in `apps/www/src/content/docs/components/`
-   - Add `index.mdx` with component description and examples
-   - Add `props.ts` with TypeScript prop definitions
-   - Add `demo.ts` with interactive examples
-
-2. **Testing documentation changes**:
-   ```bash
-   # Start the docs site
-   cd apps/www && pnpm dev
-   ```
-
-## VS Code Extension Development
-
-The project includes a VS Code extension (`packages/plugin-vscode/`) that provides:
-
-- **Autocomplete**: IntelliSense for Apsara components and design tokens
-- **Hover information**: Component documentation and prop details
-- **Snippets**: Quick component insertion
-
-### Working with the VS Code Extension
-
-1. **Development**:  
-   Use VS Code Command Palette: **"Tasks: Run Task" → "plugin-vscode: start-dev"**  
-   This starts the extension in watch mode and opens the Extension Development Host.
-
-2. **Building**:
-   ```bash
-   pnpm build  # Build for production
-   ```
-
-3. **Packaging**:
-   ```bash
-   pnpm package  # Create .vsix file for distribution
-   ```
-   
-## Pull Request Process
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Ensure tests pass and code builds
-5. Format your code
-6. Submit a pull request with a clear description
-
-### Pull Request Guidelines
-
-- Provide a clear description of what your PR does
-- Include screenshots for UI changes
-- Link to any relevant issues
-- Ensure all tests pass
-- Follow the code style guidelines
-
-## Commit Convention
-
-Use conventional commits for better release notes:
+Commit subjects and PR titles use `<type>: [<component>] <summary>`:
 
 - `feat:` for new features
 - `fix:` for bug fixes
-- `docs:` for documentation changes
-- `style:` for formatting changes
 - `refactor:` for code refactoring
 - `test:` for adding tests
 - `chore:` for maintenance tasks
 
-Example:
-```bash
-git commit -m "feat: add new Button variant"
-git commit -m "fix: resolve tooltip positioning issue"
-git commit -m "docs: update component API documentation"
-```
+`[<component>]` names the component or resource the change is about. Docs changes use `[docs]`, for example `fix: [docs] correct flex wrap values`. List two or three components as `[select, combobox]`. Leave it out for changes across most of the library.
 
-## Release Process
-
-Apsara follows an automated release process using GitHub Actions and semantic versioning.
-
-### Release Types
-
-1. **Production Releases** (`v1.2.3`):
-   - Released from the `main` branch
-   - Published to NPM with `latest` tag
-   - Triggered by pushing tags matching `v[0-9]+.[0-9]+.[0-9]+`
-
-2. **Release Candidates** (`v1.2.3-rc.1`):
-   - Released from the `main` or `release/*` branch
-   - Published to NPM with `next` tag
-   - Triggered by pushing tags matching `v[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+`
-
-3. **Canary Releases**:
-   - Built automatically for every pull request and every push to `main`
-   - Not published to NPM — hosted by [pkg.pr.new](https://pkg.pr.new) instead
-   - No tag or version bump needed
-
-### Creating a Release
-
-#### For Maintainers
-
-1. **Prepare the release**:
-   ```bash
-   # Ensure you're on the correct branch
-   git checkout main  # for production release
-   # OR
-   git checkout release/x.y  # for release candidate
-   
-   # Pull latest changes
-   git pull origin main  # or the release branch
-   ```
-
-2. **Create and push a tag**:
-   ```bash
-   # For production release
-   git tag v1.2.3
-   git push origin v1.2.3
-   
-   # For release candidate
-   git tag v1.2.3-rc.1
-   git push origin v1.2.3-rc.1
-   ```
-
-3. **GitHub Actions will automatically**:
-   - Build the library
-   - Run tests (if configured)
-   - Bump the package version
-   - Publish to NPM
-   - Create a GitHub release with auto-generated notes
-
-### Release Workflow Details
-
-The release process includes these automated steps:
-
-1. **Checkout** the appropriate branch (`main` or `release/*`)
-2. **Setup** Node.js 22.x and pnpm 9.3.0
-3. **Install** dependencies
-4. **Build** the library using `pnpm ci:build`
-5. **Bump version** in package.json based on the git tag
-6. **Publish** to NPM using `pnpm publish` (both `@raystack/apsara` and `@raystack/tools-config`)
-7. **Generate** GitHub release notes
-
-### NPM Publishing
-
-The library is published as `@raystack/apsara` with the following structure:
+Write the summary in lowercase and in the imperative mood, and keep the subject under 70 characters. Do not use `!` (`feat!:`) or a parenthesized scope (`feat(grid):`). Describe breaking changes in the PR description.
 
 ```bash
-# Install the library
-npm install @raystack/apsara
-# or
-pnpm add @raystack/apsara
+git commit -m "feat: [button] add new variant"
+git commit -m "fix: [tooltip] resolve positioning issue"
+git commit -m "chore: [deps] support lucide 1.x"
+git commit -m "feat: integrate react 19"
 ```
 
-### Canary Releases
+## Releases
 
-Every pull request gets a preview build of `@raystack/apsara`, so you can try out changes before they're merged or released — no need to wait for a real NPM publish.
+Maintainers release by pushing a version tag. The tag must be on `main` or a `release/*` branch.
 
-The [`canary.yaml`](.github/workflows/canary.yaml) workflow builds the package and publishes it to [pkg.pr.new](https://pkg.pr.new) on every push to a PR or to `main`. pkg.pr.new then comments on the PR with an install command, for example:
+| Tag | Workflow | npm tag |
+| --- | --- | --- |
+| `v1.2.3` | `release.yaml` | `latest` |
+| `v1.2.3-rc.1` | `release-rc.yaml` | `next` |
+
+```bash
+git checkout main
+git pull origin main
+git tag v1.2.3
+git push origin v1.2.3
+```
+
+The workflow installs dependencies, builds the library, sets the package versions from the tag, publishes `@raystack/apsara` and `@raystack/tools-config` to npm, and creates a GitHub release with generated notes. It does not run the tests, so make sure `main` is green first.
+
+### Canary releases
+
+Every push to a pull request or to `main` publishes a preview build to [pkg.pr.new](https://pkg.pr.new) (`canary.yaml`). On a PR, pkg.pr.new comments with the install command:
 
 ```bash
 pnpm add https://pkg.pr.new/raystack/apsara/@raystack/apsara@<pr-number>
 ```
 
-Install that in a test project to check out the change. The preview build updates automatically as new commits are pushed to the same PR.
+For a commit on `main`, use the commit SHA instead of the PR number.
 
-Pushes to `main` are published the same way but don't have a PR to comment on. Install those directly using the commit SHA:
+## Project docs
 
-```bash
-pnpm add https://pkg.pr.new/raystack/apsara/@raystack/apsara@<commit-sha>
-```
+- [Migration guide](./docs/V1-migration.md): how to move from the Radix-based release to the Base UI-based version.
+- [RFCs](./docs/rfcs/): design proposals for major features.
 
-## Project Documentation
+## Getting help
 
-Beyond this guide, the repo keeps deeper docs under `docs/`:
+Search the [GitHub issues](https://github.com/raystack/apsara/issues) and the [documentation site](https://apsara.raystack.org). If you do not find an answer, open an issue.
 
-- [Migration Guide](./docs/V1-migration.md) — breaking changes and how to move from the Radix-based release to the current Base UI-based version.
-- [RFCs](./docs/rfcs/) — design proposals and decisions behind major features (Base UI migration, unified DataView, guided Tour).
+## Code of conduct
 
-## Getting Help
-
-If you encounter issues:
-
-1. Check if there are similar issues in the [GitHub Issues](https://github.com/raystack/apsara/issues)
-2. Look at the [documentation site](https://apsara.raystack.org)
-3. Review the [Development Guide](./DEVELOPMENT.md)
-4. Create a new issue if the problem persists
-
-## Code of Conduct
-
-By participating in this project, you agree to abide by our code of conduct. Be respectful, inclusive, and collaborative in all interactions.
-
----
-
-For technical setup and local development instructions, see the [Development Guide](./DEVELOPMENT.md).
+Be respectful, inclusive, and collaborative in all interactions.
