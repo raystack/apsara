@@ -13,6 +13,7 @@ import {
   gridDemo,
   dateInfoDemo,
   pickerDemo,
+  rangeDemo,
 } from "./demo.ts";
 
 <Demo data={preview} />
@@ -212,7 +213,16 @@ Each part renders a default; children replace it.
 
 ### Reset
 
-`.Reset` restores `defaultDate` and **leaves the visible month alone** — it is a value reset, not a view reset. It renders only when `defaultDate` is set *and* the current value differs from it, so the button disappears once there is nothing to restore.
+`.Reset` restores `defaultDate` and **leaves the visible month alone** — it is a value reset, not a view reset. It renders whenever `defaultDate` is set, and goes disabled once there is nothing left to restore rather than unmounting: removing the focused element would strand a keyboard user, and dropping a child from the header would shift both nav buttons sideways every time the value crossed the default.
+
+`defaultDate` follows the selection. At `selection="range"` it takes a range, and both edges have to match before the button counts as restored:
+
+```tsx
+<CalendarPreview
+  selection="range"
+  defaultDate={{ from: new Date(2024, 3, 10), to: new Date(2024, 3, 20) }}
+>
+```
 
 `defaultDate` is a separate prop from `defaultValue` because `defaultValue` is ignored once `value` is passed. Keying the reset off its own prop is what makes it work for a controlled calendar.
 
@@ -263,6 +273,51 @@ The popover opens when the input takes focus. Enter, blur and an outside click a
 
 <Demo data={pickerDemo} />
 
+### Range selection
+
+`selection="range"` turns clicks into endpoints. Give each `.Input` a `field`:
+
+```tsx
+<CalendarPreview selection="range" value={range} onValueChange={setRange}>
+  <CalendarPreview.Trigger>
+    <CalendarPreview.Input field="start" />
+    <CalendarPreview.Input field="end" />
+  </CalendarPreview.Trigger>
+  <CalendarPreview.Content>
+    <CalendarPreview.Days numberOfMonths={2} />
+  </CalendarPreview.Content>
+</CalendarPreview>
+```
+
+**`onValueChange` fires on a complete range or not at all.** `to` is not nullable, so there is no partial `{ from?, to? }` to gate on. The half-built range stays internal — the grid styles the track from it, but nothing is emitted until the second endpoint lands.
+
+The click machine:
+
+| State | A click does |
+|---|---|
+| Nothing selected | sets `from`, moves focus to the end field |
+| `from` only, later day | completes the range, emits, closes the popover |
+| `from` only, earlier day | that day becomes the new `from` |
+| Complete range | restarts — the new day is `from`, and the value stays at the previous range until the new one completes |
+
+Completing asks the popover to close through `onOpenChange`, so a consumer holding `open` open is not fought.
+
+**Typing is stricter than clicking.** A click means "the next endpoint", so an earlier day restarts
+the range, as the table above says. Typing names the field it lands in, so an endpoint that crosses
+its partner is rejected instead: `onValidityChange` reports `out-of-order`, the field goes red, and
+nothing is emitted. Two endpoints on the same day are a valid range.
+
+```tsx
+<CalendarPreview.Input
+  field="end"
+  errorMessages={{ 'out-of-order': 'Pick a day after the start' }}
+  onValidityChange={({ message }) => setError(message)}
+/>
+```
+
+Instead of a `lock` prop, mark one endpoint's `.Input` as `readOnly` — the grid will not rewrite it. **A read-only endpoint with no value makes the range unsatisfiable:** the free endpoint sets, the range never completes, and nothing emits. Give a read-only endpoint a value.
+
+<Demo data={rangeDemo} />
 ### Invalid typed dates
 
 Typing is checked on every keystroke, and a date that fails is **never committed** — `onValueChange`
@@ -288,9 +343,12 @@ it is `undefined` while valid, which is exactly what [Field](/docs/components/fi
 </Field>
 ```
 
-The default is a flat **"Invalid input"** for every reason. It stays deliberately vague because only
+The default is a flat **"Invalid input"** for most reasons. It stays deliberately vague because only
 you know the field's bounds — the component cannot say *which* dates would be accepted without
 inventing wording it has no basis for.
+
+`out-of-order` is the exception, and gets a real default: it needs no knowledge of your bounds, only
+of which endpoint was typed.
 
 Override it with `errorMessages`, per reason. Anything left out keeps the default, so wording one
 reason does not mean restating the rest:
@@ -312,6 +370,7 @@ The reason is also on the payload if you would rather branch on it yourself:
 | `unparseable` | The text is not a date the input could read at all |
 | `out-of-bounds` | A real date, outside `minDate` / `maxDate` |
 | `unavailable` | A real date in range that `isDateUnavailable` rejected |
+| `out-of-order` | Range only — the endpoint crossed its partner |
 
 It fires only when validity *changes*, not on every keystroke, so it is safe to drive state with.
 

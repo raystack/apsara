@@ -149,7 +149,9 @@ export function CalendarPreviewGrid({
 }: CalendarPreviewGridProps) {
   const {
     value,
-    setValue,
+    selection,
+    selectDay,
+    draft,
     month,
     setMonth,
     isDateUnavailable,
@@ -202,13 +204,16 @@ export function CalendarPreviewGrid({
     [components, months]
   );
 
-  /* No `readOnly` / `disabled` check here — the root's `setValue` owns it, so
-     every path in and out of the calendar inherits the same guard. */
+  /* Every click goes to the root, which owns both the single commit and the
+     from/to machine — completing a range has to close the popover, and that
+     must travel through the root's open state rather than from in here. It
+     also keeps the `readOnly` / `disabled` guard in one place, so every path
+     in and out of the calendar inherits the same one. */
   const handleSelect = useCallback(
-    (selected: Date | undefined, triggerDate: Date) => {
-      setValue(selected ?? null, selected ? 'select' : 'clear', triggerDate);
+    (_selected: unknown, triggerDate: Date) => {
+      selectDay(triggerDate);
     },
-    [setValue]
+    [selectDay]
   );
 
   /* `mode`, `required`, `selected` and `onSelect` stay on the elements below:
@@ -242,12 +247,20 @@ export function CalendarPreviewGrid({
   return (
     <GridRootContext value={gridRootContext}>
       <GridContext value={gridContext}>
-        {clearable ? (
+        {selection === 'range' ? (
+          <DayPicker
+            {...base}
+            mode='range'
+            required={false}
+            selected={draft ?? undefined}
+            onSelect={handleSelect}
+          />
+        ) : clearable ? (
           <DayPicker
             {...base}
             mode='single'
             required={false}
-            selected={value ?? undefined}
+            selected={(value as Date | null) ?? undefined}
             onSelect={handleSelect}
           />
         ) : (
@@ -255,7 +268,7 @@ export function CalendarPreviewGrid({
             {...base}
             mode='single'
             required
-            selected={value ?? undefined}
+            selected={(value as Date | null) ?? undefined}
             onSelect={handleSelect}
           />
         )}
@@ -396,6 +409,9 @@ export function CalendarPreviewDay({
         'data-slot': 'calendar-preview-day',
         'data-scale': scale,
         'data-selected': modifiers.selected || undefined,
+        'data-range-start': modifiers.range_start || undefined,
+        'data-range-middle': modifiers.range_middle || undefined,
+        'data-range-end': modifiers.range_end || undefined,
         'data-draft': (modifiers.focused && !modifiers.selected) || undefined,
         'data-unavailable': modifiers.disabled || undefined,
         'data-today': modifiers.today || undefined,
@@ -527,6 +543,9 @@ const GRID_CLASS_NAMES: DayPickerProps['classNames'] = {
   disabled: styles.disabled,
   selected: styles.selected,
   hidden: styles.hidden,
+  range_start: styles['range-start'],
+  range_middle: styles['range-middle'],
+  range_end: styles['range-end'],
   week_number: styles['week-number'],
   week_number_header: styles['week-number-header']
 };

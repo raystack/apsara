@@ -1,8 +1,9 @@
 import { cx } from 'class-variance-authority';
-import { type ComponentProps, useRef, useState } from 'react';
+import { type ComponentProps, useEffect, useRef, useState } from 'react';
 import { CalendarIcon } from '~/icons';
 import { Input } from '../input';
 import styles from './calendar-preview.module.css';
+import type { CalendarPreviewField } from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
 import { dayKey, parseKey } from './date-adapter';
 import { parseScaleInput } from './lib/parse';
@@ -10,7 +11,8 @@ import { parseScaleInput } from './lib/parse';
 export type CalendarPreviewInputInvalidReason =
   | 'unparseable'
   | 'out-of-bounds'
-  | 'unavailable';
+  | 'unavailable'
+  | 'out-of-order';
 
 export type CalendarPreviewInputValidity = {
   valid: boolean;
@@ -27,6 +29,11 @@ export interface CalendarPreviewInputProps
   /** Called when the typed text starts or stops being a usable date. */
   onValidityChange?: (validity: CalendarPreviewInputValidity) => void;
   /**
+   * Which endpoint this field addresses, at `selection='range'`. Two inputs,
+   * each addressable — rather than one bag of props per endpoint.
+   */
+  field?: CalendarPreviewField;
+  /**
    * Replaces the message for one or more reasons; anything left out keeps the
    * default. That default is one flat string because only the consumer knows
    * the field's bounds — a built-in message cannot say which dates would be
@@ -39,6 +46,13 @@ export interface CalendarPreviewInputProps
 
 const DEFAULT_INVALID_MESSAGE = 'Invalid input';
 
+/* The one reason the component can word itself: it needs no knowledge of the
+   field's bounds. */
+const DEFAULT_OUT_OF_ORDER: Record<CalendarPreviewField, string> = {
+  start: 'Start date cannot be after the end date',
+  end: 'End date cannot be before the start date'
+};
+
 const VALID: CalendarPreviewInputValidity = { valid: true };
 
 /**
@@ -49,12 +63,14 @@ const VALID: CalendarPreviewInputValidity = { valid: true };
  * popover, which blurs and therefore commits too.
  */
 export function CalendarPreviewInput({
-  placeholder = 'Select date',
+  field = 'start',
+  placeholder,
   trailingIcon = <CalendarIcon />,
   onValidityChange,
   errorMessages,
   onKeyDown,
   onBlur,
+  onFocus,
   className,
   readOnly: readOnlyProp,
   ...props
@@ -71,11 +87,27 @@ export function CalendarPreviewInput({
     clearable,
     today,
     disabled,
-    readOnly
+    readOnly,
+    selection,
+    setEndpoint,
+    draft,
+    activeField,
+    setActiveField,
+    setFieldReadOnly
   } = useCalendarPreviewContext('CalendarPreview.Input');
 
+  const isRange = selection === 'range';
+
+  /* The grid has to know which endpoint refuses a write, and `readOnly` is
+     this input's prop, so it registers rather than the root guessing. */
+  useEffect(() => {
+    if (!isRange) return;
+    setFieldReadOnly(field, Boolean(readOnlyProp));
+    return () => setFieldReadOnly(field, false);
+  }, [isRange, field, readOnlyProp, setFieldReadOnly]);
+
   /* Null means "show the committed value"; a string is the user's draft. */
-  const [draft, setDraft] = useState<string | null>(null);
+  const [text, setText] = useState<string | null>(null);
   const lastReported = useRef<CalendarPreviewInputValidity>(VALID);
 
   /* Derived from the reason rather than returned alongside it, so the reason
@@ -89,7 +121,9 @@ export function CalendarPreviewInput({
           ...validity,
           message:
             (validity.reason && errorMessages?.[validity.reason]) ??
-            DEFAULT_INVALID_MESSAGE
+            (validity.reason === 'out-of-order'
+              ? DEFAULT_OUT_OF_ORDER[field]
+              : DEFAULT_INVALID_MESSAGE)
         };
 
   const report = (candidate: CalendarPreviewInputValidity) => {
@@ -122,34 +156,63 @@ export function CalendarPreviewInput({
       return { valid: false, reason: 'out-of-bounds' };
     }
     if (isDateUnavailable(date)) return { valid: false, reason: 'unavailable' };
+    /* The checks above read one date on its own and cannot see the partner. A
+       grid click restarts instead of rejecting, on purpose. Equal days are a
+       valid range. */
+    const partner = field === 'start' ? draft?.to : draft?.from;
+    if (isRange && partner) {
+      const typed = dayKey(date, timeZone);
+      const against = dayKey(partner, timeZone);
+      if (field === 'start' ? typed > against : typed < against) {
+        return { valid: false, reason: 'out-of-order' };
+      }
+    }
     return date;
   };
 
   const commit = () => {
-    if (draft === null) return;
-    const text = draft.trim();
-    if (text === '') {
+    if (text === null) return;
+    const trimmed = text.trim();
+    if (trimmed === '') {
       if (clearable && value) setValue(null, 'clear', today);
-      setDraft(null);
+      setText(null);
       report(VALID);
       return;
     }
-    const resolved = resolve(text);
-    if (resolved instanceof Date) {
-      setValue(resolved, 'input', resolved);
-      setDraft(null);
-      report(VALID);
-    }
+    const resolved = resolve(trimmed);
+    if (!(resolved instanceof Date)) return;
+    if (isRange) setEndpoint(field, resolved);
+    else setValue(resolved, 'input', resolved);
+    setText(null);
+    report(VALID);
   };
 
   const inert = disabled || readOnly || readOnlyProp;
+
+  const endpoint = isRange
+    ? ((field === 'start' ? draft?.from : draft?.to) ?? null)
+    : (value as Date | null);
+  const committedText = endpoint ? formatValue(endpoint, scale) : '';
+  const resolvedPlaceholder =
+    placeholder ??
+    (isRange
+      ? field === 'start'
+        ? 'Select start date'
+        : 'Select end date'
+      : 'Select date');
 
   return (
     <Input
       className={cx(styles.input, className)}
       data-slot='calendar-preview-input'
       data-scale={scale}
-      placeholder={placeholder}
+      placeholder={resolvedPlaceholder}
+      data-field={isRange ? field : undefined}
+      data-active={isRange && activeField === field ? 'true' : undefined}
+      onFocus={event => {
+        onFocus?.(event);
+        if (isRange) setActiveField(field);
+      }}
       trailingIcon={trailingIcon}
       disabled={disabled}
       readOnly={readOnly || readOnlyProp}
@@ -161,10 +224,10 @@ export function CalendarPreviewInput({
       {...(lastReported.current.valid
         ? {}
         : { 'aria-invalid': true, 'data-invalid': true })}
-      value={draft ?? (value ? formatValue(value, scale) : '')}
+      value={text ?? committedText}
       onValueChange={text => {
         if (inert) return;
-        setDraft(text);
+        setText(text);
         if (text.trim() === '') {
           report(VALID);
           return;

@@ -1454,7 +1454,9 @@ describe('useCalendar', () => {
       useCalendar();
     return (
       <div>
-        <span data-testid='value'>{value ? value.getDate() : 'none'}</span>
+        <span data-testid='value'>
+          {value instanceof Date ? value.getDate() : 'none'}
+        </span>
         <span data-testid='month'>{month.getMonth()}</span>
         <span data-testid='scale'>{scale}</span>
         <span data-testid='blocked'>

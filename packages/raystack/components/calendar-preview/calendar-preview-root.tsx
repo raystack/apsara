@@ -1,15 +1,19 @@
 'use client';
 
 import { mergeProps, Popover, useRender } from '@base-ui/react';
+import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import { REASONS } from '@base-ui/react/internals/reasons';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import styles from './calendar-preview.module.css';
 import {
   type CalendarPreviewChangeDetails,
   type CalendarPreviewChangeReason,
   type CalendarPreviewContextValue,
+  type CalendarPreviewDateRange,
+  type CalendarPreviewDraftRange,
+  type CalendarPreviewField,
   type CalendarPreviewOpenChangeDetails,
   CalendarPreviewProvider
 } from './calendar-preview-context';
@@ -29,20 +33,73 @@ import {
 
 const DEFAULT_YEAR_SPAN = 10;
 
+function isRange(value: unknown): value is CalendarPreviewDateRange {
+  return value != null && typeof value === 'object' && 'from' in value;
+}
+
+/* The day the view should open on, whichever selection shape the value is. */
+function monthAnchor(
+  value: CalendarPreviewValue | undefined
+): Date | undefined {
+  if (!value) return undefined;
+  return isRange(value) ? value.from : value;
+}
+
 /* `defaultValue` is omitted because `HTMLAttributes` already declares it as a
    form value, which is not what it means here. */
-export interface CalendarPreviewProps
-  extends Omit<useRender.ComponentProps<'div'>, 'defaultValue'> {
+export type CalendarPreviewValue = Date | CalendarPreviewDateRange | null;
+
+/* Selection arms are discriminated on `selection`, so a single-day consumer
+   keeps a `Date | null` callback and a range consumer gets a range that has
+   both edges. One shared `value` type would widen both. */
+interface CalendarPreviewSingleProps {
+  selection?: 'single';
   /** The selected day (controlled). */
   value?: Date | null;
   /** The initially selected day (uncontrolled). */
   defaultValue?: Date | null;
-  /** Called when a day is committed or cleared. */
   onValueChange?: (
     value: Date | null,
     details: CalendarPreviewChangeDetails
   ) => void;
+  /**
+   * The day `.Reset` restores, read even when `value` is controlled — which
+   * `defaultValue` is not. `null` is a default of *nothing selected*, so
+   * `.Reset` clears; omitting it renders no button at all.
+   */
+  defaultDate?: Date | null;
+}
 
+interface CalendarPreviewRangeProps {
+  selection: 'range';
+  /** The selected range (controlled). Both edges, or nothing. */
+  value?: CalendarPreviewDateRange | null;
+  /** The initial range (uncontrolled). */
+  defaultValue?: CalendarPreviewDateRange | null;
+  /**
+   * Fires on a **complete** range or not at all. The half-built state stays
+   * internal, so there is no partial `{ from?, to? }` to gate on.
+   */
+  onValueChange?: (
+    value: CalendarPreviewDateRange | null,
+    details: CalendarPreviewChangeDetails
+  ) => void;
+  /**
+   * The range `.Reset` restores, read even when `value` is controlled — which
+   * `defaultValue` is not. `null` is a default of *nothing selected*, so
+   * `.Reset` clears; omitting it renders no button at all.
+   */
+  defaultDate?: CalendarPreviewDateRange | null;
+}
+
+export type CalendarPreviewProps = (
+  | CalendarPreviewSingleProps
+  | CalendarPreviewRangeProps
+) &
+  CalendarPreviewSharedProps;
+
+interface CalendarPreviewSharedProps
+  extends Omit<useRender.ComponentProps<'div'>, 'defaultValue' | 'onChange'> {
   /** Whether the popover is open (controlled). Ignored by an inline calendar. */
   open?: boolean;
   /** @defaultValue false */
@@ -74,16 +131,6 @@ export interface CalendarPreviewProps
   maxDate?: Date;
   /** Reject individual days. Applied on top of `minDate` / `maxDate`. */
   isDateUnavailable?: (date: Date) => boolean;
-
-  /**
-   * The day `.Reset` restores. Read even when `value` is controlled, which
-   * `defaultValue` is not — otherwise a controlled consumer never sees
-   * `.Reset`.
-   *
-   * `null` is a default of *nothing selected*, so `.Reset` clears. Omitting
-   * the prop is different: the part then has no job and does not render.
-   */
-  defaultDate?: Date | null;
 
   /**
    * Renders a value for display.
@@ -152,6 +199,7 @@ export function defaultFormatValue(
 }
 
 export function CalendarPreviewRoot({
+  selection = 'single',
   value: valueProp,
   defaultValue = null,
   onValueChange,
@@ -180,7 +228,16 @@ export function CalendarPreviewRoot({
 }: CalendarPreviewProps) {
   const today = useMemo(() => todayProp ?? new Date(), [todayProp]);
 
-  const [value, setValueUnwrapped] = useControlled<Date | null>({
+  /* The public props are discriminated on `selection`; the implementation is
+     shared and works in the widened value. This is the one seam between them. */
+  const emit = onValueChange as
+    | ((
+        value: CalendarPreviewValue,
+        details: CalendarPreviewChangeDetails
+      ) => void)
+    | undefined;
+
+  const [value, setValueUnwrapped] = useControlled<CalendarPreviewValue>({
     controlled: valueProp,
     default: defaultValue,
     name: 'CalendarPreview',
@@ -193,7 +250,11 @@ export function CalendarPreviewRoot({
        moment `value` is controlled, so reading it alone opened a controlled
        calendar on today's month with the selection off-screen — against this
        prop's own documented default. */
-    default: defaultMonth ?? valueProp ?? defaultValue ?? today,
+    default:
+      defaultMonth ??
+      monthAnchor(valueProp) ??
+      monthAnchor(defaultValue) ??
+      today,
     name: 'CalendarPreview',
     state: 'month'
   });
@@ -221,19 +282,19 @@ export function CalendarPreviewRoot({
      the consumer asked to be read-only. */
   const setValue = useCallback(
     (
-      next: Date | null,
+      next: CalendarPreviewValue,
       reason: CalendarPreviewChangeReason,
       occasion: Date
     ) => {
       if (readOnly || disabled) return;
       setValueUnwrapped(next);
-      onValueChange?.(next, {
+      emit?.(next, {
         reason,
         period: periodOf(occasion, scale, timeZone),
         toDate: () => occasion
       });
     },
-    [setValueUnwrapped, onValueChange, scale, timeZone, readOnly, disabled]
+    [setValueUnwrapped, emit, scale, timeZone, readOnly, disabled]
   );
 
   const [open, setOpenUnwrapped] = useControlled<boolean>({
@@ -243,10 +304,11 @@ export function CalendarPreviewRoot({
     state: 'open'
   });
 
-  /* Escape and a press on the trigger both leave focus on the trigger, so the
-     focus event that follows would immediately undo the close. Recording the
-     reason lets `.Trigger` swallow exactly that one focus — the same rule
-     floating-ui's own `useFocus` applies. */
+  /* Escape, a press on the trigger, and completing a range all leave focus on
+     the trigger, so the focus event that follows would immediately undo the
+     close. Recording the reason lets `.Trigger` swallow exactly that one focus
+     — the rule floating-ui's own `useFocus` applies, plus `closePress`, which
+     is ours because auto-closing on completion is. */
   const focusOpenBlocked = useRef(false);
 
   const setOpen = useCallback(
@@ -254,7 +316,8 @@ export function CalendarPreviewRoot({
       if (
         !next &&
         (details.reason === REASONS.escapeKey ||
-          details.reason === REASONS.triggerPress)
+          details.reason === REASONS.triggerPress ||
+          details.reason === REASONS.closePress)
       ) {
         focusOpenBlocked.current = true;
       }
@@ -275,6 +338,106 @@ export function CalendarPreviewRoot({
     [setScaleUnwrapped]
   );
 
+  const [draft, setDraft] = useState<CalendarPreviewDraftRange | null>(null);
+  const [activeField, setActiveField] = useState<CalendarPreviewField>('start');
+  const [fieldReadOnly, setFieldReadOnlyState] = useState<
+    Record<CalendarPreviewField, boolean>
+  >({ start: false, end: false });
+
+  const setFieldReadOnly = useCallback(
+    (field: CalendarPreviewField, next: boolean) => {
+      setFieldReadOnlyState(current =>
+        current[field] === next ? current : { ...current, [field]: next }
+      );
+    },
+    []
+  );
+
+  /*
+   * The from/to machine, unchanged from the shipped picker:
+   *   no from            -> set from, advance to the end input
+   *   from, day earlier  -> that day becomes the new from
+   *   from, day later    -> completes, emits, closes
+   *   from and to        -> restart from the new day
+   *
+   * It lives on the root because completing a range both writes the value and
+   * closes the popover, and closing has to go through `setOpen` so a consumer
+   * controlling `open` is not fought.
+   */
+  const selectDay = useCallback(
+    (date: Date) => {
+      if (readOnly || disabled) return;
+
+      if (selection === 'single') {
+        const isSame =
+          value instanceof Date &&
+          dayKey(value, timeZone) === dayKey(date, timeZone);
+        if (isSame && clearable) setValue(null, 'clear', date);
+        else setValue(date, 'select', date);
+        return;
+      }
+
+      const from = draft?.from;
+      if (!from || draft?.to) {
+        if (fieldReadOnly.start) return;
+        setDraft({ from: date });
+        setActiveField('end');
+        return;
+      }
+
+      if (dayKey(date, timeZone) < dayKey(from, timeZone)) {
+        if (fieldReadOnly.start) return;
+        setDraft({ from: date });
+        return;
+      }
+
+      if (fieldReadOnly.end) return;
+      setDraft(null);
+      setActiveField('start');
+      setValue({ from, to: date }, 'select', date);
+      setOpen(
+        false,
+        createChangeEventDetails(REASONS.closePress, undefined, undefined)
+      );
+    },
+    [
+      selection,
+      value,
+      draft,
+      fieldReadOnly,
+      clearable,
+      timeZone,
+      readOnly,
+      disabled,
+      setValue,
+      setOpen
+    ]
+  );
+
+  /* A click means "the next endpoint"; typing into a field means that field,
+     so a typed date cannot go through `selectDay`. */
+  const setEndpoint = useCallback(
+    (field: CalendarPreviewField, date: Date) => {
+      if (readOnly || disabled || fieldReadOnly[field]) return;
+
+      const base = draft ?? (isRange(value) ? value : null);
+      const from = field === 'start' ? date : base?.from;
+      const to = field === 'end' ? date : base?.to;
+
+      /* An ordered pair completes. Anything else — one edge still missing, or
+         a typed day that crossed its partner — restarts from that day. */
+      if (from && to && dayKey(from, timeZone) <= dayKey(to, timeZone)) {
+        setDraft(null);
+        setActiveField('start');
+        setValue({ from, to }, 'input', date);
+        return;
+      }
+      setDraft({ from: date });
+      setActiveField('end');
+    },
+    [value, draft, fieldReadOnly, timeZone, readOnly, disabled, setValue]
+  );
+
   /* `'reset'`, not `'select'`: restoring the default is not a pick, and a
      consumer that logs or validates on selection needs to tell them apart. */
   const reset = useCallback(() => {
@@ -283,11 +446,12 @@ export function CalendarPreviewRoot({
        claim a day was restored when none was. */
     if (defaultDate === null) {
       if (value == null) return;
-      setValue(null, 'clear', value);
+      setValue(null, 'clear', monthAnchor(value) ?? today);
       return;
     }
-    setValue(defaultDate, 'reset', defaultDate);
-  }, [defaultDate, value, setValue]);
+    /* `occasion` is one day, so a range reports the day it starts on. */
+    setValue(defaultDate, 'reset', monthAnchor(defaultDate) ?? today);
+  }, [defaultDate, value, setValue, today]);
 
   /* Day-keys, not instants: a `minDate` carrying a time of day still leaves
      its own day selectable, which the current family gets wrong. */
@@ -312,10 +476,18 @@ export function CalendarPreviewRoot({
     return { from: Math.min(...years), to: Math.max(...years) };
   }, [yearRangeProp, today, minDate, maxDate]);
 
-  const context = useMemo<CalendarPreviewContextValue<Date | null>>(
+  const context = useMemo<CalendarPreviewContextValue<CalendarPreviewValue>>(
     () => ({
       value,
       setValue,
+      selection,
+      selectDay,
+      setEndpoint,
+      draft: draft ?? (isRange(value) ? value : null),
+      activeField,
+      setActiveField,
+      fieldReadOnly,
+      setFieldReadOnly,
       open,
       setOpen,
       shouldIgnoreFocusOpen,
@@ -339,6 +511,13 @@ export function CalendarPreviewRoot({
     [
       value,
       setValue,
+      selection,
+      selectDay,
+      setEndpoint,
+      draft,
+      activeField,
+      fieldReadOnly,
+      setFieldReadOnly,
       open,
       setOpen,
       shouldIgnoreFocusOpen,
