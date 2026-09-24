@@ -1,0 +1,295 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-3);
+  min-width: 0;
+}
+
+/* ---- Content ---- */
+
+.content {
+  /* The mention chip sizes itself to this line height. */
+  --editor-line-height: var(--rs-line-height-regular);
+
+  box-sizing: border-box;
+  /* ProseMirror positions widget decorations against the editing host. */
+  position: relative;
+  min-height: var(--rs-space-8);
+  outline: none;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  color: var(--rs-color-foreground-base-primary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-regular);
+  line-height: var(--editor-line-height);
+  letter-spacing: var(--rs-letter-spacing-regular);
+}
+
+.content[aria-disabled="true"] {
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+.content > * {
+  margin: 0;
+}
+
+.content > * + * {
+  margin-top: var(--rs-space-3);
+}
+
+.content p {
+  margin: 0;
+}
+
+.content h1,
+.content h2,
+.content h3,
+.content h4 {
+  margin: 0;
+  font-family: var(--rs-font-title);
+  font-weight: var(--rs-font-weight-medium);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.content h1 {
+  font-size: var(--rs-font-size-t2);
+  line-height: var(--rs-line-height-t2);
+  letter-spacing: var(--rs-letter-spacing-t2);
+}
+
+.content h2 {
+  font-size: var(--rs-font-size-t1);
+  line-height: var(--rs-line-height-t1);
+  letter-spacing: var(--rs-letter-spacing-t1);
+}
+
+.content h3 {
+  font-size: var(--rs-font-size-large);
+  line-height: var(--rs-line-height-large);
+  letter-spacing: var(--rs-letter-spacing-large);
+}
+
+.content h4 {
+  font-size: var(--rs-font-size-regular);
+  line-height: var(--rs-line-height-regular);
+}
+
+.content > h1:not(:first-child),
+.content > h2:not(:first-child),
+.content > h3:not(:first-child) {
+  margin-top: var(--rs-space-5);
+}
+
+.content ul,
+.content ol {
+  margin: 0;
+  padding-left: var(--rs-space-6);
+}
+
+.content li + li,
+.content li > * + * {
+  margin-top: var(--rs-space-2);
+}
+
+.content ul[data-type="taskList"] {
+  padding-left: 0;
+  list-style: none;
+}
+
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--rs-space-3);
+}
+
+.task-item > label {
+  display: inline-flex;
+  align-items: center;
+  height: var(--editor-line-height);
+  user-select: none;
+}
+
+.task-checkbox {
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
+  margin: 0;
+  accent-color: var(--rs-color-background-accent-emphasis);
+  cursor: pointer;
+}
+
+.task-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-item[data-checked="true"] > .task-content {
+  color: var(--rs-color-foreground-base-tertiary);
+  text-decoration: line-through;
+}
+
+.content blockquote {
+  margin: 0;
+  padding-left: var(--rs-space-4);
+  border-left: 2px solid var(--rs-color-border-base-primary);
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+.content pre {
+  margin: 0;
+  padding: var(--rs-space-3) var(--rs-space-4);
+  border-radius: var(--rs-radius-2);
+  background: var(--rs-color-background-base-secondary);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.content code {
+  font-family: var(--rs-font-mono);
+  font-size: var(--rs-font-size-mono-small);
+  line-height: var(--rs-line-height-mono-small);
+  letter-spacing: var(--rs-letter-spacing-mono-small);
+}
+
+.content :not(pre) > code {
+  padding: 0 var(--rs-space-1);
+  border-radius: var(--rs-radius-1);
+  background: var(--rs-color-background-base-secondary);
+}
+
+.content a {
+  color: var(--rs-color-foreground-accent-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: text;
+}
+
+.content hr {
+  margin-top: var(--rs-space-4);
+  margin-bottom: var(--rs-space-4);
+  border: none;
+  border-top: 1px solid var(--rs-color-border-base-primary);
+}
+
+.content hr:global(.ProseMirror-selectednode) {
+  border-top-color: var(--rs-color-border-accent-emphasis);
+}
+
+/* prosemirror-view ships a stylesheet the editor does not load. These rules
+   from it are load-bearing. */
+
+/* ProseMirror appends a zero-size <img> after a block that ends in a
+   `contentEditable="false"` node, so the browser can draw a caret past it. An
+   app-level `img { display: block }` reset turns it into a phantom line. */
+.content :global(img.ProseMirror-separator) {
+  display: inline !important;
+  border: none !important;
+  margin: 0 !important;
+}
+
+.content:global(.ProseMirror-hideselection) {
+  caret-color: transparent;
+}
+
+.content:global(.ProseMirror-hideselection) *::selection {
+  background: transparent;
+}
+
+.content :global(.ProseMirror-gapcursor) {
+  display: none;
+  position: absolute;
+  pointer-events: none;
+}
+
+.content :global(.ProseMirror-gapcursor)::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -2px;
+  width: var(--rs-space-5);
+  border-top: 1px solid var(--rs-color-foreground-base-primary);
+}
+
+.content:global(.ProseMirror-focused) :global(.ProseMirror-gapcursor) {
+  display: block;
+}
+
+.drop-cursor {
+  background: var(--rs-color-border-accent-emphasis);
+}
+
+/* The typed `/query` reads as a pending command while the menu is open. */
+.slash-query {
+  border-radius: var(--rs-radius-1);
+  box-shadow: inset 0 0 0 1px var(--rs-color-border-base-primary);
+}
+
+/* ---- Toolbars ---- */
+
+.toolbar {
+  flex-wrap: wrap;
+}
+
+.floating-popup {
+  min-width: 0;
+  max-width: none;
+  padding: 0;
+}
+
+.floating-toolbar {
+  border: none;
+}
+
+.tooltip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+}
+
+.shortcut-keys {
+  flex-shrink: 0;
+}
+
+.menu {
+  min-width: 200px;
+}
+
+.menu-chevron {
+  width: var(--rs-space-3);
+  height: var(--rs-space-3);
+  margin-left: calc(var(--rs-space-1) * -1);
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.menu-trailing {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+}
+
+.menu-check {
+  visibility: hidden;
+}
+
+.menu-check[data-visible] {
+  visibility: visible;
+}
+
+/* ---- Link ---- */
+
+.link-popover {
+  padding: var(--rs-space-1);
+  max-width: none;
+}
+
+.link-form {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-1);
+  padding: var(--rs-space-1);
+  min-width: 280px;
+}
+
+.link-form > :first-child {
+  flex: 1;
+}

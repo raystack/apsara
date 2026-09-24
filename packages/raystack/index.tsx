@@ -114,6 +114,44 @@ export {
 } from './components/data-view';
 export { Dialog } from './components/dialog';
 export { Drawer } from './components/drawer';
+export {
+  defaultShortcuts,
+  defaultSlashItems,
+  Editor,
+  type EditorAction,
+  type EditorApi,
+  type EditorBlock,
+  type EditorBlockButtonProps,
+  type EditorChangeDetails,
+  type EditorCommands,
+  type EditorContentProps,
+  type EditorFloatingToolbarProps,
+  type EditorFormat,
+  type EditorHeadingLevel,
+  type EditorHeadingMenuProps,
+  type EditorHistoryButtonProps,
+  type EditorJSON,
+  type EditorLinkButtonProps,
+  type EditorList,
+  type EditorListMenuProps,
+  type EditorMark,
+  type EditorMarkButtonProps,
+  type EditorMarkdownChangeDetails,
+  type EditorMention,
+  type EditorMentionItem,
+  type EditorMentionRef,
+  type EditorMentionsProps,
+  type EditorProps,
+  type EditorShortcuts,
+  type EditorSlashItem,
+  type EditorSlashMenuProps,
+  type EditorToolbarProps,
+  editorToHTML,
+  editorToText,
+  type MarkdownAdapter,
+  useEditor,
+  useEditorState
+} from './components/editor';
 export { EmptyState } from './components/empty-state';
 export { Field } from './components/field';
 export { Fieldset } from './components/fieldset';

@@ -54,6 +54,8 @@ export interface SuggestionMenuProps {
   /** Width the popup takes, in pixels, matching the composer frame's width. */
   width?: number;
   'aria-label'?: string;
+  /** Slot name on the listbox. */
+  'data-slot'?: string;
 }
 
 /** Row ids are derived, so the editor can name the highlighted one. */
@@ -74,7 +76,8 @@ export function SuggestionMenu({
   loadingRowCount = 3,
   emptyMessage = 'No results',
   width,
-  'aria-label': ariaLabel = 'Suggestions'
+  'aria-label': ariaLabel = 'Suggestions',
+  'data-slot': slot
 }: SuggestionMenuProps) {
   const total = groups.reduce((count, group) => count + group.items.length, 0);
   let cursor = -1;
@@ -97,7 +100,7 @@ export function SuggestionMenu({
           } as CSSProperties
         }
       >
-        <div id={id} role='listbox' aria-label={ariaLabel}>
+        <div id={id} role='listbox' aria-label={ariaLabel} data-slot={slot}>
           {loading && total === 0
             ? Array.from({ length: loadingRowCount }).map((_, index) => (
                 <div

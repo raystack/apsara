@@ -2,7 +2,8 @@ import {
   type EditorState,
   Plugin,
   PluginKey,
-  TextSelection
+  TextSelection,
+  type Transaction
 } from 'prosemirror-state';
 import { Decoration, DecorationSet, type EditorView } from 'prosemirror-view';
 import styles from './editor-core.module.css';
@@ -305,14 +306,23 @@ export function insertMention(
   attrs: MentionAttrs,
   range?: { from: number; to: number }
 ): void {
-  const { state } = view;
+  const tr = mentionTransaction(view.state, attrs, range);
+  if (tr) view.dispatch(tr);
+}
+
+/** The transaction behind `insertMention`, or null when the schema has no mentions. */
+export function mentionTransaction(
+  state: EditorState,
+  attrs: MentionAttrs,
+  range?: { from: number; to: number }
+): Transaction | null {
   const target = range ?? {
     from: state.selection.from,
     to: state.selection.to
   };
 
   const mentionType = state.schema.nodes.mention;
-  if (!mentionType) return;
+  if (!mentionType) return null;
 
   const tr = state.tr;
   const nodes = [mentionType.create(attrs)];
@@ -325,5 +335,5 @@ export function insertMention(
   const caret = Math.min(target.from + (spaced ? 1 : 2), tr.doc.content.size);
   tr.setSelection(TextSelection.create(tr.doc, caret));
   tr.scrollIntoView();
-  view.dispatch(tr);
+  return tr;
 }
