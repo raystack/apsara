@@ -30,7 +30,8 @@
   color: var(--rs-color-foreground-base-secondary);
 }
 
-.content > * {
+/* Zero specificity, so the spacing rules below win over the reset. */
+.content :where(p, h1, h2, h3, h4, ul, ol, blockquote, pre) {
   margin: 0;
 }
 
@@ -38,15 +39,10 @@
   margin-top: var(--rs-space-3);
 }
 
-.content p {
-  margin: 0;
-}
-
 .content h1,
 .content h2,
 .content h3,
 .content h4 {
-  margin: 0;
   font-family: var(--rs-font-title);
   font-weight: var(--rs-font-weight-medium);
   color: var(--rs-color-foreground-base-primary);
@@ -83,7 +79,6 @@
 
 .content ul,
 .content ol {
-  margin: 0;
   padding-left: var(--rs-space-6);
 }
 
@@ -129,14 +124,12 @@
 }
 
 .content blockquote {
-  margin: 0;
   padding-left: var(--rs-space-4);
   border-left: 2px solid var(--rs-color-border-base-primary);
   color: var(--rs-color-foreground-base-secondary);
 }
 
 .content pre {
-  margin: 0;
   padding: var(--rs-space-3) var(--rs-space-4);
   border-radius: var(--rs-radius-2);
   background: var(--rs-color-background-base-secondary);

@@ -190,8 +190,12 @@ describe('Editor.Toolbar', () => {
     it('sets a heading from the menu', async () => {
       const { api, view } = setup();
       select(view(), 1, 1);
-      fireEvent.click(screen.getByRole('button', { name: 'Text style' }));
+      const trigger = screen.getByRole('button', { name: 'Text style' });
+      fireEvent.click(trigger);
       await flush();
+      // The same element stays the trigger, so the menu keeps its anchor.
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      expect(trigger).toBeInTheDocument();
       const item = await screen.findByRole('menuitemradio', {
         name: /Heading 2/
       });

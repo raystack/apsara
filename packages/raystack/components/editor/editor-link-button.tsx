@@ -92,7 +92,7 @@ export function EditorLinkButton({
       <EditorTooltip
         label={label}
         shortcut={shortcut}
-        enabled={tooltip && !open}
+        enabled={tooltip}
         trigger={
           <Popover.Trigger
             render={

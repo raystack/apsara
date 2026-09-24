@@ -56,7 +56,7 @@ export function EditorMenuControl({
     <Menu open={open} onOpenChange={setOpen} modal={false}>
       <EditorTooltip
         label={label}
-        enabled={tooltip && !open}
+        enabled={tooltip}
         trigger={
           <Menu.Trigger
             disabled={disabled}
