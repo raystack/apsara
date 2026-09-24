@@ -148,7 +148,8 @@ export {
   type EditorToolbarProps,
   editorToHTML,
   editorToText,
-  type MarkdownAdapter,
+  MarkdownAdapter,
+  type MarkdownAdapterOptions,
   useEditor,
   useEditorState
 } from './components/editor';

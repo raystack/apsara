@@ -3,6 +3,7 @@ import {
   type EditorMention,
   isTriggerCharacter,
   type MentionAttrs,
+  readMention,
   serializeMention
 } from '../mention';
 import {
@@ -21,65 +22,6 @@ export interface EditorDocDetails {
   mentions: EditorMention[];
   /** No mentions, and text that trims to `""`. */
   empty: boolean;
-}
-
-interface MentionMatch {
-  attrs: MentionAttrs;
-  /** Index just past the closing `)`. */
-  next: number;
-}
-
-/**
- * Reads `X[label](type:id)` at `start`, where `X` is the trigger. Returns null
- * for anything malformed so the caller can keep the characters as literal text.
- */
-function readMention(source: string, start: number): MentionMatch | null {
-  const trigger = source[start];
-  if (!isTriggerCharacter(trigger) || source[start + 1] !== '[') return null;
-
-  let index = start + 2;
-  let label = '';
-  while (index < source.length) {
-    const char = source[index];
-    if (char === '\\' && index + 1 < source.length) {
-      label += source[index + 1];
-      index += 2;
-      continue;
-    }
-    if (char === ']') break;
-    if (char === '\n') return null;
-    label += char;
-    index += 1;
-  }
-  if (source[index] !== ']' || source[index + 1] !== '(') return null;
-  index += 2;
-
-  let type = '';
-  let id = '';
-  let separated = false;
-  while (index < source.length) {
-    const char = source[index];
-    if (char === '\\' && index + 1 < source.length) {
-      if (separated) id += source[index + 1];
-      else type += source[index + 1];
-      index += 2;
-      continue;
-    }
-    if (char === ')') break;
-    if (char === '\n') return null;
-    if (char === ':' && !separated) {
-      separated = true;
-      index += 1;
-      continue;
-    }
-    if (separated) id += char;
-    else type += char;
-    index += 1;
-  }
-  if (source[index] !== ')') return null;
-  if (!separated || !label || !type || !id) return null;
-
-  return { attrs: { id, label, type, trigger }, next: index + 1 };
 }
 
 /** Inline content for a plain string, where newlines become hard breaks. */

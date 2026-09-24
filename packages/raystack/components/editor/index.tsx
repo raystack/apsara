@@ -37,6 +37,6 @@ export type {
   EditorChangeDetails,
   EditorCommands,
   EditorMarkdownChangeDetails,
-  EditorSlashItem,
-  MarkdownAdapter
+  EditorSlashItem
 } from './editor-types';
+export { MarkdownAdapter, type MarkdownAdapterOptions } from './markdown';

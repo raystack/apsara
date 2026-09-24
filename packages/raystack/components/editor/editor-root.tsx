@@ -55,33 +55,30 @@ interface EditorBaseProps
   actionsRef?: RefObject<EditorApi | null>;
 }
 
-interface EditorJSONProps {
-  markdown?: undefined;
-  /** Controlled document. */
-  value?: EditorJSON;
-  /** The first document when uncontrolled. Read once. */
-  defaultValue?: EditorJSON;
-  /** Fires once per doc change. It does not fire for changes made through `value`. */
-  onValueChange?: (value: EditorJSON, details: EditorChangeDetails) => void;
-}
+type WithMarkdown<M, Yes, No> = [M] extends [MarkdownAdapter] ? Yes : No;
 
-interface EditorMarkdownProps {
+/**
+ * `M` is inferred from the `markdown` prop. With an adapter, `value` and
+ * `defaultValue` also take Markdown strings and the change details have
+ * `getMarkdown()`.
+ */
+export interface EditorProps<
+  M extends MarkdownAdapter | undefined = MarkdownAdapter | undefined
+> extends EditorBaseProps {
   /** Allows Markdown strings in `value` and `defaultValue`, and parses Markdown on paste. */
-  markdown: MarkdownAdapter;
-  /** Controlled document. A string is parsed as Markdown. */
-  value?: EditorJSON | string;
-  /** The first document when uncontrolled. A string is parsed as Markdown. */
-  defaultValue?: EditorJSON | string;
+  markdown?: M;
+  /** Controlled document. A string is parsed as Markdown and needs `markdown`. */
+  value?: WithMarkdown<M, EditorJSON | string, EditorJSON>;
+  /** The first document when uncontrolled. Read once. */
+  defaultValue?: WithMarkdown<M, EditorJSON | string, EditorJSON>;
+  /** Fires once per doc change. It does not fire for changes made through `value`. */
   onValueChange?: (
     value: EditorJSON,
-    details: EditorMarkdownChangeDetails
+    details: WithMarkdown<M, EditorMarkdownChangeDetails, EditorChangeDetails>
   ) => void;
 }
 
-export type EditorProps = EditorBaseProps &
-  (EditorJSONProps | EditorMarkdownProps);
-
-export function EditorRoot({
+export function EditorRoot<M extends MarkdownAdapter | undefined = undefined>({
   value,
   defaultValue,
   onValueChange,
@@ -98,7 +95,7 @@ export function EditorRoot({
   ref,
   children,
   ...props
-}: EditorProps) {
+}: EditorProps<M>) {
   const storeProps = {
     placeholder,
     disabled,
