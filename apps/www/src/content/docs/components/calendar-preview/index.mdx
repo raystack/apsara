@@ -12,6 +12,7 @@ import {
   boundsDemo,
   gridDemo,
   dateInfoDemo,
+  pickerDemo,
 } from "./demo.ts";
 
 <Demo data={preview} />
@@ -112,6 +113,18 @@ buttons sideways. It carries `data-restored` while there is nothing to restore.
 
 <auto-type-table path="./props.ts" name="CalendarPreviewResetProps" />
 
+### CalendarPreview.Trigger
+
+Anchors the popover and owns opening it. Renders the formatted value, or the placeholder, when given no children — wrap an `.Input` in it for a typeable field. Never renders a `button`, so the control inside stays focusable. Takes `render`, `className` and `ref`.
+
+### CalendarPreview.Content
+
+The portaled popover surface. Takes `Popover.Content` props — `side`, `align`, `sideOffset` and the rest — and flips above the trigger on collision.
+
+### CalendarPreview.Input
+
+<auto-type-table path="./props.ts" name="CalendarPreviewInputProps" />
+
 ### CalendarPreview.Footer
 
 The row below the calendar. A bare string is wrapped in `Text`; anything else renders as given.
@@ -146,6 +159,9 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | Slot | Element |
 |------|---------|
 | `calendar-preview` | The root, a column wrapping the parts |
+| `calendar-preview-trigger` | The popover anchor |
+| `calendar-preview-content` | The portaled popover surface |
+| `calendar-preview-input` | The typeable date field |
 | `calendar-preview-days` | The day view surface |
 | `calendar-preview-header` | The header row, single-month layout |
 | `calendar-preview-month-header` | One month's header, when several months are shown |
@@ -226,6 +242,86 @@ Outside days are **off by default**, so a grid ends on the last day of its month
 
 `<CalendarPreview.Caption dropdown />` turns the caption into a filled chip that opens two adjacent scrolling columns. It is a plain popover of buttons, not a `Select` — picking from either column moves the view and never selects a value.
 
+### Date picker
+
+The date picker is not a separate export — it is this composition:
+
+```tsx
+<CalendarPreview value={date} onValueChange={setDate}>
+  <CalendarPreview.Trigger>
+    <CalendarPreview.Input />
+  </CalendarPreview.Trigger>
+  <CalendarPreview.Content>
+    <CalendarPreview.Days />
+  </CalendarPreview.Content>
+</CalendarPreview>
+```
+
+The popover opens when the input takes focus. Enter, blur and an outside click all commit — there is no Apply button. Dismissal is Base UI's, so escape and outside press behave like every other popover in the library.
+
+"Without calendar icon" is composition rather than a prop: pass `trailingIcon={null}` to `.Input`.
+
+<Demo data={pickerDemo} />
+
+### Invalid typed dates
+
+Typing is checked on every keystroke, and a date that fails is **never committed** — `onValueChange`
+does not fire and the previous value stands.
+
+`.Input` marks itself `aria-invalid` and `data-invalid`, and `data-invalid` is what
+[Input](/docs/components/input) paints its error border from, so the field turns red on its own with
+nothing wired up.
+
+`onValidityChange` carries a ready-to-render `message`, so a message under the field is one line —
+it is `undefined` while valid, which is exactly what [Field](/docs/components/field)'s `error` wants:
+
+```tsx
+<Field label="Start date" error={error}>
+  <CalendarPreview>
+    <CalendarPreview.Trigger>
+      <CalendarPreview.Input onValidityChange={({ message }) => setError(message)} />
+    </CalendarPreview.Trigger>
+    <CalendarPreview.Content>
+      <CalendarPreview.Days />
+    </CalendarPreview.Content>
+  </CalendarPreview>
+</Field>
+```
+
+The default is a flat **"Invalid input"** for every reason. It stays deliberately vague because only
+you know the field's bounds — the component cannot say *which* dates would be accepted without
+inventing wording it has no basis for.
+
+Override it with `errorMessages`, per reason. Anything left out keeps the default, so wording one
+reason does not mean restating the rest:
+
+```tsx
+<CalendarPreview.Input
+  errorMessages={{
+    unparseable: 'Use DD/MM/YYYY, like 15/04/2024',
+    'out-of-bounds': 'Pick a date in April 2024'
+  }}
+  onValidityChange={({ message }) => setError(message)}
+/>
+```
+
+The reason is also on the payload if you would rather branch on it yourself:
+
+| `reason` | Means |
+|----------|-------|
+| `unparseable` | The text is not a date the input could read at all |
+| `out-of-bounds` | A real date, outside `minDate` / `maxDate` |
+| `unavailable` | A real date in range that `isDateUnavailable` rejected |
+
+It fires only when validity *changes*, not on every keystroke, so it is safe to drive state with.
+
+<Callout type="warn" title="A failed commit keeps the text">
+  Blurring or pressing Enter on a date that does not resolve leaves the typed text in the field
+  rather than discarding what was typed. The field stays marked invalid, but it now shows something
+  other than the committed value — so read the value from `onValueChange`, never from the input's
+  text.
+</Callout>
+
 ## Migrating from Calendar
 
 `CalendarPreview` is not a drop-in replacement. Two props keep their names and change
@@ -247,7 +343,7 @@ boolean `disabled`), which is why the names moved rather than the behaviour:
 | `startMonth` / `endMonth` | `minDate` / `maxDate` |
 | `disabled` (matcher) | `isDateUnavailable` |
 | `loadingData` | `loading` |
-| `dateFormat` | `formatValue` *(not yet shipped — see the callout above)* |
+| `dateFormat` | `formatValue` |
 | `required` | `clearable` (inverted) |
 | `footer` prop | `<CalendarPreview.Footer>` part |
 | `captionLayout="dropdown"` | `<CalendarPreview.Caption dropdown />` |

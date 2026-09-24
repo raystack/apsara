@@ -219,3 +219,42 @@ export interface CalendarPreviewChangeDetails {
   /** The day acted on — never null, even when the value is. */
   toDate: () => Date;
 }
+
+export interface CalendarPreviewInputProps {
+  /**
+   * Placeholder shown when there is no value.
+   * @default "Select date"
+   */
+  placeholder?: string;
+
+  /**
+   * Icon at the end of the field. Pass `null` for a picker with no calendar
+   * glyph — that variant is composition, not a prop.
+   * @default <CalendarIcon />
+   */
+  trailingIcon?: ReactNode;
+
+  /**
+   * Called when the typed text starts or stops being a usable date. `message`
+   * is resolved against `errorMessages` and absent while valid, so it can be
+   * handed straight to `Field`'s `error`.
+   * @example onValidityChange={({ message }) => setError(message)}
+   */
+  onValidityChange?: (validity: {
+    valid: boolean;
+    reason?: 'unparseable' | 'out-of-bounds' | 'unavailable';
+    message?: string;
+  }) => void;
+
+  /**
+   * Replaces the message for one or more reasons; anything left out keeps the
+   * default.
+   * @default "Invalid input" for every reason
+   */
+  errorMessages?: Partial<
+    Record<'unparseable' | 'out-of-bounds' | 'unavailable', string>
+  >;
+
+  /** Read and navigable, but not typeable. */
+  readOnly?: boolean;
+}
