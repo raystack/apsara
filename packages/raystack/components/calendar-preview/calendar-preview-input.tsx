@@ -5,7 +5,11 @@ import { Input } from '../input';
 import styles from './calendar-preview.module.css';
 import type { CalendarPreviewField } from './calendar-preview-context';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import { isRange as isRangeValue, isScaleValue } from './calendar-preview-root';
+import {
+  defaultFormatValue,
+  isRange as isRangeValue,
+  isScaleValue
+} from './calendar-preview-root';
 import { useTriggerInput } from './calendar-preview-trigger';
 import { anyDayBetween, dayKey, parseKey } from './date-adapter';
 import { parseScaleInput } from './lib/parse';
@@ -235,14 +239,15 @@ export function CalendarPreviewInput({
   const committedText = endpoint
     ? formatValue(endpoint, isScaleValue(endpoint) ? endpoint.scale : scale)
     : '';
-  /* From the scales this root offers, so it cannot suggest a format the parser rejects. */
+  /* From the scales this root offers and the default formats, not `formatValue`:
+     the parser reads only those, whatever the consumer displays. */
   const carriesScale = scales.length > 1 || scales[0] !== 'day';
   const resolvedPlaceholder =
     placeholder ??
     (carriesScale
       ? `Try: ${scales
           .slice(0, 3)
-          .map(one => formatValue(today, one))
+          .map(one => defaultFormatValue(today, one, timeZone))
           .join(', ')}`
       : isRange
         ? field === 'start'

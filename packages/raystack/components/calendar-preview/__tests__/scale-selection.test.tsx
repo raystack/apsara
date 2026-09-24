@@ -489,6 +489,17 @@ describe('CalendarPreview.Input at scale', () => {
     }
   });
 
+  it('suggests parseable formats under a custom formatValue', () => {
+    const { container } = renderBody({
+      scales: ['month', 'quarter', 'year'],
+      formatValue: () => 'custom'
+    });
+    expect(input(container)).toHaveAttribute(
+      'placeholder',
+      'Try: Aug 2026, Q3 2026, 2026'
+    );
+  });
+
   it('moves the scale to match what was typed', () => {
     const onValueChange = vi.fn();
     const onScaleChange = vi.fn();
