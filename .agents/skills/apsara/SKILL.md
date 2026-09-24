@@ -1,6 +1,6 @@
 ---
 name: apsara
-description: Helps consume the @raystack/apsara React component library correctly in an application. Use when installing or setting up Apsara, building UI with Apsara components (Button, Dialog, Select, Menu, DataTable, Form, Tabs, Sidebar, Toast, etc.), theming (light/dark, accent/gray colors, modern/traditional style), styling with design tokens, or troubleshooting Apsara component behavior. Covers install, the Theme provider, the `--rs-*` token system, compound-component composition, and common pitfalls.
+description: Helps consume the @raystack/apsara React component library correctly in an application. Use when installing or setting up Apsara, building UI with Apsara components (Button, Dialog, Select, Menu, DataTable, Form, Tabs, Sidebar, Toast, etc.), theming (light/dark, accent/gray colors, radius, scaling), styling with design tokens, or troubleshooting Apsara component behavior. Covers install, the `Theme` component, the `--rs-*` token system, compound-component composition, and common pitfalls.
 license: ISC
 metadata:
   author: raystack
@@ -8,7 +8,7 @@ metadata:
 
 # Apsara
 
-Apsara (`@raystack/apsara`) is an open-source React component library built on [Base UI](https://base-ui.com/) primitives. It targets enterprise, data-dense interfaces (data tables, navigation shells, forms, overlays) and ships ~70 accessible, typed components. Styling is **vanilla CSS driven by `--rs-*` design tokens** that react to `data-*` attributes set by the theme provider — there is no Tailwind, no runtime CSS-in-JS, and no per-component install step.
+Apsara (`@raystack/apsara`) is an open-source React component library built on [Base UI](https://base-ui.com/) primitives. It targets enterprise, data-dense interfaces (data tables, navigation shells, forms, overlays) and ships ~70 accessible, typed components. Styling is **vanilla CSS driven by `--rs-*` design tokens** that react to `data-*` attributes set by the `Theme` component — there is no Tailwind, no runtime CSS-in-JS, and no per-component install step.
 
 ## What this skill is for
 
@@ -16,7 +16,7 @@ Use this skill to help a **consumer** of the published package:
 
 - install and wire up Apsara in a new or existing app (Next.js, Vite, etc.)
 - pick and correctly compose Apsara components for a UI task
-- theme the app (light/dark, accent/gray color, modern/traditional style)
+- theme the app (light/dark, accent/gray color, radius, scaling, panel background, reduced motion)
 - style and customize components using design tokens and `data-*` attributes
 - avoid common composition and SSR pitfalls
 
@@ -36,7 +36,7 @@ When you need a prop you are unsure about, fetch the component's `.mdx` page rat
 ## Core facts (always true)
 
 1. **One package, one CSS import.** `npm install @raystack/apsara`, then `import "@raystack/apsara/style.css"` once at the app root. That stylesheet contains every component's styles and all tokens.
-2. **Wrap the app in `<Theme>`.** Theming, dark mode, and the no-flash hydration script all come from the `Theme` provider. Without it, `data-theme`/token resolution will not work.
+2. **Wrap the app in `<Theme>`.** Every `--rs-*` token is declared on the element `Theme` renders, so anything outside it has no tokens at all. Dark mode and the no-flash script come from it too.
 3. **Components are compound, dot-notation.** Apsara exports a single name per component and hangs sub-parts off it: `Dialog.Content`, `Select.Trigger`, `Menu.Item`, `Tabs.Tab`. It does **not** export flat names like `DialogContent`. (Contrast with shadcn/Radix and coss.)
 4. **Style with tokens, never hard-coded values.** Use `--rs-*` custom properties (`var(--rs-color-foreground-base-primary)`, `var(--rs-space-5)`) so styling follows the active theme.
 5. **Built on Base UI.** Components expose Base UI `data-*` state attributes (`data-open`, `data-disabled`, `data-starting-style`, …) for state-driven CSS, and trigger-based overlays follow Base UI composition.
@@ -62,7 +62,7 @@ When you need a prop you are unsure about, fetch the component's `.mdx` page rat
 ## References (read on demand)
 
 - `references/setup.md` — install, CSS import, `<Theme>` wiring for Next.js App Router & Vite, icons & hooks subpath exports
-- `references/theming.md` — full `Theme` / `ThemeProvider` API, `useTheme`, dark mode, accent/gray/style options, scoped (nested) themes, `ThemeSwitcher`
+- `references/theming.md` — full `Theme` API, the seven settings, `useTheme`, dark mode, persistence, scoped (nested) themes, `ThemeSwitcher`
 - `references/tokens.md` — **complete `--rs-*` token reference**: semantic colors, color scales, spacing, radius, typography, effects, theme `data-*` attributes
 - `references/styling.md` — customizing components via `className`, `style`, `data-*`, CSS Modules, and CVA
 - `references/composition.md` — compound dot-notation pattern, Base UI trigger/overlay composition, `render` prop, and per-component composition gotchas

@@ -84,6 +84,12 @@ export interface ContextMenuContentProps {
 
   /** Additional CSS class names */
   className?: string;
+
+  /**
+   * Corner radius for this menu only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 }
 
 export interface ContextMenuItemProps {
@@ -206,4 +212,10 @@ export interface ContextMenuSubContentProps {
 
   /** Additional CSS class names */
   className?: string;
+
+  /**
+   * Corner radius for this submenu only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 }
