@@ -50,7 +50,7 @@
   padding: 0;
   font: inherit;
   color: inherit;
-  border-radius: var(--rs-radius-1);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-1));
 }
 
 .action-btn:hover {

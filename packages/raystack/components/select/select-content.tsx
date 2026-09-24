@@ -5,6 +5,8 @@ import {
   Select as SelectPrimitive
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import { type Radius, radiusStyle } from '../../shared/radius';
+import { useThemeInjection } from '../theme/portal';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';
 
@@ -15,6 +17,8 @@ export interface SelectContentProps
     >,
     SelectPrimitive.Popup.Props {
   searchPlaceholder?: string;
+  /** Corner radius for this popup only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 export function SelectContent({
@@ -24,13 +28,15 @@ export function SelectContent({
   sideOffset = 4,
   side = 'bottom',
   align = 'start',
+  radius,
   ...props
 }: SelectContentProps) {
   const { autocomplete, multiple } = useSelectContext();
+  const theme = useThemeInjection();
 
   if (autocomplete) {
     return (
-      <ComboboxPrimitive.Portal keepMounted>
+      <ComboboxPrimitive.Portal keepMounted {...theme}>
         <ComboboxPrimitive.Positioner
           sideOffset={sideOffset}
           side={side}
@@ -39,7 +45,13 @@ export function SelectContent({
           data-slot='select-positioner'
         >
           <ComboboxPrimitive.Popup
-            className={cx(styles.content, className)}
+            {...theme}
+            className={cx(
+              styles.content,
+              theme?.className,
+              radiusStyle({ radius }),
+              className
+            )}
             data-multiselectable={multiple ? true : undefined}
             data-slot='select-content'
             {...props}
@@ -72,7 +84,13 @@ export function SelectContent({
       data-slot='select-positioner'
     >
       <SelectPrimitive.Popup
-        className={cx(styles.content, className)}
+        {...theme}
+        className={cx(
+          styles.content,
+          theme?.className,
+          radiusStyle({ radius }),
+          className
+        )}
         data-multiselectable={multiple ? true : undefined}
         data-slot='select-content'
         {...props}

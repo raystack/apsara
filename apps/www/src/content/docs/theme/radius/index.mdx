@@ -1,15 +1,13 @@
 ---
 title: Radius
-description: Overview of the border radius scale and style variants in Apsara.
+description: Overview of the border radius scale in Apsara and the theme radius setting that scales it.
 ---
 
-Border radius tokens control how round corners are across the interface. They adjust to the active style variant: modern uses sharp, minimal radii, traditional uses softer ones. Reach for a token instead of a fixed value and your own components follow along when the style changes.
+Border radius tokens control how round corners are across the interface. They follow the theme's [`radius` setting](/docs/theme/overview#radius), which multiplies the whole scale by a factor, and its [`scaling` setting](/docs/theme/overview#scaling). Reach for a token instead of a fixed value and your own components follow along when either changes.
 
 ## Radius scale
 
-The radius scale provides 7 tokens for different levels of roundness, from subtle to fully circular.
-
-### Modern style (default)
+The radius scale provides 7 tokens for different levels of roundness, from subtle to fully circular. The values below are the defaults, at `radius="medium"` and `scaling="1"`.
 
 <TokenTable
   type="radius"
@@ -24,26 +22,11 @@ The radius scale provides 7 tokens for different levels of roundness, from subtl
   ]}
 />
 
-### Traditional style
-
-When using `data-style="traditional"`, the radius values increase for a softer, more rounded appearance.
-
-<TokenTable
-  type="radius"
-  tokens={[
-    { name: "--rs-radius-1", value: "8px", description: "Subtle rounding for small elements" },
-    { name: "--rs-radius-2", value: "16px", description: "Badges, chips, small buttons" },
-    { name: "--rs-radius-3", value: "20px", description: "Inputs, buttons, cards" },
-    { name: "--rs-radius-4", value: "24px", description: "Modals, dialogs, larger cards" },
-    { name: "--rs-radius-5", value: "32px", description: "Large containers, panels" },
-    { name: "--rs-radius-6", value: "40px", description: "Extra large containers" },
-    { name: "--rs-radius-full", value: "1600px", description: "Pills, circular elements, avatars" },
-  ]}
-/>
+Every step except `--rs-radius-full` is a `calc()` over that base value, multiplied by the theme's radius factor and its scaling factor. `--rs-radius-full` is a fixed pill value that follows neither.
 
 ## Usage
 
-Radius tokens follow the active `style` variant, so a rule written once renders sharper under `modern` and softer under `traditional`.
+Radius tokens follow the theme's `radius` setting, so a rule written once renders sharper under `small` and softer under `large`.
 
 ```css
 /* Dashboard widget container */
@@ -112,21 +95,21 @@ Radius tokens follow the active `style` variant, so a rule written once renders 
 }
 ```
 
-## Enabling style variants
+## Changing the scale
 
-To switch between modern and traditional styles, set the `data-style` attribute on your root element:
+Set the theme's `radius` setting, which multiplies every step by a factor:
 
-```html
-<!-- Modern style (default) -->
-<html data-style="modern">
-
-<!-- Traditional style -->
-<html data-style="traditional">
+```tsx
+<Theme defaultValue={{ radius: "large" }}>
+  <App />
+</Theme>
 ```
+
+`none` flattens the scale to `0`, `small` multiplies by `0.75`, `medium` is the default `1`, and `large` and `full` multiply by `1.5`. `full` additionally turns controls such as `Button` and `Input` into pills. Individual components take a `radius` prop that overrides the theme for that component alone. See [Radius](/docs/theme/overview#radius).
 
 ## Best practices
 
 - **Be consistent** - Use the same radius token for similar elements throughout your application
 - **Match element size** - Use smaller radius values for smaller elements, larger values for containers
 - **Use radius-full for circles** - When you need perfectly circular elements, use `--rs-radius-full`
-- **Consider style context** - Choose modern for sharp, contemporary designs; traditional for softer, friendly aesthetics
+- **Let the theme decide the character** - Pick `small` for sharp, contemporary designs and `large` for softer, friendlier ones, rather than hard-coding either into a component

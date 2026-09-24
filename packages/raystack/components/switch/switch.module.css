@@ -8,7 +8,9 @@
   position: relative;
   cursor: pointer;
   background: var(--rs-color-background-neutral-secondary);
-  border-radius: var(--rs-radius-full);
+  /* Round from `medium` up, square at `none` and `small`; see theme.css. */
+  --switch-radius: max(var(--rs-radius-2), var(--rs-radius-thumb, 9999px));
+  border-radius: var(--switch-radius);
   transition: background-color var(--rs-duration-normal) var(--rs-ease-out);
 }
 
@@ -17,14 +19,17 @@
   outline-offset: var(--rs-focus-ring-offset-accent);
 }
 
+/* Thumb travel + thumb + inset, from the thumb's own tokens, so the thumb
+   stays inside the track at every scaling. */
 .switch.large {
-  width: 34px;
+  width: calc(var(--rs-space-5) * 2 + var(--rs-space-1));
   height: var(--rs-space-6);
 }
 
 .switch.small {
-  width: 26px;
+  width: calc(var(--rs-space-4) * 2 + var(--rs-space-1));
   height: var(--rs-space-5);
+  --switch-radius: max(var(--rs-radius-1), var(--rs-radius-thumb, 9999px));
 }
 
 .switch:not([data-disabled]):hover {
@@ -54,7 +59,8 @@
   width: var(--rs-space-5);
   height: var(--rs-space-5);
   background: var(--rs-color-foreground-base-emphasis);
-  border-radius: var(--rs-radius-full);
+  /* Concentric with the track: its radius less the thumb inset. */
+  border-radius: max(0px, calc(var(--switch-radius) - var(--rs-space-1)));
   transform: translateX(var(--rs-space-1));
 }
 
