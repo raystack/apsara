@@ -4,7 +4,7 @@
   background: var(--rs-color-background-base-primary);
   width: fit-content;
   /* Todo: var does not exist for 346px */
-  min-height: 346px;
+  min-height: calc(346px * var(--rs-scaling, 1));
 }
 
 .captionLabel,
@@ -208,7 +208,7 @@
 }
 
 .dropdownContent {
-  max-height: 260px;
+  max-height: calc(260px * var(--rs-scaling, 1));
 }
 
 .disabled {

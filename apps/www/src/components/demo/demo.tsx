@@ -54,6 +54,7 @@ import {
 } from '../dataview-demo';
 import LinearMenuDemo from '../linear-menu-demo';
 import PopoverColorPicker from '../popover-color-picker';
+import ThemePanelDemo from '../theme-panel-demo';
 import TourDemo from '../tour-demo';
 import DemoPlayground from './demo-playground';
 import DemoPreview from './demo-preview';
@@ -62,11 +63,7 @@ import { DemoProps } from './types';
 export default function Demo(props: DemoProps) {
   const {
     data,
-    // `...Apsara` carries the 32 icons Apsara publishes, so none of those needs
-    // its own entry, and nothing below may repeat one of their keys, because a
-    // later key shadows the spread. A demo that needs any other glyph names a
-    // lucide component from the block above and sizes it at the call site,
-    // which is exactly what an application does.
+    // Nothing below may repeat an Apsara icon key: a later key shadows the spread.
     scope = {
       ...Apsara,
       DataViewTableDemo,
@@ -88,6 +85,7 @@ export default function Demo(props: DemoProps) {
       ChipInputDemo,
       LinearMenuDemo,
       PopoverColorPicker,
+      ThemePanelDemo,
       TourDemo,
       NextLink,
       AlignCenter,

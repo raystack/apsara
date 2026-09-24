@@ -1,5 +1,6 @@
 import { mergeProps, useRender } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import type { ReactNode } from 'react';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
 import { CalendarPreviewInput } from './calendar-preview-input';
@@ -9,9 +10,16 @@ import { CalendarPreviewReset } from './calendar-preview-reset';
 import { CalendarPreviewScales } from './calendar-preview-scales';
 import { CalendarPreviewSeparator } from './calendar-preview-separator';
 
-export type CalendarPreviewBodyProps = useRender.ComponentProps<'div'>;
+export interface CalendarPreviewBodyProps
+  extends useRender.ComponentProps<'div'> {
+  label?: ReactNode;
+  /** @defaultValue false */
+  showIcon?: boolean;
+}
 
 export function CalendarPreviewBody({
+  label,
+  showIcon = false,
   className,
   children,
   render,
@@ -30,18 +38,15 @@ export function CalendarPreviewBody({
       {
         className: cx(styles.body, className),
         'data-slot': 'calendar-preview-body',
-        'data-scale': scale,
         /* Escape drops the draft on its way to Base UI, which closes on it. */
         onKeyDown: (event: React.KeyboardEvent) => {
           if (event.key === 'Escape') dropDraft();
         },
         children: children ?? (
           <>
-            <CalendarPreviewLabel />
-            <CalendarPreviewInput />
+            <CalendarPreviewLabel>{label}</CalendarPreviewLabel>
+            <CalendarPreviewInput trailingIcon={showIcon ? undefined : null} />
             <CalendarPreviewScales />
-            {/* `.Reset` rides in `.Header`, which only the day view mounts, so
-                a period scale would otherwise have no way back to the default. */}
             {scale !== 'day' && <CalendarPreviewReset />}
             <CalendarPreviewSeparator />
             <CalendarPreviewPanel />

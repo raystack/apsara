@@ -6,28 +6,22 @@ import { UndoIcon } from '~/icons';
 import { IconButton } from '../icon-button';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import {
-  type CalendarPreviewValue,
-  isRange,
-  isScaleValue
-} from './calendar-preview-root';
+import { isRange, isScaleValue } from './calendar-preview-root';
 import { dayKey } from './date-adapter';
 
 export type CalendarPreviewResetProps = ComponentProps<typeof IconButton>;
 
-/* Stays mounted and disabled rather than unmounting: that would send focus to
-   `<body>` mid-calendar, and drop a `flex: none` child holding the nav. */
+/* Unmounting would send focus to `<body>` and drop the nav's `flex: none` child. */
 export function CalendarPreviewReset({
   className,
   children,
   onClick,
+  disabled: disabledProp,
   ...props
 }: CalendarPreviewResetProps) {
   const { value, defaultDate, reset, disabled, readOnly, timeZone } =
-    useCalendarPreviewContext<CalendarPreviewValue>('CalendarPreview.Reset');
+    useCalendarPreviewContext('CalendarPreview.Reset');
 
-  /* No `defaultDate` means the part has no job at all, which is a different
-     thing from having nothing to restore right now — `null` is a default. */
   if (defaultDate === undefined) return null;
 
   const sameDay = (a: Date, b: Date) =>
@@ -48,16 +42,22 @@ export function CalendarPreviewReset({
               value.date === defaultDate.date &&
               value.scale === defaultDate.scale);
 
+  /* `aria-disabled`, not `disabled`: a disabled element cannot hold the focus it was activated with. */
+  const inert = disabled || readOnly || disabledProp;
+
   return (
     <IconButton
       size={3}
       className={cx(styles['nav-button'], styles.reset, className)}
-      disabled={disabled || readOnly || restored}
+      disabled={inert}
+      aria-disabled={restored || undefined}
       data-slot='calendar-preview-reset'
       data-restored={restored || undefined}
       aria-label='Reset'
       onClick={event => {
         onClick?.(event);
+        /* `aria-disabled` is a claim, not a guard — the press still arrives. */
+        if (restored) return;
         reset();
       }}
       {...props}

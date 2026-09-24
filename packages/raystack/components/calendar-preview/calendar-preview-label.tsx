@@ -1,7 +1,6 @@
 import { mergeProps, useRender } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import styles from './calendar-preview.module.css';
-import { useCalendarPreviewContext } from './calendar-preview-context';
 
 export type CalendarPreviewLabelProps = useRender.ComponentProps<'span'>;
 
@@ -12,9 +11,7 @@ export function CalendarPreviewLabel({
   ref,
   ...props
 }: CalendarPreviewLabelProps) {
-  const { scale } = useCalendarPreviewContext('CalendarPreview.Label');
-
-  return useRender({
+  const element = useRender({
     defaultTagName: 'span',
     ref,
     render,
@@ -22,12 +19,13 @@ export function CalendarPreviewLabel({
       {
         className: cx(styles.label, className),
         'data-slot': 'calendar-preview-label',
-        'data-scale': scale,
-        children: children ?? 'Date'
+        children
       } as useRender.ComponentProps<'span'>,
       props
     )
   });
+
+  return children == null && render == null ? null : element;
 }
 
 CalendarPreviewLabel.displayName = 'CalendarPreview.Label';

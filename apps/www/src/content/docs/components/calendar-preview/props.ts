@@ -76,7 +76,8 @@ export interface CalendarPreviewProps {
   onMonthChange?: (month: Date) => void;
 
   /**
-   * The years the caption's year column offers.
+   * The years the period views and the caption's year column offer. Passing it
+   * replaces the default, so a bound outside it stays unreachable.
    * Defaults to ten years either side of `today`, widened to cover any bound.
    */
   yearRange?: { from: number; to: number };
@@ -116,12 +117,16 @@ export interface CalendarPreviewProps {
 
   /**
    * Renders a value for display — every trigger, input and annotation goes
-   * through it. Defaults to `DD MMM YYYY` at day scale, and the period's own
-   * shorthand above it.
+   * through it. The root passes `timeZone` through as the third argument, so a
+   * formatter that reads calendar fields off the `Date` must use it or it will
+   * render the neighbouring day. Defaults to `DD MMM YYYY` at day scale, and
+   * the period's own shorthand above it.
+   * @example formatValue={(value, scale, timeZone) => format(value, timeZone)}
    */
   formatValue?: (
     value: Date | { date: string; scale: Scale },
-    scale: Scale
+    scale: Scale,
+    timeZone?: string
   ) => string;
 
   /**
@@ -272,6 +277,25 @@ export interface CalendarPreviewNavProps {
   className?: string;
 }
 
+export interface CalendarPreviewBodyProps {
+  /** The field label, passed to `.Label`. Omitted, no label renders. */
+  label?: ReactNode;
+
+  /**
+   * Whether the field carries the calendar glyph.
+   * @default false
+   */
+  showIcon?: boolean;
+}
+
+export interface CalendarPreviewScaleProps {
+  /** Which scale this chip selects. Required — a chip addresses one scale. */
+  value: Scale;
+
+  /** Merged with the part's own classes. */
+  className?: string;
+}
+
 export interface CalendarPreviewFooterProps {
   /** Merged with the part's own classes. */
   className?: string;
@@ -309,6 +333,12 @@ export interface UseCalendarReturn {
    */
   scale: 'day' | 'month' | 'quarter' | 'halfYear' | 'year';
 
+  /** The range mid-build, at `selection="range"`. Never emitted. */
+  draft: { from?: Date; to?: Date } | null;
+
+  /** The period a scale switch is holding, uncommitted. Never emitted. */
+  scaleDraft: { date: string; scale: Scale } | null;
+
   /** The first month currently displayed. */
   month: Date;
 
@@ -331,9 +361,38 @@ export interface CalendarPreviewChangeDetails {
   toDate: () => Date;
 }
 
+export interface CalendarPreviewTriggerProps {
+  /**
+   * Shown when there is no value and no children.
+   * @default "Select date"
+   */
+  placeholder?: string;
+
+  /**
+   * Replaces the rendered element. The trigger is a `div` by default, so a
+   * control inside it stays focusable.
+   * @default <div />
+   */
+  render?: ReactNode;
+
+  /**
+   * Whether `render` produces a native `<button>`. Tell it, or Base UI adds a
+   * role and a tab stop the element already has.
+   * @default false
+   */
+  nativeButton?: boolean;
+}
+
 export interface CalendarPreviewInputProps {
   /**
-   * Placeholder shown when there is no value.
+   * Which endpoint this field addresses, at `selection="range"`.
+   * @default "start"
+   */
+  field?: 'start' | 'end';
+
+  /**
+   * Placeholder shown when there is no value. Beyond day scale it is built
+   * from the scales the root offers.
    * @default "Select date"
    */
   placeholder?: string;

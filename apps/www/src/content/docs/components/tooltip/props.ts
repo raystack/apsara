@@ -92,6 +92,12 @@ export interface TooltipContentProps {
    * `aria-label` when the labelling text lives elsewhere in the DOM.
    */
   'aria-labelledby'?: string;
+
+  /**
+   * Corner radius for this tooltip only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 }
 
 export interface TooltipProviderProps {

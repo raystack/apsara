@@ -24,8 +24,6 @@ describe('parseScaleInput — day', () => {
     });
   });
 
-  /* `formatDayLabel` renders this form, and a field shows it. Selecting all
-     and retyping it verbatim has to come back as the same day. */
   it.each([
     ['15 Aug 2026', '2026-08-15'],
     ['15 August 2026', '2026-08-15'],
@@ -143,11 +141,6 @@ describe('parseScaleInput — year', () => {
   });
 });
 
-/*
- * The rule, stated once: a bare period resolves inside the reference year and
- * never rolls forward. `Q1` typed in September 2026 is Q1 2026 — already past
- * — not Q1 2027.
- */
 describe('parseScaleInput — year inference for a bare period', () => {
   it.each([
     ['Q4', { date: '2026-10-01', scale: 'quarter' }],
@@ -192,8 +185,7 @@ describe('parseScaleInput — year inference for a bare period', () => {
   });
 
   it('returns null rather than throwing when the reference year has no key', () => {
-    /* A `DayKey` holds four digits. A reference outside that is rejected the
-     * same way any other unreadable input is, so the caller keeps its value. */
+    /* A `DayKey` holds four digits; anything outside is unreadable input. */
     expect(
       parseScaleInput('Q4', { referenceDate: new Date(12026, 0, 1) })
     ).toBeNull();

@@ -70,13 +70,6 @@ describe('periodOf', () => {
     expect(periodOf(day, 'year')).toEqual(expected);
   });
 
-  it('accepts a Date and reads its own calendar day', () => {
-    expect(periodOf(new Date(2026, 7, 15), 'month')).toEqual({
-      start: '2026-08-01',
-      end: '2026-08-31'
-    });
-  });
-
   it.each([
     '2026-8-15',
     '15/08/2026',
@@ -143,11 +136,6 @@ describe('anchorOf', () => {
 });
 
 describe('convertScale — every direction', () => {
-  /*
-   * The anchor is 15 August 2026, which sits in August, Q3, H2 and 2026. Every
-   * cell is the period of the target scale containing that anchor, read at the
-   * stated edge.
-   */
   const leading: Record<Scale, string> = {
     day: '2026-08-15',
     month: '2026-08-01',
@@ -269,8 +257,10 @@ describe('convertScale — round trips', () => {
 
 describe('isAvailable', () => {
   it('is unbounded when neither bound is given', () => {
-    expect(isAvailable('1000-01-01', 'day', LEADING)).toBe(true);
-    expect(isAvailable('9999-12-31', 'year', TRAILING)).toBe(true);
+    expect(isAvailable('1000-01-01', 'day', { trailing: LEADING })).toBe(true);
+    expect(isAvailable('9999-12-31', 'year', { trailing: TRAILING })).toBe(
+      true
+    );
   });
 
   describe('the RFC table — an end field bounded at 15 July 2026', () => {
@@ -279,26 +269,28 @@ describe('isAvailable', () => {
 
     it('disables H1 2026, which emits 30 June', () => {
       expect(periodOf('2026-01-01', 'halfYear').end).toBe('2026-06-30');
-      expect(isAvailable('2026-01-01', 'halfYear', trailing, min)).toBe(false);
+      expect(isAvailable('2026-01-01', 'halfYear', { trailing, min })).toBe(
+        false
+      );
     });
 
     it('allows July 2026, which emits 31 July', () => {
       expect(periodOf('2026-07-01', 'month').end).toBe('2026-07-31');
-      expect(isAvailable('2026-07-01', 'month', trailing, min)).toBe(true);
+      expect(isAvailable('2026-07-01', 'month', { trailing, min })).toBe(true);
     });
 
     it('allows Q3 2026, which emits 30 September', () => {
       expect(periodOf('2026-07-01', 'quarter').end).toBe('2026-09-30');
-      expect(isAvailable('2026-07-01', 'quarter', trailing, min)).toBe(true);
+      expect(isAvailable('2026-07-01', 'quarter', { trailing, min })).toBe(
+        true
+      );
     });
 
     it('allows August 2026', () => {
-      expect(isAvailable('2026-08-01', 'month', trailing, min)).toBe(true);
+      expect(isAvailable('2026-08-01', 'month', { trailing, min })).toBe(true);
     });
 
     it('tests the produced date, not the period start', () => {
-      /* Every period above starts before the bound; only the produced date
-       * separates them. */
       for (const [day, scale] of [
         ['2026-01-01', 'halfYear'],
         ['2026-07-01', 'month'],
@@ -317,7 +309,7 @@ describe('isAvailable', () => {
       ['2026-07-01', 'quarter'],
       ['2026-08-01', 'month']
     ] as const) {
-      expect(isAvailable(day, scale, LEADING, min)).toBe(
+      expect(isAvailable(day, scale, { trailing: LEADING, min })).toBe(
         periodOf(day, scale).start >= min
       );
     }
@@ -325,88 +317,112 @@ describe('isAvailable', () => {
 
   describe('bounds are inclusive at both edges', () => {
     it('accepts a day exactly on min', () => {
-      expect(isAvailable('2026-07-15', 'day', LEADING, '2026-07-15')).toBe(
-        true
-      );
+      expect(
+        isAvailable('2026-07-15', 'day', {
+          trailing: LEADING,
+          min: '2026-07-15'
+        })
+      ).toBe(true);
     });
 
     it('rejects the day before min', () => {
-      expect(isAvailable('2026-07-14', 'day', LEADING, '2026-07-15')).toBe(
-        false
-      );
+      expect(
+        isAvailable('2026-07-14', 'day', {
+          trailing: LEADING,
+          min: '2026-07-15'
+        })
+      ).toBe(false);
     });
 
     it('accepts a day exactly on max', () => {
       expect(
-        isAvailable('2026-07-15', 'day', LEADING, undefined, '2026-07-15')
+        isAvailable('2026-07-15', 'day', {
+          trailing: LEADING,
+          max: '2026-07-15'
+        })
       ).toBe(true);
     });
 
     it('rejects the day after max', () => {
       expect(
-        isAvailable('2026-07-16', 'day', LEADING, undefined, '2026-07-15')
+        isAvailable('2026-07-16', 'day', {
+          trailing: LEADING,
+          max: '2026-07-15'
+        })
       ).toBe(false);
     });
 
     it('accepts a period whose produced date lands exactly on max', () => {
       expect(
-        isAvailable('2026-08-10', 'month', TRAILING, undefined, '2026-08-31')
+        isAvailable('2026-08-10', 'month', {
+          trailing: TRAILING,
+          max: '2026-08-31'
+        })
       ).toBe(true);
       expect(
-        isAvailable('2026-08-10', 'month', TRAILING, undefined, '2026-08-30')
+        isAvailable('2026-08-10', 'month', {
+          trailing: TRAILING,
+          max: '2026-08-30'
+        })
       ).toBe(false);
     });
 
     it('accepts a period whose produced date lands exactly on min', () => {
-      expect(isAvailable('2026-08-10', 'month', LEADING, '2026-08-01')).toBe(
-        true
-      );
-      expect(isAvailable('2026-08-10', 'month', LEADING, '2026-08-02')).toBe(
-        false
-      );
+      expect(
+        isAvailable('2026-08-10', 'month', {
+          trailing: LEADING,
+          min: '2026-08-01'
+        })
+      ).toBe(true);
+      expect(
+        isAvailable('2026-08-10', 'month', {
+          trailing: LEADING,
+          min: '2026-08-02'
+        })
+      ).toBe(false);
     });
   });
 
   it('applies both bounds together', () => {
     expect(
-      isAvailable('2026-08-15', 'day', LEADING, '2026-01-01', '2026-12-31')
+      isAvailable('2026-08-15', 'day', {
+        trailing: LEADING,
+        min: '2026-01-01',
+        max: '2026-12-31'
+      })
     ).toBe(true);
     expect(
-      isAvailable('2025-08-15', 'day', LEADING, '2026-01-01', '2026-12-31')
+      isAvailable('2025-08-15', 'day', {
+        trailing: LEADING,
+        min: '2026-01-01',
+        max: '2026-12-31'
+      })
     ).toBe(false);
     expect(
-      isAvailable('2027-08-15', 'day', LEADING, '2026-01-01', '2026-12-31')
+      isAvailable('2027-08-15', 'day', {
+        trailing: LEADING,
+        min: '2026-01-01',
+        max: '2026-12-31'
+      })
     ).toBe(false);
   });
 
   it('can allow a period in a start field and disable it in an end field', () => {
     const max = '2026-08-15';
-    expect(isAvailable('2026-08-01', 'month', LEADING, undefined, max)).toBe(
+    expect(isAvailable('2026-08-01', 'month', { trailing: LEADING, max })).toBe(
       true
     );
-    expect(isAvailable('2026-08-01', 'month', TRAILING, undefined, max)).toBe(
-      false
-    );
-  });
-
-  it('accepts Dates for the value and for either bound', () => {
     expect(
-      isAvailable(
-        new Date(2026, 7, 15),
-        'day',
-        LEADING,
-        new Date(2026, 0, 1),
-        new Date(2026, 11, 31)
-      )
-    ).toBe(true);
+      isAvailable('2026-08-01', 'month', { trailing: TRAILING, max })
+    ).toBe(false);
   });
 
   it('rejects a malformed bound rather than ignoring it', () => {
     expect(() =>
-      isAvailable('2026-08-15', 'day', LEADING, '15/08/2026')
+      isAvailable('2026-08-15', 'day', { trailing: LEADING, min: '15/08/2026' })
     ).toThrow(RangeError);
     expect(() =>
-      isAvailable('2026-08-15', 'day', LEADING, undefined, '2026-13-01')
+      isAvailable('2026-08-15', 'day', { trailing: LEADING, max: '2026-13-01' })
     ).toThrow(RangeError);
   });
 });

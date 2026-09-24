@@ -1,0 +1,23 @@
+/* Re-derived from each component's `--rs-radius-step`, so it never compounds with
+   the theme radius. Doubled selectors: CSS Modules order is not guaranteed. */
+
+.radius-none.radius-none {
+  border-radius: 0;
+}
+
+.radius-small.radius-small {
+  border-radius: calc(var(--rs-radius-step, 4px) * var(--rs-scaling, 1) * 0.75);
+}
+
+.radius-medium.radius-medium {
+  border-radius: calc(var(--rs-radius-step, 4px) * var(--rs-scaling, 1));
+}
+
+.radius-large.radius-large {
+  border-radius: calc(var(--rs-radius-step, 4px) * var(--rs-scaling, 1) * 1.5);
+}
+
+/* Literal, not `--rs-radius-pill`: the override must not depend on the theme. */
+.radius-full.radius-full {
+  border-radius: 9999px;
+}

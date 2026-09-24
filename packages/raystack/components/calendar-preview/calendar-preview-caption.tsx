@@ -7,6 +7,9 @@ import {
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { type ReactNode, useEffect, useRef } from 'react';
+import { ScrollArea } from '../scroll-area';
+import { Separator } from '../separator';
+import { useThemeInjection } from '../theme/portal';
 import styles from './calendar-preview.module.css';
 import {
   useCalendarPreviewContext,
@@ -19,20 +22,10 @@ import {
   shiftMonths
 } from './date-adapter';
 
-/* Two elements, so two prop shapes: a plain caption is a `span`, one that
-   opens the scroller is a `button`. */
 export type CalendarPreviewCaptionProps =
   | ({ dropdown?: false } & useRender.ComponentProps<'span'>)
   | ({ dropdown: true } & useRender.ComponentProps<'button'>);
 
-/**
- * The label above the grid. Children replace it entirely, so
- * `<CalendarPreview.Caption>Q3 2026</CalendarPreview.Caption>` works.
- *
- * With `dropdown` it opens our own month and year scroller. No `Select` may be
- * mounted here — one is what makes the popover dismissal loop return. Picking
- * moves the view; it never selects a value.
- */
 export function CalendarPreviewCaption(props: CalendarPreviewCaptionProps) {
   return props.dropdown ? (
     <CaptionDropdown {...props} />
@@ -62,7 +55,6 @@ function CaptionLabel({
   ref,
   ...props
 }: { dropdown?: false } & useRender.ComponentProps<'span'>) {
-  const { scale } = useCalendarPreviewContext('CalendarPreview.Caption');
   const label = useCaptionLabel();
 
   return useRender({
@@ -73,7 +65,6 @@ function CaptionLabel({
       {
         className: cx(styles.caption, className),
         'data-slot': 'calendar-preview-caption',
-        'data-scale': scale,
         children: children ?? label
       } as useRender.ComponentProps<'span'>,
       props
@@ -89,10 +80,12 @@ function CaptionDropdown({
   ref,
   ...props
 }: { dropdown: true } & useRender.ComponentProps<'button'>) {
-  const { month, setMonth, yearRange, scale, disabled } =
-    useCalendarPreviewContext('CalendarPreview.Caption');
+  const { month, setMonth, yearRange, disabled } = useCalendarPreviewContext(
+    'CalendarPreview.Caption'
+  );
   const days = useCalendarPreviewDaysContext();
   const label = useCaptionLabel();
+  const theme = useThemeInjection();
   /* Matches `.Header`: the grid shims while it loads, so the scroller must not
      open over a view that is about to change under it. */
   const inert = disabled || (days?.busy ?? false);
@@ -109,7 +102,6 @@ function CaptionDropdown({
       <PopoverPrimitive.Trigger
         className={cx(styles.caption, styles['caption-trigger'], className)}
         data-slot='calendar-preview-caption'
-        data-scale={scale}
         data-dropdown='true'
         disabled={inert}
         render={render}
@@ -118,7 +110,7 @@ function CaptionDropdown({
       >
         {children ?? label}
       </PopoverPrimitive.Trigger>
-      <PopoverPrimitive.Portal>
+      <PopoverPrimitive.Portal {...theme}>
         <PopoverPrimitive.Positioner
           sideOffset={4}
           align='start'
@@ -126,7 +118,8 @@ function CaptionDropdown({
           data-slot='calendar-preview-caption-positioner'
         >
           <PopoverPrimitive.Popup
-            className={styles['caption-popup']}
+            {...theme}
+            className={cx(theme?.className, styles['caption-popup'])}
             data-slot='calendar-preview-caption-popup'
           >
             <CaptionColumn
@@ -139,6 +132,12 @@ function CaptionDropdown({
                 active: index === activeMonth,
                 onSelect: () => setMonth(monthStart(activeYear, index))
               }))}
+            />
+            <Separator
+              orientation='vertical'
+              decorative
+              className={styles['caption-divider']}
+              data-slot='calendar-preview-caption-divider'
             />
             <CaptionColumn
               slot='calendar-preview-caption-years'
@@ -178,33 +177,34 @@ function CaptionColumn({
 }) {
   const activeRef = useRef<HTMLButtonElement>(null);
 
-  /* A twenty-year column otherwise opens scrolled to the wrong end. Optional
-     call: jsdom does not implement scrollIntoView. */
+  /* A twenty-year column otherwise opens scrolled to the wrong end. */
   useEffect(() => {
     activeRef.current?.scrollIntoView?.({ block: 'center' });
   }, []);
 
   return (
-    <div
-      className={styles['caption-column']}
-      data-slot={slot}
-      role='group'
-      aria-label={label}
-    >
-      {options.map(option => (
-        <button
-          key={option.key}
-          type='button'
-          ref={option.active ? activeRef : undefined}
-          className={styles['caption-option']}
-          data-slot={optionSlot}
-          data-active={option.active || undefined}
-          aria-current={option.active || undefined}
-          onClick={option.onSelect}
-        >
-          {option.text}
-        </button>
-      ))}
-    </div>
+    <ScrollArea className={styles['caption-scroller']}>
+      <div
+        className={styles['caption-column']}
+        data-slot={slot}
+        role='group'
+        aria-label={label}
+      >
+        {options.map(option => (
+          <button
+            key={option.key}
+            type='button'
+            ref={option.active ? activeRef : undefined}
+            className={styles['caption-option']}
+            data-slot={optionSlot}
+            data-active={option.active || undefined}
+            aria-current={option.active || undefined}
+            onClick={option.onSelect}
+          >
+            {option.text}
+          </button>
+        ))}
+      </div>
+    </ScrollArea>
   );
 }

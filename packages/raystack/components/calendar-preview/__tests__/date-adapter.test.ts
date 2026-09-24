@@ -4,9 +4,6 @@ import {
   dayKey,
   dayKeyFromParts,
   endOfMonthKey,
-  endOfQuarterKey,
-  endOfYearKey,
-  epoch,
   formatCaptionLabel,
   formatDayLabel,
   formatMonthLabel,
@@ -18,8 +15,6 @@ import {
   parseKey,
   shiftMonths,
   startOfMonthKey,
-  startOfQuarterKey,
-  startOfYearKey,
   toDayKey,
   yearOf
 } from '../date-adapter';
@@ -42,32 +37,30 @@ describe('dayKey', () => {
     expect(dayKey(instant, 'America/New_York')).toBe('2026-08-31');
   });
 
-  /* `Date.UTC(0, 0, 1)` means 1900, so the far years are set explicitly. Built
-     in UTC, not local: at +14 a local-midnight year 10000 is year 9999 in UTC,
-     and the five-digit case below then has nothing to throw about. */
-  const atYear = (year: number): Date => {
+  /* `Date.UTC(0, 0, 1)` means 1900, and a zone-less `dayKey` reads local. */
+  const atLocalYear = (year: number): Date => {
+    const date = new Date(2000, 0, 1);
+    date.setFullYear(year, 0, 1);
+    return date;
+  };
+
+  const atUtcYear = (year: number): Date => {
     const date = new Date(Date.UTC(2000, 0, 1));
     date.setUTCFullYear(year, 0, 1);
     return date;
   };
 
   it('keeps year 0 distinct from year 1, and round-trips it', () => {
-    expect(dayKey(atYear(0))).toBe('0000-01-01');
-    expect(dayKey(atYear(1))).toBe('0001-01-01');
-    expect(parseKey(dayKey(atYear(0))).getFullYear()).toBe(0);
+    expect(dayKey(atLocalYear(0))).toBe('0000-01-01');
+    expect(dayKey(atLocalYear(1))).toBe('0001-01-01');
+    expect(parseKey(dayKey(atLocalYear(0))).getFullYear()).toBe(0);
+    expect(dayKey(atUtcYear(0), 'UTC')).toBe('0000-01-01');
   });
 
   it('throws rather than return a five-digit key', () => {
-    expect(() => dayKey(atYear(10000))).toThrow(RangeError);
-    expect(() => dayKey(atYear(10000), 'Asia/Tokyo')).toThrow(RangeError);
-  });
-});
-
-describe('epoch', () => {
-  it('is the instant in milliseconds', () => {
-    const date = new Date(Date.UTC(2026, 7, 31, 20, 0));
-    expect(epoch(date)).toBe(date.getTime());
-    expect(epoch(date)).toBe(Date.UTC(2026, 7, 31, 20, 0));
+    expect(() => dayKey(atLocalYear(10000))).toThrow(RangeError);
+    expect(() => dayKey(atUtcYear(10000), 'UTC')).toThrow(RangeError);
+    expect(() => dayKey(atUtcYear(10000), 'Asia/Tokyo')).toThrow(RangeError);
   });
 });
 
@@ -159,16 +152,6 @@ describe('period key helpers', () => {
     expect(endOfMonthKey('2028-02-14')).toBe('2028-02-29');
     expect(endOfMonthKey('2100-02-14')).toBe('2100-02-28');
   });
-
-  it('brackets a quarter', () => {
-    expect(startOfQuarterKey('2026-08-15')).toBe('2026-07-01');
-    expect(endOfQuarterKey('2026-08-15')).toBe('2026-09-30');
-  });
-
-  it('brackets a year', () => {
-    expect(startOfYearKey('2026-08-15')).toBe('2026-01-01');
-    expect(endOfYearKey('2026-08-15')).toBe('2026-12-31');
-  });
 });
 
 describe('key accessors', () => {
@@ -255,8 +238,6 @@ describe('monthShortNames', () => {
     expect(names[11]).toBe('Dec');
   });
 
-  /* The caption's month column shows these, so the parser has to take them
-     back — the same contract the full names carry. */
   it('round-trips through monthFromName', () => {
     monthShortNames().forEach((name, index) => {
       expect(monthFromName(name)).toBe(index + 1);

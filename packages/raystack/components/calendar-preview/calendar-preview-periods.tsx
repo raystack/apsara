@@ -3,10 +3,7 @@ import { cx } from 'class-variance-authority';
 import { useEffect, useMemo, useRef } from 'react';
 import styles from './calendar-preview.module.css';
 import { useCalendarPreviewContext } from './calendar-preview-context';
-import {
-  type CalendarPreviewValue,
-  isScaleValue
-} from './calendar-preview-root';
+import { isScaleValue } from './calendar-preview-root';
 import {
   type DayKey,
   dayKey,
@@ -21,14 +18,11 @@ export type CalendarPreviewPeriodViewProps = useRender.ComponentProps<'div'>;
 interface Cell {
   key: string;
   label: string;
-  /* A timeless day, not an instant: "August 2026" is a calendar period, and
-     keying it from a local `Date` read it a month early west of the zone. */
   date: DayKey;
 }
 
 const MONTHS = monthShortNames();
 
-/* A month out of `dayKeyFromParts`' range has no cell rather than a bad one. */
 function cellsFor(scale: Scale, year: number): Cell[] {
   const at = (key: string, label: string, month: number): Cell | null => {
     const date = dayKeyFromParts(year, month, 1);
@@ -76,9 +70,7 @@ function PeriodView({
     timeZone,
     disabled,
     readOnly
-  } = useCalendarPreviewContext<CalendarPreviewValue>(
-    'CalendarPreview.Periods'
-  );
+  } = useCalendarPreviewContext('CalendarPreview.Periods');
 
   const years = useMemo(() => {
     const list: number[] = [];
@@ -91,14 +83,31 @@ function PeriodView({
       (isScaleValue(value) ? value.date : dayKey(month, timeZone))
   );
 
-  const selectedKey =
-    scaleDraft?.date ?? (isScaleValue(value) ? value.date : null);
+  const selected = scaleDraft ?? (isScaleValue(value) ? value : null);
+  const selectedKey = selected?.scale === viewScale ? selected.date : null;
 
-  /* Keyed on becoming active, not on mount: every view mounts at once, so a
-     mount effect would fire with an empty ref. Scrolls the container, not
-     `scrollIntoView`, which would move the popover with it. */
-  const activeRef = useRef<HTMLDivElement>(null);
   const isActive = scale === viewScale;
+
+  /* All five views mount at once, so the inactive ones build no cells. */
+  const groups = useMemo(() => {
+    if (!isActive) return [];
+    const all = years.map(year => ({
+      year,
+      cells: cellsFor(viewScale, year).map(cell => ({
+        ...cell,
+        produced: anchorOf(periodOf(cell.date, viewScale), trailingValue),
+        unavailable: !isPeriodAvailable(cell.date, viewScale)
+      }))
+    }));
+    /* Years outside the bounds would be dead tab stops, unless dropping them empties the panel. */
+    const reachable = all.filter(group =>
+      group.cells.some(cell => !cell.unavailable)
+    );
+    return reachable.length > 0 ? reachable : all;
+  }, [isActive, years, viewScale, trailingValue, isPeriodAvailable]);
+
+  /* On becoming active, not on mount: a mount effect fires with an empty ref. */
+  const activeRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!isActive) return;
     const group = activeRef.current;
@@ -117,10 +126,9 @@ function PeriodView({
       {
         className: cx(styles.periods, className),
         'data-slot': slot,
-        'data-scale': viewScale,
         children: children ?? (
           <>
-            {years.map(year => (
+            {groups.map(({ year, cells }) => (
               <div
                 key={year}
                 ref={year === activeYear ? activeRef : undefined}
@@ -128,47 +136,44 @@ function PeriodView({
                 data-slot='calendar-preview-period-group'
                 data-year={year}
               >
-                <div
-                  className={styles['period-year']}
-                  data-slot='calendar-preview-period-year'
-                >
-                  {year}
-                </div>
+                {viewScale !== 'year' && (
+                  <div
+                    className={styles['period-year']}
+                    data-slot='calendar-preview-period-year'
+                  >
+                    {year}
+                  </div>
+                )}
                 <div
                   className={styles['period-cells']}
                   style={
                     { '--rs-period-columns': columns } as React.CSSProperties
                   }
                 >
-                  {cellsFor(viewScale, year).map(cell => {
-                    const produced = anchorOf(
-                      periodOf(cell.date, viewScale),
-                      trailingValue
-                    );
-                    const unavailable = !isPeriodAvailable(
-                      cell.date,
-                      viewScale
-                    );
-                    return (
-                      <button
-                        key={cell.key}
-                        type='button'
-                        className={styles.period}
-                        data-slot='calendar-preview-period'
-                        data-scale={viewScale}
-                        data-selected={produced === selectedKey || undefined}
-                        data-unavailable={unavailable || undefined}
-                        disabled={disabled || unavailable}
-                        aria-current={produced === selectedKey || undefined}
-                        onClick={() => {
-                          if (readOnly) return;
-                          selectPeriod(cell.date, viewScale);
-                        }}
-                      >
-                        {cell.label}
-                      </button>
-                    );
-                  })}
+                  {cells.map(({ produced, unavailable, ...cell }) => (
+                    <button
+                      key={cell.key}
+                      type='button'
+                      className={styles.period}
+                      data-slot='calendar-preview-period'
+                      data-scale={viewScale}
+                      data-selected={produced === selectedKey || undefined}
+                      data-unavailable={unavailable || undefined}
+                      disabled={disabled || unavailable}
+                      aria-label={
+                        viewScale === 'year'
+                          ? cell.label
+                          : `${cell.label} ${year}`
+                      }
+                      aria-current={produced === selectedKey || undefined}
+                      onClick={() => {
+                        if (readOnly) return;
+                        selectPeriod(cell.date, viewScale);
+                      }}
+                    >
+                      {cell.label}
+                    </button>
+                  ))}
                 </div>
               </div>
             ))}

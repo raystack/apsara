@@ -36,7 +36,8 @@ export function CalendarPreviewScales({
         'data-slot': 'calendar-preview-scales',
         children: children ?? (
           <Tabs
-            size='small'
+            size='medium'
+            variant='standalone'
             value={scale}
             onValueChange={next => switchScale(next as Scale)}
           >
@@ -93,6 +94,8 @@ export function CalendarPreviewScale({
         className,
         'data-slot': 'calendar-preview-scale',
         'data-scale': value,
+        /* Says it is pressed rather than claiming a `tab` role with no tablist around it. */
+        'aria-pressed': scale === value,
         'data-active': scale === value || undefined,
         disabled,
         onClick: () => switchScale(value),
