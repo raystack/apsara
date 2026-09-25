@@ -57,7 +57,7 @@ How the currency is written: `symbol` (the default, `$`), `narrowSymbol` (`$`, e
 
 ### Compact notation
 
-Set `notation="compact"` to abbreviate large values in dashboards and summary views, for example `$1.2M`. Compact notation rounds, so do not use it where the exact amount matters.
+Set `notation="compact"` to abbreviate large values in dashboards and summary views, for example `$1.2M`. Compact notation rounds, so do not use it where the exact amount matters. With `hideDecimals`, it rounds to a whole number, so `$1.55M` shows as `$2M`.
 
 <Demo data={notationDemo} />
 
@@ -93,7 +93,7 @@ Set `valueInMinorUnits` when your API returns integer cents, paise, or fils. Amo
 
 ### Whole units
 
-`hideDecimals` rounds to whole units. Use it in dense tables and summary figures where the fraction adds noise rather than precision.
+`hideDecimals` truncates to whole units, so `$12.99` shows as `$12`. Use it in dense tables and summary figures where the fraction adds noise rather than precision.
 
 <Demo data={hideDecimalsDemo} />
 

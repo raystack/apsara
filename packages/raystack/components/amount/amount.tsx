@@ -44,7 +44,7 @@ export interface AmountProps extends ComponentProps<'span'> {
   locale?: string;
 
   /**
-   * Truncates decimal places
+   * Truncates to whole units. With `compact` notation, it rounds the abbreviated value instead.
    * @default false
    */
   hideDecimals?: boolean;
@@ -265,14 +265,15 @@ export const Amount = ({
       baseValue = value;
     }
 
-    // Remove decimals when hideDecimals is true. BigInt has no decimals, so it's a no-op there.
+    // BigInt has no decimals. Truncating a value between -1 and 0 gives -0,
+    // which formats as "-$0", so both paths drop that sign (`+ 0` turns -0 into 0).
     const finalBaseValue: number | string | bigint = !hideDecimals
       ? baseValue
       : typeof baseValue === 'bigint'
         ? baseValue
         : typeof baseValue === 'string'
-          ? baseValue.split('.')[0]
-          : Math.trunc(baseValue);
+          ? baseValue.split('.')[0].replace(/^-0+$/, '0')
+          : Math.trunc(baseValue) + 0;
 
     /**
      * Always format in currency mode, since Intl's currency-style handles fraction digits per the currency,

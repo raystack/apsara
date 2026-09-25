@@ -146,6 +146,21 @@ describe('Amount', () => {
       expect(screen.getByText('$12')).toBeInTheDocument();
     });
 
+    it('drops the sign when hideDecimals truncates a negative value to zero', () => {
+      render(<Amount value={-50} hideDecimals />);
+      expect(screen.getByText('$0')).toBeInTheDocument();
+    });
+
+    it('drops the sign when hideDecimals truncates a negative string to zero', () => {
+      render(<Amount value='-50' hideDecimals />);
+      expect(screen.getByText('$0')).toBeInTheDocument();
+    });
+
+    it('keeps the sign when hideDecimals truncates a value below -1', () => {
+      render(<Amount value={-1299} hideDecimals />);
+      expect(screen.getByText('-$12')).toBeInTheDocument();
+    });
+
     it('displays currency as symbol by default', () => {
       render(<Amount value={1299} currencyDisplay='symbol' />);
       expect(screen.getByText('$12.99')).toBeInTheDocument();
@@ -414,9 +429,9 @@ describe('Amount', () => {
       expect(screen.getByText('$13')).toBeInTheDocument();
     });
 
-    it('works with hideDecimals', () => {
-      render(<Amount value={125000000} notation='compact' hideDecimals />);
-      expect(screen.getByText('$1M')).toBeInTheDocument();
+    it('rounds the abbreviated value with hideDecimals', () => {
+      render(<Amount value={155000000} notation='compact' hideDecimals />);
+      expect(screen.getByText('$2M')).toBeInTheDocument();
     });
 
     it('works with string values', () => {
