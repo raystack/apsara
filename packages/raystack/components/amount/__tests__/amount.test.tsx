@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Amount } from '../amount';
+import styles from '../amount.module.css';
 
 describe('Amount', () => {
   describe('Basic Rendering', () => {
@@ -93,6 +94,19 @@ describe('Amount', () => {
       render(<Amount value={1299} currency='INVALID' />);
       expect(consoleSpy).toHaveBeenCalledWith(
         'Invalid currency code: INVALID. Falling back to USD.'
+      );
+      expect(screen.getByText('$12.99')).toBeInTheDocument();
+      consoleSpy.mockRestore();
+    });
+
+    it('falls back to USD when the currency is not a string', () => {
+      const consoleSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => null);
+      // API data can send null even though the prop type is string.
+      render(<Amount value={1299} currency={null as unknown as string} />);
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Invalid currency code: null. Falling back to USD.'
       );
       expect(screen.getByText('$12.99')).toBeInTheDocument();
       consoleSpy.mockRestore();
@@ -223,6 +237,21 @@ describe('Amount', () => {
     it('handles negative string values in minor units', () => {
       render(<Amount value='-1299' />);
       expect(screen.getByText('-$12.99')).toBeInTheDocument();
+    });
+
+    it('pads string values shorter than the currency decimals', () => {
+      render(<Amount value='5' />);
+      expect(screen.getByText('$0.05')).toBeInTheDocument();
+    });
+
+    it('pads negative string values shorter than the currency decimals', () => {
+      render(<Amount value='-5' />);
+      expect(screen.getByText('-$0.05')).toBeInTheDocument();
+    });
+
+    it('pads short string values for a 3-decimal currency', () => {
+      render(<Amount value='5' currency='BHD' hideCurrency />);
+      expect(screen.getByText('0.005')).toBeInTheDocument();
     });
   });
 
@@ -380,7 +409,7 @@ describe('Amount', () => {
     });
 
     it('rounds small values to compact defaults (no abbreviation below 1K)', () => {
-      // Compact notation caps fraction digits aggressively: 12.99 → "$13".
+      // Compact notation keeps 2 significant digits by default.
       render(<Amount value={1299} notation='compact' />);
       expect(screen.getByText('$13')).toBeInTheDocument();
     });
@@ -415,24 +444,24 @@ describe('Amount', () => {
 
   describe('tabularNums', () => {
     it('applies tabular figures by default', () => {
-      const { container } = render(<Amount value={1299} />);
-      const span = container.querySelector('span');
-      expect(span?.className).toContain('tabular');
+      render(<Amount value={1299} />);
+      const amount = screen.getByText('$12.99');
+      expect(amount).toHaveClass(styles.tabular);
+      expect(amount).not.toHaveClass(styles.proportional);
     });
 
-    it('omits tabular figures when tabularNums is false', () => {
-      const { container } = render(<Amount value={1299} tabularNums={false} />);
-      const span = container.querySelector('span');
-      expect(span?.className).not.toContain('tabular');
+    it('applies proportional figures when tabularNums is false', () => {
+      render(<Amount value={1299} tabularNums={false} />);
+      const amount = screen.getByText('$12.99');
+      expect(amount).toHaveClass(styles.proportional);
+      expect(amount).not.toHaveClass(styles.tabular);
     });
 
     it('keeps custom className alongside the tabular class', () => {
-      const { container } = render(
-        <Amount value={1299} className='custom-class' />
-      );
-      const span = container.querySelector('span');
-      expect(span?.className).toContain('custom-class');
-      expect(span?.className).toContain('tabular');
+      render(<Amount value={1299} className='custom-class' />);
+      const amount = screen.getByText('$12.99');
+      expect(amount).toHaveClass('custom-class');
+      expect(amount).toHaveClass(styles.tabular);
     });
   });
 });

@@ -131,6 +131,8 @@ export const currencyDisplayDemo = {
   code: `
   <Flex gap={4}>
     <Amount value={1299} currencyDisplay="symbol" /> {/* $12.99 */}
+    <Amount value={1299} locale="en-CA" currencyDisplay="symbol" /> {/* US$12.99 */}
+    <Amount value={1299} locale="en-CA" currencyDisplay="narrowSymbol" /> {/* $12.99 */}
     <Amount value={1299} currencyDisplay="code" /> {/* USD 12.99 */}
     <Amount value={1299} currencyDisplay="name" /> {/* 12.99 US dollars */}
   </Flex>
@@ -181,7 +183,7 @@ export const hideCurrencyDemo = {
   <Flex gap={4}>
     <Amount value={1299} hideCurrency /> {/* 12.99 */}
     <Amount value={1299} currency="JPY" hideCurrency /> {/* 1,299 */}
-    <Amount value={1299} hideCurrency currencyDisplay="code" />{/* 12.99 — currencyDisplay is ignored */}
+    <Amount value={1299} hideCurrency currencyDisplay="code" />{/* 12.99 (currencyDisplay is ignored) */}
   </Flex>
   `
 };
@@ -226,14 +228,14 @@ export const largeNumbersDemo = {
     valueInMinorUnits={false} hideDecimals />{/* $10,000,100,091,636,935 */}
 
     {/*
-    BigInt is always treated as major units — valueInMinorUnits is ignored
+    BigInt is always treated as major units, so valueInMinorUnits is ignored
   */}
     <Amount value={BigInt("9999999999999999999")} />{/* $9,999,999,999,999,999,999.00 */}
 
     {/* 
     Numbers exceeding safe integer limit will show warning in console 
   */}
-    <Amount value={99999999999999999} />{/* Exceeds Number.MAX_SAFE_INTEGER (~9 × 10^15) — logs a console warning */}
+    <Amount value={99999999999999999} />{/* Exceeds Number.MAX_SAFE_INTEGER (~9 × 10^15), so it logs a console warning */}
   </Flex>
   `
 };

@@ -1,3 +1,7 @@
 .tabular {
   font-variant-numeric: tabular-nums;
 }
+
+.proportional {
+  font-variant-numeric: proportional-nums;
+}

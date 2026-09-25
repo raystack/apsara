@@ -50,27 +50,20 @@ export interface AmountProps extends ComponentProps<'span'> {
   hideDecimals?: boolean;
 
   /**
-   * Currency display format
+   * How the currency is written. `narrowSymbol` shows `$` where `symbol` shows `US$`.
    * @default 'symbol'
-   * @example 'symbol' - $12.99 (may show "US$" in non-US locales), 'narrowSymbol' - $12.99 (always the narrow symbol), 'code' - USD 12.99, 'name' - 12.99 US Dollars
    */
   currencyDisplay?: 'symbol' | 'narrowSymbol' | 'code' | 'name';
 
   /**
-   * Number formatting notation.
-   * 'compact' abbreviates large values — useful for dashboards and summary views.
-   * Compact rounds aggressively by design; avoid it when the value must render exactly.
+   * Number notation. `compact` abbreviates and rounds large values, for example `$1.2M`.
    * @default 'standard'
-   * @example
-   * 'standard' - $1,200,000.00, 'compact' - $1.2M
    */
   notation?: 'standard' | 'compact';
 
   /**
-   * When to show the +/- sign — useful for gains/losses.
+   * When to show the `+` or `-` sign.
    * @default 'auto'
-   * @example
-   * 'auto' - -$12.99, 'always' - +$12.99, 'exceptZero' - +$12.99 but $0.00, 'never' - $12.99
    */
   signDisplay?: 'auto' | 'always' | 'exceptZero' | 'never';
 
@@ -103,19 +96,15 @@ export interface AmountProps extends ComponentProps<'span'> {
   hideCurrency?: boolean;
 
   /**
-   * Use fixed-width (tabular) figures so digits align vertically across rows —
-   * ideal for tables and lists of amounts. Set to false in running text,
-   * where proportional figures look more natural.
+   * Uses fixed-width figures so digits align across rows. `false` uses proportional figures.
    * @default true
    */
   tabularNums?: boolean;
 }
 
 /**
- * Intl.NumberFormat construction is expensive, and Amount often renders
- * hundreds of times in a table. Cache instances module-wide, keyed by
- * locale + options. The cap guards against unbounded growth when
- * locales/currencies are dynamic.
+ * Creating an Intl.NumberFormat is slow, and a table can render hundreds of
+ * amounts. The cap bounds memory when locales or currencies are dynamic.
  */
 const FORMATTER_CACHE_LIMIT = 64;
 const formatterCache = new Map<string, Intl.NumberFormat>();
@@ -140,35 +129,29 @@ interface CurrencyInfo {
 }
 
 /**
- * Sized to hold every valid ISO 4217 code (~180) without eviction;
- * the cap only guards against unbounded growth from invalid inputs.
+ * The cap holds every ISO 4217 code (about 180) and bounds growth from
+ * invalid codes.
  */
 const CURRENCY_INFO_CACHE_LIMIT = 256;
 const currencyInfoCache = new Map<string, CurrencyInfo>();
 
-/**
- * Resolve a currency's validity and decimal places in one cached lookup.
- */
 function getCurrencyInfo(currency: string): CurrencyInfo {
-  const code = currency.toUpperCase();
-  let info = currencyInfoCache.get(code);
+  let info = currencyInfoCache.get(currency);
   if (!info) {
     try {
-      const formatter = getFormatter('en', {
+      const { maximumFractionDigits } = new Intl.NumberFormat('en', {
         style: 'currency',
-        currency: code
-      });
-      info = {
-        valid: true,
-        decimals: formatter.resolvedOptions().maximumFractionDigits ?? 2
-      };
+        currency
+      }).resolvedOptions();
+      info = { valid: true, decimals: maximumFractionDigits ?? 2 };
     } catch {
+      // Invalid codes fall back to USD, which has 2 decimals.
       info = { valid: false, decimals: 2 };
     }
     if (currencyInfoCache.size >= CURRENCY_INFO_CACHE_LIMIT) {
       currencyInfoCache.clear();
     }
-    currencyInfoCache.set(code, info);
+    currencyInfoCache.set(currency, info);
   }
   return info;
 }
@@ -250,9 +233,7 @@ export const Amount = ({
       console.warn(`Invalid currency code: ${currency}. Falling back to USD.`);
     }
 
-    const decimals = currencyInfo.valid
-      ? currencyInfo.decimals
-      : getCurrencyInfo('USD').decimals;
+    const { decimals } = currencyInfo;
 
     /**
      * Convert minor → major units.
@@ -338,7 +319,10 @@ export const Amount = ({
       <span
         data-slot='amount'
         {...props}
-        className={cx(tabularNums && styles.tabular, className)}
+        className={cx(
+          tabularNums ? styles.tabular : styles.proportional,
+          className
+        )}
       >
         {formattedValue}
       </span>
@@ -349,7 +333,10 @@ export const Amount = ({
       <span
         data-slot='amount'
         {...props}
-        className={cx(tabularNums && styles.tabular, className)}
+        className={cx(
+          tabularNums ? styles.tabular : styles.proportional,
+          className
+        )}
       >
         {String(value)}
       </span>
