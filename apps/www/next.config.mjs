@@ -30,11 +30,28 @@ const config = {
     ];
   },
   async redirects() {
-    // TODO: remove this once we have a proper home page
     return [
+      // TODO: remove this once we have a proper home page
       {
         source: '/',
         destination: '/docs',
+        permanent: true
+      },
+      // The lucide migration page became a section of the Upgrading page.
+      {
+        source: '/docs/migrating-to-lucide-icons',
+        destination: '/docs/upgrading',
+        permanent: true
+      },
+      // DataView moved out of Components into its own section.
+      {
+        source: '/docs/components/dataview',
+        destination: '/docs/dataview',
+        permanent: true
+      },
+      {
+        source: '/docs/components/dataview/:path*',
+        destination: '/docs/dataview/:path*',
         permanent: true
       }
     ];

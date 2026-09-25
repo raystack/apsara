@@ -13,9 +13,10 @@ export function SidebarMain({
     <Flex
       className={cx(styles.main, className)}
       direction='column'
-      role='group'
+      role='list'
       gap={2}
       aria-label='Main navigation'
+      data-slot='sidebar-main'
       {...props}
     />
   );

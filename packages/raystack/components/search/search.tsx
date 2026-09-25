@@ -1,6 +1,6 @@
 'use client';
 
-import { CrossCircledIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { ClearIcon, SearchIcon } from '~/icons';
 import { IconButton } from '../icon-button';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
@@ -25,7 +25,7 @@ export function Search({
   ...props
 }: SearchProps) {
   const trailingIconWithClear = showClearButton ? (
-    <div className={styles.clearButtonWrapper}>
+    <div className={styles.clearButtonWrapper} data-slot='search-clear'>
       <IconButton
         size={size === 'small' ? 2 : 3}
         onClick={e => {
@@ -37,16 +37,23 @@ export function Search({
         disabled={disabled}
         aria-label='Clear search'
         className={styles.clearButton}
+        data-slot='search-clear-button'
       >
-        <CrossCircledIcon />
+        <ClearIcon />
       </IconButton>
     </div>
   ) : undefined;
 
   return (
-    <div className={styles.container} role='search' style={{ width }}>
+    <div
+      className={styles.container}
+      role='search'
+      style={{ width }}
+      data-slot='search'
+    >
       <Input
-        leadingIcon={<MagnifyingGlassIcon />}
+        data-slot='search-input'
+        leadingIcon={<SearchIcon />}
         trailingIcon={trailingIconWithClear}
         placeholder={placeholder}
         disabled={disabled}

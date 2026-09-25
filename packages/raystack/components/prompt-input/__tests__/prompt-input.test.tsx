@@ -63,7 +63,10 @@ describe('PromptInput', () => {
       await user.type(textarea, 'hello');
 
       expect(textarea).toHaveValue('hello');
-      expect(onValueChange).toHaveBeenLastCalledWith('hello');
+      expect(onValueChange).toHaveBeenLastCalledWith('hello', {
+        text: 'hello',
+        mentions: []
+      });
     });
 
     it('submits the trimmed value on Enter', async () => {
@@ -76,7 +79,11 @@ describe('PromptInput', () => {
       await user.keyboard('{Enter}');
 
       expect(onSubmit).toHaveBeenCalledTimes(1);
-      expect(onSubmit.mock.calls[0][0]).toBe('hello world');
+      expect(onSubmit.mock.calls[0][0]).toEqual({
+        text: 'hello world',
+        markup: 'hello world',
+        mentions: []
+      });
     });
 
     it('inserts a newline on Shift+Enter instead of submitting', async () => {
@@ -125,7 +132,7 @@ describe('PromptInput', () => {
       await user.click(screen.getByRole('button', { name: 'Send message' }));
 
       expect(onSubmit).toHaveBeenCalledTimes(1);
-      expect(onSubmit.mock.calls[0][0]).toBe('hi');
+      expect(onSubmit.mock.calls[0][0].text).toBe('hi');
     });
 
     it('supports a controlled value', async () => {
@@ -140,7 +147,10 @@ describe('PromptInput', () => {
       await user.type(textarea, '!');
       // Parent did not update the prop, so the value stays.
       expect(textarea).toHaveValue('controlled');
-      expect(onValueChange).toHaveBeenCalledWith('controlled!');
+      expect(onValueChange).toHaveBeenCalledWith('controlled!', {
+        text: 'controlled!',
+        mentions: []
+      });
     });
 
     it('clears the value when the form is reset from onSubmit', async () => {
@@ -224,7 +234,7 @@ describe('PromptInput', () => {
   // The header and footer carry `pointer-events: none`, so in a browser a press
   // on their padding is hit-tested to the form and arrives here with the form as
   // its target. jsdom applies no stylesheet and does no hit testing, so these
-  // press the form directly — the slots' own presses cannot be simulated.
+  // press the form directly, since the slots' own presses cannot be simulated.
   describe('Click to focus', () => {
     it('focuses the textarea when the frame is pressed', () => {
       const { container } = render(<BasicPromptInput />);

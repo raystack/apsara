@@ -52,6 +52,7 @@ function RadioGroup({
       aria-orientation={orientation}
       className={radioGroupVariants({ orientation, size, className })}
       required={resolvedRequired}
+      data-slot='radio-group'
       {...props}
     />
   );
@@ -66,10 +67,15 @@ interface RadioItemProps
 function RadioItem({ className, size, ...props }: RadioItemProps) {
   return (
     <RadioPrimitive.Root
+      data-slot='radio'
       {...props}
       className={radioVariants({ size, className })}
     >
-      <RadioPrimitive.Indicator className={styles.indicator} keepMounted />
+      <RadioPrimitive.Indicator
+        className={styles.indicator}
+        data-slot='radio-indicator'
+        keepMounted
+      />
     </RadioPrimitive.Root>
   );
 }

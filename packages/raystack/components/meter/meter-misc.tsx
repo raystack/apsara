@@ -9,7 +9,11 @@ export function MeterLabel({
   ...props
 }: MeterPrimitive.Label.Props) {
   return (
-    <MeterPrimitive.Label className={cx(styles.label, className)} {...props} />
+    <MeterPrimitive.Label
+      className={cx(styles.label, className)}
+      data-slot='meter-label'
+      {...props}
+    />
   );
 }
 
@@ -20,7 +24,11 @@ export function MeterValue({
   ...props
 }: MeterPrimitive.Value.Props) {
   return (
-    <MeterPrimitive.Value className={cx(styles.value, className)} {...props} />
+    <MeterPrimitive.Value
+      className={cx(styles.value, className)}
+      data-slot='meter-value'
+      {...props}
+    />
   );
 }
 

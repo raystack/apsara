@@ -1,12 +1,13 @@
 import { Button as ButtonPrimitive } from '@base-ui/react';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ReactNode } from 'react';
-
+import { radiusVariants } from '../../shared/radius';
 import { Spinner } from '../spinner';
 import styles from './button.module.css';
 
 const button = cva(styles['button'], {
   variants: {
+    ...radiusVariants,
     variant: {
       solid: styles['button-solid'],
       outline: styles['button-outline'],
@@ -138,6 +139,7 @@ export const Button = ({
   variant = 'solid',
   color = 'accent',
   size = 'normal',
+  radius,
   disabled,
   loading,
   loaderText,
@@ -152,7 +154,7 @@ export const Button = ({
   return (
     <ButtonPrimitive
       className={cx(
-        button({ variant, size, color, disabled, loading, className }),
+        button({ variant, size, color, radius, disabled, loading, className }),
         isLoaderOnly && getLoaderOnlyClass(size)
       )}
       disabled={disabled}
@@ -160,25 +162,42 @@ export const Button = ({
       nativeButton={!render}
       focusableWhenDisabled={loading}
       aria-busy={loading || undefined}
+      data-slot='button'
       {...props}
     >
       {loading ? (
         <>
-          <Spinner size={1} color='default' aria-hidden='true' />
+          <Spinner
+            size={1}
+            color='default'
+            aria-hidden='true'
+            data-slot='button-loader'
+          />
           {loaderText && (
-            <span className={styles['loader-text']}>{loaderText}</span>
+            <span
+              className={styles['loader-text']}
+              data-slot='button-loader-text'
+            >
+              {loaderText}
+            </span>
           )}
         </>
       ) : (
         <>
           {leadingIcon && (
-            <span className={cx(styles['icon'], styles['icon-leading'])}>
+            <span
+              className={cx(styles['icon'], styles['icon-leading'])}
+              data-slot='button-leading-icon'
+            >
               {leadingIcon}
             </span>
           )}
           {children}
           {trailingIcon && (
-            <span className={cx(styles['icon'], styles['icon-trailing'])}>
+            <span
+              className={cx(styles['icon'], styles['icon-trailing'])}
+              data-slot='button-trailing-icon'
+            >
               {trailingIcon}
             </span>
           )}

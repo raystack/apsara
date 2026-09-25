@@ -45,8 +45,12 @@ export function SelectItem({
   const element =
     typeof children === 'string' ? (
       <>
-        {leadingIcon && <div className={styles.itemIcon}>{leadingIcon}</div>}
-        <Text>{children}</Text>
+        {leadingIcon && (
+          <div className={styles.itemIcon} data-slot='select-item-icon'>
+            {leadingIcon}
+          </div>
+        )}
+        <Text data-slot='select-item-text'>{children}</Text>
       </>
     ) : (
       children
@@ -72,6 +76,7 @@ export function SelectItem({
       value={value}
       className={cx(styles.menuitem, className, isHidden && styles.hidden)}
       data-hidden={isHidden || undefined}
+      data-slot='select-item'
       disabled={disabled || isHidden}
       {...props}
       render={(renderProps, state) => (

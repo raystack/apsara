@@ -22,7 +22,7 @@ const highContrast = figma.selectedInstance.getEnum('High Contrast', {
   True: true
 });
 // children text, `dismissible` and `action` live on the nested ".callout_structure"
-// instance (guarded — findInstance returns an ErrorHandle when absent).
+// instance (guarded, since findInstance returns an ErrorHandle when absent).
 const structure = (function () {
   const nested = figma.selectedInstance.findInstance('.callout_structure');
   if (!nested || nested.type !== 'INSTANCE') {

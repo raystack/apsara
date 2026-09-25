@@ -2,6 +2,7 @@
 
 import { Toast as ToastPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import { useThemeInjection } from '../theme/portal';
 import styles from './toast.module.css';
 import {
   toastManager as defaultToastManager,
@@ -45,12 +46,19 @@ export function ToastProvider({
   children,
   ...props
 }: ToastProviderProps) {
+  const theme = useThemeInjection();
   return (
     <ToastPrimitive.Provider toastManager={toastManager} {...props}>
       {children}
-      <ToastPrimitive.Portal>
+      <ToastPrimitive.Portal {...theme}>
         <ToastPrimitive.Viewport
-          className={cx(styles.viewport, styles[`viewport-${position}`])}
+          {...theme}
+          className={cx(
+            styles.viewport,
+            styles[`viewport-${position}`],
+            theme?.className
+          )}
+          data-slot='toast-viewport'
         >
           <ToastList position={position} />
         </ToastPrimitive.Viewport>

@@ -1,5 +1,9 @@
 import type { ColumnDef, Row, Table } from '@tanstack/react-table';
-import { TableState } from '@tanstack/table-core';
+import {
+  getFilteredRowModel,
+  type RowModel,
+  TableState
+} from '@tanstack/table-core';
 import dayjs from 'dayjs';
 
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
@@ -19,6 +23,7 @@ import {
   getFilterOperator,
   getFilterValue
 } from './filter-operations';
+import { orderBucketKeys } from './order-bucket-keys';
 
 export function queryToTableState(query: InternalQuery): Partial<TableState> {
   const columnFilters =
@@ -80,6 +85,10 @@ export function fieldsToColumnDefs<TData>(
  * Bucket data into `GroupedData` entries keyed by `group_by`. When a resolver
  * is supplied for that key, the resolver runs per-row; otherwise the field is
  * accessed directly. Used in client mode only.
+ *
+ * Sections come out in the field's `groupOrder` where it declares one, with
+ * undeclared values following in first-seen order and the null-valued bucket
+ * last. See `orderBucketKeys`.
  */
 export function groupData<TData>(
   data: TData[],
@@ -109,7 +118,10 @@ export function groupData<TData>(
   const groupCountMap = field?.groupCountMap || {};
   const groupedData: GroupedData<TData>[] = [];
 
-  groupMap.forEach((value, key) => {
+  // Section order: the field's declared `groupOrder` first, then undeclared
+  // values in first-seen order, then the empty (null-valued) bucket last.
+  for (const key of orderBucketKeys([...groupMap.keys()], field?.groupOrder)) {
+    const value = groupMap.get(key) as TData[];
     groupedData.push({
       label: groupLabelsMap[key] || key,
       group_key: key,
@@ -117,9 +129,36 @@ export function groupData<TData>(
       count: groupCountMap[key] ?? value.length,
       showGroupCount
     });
-  });
+  }
 
   return groupedData;
+}
+
+export const GROUP_ROW_ID_PREFIX = '__group__:';
+
+export function isGroupRowData<TData>(row: unknown): row is GroupedData<TData> {
+  if (!row || typeof row !== 'object') return false;
+  const candidate = row as GroupedData<TData>;
+  return (
+    Array.isArray(candidate.subRows) && typeof candidate.group_key === 'string'
+  );
+}
+
+/**
+ * Keys group buckets by `group_key` so their ids can't collide with data row
+ * ids. Leaves delegate to `getRowId`, falling back to TanStack's positional
+ * default (which supplying any resolver would otherwise replace).
+ */
+export function createRowIdResolver<TData>(
+  getRowId?: (row: TData, index: number) => string
+) {
+  return (row: TData, index: number, parent?: Row<TData>): string => {
+    if (isGroupRowData<TData>(row)) {
+      return `${GROUP_ROW_ID_PREFIX}${row.group_key}`;
+    }
+    if (getRowId) return getRowId(row, index);
+    return parent ? `${parent.id}.${index}` : String(index);
+  };
 }
 
 const generateFilterMap = (
@@ -308,7 +347,35 @@ export function dataViewQueryToInternal(query: DataViewQuery): InternalQuery {
   return { ...rest, filters: internalFilters };
 }
 
-/** Leaf count from the row tree. Not `flatRows`: with `filterFromLeafRows`, TanStack's filtered model leaves `flatRows` empty while `rows` is correct. */
+/**
+ * `getFilteredRowModel` with `flatRows` backfilled. table-core's
+ * `filterFromLeafRows` path never fills that array, which kills every API
+ * reading it (`getIsAllRowsSelected`, `toggleAllRowsSelected`, …) while a
+ * filter is active. Filled in place to preserve the model identity downstream
+ * memos key on.
+ */
+export function getFilteredRowModelWithFlatRows<TData>(): (
+  table: Table<TData>
+) => () => RowModel<TData> {
+  const base = getFilteredRowModel<TData>();
+  return table => {
+    const getModel = base(table);
+    return () => {
+      const model = getModel();
+      if (model.flatRows.length > 0) return model;
+      const collect = (rows: Row<TData>[]) => {
+        rows.forEach(row => {
+          model.flatRows.push(row);
+          if (row.subRows?.length) collect(row.subRows);
+        });
+      };
+      collect(model.rows);
+      return model;
+    };
+  };
+}
+
+/** Leaf count from the row tree. Kept recursive so it stays correct for the grouped tree, where `flatRows` also counts group rows. */
 export function countLeafRows<T>(rows: Row<T>[]): number {
   return rows.reduce(
     (n, row) => n + (row.subRows?.length ? countLeafRows(row.subRows) : 1),

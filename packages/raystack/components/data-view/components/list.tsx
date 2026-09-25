@@ -11,7 +11,7 @@ import {
   useMemo,
   useRef
 } from 'react';
-
+import { useScaling } from '~/hooks/useScaling';
 import { Badge } from '../../badge';
 import { Skeleton } from '../../skeleton';
 import styles from '../data-view.module.css';
@@ -80,9 +80,6 @@ export function DataViewList<TData, TValue = unknown>({
   const headersVisible = showHeaders ?? isTableVariant;
   const ariaRole = role ?? (isTableVariant ? 'table' : 'list');
   const dividers = showDividers ?? isTableVariant;
-  const effectiveRowHeight =
-    estimatedRowHeight ??
-    (isTableVariant ? DEFAULT_TABLE_ROW_HEIGHT : DEFAULT_LIST_ROW_HEIGHT);
 
   const visibleLeafColumns = table.getVisibleLeafColumns();
 
@@ -95,7 +92,7 @@ export function DataViewList<TData, TValue = unknown>({
   // Render order from `columns`. TanStack-managed accessors (those declared in
   // root `fields`) gate on the current visibility map. Accessors with no
   // matching field are "unmanaged" display columns (selection, row actions,
-  // drag handles, …) — render unconditionally.
+  // drag handles, …), so render unconditionally.
   const allLeafIds = useMemo(
     () => new Set(table.getAllLeafColumns().map(c => c.id)),
     [table, visibleLeafColumns]
@@ -130,7 +127,16 @@ export function DataViewList<TData, TValue = unknown>({
   // Measure the column-header row so sticky group elements sit directly under it.
   const [headerMeasureRef, headerHeight] = useElementHeight();
 
-  // Group offsets — needed for sticky group anchor under virtualization.
+  // Rows are sized by tokens, so the estimates the virtualizer and the sticky
+  // group anchor run on follow the theme zoom. An explicit prop is left alone.
+  const scaling = useScaling(scrollRef);
+  const groupHeaderHeight = GROUP_HEADER_HEIGHT * scaling;
+  const effectiveRowHeight =
+    estimatedRowHeight ??
+    (isTableVariant ? DEFAULT_TABLE_ROW_HEIGHT : DEFAULT_LIST_ROW_HEIGHT) *
+      scaling;
+
+  // Group offsets, needed for the sticky group anchor under virtualization.
   const group_by = tableQuery?.group_by?.[0];
   const isGrouped = Boolean(group_by) && group_by !== defaultGroupOption.id;
 
@@ -150,10 +156,10 @@ export function DataViewList<TData, TValue = unknown>({
           data: row.original as GroupedData<TData>
         });
       }
-      offset += isGroupHeader ? GROUP_HEADER_HEIGHT : effectiveRowHeight;
+      offset += isGroupHeader ? groupHeaderHeight : effectiveRowHeight;
     });
     return list;
-  }, [rows, effectiveRowHeight]);
+  }, [rows, effectiveRowHeight, groupHeaderHeight]);
 
   const { totalSize, items, measureRef } = useVirtualRows({
     enabled: virtualized,
@@ -162,7 +168,7 @@ export function DataViewList<TData, TValue = unknown>({
     estimatedRowHeight: effectiveRowHeight,
     estimateSize: row => {
       const isGroupHeader = row?.subRows && row.subRows.length > 0;
-      return isGroupHeader ? GROUP_HEADER_HEIGHT : effectiveRowHeight;
+      return isGroupHeader ? groupHeaderHeight : effectiveRowHeight;
     }
   });
 
@@ -210,7 +216,7 @@ export function DataViewList<TData, TValue = unknown>({
   );
 
   if (!isActive) return null;
-  // Render nothing when there's truly no data and no loading — sibling
+  // Render nothing when there's truly no data and no loading. The sibling
   // `<DataView.EmptyState>` / `<DataView.ZeroState>` handle messaging.
   if (!hasData) return null;
 
@@ -221,10 +227,12 @@ export function DataViewList<TData, TValue = unknown>({
         ref={headerMeasureRef}
         role={ariaRole === 'table' ? 'rowgroup' : undefined}
         className={cx(styles.listHeader, classNames.header)}
+        data-slot='data-view-list-header'
       >
         <div
           role={ariaRole === 'table' ? 'row' : undefined}
           className={styles.listHeaderRow}
+          data-slot='data-view-list-header-row'
         >
           {renderedAccessors.map(accessor => {
             const spec = columnMap.get(accessor);
@@ -237,7 +245,7 @@ export function DataViewList<TData, TValue = unknown>({
                   : header.column.columnDef.header;
               content = flexRender(source, header.getContext());
             } else if (spec?.header !== undefined) {
-              // Unmanaged column (e.g. selection): no TanStack header — render
+              // Unmanaged column (e.g. selection): no TanStack header, so render
               // the spec's header with a minimal context.
               content =
                 typeof spec.header === 'function'
@@ -258,6 +266,8 @@ export function DataViewList<TData, TValue = unknown>({
                   classNames.headerCell
                 )}
                 style={spec?.styles?.header}
+                data-slot='data-view-list-header-cell'
+                data-column={accessor}
               >
                 {content}
               </div>
@@ -278,7 +288,7 @@ export function DataViewList<TData, TValue = unknown>({
           ? flexRender(spec.cell, cell.getContext())
           : ((cell.getValue() as React.ReactNode) ?? null);
       } else if (spec?.cell !== undefined) {
-        // Unmanaged column (e.g. selection): no TanStack cell — render the
+        // Unmanaged column (e.g. selection): no TanStack cell, so render the
         // spec's cell with a synthetic context covering the common reads.
         content =
           typeof spec.cell === 'function'
@@ -300,6 +310,8 @@ export function DataViewList<TData, TValue = unknown>({
             classNames.cell
           )}
           style={spec?.styles?.cell}
+          data-slot='data-view-list-cell'
+          data-column={accessor}
         >
           {content}
         </div>
@@ -339,6 +351,7 @@ export function DataViewList<TData, TValue = unknown>({
         )}
         style={composedStyle}
         aria-hidden={hidden || undefined}
+        data-slot='data-view-list-group-header'
       >
         {data?.label}
         {data?.showGroupCount ? (
@@ -384,6 +397,7 @@ export function DataViewList<TData, TValue = unknown>({
         )}
         style={composedStyle}
         onClick={handleRowActivate}
+        data-slot='data-view-list-row'
       >
         {renderRowCells(row)}
       </div>
@@ -400,6 +414,7 @@ export function DataViewList<TData, TValue = unknown>({
         className={cx(styles.listLoaderRow, dividers && styles.listRowDivider)}
         aria-busy='true'
         style={{ minHeight: effectiveRowHeight }}
+        data-slot='data-view-list-loader-row'
       >
         {renderedAccessors.map(accessor => {
           const spec = columnMap.get(accessor);
@@ -413,6 +428,8 @@ export function DataViewList<TData, TValue = unknown>({
                 classNames.cell
               )}
               style={spec?.styles?.cell}
+              data-slot='data-view-list-cell'
+              data-column={accessor}
             >
               <Skeleton containerClassName={styles.skeletonFill} />
             </div>
@@ -427,12 +444,14 @@ export function DataViewList<TData, TValue = unknown>({
       role={ariaRole === 'table' ? 'rowgroup' : undefined}
       className={styles.listBodyVirtual}
       style={{ height: totalSize }}
+      data-slot='data-view-list-body'
     >
       {stickyGroup && stickyGroupHeader ? (
         <div
           aria-hidden='true'
           className={cx(styles.listGroupAnchor, classNames.groupHeader)}
           style={{ top: headerHeight }}
+          data-slot='data-view-list-group-header'
         >
           {stickyGroup.label}
           {stickyGroup.showGroupCount ? (
@@ -474,6 +493,7 @@ export function DataViewList<TData, TValue = unknown>({
     <div
       role={ariaRole === 'table' ? 'rowgroup' : undefined}
       className={styles.listBody}
+      data-slot='data-view-list-body'
     >
       {rows.map(row => {
         const isGroupHeader = row.subRows && row.subRows.length > 0;
@@ -490,20 +510,23 @@ export function DataViewList<TData, TValue = unknown>({
       ref={scrollRef}
       className={cx(styles.listRoot, classNames.root)}
       onScroll={handleScroll}
+      data-slot='data-view-list'
     >
       <div
         role={ariaRole}
         className={styles.listGrid}
         style={{ gridTemplateColumns }}
+        data-slot='data-view-list-grid'
       >
         {renderHeaderRow()}
         {virtualized ? renderVirtualBody() : renderFlatBody()}
         {renderLoaderRows()}
-        {/* Sentinel — triggers onLoadMore via IntersectionObserver in server mode. */}
+        {/* Sentinel: fires onLoadMore via IntersectionObserver in server mode. */}
         <div
           ref={sentinelRef}
           className={styles.listSentinel}
           aria-hidden='true'
+          data-slot='data-view-list-sentinel'
         />
       </div>
       <FilterSummary />

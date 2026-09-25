@@ -1,76 +1,22 @@
 'use client';
 
-import { ThemeProvider as ApsaraThemeProvider } from '@raystack/apsara';
-import { useTheme as useNextTheme } from 'next-themes';
-import {
-  createContext,
-  ReactNode,
-  useCallback,
-  useContext,
-  useState
-} from 'react';
+import { Theme } from '@raystack/apsara';
+import type { ReactNode } from 'react';
+import styles from './theme.module.css';
 
-type Theme = 'light' | 'dark';
-
-export interface ThemeOptions {
-  /** Style variant of the theme, either 'modern' or 'traditional' */
-  style?: 'modern' | 'traditional';
-  /** Accent color for the theme */
-  accentColor?: 'indigo' | 'orange' | 'mint';
-  /** Gray color variant for the theme */
-  grayColor?: 'gray' | 'mauve' | 'slate';
-  /** Theme value for light or dark  */
-  theme?: Theme;
-}
-
-interface ThemeContextType extends ThemeOptions {
-  setTheme: (options: ThemeOptions) => void;
-}
-
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
-
-interface ThemeProviderProps {
-  children: ReactNode;
-}
-
-export function ThemeProvider({ children }: ThemeProviderProps) {
-  const { resolvedTheme, setTheme } = useNextTheme();
-  const theme = (resolvedTheme ?? 'light') as Theme;
-
-  const [options, setOptions] = useState<ThemeOptions>({
-    style: 'modern',
-    accentColor: 'indigo',
-    grayColor: 'gray'
-  });
-
-  const updateOptions = useCallback((options: ThemeOptions) => {
-    if ('theme' in options && options.theme) setTheme(options.theme);
-    setOptions(_options => ({ ..._options, ...options }));
-  }, []);
-
-  const key = `${options?.accentColor}-${options?.grayColor}-${options?.style}`;
+/**
+ * The docs' root theme, the same component the demos mount, so a nested `Theme`
+ * inherits appearance rather than resolving `system` on its own. Its inline
+ * script replaces `next-themes` for pre-hydration appearance.
+ */
+export function DocsTheme({ children }: { children: ReactNode }) {
   return (
-    <ThemeContext.Provider
-      value={{ ...options, theme, setTheme: updateOptions }}
+    <Theme
+      persistKey='apsara-docs-theme'
+      persist={['appearance']}
+      className={styles.root}
     >
-      <ApsaraThemeProvider
-        key={key}
-        disableTransitionOnChange
-        forcedTheme={theme}
-        accentColor={options.accentColor}
-        grayColor={options.grayColor}
-        style={options.style}
-      >
-        {children}
-      </ApsaraThemeProvider>
-    </ThemeContext.Provider>
+      {children}
+    </Theme>
   );
-}
-
-export function useTheme() {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
 }

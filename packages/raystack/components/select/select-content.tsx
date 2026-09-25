@@ -5,6 +5,8 @@ import {
   Select as SelectPrimitive
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import { type Radius, radiusStyle } from '../../shared/radius';
+import { useThemeInjection } from '../theme/portal';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';
 
@@ -15,6 +17,8 @@ export interface SelectContentProps
     >,
     SelectPrimitive.Popup.Props {
   searchPlaceholder?: string;
+  /** Corner radius for this popup only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 export function SelectContent({
@@ -24,30 +28,44 @@ export function SelectContent({
   sideOffset = 4,
   side = 'bottom',
   align = 'start',
+  radius,
   ...props
 }: SelectContentProps) {
   const { autocomplete, multiple } = useSelectContext();
+  const theme = useThemeInjection();
 
   if (autocomplete) {
     return (
-      <ComboboxPrimitive.Portal keepMounted>
+      <ComboboxPrimitive.Portal keepMounted {...theme}>
         <ComboboxPrimitive.Positioner
           sideOffset={sideOffset}
           side={side}
           align={align}
           className={styles.positioner}
+          data-slot='select-positioner'
         >
           <ComboboxPrimitive.Popup
-            className={cx(styles.content, className)}
+            {...theme}
+            className={cx(
+              styles.content,
+              theme?.className,
+              radiusStyle({ radius }),
+              className
+            )}
             data-multiselectable={multiple ? true : undefined}
+            data-slot='select-content'
             {...props}
           >
             <ComboboxPrimitive.Input
               placeholder={searchPlaceholder}
               className={styles.comboboxInput}
               size={12}
+              data-slot='select-search'
             />
-            <ComboboxPrimitive.List className={styles.comboboxContent}>
+            <ComboboxPrimitive.List
+              className={styles.comboboxContent}
+              data-slot='select-list'
+            >
               {children}
             </ComboboxPrimitive.List>
           </ComboboxPrimitive.Popup>
@@ -63,13 +81,24 @@ export function SelectContent({
       align={align}
       className={styles.positioner}
       alignItemWithTrigger={false}
+      data-slot='select-positioner'
     >
       <SelectPrimitive.Popup
-        className={cx(styles.content, className)}
+        {...theme}
+        className={cx(
+          styles.content,
+          theme?.className,
+          radiusStyle({ radius }),
+          className
+        )}
         data-multiselectable={multiple ? true : undefined}
+        data-slot='select-content'
         {...props}
       >
-        <SelectPrimitive.List className={styles.viewport}>
+        <SelectPrimitive.List
+          className={styles.viewport}
+          data-slot='select-list'
+        >
           {children}
         </SelectPrimitive.List>
       </SelectPrimitive.Popup>

@@ -2,6 +2,8 @@
 
 import { Popover as PopoverPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import { type Radius, radiusStyle } from '../../shared/radius';
+import { useThemeInjection } from '../theme/portal';
 import styles from './popover.module.css';
 
 export interface PopoverContentProps
@@ -9,7 +11,10 @@ export interface PopoverContentProps
       PopoverPrimitive.Positioner.Props,
       'render' | 'className' | 'style' | 'ref'
     >,
-    PopoverPrimitive.Popup.Props {}
+    PopoverPrimitive.Popup.Props {
+  /** Corner radius for this popup only. Overrides the theme's `radius`. */
+  radius?: Radius;
+}
 
 function PopoverContent({
   ref,
@@ -19,23 +24,33 @@ function PopoverContent({
   style,
   render,
   children,
+  radius,
   ...positionerProps
 }: PopoverContentProps) {
+  const theme = useThemeInjection();
   return (
-    <PopoverPrimitive.Portal>
+    <PopoverPrimitive.Portal {...theme}>
       <PopoverPrimitive.Positioner
         sideOffset={4}
         collisionPadding={3}
         className={styles.popoverPositioner}
+        data-slot='popover-positioner'
         {...positionerProps}
       >
         <PopoverPrimitive.Popup
           ref={ref}
-          className={cx(styles.popover, className)}
+          {...theme}
+          className={cx(
+            styles.popover,
+            theme?.className,
+            radiusStyle({ radius }),
+            className
+          )}
           render={render}
           initialFocus={initialFocus}
           finalFocus={finalFocus}
           style={style}
+          data-slot='popover-content'
         >
           {children}
         </PopoverPrimitive.Popup>

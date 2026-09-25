@@ -9,7 +9,7 @@ import {
   useEffect,
   useRef
 } from 'react';
-import { ReactComponent as CoPilotIcon } from '../../icons/assets/co-pilot.svg';
+import { CoPilotIcon } from '~/icons';
 import styles from './chat-panel.module.css';
 import { useChatPanelContext } from './chat-panel-context';
 
@@ -87,6 +87,7 @@ export function ChatPanelTrigger({
         else if (ref) ref.current = node;
       }}
       className={cx(styles.trigger, className)}
+      data-slot='chat-panel-trigger'
       data-chat-panel-trigger=''
       data-draggable={dragEnabled || undefined}
       data-dragging={isDragging || undefined}

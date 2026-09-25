@@ -26,7 +26,12 @@ export function DataViewEmptyState({
   if (!isEmptyState) return null;
   if (forView && activeView !== forView) return null;
   return (
-    <div className={cx(styles.dataStateContainer, className)}>{children}</div>
+    <div
+      className={cx(styles.dataStateContainer, className)}
+      data-slot='data-view-empty-state'
+    >
+      {children}
+    </div>
   );
 }
 

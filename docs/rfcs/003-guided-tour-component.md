@@ -1,7 +1,7 @@
 ---
 ID: RFC 003
 Created: June 19, 2026
-Status: Draft
+Status: Completed
 RFC PR: https://github.com/raystack/apsara/pull/839
 ---
 
@@ -284,5 +284,4 @@ The `tour:end` status says how it closed: `next()` past the last step is `finish
 - [Base UI, Popover](https://base-ui.com/react/components/popover). The primitive the tour is built on.
 - [driver.js](https://driverjs.com/) and [Shepherd](https://shepherdjs.dev/). External tour libraries weighed under Choosing an Approach.
 - [WAI-ARIA Authoring Practices, Dialog (Modal) Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/). Informs focus and labeling for the card.
-- Internal: `packages/raystack/components/tour/ANALYSIS.md`, the prototype analysis backing this RFC.
 - Internal: `apps/www/src/app/examples/tour/page.tsx`, the prototype example.

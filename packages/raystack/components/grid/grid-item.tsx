@@ -41,11 +41,13 @@ export function GridItem({
     ...style
   };
 
+  const gridItemProps = { 'data-slot': 'grid-item', style: gridItemStyle };
+
   const element = useRender({
     defaultTagName: 'div',
     ref,
     render,
-    props: mergeProps<'div'>({ style: gridItemStyle }, props)
+    props: mergeProps<'div'>(gridItemProps, props)
   });
 
   return element;

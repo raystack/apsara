@@ -21,10 +21,19 @@ export function Cell({
 }: CellProps) {
   return (
     <div {...props} className={cx(styles.cell, className)}>
-      {leadingIcon && <span className={styles.leadingIcon}>{leadingIcon}</span>}
+      {leadingIcon && (
+        <span data-slot='menu-cell-leading-icon' className={styles.leadingIcon}>
+          {leadingIcon}
+        </span>
+      )}
       {children}
       {trailingIcon && (
-        <span className={styles.trailingIcon}>{trailingIcon}</span>
+        <span
+          data-slot='menu-cell-trailing-icon'
+          className={styles.trailingIcon}
+        >
+          {trailingIcon}
+        </span>
       )}
     </div>
   );

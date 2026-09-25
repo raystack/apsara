@@ -13,7 +13,7 @@ export interface LabelProps {
 
   /**
    * Text rendered next to the label when `required={true}`. No indicator is
-   * rendered if this is omitted — preserving apsara's existing behaviour of
+   * rendered if this is omitted — preserving apsara's existing behavior of
    * not surfacing a required marker by default. Pass any non-empty string
    * (e.g. `"(required)"`, `"*"`) to opt in.
    */

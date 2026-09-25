@@ -2,6 +2,8 @@
 
 import { PreviewCard as PreviewCardPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import { type Radius, radiusStyle } from '../../shared/radius';
+import { useThemeInjection } from '../theme/portal';
 import styles from './preview-card.module.css';
 
 export interface PreviewCardContentProps
@@ -15,6 +17,8 @@ export interface PreviewCardContentProps
    * @default false
    */
   showArrow?: boolean;
+  /** Corner radius for this card only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 function PreviewCardContent({
@@ -24,25 +28,38 @@ function PreviewCardContent({
   showArrow = false,
   style,
   render,
+  radius,
   ...positionerProps
 }: PreviewCardContentProps) {
+  const theme = useThemeInjection();
   return (
-    <PreviewCardPrimitive.Portal>
+    <PreviewCardPrimitive.Portal {...theme}>
       <PreviewCardPrimitive.Positioner
         sideOffset={showArrow ? 10 : 4}
         collisionPadding={3}
         className={styles.positioner}
+        data-slot='preview-card-positioner'
         {...positionerProps}
       >
         <PreviewCardPrimitive.Popup
           ref={ref}
-          className={cx(styles.popup, className)}
+          {...theme}
+          className={cx(
+            styles.popup,
+            theme?.className,
+            radiusStyle({ radius }),
+            className
+          )}
           style={style}
           render={render}
+          data-slot='preview-card-content'
         >
           {children}
           {showArrow && (
-            <PreviewCardPrimitive.Arrow className={styles.arrow}>
+            <PreviewCardPrimitive.Arrow
+              className={styles.arrow}
+              data-slot='preview-card-arrow'
+            >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 width='6'
@@ -71,6 +88,7 @@ function PreviewCardViewport({
   return (
     <PreviewCardPrimitive.Viewport
       className={cx(styles.viewport, className)}
+      data-slot='preview-card-viewport'
       {...props}
     />
   );

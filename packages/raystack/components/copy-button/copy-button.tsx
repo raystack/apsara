@@ -1,8 +1,8 @@
 'use client';
 
-import { CheckIcon, CopyIcon } from '@radix-ui/react-icons';
 import { useEffect, useRef, useState } from 'react';
 import { useCopyToClipboard } from '~/hooks/useCopyToClipboard';
+import { CheckIcon, CopyIcon } from '~/icons';
 import { IconButton, IconButtonProps } from '../icon-button/icon-button';
 import styles from './copy-button.module.css';
 
@@ -45,19 +45,33 @@ export function CopyButton({
     <>
       <IconButton
         aria-label='Copy'
+        data-slot='copy-button'
         {...props}
         onClick={onCopy}
         data-test-id='copy-button'
       >
-        <span className={styles.iconSwap} data-copied={copied || undefined}>
-          <CopyIcon className={styles.copyIcon} />
+        <span
+          className={styles.iconSwap}
+          data-copied={copied || undefined}
+          data-slot='copy-button-icons'
+        >
+          <CopyIcon
+            className={styles.copyIcon}
+            data-slot='copy-button-copy-icon'
+          />
           <CheckIcon
             className={styles.checkIcon}
             color='var(--rs-color-foreground-success-primary)'
+            data-slot='copy-button-check-icon'
           />
         </span>
       </IconButton>
-      <span className={styles['sr-only']} role='status' aria-live='polite'>
+      <span
+        className={styles['sr-only']}
+        role='status'
+        aria-live='polite'
+        data-slot='copy-button-status'
+      >
         {copied ? 'Copied' : ''}
       </span>
     </>

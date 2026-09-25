@@ -18,17 +18,13 @@ import { Indicator } from "@raystack/apsara";
 <Indicator />
 ```
 
-## API Reference
+## Usage
 
-Renders a small status dot or label.
-
-<auto-type-table path="./props.ts" name="IndicatorProps" />
-
-## Examples
+A dot that sits on top of something else. `variant` carries its meaning, and a label covers the cases where the dot alone is not enough.
 
 ### Variant
 
-The Indicator component supports different variants to convey different states or meanings:
+Five variants that carry meaning: `accent`, `success`, `warning`, `danger`, and `neutral`. Pass `label` to show a count instead of a plain dot.
 
 <Demo data={variantDemo} />
 
@@ -37,6 +33,23 @@ The Indicator component supports different variants to convey different states o
 When no label is provided, the Indicator will show as a dot
 
 <Demo data={labelDemo} />
+
+## API Reference
+
+Renders a small status dot or label.
+
+<auto-type-table path="./props.ts" name="IndicatorProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `indicator` | The root wrapper element |
+| `indicator-badge` | The `role="status"` indicator itself |
+| `indicator-label` | The label text (when `label` is set) |
+| `indicator-dot` | The dot (when no `label` is set) |
 
 ## Accessibility
 

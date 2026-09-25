@@ -1,6 +1,7 @@
 import type {
   ColumnDef,
   Row,
+  RowSelectionState,
   Table,
   Updater,
   VisibilityState
@@ -93,6 +94,17 @@ export interface DataViewField<TData = any> {
   showGroupCount?: boolean;
   groupCountMap?: Record<string, number>;
   groupLabelsMap?: Record<string, string>;
+  /**
+   * Section order when this field is the active `group_by`, keyed by raw group
+   * value (the same keys `groupLabelsMap` uses), for example
+   * `['High', 'Medium', 'Low']` for a priority field, which text sorting alone
+   * can't produce.
+   *
+   * Values absent from the list follow in first-seen data order, and rows with
+   * no value always land in the last section. A listed value with no rows
+   * produces no section. Honoured by every renderer that groups.
+   */
+  groupOrder?: string[];
 }
 
 /**
@@ -108,6 +120,12 @@ export interface DataViewListColumn<TData, TValue = unknown> {
   header?: ColumnDef<TData, TValue>['header'];
   /** CSS grid track width. `1fr`, `auto`, `'200px'`, `'minmax(80px, 1fr)'`, or a number (pixels). Defaults to `1fr`. */
   width?: string | number;
+  /**
+   * @deprecated Every cell and header cell carries `data-column={accessorKey}`
+   * alongside its `data-slot`. Target this column with
+   * `[data-slot="data-view-list-cell"][data-column="..."]` (and the
+   * `-header-cell` variant) instead.
+   */
   classNames?: { cell?: string; header?: string };
   styles?: { cell?: React.CSSProperties; header?: React.CSSProperties };
 }
@@ -145,6 +163,14 @@ export interface DataViewProps<TData> {
   onLoadMore?: () => Promise<void> | void;
   onRowClick?: (row: TData) => void;
   onColumnVisibilityChange?: (columnVisibility: VisibilityState) => void;
+  /**
+   * Fires with the new selection map whenever rows are selected or deselected
+   * (`row.toggleSelected()`, `table.toggleAllRowsSelected()`, …). Selection
+   * itself lives on the table instance, so read it through
+   * `useDataView().table`; this is only for mirroring it outside the tree.
+   * Keys are `getRowId` values (row indices when `getRowId` is omitted).
+   */
+  onRowSelectionChange?: (rowSelection: RowSelectionState) => void;
   /** Stable unique id per row (React key). */
   getRowId?: (row: TData, index: number) => string;
   /** Multi-view configuration. When set, `DataView.DisplayControls` renders a view switcher and renderers gate themselves on the active view via their `name` prop. */
@@ -163,12 +189,19 @@ export interface DataViewProps<TData> {
   groupByResolvers?: Record<string, GroupByResolver<TData>>;
 }
 
+/** @deprecated Every key here has an equivalent `[data-slot]` selector. See the List slot table in the DataView docs. Prefer styling by `data-slot` over threading class names through props. */
 export type DataViewListClassNames = {
+  /** @deprecated Use `[data-slot="data-view-list"]` instead. */
   root?: string;
+  /** @deprecated Use `[data-slot="data-view-list-header"]` instead. */
   header?: string;
+  /** @deprecated Use `[data-slot="data-view-list-header-cell"]` instead. */
   headerCell?: string;
+  /** @deprecated Use `[data-slot="data-view-list-row"]` instead. */
   row?: string;
+  /** @deprecated Use `[data-slot="data-view-list-cell"]` instead. */
   cell?: string;
+  /** @deprecated Use `[data-slot="data-view-list-group-header"]` instead. */
   groupHeader?: string;
 };
 
@@ -200,6 +233,7 @@ export interface DataViewListProps<TData, TValue = unknown> {
   showGroupHeaders?: boolean;
   /** When true, group headers stick under the table header while scrolling. Default false. */
   stickyGroupHeader?: boolean;
+  /** @deprecated Style rendered parts by `[data-slot]` instead. See `DataViewListClassNames`. */
   classNames?: DataViewListClassNames;
 }
 
@@ -227,12 +261,12 @@ export interface TimelineCardContext {
   width: number;
   /**
    * True when the span is narrower than `minCardWidth`. Always false for
-   * point cards (no `endField`) — they size to their content instead.
+   * point cards (no `endField`), which size to their content instead.
    */
   collapsed: boolean;
   /**
    * Lane (row) index assigned by packing. Relative to the card's own group
-   * section when `group_by` is active — every section's first lane is 0.
+   * section when `group_by` is active, so every section's first lane is 0.
    */
   laneIndex: number;
   start: Date;
@@ -244,7 +278,7 @@ export interface TimelineCardContext {
  * Imperative navigation surface exposed through `actionsRef` on
  * `DataView.Timeline` (same pattern as Tour's `actionsRef`). Available for the
  * lifetime of the component; methods no-op (with a dev warning) while the
- * renderer is hidden — inactive view or no data.
+ * renderer is hidden, whether by an inactive view or no data.
  */
 export interface TimelineActions {
   /**
@@ -259,7 +293,7 @@ export interface TimelineActions {
     target: TimelineDateInput | 'today' | 'start' | 'end',
     options?: {
       align?: 'start' | 'center' | 'end';
-      /** Default `'smooth'` — a navigation action should visibly travel. */
+      /** Default `'smooth'`, since a navigation action should visibly travel. */
       behavior?: 'auto' | 'smooth';
     }
   ) => void;
@@ -267,17 +301,30 @@ export interface TimelineActions {
   getVisibleRange: () => [Date, Date] | null;
 }
 
+/** @deprecated Every key here has an equivalent `[data-slot]` selector. See the Timeline slot table in the DataView docs. Prefer styling by `data-slot` over threading class names through props. */
 export type DataViewTimelineClassNames = {
+  /** @deprecated Use `[data-slot="data-view-timeline"]` instead. */
   root?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-axis"]` instead. */
   axis?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-axis-band"]` instead. */
   band?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-axis-tick"]` instead. */
   tick?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-marker"]` instead. */
   marker?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-gridline"]` instead. */
   gridline?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-cursor"]` instead. */
   cursor?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-canvas"]` instead. */
   canvas?: string;
+  /** @deprecated Use `[data-slot="data-view-timeline-card"]` instead. */
   card?: string;
-  /** Group section header band (same name/role as `DataViewListClassNames.groupHeader`). */
+  /**
+   * Group section header band (same name/role as `DataViewListClassNames.groupHeader`).
+   * @deprecated Use `[data-slot="data-view-timeline-group-header"]` instead.
+   */
   groupHeader?: string;
 };
 
@@ -301,11 +348,11 @@ export interface DataViewTimelineProps<TData> {
   /**
    * Renders the card interior. The Timeline owns positioning (x from start,
    * width from span, lane from packing, scroll); the consumer owns the card
-   * visual entirely — chrome, states, truncation, and the collapsed variant.
+   * visual entirely: chrome, states, truncation, and the collapsed variant.
    * Compose `<DataView.DisplayAccess>` inside for Display Properties support.
    *
    * Keep the reference stable (define outside the component or wrap in
-   * `useCallback`) — cards are memoized against it, and an inline function
+   * `useCallback`), because cards are memoized against it and an inline function
    * defeats the memo so every visible card re-renders on each scroll frame.
    * The same applies to `onRowClick` on the `DataView` root.
    */
@@ -316,7 +363,7 @@ export interface DataViewTimelineProps<TData> {
 
   /** Tick granularity of the time axis. Default 'day'. */
   scale?: TimelineScale;
-  /** Pixel width of one `scale` unit — density/zoom override. */
+  /** Pixel width of one `scale` unit, as a density or zoom override. */
   unitWidth?: number;
   /**
    * Explicit time domain. Defaults to the data extent (plus today when shown)
@@ -339,7 +386,7 @@ export interface DataViewTimelineProps<TData> {
   tickInterval?: number;
   /**
    * Draw a gridline every Nth `scale` unit, counted from the domain start.
-   * Independent of `tickInterval` and purely visual — cards, the today line,
+   * Independent of `tickInterval` and purely visual: cards, the today line,
    * and the hover cursor still land on every unit. Default 1.
    */
   gridlineInterval?: number;
@@ -352,7 +399,7 @@ export interface DataViewTimelineProps<TData> {
   defaultScrollTo?: TimelineDateInput | 'today' | 'start' | 'end';
   /**
    * After a filter or search change, scroll the earliest matching card into
-   * view when no match intersects the current viewport — otherwise a filter
+   * view when no match intersects the current viewport. Otherwise a filter
    * whose results are off-screen leaves the user parked on empty canvas. A
    * query change that keeps at least one card on screen doesn't move the
    * view. Default true.
@@ -366,15 +413,31 @@ export interface DataViewTimelineProps<TData> {
   /**
    * 'auto' (default) packs non-overlapping cards into shared lanes (greedy
    * interval scheduling); 'one-per-row' gives every row its own lane, in
-   * row-model (sorted) order. Both apply per group section when `group_by` is
-   * active — cards never share a lane across sections.
+   * row-model (sorted) order; 'one-per-sort-value' gives every distinct value of
+   * the **sorted-by** field its own lane, packing that value's cards by date
+   * within it. All apply per group section when `group_by` is active, so cards
+   * never share a lane across sections.
+   *
+   * Under 'one-per-sort-value' the active sort does double duty: it picks the field
+   * lanes are built from (sort by `priority` → a High lane, a Medium lane, a
+   * Low lane) and it orders them, so the Ordering control repositions lanes
+   * live. Lane order is the sort's order, so rank values that don't sort
+   * naturally (High/Medium/Low) with a numeric field and sort on that. Rows
+   * whose value is null, empty, or a non-primitive share one lane, placed last.
    */
-  lanePacking?: 'auto' | 'one-per-row';
+  lanePacking?: 'auto' | 'one-per-row' | 'one-per-sort-value';
   /**
-   * Estimated card height in px, same contract as `DataView.List`: cards
-   * render at their natural content height and are measured after paint; the
-   * estimate only seeds lane layout until real heights arrive. Each lane
-   * sizes to its tallest card. Default 66.
+   * Lane height in px. Default 66.
+   *
+   * Unvirtualized this is an estimate, same contract as `DataView.List`: cards
+   * render at their natural content height and are measured after paint, the
+   * estimate only seeding lane layout until real heights arrive, and each lane
+   * sizing to its tallest card.
+   *
+   * With `virtualized` it is exact. A culled card never mounts and so never
+   * measures, so measured lanes would resize under the user as they scroll,
+   * lanes take this value instead, and a card taller than it overflows its
+   * lane rather than growing it. Set it to your card's height.
    */
   estimatedRowHeight?: number;
   /** Vertical gap between lanes in px. Default 16. */
@@ -384,20 +447,27 @@ export interface DataViewTimelineProps<TData> {
   /**
    * Assumed width (px) of point-marker cards (rows without `endField`) for
    * lane packing. Point cards size to their content, so the packer can't know
-   * their width — set this to roughly the widest point card to prevent
+   * their width, so set this to roughly the widest point card to prevent
    * horizontal overlap within a lane. Default 120.
    */
   estimatedPointWidth?: number;
 
-  /** When true, only cards/gridlines near the visible viewport are rendered (horizontal culling). */
+  /**
+   * Render only the cards and gridlines near the visible viewport, culling on
+   * both axes, so a frame costs what's on screen rather than what's in the data.
+   * Recommended whenever the domain is long or rows are numerous.
+   *
+   * Lane heights become fixed to `estimatedRowHeight`; see the note there.
+   */
   virtualized?: boolean;
 
   /**
    * Render the group header band above each section when `group_by` is active.
    * Same contract as `DataViewListProps.showGroupHeaders`: false hides the
-   * bands only — rows stay grouped into their sections. Default true.
+   * bands only, and rows stay grouped into their sections. Default true.
    */
   showGroupHeaders?: boolean;
+  /** @deprecated Style rendered parts by `[data-slot]` instead. See `DataViewTimelineClassNames`. */
   classNames?: DataViewTimelineClassNames;
 }
 
@@ -428,6 +498,11 @@ export type DataViewContextType<TData> = {
   columnVisibility: VisibilityState;
   setColumnVisibility: (value: Updater<VisibilityState>) => void;
 
+  // selection, lifted so a selection change invalidates this context value
+  // (the table instance identity is stable, so it can't do that on its own).
+  rowSelection: RowSelectionState;
+  setRowSelection: (value: Updater<RowSelectionState>) => void;
+
   // multi-view
   views?: ViewSpec[];
   activeView?: string;
@@ -438,7 +513,7 @@ export type DataViewContextType<TData> = {
     fields: DataViewField<TData>[]
   ) => () => void;
 
-  // global derived state — shared across all renderers and sibling components
+  // global derived state, shared across all renderers and sibling components
   hasData: boolean;
   hasActiveQuery: boolean;
   isZeroState: boolean;

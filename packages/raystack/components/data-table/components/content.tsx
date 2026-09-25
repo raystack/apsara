@@ -1,10 +1,10 @@
 'use client';
 
-import { Cross2Icon, TableIcon } from '@radix-ui/react-icons';
 import type { HeaderGroup, Row } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
 import { cx } from 'class-variance-authority';
 import { useCallback, useEffect, useRef } from 'react';
+import { TableIcon, XIcon } from '~/icons';
 
 import { Badge } from '../../badge';
 import { Button } from '../../button';
@@ -338,7 +338,7 @@ export function Content({
             variant='text'
             color='neutral'
             size='small'
-            trailingIcon={<Cross2Icon />}
+            trailingIcon={<XIcon />}
             onClick={handleClearFilters}
           >
             Clear Filters

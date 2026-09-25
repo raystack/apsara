@@ -100,7 +100,11 @@ export const CodeBlockRoot = ({
         toggleCollapsed
       }}
     >
-      <div className={cx(styles.container, className)} {...props}>
+      <div
+        className={cx(styles.container, className)}
+        data-slot='code-block'
+        {...props}
+      >
         {children}
       </div>
     </CodeBlockContext>

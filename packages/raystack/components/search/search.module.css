@@ -3,7 +3,7 @@
   flex-direction: column;
   width: 100%;
 }
-.container input {
+.container [data-slot="search-input"] {
   padding: 0 var(--rs-space-3);
 }
 

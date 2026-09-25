@@ -37,6 +37,7 @@ export const Operation = ({
       <Text
         variant='secondary'
         className={cx(styles.selectValue, styles.operationValue)}
+        data-slot='filter-chip-operation'
       >
         {operations[0].label}
       </Text>
@@ -57,10 +58,12 @@ export const Operation = ({
             display: 'none'
           }
         }}
+        data-slot='filter-chip-operation'
       >
         <Select.Value
           placeholder='Select operation'
           className={styles.operationText}
+          data-slot='filter-chip-operation-text'
         />
       </Select.Trigger>
       <Select.Content data-variant='filter'>

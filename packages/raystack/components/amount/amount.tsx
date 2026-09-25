@@ -6,8 +6,8 @@ export interface AmountProps extends ComponentProps<'span'> {
   /**
    * The monetary value to display.
    * For exact precision beyond 2^53, pass either:
-   *   - a `string` — supports decimals (e.g. "1299" or "12.99")
-   *   - a `bigint` — integer-only; treated as already in major units, so
+   *   - a `string`, which supports decimals (e.g. "1299" or "12.99")
+   *   - a `bigint`, integer-only and treated as already in major units, so
    *     `valueInMinorUnits` is ignored when value is a bigint
    * @default 0
    * @example
@@ -269,7 +269,7 @@ export const Amount = ({
         const unsigned = isNegative ? value.slice(1) : value;
         const [intPart, fracPart = ''] = unsigned.split('.');
         // Shift the existing decimal point left by `decimals` without
-        // round-tripping through Number — preserves precision for large strings
+        // round-tripping through Number, which preserves precision for large strings
         // and handles decimal strings like "12.99" (=> "0.1299" for USD).
         const allDigits = intPart + fracPart;
         const fracLen = fracPart.length + decimals;
@@ -294,7 +294,7 @@ export const Amount = ({
           : Math.trunc(baseValue);
 
     /**
-     * Always format in currency mode — Intl's currency-style handles fraction digits per the currency,
+     * Always format in currency mode, since Intl's currency-style handles fraction digits per the currency,
      * locale-correct grouping/separators,
      * and auto-clamps when only one of min/max is user-provided.
      * For hideCurrency, we then strip the currency token from the output via formatToParts(),
@@ -330,19 +330,27 @@ export const Amount = ({
           .join('')
           .trim()
       : formatter.format(
-          // @ts-expect-error TS lib types omit `string` from format() params, but Intl.NumberFormat accepts numeric strings at runtime — needed for large values that would lose precision as `number`.
+          // @ts-expect-error TS lib types omit `string` from format() params, but Intl.NumberFormat accepts numeric strings at runtime, which is needed for large values that would lose precision as `number`.
           finalBaseValue
         );
 
     return (
-      <span {...props} className={cx(tabularNums && styles.tabular, className)}>
+      <span
+        data-slot='amount'
+        {...props}
+        className={cx(tabularNums && styles.tabular, className)}
+      >
         {formattedValue}
       </span>
     );
   } catch (error) {
     console.error('Error formatting amount:', error);
     return (
-      <span {...props} className={cx(tabularNums && styles.tabular, className)}>
+      <span
+        data-slot='amount'
+        {...props}
+        className={cx(tabularNums && styles.tabular, className)}
+      >
         {String(value)}
       </span>
     );

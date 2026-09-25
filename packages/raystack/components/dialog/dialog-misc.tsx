@@ -1,9 +1,9 @@
 'use client';
 
 import { Dialog as DialogPrimitive } from '@base-ui/react';
-import { Cross1Icon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { type ComponentProps } from 'react';
+import { XIcon } from '~/icons';
 import { Flex } from '../flex';
 import { IconButton } from '../icon-button';
 import styles from './dialog.module.css';
@@ -17,6 +17,7 @@ export function DialogHeader({
       justify='between'
       align='center'
       className={cx(styles.header, className)}
+      data-slot='dialog-header'
       {...props}
     />
   );
@@ -33,6 +34,7 @@ export function DialogFooter({
       gap={5}
       justify='end'
       className={cx(styles.footer, className)}
+      data-slot='dialog-footer'
       {...props}
     />
   );
@@ -49,6 +51,7 @@ export function DialogBody({
       direction='column'
       gap={3}
       className={cx(styles.body, className)}
+      data-slot='dialog-body'
       {...props}
     />
   );
@@ -61,9 +64,10 @@ export function CloseButton(props: DialogPrimitive.Close.Props) {
     <DialogPrimitive.Close
       aria-label='Close dialog'
       render={<IconButton size={3} />}
+      data-slot='dialog-close'
       {...props}
     >
-      <Cross1Icon aria-hidden='true' />
+      <XIcon aria-hidden='true' />
     </DialogPrimitive.Close>
   );
 }
@@ -75,7 +79,11 @@ export function DialogTitle({
   ...props
 }: DialogPrimitive.Title.Props) {
   return (
-    <DialogPrimitive.Title className={cx(styles.title, className)} {...props} />
+    <DialogPrimitive.Title
+      className={cx(styles.title, className)}
+      data-slot='dialog-title'
+      {...props}
+    />
   );
 }
 
@@ -88,6 +96,7 @@ export function DialogDescription({
   return (
     <DialogPrimitive.Description
       className={cx(styles.description, className)}
+      data-slot='dialog-description'
       {...props}
     />
   );

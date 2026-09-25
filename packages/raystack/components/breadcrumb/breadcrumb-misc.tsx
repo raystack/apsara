@@ -1,8 +1,8 @@
 'use client';
 
-import { ChevronRightIcon, DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { ComponentProps } from 'react';
+import { ChevronRightIcon, EllipsisIcon } from '~/icons';
 import styles from './breadcrumb.module.css';
 
 export interface BreadcrumbEllipsisProps extends ComponentProps<'span'> {}
@@ -10,7 +10,7 @@ export interface BreadcrumbEllipsisProps extends ComponentProps<'span'> {}
 export const BreadcrumbEllipsis = ({
   ref,
   className,
-  children = <DotsHorizontalIcon width={20} height={20} />,
+  children = <EllipsisIcon width={20} height={20} />,
   ...props
 }: BreadcrumbEllipsisProps) => {
   return (
@@ -18,10 +18,12 @@ export const BreadcrumbEllipsis = ({
       className={styles['breadcrumb-item']}
       role='presentation'
       aria-hidden='true'
+      data-slot='breadcrumb-item'
     >
       <span
         className={cx(styles['breadcrumb-ellipsis'], className)}
         ref={ref}
+        data-slot='breadcrumb-ellipsis'
         {...props}
       >
         {children}
@@ -45,12 +47,14 @@ export const BreadcrumbSeparator = ({
       className={styles['breadcrumb-item']}
       role='presentation'
       aria-hidden='true'
+      data-slot='breadcrumb-item'
     >
       <span
         className={cx(styles['breadcrumb-separator'], className)}
         ref={ref}
         role='presentation'
         aria-hidden='true'
+        data-slot='breadcrumb-separator'
         {...props}
       >
         {children}

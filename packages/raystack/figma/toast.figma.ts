@@ -4,7 +4,7 @@
 
 import figma from 'figma';
 
-// Toasts are created imperatively via toastManager.add(options) — there is no
+// Toasts are created imperatively via toastManager.add(options), so there is no
 // JSX toast element. We map the Figma properties onto the add() options shape.
 
 // Leading icon BOOLEAN gates the Icon INSTANCE_SWAP → `leadingIcon` option.

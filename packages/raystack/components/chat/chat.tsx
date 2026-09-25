@@ -12,7 +12,9 @@ import { ChatSeparator } from './chat-separator';
 export interface ChatRootProps extends ComponentProps<'div'> {}
 
 function ChatRoot({ className, ...props }: ChatRootProps) {
-  return <div className={cx(styles.chat, className)} {...props} />;
+  return (
+    <div className={cx(styles.chat, className)} data-slot='chat' {...props} />
+  );
 }
 
 ChatRoot.displayName = 'Chat';

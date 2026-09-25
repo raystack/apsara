@@ -1,9 +1,9 @@
 'use client';
 
 import { Popover as PopoverPrimitive } from '@base-ui/react';
-import { Cross1Icon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import type { ComponentProps, ReactNode } from 'react';
+import { XIcon } from '~/icons';
 import { Button } from '../button';
 import { Flex } from '../flex';
 import { IconButton } from '../icon-button';
@@ -20,7 +20,11 @@ export function TourTitle({
   const content = children ?? step?.title;
   if (content == null) return null;
   return (
-    <PopoverPrimitive.Title className={cx(styles.title, className)} {...props}>
+    <PopoverPrimitive.Title
+      data-slot='tour-title'
+      className={cx(styles.title, className)}
+      {...props}
+    >
       {content}
     </PopoverPrimitive.Title>
   );
@@ -37,6 +41,7 @@ export function TourDescription({
   if (content == null) return null;
   return (
     <PopoverPrimitive.Description
+      data-slot='tour-description'
       className={cx(styles.description, className)}
       {...props}
     >
@@ -54,7 +59,14 @@ export interface TourProgressProps extends ComponentProps<typeof Text> {
 export function TourProgress({ format, ...props }: TourProgressProps) {
   const { index, steps } = useTourContext('Tour.Progress');
   return (
-    <Text size='mini' weight='medium' variant='secondary' {...props}>
+    <Text
+      data-slot='tour-progress'
+      size='mini'
+      weight='medium'
+      variant='secondary'
+      style={{ fontVariantNumeric: 'tabular-nums' }}
+      {...props}
+    >
       {format ? format(index, steps.length) : `${index + 1} of ${steps.length}`}
     </Text>
   );
@@ -70,6 +82,7 @@ export function TourNext({
   const isLastStep = index >= steps.length - 1;
   return (
     <Button
+      data-slot='tour-next'
       size='small'
       {...props}
       onClick={event => {
@@ -91,6 +104,7 @@ export function TourPrev({
   const { actions } = useTourContext('Tour.Prev');
   return (
     <Button
+      data-slot='tour-prev'
       size='small'
       variant='outline'
       color='neutral'
@@ -114,6 +128,7 @@ export function TourSkip({
   const { actions } = useTourContext('Tour.Skip');
   return (
     <Button
+      data-slot='tour-skip'
       size='small'
       variant='text'
       color='neutral'
@@ -137,6 +152,7 @@ export function TourClose({
   const { actions } = useTourContext('Tour.Close');
   return (
     <IconButton
+      data-slot='tour-close'
       size={3}
       aria-label='Close tour'
       {...props}
@@ -145,7 +161,7 @@ export function TourClose({
         if (!event.defaultPrevented) actions.stop();
       }}
     >
-      {children ?? <Cross1Icon aria-hidden='true' />}
+      {children ?? <XIcon aria-hidden='true' />}
     </IconButton>
   );
 }

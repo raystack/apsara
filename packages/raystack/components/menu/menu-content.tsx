@@ -6,6 +6,8 @@ import {
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { KeyboardEvent, useCallback, useRef } from 'react';
+import { type Radius, radiusStyle } from '../../shared/radius';
+import { useThemeInjection } from '../theme/portal';
 import styles from './menu.module.css';
 import { useMenuContext } from './menu-root';
 import {
@@ -22,6 +24,8 @@ export interface MenuContentProps
     >,
     MenuPrimitive.Popup.Props {
   searchPlaceholder?: string;
+  /** Corner radius for this menu only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 export function MenuContent({
@@ -35,6 +39,7 @@ export function MenuContent({
   sideOffset = 4,
   align = 'start',
   onFocus,
+  radius,
   ...positionerProps
 }: MenuContentProps) {
   const {
@@ -97,9 +102,12 @@ export function MenuContent({
     item.dispatchEvent(new PointerEvent('pointerout', { bubbles: true }));
   }, []);
 
+  const theme = useThemeInjection();
+
   return (
-    <MenuPrimitive.Portal>
+    <MenuPrimitive.Portal {...theme}>
       <MenuPrimitive.Positioner
+        data-slot='menu-positioner'
         className={styles.positioner}
         sideOffset={sideOffset}
         align={align}
@@ -107,9 +115,13 @@ export function MenuContent({
       >
         <MenuPrimitive.Popup
           ref={ref}
+          {...theme}
+          data-slot='menu-content'
           className={cx(
             styles.content,
             autocomplete && styles.comboboxContainer,
+            theme?.className,
+            radiusStyle({ radius }),
             className
           )}
           style={style}
@@ -151,6 +163,7 @@ export function MenuContent({
               }}
             >
               <AutocompletePrimitive.Input
+                data-slot='menu-search-input'
                 placeholder={searchPlaceholder}
                 className={styles.comboboxInput}
                 ref={inputRef}
@@ -167,6 +180,7 @@ export function MenuContent({
                 tabIndex={-1}
               />
               <AutocompletePrimitive.List
+                data-slot='menu-search-list'
                 className={styles.comboboxContent}
                 ref={containerRef}
               >

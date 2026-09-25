@@ -25,13 +25,9 @@ import { Chip } from "@raystack/apsara";
 <Chip />
 ```
 
-## API Reference
+## Usage
 
-Renders a compact element for tags, labels, or attributes.
-
-<auto-type-table path="./props.ts" name="ChipProps" />
-
-## Examples
+Appearance first, meaning variant, size and color, then the two things a chip can carry: icons and a dismiss action.
 
 ### Variant
 
@@ -41,7 +37,7 @@ Choose between outline and filled variants to match your design needs.
 
 ### Size
 
-The Chip component comes in two sizes:
+Two sizes. `large` is the default; `small` fits inside inputs and table cells.
 
 - `small`: Compact size with less padding
 - `large`: More spacious with increased padding
@@ -54,7 +50,7 @@ Choose between neutral and accent styles to control the visual emphasis.
 
 <Demo data={colorDemo} />
 
-### With Icons
+### With icons
 
 Chips can include leading and trailing icons to provide additional context or actions.
 
@@ -66,6 +62,24 @@ Chips can be made dismissible by adding the isDismissible prop and an onDismiss 
 
 <Demo data={dismissableDemo} />
 
+## API Reference
+
+Renders a compact element for tags, labels, or attributes.
+
+<auto-type-table path="./props.ts" name="ChipProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `chip` | The root element (`<button>` when interactive, `<span>` otherwise) |
+| `chip-leading-icon` | Wrapper around `leadingIcon` (when set) |
+| `chip-trailing-icon` | Wrapper around `trailingIcon` (when set and not dismissible) |
+| `chip-dismiss` | The dismiss button (when `isDismissible`) |
+| `chip-dismiss-icon` | The dismiss icon (when `isDismissible`) |
+
 ## Accessibility
 
 The Chip component has some accessibility features:
@@ -74,4 +88,4 @@ The Chip component has some accessibility features:
 - Includes proper ARIA roles and labels
 - Provides keyboard navigation support
 - Makes decorative elements hidden from screen readers
-- Ensures proper contrast ratios in all variants and states
+- Keeps contrast ratios correct in all variants and states

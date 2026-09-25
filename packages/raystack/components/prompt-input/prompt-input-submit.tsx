@@ -1,8 +1,8 @@
 'use client';
 
-import { ArrowUpIcon, StopIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, MouseEvent } from 'react';
+import { ArrowUpIcon, StopIcon } from '~/icons';
 import { Spinner } from '../spinner';
 import styles from './prompt-input.module.css';
 import { usePromptInputContext } from './prompt-input-context';
@@ -19,7 +19,9 @@ export function PromptInputSubmit({
 }: PromptInputSubmitProps) {
   const context = usePromptInputContext('Submit');
   const busy = context.status === 'submitted' || context.status === 'streaming';
-  const empty = context.value.trim() === '';
+  // Reported by the mounted input part, so a message of nothing but a chip is
+  // sendable and a lone trailing space is not.
+  const empty = context.empty;
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     onClick?.(event);
@@ -33,6 +35,7 @@ export function PromptInputSubmit({
       // must not resubmit the form.
       type={busy ? 'button' : 'submit'}
       className={cx(styles.submit, className)}
+      data-slot='prompt-input-submit'
       data-status={context.status}
       disabled={disabled ?? (context.disabled || (!busy && empty))}
       aria-label={ariaLabel ?? (busy ? 'Stop response' : 'Send message')}

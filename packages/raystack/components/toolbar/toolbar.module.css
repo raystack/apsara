@@ -1,7 +1,7 @@
 .root {
   padding: var(--rs-space-1);
   border: 0.5px solid var(--rs-color-border-base-primary);
-  border-radius: var(--rs-radius-2);
+  border-radius: var(--rs-radius-3);
   overflow: clip;
 }
 .root,
@@ -15,7 +15,7 @@
   flex-direction: column;
 }
 
-.root[data-orientation="vertical"] button {
+.root[data-orientation="vertical"] [data-slot="toolbar-button"] {
   width: 100%;
 }
 .root > *,

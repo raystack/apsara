@@ -6,9 +6,11 @@ import styles from './layout.module.css';
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <Flex className={styles.container}>
-      <DocsSidebar pageTree={docs.pageTree} className={styles.sidebar} />
-      <main className={styles.content}>{children}</main>
-    </Flex>
+    <div className={styles.surround}>
+      <Flex className={styles.container}>
+        <DocsSidebar pageTree={docs.pageTree} className={styles.sidebar} />
+        <main className={styles.content}>{children}</main>
+      </Flex>
+    </div>
   );
 }

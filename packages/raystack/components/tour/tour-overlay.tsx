@@ -133,12 +133,14 @@ export function TourOverlay({
     <div
       {...rest}
       aria-hidden
+      data-slot='tour-overlay'
       data-status={status}
       data-entered={entered ? 'true' : 'false'}
       data-hole-open={holeOpen ? 'true' : 'false'}
       className={cx(styles.overlay, className)}
     >
       <div
+        data-slot='tour-spotlight'
         className={styles.spotlight}
         style={
           hole
@@ -154,6 +156,7 @@ export function TourOverlay({
       />
       {hole && (
         <div
+          data-slot='tour-spotlight-cover'
           className={styles.spotlightCover}
           style={{
             left: hole.x,
@@ -169,10 +172,12 @@ export function TourOverlay({
           {/* Hit strips block clicks around the hole; the center strip is
               dropped when spotlightClicks lets clicks through. */}
           <div
+            data-slot='tour-overlay-hit'
             className={styles.overlayHit}
             style={{ top: 0, left: 0, right: 0, height: Math.max(hole.y, 0) }}
           />
           <div
+            data-slot='tour-overlay-hit'
             className={styles.overlayHit}
             style={{
               top: hole.y,
@@ -182,6 +187,7 @@ export function TourOverlay({
             }}
           />
           <div
+            data-slot='tour-overlay-hit'
             className={styles.overlayHit}
             style={{
               top: hole.y,
@@ -191,11 +197,13 @@ export function TourOverlay({
             }}
           />
           <div
+            data-slot='tour-overlay-hit'
             className={styles.overlayHit}
             style={{ top: hole.y + hole.height, left: 0, right: 0, bottom: 0 }}
           />
           {!(spotlightClicks && holeOpen) && (
             <div
+              data-slot='tour-overlay-hit'
               className={styles.overlayHit}
               style={{
                 top: hole.y,
@@ -207,7 +215,11 @@ export function TourOverlay({
           )}
         </>
       ) : (
-        <div className={styles.overlayHit} style={{ inset: 0 }} />
+        <div
+          data-slot='tour-overlay-hit'
+          className={styles.overlayHit}
+          style={{ inset: 0 }}
+        />
       )}
     </div>,
     document.body

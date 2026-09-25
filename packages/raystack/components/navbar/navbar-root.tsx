@@ -121,9 +121,12 @@ export const NavbarRoot = ({
       className={cx(styles.root, className)}
       data-sticky={sticky}
       role='navigation'
+      data-slot='navbar'
       {...props}
     >
-      <div className={styles.container}>{children}</div>
+      <div className={styles.container} data-slot='navbar-container'>
+        {children}
+      </div>
     </nav>
   );
 };

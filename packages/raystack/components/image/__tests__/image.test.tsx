@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { radiusClasses } from '../../../shared/radius';
 import { Image } from '../image';
 import styles from '../image.module.css';
 
@@ -60,18 +61,18 @@ describe('Image', () => {
   });
 
   describe('Radius Variants', () => {
-    const radiuses = ['none', 'small', 'medium', 'full'] as const;
+    const radiuses = ['none', 'small', 'medium', 'large', 'full'] as const;
 
     it.each(radiuses)('renders %s radius correctly', radius => {
       render(<Image src='/test.jpg' alt='Test' radius={radius} />);
       const img = screen.getByRole('img');
-      expect(img).toHaveClass(styles[`image-radius-${radius}`]);
+      expect(img).toHaveClass(radiusClasses[radius]);
     });
 
     it('defaults to none radius', () => {
       render(<Image src='/test.jpg' alt='Test' />);
       const img = screen.getByRole('img');
-      expect(img).toHaveClass(styles['image-radius-none']);
+      expect(img).toHaveClass(radiusClasses.none);
     });
   });
 
@@ -132,7 +133,7 @@ describe('Image', () => {
       fireEvent.error(img);
       expect(img.src).toContain('/fallback.jpg');
 
-      // The fallback itself fails to load — must not re-assign it again.
+      // The fallback itself fails to load, so it must not be re-assigned.
       fireEvent.error(img);
       expect(img.src).toContain('/fallback.jpg');
     });

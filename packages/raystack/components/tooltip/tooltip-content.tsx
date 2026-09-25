@@ -2,7 +2,9 @@
 
 import { Tooltip as TooltipPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import { type Radius, radiusStyle } from '../../shared/radius';
 import { Text } from '../text';
+import { useThemeInjection } from '../theme/portal';
 import styles from './tooltip.module.css';
 
 export interface TooltipContentProps
@@ -16,6 +18,8 @@ export interface TooltipContentProps
    * `@default` false
    */
   showArrow?: boolean;
+  /** Corner radius for this tooltip only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 export function TooltipContent({
@@ -25,30 +29,47 @@ export function TooltipContent({
   showArrow = false,
   style,
   render,
+  radius,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
   ...positionerProps
 }: TooltipContentProps) {
+  const theme = useThemeInjection();
   return (
-    <TooltipPrimitive.Portal>
+    <TooltipPrimitive.Portal {...theme}>
       <TooltipPrimitive.Positioner
         side='top'
         align='center'
         sideOffset={showArrow ? 10 : 4}
         className={styles.positioner}
+        data-slot='tooltip-positioner'
         {...positionerProps}
       >
         <TooltipPrimitive.Popup
           ref={ref}
-          className={cx(styles.content, className)}
+          {...theme}
+          className={cx(
+            styles.content,
+            theme?.className,
+            radiusStyle({ radius }),
+            className
+          )}
           style={style}
           render={render}
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledBy}
+          data-slot='tooltip-content'
         >
-          {typeof children === 'string' ? <Text>{children}</Text> : children}
+          {typeof children === 'string' ? (
+            <Text data-slot='tooltip-text'>{children}</Text>
+          ) : (
+            children
+          )}
           {showArrow && (
-            <TooltipPrimitive.Arrow className={styles.arrow}>
+            <TooltipPrimitive.Arrow
+              className={styles.arrow}
+              data-slot='tooltip-arrow'
+            >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 width='6'

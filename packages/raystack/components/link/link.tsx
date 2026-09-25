@@ -43,6 +43,7 @@ export function Link({
 
   return (
     <Text
+      data-slot='link'
       className={cx(styles.link, className)}
       variant={variant}
       size={size}

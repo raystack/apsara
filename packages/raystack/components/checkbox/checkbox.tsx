@@ -16,6 +16,7 @@ const CheckMarkIcon = () => (
     viewBox='0 0 16 16'
     fill='none'
     className={styles.icon}
+    data-slot='checkbox-icon'
   >
     <path
       fillRule='evenodd'
@@ -34,6 +35,7 @@ const IndeterminateIcon = () => (
     viewBox='0 0 16 16'
     fill='none'
     className={styles.icon}
+    data-slot='checkbox-icon'
   >
     <path
       fillRule='evenodd'
@@ -75,6 +77,7 @@ function CheckboxGroup({
         orientation === 'horizontal' && styles['group-horizontal'],
         className
       )}
+      data-slot='checkbox-group'
       {...props}
     />
   );
@@ -106,6 +109,7 @@ function CheckboxItem({
     <CheckboxPrimitive.Root
       className={checkboxVariants({ size, className })}
       required={resolvedRequired}
+      data-slot='checkbox'
       {...props}
     >
       <CheckboxPrimitive.Indicator
@@ -127,7 +131,7 @@ function CheckboxItem({
                 ? 'indeterminate'
                 : 'check';
             return (
-              <span {...props}>
+              <span data-slot='checkbox-indicator' {...props}>
                 {showIcon &&
                   (icon === 'indeterminate' ? (
                     <IndeterminateIcon />

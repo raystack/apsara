@@ -1,6 +1,5 @@
 'use client';
 
-import { Cross1Icon, InfoCircledIcon } from '@radix-ui/react-icons';
 import { cva, type VariantProps } from 'class-variance-authority';
 import {
   type ComponentProps,
@@ -9,7 +8,8 @@ import {
   useEffect,
   useState
 } from 'react';
-
+import { InfoIcon, XIcon } from '~/icons';
+import { radiusVariants } from '../../shared/radius';
 import { IconButton } from '../icon-button';
 import styles from './callout.module.css';
 
@@ -18,6 +18,7 @@ const EXIT_MS = 200;
 
 const callout = cva(styles.callout, {
   variants: {
+    ...radiusVariants,
     type: {
       grey: styles['callout-grey'],
       success: styles['callout-success'],
@@ -60,12 +61,13 @@ export function Callout({
   className,
   type = 'grey',
   variant,
+  radius,
   highContrast,
   children,
   action,
   dismissible,
   onDismiss,
-  icon = <InfoCircledIcon />,
+  icon = <InfoIcon />,
   ...props
 }: CalloutProps) {
   // Dismissal is controlled when `onDismiss` is given; otherwise fall back to
@@ -87,34 +89,65 @@ export function Callout({
   const role = type === 'alert' ? 'alert' : 'status';
 
   return (
-    <div className={styles.transitionShell} data-state={state}>
-      <div className={styles.transitionInner}>
+    <div
+      className={styles.transitionShell}
+      data-state={state}
+      data-slot='callout-transition'
+    >
+      <div
+        className={styles.transitionBody}
+        data-slot='callout-transition-body'
+      >
         <div
-          className={callout({ type, variant, highContrast, className })}
+          className={callout({
+            type,
+            variant,
+            radius,
+            highContrast,
+            className
+          })}
           role={role}
           aria-live={type === 'alert' ? 'assertive' : 'polite'}
+          data-slot='callout'
           {...props}
         >
-          <div className={styles.container}>
-            <div className={styles.messageContainer}>
+          <div className={styles.container} data-slot='callout-container'>
+            <div
+              className={styles.messageContainer}
+              data-slot='callout-message-container'
+            >
               {icon && (
-                <div className={styles.icon} aria-hidden='true'>
+                <div
+                  className={styles.icon}
+                  aria-hidden='true'
+                  data-slot='callout-icon'
+                >
                   {icon}
                 </div>
               )}
-              <div className={styles.message}>{children}</div>
+              <div className={styles.message} data-slot='callout-message'>
+                {children}
+              </div>
             </div>
 
-            <div className={styles.actionsContainer}>
-              {action && <div className={styles.action}>{action}</div>}
+            <div
+              className={styles.actionsContainer}
+              data-slot='callout-actions'
+            >
+              {action && (
+                <div className={styles.action} data-slot='callout-action'>
+                  {action}
+                </div>
+              )}
               {dismissible && (
                 <IconButton
                   size={1}
                   className={styles.dismiss}
                   onClick={handleDismiss}
                   aria-label='Dismiss message'
+                  data-slot='callout-dismiss'
                 >
-                  <Cross1Icon />
+                  <XIcon />
                 </IconButton>
               )}
             </div>

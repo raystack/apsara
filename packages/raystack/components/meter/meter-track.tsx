@@ -17,16 +17,25 @@ export function MeterTrack({
     return (
       <MeterPrimitive.Track
         className={cx(styles.circularSvg, className)}
+        data-slot='meter-track'
         {...props}
         render={({ children: trackChildren, ...trackProps }) => (
           <svg viewBox='0 0 72 72' {...trackProps}>
-            <circle className={styles.circularTrackCircle} />
+            <circle
+              className={styles.circularTrackCircle}
+              data-slot='meter-track-circle'
+            />
             {trackChildren}
           </svg>
         )}
       >
         <MeterPrimitive.Indicator
-          render={() => <circle className={styles.circularIndicatorCircle} />}
+          render={() => (
+            <circle
+              className={styles.circularIndicatorCircle}
+              data-slot='meter-indicator'
+            />
+          )}
         />
         {children}
       </MeterPrimitive.Track>
@@ -34,10 +43,15 @@ export function MeterTrack({
   }
 
   return (
-    <MeterPrimitive.Track className={cx(styles.track, className)} {...props}>
+    <MeterPrimitive.Track
+      className={cx(styles.track, className)}
+      data-slot='meter-track'
+      {...props}
+    >
       <MeterPrimitive.Indicator
         className={styles.indicator}
         style={{ width: '100%' }}
+        data-slot='meter-indicator'
       />
       {children}
     </MeterPrimitive.Track>

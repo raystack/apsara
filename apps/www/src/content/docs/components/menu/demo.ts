@@ -497,3 +497,26 @@ const menuData: MenuItem[] = [
     }
   ]
 };
+
+export const controlledDemo = {
+  type: 'code',
+  code: `
+function ControlledMenu() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <Flex align="center" gap={5}>
+      <Menu open={open} onOpenChange={setOpen}>
+        <Menu.Trigger asChild>
+          <Button variant="outline">Actions</Button>
+        </Menu.Trigger>
+        <Menu.Content>
+          <Menu.Item onClick={() => setOpen(false)}>Rename</Menu.Item>
+          <Menu.Item onClick={() => setOpen(false)}>Duplicate</Menu.Item>
+        </Menu.Content>
+      </Menu>
+      <Text size="small" variant="secondary">{open ? 'open' : 'closed'}</Text>
+    </Flex>
+  );
+}`
+};

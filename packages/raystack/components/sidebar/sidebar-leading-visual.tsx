@@ -28,6 +28,7 @@ function AvatarContainer({
       gap={3}
       className={cx(styles['nav-leading-icon'], className)}
       aria-hidden='true'
+      data-slot='sidebar-leading-icon'
       render={render}
     >
       {children}

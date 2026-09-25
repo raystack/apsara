@@ -1,7 +1,6 @@
 'use client';
 
 import { ScrollArea as ScrollAreaPrimitive } from '@base-ui/react/scroll-area';
-import { ArrowDownIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import {
   ComponentProps,
@@ -16,6 +15,7 @@ import {
   useRef,
   useState
 } from 'react';
+import { ArrowDownIcon } from '~/icons';
 import { ScrollAreaScrollbar } from '../scroll-area/scroll-area-scrollbar';
 import { usePrefersReducedMotion } from '../tour/use-prefers-reduced-motion';
 import styles from './chat.module.css';
@@ -244,7 +244,7 @@ export function ChatMessages({
 
   // Perform the pending anchor scroll after the spacer has been committed,
   // so the target position exists before the frame paints.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on anchorTick — each anchor request bumps it.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on anchorTick, and each anchor request bumps it.
   useLayoutEffect(() => {
     const pending = pendingAnchorRef.current;
     const viewport = viewportRef.current;
@@ -387,6 +387,7 @@ export function ChatMessages({
         <ChatMessagesStateContext.Provider value={state}>
           <ScrollAreaPrimitive.Root
             className={cx(styles.messages, className)}
+            data-slot='chat-messages'
             {...props}
           >
             <ScrollAreaPrimitive.Viewport
@@ -394,10 +395,12 @@ export function ChatMessages({
               className={styles['messages-viewport']}
               role='log'
               aria-label={ariaLabel}
+              data-slot='chat-messages-viewport'
             >
               <ScrollAreaPrimitive.Content
                 ref={contentRef}
                 className={styles['messages-content']}
+                data-slot='chat-messages-content'
               >
                 {children}
                 {spacerHeight > 0 && (
@@ -405,11 +408,16 @@ export function ChatMessages({
                     className={styles['messages-spacer']}
                     style={{ height: spacerHeight }}
                     aria-hidden='true'
+                    data-slot='chat-messages-spacer'
                   />
                 )}
               </ScrollAreaPrimitive.Content>
             </ScrollAreaPrimitive.Viewport>
-            <ScrollAreaScrollbar orientation='vertical' type='hover' />
+            <ScrollAreaScrollbar
+              orientation='vertical'
+              type='hover'
+              data-slot='chat-messages-scrollbar'
+            />
           </ScrollAreaPrimitive.Root>
         </ChatMessagesStateContext.Provider>
       </ChatMessagesActionsContext.Provider>
@@ -452,10 +460,15 @@ export function ChatJumpButton({
       aria-hidden={atBottom || undefined}
       className={cx(styles['jump-button'], className)}
       onClick={handleClick}
+      data-slot='chat-jump-button'
       {...props}
     >
       {leadingIcon !== null && (
-        <span className={styles['jump-icon']} aria-hidden='true'>
+        <span
+          className={styles['jump-icon']}
+          aria-hidden='true'
+          data-slot='chat-jump-button-icon'
+        >
           {leadingIcon ?? <ArrowDownIcon />}
         </span>
       )}

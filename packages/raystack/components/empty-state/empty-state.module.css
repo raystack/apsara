@@ -104,6 +104,7 @@
 @media (prefers-reduced-motion: no-preference) {
   .emptyState,
   .emptyStateContent {
-    animation: empty-state-enter-rise var(--rs-duration-moderate) var(--rs-ease-out);
+    animation: empty-state-enter-rise var(--rs-duration-moderate)
+      var(--rs-ease-out);
   }
 }

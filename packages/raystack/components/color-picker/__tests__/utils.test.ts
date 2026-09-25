@@ -44,7 +44,7 @@ describe('color-picker utils', () => {
 
     it('preserves the input hue when the color is achromatic', () => {
       // Internal state may carry a non-zero hue even when chroma is 0; HSL
-      // conversion would normally produce NaN — the helper falls back to the
+      // conversion would normally produce NaN, so the helper falls back to the
       // OKLCH hue so the user's last hue choice isn't lost at the s=0 axis.
       const hsl = oklchToHsl({ l: 0.5, c: 0, h: 200 });
       expect(hsl.s).toBeCloseTo(0, 6);

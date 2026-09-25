@@ -1,0 +1,1 @@
+export { IconGallery } from './icongallery';

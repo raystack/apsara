@@ -1,20 +1,16 @@
 import {
-  InfoCircledIcon,
-  Pencil2Icon,
-  PlusIcon,
-  TransformIcon,
-  UploadIcon
-} from '@radix-ui/react-icons';
-import {
   Field,
   Flex,
   IconButton,
+  InfoIcon,
   Input,
+  PlusIcon,
   Select,
   Switch,
   Text
 } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
+import { Frame, Pencil, Upload } from 'lucide-react';
 import { camelCaseToWords } from '@/lib/utils';
 import styles from './styles.module.css';
 import {
@@ -32,10 +28,19 @@ type PropControlsProps = {
 
 const ICONS_MAP = {
   plus: { icon: <PlusIcon />, value: '<PlusIcon />' },
-  transform: { icon: <TransformIcon />, value: '<TransformIcon />' },
-  pencil: { icon: <Pencil2Icon />, value: '<Pencil2Icon />' },
-  info: { icon: <InfoCircledIcon />, value: '<InfoCircledIcon />' },
-  upload: { icon: <UploadIcon />, value: '<UploadIcon />' }
+  transform: {
+    icon: <Frame size={16} strokeWidth={1.5} />,
+    value: '<Frame size={16} strokeWidth={1.5} />'
+  },
+  pencil: {
+    icon: <Pencil size={16} strokeWidth={1.5} />,
+    value: '<Pencil size={16} strokeWidth={1.5} />'
+  },
+  info: { icon: <InfoIcon />, value: '<InfoIcon />' },
+  upload: {
+    icon: <Upload size={16} strokeWidth={1.5} />,
+    value: '<Upload size={16} strokeWidth={1.5} />'
+  }
 };
 
 export default function DemoControls({

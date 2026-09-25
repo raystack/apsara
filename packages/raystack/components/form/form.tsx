@@ -5,7 +5,13 @@ import styles from './form.module.css';
 export type FormProps = FormPrimitive.Props;
 
 function FormRoot({ className, ...props }: FormProps) {
-  return <FormPrimitive className={cx(styles.form, className)} {...props} />;
+  return (
+    <FormPrimitive
+      className={cx(styles.form, className)}
+      data-slot='form'
+      {...props}
+    />
+  );
 }
 
 export const Form = FormRoot;

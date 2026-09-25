@@ -51,8 +51,8 @@ export const compositionDemo = {
   type: 'code',
   code: `<Toolbar>
   <Toolbar.Group aria-label="Alignment" render={<Toggle.Group/>}>
-    <Toolbar.Button render={<Toggle size={4}/>} ><TextAlignLeftIcon /></Toolbar.Button>
-    <Toolbar.Button render={<Toggle size={4}/>}><TextAlignRightIcon /></Toolbar.Button>
+    <Toolbar.Button render={<Toggle size={4}/>} ><AlignLeft size={16} strokeWidth={1.5} /></Toolbar.Button>
+    <Toolbar.Button render={<Toggle size={4}/>}><AlignRight size={16} strokeWidth={1.5} /></Toolbar.Button>
   </Toolbar.Group>
   <Toolbar.Separator />
   <Toolbar.Group aria-label="Numerical format">

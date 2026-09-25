@@ -51,10 +51,16 @@ export function Spinner({
       aria-label={isDecorative ? undefined : ariaLabel}
       aria-live={isDecorative ? undefined : 'polite'}
       aria-hidden={isDecorative || undefined}
+      data-slot='spinner'
       {...props}
     >
       {[...Array(8)].map((_, index) => (
-        <div key={index} className={styles.pole} aria-hidden='true' />
+        <div
+          key={index}
+          className={styles.pole}
+          aria-hidden='true'
+          data-slot='spinner-pole'
+        />
       ))}
     </div>
   );

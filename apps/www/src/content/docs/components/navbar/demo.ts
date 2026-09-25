@@ -17,7 +17,7 @@ export const preview = {
         <Button variant="outline" size="small" color="neutral" leadingIcon={<PlusIcon />}>
           Draw AOI
         </Button>
-        <Button variant="outline" size="small" color="neutral" leadingIcon={<UploadIcon />}>
+        <Button variant="outline" size="small" color="neutral" leadingIcon={<Upload size={16} strokeWidth={1.5} />}>
           Upload AOI
         </Button>
       </Navbar.End>

@@ -1,7 +1,7 @@
 'use client';
 
-import { MixerHorizontalIcon } from '@radix-ui/react-icons';
 import { isValidElement, ReactNode } from 'react';
+import { DisplayIcon } from '~/icons';
 
 import { Button } from '../../button';
 import { Flex } from '../../flex';
@@ -23,7 +23,7 @@ interface DisplayControlsProps {
 }
 
 /**
- * `DataView.DisplayControls` — the popover housing the view switcher, Ordering,
+ * `DataView.DisplayControls`, the popover housing the view switcher, Ordering,
  * Grouping, Display Properties (column visibility), and Reset. The view switcher
  * appears at the top whenever `views.length > 1`. Each section can be hidden
  * individually via `hideViewSwitcher` / `hideOrdering` / `hideGrouping` /
@@ -35,7 +35,8 @@ export function DisplayControls<TData>({
       variant='outline'
       color='neutral'
       size='small'
-      leadingIcon={<MixerHorizontalIcon />}
+      leadingIcon={<DisplayIcon />}
+      data-slot='data-view-display-trigger'
     >
       Display
     </Button>
@@ -84,9 +85,12 @@ export function DisplayControls<TData>({
         className={styles['display-popover-content']}
         align='end'
       >
-        <Flex direction='column'>
+        <Flex direction='column' data-slot='data-view-display-content'>
           {showViewSwitcher ? (
-            <Flex className={styles['display-popover-properties-container']}>
+            <Flex
+              className={styles['display-popover-properties-container']}
+              data-slot='data-view-display-section'
+            >
               <ViewSwitcher />
             </Flex>
           ) : null}
@@ -95,6 +99,7 @@ export function DisplayControls<TData>({
               direction='column'
               className={styles['display-popover-properties-container']}
               gap={5}
+              data-slot='data-view-display-section'
             >
               {!hideOrdering ? (
                 <Ordering
@@ -114,15 +119,24 @@ export function DisplayControls<TData>({
             </Flex>
           ) : null}
           {!hideDisplayProperties ? (
-            <Flex className={styles['display-popover-properties-container']}>
+            <Flex
+              className={styles['display-popover-properties-container']}
+              data-slot='data-view-display-section'
+            >
               <DisplayProperties fields={fields ?? []} />
             </Flex>
           ) : null}
           <Flex
             justify='end'
             className={styles['display-popover-reset-container']}
+            data-slot='data-view-display-reset'
           >
-            <Button variant='text' onClick={onReset} color='neutral'>
+            <Button
+              variant='text'
+              onClick={onReset}
+              color='neutral'
+              data-slot='data-view-display-reset-button'
+            >
               Reset to default
             </Button>
           </Flex>

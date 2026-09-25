@@ -22,11 +22,12 @@ export const ColorPickerMode = ({
     <Select onValueChange={value => setMode(value as ModeType)} value={mode}>
       <Select.Trigger
         className={cx(styles.selectTrigger, className)}
+        data-slot='color-picker-mode'
         {...props}
       >
         <Select.Value placeholder='Mode' />
       </Select.Trigger>
-      <Select.Content>
+      <Select.Content data-slot='color-picker-mode-content'>
         {options.map(option => (
           <Select.Item key={option} value={option}>
             {option.toUpperCase()}

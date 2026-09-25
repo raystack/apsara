@@ -4,7 +4,7 @@
 
 import figma from 'figma';
 
-// Plain COMPONENT with no Figma properties — emit a simple example with
+// Plain COMPONENT with no Figma properties, so emit a simple example with
 // sensible defaults from the code API (`mode` defaults to 'single').
 
 export default {

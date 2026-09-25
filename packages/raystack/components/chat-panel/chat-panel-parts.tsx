@@ -1,9 +1,9 @@
 'use client';
 
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { MinusIcon, SizeIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, MouseEvent, PointerEvent, ReactNode } from 'react';
+import { ExpandIcon, ShrinkIcon } from '~/icons';
 import { IconButton, type IconButtonProps } from '../icon-button/icon-button';
 import styles from './chat-panel.module.css';
 import { useChatPanelContext } from './chat-panel-context';
@@ -30,6 +30,7 @@ export function ChatPanelHeader({
       ref={mergedRef}
       className={cx(styles.header, className)}
       onPointerDown={handlePointerDown}
+      data-slot='chat-panel-header'
       {...props}
     />
   );
@@ -40,7 +41,13 @@ ChatPanelHeader.displayName = 'ChatPanel.Header';
 export interface ChatPanelTitleProps extends ComponentProps<'h2'> {}
 
 export function ChatPanelTitle({ className, ...props }: ChatPanelTitleProps) {
-  return <h2 className={cx(styles.title, className)} {...props} />;
+  return (
+    <h2
+      className={cx(styles.title, className)}
+      data-slot='chat-panel-title'
+      {...props}
+    />
+  );
 }
 
 ChatPanelTitle.displayName = 'ChatPanel.Title';
@@ -51,7 +58,13 @@ export function ChatPanelActions({
   className,
   ...props
 }: ChatPanelActionsProps) {
-  return <div className={cx(styles.actions, className)} {...props} />;
+  return (
+    <div
+      className={cx(styles.actions, className)}
+      data-slot='chat-panel-actions'
+      {...props}
+    />
+  );
 }
 
 ChatPanelActions.displayName = 'ChatPanel.Actions';
@@ -62,7 +75,13 @@ export function ChatPanelContent({
   className,
   ...props
 }: ChatPanelContentProps) {
-  return <div className={cx(styles.content, className)} {...props} />;
+  return (
+    <div
+      className={cx(styles.content, className)}
+      data-slot='chat-panel-content'
+      {...props}
+    />
+  );
 }
 
 ChatPanelContent.displayName = 'ChatPanel.Content';
@@ -88,9 +107,10 @@ export function ChatPanelMinimizeTrigger({
       size={2}
       aria-label={ariaLabel}
       onClick={handleClick}
+      data-slot='chat-panel-minimize-trigger'
       {...props}
     >
-      {children ?? <MinusIcon />}
+      {children ?? <ShrinkIcon />}
     </IconButton>
   );
 }
@@ -136,9 +156,10 @@ export function ChatPanelExpandTrigger({
         ariaLabel ?? (floating ? 'Dock chat panel' : 'Pop out chat panel')
       }
       onClick={handleClick}
+      data-slot='chat-panel-expand-trigger'
       {...props}
     >
-      {resolvedChildren ?? <SizeIcon />}
+      {resolvedChildren ?? <ExpandIcon />}
     </IconButton>
   );
 }

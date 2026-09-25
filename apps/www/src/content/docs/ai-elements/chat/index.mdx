@@ -1,6 +1,6 @@
 ---
 title: Chat
-description: The conversation scroller — live-edge following, turn anchoring, prepend preservation and visibility tracking, plus separators and attachments.
+description: The conversation scroller. Live-edge following, turn anchoring, prepend preservation and visibility tracking, plus separators and attachments.
 source: packages/raystack/components/chat
 tag: new
 ---
@@ -45,17 +45,39 @@ import { Chat, Message, PromptInput, Reasoning } from '@raystack/apsara'
 </Chat>
 ```
 
-`Chat` owns scroll behavior; layout comes from
-[Message](/docs/ai-elements/message) and
-[Reasoning](/docs/ai-elements/reasoning), composed as children. `Chat.Item`
-is the bridge: a neutral wrapper that registers whatever it wraps — a
-message, a separator, a tool-call card — with the scroller. Message bodies
-are children: markdown rendering, entity chips and embedded cards are
-composed by your app — no markdown dependency enters the design system.
-Consumers own messages, streaming and sending; everything here is
+`Chat` owns scroll behavior. Layout comes from [Message](/docs/ai-
+elements/message) and [Reasoning](/docs/ai-elements/reasoning), composed as
+children.
+
+`Chat.Item` is the bridge, a neutral wrapper that registers whatever it wraps
+with the scroller, whether that is a message, a separator, or a tool-call
+card.
+
+Message bodies are children, so your app composes markdown rendering, entity
+chips, and embedded cards. No markdown dependency enters the design system.
+Consumers own messages, streaming, and sending; everything here is
 presentational.
 
+## Usage
+
+Beyond plain layout there are two concerns: what to render for a file the user attached, and how the scroller behaves while a reply streams in.
+
+### Attachments
+
+`Chat.Attachment` renders a file alongside a message. Attachments sit inside the message item, so they scroll and anchor with it.
+
+<Demo data={attachmentDemo} />
+
+### Streaming and turn anchoring
+
+Send a message: it anchors near the top while the reply streams below, and
+the "↓ Latest" pill returns you to the live edge after scrolling up.
+
+<Demo data={streamingDemo} />
+
 ## API Reference
+
+The scroller and the parts that register with it. Every child goes through `Chat.Item`; the rest are optional.
 
 ### Chat
 
@@ -79,7 +101,7 @@ Imperative commands are available through `actionsRef`:
 The per-item behavior unit. It registers its element with the enclosing
 `Chat.Messages` for visibility tracking and `scrollToMessage`, marks the turn
 anchor, and applies `content-visibility: auto` containment so offscreen items
-skip layout and paint. It wraps anything — it has no opinion about what a
+skip layout and paint. It wraps anything and has no opinion about what a
 message looks like.
 
 <auto-type-table path="./props.ts" name="ChatItemProps" />
@@ -101,14 +123,14 @@ messages viewport and pads the sides and bottom.
 
 ### useChatMessages
 
-Hook for components rendered inside `Chat.Messages` — active-turn indicators,
+Hook for components rendered inside `Chat.Messages`: active-turn indicators,
 jump-to-message navigation, custom scroll buttons.
 
 <auto-type-table path="./props.ts" name="UseChatMessagesReturn" />
 
 ### Chat.Separator
 
-A centered label between hairlines — "Today 1:52 AM". Purely presentational;
+A centered label between hairlines, such as "Today 1:52 AM". Purely presentational;
 format dates however your app does.
 
 ### Chat.Attachment
@@ -118,18 +140,29 @@ bodies. File picking, drag-drop and validation belong to your app.
 
 <auto-type-table path="./props.ts" name="ChatAttachmentProps" />
 
-## Examples
+### Slots
 
-### Attachments
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
 
-<Demo data={attachmentDemo} />
-
-### Streaming and turn anchoring
-
-Send a message: it anchors near the top while the reply streams below, and
-the "↓ Latest" pill returns you to the live edge after scrolling up.
-
-<Demo data={streamingDemo} />
+| Slot | Element |
+|------|---------|
+| `chat` | Root container |
+| `chat-messages` | The scrollable message list |
+| `chat-messages-viewport` | Scroll viewport |
+| `chat-messages-content` | Content inside the viewport |
+| `chat-messages-spacer` | Bottom spacer that keeps the newest turn anchored |
+| `chat-messages-scrollbar` | Scrollbar |
+| `chat-item` | One message in the list |
+| `chat-separator` | Divider between messages |
+| `chat-composer` | The input area below the list |
+| `chat-jump-button` | "Jump to latest" button |
+| `chat-jump-button-icon` | Icon inside that button |
+| `chat-attachment` | An attachment card |
+| `chat-attachment-media` | Its thumbnail or preview |
+| `chat-attachment-body` | Its text column |
+| `chat-attachment-title` | Attachment filename |
+| `chat-attachment-description` | Attachment size or type |
+| `chat-attachment-remove` | Its remove button |
 
 ## Accessibility
 

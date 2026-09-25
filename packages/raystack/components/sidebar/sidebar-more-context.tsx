@@ -1,29 +1,12 @@
 'use client';
 
-import { createContext, ReactNode, useContext } from 'react';
+import { createContext, useContext } from 'react';
 
-interface SidebarMoreContextValue {
-  isInsideSidebarMore: boolean;
-}
+// True for items rendered inside a Sidebar.More menu, where Sidebar.Item
+// renders as a Menu.Item instead of a nav link. Lives in its own file so
+// sidebar-item and sidebar-more don't have to import each other.
+export const SidebarMoreContext = createContext(false);
 
-const SidebarMoreContext = createContext<SidebarMoreContextValue | undefined>(
-  undefined
-);
-
-export function SidebarMoreProvider({
-  value,
-  children
-}: {
-  value: SidebarMoreContextValue;
-  children: ReactNode;
-}) {
-  return (
-    <SidebarMoreContext.Provider value={value}>
-      {children}
-    </SidebarMoreContext.Provider>
-  );
-}
-
-export function useSidebarMoreContext() {
+export function useInsideSidebarMore(): boolean {
   return useContext(SidebarMoreContext);
 }

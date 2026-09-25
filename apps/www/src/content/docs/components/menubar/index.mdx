@@ -2,14 +2,15 @@
 title: Menubar
 description: A horizontal menu bar providing commands and options for your application, typically used at the top of a window.
 source: packages/raystack/components/menubar
-tag: new
 ---
 
 import { preview, verticalDemo, autocompleteDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Menu, Menubar } from '@raystack/apsara'
@@ -34,15 +35,9 @@ import { Menu, Menubar } from '@raystack/apsara'
 
 The `Menubar` component wraps multiple `Menu` instances. Menu triggers are automatically styled when inside a Menubar. If you pass a `render` prop to `Menu.Trigger`, the default menubar trigger styling is skipped, allowing full custom rendering.
 
-## API Reference
+## Usage
 
-### Root
-
-The container element for the menubar.
-
-<auto-type-table path="./props.ts" name="MenubarProps" />
-
-## Examples
+A menubar is a row of menus sharing one keyboard focus, so most of its behaviour comes from [Menu](/docs/components/menu) itself.
 
 ### Vertical
 
@@ -55,6 +50,24 @@ Use the `orientation` prop to render a vertical menubar.
 Use the `autocomplete` prop on `Menu` to enable search filtering within a menubar menu.
 
 <Demo data={autocompleteDemo} />
+
+## API Reference
+
+Just the bar itself. The menus inside are plain `Menu`s.
+
+### Root
+
+The container element for the menubar.
+
+<auto-type-table path="./props.ts" name="MenubarProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `menubar` | The root element |
 
 ## Accessibility
 

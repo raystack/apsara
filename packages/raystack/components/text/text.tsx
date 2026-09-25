@@ -99,11 +99,13 @@ export function Text({
     italic
   });
 
+  const textProps = { 'data-slot': 'text', className: textClassName };
+
   const element = useRender({
     defaultTagName: 'span',
     ref,
     render,
-    props: mergeProps<'span'>({ className: textClassName }, props)
+    props: mergeProps<'span'>(textProps, props)
   });
 
   return element;

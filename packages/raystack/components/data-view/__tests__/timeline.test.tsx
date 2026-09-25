@@ -3,13 +3,6 @@ import userEvent from '@testing-library/user-event';
 import dayjs from 'dayjs';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-// SVG icons are inlined via @svgr/rollup at build time. In Vitest they resolve
-// to undefined, so stub the `~/icons` module with no-op components.
-vi.mock('~/icons', () => ({
-  FilterIcon: () => null,
-  __esModule: true
-}));
-
 // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
 import { DataView } from '../data-view';
 import type {
@@ -20,11 +13,10 @@ import type {
   TimelineActions
 } from '../data-view.types';
 import { useDataView } from '../hooks/useDataView';
-import { packLanes } from '../utils/pack-lanes';
 import { buildAxis, createTimeScale, toTimestamp } from '../utils/time-scale';
 
 beforeAll(() => {
-  // jsdom doesn't implement ResizeObserver — the timeline observes its scroll
+  // jsdom doesn't implement ResizeObserver, and the timeline observes its scroll
   // container when viewport tracking is enabled.
   // biome-ignore lint/suspicious/noExplicitAny: jsdom lacks ResizeObserver
   (global as any).ResizeObserver =
@@ -39,57 +31,6 @@ beforeAll(() => {
 
 afterEach(() => {
   vi.restoreAllMocks();
-});
-
-/* ─────────────────────────── utils: packLanes ────────────────────────── */
-
-describe('packLanes', () => {
-  it('returns no lanes for empty input', () => {
-    expect(packLanes([])).toEqual({ lanes: [], laneCount: 0 });
-  });
-
-  it('packs non-overlapping items into the same lane', () => {
-    const { lanes, laneCount } = packLanes([
-      { x: 0, width: 100 },
-      { x: 120, width: 50 }
-    ]);
-    expect(lanes).toEqual([0, 0]);
-    expect(laneCount).toBe(1);
-  });
-
-  it('opens a new lane for overlapping items', () => {
-    const { lanes, laneCount } = packLanes([
-      { x: 0, width: 100 },
-      { x: 50, width: 100 }
-    ]);
-    expect(lanes).toEqual([0, 1]);
-    expect(laneCount).toBe(2);
-  });
-
-  it('respects the gap: items closer than gapPx do not share a lane', () => {
-    // First ends at 100; second starts at 104 < 100 + 8 → new lane.
-    const tight = packLanes([
-      { x: 0, width: 100 },
-      { x: 104, width: 50 }
-    ]);
-    expect(tight.lanes).toEqual([0, 1]);
-    // Exactly at the gap boundary → same lane.
-    const exact = packLanes([
-      { x: 0, width: 100 },
-      { x: 108, width: 50 }
-    ]);
-    expect(exact.lanes).toEqual([0, 0]);
-  });
-
-  it('assigns lanes by ascending x regardless of input order', () => {
-    const { lanes, laneCount } = packLanes([
-      { x: 220, width: 60 }, // fits after the first item
-      { x: 0, width: 100 },
-      { x: 50, width: 100 } // overlaps the first → lane 1
-    ]);
-    expect(lanes).toEqual([0, 0, 1]);
-    expect(laneCount).toBe(2);
-  });
 });
 
 /* ─────────────────────────── utils: time scale ───────────────────────── */
@@ -155,7 +96,7 @@ describe('createTimeScale', () => {
   });
 
   it('reaches minWidth on calendar scales with uneven unit lengths', () => {
-    // Months render at (actual ms × pxPerMs), not exactly unitWidth — the
+    // Months render at (actual ms × pxPerMs), not exactly unitWidth, so the
     // fill must land at or past minWidth despite short months.
     const ts = createTimeScale({
       minTime: dayjs('2025-01-15').valueOf(),
@@ -355,6 +296,10 @@ type Order = {
   start: string | null;
   end: string | null;
   team?: string;
+  // one-per-sort-value reads whatever the sorted field holds.
+  priority?: unknown;
+  rank?: number;
+  meta?: { rank: number };
 };
 
 const fields: DataViewField<Order>[] = [
@@ -446,7 +391,7 @@ describe('DataView.Timeline', () => {
   it('exposes the scroll region as a focusable, labelled region', () => {
     renderTimeline();
     const region = screen.getByRole('region', { name: 'Timeline' });
-    // Focusable so keyboard users can scroll the pane with arrow keys —
+    // Focusable so keyboard users can scroll the pane with arrow keys,
     // drag-to-pan is pointer-only.
     expect(region.tabIndex).toBe(0);
   });
@@ -464,7 +409,7 @@ describe('DataView.Timeline', () => {
     // lane 0 at laneGap 16, lane 1 at 16 + 66 + 16.
     expect(screen.getByTestId('card-o1').parentElement!.style.top).toBe('16px');
     expect(screen.getByTestId('card-o3').parentElement!.style.top).toBe('98px');
-    // Height is content-driven — the wrapper never hard-sizes the card.
+    // Height is content-driven, and the wrapper never hard-sizes the card.
     expect(screen.getByTestId('card-o1').parentElement!.style.height).toBe('');
   });
 
@@ -658,7 +603,7 @@ describe('DataView.Timeline', () => {
   });
 
   it('extends the domain so the grid fills a container wider than the data span', () => {
-    // jsdom's clientWidth is 0 by default — pretend the scroll container is
+    // jsdom's clientWidth is 0 by default, so pretend the scroll container is
     // 1000px wide. The explicit range renders 620px, so the domain end
     // extends Feb 1 → Feb 20 and ticks run Jan 1 … Feb 20 = 51 gridlines.
     vi.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(1000);
@@ -719,13 +664,13 @@ describe('DataView.Timeline', () => {
     expect(root.scrollTop).toBe(20);
     expect(root.dataset.dragging).toBe('true');
 
-    // Hold still past the stale window, then release — no glide.
+    // Hold still past the stale window, then release, with no glide.
     await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 100));
     });
     fireEvent.pointerUp(root, { pointerId: 1 });
     expect(root.dataset.dragging).toBeUndefined();
-    // Released — further movement no longer pans.
+    // Released, so further movement no longer pans.
     fireEvent.pointerMove(root, { pointerId: 1, clientX: 100, clientY: 0 });
     await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 50));
@@ -744,7 +689,7 @@ describe('DataView.Timeline', () => {
       clientY: 100
     });
     fireEvent.pointerMove(root, { pointerId: 1, clientX: 250, clientY: 100 });
-    // Release mid-motion — the pan keeps scrolling and decays.
+    // Release mid-motion: the pan keeps scrolling and decays.
     fireEvent.pointerUp(root, { pointerId: 1 });
     expect(root.scrollLeft).toBe(50);
     await act(async () => {
@@ -764,7 +709,7 @@ describe('DataView.Timeline', () => {
   it('does not start a pan from a card or from touch pointers', () => {
     const { container } = renderTimeline();
     const root = container.firstElementChild as HTMLElement;
-    // Press on a card (row-click territory) — no pan.
+    // Press on a card (row-click territory), so no pan.
     fireEvent.pointerDown(screen.getByTestId('card-o1'), {
       pointerType: 'mouse',
       button: 0,
@@ -775,7 +720,7 @@ describe('DataView.Timeline', () => {
     fireEvent.pointerMove(root, { pointerId: 1, clientX: 200, clientY: 100 });
     expect(root.scrollLeft).toBe(0);
 
-    // Touch pans natively — the drag handler must not hijack it.
+    // Touch pans natively, so the drag handler must not hijack it.
     fireEvent.pointerDown(root, {
       pointerType: 'touch',
       button: 0,
@@ -812,7 +757,7 @@ describe('DataView.Timeline', () => {
     // Viewport's left edge sits at Jan 11 (200px / 20px-per-day from Jan 1).
     root.scrollLeft = 200;
 
-    // Extend the range a month to the left — t0 moves to Dec 1.
+    // Extend the range a month to the left, so t0 moves to Dec 1.
     rerender(
       <DataView<Order>
         data={orders}
@@ -904,7 +849,7 @@ describe('DataView.Timeline', () => {
     expect(from.getTime()).toBe(dayjs('2025-01-06').valueOf());
 
     // Sub-pixel drift (scroll anchoring's float round-trip, device-pixel
-    // quantization of scrollLeft) is noise, not a scroll — no re-fire.
+    // quantization of scrollLeft) is noise, not a scroll, so no re-fire.
     root.scrollLeft = 100.4;
     await act(async () => {
       fireEvent.scroll(root);
@@ -1053,7 +998,7 @@ describe('DataView.Timeline', () => {
     expect(screen.queryByTestId('card-o1')).toBeNull();
 
     rerender(makeUI('gantt'));
-    // The DOM is recreated at scroll 0 — the stashed position must come back
+    // The DOM is recreated at scroll 0, so the stashed position must come back
     // instead of stranding the user at the domain start.
     const newRoot = container.firstElementChild as HTMLElement;
     expect(screen.getByTestId('card-o1')).toBeInTheDocument();
@@ -1120,10 +1065,347 @@ describe('DataView.Timeline', () => {
   });
 });
 
+/* ────────────────── characterisation: rendered geometry ──────────────────
+   Behaviour the virtualization work must leave alone. The existing suite
+   already pins card x/width, lane tops, group section stacking, and the
+   horizontal cull window; these cover what it doesn't. */
+
+describe('DataView.Timeline (characterisation)', () => {
+  const cardIds = () =>
+    Array.from(document.querySelectorAll('[data-testid^="card-"]')).map(
+      card => card.getAttribute('data-testid')?.replace('card-', '') ?? ''
+    );
+
+  it('renders cards in chronological DOM order, not row-model order', () => {
+    // Row model is sorted by title (o1, o2, o3); the canvas emits by x. DOM
+    // order is invisible on an absolutely-positioned canvas but is the order a
+    // screen reader walks the `role="list"`.
+    renderTimeline();
+    expect(cardIds()).toEqual(['o1', 'o3', 'o2']); // x = 80, 100, 220
+  });
+
+  it('keeps chronological DOM order under one-per-row packing', () => {
+    // Lanes follow row-model order here, so DOM order and lane order disagree
+    // Worth pinning separately from the packed case above.
+    renderTimeline({ lanePacking: 'one-per-row' });
+    expect(cardIds()).toEqual(['o1', 'o3', 'o2']);
+    expect(screen.getByTestId('card-o2').dataset.lane).toBe('1');
+    expect(screen.getByTestId('card-o3').dataset.lane).toBe('2');
+  });
+
+  it('falls back to the overscan floor with no measurable viewport', () => {
+    // jsdom reports a zero-size client box, as does SSR. Overscan collapses to
+    // its 200px floor, so the window is [-200, 200] horizontally and unbounded
+    // vertically: o2 at x=220 falls outside, o1 and o3 don't.
+    renderTimeline({ virtualized: true });
+    expect(cardIds()).toEqual(['o1', 'o3']);
+  });
+
+  it('ignores measured card heights when virtualized', () => {
+    // The one behaviour vertical culling deliberately moved. Unvirtualized,
+    // this same setup re-stacks lane 1 to 122px on the measured 90px height
+    // (see "re-stacks lanes to the tallest measured card height"). Virtualized,
+    // a culled card never mounts and so never measures, so honouring
+    // measurements would resize lanes under the user mid-scroll, so lanes hold
+    // the estimate instead, putting lane 1 back at 16 + 66 + 16.
+    vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockImplementation(
+      function (this: HTMLElement) {
+        return this.getAttribute('role') === 'listitem' ? 90 : 0;
+      }
+    );
+    renderTimeline({ virtualized: true });
+    expect(screen.getByTestId('card-o1').parentElement!.style.top).toBe('16px');
+    expect(screen.getByTestId('card-o3').parentElement!.style.top).toBe('98px');
+  });
+
+  it('keeps lane and canvas geometry stable across a re-render', () => {
+    const { rerender } = renderTimeline();
+    const before = ['o1', 'o2', 'o3'].map(
+      id => screen.getByTestId(`card-${id}`).parentElement!.style.top
+    );
+    rerender(
+      <DataView<Order>
+        data={orders}
+        fields={fields}
+        mode='client'
+        defaultSort={{ name: 'title', order: 'asc' }}
+        getRowId={(row: Order) => row.id}
+      >
+        <DataView.Timeline<Order>
+          startField='start'
+          endField='end'
+          range={['2025-01-01', '2025-01-31']}
+          scale='day'
+          unitWidth={20}
+          today={false}
+          defaultScrollTo='start'
+          renderCard={row => (
+            <div data-testid={`card-${row.original.id}`}>
+              {row.original.title}
+            </div>
+          )}
+        />
+      </DataView>
+    );
+    const after = ['o1', 'o2', 'o3'].map(
+      id => screen.getByTestId(`card-${id}`).parentElement!.style.top
+    );
+    expect(after).toEqual(before);
+  });
+});
+
+/* ─────────────────── characterisation: axis chrome ───────────────────────
+   Counts of the non-card furniture: tick labels, month bands, marker badges
+   and lines, group slots. Cards and gridlines already cull; the rest is what
+   Phase 2 changes, so these pin where it stands first, unvirtualized, where
+   nothing may move, and virtualized, where it should. */
+
+describe('DataView.Timeline chrome (characterisation)', () => {
+  const countSlot = (container: HTMLElement, slot: string) =>
+    container.querySelectorAll(`[data-slot="data-view-timeline-${slot}"]`)
+      .length;
+
+  /** A year-long domain: 7280px of canvas against a 600px pane. */
+  const yearProps = {
+    range: ['2025-01-01', '2025-12-31'] as [string, string],
+    markers: [
+      { date: '2025-02-14' },
+      { date: '2025-06-30', label: 'Mid' },
+      { date: '2025-11-05', label: 'Launch' }
+    ]
+  };
+
+  it('renders chrome for the whole domain when not virtualized', () => {
+    stubPane();
+    const { container } = renderTimeline(yearProps);
+    expect({
+      tickLabels: countSlot(container, 'axis-tick'),
+      monthBands: countSlot(container, 'axis-band'),
+      markerBadges: countSlot(container, 'axis-marker'),
+      markerLines: countSlot(container, 'marker'),
+      gridlines: countSlot(container, 'gridline')
+    }).toMatchInlineSnapshot(`
+      {
+        "gridlines": 366,
+        "markerBadges": 3,
+        "markerLines": 3,
+        "monthBands": 12,
+        "tickLabels": 183,
+      }
+    `);
+  });
+
+  it('culls chrome to the visible window when virtualized', () => {
+    // Was the full domain on every count but gridlines (183 tick labels, 12
+    // bands, 3 markers) regardless of how narrow the window onto it was.
+    stubPane();
+    const { container } = renderTimeline({ ...yearProps, virtualized: true });
+    expect({
+      tickLabels: countSlot(container, 'axis-tick'),
+      monthBands: countSlot(container, 'axis-band'),
+      markerBadges: countSlot(container, 'axis-marker'),
+      markerLines: countSlot(container, 'marker'),
+      gridlines: countSlot(container, 'gridline')
+    }).toMatchInlineSnapshot(`
+      {
+        "gridlines": 46,
+        "markerBadges": 1,
+        "markerLines": 1,
+        "monthBands": 2,
+        "tickLabels": 23,
+      }
+    `);
+    // Window [-600, 1200] spans Jan-Mar, so only the February marker is in it.
+    expect(screen.queryByText('Launch')).toBeNull();
+  });
+
+  it('keeps the band straddling the left edge of the window', async () => {
+    // Bands tile the domain, so the one under the viewport's left edge starts
+    // before the cull bound. Dropping it would strand the sticky month label
+    // that is supposed to ride the left edge while its band spans the view.
+    stubPane();
+    const { container } = renderTimeline({ ...yearProps, virtualized: true });
+    const root = container.firstElementChild as HTMLElement;
+    await act(async () => {
+      root.scrollLeft = 2000; // mid-April, 240px into the month's band
+      fireEvent.scroll(root);
+      await new Promise(resolve => setTimeout(resolve, 30));
+    });
+    const labels = Array.from(
+      container.querySelectorAll('[data-slot="data-view-timeline-axis-band"]')
+    ).map(band => band.textContent);
+    expect(labels[0]).toBe('Mar');
+    expect(labels).toContain('Apr');
+  });
+
+  it('renders a slot per group section when virtualized', () => {
+    stubPane();
+    const { container } = renderGrouped({ virtualized: true });
+    expect(countSlot(container, 'group-slot')).toMatchInlineSnapshot(`2`);
+  });
+
+  it('drops group slots scrolled out of the window', async () => {
+    stubPane();
+    const { container } = renderGrouped({ virtualized: true });
+    const root = container.firstElementChild as HTMLElement;
+    await act(async () => {
+      root.scrollTop = 450;
+      fireEvent.scroll(root);
+      await new Promise(resolve => setTimeout(resolve, 30));
+    });
+    // Eng's section ends at 218, above the window [250, 850]; Design's spans
+    // 218-354, inside it. Every group's slot used to stay mounted, however far
+    // off-screen the section was.
+    expect(countSlot(container, 'group-slot')).toMatchInlineSnapshot(`1`);
+    expect(screen.getByText('Design')).toBeInTheDocument();
+    expect(screen.queryByText('Eng')).toBeNull();
+  });
+});
+
+/* ──────────────────────────── virtualization ─────────────────────────────
+   `virtualized` culls on both axes. Vertical culling needs a pane height and
+   jsdom does no layout, so these stub the scroll container's client box, with
+   the deliberate exception of the last test, covering the unmeasured fallback.
+   Lane pitch under virtualization is fixed: estimatedRowHeight (66) + laneGap
+   (16) = 82, lane 0 starting at 16. */
+
+/**
+ * Give the scroll pane a viewport; everything else keeps jsdom's zeroes.
+ * jsdom does no layout, so culling has no window without this.
+ */
+function stubPane({ width = 600, height = 200 } = {}) {
+  const paneOnly = (el: HTMLElement, value: number) =>
+    el.dataset.slot === 'data-view-timeline' ? value : 0;
+  vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockImplementation(
+    function (this: HTMLElement) {
+      return paneOnly(this, width);
+    }
+  );
+  vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockImplementation(
+    function (this: HTMLElement) {
+      return paneOnly(this, height);
+    }
+  );
+}
+
+describe('DataView.Timeline virtualization', () => {
+  /** One lane per row, every card at the same x, which isolates vertical culling. */
+  const stackedOrders: Order[] = Array.from({ length: 12 }, (_, i) => ({
+    id: `r${String(i + 1).padStart(2, '0')}`,
+    title: String(i + 1).padStart(2, '0'),
+    start: '2025-01-05',
+    end: '2025-01-10'
+  }));
+
+  const renderedIds = () =>
+    Array.from(document.querySelectorAll('[data-testid^="card-r"]')).map(
+      card => card.getAttribute('data-testid')?.replace('card-', '') ?? ''
+    );
+
+  it('renders only the lanes the vertical window covers', () => {
+    stubPane();
+    renderTimeline(
+      { virtualized: true, lanePacking: 'one-per-row' },
+      stackedOrders
+    );
+    // Overscan is half the 200px pane, floored at 200 → window [-200, 400],
+    // covering lanes 0-4 (lane 5's top is 426). Without vertical culling all
+    // 12 mount, and 10k rows would mount 10k.
+    expect(renderedIds()).toEqual(['r01', 'r02', 'r03', 'r04', 'r05']);
+  });
+
+  it('swaps in lower lanes as the pane scrolls down', async () => {
+    stubPane();
+    const { container } = renderTimeline(
+      { virtualized: true, lanePacking: 'one-per-row' },
+      stackedOrders
+    );
+    const root = container.firstElementChild as HTMLElement;
+    await act(async () => {
+      root.scrollTop = 500;
+      fireEvent.scroll(root);
+      await new Promise(resolve => setTimeout(resolve, 30));
+    });
+    // Window [300, 900] → lanes 3-10. The lanes above scroll out of the top as
+    // the ones past the initial cut-off mount.
+    expect(renderedIds()).toEqual([
+      'r04',
+      'r05',
+      'r06',
+      'r07',
+      'r08',
+      'r09',
+      'r10',
+      'r11'
+    ]);
+  });
+
+  it('culls vertically through group sections too', async () => {
+    stubPane();
+    const { container } = renderGrouped({ virtualized: true });
+    // Eng's two lanes (tops 54, 136) and Design's one (272) all start inside
+    // the initial window.
+    expect(screen.getByTestId('card-a1')).toBeInTheDocument();
+    expect(screen.getByTestId('card-b1')).toBeInTheDocument();
+
+    const root = container.firstElementChild as HTMLElement;
+    await act(async () => {
+      root.scrollTop = 450;
+      fireEvent.scroll(root);
+      await new Promise(resolve => setTimeout(resolve, 30));
+    });
+    // Window [250, 850]: Eng's lanes end at 120 and 202, above it; Design's
+    // spans 272-338, inside. Bands break the uniform pitch, so this exercises
+    // the searched path, not the arithmetic one.
+    expect(screen.queryByTestId('card-a1')).toBeNull();
+    expect(screen.queryByTestId('card-a2')).toBeNull();
+    expect(screen.getByTestId('card-b1')).toBeInTheDocument();
+  });
+
+  it('keeps a card whose span reaches the window from off-screen left', async () => {
+    stubPane();
+    const { container } = renderTimeline(
+      { virtualized: true, range: ['2025-01-01', '2025-12-31'] },
+      [
+        // Both start at x = 2000, left of the window below; only the first is
+        // wide enough to reach into it.
+        { id: 'wide', title: 'Wide', start: '2025-04-11', end: '2025-05-11' },
+        {
+          id: 'narrow',
+          title: 'Narrow',
+          start: '2025-04-11',
+          end: '2025-04-12'
+        }
+      ]
+    );
+    const root = container.firstElementChild as HTMLElement;
+    await act(async () => {
+      root.scrollLeft = 2400;
+      fireEvent.scroll(root);
+      await new Promise(resolve => setTimeout(resolve, 30));
+    });
+    // Window [2100, 3300]. Culling searches by x, which is ordered, while
+    // width isn't, so each lane widens its left bound by its own widest card
+    // and then re-checks the right edge exactly.
+    expect(screen.getByTestId('card-wide')).toBeInTheDocument(); // 2000 → 2600
+    expect(screen.queryByTestId('card-narrow')).toBeNull(); // 2000 → 2020
+  });
+
+  it('skips vertical culling when the pane reports no height', () => {
+    // No stub: jsdom leaves clientHeight 0, as does SSR. A zero height would
+    // otherwise cull to a sliver of lanes, and horizontal culling carries on.
+    renderTimeline(
+      { virtualized: true, lanePacking: 'one-per-row' },
+      stackedOrders
+    );
+    expect(renderedIds()).toHaveLength(12);
+  });
+});
+
 /* ───────────────────────────── ordering contract ─────────────────────────
    Sort can't move a card horizontally (x is locked to time), so it only shows
    up where vertical order is free: `lanePacking="one-per-row"`. `auto` packing
-   stays purely chronological — these two tests are the regression guard. */
+   stays purely chronological, and these two tests are the regression guard. */
 
 describe('DataView.Timeline ordering', () => {
   const laneOf = (id: string) =>
@@ -1219,7 +1501,7 @@ const bands = (container: HTMLElement) =>
 describe('DataView.Timeline grouping', () => {
   it('renders one band per group, in row-model order, with label and count', () => {
     const { container } = renderGrouped();
-    // First-occurrence order from `groupData` — the same order List renders.
+    // First-occurrence order from `groupData`, the same order List renders.
     expect(bands(container).map(band => band.textContent)).toEqual([
       'Eng2',
       'Design1'
@@ -1277,7 +1559,7 @@ describe('DataView.Timeline grouping', () => {
 
   it('keeps a card in its own section when it starts under another group', () => {
     renderGrouped();
-    // Same x as a1 (80px) — proves packing never leaks across sections.
+    // Same x as a1 (80px), which proves packing never leaks across sections.
     expect(screen.getByTestId('card-b1').parentElement!.style.left).toBe(
       '80px'
     );
@@ -1322,7 +1604,7 @@ describe('DataView.Timeline grouping', () => {
     const { container } = renderGrouped({}, [
       ...groupedOrders,
       // A third Eng row outside the range: culled from the canvas, but the
-      // badge still reports `GroupedData.count` — same as List.
+      // badge still reports `GroupedData.count`, the same as List.
       {
         id: 'a3',
         title: 'A3',
@@ -1448,7 +1730,7 @@ describe('DataView.Timeline actionsRef', () => {
       behavior: 'auto'
     });
     expect(root.scrollLeft).toBe(596);
-    // Clamped to t0 (x 0) — the inset yields to the scroll floor.
+    // Clamped to t0 (x 0), so the inset yields to the scroll floor.
     actionsRef.current!.scrollTo('1999-01-01', {
       align: 'start',
       behavior: 'auto'
@@ -1498,5 +1780,416 @@ describe('DataView.Timeline actionsRef', () => {
     actionsRef.current!.scrollTo('today');
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('not rendered'));
     expect(actionsRef.current!.getVisibleRange()).toBeNull();
+  });
+});
+
+/* ─────────────────────── lanePacking="one-per-sort-value" ─────────────────────── */
+
+/**
+ * Lanes come from the field the view is *sorted* by: rows sharing a value share
+ * a lane, and a value only claims a sub-lane where two of its own cards overlap
+ * in time. The sort orders the lanes too, so the Ordering control moves them.
+ * Rows with no usable value lane last.
+ */
+describe('DataView.Timeline sort-value lanes', () => {
+  // Jan 5 → 80px, Jan 6 → 100px (overlaps Jan 5's span), Jan 12 → 220px (clear).
+  // `rank` is the numeric ranking of `priority`, for sorts that need High before
+  // Medium before Low, which alphabetically is impossible.
+  const tasks: Order[] = [
+    {
+      id: 't1',
+      title: 'A',
+      priority: 'Low',
+      rank: 3,
+      start: '2025-01-05',
+      end: '2025-01-10'
+    },
+    {
+      id: 't2',
+      title: 'B',
+      priority: 'High',
+      rank: 1,
+      start: '2025-01-05',
+      end: '2025-01-10'
+    },
+    {
+      id: 't3',
+      title: 'C',
+      priority: 'High',
+      rank: 1,
+      start: '2025-01-12',
+      end: '2025-01-15'
+    },
+    {
+      id: 't4',
+      title: 'D',
+      priority: 'Medium',
+      rank: 2,
+      start: '2025-01-05',
+      end: '2025-01-10'
+    }
+  ];
+
+  const sortableFields: DataViewField<Order>[] = [
+    { accessorKey: 'title', label: 'Title', sortable: true },
+    { accessorKey: 'priority', label: 'Priority', sortable: true },
+    { accessorKey: 'rank', label: 'Rank', sortable: true }
+  ];
+
+  const laneOf = (id: string) =>
+    screen.getByTestId(`card-${id}`).dataset.lane as string;
+
+  const renderSortValueLanes = (
+    props: Partial<DataViewTimelineProps<Order>> = {},
+    data: Order[] = tasks,
+    root: {
+      sort?: { name: string; order: 'asc' | 'desc' };
+      fields?: DataViewField<Order>[];
+      query?: DataViewQuery;
+    } = {}
+  ) =>
+    renderTimeline({ lanePacking: 'one-per-sort-value', ...props }, data, {
+      fields: root.fields ?? sortableFields,
+      sort: root.sort ?? { name: 'priority', order: 'asc' },
+      query: root.query
+    });
+
+  it('lanes by the sorted-by field, one lane per value', () => {
+    renderSortValueLanes();
+    // priority asc → High, Low, Medium (text order).
+    expect(laneOf('t2')).toBe('0');
+    expect(laneOf('t3')).toBe('0'); // same value as t2, no time overlap
+    expect(laneOf('t1')).toBe('1');
+    expect(laneOf('t4')).toBe('2');
+  });
+
+  it('reorders lanes when the sort direction flips', () => {
+    renderSortValueLanes(undefined, tasks, {
+      sort: { name: 'priority', order: 'desc' }
+    });
+    expect(laneOf('t4')).toBe('0');
+    expect(laneOf('t1')).toBe('1');
+    expect(laneOf('t2')).toBe('2');
+  });
+
+  it("lanes by a rank field for orders text sorting can't produce", () => {
+    renderSortValueLanes(undefined, tasks, {
+      sort: { name: 'rank', order: 'asc' }
+    });
+    // rank asc → High(1), Medium(2), Low(3).
+    expect(laneOf('t2')).toBe('0');
+    expect(laneOf('t3')).toBe('0');
+    expect(laneOf('t4')).toBe('1');
+    expect(laneOf('t1')).toBe('2');
+  });
+
+  it('relanes when the sort field changes', () => {
+    // Sorting by title instead lanes by title, where every value is distinct, so one
+    // lane per row, in title order.
+    renderSortValueLanes(undefined, tasks, {
+      sort: { name: 'title', order: 'asc' }
+    });
+    expect(['t1', 't2', 't3', 't4'].map(laneOf)).toEqual(['0', '1', '2', '3']);
+  });
+
+  it('adds a sub-lane only where one value overlaps itself', () => {
+    renderSortValueLanes(undefined, [
+      ...tasks,
+      // Overlaps t2 [80..180] and shares its value → High takes a second lane.
+      {
+        id: 't5',
+        title: 'E',
+        priority: 'High',
+        rank: 1,
+        start: '2025-01-06',
+        end: '2025-01-09'
+      }
+    ]);
+    expect(laneOf('t2')).toBe('0');
+    expect(laneOf('t5')).toBe('1');
+    // Low sits below every lane High claimed.
+    expect(laneOf('t1')).toBe('2');
+  });
+
+  it('lanes rows with no value last, whatever the sort puts first', () => {
+    renderSortValueLanes(undefined, [
+      {
+        id: 'n1',
+        title: 'N1',
+        priority: null,
+        rank: 0,
+        start: '2025-01-05',
+        end: '2025-01-10'
+      },
+      {
+        id: 'n2',
+        title: 'N2',
+        rank: 0,
+        start: '2025-01-12',
+        end: '2025-01-15'
+      },
+      {
+        id: 'n3',
+        title: 'N3',
+        priority: '',
+        rank: 0,
+        start: '2025-01-20',
+        end: '2025-01-25'
+      },
+      ...tasks
+    ]);
+    expect(laneOf('t2')).toBe('0');
+    expect(laneOf('t1')).toBe('1');
+    expect(laneOf('t4')).toBe('2');
+    // null, undefined and '' share the one trailing lane.
+    expect(laneOf('n1')).toBe('3');
+    expect(laneOf('n2')).toBe('3');
+    expect(laneOf('n3')).toBe('3');
+  });
+
+  it('lanes non-primitive values last, with a dev warning', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    renderSortValueLanes(undefined, [
+      {
+        id: 'obj',
+        title: 'Obj',
+        priority: { id: 'High' },
+        rank: 1,
+        start: '2025-01-05',
+        end: '2025-01-10'
+      },
+      {
+        id: 'ok',
+        title: 'Ok',
+        priority: 'High',
+        rank: 1,
+        start: '2025-01-12',
+        end: '2025-01-15'
+      }
+    ]);
+    expect(laneOf('ok')).toBe('0');
+    expect(laneOf('obj')).toBe('1');
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('non-primitive "priority" value')
+    );
+  });
+
+  it('keys numeric values by their string form', () => {
+    renderSortValueLanes(
+      undefined,
+      [
+        {
+          id: 'p1',
+          title: 'P1',
+          priority: 'x',
+          rank: 1,
+          start: '2025-01-05',
+          end: '2025-01-10'
+        },
+        {
+          id: 'p2',
+          title: 'P2',
+          priority: 'x',
+          rank: 2,
+          start: '2025-01-05',
+          end: '2025-01-10'
+        },
+        {
+          id: 'p3',
+          title: 'P3',
+          priority: 'x',
+          rank: 1,
+          start: '2025-01-12',
+          end: '2025-01-15'
+        }
+      ],
+      { sort: { name: 'rank', order: 'asc' } }
+    );
+    expect(laneOf('p1')).toBe('0');
+    expect(laneOf('p3')).toBe('0');
+    expect(laneOf('p2')).toBe('1');
+  });
+
+  it('stacks lanes at the fixed pitch like any other packing', () => {
+    renderSortValueLanes(undefined, tasks, {
+      sort: { name: 'rank', order: 'asc' }
+    });
+    // lane 0 at laneGap 16, lane 1 at 16 + 66 + 16, lane 2 at 16 + 2 × 82.
+    expect(screen.getByTestId('card-t2').parentElement!.style.top).toBe('16px');
+    expect(screen.getByTestId('card-t4').parentElement!.style.top).toBe('98px');
+    expect(screen.getByTestId('card-t1').parentElement!.style.top).toBe(
+      '180px'
+    );
+  });
+
+  it('lanes per group section when group_by is active', () => {
+    const grouped: Order[] = [
+      {
+        id: 'e1',
+        title: 'E1',
+        team: 'Eng',
+        priority: 'High',
+        rank: 1,
+        start: '2025-01-05',
+        end: '2025-01-10'
+      },
+      {
+        id: 'e2',
+        title: 'E2',
+        team: 'Eng',
+        priority: 'Low',
+        rank: 3,
+        start: '2025-01-12',
+        end: '2025-01-15'
+      },
+      {
+        id: 'd1',
+        title: 'D1',
+        team: 'Design',
+        priority: 'Low',
+        rank: 3,
+        start: '2025-01-05',
+        end: '2025-01-10'
+      }
+    ];
+    renderSortValueLanes(undefined, grouped, {
+      fields: [
+        ...sortableFields,
+        { accessorKey: 'team', label: 'Team', groupable: true }
+      ],
+      query: { group_by: ['team'] }
+    });
+    // Section-relative lanes: Design's only value starts back at lane 0, and a
+    // value never spans sections.
+    expect(laneOf('e1')).toBe('0');
+    expect(laneOf('e2')).toBe('1');
+    expect(laneOf('d1')).toBe('0');
+  });
+
+  it('degenerates to time packing when grouped by the sorted field', () => {
+    const grouped: Order[] = [
+      {
+        id: 'h1',
+        title: 'H1',
+        priority: 'High',
+        rank: 1,
+        start: '2025-01-05',
+        end: '2025-01-10'
+      },
+      {
+        id: 'h2',
+        title: 'H2',
+        priority: 'High',
+        rank: 1,
+        start: '2025-01-12',
+        end: '2025-01-15'
+      },
+      {
+        id: 'l1',
+        title: 'L1',
+        priority: 'Low',
+        rank: 3,
+        start: '2025-01-05',
+        end: '2025-01-10'
+      }
+    ];
+    renderSortValueLanes(undefined, grouped, {
+      fields: [
+        { accessorKey: 'title', label: 'Title', sortable: true },
+        {
+          accessorKey: 'priority',
+          label: 'Priority',
+          sortable: true,
+          groupable: true
+        },
+        { accessorKey: 'rank', label: 'Rank', sortable: true }
+      ],
+      query: { group_by: ['priority'] }
+    });
+    // Each section already holds one value → one lane per section.
+    expect(laneOf('h1')).toBe('0');
+    expect(laneOf('h2')).toBe('0');
+    expect(laneOf('l1')).toBe('0');
+  });
+
+  it('lanes by a dotted accessorKey the way the sort reads it', () => {
+    // TanStack treats a dotted key as a path, so the lane value has to come
+    // through the row, since `original['meta.rank']` would be undefined for every
+    // row and pile them all onto the no-value lane.
+    renderSortValueLanes(
+      undefined,
+      [
+        {
+          id: 'd1',
+          title: 'D1',
+          meta: { rank: 3 },
+          start: '2025-01-05',
+          end: '2025-01-10'
+        },
+        {
+          id: 'd2',
+          title: 'D2',
+          meta: { rank: 1 },
+          start: '2025-01-05',
+          end: '2025-01-10'
+        },
+        {
+          id: 'd3',
+          title: 'D3',
+          meta: { rank: 2 },
+          start: '2025-01-05',
+          end: '2025-01-10'
+        }
+      ],
+      {
+        fields: [
+          { accessorKey: 'title', label: 'Title', sortable: true },
+          { accessorKey: 'meta.rank', label: 'Rank', sortable: true }
+        ],
+        sort: { name: 'meta.rank', order: 'asc' }
+      }
+    );
+    expect(laneOf('d2')).toBe('0');
+    expect(laneOf('d3')).toBe('1');
+    expect(laneOf('d1')).toBe('2');
+  });
+
+  it('warns when the sort key matches no field', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    renderSortValueLanes(undefined, tasks, {
+      sort: { name: 'nope', order: 'asc' }
+    });
+    // Nothing to read → one bucket for every row, which then sub-lanes on time
+    // overlap alone (t1/t2/t4 all start Jan 5; t3 is clear of them). Visually
+    // indistinguishable from `auto`, hence the warning.
+    expect(['t1', 't2', 't4'].map(laneOf)).toEqual(['0', '1', '2']);
+    expect(laneOf('t3')).toBe('0');
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('which matches no field')
+    );
+  });
+
+  it('culls sort-value lanes when virtualized', () => {
+    stubPane();
+    const many: Order[] = Array.from({ length: 12 }, (_, i) => ({
+      id: `v${String(i + 1).padStart(2, '0')}`,
+      title: String(i + 1).padStart(2, '0'),
+      priority: `p${String(i + 1).padStart(2, '0')}`,
+      start: '2025-01-05',
+      end: '2025-01-10'
+    }));
+    renderSortValueLanes({ virtualized: true }, many);
+    // One lane per value at the fixed 82px pitch; the 200px pane plus overscan
+    // reaches lane 4 (top 344px) and stops before lane 5 (426px).
+    const rendered = Array.from(
+      document.querySelectorAll('[data-testid^="card-v"]')
+    ).map(card => (card as HTMLElement).dataset.testid);
+    expect(rendered).toEqual([
+      'card-v01',
+      'card-v02',
+      'card-v03',
+      'card-v04',
+      'card-v05'
+    ]);
   });
 });

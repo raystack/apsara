@@ -96,3 +96,27 @@ export const positionDemo = {
     </Drawer>
   </Flex>`
 };
+
+export const controlledDemo = {
+  type: 'code',
+  code: `
+function ControlledDrawer() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <Flex align="center" gap={5}>
+      <Button variant="outline" onClick={() => setOpen(true)}>Open from outside</Button>
+      <Drawer open={open} onOpenChange={setOpen} side="right">
+        <Drawer.Content>
+          <Drawer.Header>
+            <Drawer.Title>Settings</Drawer.Title>
+          </Drawer.Header>
+          <Drawer.Body>
+            <Text size="small">Closing is owned by the parent, so a save can finish first.</Text>
+          </Drawer.Body>
+        </Drawer.Content>
+      </Drawer>
+    </Flex>
+  );
+}`
+};

@@ -2,7 +2,6 @@
 title: Avatar
 description: An image element with a fallback for representing the user.
 source: packages/raystack/components/avatar
-tag: new
 ---
 
 import {
@@ -32,21 +31,9 @@ import { Avatar, AvatarGroup, getAvatarColor } from '@raystack/apsara'
 </AvatarGroup>
 ```
 
-## API Reference
+## Usage
 
-### Avatar
-
-Renders an individual avatar with image or initials fallback.
-
-<auto-type-table path="./props.ts" name="AvatarProps" />
-
-### AvatarGroup
-
-Groups multiple avatars with overlap and count indicator.
-
-<auto-type-table path="./props.ts" name="AvatarGroupProps" />
-
-## Examples
+The props below cover the shape and size of an avatar, and what it shows when there is no picture to display.
 
 ### Variant
 
@@ -56,7 +43,7 @@ Choose between soft and solid variants to control the visual weight and emphasis
 
 ### Size
 
-The Avatar component supports 13 different sizes to accommodate various layout requirements and design needs.
+`size` is a number in pixels rather than a named scale, so an avatar can match whatever line height or row it sits in.
 
 <Demo data={sizesDemo} />
 
@@ -78,11 +65,39 @@ Avatar can display user images with graceful fallback to initials when images fa
 
 <Demo data={imageDemo} />
 
-### With Generated Colors
+### With generated colors
 
 use `getAvatarColor` utility to generate colors based on a string.
 
 <Demo data={generatedColorDemo} />
+
+## API Reference
+
+The avatar, plus a group for stacking several together.
+
+### Avatar
+
+Renders an individual avatar with image or initials fallback.
+
+<auto-type-table path="./props.ts" name="AvatarProps" />
+
+### AvatarGroup
+
+Groups multiple avatars with overlap and count indicator.
+
+<auto-type-table path="./props.ts" name="AvatarGroupProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `avatar` | The root element that wraps the image and fallback |
+| `avatar-image` | The `<img>` element (when the image loads) |
+| `avatar-fallback` | The fallback shown before the image loads or on error |
+| `avatar-group` | The root `<div>` of an `AvatarGroup` |
+| `avatar-group-item` | Wrapper around each avatar in the group, including the overflow avatar |
 
 ## Accessibility
 

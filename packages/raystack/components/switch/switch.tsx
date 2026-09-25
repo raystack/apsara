@@ -28,9 +28,13 @@ export function Switch({ className, size, required, ...props }: SwitchProps) {
     <SwitchPrimitive.Root
       required={resolvedRequired}
       className={switchVariants({ size, className })}
+      data-slot='switch'
       {...props}
     >
-      <SwitchPrimitive.Thumb className={styles.thumb} />
+      <SwitchPrimitive.Thumb
+        className={styles.thumb}
+        data-slot='switch-thumb'
+      />
     </SwitchPrimitive.Root>
   );
 }

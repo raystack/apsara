@@ -61,6 +61,7 @@ export function ProgressRoot({
         value={value}
         min={min}
         max={max}
+        data-slot='progress'
         {...props}
       >
         {children}

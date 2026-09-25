@@ -15,7 +15,11 @@ export function CodeBlockContent({
   ...props
 }: ComponentProps<'div'>) {
   return (
-    <div className={cx(styles.content, className)} {...props}>
+    <div
+      className={cx(styles.content, className)}
+      data-slot='code-block-content'
+      {...props}
+    >
       {children}
     </div>
   );
@@ -33,6 +37,7 @@ export function CodeBlockHeader({
       align='center'
       gap={4}
       className={cx(styles.header, className)}
+      data-slot='code-block-header'
       {...props}
     >
       {children}
@@ -48,7 +53,11 @@ export function CodeBlockLabel({
   ...props
 }: ComponentProps<typeof Text>) {
   return (
-    <Text className={cx(styles.label, className)} {...props}>
+    <Text
+      className={cx(styles.label, className)}
+      data-slot='code-block-label'
+      {...props}
+    >
       {children}
     </Text>
   );
@@ -86,6 +95,7 @@ export function CodeBlockCollapseTrigger({
         collapsed && styles.collapsed,
         className
       )}
+      data-slot='code-block-collapse-trigger'
       {...props}
     >
       {typeof children === 'function' ? children(!!collapsed) : children}
@@ -116,6 +126,7 @@ export function CodeBlockCopyButton({
         variant === 'floating' && styles.floatingCopyButton,
         className
       )}
+      data-slot='code-block-copy-button'
       {...props}
     />
   );

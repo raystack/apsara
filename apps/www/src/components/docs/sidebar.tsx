@@ -25,6 +25,9 @@ function renderNode(node: Node, pathname: string): ReactNode {
     node.children &&
     node.children.length > 0
   ) {
+    // A section documented across several pages. It renders like every other
+    // section, always open, with the index page listed first under its own
+    // title.
     return (
       <Sidebar.Group
         label={node.name as string}
@@ -35,9 +38,7 @@ function renderNode(node: Node, pathname: string): ReactNode {
           label: styles.label
         }}
       >
-        {/* Render index item first */}
-        {renderNode(node.index, pathname)}
-        {/* Recursively render all children */}
+        <SidebarItem item={node.index} pathname={pathname} />
         {node.children.map(child => renderNode(child, pathname))}
       </Sidebar.Group>
     );
@@ -90,6 +91,7 @@ function SidebarItem({ item, pathname }: { item: Item; pathname: string }) {
       render={<Link href={item.url} />}
       active={isActiveUrl(item.url, pathname, false)}
       classNames={{
+        root: styles.item,
         text: styles.itemText
       }}
     >
@@ -104,7 +106,7 @@ function SidebarItem({ item, pathname }: { item: Item; pathname: string }) {
 export default function DocsSidebar({ pageTree, className }: Props) {
   const pathname = usePathname();
   return (
-    <Sidebar open collapsible={false} className={cx(className, styles.sidebar)}>
+    <Sidebar open collapsible='none' className={cx(className, styles.sidebar)}>
       <Sidebar.Header className={styles.header}>
         <Flex
           align='center'

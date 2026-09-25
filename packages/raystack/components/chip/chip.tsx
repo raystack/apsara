@@ -3,10 +3,12 @@
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ComponentProps, ReactNode } from 'react';
 
+import { radiusVariants } from '../../shared/radius';
 import styles from './chip.module.css';
 
 const chip = cva(styles.chip, {
   variants: {
+    ...radiusVariants,
     variant: {
       outline: styles['chip-variant-outline'],
       filled: styles['chip-variant-filled']
@@ -39,6 +41,7 @@ type ChipProps = ComponentProps<'span'> &
 
 export const Chip = ({
   variant,
+  radius,
   size,
   color,
   trailingIcon,
@@ -73,6 +76,7 @@ export const Chip = ({
           className={styles['leading-icon']}
           aria-hidden='true'
           role='presentation'
+          data-slot='chip-leading-icon'
         >
           {leadingIcon}
         </span>
@@ -86,6 +90,7 @@ export const Chip = ({
             typeof children === 'string' ? children : 'item'
           }`}
           type='button'
+          data-slot='chip-dismiss'
         >
           <svg
             width='12'
@@ -95,6 +100,7 @@ export const Chip = ({
             xmlns='http://www.w3.org/2000/svg'
             aria-hidden='true'
             role='presentation'
+            data-slot='chip-dismiss-icon'
           >
             <path
               fillRule='evenodd'
@@ -109,6 +115,7 @@ export const Chip = ({
           className={styles['trailing-icon']}
           aria-hidden='true'
           role='presentation'
+          data-slot='chip-trailing-icon'
         >
           {trailingIcon}
         </span>
@@ -119,6 +126,7 @@ export const Chip = ({
   if (isInteractive) {
     return (
       <button
+        data-slot='chip'
         {...(props as React.ComponentProps<'button'>)}
         {...sharedProps}
         type='button'
@@ -126,6 +134,7 @@ export const Chip = ({
         role={role}
         className={chip({
           variant,
+          radius,
           size,
           color,
           className: cx(styles['chip-interactive'], className)
@@ -141,9 +150,10 @@ export const Chip = ({
 
   return (
     <span
+      data-slot='chip'
       {...props}
       {...sharedProps}
-      className={chip({ variant, size, color, className })}
+      className={chip({ variant, size, color, radius, className })}
       role={role ?? 'status'}
       onClick={disabled ? undefined : onClick}
     >

@@ -18,17 +18,13 @@ import { Search } from "@raystack/apsara";
 <Search />
 ```
 
-## API Reference
+## Usage
 
-Renders a search input field with clear functionality.
-
-<auto-type-table path="./props.ts" name="SearchProps" />
-
-## Examples
+A text input with the search icon already in place. Set its size, whether it can be cleared, and who owns the value.
 
 ### Size
 
-The Search component comes in two sizes to fit different design contexts.
+Two sizes. `large` is the default; `small` fits a toolbar or a table header.
 
 <Demo data={sizeDemo} />
 
@@ -38,11 +34,28 @@ The Search component can include a clear button that appears when there is input
 
 <Demo data={clearDemo} />
 
-### Controlled Value
+### Controlled value
 
 Use `onValueChange` to receive only the new query string, or `onChange` for the full React change event. The Search component forwards both to the underlying [Input](/docs/components/input).
 
 <Demo data={onValueChangeDemo} />
+
+## API Reference
+
+Renders a search input field with clear functionality.
+
+<auto-type-table path="./props.ts" name="SearchProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `search` | The `role="search"` container |
+| `search-input` | The `<input>` element itself |
+| `search-clear` | Wrapper around the clear button (when `showClearButton`) |
+| `search-clear-button` | The clear button (when `showClearButton`) |
 
 ## Accessibility
 

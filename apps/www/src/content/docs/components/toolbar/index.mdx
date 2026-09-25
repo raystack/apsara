@@ -2,7 +2,6 @@
 title: Toolbar
 description: A container for grouping interactive controls with accessible keyboard navigation.
 source: packages/raystack/components/toolbar
-tag: new
 ---
 
 import { preview, groupDemo, verticalDemo, compositionDemo, disabledDemo } from "./demo.ts";
@@ -28,7 +27,37 @@ import { Toolbar } from '@raystack/apsara'
 </Toolbar>
 ```
 
+## Usage
+
+A toolbar gives its children one tab stop and arrow-key movement between them. What goes inside is up to you.
+
+### Grouped
+
+Use `Toolbar.Group` to group related buttons.
+
+<Demo data={groupDemo} />
+
+### Vertical
+
+Use the `orientation` prop to render the toolbar vertically.
+
+<Demo data={verticalDemo} />
+
+### Composition
+
+Use the `render` prop to compose with other components.
+
+<Demo data={compositionDemo} />
+
+### Disabled
+
+Disable all toolbar items by setting `disabled` on the root.
+
+<Demo data={disabledDemo} />
+
 ## API Reference
+
+The toolbar, and the controls that know how to sit inside it.
 
 ### Root
 
@@ -66,31 +95,16 @@ A native input element with integrated keyboard navigation.
 
 <auto-type-table path="./props.ts" name="ToolbarInputProps" />
 
-## Examples
+### Slots
 
-### Grouped
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
 
-Use `Toolbar.Group` to group related buttons.
-
-<Demo data={groupDemo} />
-
-### Vertical
-
-Use the `orientation` prop to render the toolbar vertically.
-
-<Demo data={verticalDemo} />
-
-### Composition
-
-Use the `render` prop to compose with other components.
-
-<Demo data={compositionDemo} />
-
-### Disabled
-
-Disable all toolbar items by setting `disabled` on the root.
-
-<Demo data={disabledDemo} />
+| Slot | Element |
+|------|---------|
+| `toolbar` | The root element |
+| `toolbar-button` | `Toolbar.Button` |
+| `toolbar-group` | `Toolbar.Group` wrapper |
+| `toolbar-separator` | `Toolbar.Separator` |
 
 ## Accessibility
 

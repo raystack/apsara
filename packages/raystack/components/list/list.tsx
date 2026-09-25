@@ -44,6 +44,7 @@ const ListRoot = ({ children, className, ...props }: ListRootProps) => {
       // `list-style: none` causes Safari/VoiceOver to drop the implicit
       // list role; keep the explicit role so the list stays announced.
       role='list'
+      data-slot='list'
       {...props}
     >
       {children}
@@ -53,7 +54,7 @@ const ListRoot = ({ children, className, ...props }: ListRootProps) => {
 
 const ListItem = ({ children, className, ...props }: ListItemProps) => {
   return (
-    <li className={listItem({ className })} {...props}>
+    <li className={listItem({ className })} data-slot='list-item' {...props}>
       {children}
     </li>
   );
@@ -61,7 +62,7 @@ const ListItem = ({ children, className, ...props }: ListItemProps) => {
 
 const ListLabel = ({ children, className, ...props }: ListLabelProps) => {
   return (
-    <span className={label({ className })} {...props}>
+    <span className={label({ className })} data-slot='list-label' {...props}>
       {children}
     </span>
   );
@@ -69,7 +70,7 @@ const ListLabel = ({ children, className, ...props }: ListLabelProps) => {
 
 const ListValue = ({ children, className, ...props }: ListValueProps) => {
   return (
-    <span className={value({ className })} {...props}>
+    <span className={value({ className })} data-slot='list-value' {...props}>
       {children}
     </span>
   );
@@ -86,9 +87,12 @@ const ListHeader = ({
       className={header({ className })}
       role='heading'
       aria-level={ariaLevel}
+      data-slot='list-header'
       {...props}
     >
-      <span className={headerText()}>{children}</span>
+      <span className={headerText()} data-slot='list-header-text'>
+        {children}
+      </span>
     </div>
   );
 };

@@ -72,13 +72,21 @@ export const SelectMultipleValue = ({
   }, [data, containerWidth]);
 
   return (
-    <div ref={containerRef} className={cx(styles.valueContent)}>
+    <div
+      ref={containerRef}
+      className={cx(styles.valueContent)}
+      data-slot='select-value'
+    >
       {data.slice(0, visibleCount).map(item => (
         <Chip key={item.value} leadingIcon={item.leadingIcon}>
           {typeof item.children === 'string' ? item.children : item.value}
         </Chip>
       ))}
-      {data.length > visibleCount && <Text>+{data.length - visibleCount}</Text>}
+      {data.length > visibleCount && (
+        <Text data-slot='select-value-overflow'>
+          +{data.length - visibleCount}
+        </Text>
+      )}
     </div>
   );
 };

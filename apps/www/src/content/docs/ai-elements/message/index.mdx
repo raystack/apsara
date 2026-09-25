@@ -1,6 +1,6 @@
 ---
 title: Message
-description: Inert message layout — avatar, header, content, footer, hover actions and bubbles, aligned to either side of a conversation.
+description: Inert message layout with avatar, header, content, footer, hover actions and bubbles, aligned to either side of a conversation.
 source: packages/raystack/components/message
 tag: new
 ---
@@ -25,37 +25,14 @@ import { Message } from '@raystack/apsara'
 </Message>
 ```
 
-`Message` is pure layout — no context, no effects, no chat coupling. It works
+`Message` is pure layout, with no context, no effects and no chat coupling. It works
 anywhere: inside a `Chat` scroller, a comment thread, or a standalone
 transcript. Scroll behavior (visibility tracking, turn anchoring) belongs to
-[Chat](/docs/ai-elements/chat) — wrap a message in `Chat.Item` to opt in.
+[Chat](/docs/ai-elements/chat). Wrap a message in `Chat.Item` to opt in.
 
-## API Reference
+## Usage
 
-### Message
-
-One message. `align` drives which side everything sits on.
-
-<auto-type-table path="./props.ts" name="MessageProps" />
-
-Sub-parts are layout slots: `Message.Avatar` (bottom-aligned beside the
-message), `Message.Header` (sender line), `Message.Content` (the body
-column), `Message.Footer` (timestamp line) and `Message.Actions`
-(hover-revealed controls beside the bubble; always visible on touch devices).
-
-### Message.Group
-
-A flex column that pulls consecutive messages from the same sender closer
-together. Render the avatar and footer once — typically on the group's last
-message.
-
-### Message.Bubble
-
-The message surface.
-
-<auto-type-table path="./props.ts" name="MessageBubbleProps" />
-
-## Examples
+A message is composed from parts. What follows covers those parts, how consecutive turns group together, and the bubble treatments.
 
 ### Message anatomy
 
@@ -79,7 +56,7 @@ appear once.
 
 ### Ghost bubbles
 
-`variant="ghost"` removes the surface — no background, border or padding — and
+`variant="ghost"` removes the surface, so there is no background, border or padding, and
 the bubble runs the full width of the message row instead of shrink-wrapping.
 It renders as plain body copy (Text at `size="small"`), which is the
 conventional treatment for assistant replies: the reader's own messages keep a
@@ -87,9 +64,50 @@ bubble, the assistant's read as page content.
 
 <Demo data={ghostDemo} />
 
+## API Reference
+
+A message, a group of them, and the bubble a message body sits in.
+
+### Message
+
+One message. `align` drives which side everything sits on.
+
+<auto-type-table path="./props.ts" name="MessageProps" />
+
+Sub-parts are layout slots: `Message.Avatar` (bottom-aligned beside the
+message), `Message.Header` (sender line), `Message.Content` (the body
+column), `Message.Footer` (timestamp line) and `Message.Actions`
+(hover-revealed controls beside the bubble; always visible on touch devices).
+
+### Message.Group
+
+A flex column that pulls consecutive messages from the same sender closer
+together. Render the avatar and footer once, typically on the group's last
+message.
+
+### Message.Bubble
+
+The message surface.
+
+<auto-type-table path="./props.ts" name="MessageBubbleProps" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `message` | A single message row |
+| `message-group` | Wrapper around consecutive messages from one sender |
+| `message-avatar` | The sender avatar |
+| `message-header` | Row above the bubble, for sender name and timestamp |
+| `message-content` | The bubble holding the message body |
+| `message-actions` | Action row revealed on the message |
+| `message-footer` | Row below the bubble |
+
 ## Accessibility
 
 - `Message.Actions` reveal on hover **and** on focus-within, and stay visible
   on touch devices, so keyboard and touch users are not locked out.
-- Message bodies are regular document content — screen readers announce them
+- Message bodies are regular document content, so screen readers announce them
   in reading order with no extra semantics to configure.

@@ -28,9 +28,10 @@ export function CodeBlockLanguageSelectTrigger({
       className={cx(styles.languageSelectTrigger, className)}
       size='small'
       variant='text'
+      data-slot='code-block-language-select-trigger'
       {...props}
     >
-      <Select.Value />
+      <Select.Value data-slot='code-block-language-select-value' />
     </Select.Trigger>
   );
 }

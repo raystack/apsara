@@ -59,6 +59,7 @@ export function MeterRoot({
         value={value}
         min={min}
         max={max}
+        data-slot='meter'
         {...props}
       >
         {children}

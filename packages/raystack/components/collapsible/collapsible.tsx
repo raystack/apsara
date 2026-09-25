@@ -5,7 +5,7 @@ import { cx } from 'class-variance-authority';
 import styles from './collapsible.module.css';
 
 function CollapsibleRoot(props: CollapsiblePrimitive.Root.Props) {
-  return <CollapsiblePrimitive.Root {...props} />;
+  return <CollapsiblePrimitive.Root data-slot='collapsible' {...props} />;
 }
 
 CollapsibleRoot.displayName = 'Collapsible';
@@ -17,6 +17,7 @@ function CollapsibleTrigger({
   return (
     <CollapsiblePrimitive.Trigger
       className={cx(styles.trigger, className)}
+      data-slot='collapsible-trigger'
       {...props}
     />
   );
@@ -31,6 +32,7 @@ function CollapsiblePanel({
   return (
     <CollapsiblePrimitive.Panel
       className={cx(styles.panel, className)}
+      data-slot='collapsible-panel'
       {...props}
     />
   );

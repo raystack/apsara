@@ -4,7 +4,9 @@ description: A component for displaying information in a key-value pair list for
 source: packages/raystack/components/list
 ---
 
-import { basicDemo, preview } from "./demo.ts";
+import { basicDemo, preview,
+  alignDemo,
+} from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -24,7 +26,25 @@ import { List } from "@raystack/apsara";
 </List>
 ```
 
+## Usage
+
+A list is rows of label and value. The only real choice is how those two columns line up.
+
+### Basic usage
+
+A `Header` labels the group, then each `Item` pairs a `Label` with its `Value`. Give the labels a shared `min-width` so the values line up in a column.
+
+<Demo data={basicDemo} />
+
+### Aligning rows
+
+`align` on an `Item` controls how the label sits against its value. `center` suits one-line values; switch to `start` when the value wraps, so the label stays level with the first line rather than floating in the middle.
+
+<Demo data={alignDemo} />
+
 ## API Reference
+
+Each item holds an aligned label and value, with an optional header above them.
 
 ### Root
 
@@ -56,11 +76,18 @@ Renders the value text within a list item.
 
 <auto-type-table path="./props.ts" name="ListValueProps" />
 
-## Examples
+### Slots
 
-### Basic Usage
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
 
-<Demo data={basicDemo} />
+| Slot | Element |
+|------|---------|
+| `list` | The root `<ul>` element |
+| `list-header` | The header row (`<div>` with heading role) |
+| `list-header-text` | The `<span>` wrapping the header text |
+| `list-item` | An individual list row (`<li>`) |
+| `list-label` | The `<span>` holding the key text of an item |
+| `list-value` | The `<span>` holding the value text of an item |
 
 ## Accessibility
 
@@ -69,7 +96,7 @@ The List component implements proper ARIA attributes for accessibility:
 - List renders a `<ul>` with explicit `role="list"`. The role is kept
   even though the element is native, because Safari/VoiceOver drop the
   implicit list role when `list-style: none` is applied.
-- List relies on the native `<li>` semantics for items — no redundant
+- List relies on the native `<li>` semantics for items, with no redundant
   `role="listitem"` is set.
 - No generic default `aria-label` is added. Pass `aria-label` when the
   list needs an accessible name distinct from surrounding context.

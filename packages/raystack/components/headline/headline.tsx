@@ -45,14 +45,16 @@ export function Headline({
   ref,
   ...props
 }: HeadlineProps) {
+  const headlineProps = {
+    'data-slot': 'headline',
+    className: headline({ size, weight, align, truncate, className })
+  };
+
   const element = useRender({
     defaultTagName: 'h2',
     ref,
     render,
-    props: mergeProps<'h2'>(
-      { className: headline({ size, weight, align, truncate, className }) },
-      props
-    )
+    props: mergeProps<'h2'>(headlineProps, props)
   });
 
   return element;

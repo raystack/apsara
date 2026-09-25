@@ -39,6 +39,7 @@ export function Container({
   const resolvedRole = role ?? (hasLabel ? 'region' : undefined);
   return (
     <div
+      data-slot='container'
       className={container({ size, align, className })}
       role={resolvedRole}
       aria-label={ariaLabel}

@@ -41,6 +41,7 @@ export const FloatingActionsRoot = ({
   ...props
 }: FloatingActionsProps) => (
   <ToolbarPrimitive.Root
+    data-slot='floating-actions'
     data-variant={variant}
     data-side={side}
     data-align={align}
@@ -59,7 +60,11 @@ export const FloatingActionsGroup = ({
   className,
   ...props
 }: FloatingActionsGroupProps) => (
-  <ToolbarPrimitive.Group className={cx(styles.group, className)} {...props} />
+  <ToolbarPrimitive.Group
+    data-slot='floating-actions-group'
+    className={cx(styles.group, className)}
+    {...props}
+  />
 );
 FloatingActionsGroup.displayName = 'FloatingActions.Group';
 
@@ -73,6 +78,7 @@ export const FloatingActionsSeparator = ({
   ...props
 }: FloatingActionsSeparatorProps) => (
   <Separator
+    data-slot='floating-actions-separator'
     orientation='vertical'
     className={cx(styles.separator, className)}
     {...props}

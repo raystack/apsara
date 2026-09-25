@@ -41,6 +41,7 @@ export function SelectValue({
     return (
       <span
         data-placeholder=''
+        data-slot='select-value'
         className={cx(styles.placeholder, className)}
         {...props}
       >
@@ -51,7 +52,7 @@ export function SelectValue({
 
   if (typeof children === 'function') {
     return (
-      <span className={className} {...props}>
+      <span data-slot='select-value' className={className} {...props}>
         {children(item)}
       </span>
     );
@@ -59,7 +60,7 @@ export function SelectValue({
 
   if (children) {
     return (
-      <span className={className} {...props}>
+      <span data-slot='select-value' className={className} {...props}>
         {children}
       </span>
     );
@@ -70,10 +71,12 @@ export function SelectValue({
   }
 
   return (
-    <span className={className} {...props}>
-      <div className={cx(styles.valueContent)}>
+    <span data-slot='select-value' className={className} {...props}>
+      <div className={cx(styles.valueContent)} data-slot='select-value-content'>
         {typeof item?.children === 'string' && item?.leadingIcon && (
-          <div className={styles.itemIcon}>{item.leadingIcon}</div>
+          <div className={styles.itemIcon} data-slot='select-value-icon'>
+            {item.leadingIcon}
+          </div>
         )}
         {item?.children ?? value}
       </div>

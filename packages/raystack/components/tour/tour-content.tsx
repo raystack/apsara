@@ -9,6 +9,8 @@ import {
   useMemo,
   useRef
 } from 'react';
+import { type Radius, radiusStyle } from '../../shared/radius';
+import { useThemeInjection } from '../theme/portal';
 import styles from './tour.module.css';
 import { useTourContext } from './tour-context';
 import { TourDefaultLayout } from './tour-parts';
@@ -34,6 +36,8 @@ export interface TourContentProps {
    * `Tour.Description`, `Tour.Progress` and the navigation buttons.
    */
   children?: ReactNode | ((props: TourRenderProps) => ReactNode);
+  /** Corner radius for this card only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 export function TourContent({
@@ -43,6 +47,7 @@ export function TourContent({
   showArrow = false,
   className,
   style,
+  radius,
   children
 }: TourContentProps) {
   const {
@@ -58,6 +63,7 @@ export function TourContent({
   } = useTourContext('Tour.Content');
   const detached = step != null && step.target == null;
   const popupRef = useRef<HTMLDivElement>(null);
+  const theme = useThemeInjection();
 
   const visible = transition !== 'fade' || revealed;
 
@@ -75,7 +81,7 @@ export function TourContent({
   );
 
   const spotlightClicks = step?.spotlightClicks ?? false;
-  // biome-ignore lint/correctness/useExhaustiveDependencies: `index` is intentional — re-running on step change is how the card refocuses.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `index` is intentional, and re-running on step change is how the card refocuses.
   useEffect(() => {
     if (!popoverOpen || !visible || spotlightClicks) return;
     popupRef.current?.focus({ preventScroll: true });
@@ -99,12 +105,13 @@ export function TourContent({
       modal={false}
       onOpenChange={(nextOpen, eventDetails) => {
         if (nextOpen) return;
-        // Tours are persistent — only Escape dismisses, not outside press/focus.
+        // Tours are persistent: only Escape dismisses, not outside press/focus.
         if (eventDetails.reason === 'escape-key') actions.stop();
       }}
     >
-      <PopoverPrimitive.Portal>
+      <PopoverPrimitive.Portal {...theme}>
         <PopoverPrimitive.Positioner
+          data-slot='tour-positioner'
           anchor={detached ? centerAnchor : anchor}
           side={step?.side ?? (detached ? 'top' : side)}
           align={step?.align ?? align}
@@ -115,14 +122,24 @@ export function TourContent({
         >
           <PopoverPrimitive.Popup
             ref={popupRef}
-            className={cx(styles.popup, className)}
+            {...theme}
+            data-slot='tour-content'
+            className={cx(
+              styles.popup,
+              theme?.className,
+              radiusStyle({ radius }),
+              className
+            )}
             style={style}
             data-detached={detached || undefined}
             data-transition={transition}
             data-visible={visible ? 'true' : 'false'}
           >
             {showArrow && !detached && (
-              <PopoverPrimitive.Arrow className={styles.arrow}>
+              <PopoverPrimitive.Arrow
+                data-slot='tour-arrow'
+                className={styles.arrow}
+              >
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   width='10'
@@ -139,7 +156,11 @@ export function TourContent({
               </PopoverPrimitive.Arrow>
             )}
             {renderProps && (
-              <div key={index} className={styles.stepContent}>
+              <div
+                key={index}
+                data-slot='tour-step-content'
+                className={styles.stepContent}
+              >
                 {typeof children === 'function'
                   ? children(renderProps)
                   : (children ?? <TourDefaultLayout />)}

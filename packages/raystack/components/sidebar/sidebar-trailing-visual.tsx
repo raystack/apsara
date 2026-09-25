@@ -16,7 +16,10 @@ export function SidebarTrailingVisual({
   if (!trailingIcon) return null;
 
   return (
-    <span className={cx(styles['nav-group-trailing-icon'], className)}>
+    <span
+      className={cx(styles['nav-group-trailing-icon'], className)}
+      data-slot='sidebar-trailing-icon'
+    >
       {trailingIcon}
     </span>
   );

@@ -2,7 +2,7 @@
   --rs-scrollbar-size: 6px; /* track + hit area, and the expanded thumb */
   --rs-scrollbar-thumb-rest: var(
     --rs-space-2
-  ); /* 4px — visible thumb at rest */
+  ); /* 4px, a visible thumb at rest */
 }
 
 .root {
@@ -52,7 +52,7 @@
 
 /* The drawn bar. The thumb stays the full-size hit area; this pseudo is what
    you see. It's a pseudo because Base UI writes an inline transform on the
-   thumb to position it — so the thumb's own transform can't be used to size it,
+   thumb to position it, so the thumb's own transform can't be used to size it,
    and animating the thumb's transform would make it lag while scrolling. */
 .thumb::before {
   content: "";

@@ -278,7 +278,7 @@
    permanently stuck and coincides with the first natural group header at
    scroll 0, so "scrolled > 0" is exactly "content is underneath it".
    (.stickySectionHeader is intentionally NOT gated: its many instances stick
-   at per-element offsets a scroll() timeline can't express — revisit with
+   at per-element offsets a scroll() timeline can't express. Revisit with
    @container scroll-state(stuck: top) when support matures.) */
 @supports (animation-timeline: scroll()) {
   .stickyGroupAnchor {

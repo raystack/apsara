@@ -11,6 +11,7 @@ export function ProgressLabel({
   return (
     <ProgressPrimitive.Label
       className={cx(styles.label, className)}
+      data-slot='progress-label'
       {...props}
     />
   );
@@ -25,6 +26,7 @@ export function ProgressValue({
   return (
     <ProgressPrimitive.Value
       className={cx(styles.value, className)}
+      data-slot='progress-value'
       {...props}
     />
   );

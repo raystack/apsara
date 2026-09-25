@@ -14,7 +14,11 @@ export function useMenubarContext() {
 function MenubarRoot({ className, ...props }: MenubarPrimitive.Props) {
   return (
     <MenubarContext value={true}>
-      <MenubarPrimitive className={cx(styles.menubar, className)} {...props} />
+      <MenubarPrimitive
+        data-slot='menubar'
+        className={cx(styles.menubar, className)}
+        {...props}
+      />
     </MenubarContext>
   );
 }

@@ -4,9 +4,9 @@ import {
   Combobox as ComboboxPrimitive,
   Select as SelectPrimitive
 } from '@base-ui/react';
-import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { cva, VariantProps } from 'class-variance-authority';
 import { ComponentProps, SVGAttributes } from 'react';
+import { ChevronDownIcon } from '~/icons';
 import { Flex } from '../flex';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';
@@ -59,17 +59,24 @@ export function SelectTrigger({
   return (
     <TriggerPrimitive
       data-multiselectable={multiple ? true : undefined}
+      data-slot='select-trigger'
       ref={ref}
       className={trigger({ size, variant, className })}
       aria-label={ariaLabel || 'Select option'}
       {...props}
     >
-      <Flex className={styles.triggerContent} align='center' gap={2}>
+      <Flex
+        className={styles.triggerContent}
+        align='center'
+        gap={2}
+        data-slot='select-trigger-content'
+      >
         {children}
       </Flex>
       <ChevronDownIcon
         className={styles.triggerIcon}
         aria-hidden='true'
+        data-slot='select-trigger-icon'
         {...iconProps}
       />
     </TriggerPrimitive>

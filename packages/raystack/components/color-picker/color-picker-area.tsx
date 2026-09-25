@@ -50,7 +50,7 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
 
   const { lightness, chroma, hue, setColor } = useColorPicker();
   // Use the native CSS oklch() so the thumb renders the actual picked color on
-  // wide-gamut (P3) displays — hex would silently sRGB-clip wide-gamut picks.
+  // wide-gamut (P3) displays, and hex would silently sRGB-clip wide-gamut picks.
   const thumbColor = useMemo(
     () => `oklch(${lightness} ${chroma} ${hue})`,
     [lightness, chroma, hue]
@@ -208,6 +208,7 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={Math.round((chroma / CHROMA_MAX) * 100)}
+      data-slot='color-picker-area'
       {...props}
     >
       <canvas
@@ -215,11 +216,13 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
         width={CANVAS_RES}
         height={CANVAS_RES}
         className={styles.selectionCanvas}
+        data-slot='color-picker-area-canvas'
       />
       <div
         className={cx(styles.sliderThumb, styles.selectionThumb)}
         ref={thumbRef}
         style={{ background: thumbColor, opacity: 0 }}
+        data-slot='color-picker-area-thumb'
       />
     </div>
   );
@@ -374,6 +377,7 @@ const HslArea = ({ className, ...props }: ColorPickerAreaProps) => {
       aria-valuemax={100}
       aria-valuenow={Math.round(hsl.s)}
       style={{ background }}
+      data-slot='color-picker-area'
       {...props}
     >
       <div
@@ -383,6 +387,7 @@ const HslArea = ({ className, ...props }: ColorPickerAreaProps) => {
           background: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`,
           opacity: 0
         }}
+        data-slot='color-picker-area-thumb'
       />
     </div>
   );

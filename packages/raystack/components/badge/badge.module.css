@@ -6,7 +6,8 @@
   justify-content: center;
   align-items: center;
   gap: var(--rs-space-2);
-  border-radius: var(--rs-radius-1);
+  --rs-radius-step: 2px;
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-1));
   white-space: nowrap;
 }
 
@@ -16,7 +17,7 @@
   line-height: var(--rs-line-height-micro);
   letter-spacing: var(--rs-letter-spacing-micro);
   /* Todo: var does not exist for 18px */
-  height: 18px;
+  height: calc(18px * var(--rs-scaling, 1));
 }
 
 .badge-small {
@@ -24,7 +25,7 @@
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
   /* Todo: var does not exist for 22px */
-  height: 22px;
+  height: calc(22px * var(--rs-scaling, 1));
 }
 
 .badge-regular {
@@ -61,7 +62,11 @@
 }
 
 .badge-gradient {
-  background: linear-gradient(to right, oklch(0.5674 0.2831 312.58 / 0.2) 0%, oklch(0.5988 0.2445 29.12 / 0.2) 100%);
+  background: linear-gradient(
+    to right,
+    oklch(0.5674 0.2831 312.58 / 0.2) 0%,
+    oklch(0.5988 0.2445 29.12 / 0.2) 100%
+  );
   color: var(--rs-color-foreground-base-primary);
 }
 
@@ -75,8 +80,8 @@
 
 .badge-micro .icon {
   /* Todo: var does not exist for 10px */
-  width: 10px;
-  height: 10px;
+  width: calc(10px * var(--rs-scaling, 1));
+  height: calc(10px * var(--rs-scaling, 1));
 }
 
 .badge-small .icon {
@@ -86,8 +91,8 @@
 
 .badge-regular .icon {
   /* Todo: var does not exist for 14px */
-  width: 14px;
-  height: 14px;
+  width: calc(14px * var(--rs-scaling, 1));
+  height: calc(14px * var(--rs-scaling, 1));
 }
 
 .sr-only {

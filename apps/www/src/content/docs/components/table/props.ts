@@ -38,14 +38,6 @@ export interface TableCellProps {
 }
 
 export interface TableSectionHeaderProps {
-  /** Map of class names for internal components. */
-  classNames?: {
-    /** CSS class for the row. */
-    row?: string;
-    /** CSS class for the cell. */
-    cell?: string;
-  };
-
-  /** Number of cells the row should span across. Ensures the section header spans all table columns. */
-  colSpan?: number;
+  /** Number of columns the row spans. Set it to the table's total column count so the section header covers the full width. (Required) */
+  colSpan: number;
 }

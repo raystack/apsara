@@ -5,6 +5,10 @@ import styles from './flex.module.css';
 
 const flex = cva(styles.flex, {
   variants: {
+    inline: {
+      true: styles['flex-inline'],
+      false: null
+    },
     direction: {
       row: styles['direction-row'],
       column: styles['direction-column'],
@@ -32,6 +36,7 @@ const flex = cva(styles.flex, {
     gap: gapVariants
   },
   defaultVariants: {
+    inline: false,
     direction: 'row',
     align: 'stretch',
     justify: 'start',
@@ -42,6 +47,7 @@ const flex = cva(styles.flex, {
 type BoxProps = VariantProps<typeof flex> & useRender.ComponentProps<'div'>;
 
 export function Flex({
+  inline,
   direction,
   align,
   justify,
@@ -53,7 +59,9 @@ export function Flex({
   ...props
 }: BoxProps) {
   const flexProps = {
+    'data-slot': 'flex',
     className: flex({
+      inline,
       direction,
       align,
       justify,

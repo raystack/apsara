@@ -15,6 +15,7 @@ export const ComboboxLabel = ({
   return (
     <ComboboxPrimitive.GroupLabel
       className={cx(styles.label, className)}
+      data-slot='combobox-label'
       {...props}
     />
   );
@@ -30,7 +31,11 @@ export const ComboboxGroup = ({
   if (!hasItems && inputValue?.length) return children;
 
   return (
-    <ComboboxPrimitive.Group className={cx(styles.group, className)} {...props}>
+    <ComboboxPrimitive.Group
+      className={cx(styles.group, className)}
+      data-slot='combobox-group'
+      {...props}
+    >
       {children}
     </ComboboxPrimitive.Group>
   );
@@ -47,6 +52,7 @@ export const ComboboxSeparator = ({
   return (
     <ComboboxPrimitive.Separator
       className={cx(styles.separator, className)}
+      data-slot='combobox-separator'
       {...props}
     />
   );

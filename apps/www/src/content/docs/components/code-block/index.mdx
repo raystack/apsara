@@ -2,7 +2,6 @@
 title: Code Block
 description: A flexible composite component for displaying code with syntax highlighting, line numbers, copy functionality, and multi-language support.
 source: packages/raystack/components/code-block
-tag: new
 ---
 
 import {
@@ -39,7 +38,52 @@ import { CodeBlock } from '@raystack/apsara'
 </CodeBlock>
 ```
 
+## Usage
+
+The block is assembled from parts, so a bare snippet and one with a header, a language switcher and a copy button all use the same root.
+
+### Basic usage
+
+The most basic usage using `CodeBlock` with `CodeBlock.Code` for displaying code content with a floating copy button.
+
+<Demo data={basicDemo} />
+
+### With header
+
+Add a structured header with labels and controls using `CodeBlock.Header`, `CodeBlock.Label`, and `CodeBlock.CopyButton` for better organization and user experience.
+
+<Demo data={withHeaderDemo} />
+
+### Language switcher
+
+Support multiple programming languages by including multiple `CodeBlock.Code` components with different language values.
+Use `CodeBlock.LanguageSelect` to provide a dropdown for users to switch between languages. The component automatically displays the code block matching the selected language value, which can be controlled programmatically using the `value` and `onValueChange` props.
+
+<Demo data={languageSwitcherDemo} />
+
+### No line numbers
+
+Hide line numbers by setting the `hideLineNumbers` prop to `true` on the root `CodeBlock` component for a cleaner appearance.
+
+<Demo data={noLineNumbersDemo} />
+
+### Collapsible code
+
+For long code snippets, use the `maxLines` prop to create collapsible code blocks. When the code exceeds the specified number of lines, a `CodeBlock.CollapseTrigger` button appears, allowing users to expand or collapse the content.
+
+<Demo data={collapsibleDemo} />
+
+### Copy button variants
+
+The `CodeBlock.CopyButton` component offers two placement options:
+- **Floating**: Overlays on the code block using `variant="floating"`
+- **Inline**: Positioned within the header alongside other controls
+
+<Demo data={copyButtonDemo} />
+
 ## API Reference
+
+The code sits in a root. Everything else, meaning the label, language select, copy button and collapse trigger, is optional header furniture.
 
 ### Root
 
@@ -95,46 +139,26 @@ Renders a button to expand or collapse long code blocks.
 
 <auto-type-table path="./props.ts" name="CodeBlockCollapseTriggerProps" />
 
-## Examples
+### Slots
 
-### Basic Usage
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
 
-The most basic usage using `CodeBlock` with `CodeBlock.Code` for displaying code content with a floating copy button.
-
-<Demo data={basicDemo} />
-
-### With Header
-
-Add a structured header with labels and controls using `CodeBlock.Header`, `CodeBlock.Label`, and `CodeBlock.CopyButton` for better organization and user experience.
-
-<Demo data={withHeaderDemo} />
-
-### Language Switcher
-
-Support multiple programming languages by including multiple `CodeBlock.Code` components with different language values.
-Use `CodeBlock.LanguageSelect` to provide a dropdown for users to switch between languages. The component automatically displays the code block matching the selected language value, which can be controlled programmatically using the `value` and `onValueChange` props.
-
-<Demo data={languageSwitcherDemo} />
-
-### No Line Numbers
-
-Hide line numbers by setting the `hideLineNumbers` prop to `true` on the root `CodeBlock` component for a cleaner appearance.
-
-<Demo data={noLineNumbersDemo} />
-
-### Collapsible Code
-
-For long code snippets, use the `maxLines` prop to create collapsible code blocks. When the code exceeds the specified number of lines, a `CodeBlock.CollapseTrigger` button appears, allowing users to expand or collapse the content.
-
-<Demo data={collapsibleDemo} />
-
-### Copy Button Variants
-
-The `CodeBlock.CopyButton` component offers two placement options:
-- **Floating**: Overlays on the code block using `variant="floating"`
-- **Inline**: Positioned within the header alongside other controls
-
-<Demo data={copyButtonDemo} />
+| Slot | Element |
+|------|---------|
+| `code-block` | The root `<div>` container |
+| `code-block-header` | The header row above the code |
+| `code-block-label` | The label text in the header |
+| `code-block-copy-button` | The copy-to-clipboard button |
+| `code-block-content` | Wrapper `<div>` around the code |
+| `code-block-code` | Wrapper `<div>` around the highlighted code |
+| `code-block-pre` | The `<pre>` element holding the lines |
+| `code-block-line` | Each code line `<div>` |
+| `code-block-line-number` | The line-number `<span>` (when line numbers are shown) |
+| `code-block-line-content` | The `<span>` holding a line's tokens |
+| `code-block-token` | Each syntax token `<span>` |
+| `code-block-collapse-trigger` | The show/hide button (when `maxLines` is exceeded) |
+| `code-block-language-select-trigger` | The language select trigger button |
+| `code-block-language-select-value` | The selected language value inside the trigger |
 
 ## Accessibility
 

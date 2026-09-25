@@ -1,6 +1,6 @@
-import { ArrowLeftIcon, ArrowRightIcon } from '@radix-ui/react-icons';
 import { Button, Flex, Link } from '@raystack/apsara';
 import { findNeighbour } from 'fumadocs-core/page-tree';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { docs } from '@/lib/source';
 
 type DocsFooterProps = {
@@ -17,7 +17,7 @@ export default function DocsFooter({ url }: DocsFooterProps) {
             variant='outline'
             color='neutral'
             size='normal'
-            leadingIcon={<ArrowLeftIcon />}
+            leadingIcon={<ArrowLeft size={16} strokeWidth={1.5} />}
           >
             {neighbours.previous.name}
           </Button>
@@ -31,7 +31,7 @@ export default function DocsFooter({ url }: DocsFooterProps) {
             variant='outline'
             color='neutral'
             size='normal'
-            trailingIcon={<ArrowRightIcon />}
+            trailingIcon={<ArrowRight size={16} strokeWidth={1.5} />}
           >
             {neighbours.next.name}
           </Button>

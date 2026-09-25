@@ -10,6 +10,7 @@ import {
   useRef,
   useState
 } from 'react';
+import { radiusVariants } from '../../shared/radius';
 import styles from './avatar.module.css';
 import { AVATAR_COLORS } from './utils';
 
@@ -18,10 +19,8 @@ type ImageLoadingStatus = 'idle' | 'loading' | 'loaded' | 'error';
 
 const avatar = cva(styles.avatar, {
   variants: {
-    radius: {
-      small: styles['avatar-small'],
-      full: styles['avatar-full']
-    },
+    // Each size names its own base step. No default: the theme radius applies.
+    ...radiusVariants,
     size: {
       1: styles['avatar-size-1'],
       2: styles['avatar-size-2'],
@@ -125,7 +124,6 @@ const avatar = cva(styles.avatar, {
   ],
   defaultVariants: {
     size: 3,
-    radius: 'small',
     variant: 'soft',
     color: 'indigo'
   }
@@ -198,6 +196,7 @@ const AvatarRoot = ({
         avatar({ size, radius, variant, color }),
         className
       )}
+      data-slot='avatar'
       {...props}
     >
       <AvatarPrimitive.Image
@@ -205,8 +204,12 @@ const AvatarRoot = ({
         src={src}
         alt={alt}
         onLoadingStatusChange={handleLoadingStatusChange}
+        data-slot='avatar-image'
       />
-      <AvatarPrimitive.Fallback className={styles.fallback}>
+      <AvatarPrimitive.Fallback
+        className={styles.fallback}
+        data-slot='avatar-fallback'
+      >
         {fallback}
       </AvatarPrimitive.Fallback>
     </AvatarPrimitive.Root>
@@ -235,14 +238,22 @@ export const AvatarGroup = ({
   const firstAvatarProps = getAvatarProps(avatars[0]);
 
   return (
-    <div className={cx(styles.avatarGroup, className)} {...props}>
+    <div
+      className={cx(styles.avatarGroup, className)}
+      data-slot='avatar-group'
+      {...props}
+    >
       {avatars.map((avatar, index) => (
-        <div key={index} className={styles.avatarWrapper}>
+        <div
+          key={index}
+          className={styles.avatarWrapper}
+          data-slot='avatar-group-item'
+        >
           {avatar}
         </div>
       ))}
       {count > 0 && (
-        <div className={styles.avatarWrapper}>
+        <div className={styles.avatarWrapper} data-slot='avatar-group-item'>
           <Avatar
             size={firstAvatarProps.size}
             radius={firstAvatarProps.radius}

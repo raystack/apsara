@@ -49,6 +49,7 @@
 .item {
   flex-shrink: 0;
   min-width: 0;
+  text-wrap: pretty;
   content-visibility: auto;
   contain-intrinsic-size: auto 10rem;
 }
@@ -64,7 +65,7 @@
   gap: var(--rs-space-2);
   padding: var(--rs-space-2) var(--rs-space-4);
   border: 0.5px solid var(--rs-color-border-base-primary);
-  border-radius: var(--rs-radius-full);
+  border-radius: max(var(--rs-radius-2), var(--rs-radius-thumb, 9999px));
   background: var(--rs-color-background-base-primary);
   color: var(--rs-color-foreground-base-primary);
   font-size: var(--rs-font-size-mini);
@@ -81,9 +82,8 @@
 @media (prefers-reduced-motion: no-preference) {
   .jump-button {
     transition:
-      background-color var(--rs-duration-fast) var(--rs-ease-out),
-      opacity var(--rs-duration-fast) var(--rs-ease-out),
-      transform var(--rs-duration-fast) var(--rs-ease-out);
+      var(--rs-transition-interactive),
+      transform var(--rs-duration-normal) var(--rs-ease-out);
   }
 
   .jump-button:active {
@@ -185,7 +185,7 @@
   flex-shrink: 0;
   width: var(--rs-space-9);
   height: var(--rs-space-9);
-  border-radius: var(--rs-radius-2);
+  border-radius: var(--rs-radius-1);
   background: var(--rs-color-background-neutral-secondary);
   color: var(--rs-color-foreground-base-secondary);
   overflow: hidden;

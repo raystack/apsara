@@ -18,7 +18,11 @@ export function MenuGroup({
   }
 
   return (
-    <MenuPrimitive.Group className={cx(className)} {...props}>
+    <MenuPrimitive.Group
+      data-slot='menu-group'
+      className={cx(className)}
+      {...props}
+    >
       {children}
     </MenuPrimitive.Group>
   );
@@ -37,6 +41,7 @@ export function MenuLabel({
 
   return (
     <MenuPrimitive.GroupLabel
+      data-slot='menu-label'
       className={cx(styles.label, className)}
       {...props}
     />
@@ -53,6 +58,7 @@ export function MenuSeparator({ className, ...props }: ComponentProps<'div'>) {
 
   return (
     <div
+      data-slot='menu-separator'
       role='separator'
       className={cx(styles.separator, className)}
       {...props}
@@ -67,7 +73,11 @@ export function MenuEmptyState({
   ...props
 }: ComponentProps<'div'> & { children: ReactNode }) {
   return (
-    <div className={cx(styles.empty, className)} {...props}>
+    <div
+      data-slot='menu-empty-state'
+      className={cx(styles.empty, className)}
+      {...props}
+    >
       {children}
     </div>
   );

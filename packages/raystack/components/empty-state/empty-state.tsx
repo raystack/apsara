@@ -17,6 +17,14 @@ interface EmptyStateProps extends ComponentProps<typeof Flex> {
   subHeading?: ReactNode;
   primaryAction?: ReactNode;
   secondaryAction?: ReactNode;
+  /**
+   * @deprecated Every key has an equivalent `[data-slot]`: `container` ->
+   * `[data-slot="empty-state"]`, `iconContainer` ->
+   * `[data-slot="empty-state-icon-container"]`, `icon` ->
+   * `[data-slot="empty-state-icon"]`, `heading` ->
+   * `[data-slot="empty-state-heading"]`, `subHeading` ->
+   * `[data-slot="empty-state-subheading"]`.
+   */
   classNames?: Partial<Record<classNameKeys, string>>;
   variant?: 'empty1' | 'empty2';
 }
@@ -37,6 +45,7 @@ export function EmptyState({
         align='center'
         justify='center'
         className={styles.emptyStatePage}
+        data-slot='empty-state'
         {...props}
       >
         <Flex
@@ -44,10 +53,15 @@ export function EmptyState({
           align='start'
           gap={5}
           className={cx(styles.emptyStateContent, classNames?.container)}
+          data-slot='empty-state-content'
         >
-          <div className={cx(styles.iconContainer, classNames?.iconContainer)}>
+          <div
+            className={cx(styles.iconContainer, classNames?.iconContainer)}
+            data-slot='empty-state-icon-container'
+          >
             <div
               className={cx(styles.icon, styles.iconLarge, classNames?.icon)}
+              data-slot='empty-state-icon'
             >
               {icon}
             </div>
@@ -58,6 +72,7 @@ export function EmptyState({
               size='large'
               weight='medium'
               className={cx(styles.headerText, classNames?.heading)}
+              data-slot='empty-state-heading'
             >
               {heading}
             </Text>
@@ -68,12 +83,13 @@ export function EmptyState({
               size='regular'
               weight='regular'
               className={cx(styles.subHeaderText, classNames?.subHeading)}
+              data-slot='empty-state-subheading'
             >
               {subHeading}
             </Text>
           )}
 
-          <Flex gap={5}>
+          <Flex gap={5} data-slot='empty-state-actions'>
             {primaryAction}
             {secondaryAction}
           </Flex>
@@ -88,18 +104,33 @@ export function EmptyState({
       align='center'
       gap={5}
       className={cx(styles.emptyState, classNames?.container)}
+      data-slot='empty-state'
       {...props}
     >
-      <div className={cx(styles.iconContainer, classNames?.iconContainer)}>
-        <div className={cx(styles.icon, classNames?.icon)}>{icon}</div>
+      <div
+        className={cx(styles.iconContainer, classNames?.iconContainer)}
+        data-slot='empty-state-icon-container'
+      >
+        <div
+          className={cx(styles.icon, classNames?.icon)}
+          data-slot='empty-state-icon'
+        >
+          {icon}
+        </div>
       </div>
 
-      <Flex direction='column' gap={3} align='center'>
+      <Flex
+        direction='column'
+        gap={3}
+        align='center'
+        data-slot='empty-state-content'
+      >
         {heading && (
           <Text
             size='large'
             weight='medium'
             className={cx(styles.headerText, classNames?.heading)}
+            data-slot='empty-state-heading'
           >
             {heading}
           </Text>
@@ -110,6 +141,7 @@ export function EmptyState({
             size='regular'
             weight='regular'
             className={cx(styles.subHeaderText, classNames?.subHeading)}
+            data-slot='empty-state-subheading'
           >
             {subHeading}
           </Text>

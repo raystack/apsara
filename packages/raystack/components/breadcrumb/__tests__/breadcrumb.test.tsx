@@ -487,7 +487,7 @@ describe('Breadcrumb', () => {
 
       const ellipsis = screen.getByTestId('breadcrumb-ellipsis');
       expect(ellipsis).toBeInTheDocument();
-      // Default icon is DotsHorizontalIcon
+      // Default icon is EllipsisIcon
       expect(ellipsis?.querySelector('svg')).toBeInTheDocument();
     });
 

@@ -1,8 +1,8 @@
 'use client';
 
-import { Cross2Icon, FileTextIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, ReactNode } from 'react';
+import { FileTextIcon, XIcon } from '~/icons';
 import { IconButton } from '../icon-button';
 import { Spinner } from '../spinner';
 import styles from './chat.module.css';
@@ -13,7 +13,7 @@ export interface ChatAttachmentProps
   extends Omit<ComponentProps<'div'>, 'title'> {
   /** File name or main label. */
   title?: ReactNode;
-  /** Secondary line — file size, type, or the error message. */
+  /** Secondary line: file size, type, or the error message. */
   description?: ReactNode;
   /**
    * Content of the leading media square. Defaults to a file icon, or a
@@ -49,9 +49,14 @@ export function ChatAttachment({
     <div
       data-state={state}
       className={cx(styles.attachment, className)}
+      data-slot='chat-attachment'
       {...props}
     >
-      <div className={styles['attachment-media']} aria-hidden='true'>
+      <div
+        className={styles['attachment-media']}
+        aria-hidden='true'
+        data-slot='chat-attachment-media'
+      >
         {media ??
           (state === 'uploading' ? (
             <Spinner size={2} aria-hidden='true' />
@@ -60,10 +65,23 @@ export function ChatAttachment({
           ))}
       </div>
       {(title || description) && (
-        <div className={styles['attachment-body']}>
-          {title && <span className={styles['attachment-title']}>{title}</span>}
+        <div
+          className={styles['attachment-body']}
+          data-slot='chat-attachment-body'
+        >
+          {title && (
+            <span
+              className={styles['attachment-title']}
+              data-slot='chat-attachment-title'
+            >
+              {title}
+            </span>
+          )}
           {description && (
-            <span className={styles['attachment-description']}>
+            <span
+              className={styles['attachment-description']}
+              data-slot='chat-attachment-description'
+            >
               {description}
             </span>
           )}
@@ -76,8 +94,9 @@ export function ChatAttachment({
           aria-label={removeLabel}
           className={styles['attachment-remove']}
           onClick={onRemove}
+          data-slot='chat-attachment-remove'
         >
-          <Cross2Icon />
+          <XIcon />
         </IconButton>
       )}
     </div>

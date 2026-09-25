@@ -9,8 +9,15 @@ export const AccordionContent = ({
   children,
   ...props
 }: AccordionPrimitive.Panel.Props) => (
-  <AccordionPrimitive.Panel className={styles['accordion-content']} {...props}>
-    <div className={cx(styles['accordion-content-inner'], className)}>
+  <AccordionPrimitive.Panel
+    className={styles['accordion-content']}
+    data-slot='accordion-content'
+    {...props}
+  >
+    <div
+      className={cx(styles['accordion-content-body'], className)}
+      data-slot='accordion-content-body'
+    >
       {children}
     </div>
   </AccordionPrimitive.Panel>

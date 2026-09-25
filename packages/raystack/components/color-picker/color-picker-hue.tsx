@@ -39,24 +39,33 @@ export const ColorPickerHue = ({
       className={cx(styles.sliderRoot, className)}
       max={360}
       onValueChange={value => handleValueChange(value as number)}
-      // OKLCH hue is perceptually uniform — sub-degree precision is meaningful
+      // OKLCH hue is perceptually uniform, so sub-degree precision is meaningful
       // when fine-tuning a tone. HSL hue keeps the classic 1° granularity.
       step={isOklch ? 0.1 : 1}
       value={value}
       thumbAlignment='edge'
+      data-slot='color-picker-hue'
       {...props}
     >
-      <Slider.Control className={styles.sliderControl}>
+      <Slider.Control
+        className={styles.sliderControl}
+        data-slot='color-picker-slider-control'
+      >
         <Slider.Track
           className={cx(
             styles.sliderTrack,
             isOklch ? styles.hueTrack : styles.hueTrackHsl
           )}
+          data-slot='color-picker-slider-track'
         >
-          <Slider.Indicator className={styles.sliderRange} />
+          <Slider.Indicator
+            className={styles.sliderRange}
+            data-slot='color-picker-slider-range'
+          />
           <Slider.Thumb
             className={styles.sliderThumb}
             aria-label={isOklch ? 'OKLCH hue' : 'HSL hue'}
+            data-slot='color-picker-slider-thumb'
           />
         </Slider.Track>
       </Slider.Control>

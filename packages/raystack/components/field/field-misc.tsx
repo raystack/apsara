@@ -16,6 +16,7 @@ export function FieldLabel({
     <FieldPrimitive.Label
       ref={ref}
       render={<Label required={required} optionalText={optionalText} />}
+      data-slot='field-label'
       {...props}
     >
       {children}
@@ -32,6 +33,7 @@ export function FieldControl({
     <FieldPrimitive.Control
       ref={ref}
       className={cx(styles.input, className)}
+      data-slot='field-input'
       {...props}
     />
   );
@@ -46,6 +48,7 @@ export function FieldError({
     <FieldPrimitive.Error
       ref={ref}
       className={cx(styles.error, className)}
+      data-slot='field-error'
       {...props}
     />
   );
@@ -60,6 +63,7 @@ export function FieldDescription({
     <FieldPrimitive.Description
       ref={ref}
       className={cx(styles.description, className)}
+      data-slot='field-description'
       {...props}
     />
   );

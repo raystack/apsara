@@ -91,7 +91,7 @@ describe('ColorPicker', () => {
 
       const area = screen.getByTestId('color-area');
       // Non-oklch modes use a CSS-gradient div, not the canvas-painted
-      // OKLCH plane — the absence of <canvas> is what distinguishes them.
+      // OKLCH plane, where the absence of <canvas> is what distinguishes them.
       // (jsdom rejects `linear-gradient(...)` inline styles, so we can't
       // assert the background string directly.)
       expect(area.querySelector('canvas')).not.toBeInTheDocument();

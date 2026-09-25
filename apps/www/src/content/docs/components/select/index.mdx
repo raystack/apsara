@@ -1,6 +1,6 @@
 ---
 title: Select
-description: Displays a list of options for the user to pick from—triggered by a button.
+description: Displays a list of options for the user to pick from, triggered by a button.
 source: packages/raystack/components/select
 ---
 
@@ -12,7 +12,8 @@ import {
   separatorDemo,
   iconDemo,
   autocompleteDemo,
-  multipleDemo
+  multipleDemo,
+  controlledDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -36,7 +37,65 @@ import { Select } from "@raystack/apsara";
 </Select>
 ```
 
+## Usage
+
+Appearance first, meaning size and variant, then how many items can be chosen, and who owns the value.
+
+### Basic Select
+
+A trigger and a list of items. `Select.Value` renders the current selection in the trigger.
+
+<Demo data={basicDemo} />
+
+### Icon
+
+You can pass `leadingIcon` prop to Select.Item to include items
+
+<Demo data={iconDemo} />
+
+### Size
+
+Two sizes. `medium` is the default; `small` fits toolbars and table filters.
+
+<Demo data={sizeDemo} />
+
+### Variant
+
+`outline` (the default) draws a bordered control. `text` removes the border for use inside a toolbar or beside other text.
+
+<Demo data={variantDemo} />
+
+### With Separator
+
+`Select.Separator` draws a rule between groups of items.
+
+<Demo data={separatorDemo} />
+
+### Multiple selection
+
+To enable multiple selection, pass the `multiple` prop to the Select root element.
+
+When multiple selection is enabled, the value, onValueChange, and defaultValue will be an array of strings.
+
+<Demo data={multipleDemo} />
+
+### Autocomplete
+
+To enable autocomplete, pass the `autocomplete` prop to the Select root element.
+
+By default, only select items are filtered using a simple match. For more advanced control, set `autocompleteMode="manual"` and implement your own custom filtering logic.
+
+<Demo data={autocompleteDemo} />
+
+### Controlled
+
+Pass `value` with `onValueChange` to own the selection. Do this when the value comes from a form, a URL, or another control on the page.
+
+<Demo data={controlledDemo} />
+
 ## API Reference
+
+The trigger, and the parts of the list it opens.
 
 ### Root
 
@@ -82,45 +141,29 @@ Visual divider between Select items or groups.
 
 <auto-type-table path="./props.ts" name="SelectSeparatorProps" />
 
-## Examples
+### Slots
 
-### Basic Select
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
 
-<Demo data={basicDemo} />
-
-### Icon
-
-You can pass `leadingIcon` prop to Select.Item to include items
-
-<Demo data={iconDemo} />
-
-### Size
-
-<Demo data={sizeDemo} />
-
-### Variant
-
-<Demo data={variantDemo} />
-
-### With Separator
-
-<Demo data={separatorDemo} />
-
-### Multiple Selection
-
-To enable multiple selection, pass the `multiple` prop to the Select root element.
-
-When multiple selection is enabled, the value, onValueChange, and defaultValue will be an array of strings.
-
-<Demo data={multipleDemo} />
-
-### Autocomplete
-
-To enable autocomplete, pass the `autocomplete` prop to the Select root element.
-
-By default, only select items are filtered using a simple match. For more advanced control, set `autocompleteMode="manual"` and implement your own custom filtering logic.
-
-<Demo data={autocompleteDemo} />
+| Slot | Element |
+|------|---------|
+| `select-trigger` | The trigger button that opens the menu |
+| `select-trigger-content` | Flex wrapper around the trigger's children |
+| `select-trigger-icon` | The chevron dropdown icon in the trigger |
+| `select-value` | The `<span>` (or wrapper) showing the selected value or placeholder |
+| `select-value-content` | Inner wrapper around a single selected value |
+| `select-value-icon` | Leading icon of the selected value (when set) |
+| `select-value-overflow` | The "+N" overflow count for multiple values (when they don't all fit) |
+| `select-positioner` | The floating positioner for the popup |
+| `select-content` | The popup container |
+| `select-search` | The search input (when autocomplete is enabled) |
+| `select-list` | The scrollable list of items |
+| `select-group` | A group of items |
+| `select-label` | The label of a group |
+| `select-separator` | A divider between items or groups |
+| `select-item` | An individual option row |
+| `select-item-icon` | Leading icon on an item (when set) |
+| `select-item-text` | The text label of an item |
 
 ## Accessibility
 

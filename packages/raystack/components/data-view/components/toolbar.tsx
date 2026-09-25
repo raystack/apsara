@@ -14,7 +14,7 @@ interface ToolbarProps {
 
 /**
  * Toolbar container for `DataView`. Visible whenever there is data OR an active
- * query — pure zero state keeps it hidden. Consumers compose children
+ * query, and pure zero state keeps it hidden. Consumers compose children
  * (`<DataView.Search>`, `<DataView.Filters>`, `<DataView.DisplayControls>`,
  * custom actions); omitting children renders the default
  * `<Filters> + <DisplayControls>` pair.
@@ -33,6 +33,7 @@ export function Toolbar<TData>({
         justify='between'
         gap={3}
         align='start'
+        data-slot='data-view-toolbar'
       >
         {children}
       </Flex>
@@ -45,6 +46,7 @@ export function Toolbar<TData>({
       justify='between'
       gap={3}
       align='start'
+      data-slot='data-view-toolbar'
     >
       <Filters<TData> />
       <DisplayControls<TData> />

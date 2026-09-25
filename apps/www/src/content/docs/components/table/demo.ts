@@ -102,3 +102,54 @@ export const basicDemo = {
   </Table>
 `
 };
+
+export const interactiveDemo = {
+  type: 'code',
+  code: `
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Invoice</Table.Head>
+      <Table.Head>Status</Table.Head>
+      <Table.Head>Amount</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row interactive onClick={() => alert('INV001')}>
+      <Table.Cell>INV001</Table.Cell>
+      <Table.Cell>Paid</Table.Cell>
+      <Table.Cell>$250.00</Table.Cell>
+    </Table.Row>
+    <Table.Row interactive onClick={() => alert('INV002')}>
+      <Table.Cell>INV002</Table.Cell>
+      <Table.Cell>Pending</Table.Cell>
+      <Table.Cell>$150.00</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>`
+};
+
+export const sectionDemo = {
+  type: 'code',
+  code: `
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Name</Table.Head>
+      <Table.Head>Role</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.SectionHeader colSpan={2}>Engineering</Table.SectionHeader>
+    <Table.Row>
+      <Table.Cell>Maya Chen</Table.Cell>
+      <Table.Cell>Staff engineer</Table.Cell>
+    </Table.Row>
+    <Table.SectionHeader colSpan={2}>Design</Table.SectionHeader>
+    <Table.Row>
+      <Table.Cell>Sam Ortiz</Table.Cell>
+      <Table.Cell>Product designer</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>`
+};

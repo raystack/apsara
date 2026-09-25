@@ -25,7 +25,11 @@ export function SelectGroup({
     : SelectPrimitive.Group;
 
   return (
-    <GroupPrimitive className={cx(styles.menugroup, className)} {...props}>
+    <GroupPrimitive
+      className={cx(styles.menugroup, className)}
+      data-slot='select-group'
+      {...props}
+    >
       {children}
     </GroupPrimitive>
   );
@@ -43,7 +47,13 @@ export function SelectLabel({ className, ...props }: SelectLabelProps) {
     ? ComboboxPrimitive.GroupLabel
     : SelectPrimitive.GroupLabel;
 
-  return <LabelPrimitive className={cx(styles.label, className)} {...props} />;
+  return (
+    <LabelPrimitive
+      className={cx(styles.label, className)}
+      data-slot='select-label'
+      {...props}
+    />
+  );
 }
 SelectLabel.displayName = 'Select.Label';
 
@@ -61,6 +71,7 @@ export function SelectSeparator({ className, ...props }: SelectSeparatorProps) {
   return (
     <SeparatorPrimitive
       className={cx(styles.separator, className)}
+      data-slot='select-separator'
       {...props}
     />
   );

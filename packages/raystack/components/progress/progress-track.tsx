@@ -17,16 +17,25 @@ export function ProgressTrack({
     return (
       <ProgressPrimitive.Track
         className={cx(styles.circularSvg, className)}
+        data-slot='progress-track'
         {...props}
         render={({ children: trackChildren, ...trackProps }) => (
           <svg viewBox='0 0 72 72' {...trackProps}>
-            <circle className={styles.circularTrackCircle} />
+            <circle
+              className={styles.circularTrackCircle}
+              data-slot='progress-track-circle'
+            />
             {trackChildren}
           </svg>
         )}
       >
         <ProgressPrimitive.Indicator
-          render={() => <circle className={styles.circularIndicatorCircle} />}
+          render={() => (
+            <circle
+              className={styles.circularIndicatorCircle}
+              data-slot='progress-indicator'
+            />
+          )}
         />
         {children}
       </ProgressPrimitive.Track>
@@ -34,10 +43,15 @@ export function ProgressTrack({
   }
 
   return (
-    <ProgressPrimitive.Track className={cx(styles.track, className)} {...props}>
+    <ProgressPrimitive.Track
+      className={cx(styles.track, className)}
+      data-slot='progress-track'
+      {...props}
+    >
       <ProgressPrimitive.Indicator
         className={styles.indicator}
         style={{ width: '100%' }}
+        data-slot='progress-indicator'
       />
       {children}
     </ProgressPrimitive.Track>

@@ -12,7 +12,7 @@ const variant = instance.getEnum('Variant', {
   Circular: 'circular'
 });
 
-// "Value" text layer (present in both variants) reads like "50%" — extract the
+// "Value" text layer (present in both variants) reads like "50%", so extract the
 // leading number so it can be passed as the numeric `value` prop.
 const valueText = instance.findText('Value');
 const valueMatch =

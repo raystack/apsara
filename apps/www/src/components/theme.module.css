@@ -1,0 +1,7 @@
+/* The theme element is the page: it carries the tokens the whole shell reads,
+   so the column that used to live on `body` lives here. */
+.root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}

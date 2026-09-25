@@ -194,3 +194,27 @@ export const operationsDemo = {
 />
 </Flex>`
 };
+
+export const controlledDemo = {
+  type: 'code',
+  code: `
+function ControlledFilterChip() {
+  const [status, setStatus] = React.useState('active');
+
+  return (
+    <Flex direction="column" gap={5}>
+      <FilterChip
+        label="Status"
+        columnType="select"
+        value={status}
+        onValueChange={setStatus}
+        options={[
+          { label: "Active", value: "active" },
+          { label: "Inactive", value: "inactive" }
+        ]}
+      />
+      <Text size="small" variant="secondary">Querying for: {status}</Text>
+    </Flex>
+  );
+}`
+};

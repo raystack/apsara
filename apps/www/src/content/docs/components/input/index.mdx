@@ -40,45 +40,41 @@ import { Field, Input } from "@raystack/apsara";
 </Field>
 ```
 
-## API Reference
+## Usage
 
-Renders a text input control. For label, description, and error support, use with [Field](/docs/components/field).
-
-<auto-type-table path="./props.ts" name="InputProps" />
-
-## Examples
+An input can carry more than text. Icons, a prefix or suffix, and chips all sit inside the same frame.
 
 ### Basic Input
 
-A basic input with a placeholder.
+A single-line text input. `placeholder` hints at the expected value; it is not a label and does not replace one.
 
 <Demo data={basicDemo} />
 
-### With Field
+### Size
 
-Use Field to add label, description, and error handling.
+Input comes in two sizes: small (24px) and large (32px).
 
-<Demo data={withFieldDemo} />
+<Demo data={sizeDemo} />
 
-### Controlled Value
+### With prefix and suffix
 
-Use `onValueChange` for a callback that receives only the new string value, or `onChange` for the full React change event. Both fire on every keystroke — pick whichever fits your needs.
-
-<Demo data={onValueChangeDemo} />
-
-### With Prefix/Suffix
-
-Input with prefix and suffix text.
+Prefix and suffix sit inside the field for fixed units and protocols: a currency symbol, `https://`, `@`. They are decoration, not part of the value.
 
 <Demo data={prefixDemo} />
 
-### With Icons
+### With icons
 
-Input with leading and trailing icons.
+A leading icon names the field at a glance; a trailing icon usually holds an action, like clear or reveal.
 
 <Demo data={iconDemo} />
 
-### Interactive Chips
+### With chips
+
+Input that can display and manage chips/tags.
+
+<Demo data={sizeChipDemo} />
+
+### Interactive chips
 
 Accepts an array of chips, each with a `label` and an optional `onRemove` callback. 
 
@@ -89,36 +85,58 @@ chips?: Array<{ label: string; onRemove?: () => void }>;
 maxChipsVisible?: number;  // defaults to 2   
 ```
 
-This is purely a presentation layer — it does not manage chip state. The wrapper component owns the array and decides when items are added or removed.
+This is purely a presentation layer and does not manage chip state. The wrapper component owns the array and decides when items are added or removed.
 
 The example below 
   appends a chip on `Enter`, removes one when its dismiss button is clicked.
 
 <Demo data={interactiveChipDemo} />
 
-### Disabled State
+### With Field
 
-Input in disabled state.
+Use Field to add label, description, and error handling.
+
+<Demo data={withFieldDemo} />
+
+### Controlled
+
+Use `onValueChange` for a callback that receives only the new string value, or `onChange` for the full React change event. Both fire on every keystroke, so pick whichever fits your needs.
+
+<Demo data={onValueChangeDemo} />
+
+### Disabled
+
+`disabled` stops interaction and removes the field from the tab order. Use `readOnly` instead when the value still needs to be selectable and copyable.
 
 <Demo data={disabledDemo} />
 
-### Disabled with Chips
+### Disabled with chips
 
 When disabled, chips become non-interactive and their dismiss buttons are hidden.
 
 <Demo data={disabledChipsDemo} />
 
-### Size Variants
+## API Reference
 
-Input comes in two sizes: small (24px) and large (32px).
+Renders a text input control. For label, description, and error support, use with [Field](/docs/components/field).
 
-<Demo data={sizeDemo} />
+<auto-type-table path="./props.ts" name="InputProps" />
 
-### With Chips
+### Slots
 
-Input that can display and manage chips/tags.
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
 
-<Demo data={sizeChipDemo} />
+| Slot | Element |
+|------|---------|
+| `input-container` | The outer wrapper `<div>` |
+| `input-leading-icon` | Wrapper around the leading icon (when `leadingIcon`) |
+| `input-prefix` | The prefix text (when `prefix`) |
+| `input-chip-container` | Wrapper around the chips and the `<input>` element |
+| `input-chip` | Each visible chip (when `chips`) |
+| `input-chip-overflow` | The `+N` overflow count (when chips exceed `maxChipsVisible`) |
+| `input` | The `<input>` element itself |
+| `input-suffix` | The suffix text (when `suffix`) |
+| `input-trailing-icon` | Wrapper around the trailing icon (when `trailingIcon`) |
 
 ## Accessibility
 
