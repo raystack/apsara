@@ -1,6 +1,11 @@
 ---
 name: design-review
-description: Review the design of a change or a codebase — architecture, API surface, and whether the machinery fits the problem — rather than code quality. Use to analyse a PR's design, self-review your own branch before opening a PR, or audit an existing module or package. For bug-hunting line review use /review or /code-review instead.
+description: 'Review the design of a change or a codebase — architecture, API surface, and whether the machinery fits the problem — rather than code quality. Analyses a PR''s design, self-reviews your own branch before opening a PR, or audits an existing module or package. Use ONLY when the user asks for it by name: /design-review or $design-review. For bug-hunting line review use /apsara-review instead.'
+disable-model-invocation: true
+metadata:
+  author: raystack
+  version: "1.0"
+  internal: true
 ---
 
 # Design Review

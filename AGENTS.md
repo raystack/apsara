@@ -16,6 +16,7 @@ Skills are in `.agents/skills/`. `.claude/skills` is a symlink to that folder, s
 - `add-new-component`: every step to add a component, from source to docs.
 - `apsara-review`: reviews a diff for bugs, tests, simplifications, and docs. Run it only when someone asks for it by name (`/apsara-review` or `$apsara-review`). Do not run it for a general review request or after you finish a change.
 - `apsara`: for apps that use the library. It is not for work in this repo.
+- `design-review`: reviews the design of a PR, a branch, or an existing module: API surface, maintenance cost, and whether the machinery fits the problem. Run it only when someone asks for it by name (`/design-review` or `$design-review`).
 
 ## Code
 
