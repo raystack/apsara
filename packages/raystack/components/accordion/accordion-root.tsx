@@ -30,7 +30,7 @@ export type AccordionRootProps = AccordionSingleProps | AccordionMultipleProps;
  * Convert the wrapper's `string | string[]` API into Base UI's `string[]` format.
  *
  * Only `undefined` maps to `undefined` (uncontrolled).
- * Empty string and empty array map to `[]` (controlled, nothing open) — this prevents the
+ * Empty string and empty array map to `[]` (controlled, nothing open), which prevents the
  * controlled → uncontrolled flip that would otherwise break reopen-after-close.
  */
 const toArray = (v: string | string[] | undefined): string[] | undefined => {

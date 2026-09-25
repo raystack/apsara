@@ -1,7 +1,7 @@
 'use client';
 
-import { MixerHorizontalIcon } from '@radix-ui/react-icons';
 import { isValidElement, ReactNode } from 'react';
+import { DisplayIcon } from '~/icons';
 
 import { Button } from '../../button';
 import { Flex } from '../../flex';
@@ -23,7 +23,7 @@ interface DisplayControlsProps {
 }
 
 /**
- * `DataView.DisplayControls` — the popover housing the view switcher, Ordering,
+ * `DataView.DisplayControls`, the popover housing the view switcher, Ordering,
  * Grouping, Display Properties (column visibility), and Reset. The view switcher
  * appears at the top whenever `views.length > 1`. Each section can be hidden
  * individually via `hideViewSwitcher` / `hideOrdering` / `hideGrouping` /
@@ -35,7 +35,7 @@ export function DisplayControls<TData>({
       variant='outline'
       color='neutral'
       size='small'
-      leadingIcon={<MixerHorizontalIcon />}
+      leadingIcon={<DisplayIcon />}
       data-slot='data-view-display-trigger'
     >
       Display

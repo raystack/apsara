@@ -1,9 +1,8 @@
 'use client';
 
-import { Cross2Icon } from '@radix-ui/react-icons';
-import { Dialog, Flex, IconButton } from '@raystack/apsara';
-import { ResetIcon } from '@raystack/apsara/icons';
+import { Dialog, Flex, IconButton, XIcon } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
+import { RotateCcw } from 'lucide-react';
 import {
   ReadonlyURLSearchParams,
   useRouter,
@@ -17,6 +16,7 @@ import { useDemoContext } from './demo-context';
 import DemoControls from './demo-controls';
 import DemoPreview from './demo-preview';
 import DemoTitle from './demo-title';
+import { needsNoInline } from './no-inline';
 import styles from './styles.module.css';
 import {
   ComponentPropsType,
@@ -36,7 +36,13 @@ const getInitialProps = (
     const value =
       (searchParams && searchParams.get(key)) ?? initialValue ?? defaultValue;
 
-    initialProps[key] = type === 'checkbox' ? value === 'true' : value;
+    /* Only a search param arrives as a string; comparing a real boolean to 'true' unchecks it. */
+    initialProps[key] =
+      type === 'checkbox'
+        ? typeof value === 'string'
+          ? value === 'true'
+          : Boolean(value)
+        : value;
   });
   return initialProps;
 };
@@ -114,18 +120,23 @@ export default function DemoPlayground({
                 onClick={resetProps}
                 aria-label='Reset to default props'
               >
-                <ResetIcon />
+                <RotateCcw size={16} strokeWidth={1.5} />
               </IconButton>
               <IconButton
                 size={2}
                 onClick={() => setOpenPlayground(false)}
                 aria-label='Close playground'
               >
-                <Cross2Icon />
+                <XIcon />
               </IconButton>
             </Flex>
           </Dialog.Header>
-          <LiveProvider code={code} scope={scope} disabled>
+          <LiveProvider
+            code={code}
+            scope={scope}
+            noInline={needsNoInline(code)}
+            disabled
+          >
             <div
               className={cx(styles.container, styles.playgroundContent)}
               data-demo

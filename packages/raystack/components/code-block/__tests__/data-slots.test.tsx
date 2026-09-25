@@ -8,14 +8,6 @@ vi.mock('~/hooks/useCopyToClipboard', () => ({
   useCopyToClipboard: () => ({ copy: vi.fn() })
 }));
 
-// SVG icons are inlined via @svgr/rollup at build time; stub them for jsdom.
-vi.mock('@radix-ui/react-icons', () => ({
-  CopyIcon: () => null,
-  CheckIcon: () => null,
-  ChevronDownIcon: () => null,
-  CaretSortIcon: () => null
-}));
-
 const CODE = `function hello() {
   console.log('hi');
 }`;

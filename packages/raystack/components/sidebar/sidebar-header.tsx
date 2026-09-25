@@ -6,7 +6,7 @@ import { Flex } from '../flex';
 import styles from './sidebar.module.css';
 
 /**
- * Free-form slot at the top of the sidebar — an avatar, a workspace switcher,
+ * Free-form slot at the top of the sidebar: an avatar, a workspace switcher,
  * a search box, whatever the header needs to hold. Because its content is
  * arbitrary, it isn't hidden automatically when the sidebar collapses; add
  * `data-collapse-hidden` to any child that should disappear on collapse

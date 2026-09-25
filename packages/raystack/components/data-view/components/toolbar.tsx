@@ -14,7 +14,7 @@ interface ToolbarProps {
 
 /**
  * Toolbar container for `DataView`. Visible whenever there is data OR an active
- * query — pure zero state keeps it hidden. Consumers compose children
+ * query, and pure zero state keeps it hidden. Consumers compose children
  * (`<DataView.Search>`, `<DataView.Filters>`, `<DataView.DisplayControls>`,
  * custom actions); omitting children renders the default
  * `<Filters> + <DisplayControls>` pair.

@@ -12,14 +12,6 @@ vi.mock('~/hooks/useCopyToClipboard', () => ({
   })
 }));
 
-// Mock icon components used inside CopyButton to avoid invalid element errors
-vi.mock('@radix-ui/react-icons', () => ({
-  CopyIcon: () => null,
-  CheckIcon: () => null,
-  ChevronDownIcon: () => null,
-  CaretSortIcon: () => null
-}));
-
 const JAVASCRIPT_CODE = `function hello() {
   console.log('Hello, world!');
 }`;

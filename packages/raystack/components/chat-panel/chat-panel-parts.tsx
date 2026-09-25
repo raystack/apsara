@@ -1,9 +1,9 @@
 'use client';
 
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { MinusIcon, SizeIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, MouseEvent, PointerEvent, ReactNode } from 'react';
+import { ExpandIcon, ShrinkIcon } from '~/icons';
 import { IconButton, type IconButtonProps } from '../icon-button/icon-button';
 import styles from './chat-panel.module.css';
 import { useChatPanelContext } from './chat-panel-context';
@@ -110,7 +110,7 @@ export function ChatPanelMinimizeTrigger({
       data-slot='chat-panel-minimize-trigger'
       {...props}
     >
-      {children ?? <MinusIcon />}
+      {children ?? <ShrinkIcon />}
     </IconButton>
   );
 }
@@ -159,7 +159,7 @@ export function ChatPanelExpandTrigger({
       data-slot='chat-panel-expand-trigger'
       {...props}
     >
-      {resolvedChildren ?? <SizeIcon />}
+      {resolvedChildren ?? <ExpandIcon />}
     </IconButton>
   );
 }

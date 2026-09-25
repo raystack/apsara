@@ -2,7 +2,6 @@
 title: Field
 description: Provides accessible labels, descriptions, and error messages for form controls.
 source: packages/raystack/components/field
-tag: new
 ---
 
 import {
@@ -54,66 +53,9 @@ import { Field } from "@raystack/apsara";
 </Field>
 ```
 
-## API Reference
+## Usage
 
-### Root
-
-Groups all parts of the field. Renders a `<div>` element.
-
-<auto-type-table path="./props.ts" name="FieldProps" />
-
-### Label
-
-An accessible label automatically associated with the field control. Renders a `<label>` element.
-
-<auto-type-table path="./props.ts" name="FieldLabelProps" />
-
-### Control
-
-A native input element for use with the sub-component API. Renders an `<input>` element. Supports standard HTML validation attributes: `required`, `type`, `pattern`, `minLength`, `maxLength`, `min`, `max`, `step`.
-
-<auto-type-table path="./props.ts" name="FieldControlProps" />
-
-### Error
-
-An error message displayed when validation fails. Renders a `<div>` element.
-
-The `match` prop controls when the error is shown:
-
-- **`match="valueMissing"`** — shown when a `required` field is empty
-- **`match="typeMismatch"`** — shown when `type="email"` or `type="url"` value is invalid
-- **`match="patternMismatch"`** — shown when value doesn't match the `pattern` regex
-- **`match="tooShort"` / `match="tooLong"`** — shown for `minLength` / `maxLength` violations
-- **`match="rangeUnderflow"` / `match="rangeOverflow"`** — shown for `min` / `max` violations
-- **`match="customError"`** — shown when the Field's `validate` prop returns an error
-
-<auto-type-table path="./props.ts" name="FieldErrorProps" />
-
-### Description
-
-A paragraph with additional information about the field. Renders a `<p>` element. Hidden when an error is present (in the simple API).
-
-<auto-type-table path="./props.ts" name="FieldDescriptionProps" />
-
-### Validity
-
-Provides field validity state to a render function. Use for custom validity-based rendering.
-
-### Slots
-
-Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
-
-| Slot | Element |
-|------|---------|
-| `field` | The root element |
-| `field-label` | The field label (when a label is set) |
-| `field-control` | Wrapper around the field content (simple API) |
-| `field-input` | The input control (sub-component API) |
-| `field-helper` | Wrapper around the description and error (simple API, when either is set) |
-| `field-description` | The description text (when set) |
-| `field-error` | The error message (when the field is invalid) |
-
-## Examples
+`Field` wraps a control and wires its label, description and error message to it. It works the same way whichever control goes inside.
 
 ### With Input
 
@@ -123,7 +65,7 @@ Use Field to add label, description, and error to an Input.
 
 ### With TextArea
 
-Field works with TextArea the same way.
+Field wraps a TextArea the same way it wraps an Input, so the label, description, and error all wire up through the same context.
 
 <Demo data={withTextAreaDemo} />
 
@@ -133,19 +75,19 @@ Base UI-based components like Select auto-connect with Field for accessibility.
 
 <Demo data={withSelectDemo} />
 
-### Error State
+### Error state
 
 Pass an error string to show the error message and set the field to invalid state. The description is hidden while an error is shown.
 
 <Demo data={errorDemo} />
 
-### Constraint Validation Errors
+### Constraint validation errors
 
 Use `Field.Control` with native attributes and multiple `Field.Error` elements to show targeted messages for each validation constraint.
 
 <Demo data={constraintErrorsDemo} />
 
-### Custom Validation
+### Custom validation
 
 Use the `validate` prop to run custom logic. Return an error string to fail, or `null` to pass. The error renders via `Field.Error match="customError"`.
 
@@ -174,6 +116,67 @@ Set `required={false}` to show an "(optional)" indicator next to the label.
 Use sub-components for built-in constraint validation with custom error matching.
 
 <Demo data={subComponentDemo} />
+
+## API Reference
+
+The control sits in a root; the label, description and error attach to it.
+
+### Root
+
+Groups all parts of the field. Renders a `<div>` element.
+
+<auto-type-table path="./props.ts" name="FieldProps" />
+
+### Label
+
+An accessible label automatically associated with the field control. Renders a `<label>` element.
+
+<auto-type-table path="./props.ts" name="FieldLabelProps" />
+
+### Control
+
+A native input element for use with the sub-component API. Renders an `<input>` element. Supports standard HTML validation attributes: `required`, `type`, `pattern`, `minLength`, `maxLength`, `min`, `max`, `step`.
+
+<auto-type-table path="./props.ts" name="FieldControlProps" />
+
+### Error
+
+An error message displayed when validation fails. Renders a `<div>` element.
+
+The `match` prop controls when the error is shown:
+
+- **`match="valueMissing"`**: shown when a `required` field is empty
+- **`match="typeMismatch"`**: shown when `type="email"` or `type="url"` value is invalid
+- **`match="patternMismatch"`**: shown when value doesn't match the `pattern` regex
+- **`match="tooShort"` / `match="tooLong"`**: shown for `minLength` / `maxLength` violations
+- **`match="rangeUnderflow"` / `match="rangeOverflow"`**: shown for `min` / `max` violations
+- **`match="customError"`**: shown when the Field's `validate` prop returns an error
+
+<auto-type-table path="./props.ts" name="FieldErrorProps" />
+
+### Description
+
+A paragraph with additional information about the field. Renders a `<p>` element. Hidden when an error is present (in the simple API).
+
+<auto-type-table path="./props.ts" name="FieldDescriptionProps" />
+
+### Validity
+
+Provides field validity state to a render function. Use for custom validity-based rendering.
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `field` | The root element |
+| `field-label` | The field label (when a label is set) |
+| `field-control` | Wrapper around the field content (simple API) |
+| `field-input` | The input control (sub-component API) |
+| `field-helper` | Wrapper around the description and error (simple API, when either is set) |
+| `field-description` | The description text (when set) |
+| `field-error` | The error message (when the field is invalid) |
 
 ## Accessibility
 

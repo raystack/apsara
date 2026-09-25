@@ -1,9 +1,9 @@
 'use client';
 
-import { Cross1Icon } from '@radix-ui/react-icons';
 import { cva, VariantProps } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import { ComponentProps, ReactElement, useCallback, useState } from 'react';
+import { XIcon } from '~/icons';
 import {
   FilterOperation,
   FilterOperator,
@@ -36,7 +36,7 @@ const chip = cva(styles.chip, {
 export type FilterChipValue = string | string[] | number | Date;
 
 /**
- * Coerce a `FilterChipValue` to the `Date` the DatePicker expects — filter
+ * Coerce a `FilterChipValue` to the `Date` the DatePicker expects, since filter
  * state hydrated from a serialized query arrives as a string or epoch number.
  * Unparseable values leave the field unselected.
  */
@@ -113,7 +113,8 @@ export const FilterChip = ({
   const [operation, setOperation] = useState<FilterOperation | undefined>(
     computedOperations?.[0]
   );
-  const [filterValue, setFilterValue] = useState<any>(value || '');
+  // `??` not `||`, since a falsy option value like `0` is a real selection.
+  const [filterValue, setFilterValue] = useState<any>(value ?? '');
 
   const showOnRemove = typeof onRemove === 'function';
   const isMultiSelectColumn = columnType === FilterType.multiselect;
@@ -256,7 +257,7 @@ export const FilterChip = ({
           onClick={onRemove}
           data-slot='filter-chip-remove'
         >
-          <Cross1Icon
+          <XIcon
             className={styles.removeIcon}
             data-slot='filter-chip-remove-icon'
           />

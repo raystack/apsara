@@ -68,3 +68,18 @@ export const formatDemo = {
     }
   ]
 };
+
+export const controlledDemo = {
+  type: 'code',
+  code: `
+function ControlledNumberField() {
+  const [qty, setQty] = React.useState(1);
+
+  return (
+    <Flex direction="column" gap={5}>
+      <NumberField value={qty} onValueChange={setQty} min={1} max={10} />
+      <Text size="small" variant="secondary">Subtotal: {qty * 12} credits</Text>
+    </Flex>
+  );
+}`
+};

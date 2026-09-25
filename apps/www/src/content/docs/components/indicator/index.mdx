@@ -18,6 +18,22 @@ import { Indicator } from "@raystack/apsara";
 <Indicator />
 ```
 
+## Usage
+
+A dot that sits on top of something else. `variant` carries its meaning, and a label covers the cases where the dot alone is not enough.
+
+### Variant
+
+Five variants that carry meaning: `accent`, `success`, `warning`, `danger`, and `neutral`. Pass `label` to show a count instead of a plain dot.
+
+<Demo data={variantDemo} />
+
+### Label
+
+When no label is provided, the Indicator will show as a dot
+
+<Demo data={labelDemo} />
+
 ## API Reference
 
 Renders a small status dot or label.
@@ -34,20 +50,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `indicator-badge` | The `role="status"` indicator itself |
 | `indicator-label` | The label text (when `label` is set) |
 | `indicator-dot` | The dot (when no `label` is set) |
-
-## Examples
-
-### Variant
-
-The Indicator component supports different variants to convey different states or meanings:
-
-<Demo data={variantDemo} />
-
-### Label
-
-When no label is provided, the Indicator will show as a dot
-
-<Demo data={labelDemo} />
 
 ## Accessibility
 

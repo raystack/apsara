@@ -1,11 +1,11 @@
 import { promises as fs } from 'fs';
-import path from 'path';
-import { docs } from '@/lib/source';
 import type { InferPageType } from 'fumadocs-core/source';
 import { remarkAutoTypeTable } from 'fumadocs-typescript';
+import path from 'path';
 import { remark } from 'remark';
 import remarkGfm from 'remark-gfm';
 import remarkMdx from 'remark-mdx';
+import { docs } from '@/lib/source';
 import { remarkTypeTableToMd } from './remark';
 
 const processor = remark()
@@ -16,9 +16,7 @@ const processor = remark()
 
 const REGEX = {
   FRONTMATTER: /\*{3}\n\ntitle: .*?\ndescription: .*?(?:\ntag: .*?)?\n-+\n?/,
-  IMPORT: /import\s*{[^}]*}\s*from\s*["'][^"']+["'];?\n?/g,
-  DEMO: /export const (\w+)\s*=\s*{[\s\S]*?code:/g,
-  PLAYGROUND: /export const playground\s*=\s*{/g
+  IMPORT: /import\s*{[^}]*}\s*from\s*["'][^"']+["'];?\n?/g
 };
 
 // Inline the demo examples into the content
@@ -26,10 +24,12 @@ function inlineDemoComponents(content: string, demo: string): string {
   const demoMap: Record<string, string[]> = {};
   const formattedDemo = removePlaygroundExportBlock(demo);
 
-  // Match each export const <name> = ...code:
+  // Match each `export const <name> = ...code:`. Built fresh per call so its
+  // `lastIndex` never leaks between pages.
+  const demoRegex = /export const (\w+)\s*=\s*{[\s\S]*?code:/g;
   let match: RegExpExecArray | null;
 
-  while ((match = REGEX.DEMO.exec(formattedDemo)) !== null) {
+  while ((match = demoRegex.exec(formattedDemo)) !== null) {
     const [_, name] = match;
 
     // Find the full block by slicing from the start of this match to the next export or end of string
@@ -71,12 +71,12 @@ function inlineDemoComponents(content: string, demo: string): string {
 
 // Remove the playground export block from the demo file
 function removePlaygroundExportBlock(content: string): string {
-  const match = REGEX.PLAYGROUND.exec(content);
+  const match = /export const playground\s*=\s*{/.exec(content);
 
   if (!match) return content; // nothing to remove
 
   const start = match.index;
-  let i = REGEX.PLAYGROUND.lastIndex - 1; // start at opening `{`
+  let i = match.index + match[0].length - 1; // start at opening `{`
   let braceCount = 1;
 
   while (i < content.length && braceCount > 0) {

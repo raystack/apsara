@@ -1,8 +1,8 @@
 .container {
   display: flex;
   flex-direction: column;
-  border: 0.5px solid var(--rs-color-border-base-primary);
-  border-radius: var(--rs-radius-2);
+  border: var(--docs-rule);
+  border-radius: var(--docs-surface-radius);
   overflow: hidden;
 }
 
@@ -12,10 +12,10 @@
   gap: var(--rs-space-5);
   height: 36px;
   padding: 0 var(--rs-space-4);
-  background: var(--rs-color-background-base-secondary);
-  border: 0.5px solid var(--rs-color-border-base-primary);
-  border-top-left-radius: var(--rs-radius-2);
-  border-top-right-radius: var(--rs-radius-2);
+  background: var(--docs-bg-surface);
+  border: var(--docs-rule);
+  border-top-left-radius: var(--docs-surface-radius);
+  border-top-right-radius: var(--docs-surface-radius);
   border-bottom: none;
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-regular);
@@ -34,8 +34,8 @@
 }
 
 .accordionItem:last-child .trigger {
-  border-bottom-left-radius: var(--rs-radius-2);
-  border-bottom-right-radius: var(--rs-radius-2);
+  border-bottom-left-radius: var(--docs-surface-radius);
+  border-bottom-right-radius: var(--docs-surface-radius);
 }
 
 .trigger {
@@ -67,7 +67,7 @@
 }
 
 .content {
-  background: var(--rs-color-background-base-secondary);
+  background: var(--docs-bg-surface);
   border-top: none;
   position: relative;
 }

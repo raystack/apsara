@@ -1,4 +1,4 @@
-/* Global native scrollbar styling — uses the Baseline standard scrollbar
+/* Global native scrollbar styling. Uses the Baseline standard scrollbar
    properties (scrollbar-width / scrollbar-color), supported across Chrome,
    Safari and Firefox. Note: scrollbar-width is keyword-only (no exact px) and
    setting scrollbar-color opts out of the macOS overlay/auto-hide scrollbar.

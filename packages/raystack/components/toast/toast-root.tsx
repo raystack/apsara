@@ -1,15 +1,9 @@
 'use client';
 
 import { Toast as ToastPrimitive } from '@base-ui/react';
-import {
-  CheckCircledIcon,
-  Cross1Icon,
-  CrossCircledIcon,
-  ExclamationTriangleIcon,
-  InfoCircledIcon
-} from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
+import { ErrorIcon, InfoIcon, SuccessIcon, WarningIcon, XIcon } from '~/icons';
 import { Button } from '../button';
 import { Flex } from '../flex';
 import { IconButton } from '../icon-button';
@@ -19,11 +13,11 @@ import type { ToastData } from './toast-manager';
 import type { ToastPosition } from './toast-provider';
 
 const TOAST_ICONS: Record<string, ReactNode> = {
-  default: <InfoCircledIcon />,
-  success: <CheckCircledIcon />,
-  error: <CrossCircledIcon />,
-  warning: <ExclamationTriangleIcon />,
-  info: <InfoCircledIcon />,
+  default: <InfoIcon />,
+  success: <SuccessIcon />,
+  error: <ErrorIcon />,
+  warning: <WarningIcon />,
+  info: <InfoIcon />,
   loading: <Spinner size={2} color='default' />
 };
 
@@ -139,7 +133,7 @@ export function ToastRoot({
                   render={<IconButton size={2} />}
                   data-slot='toast-close'
                 >
-                  <Cross1Icon />
+                  <XIcon />
                 </ToastPrimitive.Close>
               </Flex>
             </Flex>

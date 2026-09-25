@@ -1,8 +1,8 @@
 'use client';
 
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { ReactNode, useContext, useEffect, useState } from 'react';
+import { EllipsisIcon } from '~/icons';
 import { Menu } from '../menu';
 import { Tooltip } from '../tooltip';
 import styles from './sidebar.module.css';
@@ -24,7 +24,7 @@ export interface SidebarMoreProps {
     /**
      * Not deprecated: `Menu.Content` portals to `document.body`, so a
      * `[data-slot="menu-content"]` selector can't be scoped to just this
-     * instance's dropdown — this prop remains the only way to target it.
+     * instance's dropdown, so this prop remains the only way to target it.
      */
     menuContent?: string;
   };
@@ -52,9 +52,7 @@ export function SidebarMore({
 
   if (!children) return null;
 
-  const triggerIcon = leadingIcon ?? (
-    <DotsHorizontalIcon width={16} height={16} />
-  );
+  const triggerIcon = leadingIcon ?? <EllipsisIcon width={16} height={16} />;
 
   const triggerContent = (
     <button

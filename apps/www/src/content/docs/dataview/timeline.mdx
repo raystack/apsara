@@ -1,0 +1,298 @@
+---
+title: Timeline
+description: DataView's time-axis renderer. Cards positioned on a continuous, scrollable date range with lane packing, swim-lane grouping, and range-window loading.
+source: packages/raystack/components/data-view
+---
+
+import {
+  timelinePreview,
+  timelineSortValueLanePreview,
+  timelineGroupingPreview,
+  timelinePointPreview,
+} from "./demo.ts";
+
+<Demo data={timelinePreview} />
+
+## Overview
+
+`DataView.Timeline` positions the same row model as cards on a continuous, horizontally scrollable time axis: orders on a delivery schedule, tasks on a Gantt-style plan, releases on a strip. It shares the root's entire data layer: search, filters, grouping, and Display Properties apply to cards exactly as they do to list rows, and it participates in multi-view switching via `name`.
+
+In the demo above: drag the background to pan (with a momentum glide), hover for the snapped date cursor, and use the Today button, wired through `actionsRef`, to jump back. The narrow "B" stub is a span shorter than `minCardWidth`, rendered via `context.collapsed`.
+
+## Anatomy
+
+```tsx
+import { DataView, TimelineActions } from "@raystack/apsara";
+
+<DataView data={tasks} fields={fields} defaultSort={defaultSort} getRowId={(t) => t.id}>
+  <DataView.Toolbar>
+    <DataView.Search />
+    <DataView.Filters />
+    <DataView.DisplayControls />
+  </DataView.Toolbar>
+
+  <DataView.Timeline
+    startField="start"
+    endField="end"
+    renderCard={renderCard}
+  />
+</DataView>
+```
+
+## Usage
+
+Horizontal position is always time. Everything below is about the vertical axis and what fills it.
+
+### Cards
+
+The Timeline owns **positioning**: the time scale (date to x, span to width, using real timestamps so variable-length months don't distort placement), lane packing, the sticky two-tier axis, and scrolling. You own the **card**: `renderCard(row, context)` draws everything visual, the same split as `DataView.List`'s `columns[].cell`.
+
+```tsx
+<DataView.Timeline
+  startField="start"
+  endField="end"
+  renderCard={(row, context) => {
+    // context: { width, collapsed, laneIndex, start, end }
+    if (context.collapsed) return <CompactStub task={row.original} />;
+    return <TaskCard task={row.original} />;
+  }}
+/>
+```
+
+`context.collapsed` flips when the span is narrower than `minCardWidth` (default 60px). Render a compact stub instead of letting the full card clip. Point cards never collapse; they size to their content. Wrap card fields in `DataView.DisplayAccess` so the toolbar's Display Properties toggles reach them.
+
+Card height is content-driven, the same contract as `DataView.List` rows: cards auto-measure after paint, each lane sizes to its tallest card, and `estimatedRowHeight` (default 66) is only a layout hint until real heights arrive.
+
+Under `virtualized` this inverts. A culled card never reports a height, so measuring would resize lanes as you scroll and shift every lane below them. Lanes there take a fixed `estimatedRowHeight` pitch, and a card taller than the pitch overlaps the lane below instead of growing its own.
+
+Give a card an explicit height if you want uniform cards, and keep that height within the pitch if you virtualize.
+
+Keep `renderCard` referentially stable by defining it outside the component or wrapping it in `useCallback`. Cards are memoized against it, and an inline closure forces every visible card to re-render on each scroll frame.
+
+### Point markers
+
+Omit `endField` and rows render as point markers at their date: releases, incidents, audit events. The wrapper sizes to the card's content instead of a time span, and `context.end` is `null`. Because the packer can't measure content, it assumes each point card is `estimatedPointWidth` wide (default 120px) when assigning lanes. Set it to roughly your widest point card so nearby markers don't overlap in a lane.
+
+<Demo data={timelinePointPreview} />
+
+### Lane packing
+
+`lanePacking` decides what a lane *means*. All three modes run per group section. A card never shares a lane across sections.
+
+| Mode | A lane is | Use it for |
+| --- | --- | --- |
+| `auto` (default) | a dense chronological track: cards that don't overlap in time share it | fitting many cards into the least vertical space |
+| `one-per-row` | one row | a Gantt chart, where every row needs its own visible track |
+| `one-per-sort-value` | one distinct value of the **sorted-by** field | grouping by a property while keeping the flat single-axis layout |
+
+Under `one-per-sort-value`, rows sharing a value share a lane and are packed by date within it; a value only claims a **sub-lane** where two of its own cards overlap in time. So a timeline sorted by priority shows a High lane, a Medium lane and a Low lane, and only the priority with genuinely concurrent work grows a second row.
+
+The active sort does double duty here: it picks the field lanes are built from *and* orders them, so the Ordering control repositions lanes live and there's no second ordering vocabulary to keep in sync.
+
+<Demo data={timelineSortValueLanePreview} />
+
+```tsx
+<DataView
+  data={tasks}
+  fields={fields}
+  // The sort is the lane definition: sort by rank → one lane per rank value
+  defaultSort={{ name: "rank", order: "asc" }}
+  getRowId={(t) => t.id}>
+  <DataView.Timeline
+    startField="start"
+    endField="end"
+    lanePacking="one-per-sort-value"
+    renderCard={renderCard}
+  />
+</DataView>
+```
+
+- **Rank what doesn't sort naturally.** Sorting `priority` alphabetically gives High, Low, Medium. Carry a numeric `rank` alongside it and sort on that for High, Medium, Low. The lane values are then the ranks, which is invisible unless your card shows them.
+- **Rows with no usable value**, meaning null, `undefined`, `""`, or a non-primitive (which also logs a dev warning), share one lane, always last, wherever the sort would have put them.
+- **Values are keyed by their string form**, so `1` and `"1"` share a lane. Resolve an object-valued field to a primitive before sorting on it.
+- **No sort, no lanes.** The mode falls back to `auto` if the query carries no sort. `defaultSort` is required on the root, so that's a guard rather than a configuration.
+- **With `group_by` active**, each section gets its own lane set and `context.laneIndex` stays section-relative. Grouping by the sorted field is allowed, and collapses to the simple case: a section already holds one value, so it renders as one lane, plus sub-lanes on overlap.
+
+### Grouping
+
+Set `group_by`, either from `DataView.DisplayControls` → Grouping or on the initial `query`, and the timeline splits into **swim-lane sections** stacked under the single shared time axis: a full-width header band per group, with that group's cards lane-packed beneath it. Horizontal position stays purely time; grouping reorganizes vertically only.
+
+<Demo data={timelineGroupingPreview} />
+
+```tsx
+// Mark the field groupable; showGroupCount adds the count badge to the band.
+const fields = [
+  { accessorKey: "team", label: "Team", groupable: true, showGroupCount: true },
+  …
+];
+
+<DataView data={tasks} fields={fields} query={{ group_by: ["team"] }} …>
+  <DataView.Timeline startField="start" endField="end" renderCard={renderCard} />
+</DataView>
+```
+
+The timeline consumes the **same group rows** `DataView.List` renders as section headers (the root's `groupData` output), so section order, labels (`groupLabelsMap`), and counts (`groupCountMap`, or the bucket size) match between views, in client and server mode alike. There's no timeline-specific grouping path to keep in sync.
+
+Section order is the field's `groupOrder` where it declares one (`['High', 'Medium', 'Low']`, the ranking sorting can't express), then values it doesn't list in first-occurrence order, with rows that have no value in the last section. A declared value with no rows renders no section.
+
+- **Packing is per section.** A card only ever shares a lane with cards in its own group, and `context.laneIndex` is section-relative. Every section starts at lane 0. `lanePacking="one-per-row"` and `"one-per-sort-value"` apply within each section too.
+- **Bands pin while their section is in view.** The active band sticks directly under the time axis and is pushed off by the next section's band; its label sticks to the left edge so it stays readable while you pan to a distant month. Always on, in pure CSS, with no prop.
+- **Empty sections disappear.** A group whose cards all fall outside an explicit `range`, or that has no valid `startField` values, renders nothing: no band, no empty strip. A band that *does* render shows the full group count, even when some of its cards are culled, matching List.
+- **`showGroupHeaders={false}`** hides the bands but keeps the sections, the same semantics as the prop on `DataView.List`. Style a band with `classNames.groupHeader`.
+
+Bands are labels only in this release: no chevron, no collapsing.
+
+### Ordering
+
+Sort can't move a card horizontally, because x is locked to the start date, so it reaches the vertical axis only, and only under two of the three packing modes.
+
+- **`one-per-row`**: row order follows the active sort, within each section when grouped.
+- **`one-per-sort-value`**: the sorted-by field *defines* the lanes, so changing the sort field rebuilds them.
+
+Leave the Ordering control visible for both.
+
+Under the default `auto` packing the sort has no visible effect at all, since lanes are assigned by dense chronological first-fit, so there hide the control with `<DataView.DisplayControls hideOrdering />`, or leave `sortable` off the timeline's per-view `fields`.
+
+In [server mode](/docs/dataview#server-mode) the sort is the backend's to apply: rows arrive already ordered and `one-per-sort-value` takes lane order from that row order, first value seen first. A backend that ignores the `sort` in `onTableQueryChange` therefore produces lanes in whatever order it returned rows, with nothing logged to say so. The lane *membership* is still correct, only the ranking is arbitrary.
+
+### Scale and axis
+
+Four props control the axis, and they compose rather than overlap:
+
+- `scale` sets the tick unit: `day` (default), `week`, `month`, or `quarter`.
+- `unitWidth` sets pixels per unit (defaults: day 20, week 56, month 96, quarter 140). This is the zoom knob.
+- `tickInterval` labels every Nth unit. Labels never render closer than a collision floor, so a too-dense value degrades gracefully instead of overlapping.
+- `gridlineInterval` draws a gridline every Nth unit. Purely visual: cards, the today line, and cursor snapping still land on every unit.
+
+The domain defaults to the data extent (plus today and markers) with padding. Pass an explicit `range` to fix the coordinate space. This is essential for range-window loading, since the scrollbar then never jumps as data streams in. Rows entirely outside an explicit `range` are culled.
+
+### Today and markers
+
+`today` (default `true`) draws a vertical line with a date badge pinned to the axis, at day precision so server and client renders agree. Pin it to a fixed date with `today={date}` or hide it with `today={false}`. `markers` adds more full-height lines for milestones and deadlines:
+
+```tsx
+<DataView.Timeline
+  markers={[
+    { date: "2026-08-01", label: "Code freeze" },
+    { date: "2026-08-15", label: "Release", variant: "accent" },
+    { date: "2026-08-20", label: "EOL", variant: "danger" },
+  ]}
+/>
+```
+
+### Navigation
+
+`defaultScrollTo` (default `'today'`) sets the initial scroll position: a date, `'today'`, `'start'`, or `'end'`. After mount, navigate imperatively through `actionsRef`:
+
+```tsx
+const timelineActions = useRef<TimelineActions | null>(null);
+
+<DataView.Timeline actionsRef={timelineActions} … />
+
+<Button onClick={() => timelineActions.current?.scrollTo("today")}>
+  Today
+</Button>
+```
+
+`scrollTo(target, { align = "center", behavior = "smooth" })` accepts the same target vocabulary as `defaultScrollTo`. Out-of-domain dates clamp to the nearest domain edge; while the timeline is hidden (inactive view, no data) calls no-op with a dev warning. `getVisibleRange()` returns the visible `[Date, Date]` window, or `null` while hidden, which is useful for showing the Today button only when today is off-screen.
+
+Filtering navigates too: when a filter or search change leaves no matching card in the viewport, the timeline scrolls the earliest match into view instead of leaving you parked on empty canvas. A change whose results are already on screen doesn't move the view. Opt out with `scrollToResults={false}`.
+
+### Virtualization
+
+`virtualized` culls both axes. Cards, gridlines, tick labels, month bands, and markers render only near the viewport, and the grid and marker lines span the visible window rather than the full canvas height.
+
+A frame then costs what is on screen rather than what is in the data, so a long domain and deep grouping stay affordable. It defaults to `false`, so pass it explicitly. Reach for it whenever the domain is long or the rows are many.
+
+Without it, nothing is culled vertically. Every lane in the domain stays mounted and every card in the visible time window renders, so deep grouping over thousands of rows builds a tall, fully populated canvas. The trade is content-driven lane heights, which virtualization gives up.
+
+### Loading by visible range
+
+Offset pagination doesn't fit a 2-D time canvas. The natural unit of fetching is the **visible window**. So unlike List, a timeline backed by an API usually stays in **client mode** and fetches through `onVisibleRangeChange` rather than switching to [server mode](/docs/dataview#server-mode).
+
+1. Fix the coordinate space with an explicit `range` so the scrollbar stays stable while rows stream in.
+2. On `onVisibleRangeChange`, widen the window by a prefetch pad and fetch rows **overlapping** it (`start <= to AND end >= from`). A containment filter drops cards straddling the window edges.
+3. Track requested buckets, such as months, in a `Set` so re-entering a window is free, and dedupe merged rows by id, since edge-straddling rows come back from both adjacent fetches. On a failed fetch, delete the affected buckets from the `Set` so scrolling back retries them instead of leaving a permanent hole.
+4. Throttle, don't debounce. A debounce waits for scrolling to stop, leaving a gap of missing cards mid-drag.
+
+```tsx
+const [orders, setOrders] = useState<Order[]>([]);
+const [isLoading, setIsLoading] = useState(true); // initial fetch in flight
+
+<DataView
+  data={orders}
+  fields={fields}
+  mode="client" // filters/search run locally against loaded rows
+  isLoading={isLoading}
+  defaultSort={{ name: "start", order: "asc" }}
+  getRowId={(o) => o.id}
+>
+  <DataView.Timeline
+    startField="start"
+    endField="end"
+    range={FIXED_RANGE}
+    virtualized
+    onVisibleRangeChange={([from, to]) => throttledLoadWindow(from, to)}
+    renderCard={renderOrderCard}
+  />
+</DataView>
+```
+
+Start with `isLoading={true}` and fire an initial fetch on mount. With no data and no loading flag the timeline renders `null` and the zero state takes over, so `onVisibleRangeChange` would never fire to bootstrap the first window.
+
+Keep the row model **cumulative**. The domain is stable, so previously fetched cards stay mounted and scrolling back is instant. Scroll position is anchored by *time*, not pixels: if the domain shifts (a `range` extension, or rows prepended by a fetch), the date under the viewport's left edge stays put instead of the content jumping.
+
+## API Reference
+
+The renderer, the context each card is rendered with, and the marker and action shapes.
+
+### DataView.Timeline
+
+<auto-type-table path="./props.ts" name="DataViewTimelineProps" />
+
+### Card context
+
+Passed as the second argument to `renderCard`.
+
+<auto-type-table path="./props.ts" name="TimelineCardContext" />
+
+### Marker
+
+<auto-type-table path="./props.ts" name="TimelineMarker" />
+
+### Actions
+
+The imperative handle received through `actionsRef`.
+
+<auto-type-table path="./props.ts" name="TimelineActions" />
+
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot). Toolbar, filter, and display-control slots are on the [DataView](/docs/dataview#slots) page.
+
+| Slot | Element |
+|------|---------|
+| `data-view-timeline` | Scroll container |
+| `data-view-timeline-axis` | Sticky axis |
+| `data-view-timeline-axis-band` / `-band-label` | Month/year band and its label |
+| `data-view-timeline-axis-tick` | Axis tick |
+| `data-view-timeline-axis-marker` | Today/custom marker badge on the axis |
+| `data-view-timeline-axis-cursor` | Hover cursor badge on the axis |
+| `data-view-timeline-canvas` | Card canvas |
+| `data-view-timeline-card` | Card positioning wrapper |
+| `data-view-timeline-gridline` | Vertical gridline |
+| `data-view-timeline-marker` | Marker line on the canvas |
+| `data-view-timeline-cursor` | Hover cursor line on the canvas |
+| `data-view-timeline-group-layer` / `-group-slot` / `-group-header` / `-group-header-label` | Group band layer and its parts |
+| `data-view-timeline-footer` | Sticky footer |
+
+## Accessibility
+
+- The Timeline pane is a focusable, labelled `role="region"` (`aria-label`,
+  default "Timeline") that keyboard users can Tab to and scroll with the arrow
+  keys.
+- The card canvas is a `role="list"` with each card as a `listitem`.
+  Decorative gridlines, markers, and the axis are `aria-hidden`.
+- Cards receive row clicks via the root's `onRowClick`. The background supports
+  mouse drag-to-pan with a momentum glide, and scrolling past the domain edge
+  won't trigger browser back-swipe.

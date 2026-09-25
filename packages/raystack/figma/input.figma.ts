@@ -9,14 +9,14 @@ const findTextContent = (name: string) => {
   return t && t.type === 'TEXT' ? t.textContent : undefined;
 };
 
-// Variant Normal/Chips have no prefix/suffix code prop — only Prefix/Suffix map.
+// Variant Normal/Chips have no prefix/suffix code prop, and only Prefix/Suffix map.
 const prefix = figma.selectedInstance.getEnum('Variant', {
   Prefix: findTextContent('Prefix')
 });
 const suffix = figma.selectedInstance.getEnum('Variant', {
   Suffix: findTextContent('Suffix')
 });
-// State Hover/Active/Filled Active are visual-only — only Disabled maps.
+// State Hover/Active/Filled Active are visual-only, and only Disabled maps.
 const disabled = figma.selectedInstance.getEnum('State', {
   Disabled: true
 });
@@ -51,7 +51,7 @@ const description = figma.selectedInstance.getBoolean('Helper text', {
 });
 const optional = figma.selectedInstance.getBoolean('Optional');
 // "Leading Icon" BOOLEAN toggles the leading icon; resolve the child instance
-// named "Leading Icon" when enabled (guarded — ErrorHandle when absent).
+// named "Leading Icon" when enabled (guarded, since ErrorHandle is returned when absent).
 const leadingIcon = figma.selectedInstance.getBoolean('Leading Icon', {
   true: (function () {
     const i = figma.selectedInstance.findInstance('Leading Icon');

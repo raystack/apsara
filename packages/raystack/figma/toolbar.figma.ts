@@ -14,7 +14,7 @@ const instance = figma.selectedInstance;
 //   forward the full button via the `render` prop.
 // - An uncoded instance whose layer name starts with "Line" → Toolbar.Separator.
 //   NOTE: raw Figma LINE/vector primitives are NOT exposed in `children` by the
-//   Code Connect API — only INSTANCE/TEXT children are. A divider only renders
+//   Code Connect API; only INSTANCE/TEXT children are. A divider only renders
 //   here if it is an instance (e.g. a Separator/Divider component).
 // - Any other child is passed through and rendered directly.
 const items = instance.children.flatMap(child => {
@@ -47,7 +47,7 @@ const items = instance.children.flatMap(child => {
     });
     const size = child.getEnum('Size', { Small: 'small', Normal: 'normal' });
     // "Plain" = the default Toolbar.Button render (text/neutral/small) with a
-    // label and no icons, disabled or loading state — i.e. nothing extra.
+    // label and no icons, disabled or loading state, meaning nothing extra.
     const isPlain =
       variant === 'text' &&
       color === 'neutral' &&

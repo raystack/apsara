@@ -10,6 +10,7 @@ import {
   useRef,
   useState
 } from 'react';
+import { radiusVariants } from '../../shared/radius';
 import styles from './avatar.module.css';
 import { AVATAR_COLORS } from './utils';
 
@@ -18,10 +19,8 @@ type ImageLoadingStatus = 'idle' | 'loading' | 'loaded' | 'error';
 
 const avatar = cva(styles.avatar, {
   variants: {
-    radius: {
-      small: styles['avatar-small'],
-      full: styles['avatar-full']
-    },
+    // Each size names its own base step. No default: the theme radius applies.
+    ...radiusVariants,
     size: {
       1: styles['avatar-size-1'],
       2: styles['avatar-size-2'],
@@ -125,7 +124,6 @@ const avatar = cva(styles.avatar, {
   ],
   defaultVariants: {
     size: 3,
-    radius: 'small',
     variant: 'soft',
     color: 'indigo'
   }

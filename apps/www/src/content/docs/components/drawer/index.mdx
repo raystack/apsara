@@ -4,7 +4,9 @@ description: A panel that slides in from the edge of the screen with swipe-to-di
 source: packages/raystack/components/drawer
 ---
 
-import { playground, basicDemo, positionDemo } from "./demo.ts";
+import { playground, basicDemo, positionDemo,
+  controlledDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -27,7 +29,31 @@ import { Drawer } from "@raystack/apsara";
 </Drawer>
 ```
 
+## Usage
+
+Pick the edge it enters from, then decide who owns its open state.
+
+### Basic
+
+A drawer slides in from the edge named by `side` and traps focus while open.
+
+<Demo data={basicDemo} />
+
+### Positioning
+
+The Drawer can slide in from different sides of the screen. Swipe-to-dismiss is automatically configured based on the `side` prop.
+
+<Demo data={positionDemo} />
+
+### Controlled
+
+Pass `open` with `onOpenChange` to own the state. Do this when the drawer has to open from elsewhere on the page, or stay open until a save completes.
+
+<Demo data={controlledDemo} />
+
 ## API Reference
+
+The same header, body and footer shell as [Dialog](/docs/components/dialog), anchored to an edge.
 
 ### Root
 
@@ -79,18 +105,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `drawer-body` | The `Drawer.Body` container |
 | `drawer-footer` | The `Drawer.Footer` container |
 
-## Examples
-
-### Basic
-
-<Demo data={basicDemo} />
-
-### Positioning
-
-The Drawer can slide in from different sides of the screen. Swipe-to-dismiss is automatically configured based on the `side` prop.
-
-<Demo data={positionDemo} />
-
 ## Accessibility
 
 - Uses `role="dialog"` with `aria-modal="true"`.
@@ -102,4 +116,3 @@ The Drawer can slide in from different sides of the screen. Swipe-to-dismiss is 
   prop for localisation or context-specific copy (e.g. `"Close settings"`).
 - Respects motion preferences: drawer slide motion is enabled only when
   `prefers-reduced-motion: no-preference`.
-

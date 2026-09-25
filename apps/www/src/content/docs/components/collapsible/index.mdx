@@ -2,7 +2,6 @@
 title: Collapsible
 description: An interactive component that toggles the visibility of its content panel.
 source: packages/raystack/components/collapsible
-tag: new
 ---
 
 import {
@@ -27,7 +26,31 @@ import { Collapsible } from '@raystack/apsara'
 </Collapsible>
 ```
 
+## Usage
+
+The panel manages its own open state unless you take it over.
+
+### Controlled
+
+Pass `open` with `onOpenChange` to own the state, so a button elsewhere on the page can expand the section.
+
+<Demo data={controlledDemo} />
+
+### Default open
+
+Use `defaultOpen` to have the panel initially expanded.
+
+<Demo data={defaultOpenDemo} />
+
+### Disabled
+
+`disabled` freezes the collapsible in its current state. Use it while content is still loading rather than hiding the section outright.
+
+<Demo data={disabledDemo} />
+
 ## API Reference
+
+A root, the trigger that toggles it, and the panel that opens.
 
 ### Root
 
@@ -56,26 +79,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `collapsible` | The root element |
 | `collapsible-trigger` | The button that toggles the panel |
 | `collapsible-panel` | The collapsible content panel |
-
-## Examples
-
-### Controlled
-
-You can control the collapsible state by providing `open` and `onOpenChange` props.
-
-<Demo data={controlledDemo} />
-
-### Default Open
-
-Use `defaultOpen` to have the panel initially expanded.
-
-<Demo data={defaultOpenDemo} />
-
-### Disabled
-
-The collapsible can be disabled to prevent user interaction.
-
-<Demo data={disabledDemo} />
 
 ## Accessibility
 

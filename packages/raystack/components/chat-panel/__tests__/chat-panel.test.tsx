@@ -370,8 +370,8 @@ describe('ChatPanel', () => {
           screen.getByRole('button', { name: 'Minimize chat panel' })
         );
 
-        // The bubble starts over the middle of the docked box it replaces —
-        // centre (820, 400) against its own (978, 722) — at its own size, so
+        // The bubble starts over the middle of the docked box it replaces,
+        // centre (820, 400) against its own (978, 722), at its own size, so
         // its icon is never stretched.
         const panel = screen.getByTestId('panel');
         expect(panel).toHaveAttribute('data-mode-from', 'docked');
@@ -803,10 +803,7 @@ describe('ChatPanel', () => {
       const icon = screen.getByTestId('bubble').querySelector('svg');
       expect(icon).not.toBeNull();
       expect(icon).toHaveAttribute('aria-hidden', 'true');
-      expect(icon?.querySelector('path')).toHaveAttribute(
-        'fill',
-        'currentColor'
-      );
+      expect(icon).toHaveAttribute('data-icon', 'CoPilotIcon');
     });
   });
 

@@ -8,6 +8,10 @@ import { playground, sizesDemo, stateDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
+## Overview
+
+`CopyButton` is an [IconButton](/docs/components/icon-button) wired to the clipboard: pass the `text` to copy and it handles the click, swaps the copy icon for a check, and announces "Copied" to screen readers. The check icon reverts after `resetTimeout` (default 1000ms); set `resetIcon={false}` to keep it. Drop it next to code snippets, API keys, and IDs. If you need copy behavior with your own UI, use the `useCopyToClipboard` hook from `@raystack/apsara/hooks` instead.
+
 ## Anatomy
 
 Import and assemble the component:
@@ -17,6 +21,22 @@ import { CopyButton } from "@raystack/apsara";
 
 <CopyButton />
 ```
+
+## Usage
+
+The button handles the copy and the confirmation itself. Only its size and state are yours to set.
+
+### Size
+
+Like IconButton, CopyButton supports sizes 1 through 4. Default is `2`.
+
+<Demo data={sizesDemo} />
+
+### States
+
+CopyButton inherits all IconButton states. A disabled button ignores clicks and never triggers a copy.
+
+<Demo data={stateDemo} />
 
 ## API Reference
 
@@ -37,20 +57,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `copy-button-copy-icon` | The copy icon |
 | `copy-button-check-icon` | The check icon shown after copying |
 | `copy-button-status` | Visually hidden live region announcing "Copied" |
-
-## Examples
-
-### Size
-
-Like IconButton, CopyButton supports different sizes:
-
-<Demo data={sizesDemo} />
-
-### States
-
-The CopyButton inherits all states from IconButton
-
-<Demo data={stateDemo} />
 
 ## Accessibility
 

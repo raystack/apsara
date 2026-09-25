@@ -20,6 +20,41 @@ export {
   type DateRange,
   RangePicker
 } from './components/calendar';
+export {
+  CalendarPreview,
+  type CalendarPreviewBodyProps,
+  type CalendarPreviewCaptionProps,
+  type CalendarPreviewChangeDetails,
+  type CalendarPreviewChangeReason,
+  type CalendarPreviewContentProps,
+  type CalendarPreviewDateRange,
+  type CalendarPreviewDayProps,
+  type CalendarPreviewDaysProps,
+  type CalendarPreviewDraftRange,
+  type CalendarPreviewField,
+  type CalendarPreviewFooterProps,
+  type CalendarPreviewGridProps,
+  type CalendarPreviewHeaderProps,
+  type CalendarPreviewInputInvalidReason,
+  type CalendarPreviewInputProps,
+  type CalendarPreviewInputValidity,
+  type CalendarPreviewLabelProps,
+  type CalendarPreviewNavProps,
+  type CalendarPreviewOpenChangeDetails,
+  type CalendarPreviewPanelProps,
+  type CalendarPreviewPeriodViewProps,
+  type CalendarPreviewProps,
+  type CalendarPreviewResetProps,
+  type CalendarPreviewScale,
+  type CalendarPreviewScaleProps,
+  type CalendarPreviewScalesProps,
+  type CalendarPreviewScaleValue,
+  type CalendarPreviewSeparatorProps,
+  type CalendarPreviewTriggerProps,
+  type CalendarPreviewWeekdayProps,
+  type UseCalendarReturn,
+  useCalendar
+} from './components/calendar-preview';
 export { Callout } from './components/callout';
 export {
   Chat,
@@ -97,6 +132,7 @@ export { IconButton } from './components/icon-button';
 export { Image } from './components/image';
 export { Indicator } from './components/indicator';
 export { Input } from './components/input';
+export { Kbd } from './components/kbd';
 export { Label } from './components/label';
 export { Link } from './components/link';
 export { List } from './components/list';
@@ -112,8 +148,16 @@ export { PreviewCard } from './components/preview-card';
 export { Progress } from './components/progress';
 export {
   PromptInput,
+  type PromptInputActions,
+  type PromptInputEditorProps,
+  type PromptInputMention,
+  type PromptInputMentionItem,
+  type PromptInputMentionRef,
+  type PromptInputMentionsProps,
+  type PromptInputMessage,
   type PromptInputProps,
-  type PromptInputStatus
+  type PromptInputStatus,
+  type PromptInputTextareaProps
 } from './components/prompt-input';
 export { Radio } from './components/radio';
 export { Reasoning } from './components/reasoning';
@@ -136,12 +180,30 @@ export { Tabs } from './components/tabs';
 export { Text } from './components/text';
 export { TextArea } from './components/text-area';
 export {
+  type AccentColor,
+  type Appearance,
+  type AppearanceSetting,
+  createThemeScript,
+  type GrayColor,
+  type GrayColorSetting,
+  type PanelBackground,
+  type Radius,
+  type ReducedMotion,
+  type ResolvedThemeSettings,
+  type Scaling,
   Theme,
-  ThemeProvider,
-  ThemeProviderProps,
+  type ThemeHandle,
+  type ThemeInjectionProps,
+  type ThemeProps,
+  type ThemeScriptParams,
+  type ThemeSettings,
   ThemeSwitcher,
-  useTheme
-} from './components/theme-provider';
+  type ThemeSwitcherProps,
+  type UseThemeReturn,
+  useSystemAppearance,
+  useTheme,
+  useThemeInjection
+} from './components/theme';
 export { Toast, toastManager, useToastManager } from './components/toast';
 export { Toggle } from './components/toggle';
 export { Toolbar } from './components/toolbar';
@@ -156,3 +218,15 @@ export {
   type TourTarget,
   useTour
 } from './components/tour';
+export {
+  createIcon,
+  type IconComponent,
+  type IconOptions,
+  type IconOverrides,
+  type IconProps,
+  IconProvider,
+  type IconProviderProps
+} from './icons/create-icon';
+export * from './icons/icons';
+export type { IconName } from './icons/types';
+export { radiusStyle } from './shared/radius';

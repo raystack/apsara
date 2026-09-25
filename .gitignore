@@ -18,8 +18,6 @@ dist
 .DS_Store
 *.pem
 
-www-old/
-
 # debug
 npm-debug.log*
 yarn-debug.log*
@@ -44,5 +42,10 @@ yarn-error.log*
 # npm pack artifacts
 *.tgz
 
-# generated Code Connect batch file (created by figma:generate-icons at publish time)
-packages/raystack/figma/icons.figma.batch.json
+# Playwright MCP session logs
+.playwright-mcp/
+
+# Claude Code local files
+.claude/settings.local.json
+.claude/worktrees/
+CLAUDE.local.md

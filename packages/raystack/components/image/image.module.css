@@ -1,9 +1,11 @@
 .image {
+  /* Base step for the shared `radius` override. */
+  --rs-radius-step: 6px;
   display: block;
   max-width: 100%;
   height: auto;
   /* Hairline media edge so pale images keep a shape on light surfaces.
-     Outline, not inset shadow — the decoded image paints over a shadow. */
+     Outline, not inset shadow, since the decoded image paints over a shadow. */
   outline: 0.5px solid var(--rs-color-overlay-base-a2);
   outline-offset: -0.5px;
 }
@@ -18,22 +20,6 @@
 
 .image-fill {
   object-fit: fill;
-}
-
-.image-radius-none {
-  border-radius: 0;
-}
-
-.image-radius-small {
-  border-radius: var(--rs-radius-2);
-}
-
-.image-radius-medium {
-  border-radius: var(--rs-radius-3);
-}
-
-.image-radius-full {
-  border-radius: var(--rs-radius-full);
 }
 
 /* Load fade: hidden only after JS confirms an in-flight load, so SSR/no-JS

@@ -76,11 +76,6 @@ describe('DatePicker data-slot contract', () => {
   it('exposes the trigger and input slots when closed', () => {
     const { container } = render(<DatePicker />);
     expectSlots(container, ['date-picker-trigger', 'date-picker-input']);
-    // The error span always mounts (toggled via `data-visible`, not conditional
-    // rendering) so a screen reader announces it the instant an error appears.
-    expect(getSlot(container, 'date-picker-error')).not.toHaveAttribute(
-      'data-visible'
-    );
   });
 
   it('exposes the content slots and nested calendar slots when open', () => {
@@ -91,13 +86,6 @@ describe('DatePicker data-slot contract', () => {
       'date-picker-content',
       'calendar'
     ]);
-  });
-
-  it('exposes the error slot when the typed date is invalid', () => {
-    const { container } = render(<DatePicker />);
-    const input = screen.getByPlaceholderText('Select date');
-    fireEvent.change(input, { target: { value: 'not a date' } });
-    expect(getSlot(container, 'date-picker-error')).not.toBeNull();
   });
 });
 

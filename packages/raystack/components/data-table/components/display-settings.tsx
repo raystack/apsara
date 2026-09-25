@@ -1,9 +1,8 @@
 'use client';
 
-import { MixerHorizontalIcon } from '@radix-ui/react-icons';
-
 import { cx } from 'class-variance-authority';
 import { isValidElement, ReactNode } from 'react';
+import { DisplayIcon } from '~/icons';
 import { Button } from '../../button';
 import { Flex } from '../../flex';
 import { Popover } from '../../popover';
@@ -29,7 +28,7 @@ export function DisplaySettings<TData, TValue>({
       variant='outline'
       color='neutral'
       size='small'
-      leadingIcon={<MixerHorizontalIcon />}
+      leadingIcon={<DisplayIcon />}
     >
       Display
     </Button>

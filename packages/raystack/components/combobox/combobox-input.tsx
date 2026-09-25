@@ -1,8 +1,8 @@
 'use client';
 
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
-import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { type ComponentProps } from 'react';
+import { ChevronDownIcon } from '~/icons';
 import { Input } from '../input';
 import { useComboboxContext } from './combobox-root';
 

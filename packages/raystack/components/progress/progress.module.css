@@ -21,6 +21,7 @@
   line-height: var(--rs-line-height-mini);
   letter-spacing: var(--rs-letter-spacing-mini);
   color: var(--rs-color-foreground-base-primary);
+  font-variant-numeric: tabular-nums;
   text-align: right;
 }
 
@@ -29,7 +30,10 @@
   width: 100%;
   height: var(--rs-space-2);
   overflow: clip;
-  border-radius: 1px;
+  border-radius: max(
+    var(--rs-radius-pill, 0px),
+    calc(1px * var(--rs-scaling, 1) * var(--rs-radius-factor, 1))
+  );
   background-color: var(--rs-color-background-neutral-secondary);
 }
 
@@ -40,7 +44,7 @@
   transform-origin: left;
 }
 
-/* Circular variant — viewBox is 72×72, SVG scales to container size */
+/* Circular variant. viewBox is 72×72, SVG scales to container size */
 .progress-variant-circular {
   align-items: center;
   justify-content: center;

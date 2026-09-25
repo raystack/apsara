@@ -1,8 +1,8 @@
 'use client';
 
-import { Cross2Icon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { useCallback } from 'react';
+import { XIcon } from '~/icons';
 import { Button } from '../../button';
 import { Flex } from '../../flex';
 import styles from '../data-view.module.css';
@@ -25,7 +25,7 @@ export interface DataViewClearFiltersProps {
  * filters); a bordered panel in the empty state. Shared between the List footer
  * and `DataView.ClearFilters` so the markup lives in one place.
  *
- * Internal — not exported from the package.
+ * Internal, not exported from the package.
  */
 export function FilterSummary({ className }: DataViewClearFiltersProps) {
   const {
@@ -96,7 +96,7 @@ export function FilterSummary({ className }: DataViewClearFiltersProps) {
         variant='text'
         color='neutral'
         size='small'
-        trailingIcon={<Cross2Icon />}
+        trailingIcon={<XIcon />}
         onClick={handleClearFilters}
         data-slot='data-view-filter-summary-clear'
       >
@@ -110,7 +110,7 @@ FilterSummary.displayName = 'DataView.FilterSummary';
 
 /**
  * Surfaces the bordered "Clear Filters" panel in the empty state (a query
- * returned no rows). Place it as a sibling of `DataView.List` — separate from
+ * returned no rows). Place it as a sibling of `DataView.List`, separate from
  * `DataView.EmptyState`. Renders nothing outside the empty state; the flat
  * footer for the data state is rendered automatically by `DataView.List`.
  */

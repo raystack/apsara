@@ -1,9 +1,9 @@
 'use client';
 
 import { Accordion as AccordionPrimitive } from '@base-ui/react';
-import { TriangleDownIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, ReactNode, useCallback, useState } from 'react';
+import { ChevronDownIcon } from '~/icons';
 import { Flex } from '../flex';
 import styles from './sidebar.module.css';
 import { SidebarLeadingVisual } from './sidebar-leading-visual';
@@ -23,7 +23,7 @@ export interface SidebarNavigationGroupProps extends ComponentProps<'section'> {
   onOpenChange?: (open: boolean) => void;
   leadingIcon?: ReactNode;
   trailingIcon?: ReactNode;
-  /** @deprecated Every key here has an equivalent `[data-slot]` — see the Slots table in the Sidebar docs. */
+  /** @deprecated Every key here has an equivalent `[data-slot]`. See the Slots table in the Sidebar docs. */
   classNames?: {
     /** @deprecated Use `[data-slot="sidebar-group-header"]` instead. */
     header?: string;
@@ -126,7 +126,7 @@ export function SidebarNavigationGroup({
                 data-slot='sidebar-group-trigger'
               >
                 {labelContent}
-                <TriangleDownIcon
+                <ChevronDownIcon
                   className={cx(
                     styles['nav-group-chevron'],
                     classNames?.chevron

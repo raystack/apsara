@@ -1,4 +1,12 @@
 {
   "title": "Theme",
-  "pages": ["overview", "colors", "typography", "spacing", "radius", "effects"]
+  "pages": [
+    "overview",
+    "colors",
+    "typography",
+    "spacing",
+    "radius",
+    "effects",
+    "icons"
+  ]
 }

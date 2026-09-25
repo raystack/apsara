@@ -1,12 +1,12 @@
 'use client';
 
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { cva, cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import timezonePlugin from 'dayjs/plugin/timezone';
 import utcPlugin from 'dayjs/plugin/utc';
 import { ChangeEvent, ReactNode, useEffect, useRef, useState } from 'react';
 import { DayPicker, DayPickerProps, DropdownProps } from 'react-day-picker';
+import { ChevronLeftIcon, ChevronRightIcon } from '~/icons';
 
 import { IconButton } from '../icon-button';
 import { Select } from '../select';
@@ -54,7 +54,7 @@ function DropDown({
   const [open, setOpen] = useState(false);
 
   /*
-   * Mirror the callback into a ref so the effect depends only on `open` —
+   * Mirror the callback into a ref so the effect depends only on `open`,
    * parents that re-create `onDropdownOpen` per render would otherwise cause
    * a re-fire on every parent render where `open` is true.
    */

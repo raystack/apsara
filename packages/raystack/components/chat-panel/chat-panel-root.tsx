@@ -116,8 +116,8 @@ function readBox(node: HTMLElement): MorphBox {
 }
 
 /**
- * Draws the panel back over the box it just left — an inverse translate and
- * scale off its top-left corner — and lets go a frame later, so the two modes
+ * Draws the panel back over the box it just left, with an inverse translate and
+ * scale off its top-left corner, and lets go a frame later, so the two modes
  * read as one shape moving. The old box has to be read while the DOM still
  * shows the old mode, hence the measurement in render; the inverse can only be
  * worked out once the new mode has laid out, hence the layout effect.
@@ -150,7 +150,7 @@ function useMorph(
     if (!to.width || !to.height) return;
     // Minimized is the one mode whose whole content is a single small control.
     // Blowing the bubble up to the panel's box would stretch its icon into mush
-    // for the length of the tween, so it only travels — from the middle of the
+    // for the length of the tween, so it only travels, from the middle of the
     // box it is replacing, since there is no shape left to line its edges up
     // with.
     if (mode === 'minimized') {
@@ -229,7 +229,7 @@ export interface ChatPanelRootProps extends ComponentProps<'aside'> {
   /**
    * Largest allowed floating size, always additionally clamped by the
    * viewport.
-   * @defaultValue the initial floating size — out of the box the window can
+   * @defaultValue the initial floating size, so by default the window can
    * only shrink; pass a larger `maxSize` to let it grow.
    */
   maxSize?: ChatPanelSize;

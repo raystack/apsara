@@ -4,7 +4,7 @@ import { RangePicker } from '../range-picker';
 
 /*
  * Real-Calendar runtime regression tests for RangePicker. Mirrors
- * date-picker.runtime.test.tsx — uses the real Calendar to catch
+ * date-picker.runtime.test.tsx. Uses the real Calendar to catch
  * mount/unmount loops in Base UI internals after RangePicker adopted
  * usePickerPopover.
  */

@@ -1,8 +1,8 @@
 'use client';
 
 import { Accordion as AccordionPrimitive } from '@base-ui/react';
-import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
+import { ChevronDownIcon } from '~/icons';
 import styles from './accordion.module.css';
 
 export const AccordionTrigger = ({

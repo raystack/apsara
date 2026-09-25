@@ -1,7 +1,6 @@
 'use client';
 
 import { ScrollArea as ScrollAreaPrimitive } from '@base-ui/react/scroll-area';
-import { ArrowDownIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import {
   ComponentProps,
@@ -16,6 +15,7 @@ import {
   useRef,
   useState
 } from 'react';
+import { ArrowDownIcon } from '~/icons';
 import { ScrollAreaScrollbar } from '../scroll-area/scroll-area-scrollbar';
 import { usePrefersReducedMotion } from '../tour/use-prefers-reduced-motion';
 import styles from './chat.module.css';
@@ -244,7 +244,7 @@ export function ChatMessages({
 
   // Perform the pending anchor scroll after the spacer has been committed,
   // so the target position exists before the frame paints.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on anchorTick — each anchor request bumps it.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on anchorTick, and each anchor request bumps it.
   useLayoutEffect(() => {
     const pending = pendingAnchorRef.current;
     const viewport = viewportRef.current;

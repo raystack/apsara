@@ -25,7 +25,7 @@
   height: var(--rs-space-4);
   width: 100%;
   flex-grow: 1;
-  border-radius: var(--rs-radius-3);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-3));
 }
 
 .hueTrack {
@@ -110,7 +110,7 @@
   position: relative;
   width: 100%;
   height: 100%;
-  /* Fallback dimensions when the parent doesn't constrain height — the OKLCH
+  /* Fallback dimensions when the parent doesn't constrain height, where the OKLCH
      canvas used to anchor size via its intrinsic 96×96, but the HSL gradient
      branch has no such element. aspect-ratio gives both branches a square
      footprint derived from width. */

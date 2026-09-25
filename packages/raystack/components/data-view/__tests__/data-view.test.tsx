@@ -2,13 +2,6 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-// SVG icons are inlined via @svgr/rollup at build time. In Vitest they resolve
-// to undefined, so stub the `~/icons` module with no-op components.
-vi.mock('~/icons', () => ({
-  FilterIcon: () => null,
-  __esModule: true
-}));
-
 // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
 import { DataView } from '../data-view';
 import type {
@@ -62,7 +55,7 @@ beforeAll(() => {
     ioInstances.push(this);
   }) as unknown as typeof IntersectionObserver;
 
-  // jsdom doesn't implement ResizeObserver — TanStack Virtual uses it for
+  // jsdom doesn't implement ResizeObserver, and TanStack Virtual uses it for
   // measureElement.
   // biome-ignore lint/suspicious/noExplicitAny: jsdom lacks ResizeObserver
   (global as any).ResizeObserver =
@@ -507,7 +500,7 @@ describe('DataView', () => {
         { value: 'table', label: 'Table' },
         { value: 'list', label: 'List' }
       ];
-      // In `list` view, mark email as defaultHidden — the column gates itself.
+      // In `list` view, mark email as defaultHidden, so the column gates itself.
       const listFields = mockFields.map(f =>
         f.accessorKey === 'email' ? { ...f, defaultHidden: true } : f
       );
@@ -755,7 +748,7 @@ describe('DataView', () => {
           <DataView.List variant='table' columns={mockColumns} />
         </DataView>
       );
-      // Two group headers (active, inactive) — counted via class
+      // Two group headers (active, inactive), counted via class
       const groupHeaders = container.querySelectorAll(
         '[class*="listGroupHeader"]'
       );
@@ -1035,7 +1028,7 @@ describe('DataView', () => {
 
   describe('Virtualization', () => {
     it('accepts estimatedRowHeight as the initial size hint', () => {
-      // Smoke test — render with virtualized + estimatedRowHeight and verify
+      // Smoke test: render with virtualized + estimatedRowHeight and verify
       // the listGrid mounts. The exact pixel math is exercised by
       // @tanstack/react-virtual; we only confirm the prop is honoured.
       const { container } = render(
@@ -1136,7 +1129,7 @@ describe('DataView', () => {
 
   describe('Unmanaged display columns', () => {
     // Selection / row-action / drag-handle columns aren't declared as fields
-    // (no filter/sort/group/visibility semantics) — they're presentation only.
+    // (no filter/sort/group/visibility semantics), so they're presentation only.
     // Such accessors must still render via their column spec.
     it('renders header + cells for a column whose accessor is absent from fields', async () => {
       const user = userEvent.setup();

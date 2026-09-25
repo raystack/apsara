@@ -1,4 +1,4 @@
-import { Flex, Headline, Text } from '@raystack/apsara';
+import { Flex } from '@raystack/apsara';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -34,12 +34,12 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
           pageTree={docs.pageTree}
           source={page.data.source}
         />
-        <Flex style={{ width: '100%' }} align='start'>
+        <Flex className={styles.body} align='start'>
           <Flex
             direction='column'
             align='center'
             justify='center'
-            style={{ width: '100%' }}
+            className={styles.column}
           >
             <Flex
               direction='column'
@@ -48,10 +48,8 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
             >
               <Flex direction='column' gap={6}>
                 <Flex direction='column' gap={3}>
-                  <Headline size='t4'>{page.data.title}</Headline>
-                  <Text size='regular' variant='secondary'>
-                    {page.data.description}
-                  </Text>
+                  <h1 className={styles['page-title']}>{page.data.title}</h1>
+                  <p className={styles['page-lede']}>{page.data.description}</p>
                 </Flex>
                 <Flex direction='column' className='prose'>
                   <MDX
@@ -66,28 +64,8 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
               <DocsFooter url={page.url} />
             </Flex>
           </Flex>
-          <aside
-            style={{
-              width: '300px',
-              height: 'calc(100vh - 50px)',
-              position: 'sticky',
-              top: '50px',
-              padding: '40px 0',
-              paddingRight: 'var(--rs-space-7)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <div
-              style={{
-                width: '100%',
-                height: '70vh'
-              }}
-            >
-              <TableOfContents headings={page.data.toc} />
-            </div>
+          <aside className={styles.toc}>
+            <TableOfContents headings={page.data.toc} />
           </aside>
         </Flex>
       </Flex>

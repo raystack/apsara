@@ -35,7 +35,7 @@ export interface MessageBubbleProps
     VariantProps<typeof bubble> {
   /**
    * Visual style of the message surface. `"ghost"` drops the surface
-   * entirely — no background, border or padding — and renders the message as
+   * entirely, so there is no background, border or padding, and it renders the message as
    * full-width body copy.
    * @defaultValue "solid"
    */

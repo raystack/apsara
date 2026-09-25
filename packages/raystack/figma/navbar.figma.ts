@@ -4,7 +4,7 @@
 
 import figma from 'figma';
 
-// Navbar has no Figma component properties — compose a minimal realistic
+// Navbar has no Figma component properties, so compose a minimal realistic
 // example using the public sub-components (Start / Center / End).
 
 export default {

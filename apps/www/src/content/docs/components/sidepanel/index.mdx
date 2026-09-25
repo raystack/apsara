@@ -1,5 +1,5 @@
 ---
-title: Sidepanel
+title: Side Panel
 description: A flexible side panel component to place content on either side of the page.
 source: packages/raystack/components/sidepanel
 ---
@@ -20,7 +20,25 @@ import { SidePanel } from "@raystack/apsara";
 </SidePanel>
 ```
 
+## Usage
+
+A panel that holds content beside the page. Pick the side it sits on.
+
+### Basic usage
+
+A panel with a header and content. `side` puts it on the `left` or `right` of the layout.
+
+<Demo data={basicDemo} />
+
+### Position
+
+`left` or `right`. Match it to the side the panel relates to, so it opens next to the content it acts on.
+
+<Demo data={positionDemo} />
+
 ## API Reference
+
+The panel and its header.
 
 ### Root
 
@@ -51,21 +69,9 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `side-panel-description` | Header description text (when `description` is set) |
 | `side-panel-section` | `SidePanel.Section` container |
 
-## Examples
-
-### Basic Usage
-
-<Demo data={basicDemo} />
-
-### Position
-
-The SidePanel can be positioned on either the left or right side of the screen.
-
-<Demo data={positionDemo} />
-
 ## Accessibility
 
-- Renders as a native `<aside>` — assistive tech announces it as the
+- Renders as a native `<aside>`, so assistive tech announces it as the
   `complementary` landmark automatically.
 - `SidePanel.Header` renders the `title` as a semantic `<h2>` and assigns
   it an auto-generated id (override via `titleId`). Pair it with

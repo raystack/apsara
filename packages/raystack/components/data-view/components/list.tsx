@@ -11,7 +11,7 @@ import {
   useMemo,
   useRef
 } from 'react';
-
+import { useScaling } from '~/hooks/useScaling';
 import { Badge } from '../../badge';
 import { Skeleton } from '../../skeleton';
 import styles from '../data-view.module.css';
@@ -80,9 +80,6 @@ export function DataViewList<TData, TValue = unknown>({
   const headersVisible = showHeaders ?? isTableVariant;
   const ariaRole = role ?? (isTableVariant ? 'table' : 'list');
   const dividers = showDividers ?? isTableVariant;
-  const effectiveRowHeight =
-    estimatedRowHeight ??
-    (isTableVariant ? DEFAULT_TABLE_ROW_HEIGHT : DEFAULT_LIST_ROW_HEIGHT);
 
   const visibleLeafColumns = table.getVisibleLeafColumns();
 
@@ -95,7 +92,7 @@ export function DataViewList<TData, TValue = unknown>({
   // Render order from `columns`. TanStack-managed accessors (those declared in
   // root `fields`) gate on the current visibility map. Accessors with no
   // matching field are "unmanaged" display columns (selection, row actions,
-  // drag handles, …) — render unconditionally.
+  // drag handles, …), so render unconditionally.
   const allLeafIds = useMemo(
     () => new Set(table.getAllLeafColumns().map(c => c.id)),
     [table, visibleLeafColumns]
@@ -130,7 +127,16 @@ export function DataViewList<TData, TValue = unknown>({
   // Measure the column-header row so sticky group elements sit directly under it.
   const [headerMeasureRef, headerHeight] = useElementHeight();
 
-  // Group offsets — needed for sticky group anchor under virtualization.
+  // Rows are sized by tokens, so the estimates the virtualizer and the sticky
+  // group anchor run on follow the theme zoom. An explicit prop is left alone.
+  const scaling = useScaling(scrollRef);
+  const groupHeaderHeight = GROUP_HEADER_HEIGHT * scaling;
+  const effectiveRowHeight =
+    estimatedRowHeight ??
+    (isTableVariant ? DEFAULT_TABLE_ROW_HEIGHT : DEFAULT_LIST_ROW_HEIGHT) *
+      scaling;
+
+  // Group offsets, needed for the sticky group anchor under virtualization.
   const group_by = tableQuery?.group_by?.[0];
   const isGrouped = Boolean(group_by) && group_by !== defaultGroupOption.id;
 
@@ -150,10 +156,10 @@ export function DataViewList<TData, TValue = unknown>({
           data: row.original as GroupedData<TData>
         });
       }
-      offset += isGroupHeader ? GROUP_HEADER_HEIGHT : effectiveRowHeight;
+      offset += isGroupHeader ? groupHeaderHeight : effectiveRowHeight;
     });
     return list;
-  }, [rows, effectiveRowHeight]);
+  }, [rows, effectiveRowHeight, groupHeaderHeight]);
 
   const { totalSize, items, measureRef } = useVirtualRows({
     enabled: virtualized,
@@ -162,7 +168,7 @@ export function DataViewList<TData, TValue = unknown>({
     estimatedRowHeight: effectiveRowHeight,
     estimateSize: row => {
       const isGroupHeader = row?.subRows && row.subRows.length > 0;
-      return isGroupHeader ? GROUP_HEADER_HEIGHT : effectiveRowHeight;
+      return isGroupHeader ? groupHeaderHeight : effectiveRowHeight;
     }
   });
 
@@ -210,7 +216,7 @@ export function DataViewList<TData, TValue = unknown>({
   );
 
   if (!isActive) return null;
-  // Render nothing when there's truly no data and no loading — sibling
+  // Render nothing when there's truly no data and no loading. The sibling
   // `<DataView.EmptyState>` / `<DataView.ZeroState>` handle messaging.
   if (!hasData) return null;
 
@@ -239,7 +245,7 @@ export function DataViewList<TData, TValue = unknown>({
                   : header.column.columnDef.header;
               content = flexRender(source, header.getContext());
             } else if (spec?.header !== undefined) {
-              // Unmanaged column (e.g. selection): no TanStack header — render
+              // Unmanaged column (e.g. selection): no TanStack header, so render
               // the spec's header with a minimal context.
               content =
                 typeof spec.header === 'function'
@@ -282,7 +288,7 @@ export function DataViewList<TData, TValue = unknown>({
           ? flexRender(spec.cell, cell.getContext())
           : ((cell.getValue() as React.ReactNode) ?? null);
       } else if (spec?.cell !== undefined) {
-        // Unmanaged column (e.g. selection): no TanStack cell — render the
+        // Unmanaged column (e.g. selection): no TanStack cell, so render the
         // spec's cell with a synthetic context covering the common reads.
         content =
           typeof spec.cell === 'function'
@@ -515,7 +521,7 @@ export function DataViewList<TData, TValue = unknown>({
         {renderHeaderRow()}
         {virtualized ? renderVirtualBody() : renderFlatBody()}
         {renderLoaderRows()}
-        {/* Sentinel — triggers onLoadMore via IntersectionObserver in server mode. */}
+        {/* Sentinel: fires onLoadMore via IntersectionObserver in server mode. */}
         <div
           ref={sentinelRef}
           className={styles.listSentinel}
