@@ -3,7 +3,8 @@ export interface FilterChipProps {
   label: string;
 
   /** Current value of the filter. `multiselect` takes a `string[]`; `date`
-   * takes a `Date` (a string or epoch number is parsed for you). */
+   * takes a `Date` (a string or epoch number is parsed for you); `number`
+   * takes a `number` (a numeric string is accepted too). */
   value?: string | string[] | number | Date;
 
   /** Type of input for the filter
@@ -22,7 +23,11 @@ export interface FilterChipProps {
   /** Optional array of operations for the type of filter operation */
   operations?: { label: string; value: string }[];
 
-  /** Callback when the filter value changes; receives the value and the active operation */
+  /** Callback when the filter value changes; receives the value and the active
+   * operation. For `number`, non-numeric input is rejected and never reported,
+   * and the value arrives as a `number` — except for the intermediate states
+   * `""`, `"-"` and `"1."`, which are reported as-is so the field stays
+   * editable. */
   onValueChange?: (
     value: string | string[] | number | Date,
     operation: string
