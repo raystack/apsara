@@ -46,7 +46,7 @@ Two sizes. `large` is the default; `small` fits inside inputs and table cells.
 
 ### Color
 
-Choose between neutral and accent styles to control the visual emphasis.
+Five colors. `neutral` and `accent` control visual emphasis; `danger`, `success` and `warning` convey status, so reach for them when the chip reports a state rather than decorating a label.
 
 <Demo data={colorDemo} />
 
@@ -89,3 +89,5 @@ The Chip component has some accessibility features:
 - Provides keyboard navigation support
 - Makes decorative elements hidden from screen readers
 - Keeps contrast ratios correct in all variants and states
+
+`children` is optional, so a chip can be icon-only. When you omit `children`, pass an `aria-label` — the chip otherwise derives its label from string children and would be announced as nothing.

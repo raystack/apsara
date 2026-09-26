@@ -1,8 +1,8 @@
 'use client';
 
 import { cva, cx, type VariantProps } from 'class-variance-authority';
-import { ComponentProps, ReactNode } from 'react';
-
+import { ComponentProps, ReactNode, Ref } from 'react';
+import { XIcon } from '~/icons';
 import { radiusVariants } from '../../shared/radius';
 import styles from './chip.module.css';
 
@@ -19,7 +19,10 @@ const chip = cva(styles.chip, {
     },
     color: {
       neutral: styles['chip-color-neutral'],
-      accent: styles['chip-color-accent']
+      accent: styles['chip-color-accent'],
+      danger: styles['chip-color-danger'],
+      success: styles['chip-color-success'],
+      warning: styles['chip-color-warning']
     }
   },
   defaultVariants: {
@@ -29,14 +32,21 @@ const chip = cva(styles.chip, {
   }
 });
 
-type ChipProps = ComponentProps<'span'> &
+export type ChipProps = Omit<ComponentProps<'span'>, 'ref' | 'children'> &
   VariantProps<typeof chip> & {
     trailingIcon?: ReactNode;
     leadingIcon?: ReactNode;
     isDismissible?: boolean;
-    children: ReactNode;
+    /** Optional: an icon-only chip passes `aria-label` instead. */
+    children?: ReactNode;
     onDismiss?: () => void;
     disabled?: boolean;
+    /**
+     * The chip renders a `<button>` when `onClick` is set and it is not
+     * dismissible, and a `<span>` otherwise — so the ref lands on whichever
+     * element that combination produced.
+     */
+    ref?: Ref<HTMLSpanElement | HTMLButtonElement>;
   };
 
 export const Chip = ({
@@ -92,23 +102,12 @@ export const Chip = ({
           type='button'
           data-slot='chip-dismiss'
         >
-          <svg
-            width='12'
-            height='12'
-            viewBox='0 0 12 12'
-            fill='none'
-            xmlns='http://www.w3.org/2000/svg'
+          <XIcon
+            className={styles['dismiss-icon']}
             aria-hidden='true'
             role='presentation'
             data-slot='chip-dismiss-icon'
-          >
-            <path
-              fillRule='evenodd'
-              clipRule='evenodd'
-              d='M9.5066 3.3066C9.73115 3.08205 9.73115 2.71798 9.5066 2.49343C9.28205 2.26887 8.91798 2.26887 8.69343 2.49343L6.00001 5.18684L3.3066 2.49343C3.08205 2.26887 2.71798 2.26887 2.49343 2.49343C2.26887 2.71798 2.26887 3.08205 2.49343 3.3066L5.18684 6.00001L2.49343 8.69343C2.26887 8.91798 2.26887 9.28205 2.49343 9.5066C2.71798 9.73115 3.08205 9.73115 3.3066 9.5066L6.00001 6.81318L8.69343 9.5066C8.91798 9.73115 9.28205 9.73115 9.5066 9.5066C9.73115 9.28205 9.73115 8.91798 9.5066 8.69343L6.81318 6.00001L9.5066 3.3066Z'
-              fill='currentColor'
-            />
-          </svg>
+          />
         </button>
       ) : trailingIcon ? (
         <span

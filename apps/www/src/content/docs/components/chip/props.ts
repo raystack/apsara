@@ -12,10 +12,10 @@ export interface ChipProps {
   size?: 'small' | 'large';
 
   /**
-   * Color style
+   * Color style. `danger`, `success` and `warning` convey status.
    * @defaultValue "neutral"
    */
-  color?: 'neutral' | 'accent';
+  color?: 'neutral' | 'accent' | 'danger' | 'success' | 'warning';
 
   /** ReactNode to display as an icon before the label */
   leadingIcon?: React.ReactNode;
@@ -51,4 +51,11 @@ export interface ChipProps {
    * @defaultValue The theme's `radius`
    */
   radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
+
+  /**
+   * Ref to the rendered element. The chip is a `<button>` when `onClick` is set
+   * and it is not dismissible, and a `<span>` otherwise, so the ref accepts
+   * either.
+   */
+  ref?: React.Ref<HTMLSpanElement | HTMLButtonElement>;
 }

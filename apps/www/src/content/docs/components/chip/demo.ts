@@ -24,7 +24,7 @@ export const playground = {
     },
     color: {
       type: 'select',
-      options: ['neutral', 'accent'],
+      options: ['neutral', 'accent', 'danger', 'success', 'warning'],
       defaultValue: 'neutral'
     },
     isDismissible: {
@@ -62,11 +62,21 @@ export const sizesDemo = {
 export const colorDemo = {
   type: 'code',
   code: `
-  <Flex gap={9}>
-    <Chip color="neutral" variant="outline">Outline</Chip>
-    <Chip color="neutral" variant="filled">Filled</Chip>
-    <Chip color="accent" variant="outline">Outline</Chip>
-    <Chip color="accent" variant="filled">Filled</Chip>
+  <Flex direction="column" gap={5}>
+    <Flex gap={9}>
+      <Chip color="neutral" variant="outline">Neutral</Chip>
+      <Chip color="accent" variant="outline">Accent</Chip>
+      <Chip color="danger" variant="outline">Danger</Chip>
+      <Chip color="success" variant="outline">Success</Chip>
+      <Chip color="warning" variant="outline">Warning</Chip>
+    </Flex>
+    <Flex gap={9}>
+      <Chip color="neutral" variant="filled">Neutral</Chip>
+      <Chip color="accent" variant="filled">Accent</Chip>
+      <Chip color="danger" variant="filled">Danger</Chip>
+      <Chip color="success" variant="filled">Success</Chip>
+      <Chip color="warning" variant="filled">Warning</Chip>
+    </Flex>
   </Flex>`
 };
 

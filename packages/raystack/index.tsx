@@ -79,7 +79,7 @@ export {
   type ChatPanelTriggerProps
 } from './components/chat-panel';
 export { Checkbox } from './components/checkbox';
-export { Chip } from './components/chip';
+export { Chip, type ChipProps } from './components/chip';
 export { CodeBlock } from './components/code-block';
 export { Collapsible } from './components/collapsible';
 export * from './components/color-picker';

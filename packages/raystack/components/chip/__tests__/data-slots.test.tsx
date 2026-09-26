@@ -28,6 +28,13 @@ describe('Chip data-slot contract', () => {
     expect(getSlot(container, 'chip')?.tagName).toBe('BUTTON');
   });
 
+  it('exposes slots for an icon-only chip', () => {
+    const { container } = render(
+      <Chip leadingIcon={<span>l</span>} aria-label='Filter' />
+    );
+    expectSlots(container, ['chip', 'chip-leading-icon']);
+  });
+
   it('omits optional slots when their parts are absent', () => {
     const { container } = render(<Chip>Label</Chip>);
     expect(getSlot(container, 'chip-leading-icon')).toBeNull();
