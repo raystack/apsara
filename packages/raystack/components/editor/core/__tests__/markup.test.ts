@@ -6,7 +6,7 @@ import {
   isDocEmpty,
   serializeMarkup,
   serializeText
-} from '../markup';
+} from '../composer/markup';
 import { isTriggerCharacter, serializeMention, trimDetails } from '../mention';
 
 const derive = (markup: string) => deriveDocDetails(docFromMarkup(markup));

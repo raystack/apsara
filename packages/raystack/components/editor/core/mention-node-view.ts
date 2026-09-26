@@ -1,8 +1,7 @@
 import type { Node as PMNode } from 'prosemirror-model';
 import type { NodeView } from 'prosemirror-view';
-import styles from './editor.module.css';
+import styles from './editor-core.module.css';
 import type { MentionAttrs } from './mention';
-import { mentionType } from './schema';
 
 /**
  * One live chip. The node view owns the element and writes the label into it
@@ -79,7 +78,7 @@ export class MentionNodeView implements NodeView {
   }
 
   update(node: PMNode) {
-    if (node.type !== mentionType) return false;
+    if (node.type.name !== 'mention') return false;
     this.write(node.attrs as MentionAttrs);
     this.registry.update(this.id, node.attrs as MentionAttrs);
     return true;
