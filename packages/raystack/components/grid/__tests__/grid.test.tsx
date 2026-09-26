@@ -1,8 +1,10 @@
 import { render } from '@testing-library/react';
+import { ReactElement } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import gapStyles from '~/shared/gap/gap.module.css';
 import { Grid } from '../grid';
 import styles from '../grid.module.css';
+import { GridItem } from '../grid-item';
 
 describe('Grid', () => {
   describe('Basic Rendering', () => {
@@ -199,6 +201,68 @@ describe('Grid', () => {
       );
       const grid = container.querySelector('[data-testid="test-grid"]');
       expect(grid).toBeInTheDocument();
+    });
+  });
+
+  describe('Item', () => {
+    const itemOf = (ui: ReactElement) =>
+      render(ui).container.querySelector(
+        '[data-slot="grid-item"]'
+      ) as HTMLElement;
+
+    it('places an item with area', () => {
+      expect(itemOf(<GridItem area='nav'>nav</GridItem>)).toHaveStyle({
+        gridArea: 'nav'
+      });
+    });
+
+    it('keeps area when a custom style is also passed', () => {
+      const item = itemOf(
+        <GridItem area='nav' style={{ padding: '8px' }}>
+          nav
+        </GridItem>
+      );
+      expect(item).toHaveStyle({ gridArea: 'nav', padding: '8px' });
+    });
+
+    it('renders start and end lines', () => {
+      expect(
+        itemOf(
+          <GridItem colStart={2} colEnd={4} rowStart={1} rowEnd={3}>
+            cell
+          </GridItem>
+        )
+      ).toHaveStyle({
+        gridColumnStart: '2',
+        gridColumnEnd: '4',
+        gridRowStart: '1',
+        gridRowEnd: '3'
+      });
+    });
+
+    it('renders spans', () => {
+      expect(
+        itemOf(
+          <GridItem colSpan={3} rowSpan={2}>
+            cell
+          </GridItem>
+        )
+      ).toHaveStyle({ gridColumn: 'span 3', gridRow: 'span 2' });
+    });
+
+    it('renders self alignment', () => {
+      expect(
+        itemOf(
+          <GridItem justifySelf='center' alignSelf='end'>
+            cell
+          </GridItem>
+        )
+      ).toHaveStyle({ justifySelf: 'center', alignSelf: 'end' });
+    });
+
+    it('sets no grid properties when no positioning props are given', () => {
+      const item = itemOf(<GridItem>cell</GridItem>);
+      expect(item.getAttribute('style')).toBeNull();
     });
   });
 });
