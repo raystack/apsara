@@ -31,12 +31,6 @@ const config = {
   },
   async redirects() {
     return [
-      // TODO: remove this once we have a proper home page
-      {
-        source: '/',
-        destination: '/docs',
-        permanent: true
-      },
       // The lucide migration page became a section of the Upgrading page.
       {
         source: '/docs/migrating-to-lucide-icons',
