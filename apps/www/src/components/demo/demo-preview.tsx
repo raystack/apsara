@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { LiveProvider } from 'react-live';
 import Editor from '../editor';
 import Preview from '../preview';
+import { needsNoInline } from './no-inline';
 import styles from './styles.module.css';
 import { DemoPreviewProps } from './types';
 
@@ -22,7 +23,12 @@ export default function DemoPreview({
   const previewCode =
     typeof codePreview === 'string' ? codePreview : activeCode;
   return (
-    <LiveProvider code={activeCode} scope={scope} disabled>
+    <LiveProvider
+      code={activeCode}
+      scope={scope}
+      noInline={needsNoInline(activeCode)}
+      disabled
+    >
       <div className={styles.container} data-demo>
         {tabs && tabs.length > 1 && (
           <div className={styles.tabs}>

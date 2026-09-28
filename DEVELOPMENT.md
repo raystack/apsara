@@ -1,337 +1,134 @@
-# Development Guide
+# Development guide
 
-Welcome to the Apsara development guide! This document will help you get started with the local development environment and understand the technical aspects of the project.
+This guide covers setup, scripts, and the project layout. To send a change, see [CONTRIBUTING.md](./CONTRIBUTING.md). Code rules are in [AGENTS.md](./AGENTS.md) and apply to everyone.
 
-For contribution guidelines, please see [CONTRIBUTING.md](./CONTRIBUTING.md).
+## Requirements
 
-## Table of Contents
+- Node.js 22 or later
+- pnpm 9.3.0. Install it with `npm install -g pnpm@9.3.0`.
 
-- [Prerequisites](#prerequisites)
-- [Local Development Setup](#local-development-setup)
-- [Project Structure](#project-structure)
-- [Available Scripts](#available-scripts)
-- [Testing](#testing)
-- [Building](#building)
-- [Troubleshooting](#troubleshooting)
-
-## Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-- **Node.js** (version 22 or higher)
-- **pnpm** (version 9.3.0 or higher)
-- **Git**
-
-You can check your versions with:
-```bash
-node --version  # Should be 22.x or higher
-pnpm --version  # Should be 9.3.0 or higher
-git --version
-```
-
-### Installing pnpm
-
-If you don't have pnpm installed, you can install it globally:
+## Setup
 
 ```bash
-npm install -g pnpm@9.3.0
-```
-
-## Local Development Setup
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/raystack/apsara.git
-   cd apsara
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   pnpm install
-   ```
-
-3. **Start development servers**:
-   ```bash
-   # Start both library development and documentation site
-   pnpm start
-   
-   # Or start just the library development server
-   pnpm dev
-   ```
-
-4. **Build**:
-   ```bash
-   # Build both library and documentation site
-   pnpm build
-
-   # Or build just the library
-   pnpm build:apsara
-   ```
-
-## Development Tools & IDE Setup
-
-### IDE Configuration
-
-The project uses Biome for linting and formatting with preconfigured VS Code settings. Ensure you have the Biome plugin installed for consistent code formatting.
-
-## Project Structure
-
-Apsara uses a monorepo structure managed by pnpm workspaces and Turbo:
-
-```
-apsara/
-├── apps/
-│   ├── www/                    # Documentation website (Fumadocs)
-├── packages/
-│   ├── plugin-vscode/          # VS Code extension for Apsara
-│   ├── raystack/              # Main Apsara component library
-│   └── tools-config/          # Shared Biome and TypeScript configurations
-├── .github/
-│   └── workflows/             # GitHub Actions for CI/CD
-├── pnpm-workspace.yaml        # pnpm workspace configuration
-├── turbo.json                 # Turbo build configuration
-└── package.json               # Root package.json
-```
-
-### Key Directories
-
-- **`packages/raystack/`**: Contains the main Apsara component library
-  - `components/`: React components, one folder each (`accordion/`, `avatar/`, `button/`, etc.)
-  - `hooks/`: Custom React hooks
-  - `icons/`: Icon components
-  - `styles/`: Shared styles and theme tokens
-  - `types/`: Shared TypeScript types
-  - `test-utils/`: Test helpers
-  - `dist/`: Built output
-
-- **`apps/www/`**: Documentation website built with Next.js and Fumadocs
-  - `src/content/docs/`: Contains all the `.mdx` documentation files
-  - `src/components/`: Shared documentation components
-  - `public/`: Static assets for the documentation site
-
-- **`packages/plugin-vscode/`**: VS Code extension for Apsara
-  - Provides autocomplete and IntelliSense for Apsara components
-  - Includes design tokens and component snippets
-  - Built with TypeScript and VS Code Language Server Protocol
-
-### Package Exports
-
-The Apsara library provides multiple export paths for flexibility:
-
-#### Import Paths
-```javascript
-// Components
-import { Button, Flex } from '@raystack/apsara'
-
-// Specific feature imports
-import { ChevronDownIcon } from '@raystack/apsara/icons'
-import { useCopyToClipboard } from '@raystack/apsara/hooks'
-
-// Styles
-import '@raystack/apsara/style.css'
-```
-
-#### Available Exports
-- **Components**: `@raystack/apsara`
-- **Icons**: `@raystack/apsara/icons`
-- **Hooks**: `@raystack/apsara/hooks`
-- **Styles**: `@raystack/apsara/style.css`
-
-**Note**: The package also exports a `/v1` path for backward compatibility. It's recommended not to use this path as it will be removed in future releases.
-
-## Available Scripts
-
-### Root Level Scripts
-
-```bash
-# Start both library dev server and docs site
+git clone https://github.com/raystack/apsara.git
+cd apsara
+pnpm install
 pnpm start
-
-# Build all packages
-pnpm build
-
-# Build only the Apsara library
-pnpm build:apsara
-
-# Start library development server
-pnpm dev
-
-# Lint the Apsara library
-pnpm lint
-
-# Clean build artifacts (library-specific)
-cd packages/raystack && pnpm clean
-
-# Format code with Biome
-pnpm format
 ```
 
-### Library-Specific Scripts (in packages/raystack/)
+`pnpm start` builds the library in watch mode and starts the docs site at http://localhost:3000.
 
-```bash
-cd packages/raystack
+The repo includes Biome settings for VS Code (`.vscode/`) and Zed (`.zed/`). Install the Biome extension so files format on save.
 
-# Build the library
-pnpm build
+## Project structure
 
-# Start development server with watch mode
-pnpm dev
-
-# Run tests
-pnpm test
-
-# Run tests in watch mode
-pnpm test:watch
-
-# Run tests with coverage
-pnpm test:coverage
-
-# Lint TypeScript files
-pnpm lint
-
-# Clean build artifacts
-pnpm clean
+```
+apps/www/                 Docs site (Next.js and Fumadocs)
+packages/raystack/        The @raystack/apsara library
+packages/tools-config/    Shared Biome and TypeScript config
+packages/plugin-vscode/   VS Code extension for design tokens
+docs/                     Migration guide and RFCs
 ```
 
-### Icons
+### Library
 
-The icons live in one committed file, `packages/raystack/icons/icons.tsx`: one
-`createIcon` call per key, 31 of them. There is no generator and no build step —
-to add, remove, or repoint an icon, edit that file.
-
-`icons/types.ts` derives `IconName` from its exports with `keyof typeof icons`,
-so the union cannot drift and nothing needs to be kept in step by hand.
-
-`icons/__tests__/bundle.test.ts` is the test that matters here. It bundles a
-three-icon fixture with the real rollup and asserts the other 28 keys and their
-lucide imports are gone. That is what keeps one file from becoming one bundle.
-
-## Testing
-
-Apsara uses Vitest with React Testing Library for testing:
-
-### Running Tests
-
-```bash
-# Run all tests
-pnpm test
-
-# Run tests in watch mode (useful during development)
-pnpm test:watch
-
-# Run tests with coverage report
-pnpm test:coverage
-
-# Run specific test file
-pnpm test -- avatar.test.tsx
+```
+packages/raystack/
+  components/<name>/
+    <name>.tsx            Component
+    <name>.module.css     Styles
+    index.tsx             Re-exports only
+    __tests__/            Tests
+  hooks/                  Hooks (@raystack/apsara/hooks)
+  icons/                  Icons (@raystack/apsara/icons)
+  shared/                 Shared variants, such as gap and radius
+  styles/                 Design tokens and global CSS
+  test-utils/             Test helpers
+  figma/                  Figma Code Connect templates
+  index.tsx               Public exports
 ```
 
-### Writing Tests
+### Docs page
 
-- Test files should be placed in `__tests__` folders and named with the `.test.tsx` suffix
-- Use React Testing Library for component testing
-- Follow existing test patterns in the codebase
-- Test files are located alongside component files
+```
+apps/www/src/content/docs/components/<name>/
+  index.mdx               Page content
+  demo.ts                 Live examples and the playground
+  props.ts                Prop types, rendered by <auto-type-table>
+```
 
-Example test structure:
-```typescript
-import { render, screen } from '../test-utils';
-import { YourComponent } from './your-component';
+Component pages sort alphabetically. Other sections, such as `theme`, set their order in `meta.json`.
 
-describe('YourComponent', () => {
-  it('renders correctly', () => {
-    render(<YourComponent />);
-    expect(screen.getByText('Expected text')).toBeInTheDocument();
+### Package exports
+
+| Import | Contents |
+| --- | --- |
+| `@raystack/apsara` | Components |
+| `@raystack/apsara/hooks` | Hooks |
+| `@raystack/apsara/icons` | Icons |
+| `@raystack/apsara/style.css` | Styles, with fonts |
+| `@raystack/apsara/style-no-fonts.css` | Styles, without fonts |
+| `@raystack/apsara/normalize.css` | CSS reset |
+| `@raystack/apsara/v1` | Legacy alias of the root entry. Do not use it in new code. |
+
+## Scripts
+
+Run these from the repo root:
+
+| Script | What it does |
+| --- | --- |
+| `pnpm start` | Library watch build and docs dev server |
+| `pnpm dev` | Library watch build only |
+| `pnpm build` | Build every package |
+| `pnpm build:apsara` | Build the library |
+| `pnpm test:apsara` | Run the library tests |
+| `pnpm lint` | Lint the library with Biome |
+| `pnpm format` | Format and fix staged files. The pre-commit hook runs it. |
+| `pnpm clean` | Delete the library build output |
+
+Run these from `packages/raystack/`:
+
+| Script | What it does |
+| --- | --- |
+| `pnpm test -- components/<name>` | Run one component's tests |
+| `pnpm test:watch` | Run tests in watch mode |
+| `pnpm test:coverage` | Run tests with a coverage report |
+| `pnpm lint:fix` | Fix lint issues |
+| `pnpm exec tsc --noEmit` | Check types |
+
+Run `pnpm dev` in `apps/www/` to start only the docs site.
+
+## Tests
+
+Tests use Vitest and Testing Library in jsdom. Put them in `components/<name>/__tests__/<name>.test.tsx`:
+
+```tsx
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { Flex } from '../flex';
+
+describe('Flex', () => {
+  it('renders children', () => {
+    render(<Flex>Content</Flex>);
+    expect(screen.getByText('Content')).toBeInTheDocument();
   });
 });
 ```
 
-## Building
+## Build
 
-### Development Build
+`pnpm build:apsara` runs Rollup (`packages/raystack/rollup.config.mjs`) and writes ESM and CommonJS builds, type declarations, and CSS to `packages/raystack/dist/`. `pnpm dev` runs the same build in watch mode.
 
-```bash
-pnpm dev
-```
+## Icons
 
-This starts Rollup in watch mode, rebuilding automatically when files change.
+All icons are in `packages/raystack/icons/icons.tsx`, one `createIcon` call per icon. There is no generator. To add, remove, or change an icon, edit that file. `icons/types.ts` derives `IconName` from the exports, so it cannot drift. `icons/__tests__/bundle.test.ts` checks that unused icons are removed from a bundle.
 
-### Production Build
+## VS Code extension
 
-```bash
-pnpm build:apsara
-```
-
-This creates optimized builds in the `dist/` directory with:
-- ESM modules (`dist/index.js`)
-- CommonJS modules (`dist/index.cjs`)
-- TypeScript declarations (`dist/index.d.ts`)
-- CSS files (`dist/style.css`, `dist/normalize.css`)
-
-The package also exports a `./v1` entry point. It is a legacy alias that maps to the same root `dist` files, kept so older `@raystack/apsara/v1` imports keep working.
-
-### Build Configuration
-
-The build process uses:
-- **Rollup** for bundling JavaScript/TypeScript
-- **PostCSS** for CSS processing
-- **TypeScript** for type checking and declaration generation
-
-Configuration files:
-- `rollup.config.mjs`: Rollup configuration
-- `tsconfig.json`: TypeScript configuration
-- `biome.json`: Biome configuration for formatting/linting
-
-
+`packages/plugin-vscode/` adds autocomplete and hover previews for design tokens. To develop it, run the VS Code task `plugin-vscode: start-dev`. In that folder, `pnpm build` builds it and `pnpm package` creates the `.vsix` file.
 
 ## Troubleshooting
 
-### Common Issues
-
-1. **Node.js Version Issues**:
-   ```bash
-   # Ensure you're using Node.js 22+
-   node --version
-   
-   # If using nvm:
-   nvm use 22
-   ```
-
-2. **pnpm Version Issues**:
-   ```bash
-   # Ensure you're using the correct pnpm version
-   pnpm --version
-   
-   # Update pnpm if needed:
-   npm install -g pnpm@9.3.0
-   ```
-
-3. **Build Failures**:
-   ```bash
-   # Clean and reinstall if builds fail
-   pnpm clean
-   rm -rf node_modules
-   pnpm install
-   pnpm build:apsara
-   ```
-
-4. **Test Failures**:
-   ```bash
-   # Some tests may be failing in the current codebase
-   # Focus on not introducing new test failures
-   # Run tests to understand the current state:
-   pnpm test:apsara
-   ```
-
-### Getting Help
-
-If you encounter technical issues during development:
-
-1. Check the [Troubleshooting](#troubleshooting) section above
-2. Review the [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution guidelines
-3. Check the [GitHub Issues](https://github.com/raystack/apsara/issues) for similar problems
-4. Look at the [documentation site](https://apsara.raystack.org)
-
----
-
-For contribution guidelines, pull request process, and release information, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+- Wrong versions: check that `node --version` is 22 or later and `pnpm --version` is 9.3.0.
+- The build fails after you pull: run `pnpm clean`, `pnpm install`, then `pnpm build:apsara`.
+- The docs site does not show a component change: restart `pnpm start`.

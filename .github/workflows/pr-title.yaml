@@ -1,0 +1,28 @@
+name: PR Title
+
+# PRs are squash-merged, so the PR title becomes the commit message on main.
+# See https://github.com/raystack/apsara/blob/main/CONTRIBUTING.md#commit-convention
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions: {}
+
+jobs:
+  check:
+    name: Check PR title
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Check format
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          pattern='^(feat|fix|refactor|test|chore): (\[[[:lower:][:digit:]-]+(, [[:lower:][:digit:]-]+)*\] )?[^][[:upper:][:space:]]'
+          if [[ ! "$TITLE" =~ $pattern ]]; then
+            echo "::error::PR title must match '<type>: [<component>] <summary>', for example 'feat: [grid] introduce css modules'. Types: feat, fix, refactor, test, chore. See CONTRIBUTING.md#commit-convention."
+            exit 1
+          fi
+          if (( ${#TITLE} > 70 )); then
+            echo "::warning::PR title is ${#TITLE} characters. Keep it under 70."
+          fi

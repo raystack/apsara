@@ -21,12 +21,6 @@ export interface AvatarProps {
   variant?: 'solid' | 'soft';
 
   /**
-   * Border radius style
-   * @defaultValue "small"
-   */
-  radius?: 'small' | 'full';
-
-  /**
    * Color theme for the avatar
    */
   color?:
@@ -55,6 +49,12 @@ export interface AvatarProps {
 
   /** Additional CSS class names */
   className?: string;
+
+  /**
+   * Corner radius for this avatar only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 }
 
 export interface AvatarGroupProps {

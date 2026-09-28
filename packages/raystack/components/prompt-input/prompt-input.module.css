@@ -113,7 +113,7 @@
   height: var(--rs-space-7);
   padding: 0;
   border: none;
-  border-radius: var(--rs-radius-full);
+  border-radius: max(var(--rs-radius-2), var(--rs-radius-thumb, 9999px));
   background: var(--rs-color-background-accent-emphasis);
   color: var(--rs-accent-contrast);
   cursor: pointer;

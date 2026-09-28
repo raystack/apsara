@@ -227,6 +227,12 @@
   flex-shrink: 0;
 }
 
+/* Direct child only: the fallback path holds an Avatar, which sizes itself. */
+.nav-leading-icon > svg {
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
+}
+
 .nav-fallback-avatar {
   cursor: pointer;
 }

@@ -16,4 +16,10 @@ export interface IconButtonProps {
 
   /** onClick function triggered when iconButton is clicked. */
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+
+  /**
+   * Corner radius for this button only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 }

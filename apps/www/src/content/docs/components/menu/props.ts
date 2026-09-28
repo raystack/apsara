@@ -86,6 +86,12 @@ export interface MenuContentProps {
 
   /** Additional CSS class names */
   className?: string;
+
+  /**
+   * Corner radius for this menu only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 }
 
 export interface MenuItemProps {
@@ -208,4 +214,10 @@ export interface MenuSubContentProps {
 
   /** Additional CSS class names */
   className?: string;
+
+  /**
+   * Corner radius for this submenu only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 }

@@ -20,6 +20,41 @@ export {
   type DateRange,
   RangePicker
 } from './components/calendar';
+export {
+  CalendarPreview,
+  type CalendarPreviewBodyProps,
+  type CalendarPreviewCaptionProps,
+  type CalendarPreviewChangeDetails,
+  type CalendarPreviewChangeReason,
+  type CalendarPreviewContentProps,
+  type CalendarPreviewDateRange,
+  type CalendarPreviewDayProps,
+  type CalendarPreviewDaysProps,
+  type CalendarPreviewDraftRange,
+  type CalendarPreviewField,
+  type CalendarPreviewFooterProps,
+  type CalendarPreviewGridProps,
+  type CalendarPreviewHeaderProps,
+  type CalendarPreviewInputInvalidReason,
+  type CalendarPreviewInputProps,
+  type CalendarPreviewInputValidity,
+  type CalendarPreviewLabelProps,
+  type CalendarPreviewNavProps,
+  type CalendarPreviewOpenChangeDetails,
+  type CalendarPreviewPanelProps,
+  type CalendarPreviewPeriodViewProps,
+  type CalendarPreviewProps,
+  type CalendarPreviewResetProps,
+  type CalendarPreviewScale,
+  type CalendarPreviewScaleProps,
+  type CalendarPreviewScalesProps,
+  type CalendarPreviewScaleValue,
+  type CalendarPreviewSeparatorProps,
+  type CalendarPreviewTriggerProps,
+  type CalendarPreviewWeekdayProps,
+  type UseCalendarReturn,
+  useCalendar
+} from './components/calendar-preview';
 export { Callout } from './components/callout';
 export {
   Chat,
@@ -145,12 +180,30 @@ export { Tabs } from './components/tabs';
 export { Text } from './components/text';
 export { TextArea } from './components/text-area';
 export {
+  type AccentColor,
+  type Appearance,
+  type AppearanceSetting,
+  createThemeScript,
+  type GrayColor,
+  type GrayColorSetting,
+  type PanelBackground,
+  type Radius,
+  type ReducedMotion,
+  type ResolvedThemeSettings,
+  type Scaling,
   Theme,
-  ThemeProvider,
-  ThemeProviderProps,
+  type ThemeHandle,
+  type ThemeInjectionProps,
+  type ThemeProps,
+  type ThemeScriptParams,
+  type ThemeSettings,
   ThemeSwitcher,
-  useTheme
-} from './components/theme-provider';
+  type ThemeSwitcherProps,
+  type UseThemeReturn,
+  useSystemAppearance,
+  useTheme,
+  useThemeInjection
+} from './components/theme';
 export { Toast, toastManager, useToastManager } from './components/toast';
 export { Toggle } from './components/toggle';
 export { Toolbar } from './components/toolbar';
@@ -176,3 +229,4 @@ export {
 } from './icons/create-icon';
 export * from './icons/icons';
 export type { IconName } from './icons/types';
+export { radiusStyle } from './shared/radius';

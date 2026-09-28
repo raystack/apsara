@@ -10,12 +10,12 @@
 @media (prefers-reduced-motion: no-preference) {
   .link {
     transition:
-      text-decoration-color var(--rs-duration-fast) var(--rs-ease-out),
-      opacity var(--rs-duration-fast) var(--rs-ease-out);
+      text-decoration-color var(--rs-duration-normal) var(--rs-ease-out),
+      opacity var(--rs-duration-normal) var(--rs-ease-out);
   }
 
   /* Press dims at the snappy press tier; releasing eases back at the base
-     (fast) tier above: quick press, gentle release. */
+     tier above: quick press, gentle release. */
   .link:active {
     transition: opacity var(--rs-duration-press) var(--rs-ease-out);
   }

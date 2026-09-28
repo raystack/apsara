@@ -1,0 +1,6 @@
+interface:
+  display_name: 'Design Review'
+  short_description: 'Review a PR, branch, or module for API and design fit'
+  default_prompt: 'Use $design-review to review the design of my current branch.'
+policy:
+  allow_implicit_invocation: false

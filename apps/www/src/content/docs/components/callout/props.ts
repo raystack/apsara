@@ -50,4 +50,10 @@ export interface CalloutProps {
 
   /** Additional CSS class names */
   className?: string;
+
+  /**
+   * Corner radius for this callout only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 }

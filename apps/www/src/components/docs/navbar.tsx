@@ -2,12 +2,13 @@
 import { Breadcrumb, Button, CopyIcon } from '@raystack/apsara';
 import { useBreadcrumb } from 'fumadocs-core/breadcrumb';
 import { Root } from 'fumadocs-core/page-tree';
-import { Component, Github } from 'lucide-react';
+import { Component } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment, useState } from 'react';
 import { SourceType } from '@/lib/types';
 import { useDemoContext } from '../demo/demo-context';
+import { GithubMark } from './github-mark';
 import styles from './navbar.module.css';
 
 const cache = new Map<string, string>();
@@ -114,9 +115,7 @@ export default function DocsNavbar({
               variant='outline'
               color='neutral'
               size='small'
-              leadingIcon={
-                <Github size={12} strokeWidth={1.5} className={styles.icon} />
-              }
+              leadingIcon={<GithubMark className={styles.icon} />}
             >
               View source
             </Button>

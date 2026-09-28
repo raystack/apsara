@@ -45,4 +45,10 @@ export interface ChipProps {
 
   /** Custom accessibility label for the chip */
   'aria-label'?: string;
+
+  /**
+   * Corner radius for this chip only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 }

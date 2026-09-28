@@ -2,7 +2,9 @@
 
 import { Tooltip as TooltipPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import { type Radius, radiusStyle } from '../../shared/radius';
 import { Text } from '../text';
+import { useThemeInjection } from '../theme/portal';
 import styles from './tooltip.module.css';
 
 export interface TooltipContentProps
@@ -16,6 +18,8 @@ export interface TooltipContentProps
    * `@default` false
    */
   showArrow?: boolean;
+  /** Corner radius for this tooltip only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 export function TooltipContent({
@@ -25,12 +29,14 @@ export function TooltipContent({
   showArrow = false,
   style,
   render,
+  radius,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
   ...positionerProps
 }: TooltipContentProps) {
+  const theme = useThemeInjection();
   return (
-    <TooltipPrimitive.Portal>
+    <TooltipPrimitive.Portal {...theme}>
       <TooltipPrimitive.Positioner
         side='top'
         align='center'
@@ -41,7 +47,13 @@ export function TooltipContent({
       >
         <TooltipPrimitive.Popup
           ref={ref}
-          className={cx(styles.content, className)}
+          {...theme}
+          className={cx(
+            styles.content,
+            theme?.className,
+            radiusStyle({ radius }),
+            className
+          )}
           style={style}
           render={render}
           aria-label={ariaLabel}

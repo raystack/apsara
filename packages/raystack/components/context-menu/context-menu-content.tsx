@@ -6,6 +6,7 @@ import {
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { KeyboardEvent, useCallback, useRef } from 'react';
+import { type Radius, radiusStyle } from '../../shared/radius';
 import styles from '../menu/menu.module.css';
 import { useMenuContext } from '../menu/menu-root';
 import {
@@ -14,6 +15,7 @@ import {
   isElementSubMenuTrigger,
   KEYCODES
 } from '../menu/utils';
+import { useThemeInjection } from '../theme/portal';
 
 export interface ContextMenuContentProps
   extends Omit<
@@ -22,6 +24,8 @@ export interface ContextMenuContentProps
     >,
     ContextMenuPrimitive.Popup.Props {
   searchPlaceholder?: string;
+  /** Corner radius for this menu only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 export const ContextMenuContent = ({
@@ -35,6 +39,7 @@ export const ContextMenuContent = ({
   sideOffset = 4,
   align = 'start',
   onFocus,
+  radius,
   ...positionerProps
 }: ContextMenuContentProps) => {
   const {
@@ -97,8 +102,10 @@ export const ContextMenuContent = ({
     item.dispatchEvent(new PointerEvent('pointerout', { bubbles: true }));
   }, []);
 
+  const theme = useThemeInjection();
+
   return (
-    <ContextMenuPrimitive.Portal>
+    <ContextMenuPrimitive.Portal {...theme}>
       <ContextMenuPrimitive.Positioner
         data-slot='context-menu-positioner'
         className={cx(styles.positioner)}
@@ -108,10 +115,13 @@ export const ContextMenuContent = ({
       >
         <ContextMenuPrimitive.Popup
           ref={ref}
+          {...theme}
           data-slot='context-menu-content'
           className={cx(
             styles.content,
             autocomplete && styles.comboboxContainer,
+            theme?.className,
+            radiusStyle({ radius }),
             className
           )}
           style={style}

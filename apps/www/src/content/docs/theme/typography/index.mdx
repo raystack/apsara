@@ -3,7 +3,7 @@ title: Typography
 description: Overview of the typography system and text tokens in Apsara.
 ---
 
-Typography tokens cover font families, sizes, weights, and spacing. They follow the active style variant: modern uses Inter, traditional uses Lora and Josefin Sans. Text built on the tokens stays consistent and changes with the style.
+Typography tokens cover font families, sizes, weights, and spacing. Sizes and line heights follow the theme's [`scaling` setting](/docs/theme/overview#scaling); the families are CSS variables you can redeclare. Text built on the tokens stays consistent and changes with the theme.
 
 ## Font families
 
@@ -24,8 +24,6 @@ Apsara includes three font family categories for different use cases.
   type="typography"
   tokens={[
     { name: "--rs-font-inter", value: "Inter", description: "Modern sans-serif font" },
-    { name: "--rs-font-lora", value: "Lora", description: "Elegant serif font" },
-    { name: "--rs-font-josefin-sans", value: "Josefin Sans", description: "Geometric sans-serif font" },
     { name: "--rs-font-jetbrains-mono", value: "JetBrains Mono", description: "Developer-focused monospace font" },
     { name: "--rs-font-menlo", value: "Menlo", description: "System monospace font" },
   ]}
@@ -110,21 +108,19 @@ Font sizes, line heights, and letter spacing for code and technical content.
   ]}
 />
 
-## Style variants
+## Changing the fonts
 
-Apsara supports different style variants that change typography to match your design preference.
+Font families are CSS variables rather than a theme setting. Redeclare them on `.rs-theme`, the class every theme element carries:
 
-### Traditional style
+```css
+.rs-theme {
+  --rs-font-body: "Geist", system-ui, sans-serif;
+  --rs-font-title: "Geist", system-ui, sans-serif;
+  --rs-font-mono: "Geist Mono", monospace;
+}
+```
 
-When using `data-style="traditional"`, the font families change to:
-
-<TokenTable
-  type="typography"
-  tokens={[
-    { name: "--rs-font-title", value: "Lora, serif", description: "Title font in traditional style" },
-    { name: "--rs-font-body", value: "Josefin Sans, sans-serif", description: "Body font in traditional style" },
-  ]}
-/>
+`@raystack/apsara/style.css` imports Inter and JetBrains Mono for you; `@raystack/apsara/style-no-fonts.css` is the same stylesheet with those imports stripped, for self-hosted fonts. The scale above is tuned for Inter's metrics, so another family may need its line heights and tracking adjusted. See [Fonts](/docs/theme/overview#fonts).
 
 ## Usage
 

@@ -4,12 +4,14 @@
  * All variables must be used from colors.css file only.
  */
 
-/* Smooth theme switch transition. Applies regardless of which theme is active */
-[data-theme="light"],
-[data-theme="dark"] {
+/* Smooth theme switch transition. Zero specificity like every other theme rule,
+   so a component's own `transition` shorthand always wins over it. Same duration
+   and easing as --rs-transition-interactive, so the ground a control sits on
+   never arrives at a different time than the control. */
+:where([data-theme="light"], [data-theme="dark"]) {
   transition:
-    background-color 0.4s ease,
-    color 0.4s ease;
+    background-color var(--rs-duration-normal) var(--rs-ease-out),
+    color var(--rs-duration-normal) var(--rs-ease-out);
 }
 
 /* Native UI (form controls, scrollbars, text selection) follows the scoped theme */
@@ -23,7 +25,7 @@
 }
 
 /* Light Theme Colors */
-[data-theme="light"] {
+:where([data-theme="light"]) {
   /* Neutral Colors */
   --rs-neutral-1: var(--rs-gray-1);
   --rs-neutral-2: var(--rs-gray-2);
@@ -159,7 +161,7 @@
 }
 
 /* Dark Theme Colors */
-[data-theme="dark"] {
+:where([data-theme="dark"]) {
   /* Neutral Colors */
   --rs-neutral-1: var(--rs-gray-1);
   --rs-neutral-2: var(--rs-gray-2);

@@ -41,7 +41,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .breadcrumb-link {
-    transition: color var(--rs-duration-fast) var(--rs-ease-out);
+    transition: color var(--rs-duration-normal) var(--rs-ease-out);
   }
 }
 

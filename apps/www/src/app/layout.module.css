@@ -1,6 +1,7 @@
+/* The ground is painted by the theme element inside, which is where the tokens
+   now live; `color-scheme` covers the overscroll area past it. */
 .body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: var(--rs-color-background-base-primary);
 }

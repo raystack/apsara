@@ -1,0 +1,157 @@
+/* All `:where()`-wrapped: zero specificity, so a consumer rule on `.rs-theme`
+   always wins. */
+
+/* `:global`: CSS Modules would otherwise hash the override target. */
+:global(.rs-theme) {
+  font-family: var(--rs-font-body);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+:global(.rs-theme)[data-rs-background] {
+  background-color: var(--rs-color-background-base-primary);
+}
+
+/* Cover the viewport so a short page leaves no unthemed strip. */
+:global(.rs-theme)[data-rs-root][data-rs-background] {
+  min-height: 100dvh;
+  isolation: isolate;
+}
+
+/* Root colour scheme. Must stay after primitives/appearance.css: same
+   specificity as its `:root` rule, so source order decides. */
+:root:where(:has(:global(.rs-theme)[data-rs-root][data-theme="light"])) {
+  color-scheme: light;
+}
+
+:root:where(:has(:global(.rs-theme)[data-rs-root][data-theme="dark"])) {
+  color-scheme: dark;
+}
+
+/* Scaling. Set absolutely per value so nested scopes do not compound. */
+:where([data-theme]) {
+  --rs-scaling: 1;
+}
+
+:where([data-scaling="0.9"]) {
+  --rs-scaling: 0.9;
+}
+:where([data-scaling="0.95"]) {
+  --rs-scaling: 0.95;
+}
+:where([data-scaling="1"]) {
+  --rs-scaling: 1;
+}
+:where([data-scaling="1.05"]) {
+  --rs-scaling: 1.05;
+}
+:where([data-scaling="1.1"]) {
+  --rs-scaling: 1.1;
+}
+
+/* Three pill tokens: `--rs-radius-pill` rounds controls only at `full`;
+   `--rs-radius-thumb` keeps round controls (Switch, Slider) round from `medium`
+   up and squares them below; `--rs-radius-full` is the legacy fixed token. */
+:where([data-theme]) {
+  --rs-radius-factor: 1;
+  --rs-radius-pill: 0px;
+  --rs-radius-thumb: 9999px;
+
+  --rs-radius-1: calc(2px * var(--rs-scaling) * var(--rs-radius-factor));
+  --rs-radius-2: calc(4px * var(--rs-scaling) * var(--rs-radius-factor));
+  --rs-radius-3: calc(6px * var(--rs-scaling) * var(--rs-radius-factor));
+  --rs-radius-4: calc(8px * var(--rs-scaling) * var(--rs-radius-factor));
+  --rs-radius-5: calc(12px * var(--rs-scaling) * var(--rs-radius-factor));
+  --rs-radius-6: calc(16px * var(--rs-scaling) * var(--rs-radius-factor));
+  --rs-radius-full: 800px;
+}
+
+:where([data-radius="none"]) {
+  --rs-radius-factor: 0;
+  --rs-radius-pill: 0px;
+  --rs-radius-thumb: 0px;
+}
+:where([data-radius="small"]) {
+  --rs-radius-factor: 0.75;
+  --rs-radius-pill: 0px;
+  --rs-radius-thumb: 0px;
+}
+:where([data-radius="medium"]) {
+  --rs-radius-factor: 1;
+  --rs-radius-pill: 0px;
+  --rs-radius-thumb: 9999px;
+}
+:where([data-radius="large"]) {
+  --rs-radius-factor: 1.5;
+  --rs-radius-pill: 0px;
+  --rs-radius-thumb: 9999px;
+}
+:where([data-radius="full"]) {
+  --rs-radius-factor: 1.5;
+  --rs-radius-pill: 9999px;
+  --rs-radius-thumb: 9999px;
+}
+
+/* Surfaces and panel background */
+:where([data-theme]) {
+  --rs-color-panel-solid: var(--rs-color-background-base-primary);
+  --rs-color-panel-translucent: color-mix(
+    in oklab,
+    var(--rs-color-panel-solid) 70%,
+    transparent
+  );
+  --rs-color-panel: var(--rs-color-panel-solid);
+  --rs-color-overlay: var(--rs-color-overlay-black-a5);
+  --rs-panel-backdrop-filter: none;
+}
+
+/* In dark, a faint white lift over the blur rather than a wash: a dark panel
+   mixed with the dark page behind it reads as neither. */
+:where([data-theme="dark"]) {
+  --rs-color-panel-translucent: var(--rs-color-overlay-base-a1);
+}
+
+:where([data-panel-background="solid"]) {
+  --rs-color-panel: var(--rs-color-panel-solid);
+  --rs-panel-backdrop-filter: none;
+}
+
+:where([data-panel-background="translucent"]) {
+  --rs-color-panel: var(--rs-color-panel-translucent);
+  --rs-panel-backdrop-filter: blur(40px);
+}
+
+/* Appearance switch. Most of a page carries no transition and lands a frame
+   after the flip while the components are still fading, so crossfading one
+   snapshot puts all of it on the same clock. (Giving every element a transition
+   instead means ~10k concurrent ones, slower than no animation at all.) Scoped
+   to the attribute `Theme` sets, so an app's own view transitions keep theirs. */
+html[data-rs-appearance-change]::view-transition-old(root),
+html[data-rs-appearance-change]::view-transition-new(root) {
+  animation-duration: var(--rs-duration-normal);
+  animation-timing-function: var(--rs-ease-out);
+  /* The UA crossfade blends `plus-lighter`, which suits two frames of the same
+     brightness; across a light/dark swap it blows out to white at the midpoint. */
+  mix-blend-mode: normal;
+}
+
+html[data-rs-appearance-change]::view-transition-old(root) {
+  animation-name: rs-appearance-out;
+}
+
+html[data-rs-appearance-change]::view-transition-new(root) {
+  animation-name: rs-appearance-in;
+}
+
+@keyframes rs-appearance-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes rs-appearance-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Reduced motion: see the end of `effects.css`. */

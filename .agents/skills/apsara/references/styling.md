@@ -47,22 +47,22 @@ Common attributes: `data-open`, `data-closed`, `data-active`, `data-disabled`, `
 
 ## Theme-conditional styling
 
-`<Theme>` sets `data-theme` / `data-style` / `data-accent-color` / `data-gray-color` on the root (and scope wrappers). Target them for theme-specific overrides:
+`<Theme>` writes one attribute per setting — `data-theme`, `data-accent-color`, `data-gray-color`, `data-radius`, `data-scaling`, `data-panel-background`, `data-reduced-motion` — onto the element it renders. Match an ancestor rather than `<html>`, so a nested scope styles correctly too:
 
 ```css
 [data-theme="dark"] .custom-card { border-color: var(--rs-color-border-base-tertiary); }
-[data-style="traditional"] .heading { font-family: var(--rs-font-title); }
+[data-accent-color="orange"] .heading { color: var(--rs-color-foreground-accent-primary); }
 ```
 
 ## Overriding tokens (custom palette / sizing)
 
 To re-skin globally or per-scope, redefine **semantic** tokens under a selector. Prefer semantic tokens over raw scale steps so the override stays theme-correct.
 
+Every `--rs-*` declaration is wrapped in `:where()` and every theme element carries the stable `rs-theme` class, so one class selector wins without `!important`.
+
 ```css
-/* Make the danger emphasis fill a custom red across the app */
-:root,
-[data-theme="light"],
-[data-theme="dark"] {
+/* Make the accent emphasis fill a custom color across the app */
+.rs-theme {
   --rs-color-background-accent-emphasis: var(--rs-color-viz-iris-9);
 }
 ```

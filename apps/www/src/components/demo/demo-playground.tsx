@@ -16,6 +16,7 @@ import { useDemoContext } from './demo-context';
 import DemoControls from './demo-controls';
 import DemoPreview from './demo-preview';
 import DemoTitle from './demo-title';
+import { needsNoInline } from './no-inline';
 import styles from './styles.module.css';
 import {
   ComponentPropsType,
@@ -35,7 +36,13 @@ const getInitialProps = (
     const value =
       (searchParams && searchParams.get(key)) ?? initialValue ?? defaultValue;
 
-    initialProps[key] = type === 'checkbox' ? value === 'true' : value;
+    /* Only a search param arrives as a string; comparing a real boolean to 'true' unchecks it. */
+    initialProps[key] =
+      type === 'checkbox'
+        ? typeof value === 'string'
+          ? value === 'true'
+          : Boolean(value)
+        : value;
   });
   return initialProps;
 };
@@ -124,7 +131,12 @@ export default function DemoPlayground({
               </IconButton>
             </Flex>
           </Dialog.Header>
-          <LiveProvider code={code} scope={scope} disabled>
+          <LiveProvider
+            code={code}
+            scope={scope}
+            noInline={needsNoInline(code)}
+            disabled
+          >
             <div
               className={cx(styles.container, styles.playgroundContent)}
               data-demo

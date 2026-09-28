@@ -53,6 +53,12 @@ export interface PopoverContentProps {
 
   /** Content to render inside the popover. */
   children?: React.ReactNode;
+
+  /**
+   * Corner radius for this popup only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 }
 
 export interface PopoverTriggerProps {

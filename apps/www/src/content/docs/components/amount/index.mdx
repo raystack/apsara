@@ -12,6 +12,9 @@ import {
   localeDemo,
   hideDecimalsDemo,
   currencyDisplayDemo,
+  notationDemo,
+  signDisplayDemo,
+  tabularNumsDemo,
   hideCurrencyDemo,
   groupDigitsDemo,
   withTextDemo,
@@ -48,9 +51,27 @@ Pass a `value` and a `currency` code. Amount formats it for the active locale us
 
 ### Currency display
 
-How the currency is written: `symbol` (the default, `$`), `code` (`USD`), or `name` (`US dollars`).
+How the currency is written: `symbol` (the default, `$`), `narrowSymbol` (`$`, even in locales where `symbol` shows `US$`), `code` (`USD`), or `name` (`US dollars`).
 
 <Demo data={currencyDisplayDemo} />
+
+### Compact notation
+
+Set `notation="compact"` to abbreviate large values in dashboards and summary views, for example `$1.2M`. Compact notation rounds, so do not use it where the exact amount matters. With `hideDecimals`, it rounds to a whole number, so `$1.55M` shows as `$2M`.
+
+<Demo data={notationDemo} />
+
+### Sign display
+
+`signDisplay` sets when the `+` or `-` sign shows. Use `always` to show gains and losses as `+$12.99` and `-$12.99`.
+
+<Demo data={signDisplayDemo} />
+
+### Tabular numbers
+
+Amount uses tabular (fixed-width) figures by default, so digits align across table rows. Set `tabularNums={false}` in running text to use proportional figures.
+
+<Demo data={tabularNumsDemo} />
 
 ### Number without currency
 
@@ -72,7 +93,7 @@ Set `valueInMinorUnits` when your API returns integer cents, paise, or fils. Amo
 
 ### Whole units
 
-`hideDecimals` rounds to whole units. Use it in dense tables and summary figures where the fraction adds noise rather than precision.
+`hideDecimals` truncates to whole units, so `$12.99` shows as `$12`. Use it in dense tables and summary figures where the fraction adds noise rather than precision.
 
 <Demo data={hideDecimalsDemo} />
 

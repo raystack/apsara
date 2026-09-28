@@ -12,7 +12,7 @@
   align-items: center;
   justify-content: center;
   font-variant-numeric: tabular-nums;
-  border-radius: var(--rs-radius-full);
+  border-radius: max(var(--rs-radius-1), var(--rs-radius-thumb, 9999px));
   white-space: nowrap;
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-micro);
@@ -27,15 +27,16 @@
 
 .indicator:has(.label) {
   /* Todo: var does not exist for 18px */
-  min-width: 18px;
-  height: 18px;
+  min-width: calc(18px * var(--rs-scaling, 1));
+  height: calc(18px * var(--rs-scaling, 1));
 }
 
+/* Always round: a status dot, not a control. */
 .dot {
   display: block;
   /* Todo: var does not exist for 5px */
-  width: 5px;
-  height: 5px;
+  width: calc(5px * var(--rs-scaling, 1));
+  height: calc(5px * var(--rs-scaling, 1));
   border-radius: var(--rs-radius-full);
 }
 

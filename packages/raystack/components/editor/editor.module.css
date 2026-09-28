@@ -66,7 +66,7 @@
 /* The subtle fill on the typed trigger and its query while the menu is open, so
    a pending mention reads as pending rather than as ordinary text. */
 .activeSuggestion {
-  border-radius: var(--rs-radius-2);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
   background: var(--rs-color-background-base-primary-hover);
 }
 
@@ -84,7 +84,7 @@
   height: var(--editor-line-height);
   max-width: 16rem;
   padding: 0 var(--rs-space-2);
-  border-radius: var(--rs-radius-2);
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
   background: var(--rs-color-background-base-primary-hover);
   color: var(--rs-color-foreground-base-primary);
   font-size: inherit;

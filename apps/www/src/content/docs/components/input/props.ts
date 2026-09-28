@@ -54,4 +54,10 @@ export interface InputProps {
 
   /** Additional CSS class names. */
   className?: string;
+
+  /**
+   * Corner radius for this input only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 }

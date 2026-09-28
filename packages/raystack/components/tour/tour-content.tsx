@@ -9,6 +9,8 @@ import {
   useMemo,
   useRef
 } from 'react';
+import { type Radius, radiusStyle } from '../../shared/radius';
+import { useThemeInjection } from '../theme/portal';
 import styles from './tour.module.css';
 import { useTourContext } from './tour-context';
 import { TourDefaultLayout } from './tour-parts';
@@ -34,6 +36,8 @@ export interface TourContentProps {
    * `Tour.Description`, `Tour.Progress` and the navigation buttons.
    */
   children?: ReactNode | ((props: TourRenderProps) => ReactNode);
+  /** Corner radius for this card only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 export function TourContent({
@@ -43,6 +47,7 @@ export function TourContent({
   showArrow = false,
   className,
   style,
+  radius,
   children
 }: TourContentProps) {
   const {
@@ -58,6 +63,7 @@ export function TourContent({
   } = useTourContext('Tour.Content');
   const detached = step != null && step.target == null;
   const popupRef = useRef<HTMLDivElement>(null);
+  const theme = useThemeInjection();
 
   const visible = transition !== 'fade' || revealed;
 
@@ -103,7 +109,7 @@ export function TourContent({
         if (eventDetails.reason === 'escape-key') actions.stop();
       }}
     >
-      <PopoverPrimitive.Portal>
+      <PopoverPrimitive.Portal {...theme}>
         <PopoverPrimitive.Positioner
           data-slot='tour-positioner'
           anchor={detached ? centerAnchor : anchor}
@@ -116,8 +122,14 @@ export function TourContent({
         >
           <PopoverPrimitive.Popup
             ref={popupRef}
+            {...theme}
             data-slot='tour-content'
-            className={cx(styles.popup, className)}
+            className={cx(
+              styles.popup,
+              theme?.className,
+              radiusStyle({ radius }),
+              className
+            )}
             style={style}
             data-detached={detached || undefined}
             data-transition={transition}

@@ -1,5 +1,4 @@
-:root,
-[data-theme="light"] {
+:where(:root, [data-theme="light"]) {
   /* Shadows */
   /* Example usage: box-shadow: var(--rs-shadow-feather); */
   --rs-shadow-feather:
@@ -17,7 +16,7 @@
   --rs-shadow-inset: 0px 1px 1px 0px oklch(0 0 0 / 0.04) inset;
 }
 
-:root {
+:where(:root, [data-theme]) {
   /* Transitions */
   --rs-transition-interactive:
     background-color var(--rs-duration-normal) var(--rs-ease-out),
@@ -71,7 +70,7 @@
   --rs-duration-fast: 150ms; /* tooltips, menus, small popups */
   --rs-duration-normal: 200ms; /* popovers, dialogs, switches */
   --rs-duration-moderate: 250ms; /* tabs indicator, preview card, tour steps */
-  --rs-duration-slow: 400ms; /* toasts */
+  --rs-duration-slow: 400ms; /* toasts, theme switch */
   --rs-duration-drawer: 450ms; /* drawer */
 
   /* Blurs */
@@ -82,7 +81,7 @@
   --rs-blur-xl: blur(4px);
 }
 
-[data-theme="dark"] {
+:where([data-theme="dark"]) {
   --rs-shadow-feather:
     0px 1px 1px 0px oklch(0 0 0 / 0.3), 0px 4px 4px -1px oklch(0 0 0 / 0.25);
   --rs-shadow-soft:
@@ -96,4 +95,27 @@
       0 0 0 / 0.3
     ), 0px 4px 30px 0px oklch(0 0 0 / 0.4);
   --rs-shadow-inset: 0px 1px 1px 0px oklch(0 0 0 / 0.25) inset;
+}
+
+/* Reduced motion. Must stay after the base durations above: both are
+   zero-specificity, so source order decides. */
+
+:where([data-reduced-motion="true"]) {
+  --rs-duration-press: 1ms;
+  --rs-duration-fast: 1ms;
+  --rs-duration-normal: 1ms;
+  --rs-duration-moderate: 1ms;
+  --rs-duration-slow: 1ms;
+  --rs-duration-drawer: 1ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where([data-reduced-motion="system"]) {
+    --rs-duration-press: 1ms;
+    --rs-duration-fast: 1ms;
+    --rs-duration-normal: 1ms;
+    --rs-duration-moderate: 1ms;
+    --rs-duration-slow: 1ms;
+    --rs-duration-drawer: 1ms;
+  }
 }

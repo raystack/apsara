@@ -57,14 +57,14 @@ import { Theme } from "@raystack/apsara";
 
 function App() {
   return (
-    <Theme defaultTheme="system">
+    <Theme persistKey="app-theme">
       <YourApp />
     </Theme>
   );
 }
 ```
 
-The `defaultTheme` prop accepts `"light"`, `"dark"`, or `"system"` (follows OS preference).
+Tokens live on the element it renders, so anything that reads `--rs-*` has to be inside it. `persistKey` stores the user's choices; leave it off to keep them in memory. Seed any of the seven settings with `defaultValue`, for example `defaultValue={{ appearance: "dark" }}`.
 
 ### 3. Use components
 
@@ -101,9 +101,9 @@ import "@raystack/apsara/style.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body>
-        <Theme defaultTheme="system">
+        <Theme persistKey="app-theme">
           {children}
         </Theme>
       </body>
@@ -112,7 +112,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
-The `suppressHydrationWarning` attribute is required because `Theme` injects a script to prevent theme flash during hydration.
+Settings are props, so the server renders them. An inline script patches in what it cannot know before first paint: stored values, and the OS answer for a `system` appearance. Nothing is written to `<html>`, so it needs no `suppressHydrationWarning`.
 
 ### Vite
 
@@ -128,7 +128,7 @@ import App from "./App";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Theme defaultTheme="system">
+    <Theme persistKey="app-theme">
       <App />
     </Theme>
   </React.StrictMode>
@@ -178,11 +178,12 @@ To read or change the active theme, use `useTheme` from the main entry:
 import { Button, useTheme } from "@raystack/apsara";
 
 function ThemeToggle() {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { resolved, setValue } = useTheme();
+  const isDark = resolved.appearance === "dark";
 
   return (
-    <Button onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
-      Toggle Theme
+    <Button onClick={() => setValue({ appearance: isDark ? "light" : "dark" })}>
+      Toggle theme
     </Button>
   );
 }
@@ -190,6 +191,6 @@ function ThemeToggle() {
 
 ## Next steps
 
-- [Theme Overview](/docs/theme/overview): configure colors, spacing, and style variants
+- [Theme Overview](/docs/theme/overview): tokens, the seven settings, and nested scopes
 - [Button](/docs/components/button): start with a common component
 - [DataView](/docs/dataview): build data-rich interfaces
