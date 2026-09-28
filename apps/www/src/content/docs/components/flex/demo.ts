@@ -21,7 +21,7 @@ export const playground = {
     },
     wrap: {
       type: 'select',
-      options: ['nowrap', 'wrap', 'wrap-reverse'],
+      options: ['noWrap', 'wrap', 'wrapReverse'],
       initialValue: 'wrap'
     },
     justify: {
@@ -38,6 +38,10 @@ export const playground = {
       type: 'select',
       options: ['row', 'rowReverse', 'column', 'columnReverse'],
       initialValue: 'row'
+    },
+    inline: {
+      type: 'checkbox',
+      defaultValue: false
     }
   },
   getCode
@@ -107,5 +111,26 @@ export const wrapDemo = {
   {["alpha", "bravo", "charlie", "delta", "echo", "foxtrot"].map((t) => (
     <Badge key={t}>{t}</Badge>
   ))}
+</Flex>`
+};
+
+export const inlineDemo = {
+  type: 'code',
+  code: `
+<Flex direction="column" gap={5}>
+  <div>
+    <Flex gap={2} style={{ padding: 8, border: '1px dashed var(--rs-color-border-base-primary)', borderRadius: 4 }}>
+      <Badge>block</Badge>
+      <Badge>flex</Badge>
+    </Flex>
+    <Text>fills the row, so this text drops below it.</Text>
+  </div>
+  <div>
+    <Flex inline gap={2} style={{ padding: 8, border: '1px dashed var(--rs-color-border-base-primary)', borderRadius: 4 }}>
+      <Badge>inline</Badge>
+      <Badge>flex</Badge>
+    </Flex>
+    <Text> shrinks to its content and sits in line with this text.</Text>
+  </div>
 </Flex>`
 };

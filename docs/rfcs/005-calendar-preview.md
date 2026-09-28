@@ -243,6 +243,15 @@ Selection arms are discriminated on `selection` and `scales`; `onValueChange` re
 | **Five sibling view parts**, not one switched by a prop | They need different layouts (3 / 4 / 2 / 1 columns) and different heights, and a consumer must be able to mount the quarter view alone. Each self-gates on the active scale exactly as `DataView`'s `.List` / `.Timeline` / `.Custom` do. Also retires `.MonthGrid`, which collided with RDP's own `MonthGrid` slot |
 | **`.Caption`** | Opens our own two-column month+year scroller — never a `Select`, so the unmount loop cannot return. Standalone calendar only; inside a picker the caption is plain text and the scale switcher navigates |
 | **`.Reset`** | Restores `defaultDate`. Renders only when `defaultDate` is set and the value differs. A **value** reset, not a view reset |
+
+> **Note — deviation, phase 5.** The tree above mounts `.Reset` only inside
+> `.Header`, which `.Days` alone renders. Once phase 5 added the four period
+> views and let `defaultDate` hold a `ScaleValue`, that left a period default
+> that could never be invoked: pick a quarter and the day view — and the reset
+> with it — unmounts. `.Body` now also mounts `.Reset` when the scale is not
+> `'day'`, so exactly one renders at every scale and the standalone inline
+> calendar keeps the approved `.Header` placement untouched. The row it lands
+> in is unstyled pending design.
 | **Height** | `.Days` hugs its content. The four period views are 320px and scroll — the whole list, not only the rows under a year heading |
 | **Every part** | Takes `render`, `className`, `ref`, `data-slot`. **Children override context-computed content** the way `Tour.Title` does, so `<CalendarPreview.Caption>Q3 2026</CalendarPreview.Caption>` works |
 | **Cell state** | `data-selected`, `data-draft`, `data-unavailable`, `data-today`, `data-outside`, `data-scale`. Slots say what an element is; these say what state it is in. `dateInfo` renders above the date number, as today |
@@ -339,6 +348,17 @@ Verified against the npm registry and `pnpm-lock.yaml` on 3 September 2026.
 - v10 also drops `date-fns-jalali` and the 16 `@deprecated` v8-era props, none of which we reference
 - `@base-ui/react` 1.7.0 pins `@base-ui/utils` at exactly 0.3.2, so bumping Base UI moves utils with it
 - Neither 1.6.0 nor 1.7.0 exports a date primitive; both ship `./internals/temporal` plus date-fns and Luxon adapters, and `date-adapter.ts` is shaped to that surface — adopting theirs later is a one-file swap, not a third rewrite
+
+> **Note — deviation, phase 0.** The table above is the pre-upgrade baseline as
+> approved. The upgrade has since landed in the phase 0 PR rather than "before
+> phase 2": `react-day-picker` `~10.0.1`, `@base-ui/react` `~1.7.0`,
+> `@base-ui/utils` `~0.3.2`, `dayjs` `^1.11.23`, plus `date-fns` `^4.1.0` and
+> `@date-fns/tz` `^1.5.0` added as direct dependencies for `date-adapter.ts`.
+> Taking the major at phase 0 means phase 1 writes the `.Day`/`.Weekday` slot
+> names against 10 once instead of writing them against 9 and rechecking; those
+> slot names are verified when `.Grid` is built, since no part imports RDP
+> before then. Both findings above still hold — the `mode`/`required` union is
+> unchanged, and v10 drops `date-fns-jalali` and the 16 deprecated v8-era props.
 
 ## Breaking Changes
 

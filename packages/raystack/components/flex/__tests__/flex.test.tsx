@@ -33,6 +33,21 @@ describe('Flex', () => {
     });
   });
 
+  describe('Inline', () => {
+    it('renders as block-level flex by default', () => {
+      const { container } = render(<Flex>Content</Flex>);
+      const flex = container.firstChild as HTMLElement;
+      expect(flex).toHaveClass(styles.flex);
+      expect(flex).not.toHaveClass(styles['flex-inline']);
+    });
+
+    it('applies inline-flex class when inline is true', () => {
+      const { container } = render(<Flex inline>Content</Flex>);
+      const flex = container.firstChild as HTMLElement;
+      expect(flex).toHaveClass(styles['flex-inline']);
+    });
+  });
+
   describe('Direction', () => {
     const directions = [
       'row',

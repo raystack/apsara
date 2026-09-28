@@ -36,7 +36,13 @@ const getInitialProps = (
     const value =
       (searchParams && searchParams.get(key)) ?? initialValue ?? defaultValue;
 
-    initialProps[key] = type === 'checkbox' ? value === 'true' : value;
+    /* Only a search param arrives as a string; comparing a real boolean to 'true' unchecks it. */
+    initialProps[key] =
+      type === 'checkbox'
+        ? typeof value === 'string'
+          ? value === 'true'
+          : Boolean(value)
+        : value;
   });
   return initialProps;
 };

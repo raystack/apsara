@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Amount } from '../amount';
+import styles from '../amount.module.css';
 
 describe('Amount', () => {
   describe('Basic Rendering', () => {
@@ -98,6 +99,19 @@ describe('Amount', () => {
       consoleSpy.mockRestore();
     });
 
+    it('falls back to USD when the currency is not a string', () => {
+      const consoleSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => null);
+      // API data can send null even though the prop type is string.
+      render(<Amount value={1299} currency={null as unknown as string} />);
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Invalid currency code: null. Falling back to USD.'
+      );
+      expect(screen.getByText('$12.99')).toBeInTheDocument();
+      consoleSpy.mockRestore();
+    });
+
     it('handles lowercase currency codes', () => {
       render(<Amount value={1299} currency='eur' locale='en-US' />);
       expect(screen.getByText('€12.99')).toBeInTheDocument();
@@ -130,6 +144,21 @@ describe('Amount', () => {
     it('hides decimals with string values', () => {
       render(<Amount value='1299' hideDecimals />);
       expect(screen.getByText('$12')).toBeInTheDocument();
+    });
+
+    it('drops the sign when hideDecimals truncates a negative value to zero', () => {
+      render(<Amount value={-50} hideDecimals />);
+      expect(screen.getByText('$0')).toBeInTheDocument();
+    });
+
+    it('drops the sign when hideDecimals truncates a negative string to zero', () => {
+      render(<Amount value='-50' hideDecimals />);
+      expect(screen.getByText('$0')).toBeInTheDocument();
+    });
+
+    it('keeps the sign when hideDecimals truncates a value below -1', () => {
+      render(<Amount value={-1299} hideDecimals />);
+      expect(screen.getByText('-$12')).toBeInTheDocument();
     });
 
     it('displays currency as symbol by default', () => {
@@ -223,6 +252,21 @@ describe('Amount', () => {
     it('handles negative string values in minor units', () => {
       render(<Amount value='-1299' />);
       expect(screen.getByText('-$12.99')).toBeInTheDocument();
+    });
+
+    it('pads string values shorter than the currency decimals', () => {
+      render(<Amount value='5' />);
+      expect(screen.getByText('$0.05')).toBeInTheDocument();
+    });
+
+    it('pads negative string values shorter than the currency decimals', () => {
+      render(<Amount value='-5' />);
+      expect(screen.getByText('-$0.05')).toBeInTheDocument();
+    });
+
+    it('pads short string values for a 3-decimal currency', () => {
+      render(<Amount value='5' currency='BHD' hideCurrency />);
+      expect(screen.getByText('0.005')).toBeInTheDocument();
     });
   });
 
@@ -319,6 +363,120 @@ describe('Amount', () => {
       // + formatToParts(), Intl's spec auto-clamps max → 3, so 12.99 pads to 12.990.
       render(<Amount value={1299} hideCurrency minimumFractionDigits={3} />);
       expect(screen.getByText('12.990')).toBeInTheDocument();
+    });
+  });
+
+  describe('narrowSymbol', () => {
+    it('renders the narrow symbol instead of the locale-prefixed one', () => {
+      // en-CA formats USD as "US$12.99" with 'symbol'; narrowSymbol drops the prefix.
+      render(
+        <Amount
+          value={1299}
+          currency='USD'
+          locale='en-CA'
+          currencyDisplay='narrowSymbol'
+        />
+      );
+      expect(screen.getByText('$12.99')).toBeInTheDocument();
+    });
+
+    it('matches symbol output for the home locale', () => {
+      render(<Amount value={1299} currencyDisplay='narrowSymbol' />);
+      expect(screen.getByText('$12.99')).toBeInTheDocument();
+    });
+  });
+
+  describe('signDisplay', () => {
+    it('always shows the sign when signDisplay is always', () => {
+      render(<Amount value={1299} signDisplay='always' />);
+      expect(screen.getByText('+$12.99')).toBeInTheDocument();
+    });
+
+    it('shows the sign except for zero when signDisplay is exceptZero', () => {
+      const { rerender } = render(
+        <Amount value={1299} signDisplay='exceptZero' />
+      );
+      expect(screen.getByText('+$12.99')).toBeInTheDocument();
+      rerender(<Amount value={0} signDisplay='exceptZero' />);
+      expect(screen.getByText('$0.00')).toBeInTheDocument();
+    });
+
+    it('hides the sign for negative values when signDisplay is never', () => {
+      render(<Amount value={-1299} signDisplay='never' />);
+      expect(screen.getByText('$12.99')).toBeInTheDocument();
+    });
+
+    it('keeps the sign when hideCurrency strips the currency token', () => {
+      render(<Amount value={1299} signDisplay='always' hideCurrency />);
+      expect(screen.getByText('+12.99')).toBeInTheDocument();
+    });
+  });
+
+  describe('notation', () => {
+    it('renders compact notation for large values', () => {
+      render(<Amount value={120000000} notation='compact' />);
+      expect(screen.getByText('$1.2M')).toBeInTheDocument();
+    });
+
+    it('renders standard notation by default', () => {
+      render(<Amount value={120000000} />);
+      expect(screen.getByText('$1,200,000.00')).toBeInTheDocument();
+    });
+
+    it('rounds small values to compact defaults (no abbreviation below 1K)', () => {
+      // Compact notation keeps 2 significant digits by default.
+      render(<Amount value={1299} notation='compact' />);
+      expect(screen.getByText('$13')).toBeInTheDocument();
+    });
+
+    it('rounds the abbreviated value with hideDecimals', () => {
+      render(<Amount value={155000000} notation='compact' hideDecimals />);
+      expect(screen.getByText('$2M')).toBeInTheDocument();
+    });
+
+    it('works with string values', () => {
+      render(<Amount value='120000000' notation='compact' />);
+      expect(screen.getByText('$1.2M')).toBeInTheDocument();
+    });
+
+    it('works with hideCurrency', () => {
+      render(<Amount value={120000000} notation='compact' hideCurrency />);
+      expect(screen.getByText('1.2M')).toBeInTheDocument();
+    });
+
+    it('respects explicit fraction digits', () => {
+      render(
+        <Amount
+          value={123400000}
+          notation='compact'
+          minimumFractionDigits={2}
+          maximumFractionDigits={2}
+        />
+      );
+      expect(screen.getByText('$1.23M')).toBeInTheDocument();
+    });
+  });
+
+  describe('tabularNums', () => {
+    it('applies tabular figures by default', () => {
+      render(<Amount value={1299} />);
+      const amount = screen.getByText('$12.99');
+      expect(amount).toHaveClass(styles.tabular);
+      expect(amount).not.toHaveClass(styles.proportional);
+    });
+
+    it('applies proportional figures when tabularNums is false', () => {
+      render(<Amount value={1299} tabularNums={false} />);
+      const amount = screen.getByText('$12.99');
+      expect(amount).toHaveClass(styles.proportional);
+      expect(amount).not.toHaveClass(styles.tabular);
+    });
+
+    it('keeps custom className alongside the tabular class', () => {
+      render(<Amount value={1299} className='custom-class' />);
+      const amount = screen.getByText('$12.99');
+      expect(amount).toHaveClass('custom-class');
+      expect(amount).toHaveClass(styles.tabular);
     });
   });
 });

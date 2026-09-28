@@ -1,12 +1,7 @@
 'use client';
 
-// The 31 icons Apsara's own components draw: the one place that pairs a key
-// with a drawing. A key names the job or the glyph, never the library, so
-// changing icon library is an edit to this file and nothing else.
-//
-// Keep the `/*#__PURE__*/` annotation on every call. It is what lets a bundler
-// drop an unused key, and its lucide import, out of this single module;
-// `icons/__tests__/bundle.test.ts` checks that it still does.
+// Keep the `/*#__PURE__*/` annotation on every call: it is what lets a bundler
+// drop an unused key and its lucide import out of this module.
 
 import {
   ArrowDown,
@@ -38,6 +33,7 @@ import {
   Sun,
   Table,
   TriangleAlert,
+  Undo2,
   X
 } from 'lucide-react';
 import { createIcon } from './create-icon';
@@ -47,7 +43,7 @@ export const ArrowDownIcon = /*#__PURE__*/ createIcon(
   ArrowDown
 );
 export const ArrowUpIcon = /*#__PURE__*/ createIcon('ArrowUpIcon', ArrowUp);
-/** Draws lucide `CalendarDays`, not lucide `Calendar`. The key is ours. */
+/** Draws lucide `CalendarDays`, not lucide `Calendar`. */
 export const CalendarIcon = /*#__PURE__*/ createIcon(
   'CalendarIcon',
   CalendarDays
@@ -102,6 +98,8 @@ export const StopIcon = /*#__PURE__*/ createIcon('StopIcon', Square);
 export const SuccessIcon = /*#__PURE__*/ createIcon('SuccessIcon', CircleCheck);
 export const SunIcon = /*#__PURE__*/ createIcon('SunIcon', Sun);
 export const TableIcon = /*#__PURE__*/ createIcon('TableIcon', Table);
+/** Restores a value to its default — the calendar's reset. */
+export const UndoIcon = /*#__PURE__*/ createIcon('UndoIcon', Undo2);
 export const WarningIcon = /*#__PURE__*/ createIcon(
   'WarningIcon',
   TriangleAlert
