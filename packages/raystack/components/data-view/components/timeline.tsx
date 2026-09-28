@@ -14,8 +14,12 @@ import {
   useRef,
   useState
 } from 'react';
-import { defaultFormatValue } from '~/components/calendar-preview/calendar-preview-root';
-import { formatDayMonth } from '~/components/calendar-preview/date-adapter';
+import {
+  formatDayMonth,
+  formatMonthLabel,
+  formatQuarterShort,
+  formatYear
+} from '~/components/calendar-preview/date-adapter';
 import { useScaling } from '~/hooks/useScaling';
 import { Badge } from '../../badge';
 import styles from '../data-view.module.css';
@@ -360,8 +364,9 @@ function cursorLabel(time: number, scale: TimelineScale): string {
     case 'week':
       return formatDayMonth(date);
     case 'month':
+      return formatMonthLabel(date);
     case 'quarter':
-      return defaultFormatValue(date, scale);
+      return `${formatQuarterShort(date)} ${formatYear(date)}`;
   }
 }
 

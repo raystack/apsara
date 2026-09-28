@@ -634,6 +634,20 @@ describe('DataView.Timeline', () => {
     expect(screen.queryByText('6 Jan')).toBeNull();
   });
 
+  it.each([
+    ['month', 96, 'Jan 2025'],
+    ['quarter', 140, 'Q1 2025']
+  ] as const)('labels the cursor badge with the %s and year', async (scale, unitWidth, label) => {
+    const { container } = renderTimeline({ scale, unitWidth });
+    const root = container.firstElementChild as HTMLElement;
+    expect(screen.queryByText(label)).toBeNull();
+    await act(async () => {
+      fireEvent.mouseMove(root, { clientX: 10 });
+      await new Promise(resolve => setTimeout(resolve, 30));
+    });
+    expect(screen.getByText(label)).toBeInTheDocument();
+  });
+
   it('does not track the cursor when showCursorLine is false', async () => {
     const { container } = renderTimeline({ showCursorLine: false });
     const root = container.firstElementChild as HTMLElement;

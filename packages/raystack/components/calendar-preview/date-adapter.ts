@@ -3,10 +3,12 @@ import { TZDate } from '@date-fns/tz';
 import {
   addDays,
   addMonths,
+  addQuarters,
   addWeeks,
   addYears,
   endOfMonth,
   format,
+  getQuarter,
   isValid,
   parse,
   parseISO,
@@ -33,12 +35,11 @@ export function dayKey(date: Date, timeZone?: string): DayKey {
   return key;
 }
 
-export function toDayKey(value: unknown, timeZone?: string): DayKey | null {
-  if (typeof value === 'string' && isDayKey(value)) return value;
+export function toDayKey(value: unknown): DayKey | null {
   const date = toInstant(value);
   if (!date) return null;
   try {
-    return dayKey(date, timeZone);
+    return dayKey(date);
   } catch {
     return null;
   }
@@ -50,7 +51,7 @@ export function toInstant(value: unknown): Date | null {
     const fromEpoch = new Date(value);
     return isValid(fromEpoch) ? fromEpoch : null;
   }
-  if (typeof value !== 'string' || value.trim() === '') return null;
+  if (typeof value !== 'string') return null;
   const iso = parseISO(value);
   if (isValid(iso)) return iso;
   const parts = LOCAL_SHAPE.exec(value);
@@ -186,6 +187,7 @@ export const addUnit = {
   day: addDays,
   week: addWeeks,
   month: addMonths,
+  quarter: addQuarters,
   year: addYears
 } as const;
 
@@ -206,7 +208,7 @@ export function formatYear(date: Date): string {
 }
 
 export function formatQuarterShort(date: Date): string {
-  return format(date, 'QQQ');
+  return `Q${getQuarter(date)}`;
 }
 
 /* Same locale as monthFromName, so the column and the parser cannot disagree. */

@@ -344,28 +344,15 @@ describe('Filter Operations', () => {
       expect(result).toBe(true);
     });
 
-    it.each([
-      ['eq', '2023-12-15', true],
-      ['eq', '2023-11-30', false],
-      ['neq', '2023-12-31', false],
-      ['neq', '2024-01-01', true],
-      ['lt', '2023-11-30', true],
-      ['lt', '2023-12-15', false],
-      ['lte', '2023-12-31', true],
-      ['lte', '2024-01-01', false],
-      ['gt', '2024-01-01', true],
-      ['gt', '2023-12-15', false],
-      ['gte', '2023-12-01', true],
-      ['gte', '2023-11-30', false]
-    ] as const)('should filter %s %s against the whole month', (operator, row, expected) => {
-      const result = filterOperationsMap.date[operator](
-        createMockRow(row),
+    it('should not match an unreadable row with neq', () => {
+      const result = filterOperationsMap.date.neq(
+        createMockRow('not a date'),
         'createdAt',
-        { date: { date: '2023-12-01', scale: 'month' } },
+        { date: new Date(2023, 11, 1) },
         addMeta
       );
 
-      expect(result).toBe(expected);
+      expect(result).toBe(false);
     });
   });
 

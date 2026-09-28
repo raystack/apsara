@@ -4,7 +4,6 @@ import {
   type DayKey,
   toDayKey
 } from '~/components/calendar-preview/date-adapter';
-import { type Period, periodOf } from '~/components/calendar-preview/lib/scale';
 import {
   DataTableFilterOperatorTypes,
   DateFilterOperatorType,
@@ -29,35 +28,14 @@ export type FilterFunctionsMap = {
   multiselect: Record<MultiSelectFilterOperatorType, FilterFn<unknown>>;
 };
 
-/* A day value filters on its day; a coarser one filters on the whole period it
-   names, so a month cannot compare as a single day. `trailingValue` never
-   reaches here: the period is derived from whichever edge was stored, so both
-   anchors resolve to the same span. */
-function periodFor(value: FilterValue['date']): Period | null {
-  if (value == null) return null;
-  if (
-    typeof value === 'object' &&
-    !(value instanceof Date) &&
-    'scale' in value
-  ) {
-    const anchor = toDayKey(value.date);
-    return anchor ? periodOf(anchor, value.scale) : null;
-  }
-  const day = toDayKey(value);
-  return day ? { start: day, end: day } : null;
-}
-
-/* An unreadable row or filter matches nothing, and `neq` negates that, so
-   `whenUnreadable` keeps a bad value from matching every row instead. */
-function onPeriod(
-  test: (day: DayKey, period: Period) => boolean,
-  whenUnreadable = false
+/* An unreadable row matches no operator, `neq` included. */
+function onDay(
+  test: (day: DayKey, filterDay: DayKey) => boolean
 ): FilterFn<unknown> {
   return (row, columnId, filterValue: FilterValue) => {
-    const period = periodFor(filterValue.date);
     const day = toDayKey(row.getValue(columnId));
-    if (!period || !day) return whenUnreadable;
-    return test(day, period);
+    const filterDay = toDayKey(filterValue.date);
+    return day !== null && filterDay !== null && test(day, filterDay);
   };
 }
 
@@ -100,15 +78,12 @@ export const filterOperationsMap: FilterFunctionsMap = {
     }
   },
   date: {
-    eq: onPeriod((day, period) => day >= period.start && day <= period.end),
-    neq: onPeriod(
-      (day, period) => day < period.start || day > period.end,
-      true
-    ),
-    lt: onPeriod((day, period) => day < period.start),
-    lte: onPeriod((day, period) => day <= period.end),
-    gt: onPeriod((day, period) => day > period.end),
-    gte: onPeriod((day, period) => day >= period.start)
+    eq: onDay((day, filterDay) => day === filterDay),
+    neq: onDay((day, filterDay) => day !== filterDay),
+    lt: onDay((day, filterDay) => day < filterDay),
+    lte: onDay((day, filterDay) => day <= filterDay),
+    gt: onDay((day, filterDay) => day > filterDay),
+    gte: onDay((day, filterDay) => day >= filterDay)
   },
   select: {
     eq: (row, columnId, filterValue: FilterValue) => {
@@ -153,13 +128,8 @@ const handleStringBasedTypes = (
 ): DataViewFilterValues => {
   switch (filterType) {
     case FilterType.date: {
-      const isPeriod = value && typeof value === 'object' && 'scale' in value;
-      const day = toDayKey(isPeriod ? value.date : value);
-      if (!day) return { value, stringValue: '' };
-      return {
-        value: isPeriod ? { ...value, date: day } : day,
-        stringValue: day
-      };
+      const day = toDayKey(value);
+      return { value: day ?? value, stringValue: day ?? '' };
     }
     case FilterType.select:
       return {

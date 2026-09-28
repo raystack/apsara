@@ -187,6 +187,23 @@ describe('Data Table Utils', () => {
       expect(result.columnFilters).toHaveLength(0);
     });
 
+    /* dayjs read `undefined` as now, so this filter was kept and matched today. */
+    it('should filter out a date filter with no value', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'createdAt',
+            operator: 'eq',
+            value: undefined,
+            _type: FilterType.date
+          }
+        ]
+      };
+      const result = queryToTableState(query);
+
+      expect(result.columnFilters).toHaveLength(0);
+    });
+
     it('should keep valid date filters', () => {
       const query: InternalQuery = {
         filters: [
@@ -682,6 +699,22 @@ describe('Data Table Utils', () => {
             name: 'createdAt',
             operator: 'eq',
             value: new Date('invalid'),
+            _type: FilterType.date
+          }
+        ]
+      };
+
+      const result = transformToDataTableQuery(query);
+      expect(result.filters).toHaveLength(0);
+    });
+
+    it('should filter out a date filter with no value', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'createdAt',
+            operator: 'eq',
+            value: undefined,
             _type: FilterType.date
           }
         ]

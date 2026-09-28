@@ -145,7 +145,11 @@ describe('FilterChip', () => {
           value='2026-05-27'
         />
       );
-      expect(screen.getByDisplayValue('27 May 2026')).toBeInTheDocument();
+      expect(
+        screen.getByDisplayValue(
+          defaultFormatValue(new Date(2026, 4, 27), 'day')
+        )
+      ).toBeInTheDocument();
     });
 
     it('parses an epoch number value', () => {
@@ -157,7 +161,11 @@ describe('FilterChip', () => {
           value={new Date(2026, 4, 27).getTime()}
         />
       );
-      expect(screen.getByDisplayValue('27 May 2026')).toBeInTheDocument();
+      expect(
+        screen.getByDisplayValue(
+          defaultFormatValue(new Date(2026, 4, 27), 'day')
+        )
+      ).toBeInTheDocument();
     });
 
     it('coerces an unparseable value to unselected instead of crashing', () => {
@@ -182,7 +190,11 @@ describe('FilterChip', () => {
           value={new Date(2026, 4, 27)}
         />
       );
-      expect(screen.getByDisplayValue('27 May 2026')).toBeInTheDocument();
+      expect(
+        screen.getByDisplayValue(
+          defaultFormatValue(new Date(2026, 4, 27), 'day')
+        )
+      ).toBeInTheDocument();
     });
 
     it('forwards calendarProps to the underlying DatePicker', () => {
@@ -197,26 +209,6 @@ describe('FilterChip', () => {
         />
       );
       expect(screen.getByDisplayValue('27/05/2026')).toBeInTheDocument();
-    });
-
-    /* A chip holds a day only, so day is the one scale to match. */
-    it.each([
-      ['a Date', new Date(2026, 7, 15)],
-      ['a day key', '2026-08-15'],
-      ['an epoch', new Date(2026, 7, 15).getTime()]
-    ])('displays %s as CalendarPreview does', (_label, value) => {
-      render(
-        <FilterChip
-          label='Created'
-          columnType={FilterType.date}
-          value={value}
-        />
-      );
-      expect(
-        screen.getByDisplayValue(
-          defaultFormatValue(new Date(2026, 7, 15), 'day')
-        )
-      ).toBeInTheDocument();
     });
   });
 

@@ -52,7 +52,6 @@ export function startOfUnit(date: Date, scale: TimelineScale): Date {
 }
 
 export function addUnits(date: Date, scale: TimelineScale, n: number): Date {
-  if (scale === 'quarter') return addUnit.month(date, 3 * n);
   return addUnit[scale](date, n);
 }
 

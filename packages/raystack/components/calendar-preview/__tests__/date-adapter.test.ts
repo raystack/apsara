@@ -329,6 +329,12 @@ describe('toInstant', () => {
     expect(toInstant(input)).toBeNull();
   });
 
+  it('keeps milliseconds from a longer fraction in a local time', () => {
+    expect(toInstant('2023/12/01 10:30:00.123456')?.getTime()).toBe(
+      new Date(2023, 11, 1, 10, 30, 0, 123).getTime()
+    );
+  });
+
   /* dayjs read `undefined` as now, so an unset date filter matched today. */
   it('rejects undefined', () => {
     expect(toInstant(undefined)).toBeNull();
@@ -361,21 +367,6 @@ describe('toDayKey', () => {
   it('reads the local calendar day', () => {
     expect(toDayKey('2023-12-01')).toBe('2023-12-01');
     expect(toDayKey(new Date(2023, 11, 1, 23, 59))).toBe('2023-12-01');
-  });
-
-  it.each([
-    'UTC',
-    'Asia/Kolkata',
-    'Pacific/Kiritimati',
-    'Pacific/Niue'
-  ])('keeps a day key as the same day in %s', timeZone => {
-    expect(toDayKey('2026-08-15', timeZone)).toBe('2026-08-15');
-  });
-
-  it('reads the day in the zone it is given', () => {
-    const instant = new Date(Date.UTC(2023, 11, 1, 2, 0));
-    expect(toDayKey(instant, 'UTC')).toBe('2023-12-01');
-    expect(toDayKey(instant, 'Pacific/Niue')).toBe('2023-11-30');
   });
 
   it('rejects what toInstant rejects', () => {
