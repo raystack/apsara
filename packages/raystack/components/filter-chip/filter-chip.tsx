@@ -118,13 +118,19 @@ export const FilterChip = ({
   );
   const isNumberColumn = columnType === FilterType.number;
   // `??` not `||`, since a falsy option value like `0` is a real selection.
-  // A non-numeric number value starts empty, since the regex below would
-  // reject every edit to it.
-  const [filterValue, setFilterValue] = useState<any>(() =>
-    isNumberColumn && !PARTIAL_NUMBER.test(String(value ?? ''))
-      ? ''
-      : (value ?? '')
-  );
+  // For `number`, the value is shown without an exponent (`1e-7`), and a
+  // non-numeric value starts empty, since the regex would reject every edit.
+  const [filterValue, setFilterValue] = useState<any>(() => {
+    if (!isNumberColumn) return value ?? '';
+    const text =
+      typeof value === 'number'
+        ? value.toLocaleString('en-US', {
+            useGrouping: false,
+            maximumFractionDigits: 20
+          })
+        : String(value ?? '');
+    return PARTIAL_NUMBER.test(text) ? text : '';
+  });
 
   const showOnRemove = typeof onRemove === 'function';
   const isMultiSelectColumn = columnType === FilterType.multiselect;
@@ -153,13 +159,12 @@ export const FilterChip = ({
       }
       // Skipping setFilterValue makes React restore the controlled value.
       if (!PARTIAL_NUMBER.test(raw)) return;
+      const parsed = Number(raw);
+      if (parsed === Infinity || parsed === -Infinity) return;
 
       setFilterValue(raw);
-      const isIntermediate = raw === '' || Number.isNaN(Number(raw));
-      onValueChange?.(
-        isIntermediate ? raw : Number(raw),
-        operation?.value ?? ''
-      );
+      const isIntermediate = raw === '' || Number.isNaN(parsed);
+      onValueChange?.(isIntermediate ? raw : parsed, operation?.value ?? '');
     },
     [isNumberColumn, handleFilterValueChange, onValueChange, operation]
   );

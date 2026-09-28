@@ -239,6 +239,35 @@ describe('FilterChip', () => {
       expect(onValueChange).toHaveBeenCalledTimes(1);
     });
 
+    it('rejects input that parses to Infinity', () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Size'
+          columnType={FilterType.number}
+          onValueChange={onValueChange}
+        />
+      );
+
+      const input = getInput(container);
+      fireEvent.change(input, { target: { value: '9'.repeat(309) } });
+
+      expect(onValueChange).not.toHaveBeenCalled();
+      expect(input).toHaveValue('');
+    });
+
+    it('shows a numeric value without an exponent', () => {
+      const { container: small } = render(
+        <FilterChip label='Size' value={1e-7} columnType={FilterType.number} />
+      );
+      const { container: large } = render(
+        <FilterChip label='Size' value={1e21} columnType={FilterType.number} />
+      );
+
+      expect(getInput(small)).toHaveValue('0.0000001');
+      expect(getInput(large)).toHaveValue('1000000000000000000000');
+    });
+
     it('shows a numeric value and starts empty for a non-numeric one', () => {
       const { container: numeric } = render(
         <FilterChip label='Size' value={-1.5} columnType={FilterType.number} />
