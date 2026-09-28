@@ -7,7 +7,9 @@ import type { EditorControlBaseProps } from './editor-control';
 import { HEADING_DEFAULTS, PARAGRAPH_DEFAULT } from './editor-defaults';
 import {
   EditorMenuControl,
-  type EditorMenuOption
+  EditorMenuItems,
+  type EditorMenuOption,
+  sameFlags
 } from './editor-menu-control';
 
 export interface EditorHeadingMenuProps extends EditorControlBaseProps {
@@ -29,36 +31,8 @@ export function EditorHeadingMenu({
     activeTextStyle(state.state)
   );
   const editable = useStoreSelector(store, state => state.isEditable());
-  // One flag per row, as a string so an unchanged result skips the render.
-  const can = useStoreSelector(store, state =>
-    [setParagraph, ...levels.map(level => setHeading(level))]
-      .map(command => (command(state.state) ? '1' : '0'))
-      .join('')
-  );
 
   if (!store.schema.nodes.heading) return null;
-
-  const options: EditorMenuOption[] = [
-    {
-      key: 'paragraph',
-      ...PARAGRAPH_DEFAULT,
-      shortcut: store.shortcuts.paragraph,
-      active: current === 'paragraph',
-      disabled: current !== 'paragraph' && can[0] !== '1',
-      run: () => store.run(setParagraph)
-    },
-    ...levels.map((level, index) => {
-      const { action, ...rest } = HEADING_DEFAULTS[level];
-      return {
-        key: `heading-${level}`,
-        ...rest,
-        shortcut: action && store.shortcuts[action],
-        active: current === level,
-        disabled: current !== level && can[index + 1] !== '1',
-        run: () => store.run(setHeading(level))
-      };
-    })
-  ];
 
   const Icon =
     typeof current === 'number'
@@ -70,11 +44,51 @@ export function EditorHeadingMenu({
       data-slot='editor-heading-menu'
       label={label}
       trigger={<Icon />}
-      options={options}
       disabled={!editable}
       {...props}
-    />
+    >
+      <HeadingOptions levels={levels} />
+    </EditorMenuControl>
   );
 }
 
 EditorHeadingMenu.displayName = 'Editor.HeadingMenu';
+
+function HeadingOptions({ levels }: { levels: EditorHeadingLevel[] }) {
+  const store = useEditorStore('Editor.HeadingMenu');
+  const current = useStoreSelector(store, state =>
+    activeTextStyle(state.state)
+  );
+  const can = useStoreSelector(
+    store,
+    state =>
+      [setParagraph, ...levels.map(level => setHeading(level))].map(command =>
+        command(state.state)
+      ),
+    sameFlags
+  );
+
+  const options: EditorMenuOption[] = [
+    {
+      key: 'paragraph',
+      ...PARAGRAPH_DEFAULT,
+      shortcut: store.shortcuts.paragraph,
+      active: current === 'paragraph',
+      disabled: current !== 'paragraph' && !can[0],
+      run: () => store.run(setParagraph)
+    },
+    ...levels.map((level, index) => {
+      const { action, ...rest } = HEADING_DEFAULTS[level];
+      return {
+        key: `heading-${level}`,
+        ...rest,
+        shortcut: action && store.shortcuts[action],
+        active: current === level,
+        disabled: current !== level && !can[index + 1],
+        run: () => store.run(setHeading(level))
+      };
+    })
+  ];
+
+  return <EditorMenuItems options={options} />;
+}

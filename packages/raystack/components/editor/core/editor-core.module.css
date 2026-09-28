@@ -1,30 +1,35 @@
-/* The editing host. A contentEditable div grows with its content natively, so
-   there is no `field-sizing` here, since that property applies to form controls. */
+/* The editing host, shared by Editor.Content and PromptInput.Editor. A
+   contentEditable div grows with its content natively, so there is no
+   `field-sizing` here, since that property applies to form controls. */
 .editor {
   /* One line box has to be tall enough to hold a whole chip, or inserting one
-     would grow the composer and nudge the page under it. The small font's own
-     16px line box is shorter than a chip's icon and trailing slots, so the
-     editor pairs the small font with the regular line height and sizes the chip
-     to match, so the line box is the same height whatever a line holds. */
+     would grow the editor and nudge the page under it. */
   --editor-line-height: var(--rs-line-height-regular);
 
   box-sizing: border-box;
   /* ProseMirror positions widget decorations against the editing host. */
   position: relative;
-  width: 100%;
   outline: none;
   white-space: pre-wrap;
   overflow-wrap: break-word;
   word-break: break-word;
+  line-height: var(--editor-line-height);
+}
+
+/* The PromptInput composer. The small font's own 16px line box is shorter
+   than a chip's icon and trailing slots, so the composer pairs the small font
+   with the regular line height and sizes the chip to match, so the line box is
+   the same height whatever a line holds. */
+.composer {
+  width: 100%;
   overflow-y: auto;
   color: var(--rs-color-foreground-base-primary);
   font-family: var(--rs-font-family);
   font-size: var(--rs-font-size-small);
-  line-height: var(--editor-line-height);
   letter-spacing: var(--rs-letter-spacing-small);
 }
 
-.editor > p {
+.composer > p {
   margin: 0;
 }
 
@@ -32,7 +37,7 @@
    it brings its own type, layout and selection treatment. Two of those rules
    are load-bearing rather than cosmetic, so they are mirrored here. */
 
-/* ProseMirror appends a zero-size placeholder <img> after a paragraph that ends
+/* ProseMirror appends a zero-size placeholder <img> after a block that ends
    in a `contentEditable="false"` node, a chip, so the browser can draw a
    caret past it. An app-level `img { display: block }` reset (Tailwind's
    preflight carries one) turns that placeholder into a block box, which reads
@@ -53,8 +58,8 @@
   background: transparent;
 }
 
-/* Read from the same emptiness predicate as `data-empty`, a ProseMirror-empty
-   paragraph still holds a trailing <br>, so `:empty` would never match. */
+/* A decoration, since a ProseMirror-empty paragraph still holds a trailing
+   <br>, so `:empty` would never match. */
 .placeholder::before {
   content: attr(data-placeholder);
   float: left;
@@ -132,7 +137,7 @@
   outline-offset: 1px;
 }
 
-.editor[data-disabled] .mention {
+.editor[aria-disabled="true"] .mention {
   opacity: 0.7;
 }
 
@@ -164,6 +169,19 @@
 
 .suggestionRow {
   cursor: pointer;
+}
+
+.suggestionText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.suggestionDescription {
+  color: var(--rs-color-foreground-base-tertiary);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
 }
 
 .suggestionEmpty {

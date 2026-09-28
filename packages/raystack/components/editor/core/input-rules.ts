@@ -92,7 +92,8 @@ export function buildInputRules(schema: Schema): Plugin | null {
   if (nodes.horizontalRule) {
     const rule = nodes.horizontalRule;
     rules.push(
-      new InputRule(/^(?:---|___|\*\*\*)$/, (state, _match, start, end) => {
+      // `***` and `___` wait for a space, so `***bold italic***` can be typed.
+      new InputRule(/^(?:---|___\s|\*\*\*\s)$/, (state, _match, start, end) => {
         const $start = state.doc.resolve(start);
         const block = $start.parent;
         if (block.type.name !== 'paragraph') return null;

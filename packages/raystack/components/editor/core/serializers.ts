@@ -1,27 +1,10 @@
-import type {
-  DOMOutputSpec,
-  Mark,
-  Node as PMNode,
-  Schema
-} from 'prosemirror-model';
+import type { DOMOutputSpec, Mark, Node as PMNode } from 'prosemirror-model';
+import { escapeAttribute, escapeText } from './html';
 import { docFromJSON, type EditorJSON } from './json';
-import type { EditorMention, MentionAttrs } from './mention';
+import { type EditorMention, type MentionAttrs, mentionText } from './mention';
 import { buildSchema } from './schema';
 
-const VOID_ELEMENTS = new Set(['br', 'hr', 'img', 'input']);
-
-const HOLE = '\u0000';
-
-function escapeText(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}
-
-function escapeAttribute(value: string): string {
-  return escapeText(value).replace(/"/g, '&quot;');
-}
+const VOID_ELEMENTS = new Set(['br', 'hr', 'input']);
 
 function isAttrs(value: unknown): value is Record<string, unknown> {
   return (
@@ -32,13 +15,22 @@ function isAttrs(value: unknown): value is Record<string, unknown> {
   );
 }
 
-/** Writes a `toDOM` spec as a string. `hole` fills the content slot. */
-function renderSpec(spec: DOMOutputSpec, hole: () => string): string {
-  if (typeof spec === 'string') return escapeText(spec);
-  if (!Array.isArray(spec)) return '';
+interface RenderedSpec {
+  /** The HTML up to the content hole, or all of it when there is no hole. */
+  before: string;
+  /** The HTML after the content hole. */
+  after: string;
+  hole: boolean;
+}
 
-  const [rawTag, ...rest] = spec as readonly [string, ...unknown[]];
-  const tag = rawTag.includes(' ') ? rawTag.split(' ')[1] : rawTag;
+/** Writes a `toDOM` spec as HTML, split at its content hole. */
+function renderSpec(spec: DOMOutputSpec): RenderedSpec {
+  if (typeof spec === 'string') {
+    return { before: escapeText(spec), after: '', hole: false };
+  }
+  if (!Array.isArray(spec)) return { before: '', after: '', hole: false };
+
+  const [tag, ...rest] = spec as readonly [string, ...unknown[]];
   let children = rest;
   let attrs = '';
   if (isAttrs(rest[0])) {
@@ -49,22 +41,36 @@ function renderSpec(spec: DOMOutputSpec, hole: () => string): string {
     }
   }
 
-  if (VOID_ELEMENTS.has(tag)) return `<${tag}${attrs}>`;
+  let before = `<${tag}${attrs}>`;
+  if (VOID_ELEMENTS.has(tag)) return { before, after: '', hole: false };
 
-  let inner = '';
+  let after = '';
+  let hole = false;
   for (const child of children) {
+    if (child === 0) {
+      hole = true;
+      continue;
+    }
     // The hole can sit in a nested element, as in `['pre', ['code', 0]]`.
-    inner += child === 0 ? hole() : renderSpec(child as DOMOutputSpec, hole);
+    const part = renderSpec(child as DOMOutputSpec);
+    if (hole) {
+      after += part.before + part.after;
+    } else if (part.hole) {
+      before += part.before;
+      after += part.after;
+      hole = true;
+    } else {
+      before += part.before + part.after;
+    }
   }
-  return `<${tag}${attrs}>${inner}</${tag}>`;
+  return { before, after: `${after}</${tag}>`, hole };
 }
 
 function markTags(mark: Mark): [string, string] {
   const toDOM = mark.type.spec.toDOM;
   if (!toDOM) return ['', ''];
-  const html = renderSpec(toDOM(mark, true), () => HOLE);
-  const [open, close = ''] = html.split(HOLE);
-  return [open, close];
+  const { before, after } = renderSpec(toDOM(mark, true));
+  return [before, after];
 }
 
 function serializeChildren(node: PMNode): string {
@@ -110,7 +116,8 @@ function serializeNode(node: PMNode): string {
   if (node.isText) return escapeText(node.text ?? '');
   const toDOM = node.type.spec.toDOM;
   if (!toDOM) return serializeChildren(node);
-  return renderSpec(toDOM(node), () => serializeChildren(node));
+  const { before, after, hole } = renderSpec(toDOM(node));
+  return hole ? before + serializeChildren(node) + after : before + after;
 }
 
 /** HTML for a document, built from the schema's `toDOM` specs with no DOM. */
@@ -145,7 +152,7 @@ export function docToText(doc: PMNode): DocText {
     }
     if (node.type.name === 'mention') {
       const attrs = node.attrs as MentionAttrs;
-      const label = `${attrs.trigger}${attrs.label}`;
+      const label = mentionText(attrs);
       mentions.push({
         ...attrs,
         start: text.length,
@@ -164,9 +171,20 @@ export function docToText(doc: PMNode): DocText {
   return { text, mentions };
 }
 
-/** The mentions in a document, in document order. */
-export function docMentions(doc: PMNode): EditorMention[] {
-  return docToText(doc).mentions;
+const mentionCache = new WeakMap<PMNode, MentionAttrs[]>();
+
+/** The mentions in a document, in document order. Cached per document. */
+export function docMentions(doc: PMNode): MentionAttrs[] {
+  const cached = mentionCache.get(doc);
+  if (cached) return cached;
+  const mentions: MentionAttrs[] = [];
+  doc.descendants(node => {
+    if (node.type.name === 'mention') {
+      mentions.push(node.attrs as MentionAttrs);
+    }
+  });
+  mentionCache.set(doc, mentions);
+  return mentions;
 }
 
 /**
@@ -197,16 +215,12 @@ export function showsPlaceholder(doc: PMNode): boolean {
   );
 }
 
-let fullSchema: Schema | undefined;
-
 /** Converts editor JSON to HTML. It needs no DOM, so it runs on the server. */
 export function editorToHTML(value: EditorJSON): string {
-  fullSchema ??= buildSchema();
-  return docToHTML(docFromJSON(fullSchema, value));
+  return docToHTML(docFromJSON(buildSchema(), value));
 }
 
 /** Converts editor JSON to plain text. Mentions read as `@label`. */
 export function editorToText(value: EditorJSON): string {
-  fullSchema ??= buildSchema();
-  return docToText(docFromJSON(fullSchema, value)).text;
+  return docToText(docFromJSON(buildSchema(), value)).text;
 }

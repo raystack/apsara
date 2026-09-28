@@ -1,5 +1,5 @@
 import { setBlockType, toggleMark, wrapIn } from 'prosemirror-commands';
-import { redo, redoDepth, undo, undoDepth } from 'prosemirror-history';
+import { redo, undo } from 'prosemirror-history';
 import type { Mark, MarkType, Node as PMNode } from 'prosemirror-model';
 import { liftListItem, wrapInList } from 'prosemirror-schema-list';
 import {
@@ -10,7 +10,12 @@ import {
 } from 'prosemirror-state';
 import { liftTarget } from 'prosemirror-transform';
 import { isSafeHref, normalizeHref } from './link';
-import type { EditorHeadingLevel, EditorList, EditorMark } from './schema';
+import {
+  type EditorHeadingLevel,
+  type EditorList,
+  type EditorMark,
+  LIST_TYPES
+} from './schema';
 
 export type EditorBlock =
   | 'blockquote'
@@ -18,7 +23,7 @@ export type EditorBlock =
   | EditorList
   | 'horizontalRule';
 
-const LISTS: readonly string[] = ['bulletList', 'orderedList', 'taskList'];
+const LISTS: readonly string[] = LIST_TYPES;
 
 /** Runs `build` on a scratch transaction, so a step that throws reads as "cannot run". */
 function tryCommand(
@@ -220,14 +225,35 @@ export function toggleList(list: EditorList): Command {
   };
 }
 
+/**
+ * Whether a link can go on the selection: the text block at a caret, or some
+ * text in a range, allows the link mark.
+ */
+export function canSetLink(state: EditorState): boolean {
+  const type = state.schema.marks.link;
+  if (!type) return false;
+  const { empty, $from, ranges } = state.selection;
+  if (empty) {
+    return $from.parent.inlineContent && $from.parent.type.allowsMarkType(type);
+  }
+  return ranges.some(range => {
+    let applies = false;
+    state.doc.nodesBetween(range.$from.pos, range.$to.pos, node => {
+      if (applies) return false;
+      applies = node.inlineContent && node.type.allowsMarkType(type);
+      return true;
+    });
+    return applies;
+  });
+}
+
 export function setLink(href: string): Command {
   return (state, dispatch) => {
     const type = state.schema.marks.link;
-    if (!type) return false;
+    if (!type || !canSetLink(state)) return false;
     const normalized = normalizeHref(href);
     if (!normalized || !isSafeHref(normalized)) return false;
-    const { from, to, empty, $from } = state.selection;
-    if (!$from.parent.type.allowsMarkType(type)) return false;
+    const { from, to, empty } = state.selection;
 
     return tryCommand(state, dispatch, tr => {
       const mark = type.create({ href: normalized });
@@ -320,8 +346,18 @@ export const clearFormatting: Command = (state, dispatch) => {
   return true;
 };
 
-export const undoCommand: Command = (state, dispatch) =>
-  undoDepth(state) > 0 && undo(state, dispatch);
-
-export const redoCommand: Command = (state, dispatch) =>
-  redoDepth(state) > 0 && redo(state, dispatch);
+/** The editor's commands as ProseMirror commands, for code that works on an `EditorState` directly. */
+export const editorCommands = {
+  toggleMark: toggleMarkCommand,
+  setParagraph: (): Command => setParagraph,
+  setHeading,
+  toggleBlock,
+  toggleList,
+  setLink,
+  unsetLink: (): Command => unsetLink,
+  insertHorizontalRule: (): Command => insertHorizontalRule,
+  insertText,
+  clearFormatting: (): Command => clearFormatting,
+  undo: (): Command => undo,
+  redo: (): Command => redo
+};

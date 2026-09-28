@@ -4,15 +4,11 @@ import { baseKeymap } from 'prosemirror-commands';
 import { history, redo, undo } from 'prosemirror-history';
 import { keymap } from 'prosemirror-keymap';
 import { Slice } from 'prosemirror-model';
-import {
-  type Command,
-  EditorState,
-  Plugin,
-  Selection
-} from 'prosemirror-state';
-import { Decoration, DecorationSet, EditorView } from 'prosemirror-view';
+import { EditorState, Plugin, Selection } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import styles from '../editor-core.module.css';
+import { EXTERNAL, insertHardBreak, placeholderPlugin } from '../base';
+import { escapeText } from '../html';
 import { type MentionAttrs, mentionKey } from '../mention';
 import { deleteAdjacentMention, moveOverMention } from '../mention-commands';
 import {
@@ -37,10 +33,7 @@ import {
   textFromFragment,
   textLength
 } from './markup';
-import { hardBreakType, mentionType } from './schema';
-
-/** Marks transactions that came from outside the editor, so they are not echoed back. */
-const EXTERNAL = 'apsara-editor-external';
+import { mentionType } from './schema';
 
 export interface UseComposerEditorOptions {
   /** Markup for the first document. Read once. */
@@ -96,22 +89,6 @@ export interface UseComposerEditorResult {
   actions: ComposerEditorActions;
 }
 
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}
-
-const insertHardBreak: Command = (state, dispatch) => {
-  if (dispatch) {
-    dispatch(
-      state.tr.replaceSelectionWith(hardBreakType.create()).scrollIntoView()
-    );
-  }
-  return true;
-};
-
 export function useComposerEditor(
   options: UseComposerEditorOptions
 ): UseComposerEditorResult {
@@ -127,7 +104,7 @@ export function useComposerEditor(
   const initialMarkupRef = useRef(options.initialMarkup);
   const initialHtml = useMemo(
     () => ({
-      __html: escapeHtml(serializeText(docFromMarkup(initialMarkupRef.current)))
+      __html: escapeText(serializeText(docFromMarkup(initialMarkupRef.current)))
     }),
     []
   );
@@ -172,21 +149,6 @@ export function useComposerEditor(
           if (event.shiftKey) return insertHardBreak(view.state, view.dispatch);
           optionsRef.current.onSubmit?.();
           return true;
-        }
-      }
-    });
-
-    const placeholderPlugin = new Plugin({
-      props: {
-        decorations(state) {
-          const text = optionsRef.current.placeholder;
-          if (!text || !isDocEmpty(state.doc)) return null;
-          return DecorationSet.create(state.doc, [
-            Decoration.node(0, state.doc.content.size, {
-              class: styles.placeholder,
-              'data-placeholder': text
-            })
-          ]);
         }
       }
     });
@@ -302,7 +264,7 @@ export function useComposerEditor(
         keymap(baseKeymap),
         maxLengthPlugin,
         scrollPlugin,
-        placeholderPlugin,
+        placeholderPlugin(() => optionsRef.current.placeholder, isDocEmpty),
         clipboardPlugin,
         focusPlugin
       ]

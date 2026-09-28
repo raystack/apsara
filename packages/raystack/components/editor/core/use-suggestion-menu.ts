@@ -1,6 +1,10 @@
 'use client';
 
-import { compareItems, rankItem } from '@tanstack/match-sorter-utils';
+import {
+  type Accessor,
+  compareItems,
+  rankItem
+} from '@tanstack/match-sorter-utils';
 import type { EditorView } from 'prosemirror-view';
 import {
   useCallback,
@@ -10,11 +14,12 @@ import {
   useState,
   useSyncExternalStore
 } from 'react';
-import type { EditorMention } from './mention';
+import { type MentionAttrs, mentionKey } from './mention';
 import type {
   EditorMentionItem,
   EditorMentionRef,
-  MentionRegistry
+  MentionRegistry,
+  MentionsData
 } from './mention-registry';
 import {
   type SuggestionAnchor,
@@ -88,15 +93,13 @@ export function toGroups<Item extends SuggestionItem>(
 export function filterItems<Item>(
   items: Item[],
   query: string,
-  accessors: Array<(item: Item) => string | string[]>
+  accessors: ReadonlyArray<Accessor<Item>>
 ): Item[] {
   if (!query) return items;
   const ranked = items
     .map(item => ({
       item,
-      ranking: rankItem(item, query, {
-        accessors: accessors as Array<(item: unknown) => string | string[]>
-      })
+      ranking: rankItem(item, query, { accessors })
     }))
     .filter(entry => entry.ranking.passed);
   ranked.sort((a, b) => compareItems(a.ranking, b.ranking));
@@ -430,12 +433,16 @@ export function useSuggestionMenu<Item extends SuggestionItem>({
  */
 export function useMentionResolution(
   registry: MentionRegistry,
-  mentions: EditorMention[],
-  refreshLabels: (labels: Map<string, string>) => void
+  mentions: MentionAttrs[],
+  refreshLabels: (labels: Map<string, string>) => void,
+  getResolver: (trigger: string) => MentionsData['resolveMentions'] = trigger =>
+    registry.get(trigger)?.resolveMentions
 ): void {
   const requestedRef = useRef(new Set<string>());
   const refreshRef = useRef(refreshLabels);
   refreshRef.current = refreshLabels;
+  const getResolverRef = useRef(getResolver);
+  getResolverRef.current = getResolver;
 
   useEffect(() => {
     if (mentions.length === 0) return;
@@ -443,11 +450,10 @@ export function useMentionResolution(
     const byTrigger = new Map<string, EditorMentionRef[]>();
 
     for (const mention of mentions) {
-      const key = `${mention.trigger}|${mention.type}|${mention.id}`;
+      const key = mentionKey(mention.trigger, mention.type, mention.id);
       if (requestedRef.current.has(key)) continue;
       if (registry.has(mention.trigger, mention.type, mention.id)) continue;
-      const config = registry.get(mention.trigger);
-      if (!config?.resolveMentions) continue;
+      if (!getResolverRef.current(mention.trigger)) continue;
       requestedRef.current.add(key);
       const bucket = byTrigger.get(mention.trigger);
       const ref = {
@@ -462,7 +468,7 @@ export function useMentionResolution(
     if (byTrigger.size === 0) return;
 
     for (const [trigger, refs] of byTrigger) {
-      const resolve = registry.get(trigger)?.resolveMentions;
+      const resolve = getResolverRef.current(trigger);
       if (!resolve) continue;
       resolve(refs)
         .then((items: EditorMentionItem[]) => {
@@ -471,7 +477,7 @@ export function useMentionResolution(
           const labels = new Map<string, string>();
           for (const item of items) {
             labels.set(
-              `${trigger}|${item.type ?? 'mention'}|${item.id}`,
+              mentionKey(trigger, item.type ?? 'mention', item.id),
               item.label
             );
           }

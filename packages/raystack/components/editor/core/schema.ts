@@ -4,8 +4,8 @@ import {
   Schema,
   type TagParseRule
 } from 'prosemirror-model';
-import { isSafeHref } from './link';
-import type { MentionAttrs } from './mention';
+import { isSafeHref, stripControlCharacters } from './link';
+import { hardBreakNodeSpec, mentionNodeSpec, paragraphNodeSpec } from './nodes';
 
 /** A mark that a toolbar button can toggle. */
 export type EditorMark = 'bold' | 'italic' | 'underline' | 'strike' | 'code';
@@ -44,73 +44,17 @@ export const EDITOR_FORMATS: readonly EditorFormat[] = [
 
 export const HEADING_LEVELS: readonly EditorHeadingLevel[] = [1, 2, 3, 4];
 
+export const LIST_TYPES: readonly EditorList[] = [
+  'bulletList',
+  'orderedList',
+  'taskList'
+];
+
 function readLanguage(element: HTMLElement): string | null {
   const code = element.querySelector('code') ?? element;
   const match = code.className.match(/(?:^|\s)language-([\w-]+)/);
   return match ? match[1] : element.getAttribute('data-language');
 }
-
-export const mentionNodeSpec: NodeSpec = {
-  inline: true,
-  group: 'inline',
-  // Atomic: the cursor never enters it, so it deletes and moves as one unit.
-  atom: true,
-  selectable: true,
-  // ProseMirror makes inline atoms draggable by default, which would let a
-  // chip be dropped into the middle of a word.
-  draggable: false,
-  attrs: {
-    id: {},
-    label: {},
-    type: { default: 'mention' },
-    trigger: { default: '@' }
-  },
-  parseDOM: [
-    {
-      tag: 'span[data-mention-id]',
-      getAttrs: dom => {
-        const el = dom as HTMLElement;
-        return {
-          id: el.getAttribute('data-mention-id') ?? '',
-          label: el.getAttribute('data-mention-label') ?? el.textContent,
-          type: el.getAttribute('data-mention-type') ?? 'mention',
-          trigger: el.getAttribute('data-mention-trigger') ?? '@'
-        };
-      }
-    }
-  ],
-  // Used for the clipboard's `text/html` flavour and for `editorToHTML`. On
-  // screen the node view owns the element. Pasting this back restores the chip
-  // with its id.
-  toDOM: node => {
-    const { id, label, type, trigger } = node.attrs as MentionAttrs;
-    return [
-      'span',
-      {
-        'data-mention-id': id,
-        'data-mention-label': label,
-        'data-mention-type': type,
-        'data-mention-trigger': trigger
-      },
-      `${trigger}${label}`
-    ];
-  }
-};
-
-export const paragraphNodeSpec: NodeSpec = {
-  content: 'inline*',
-  group: 'block',
-  parseDOM: [{ tag: 'p' }],
-  toDOM: () => ['p', 0]
-};
-
-export const hardBreakNodeSpec: NodeSpec = {
-  inline: true,
-  group: 'inline',
-  selectable: false,
-  parseDOM: [{ tag: 'br' }],
-  toDOM: () => ['br']
-};
 
 const headingNodeSpec: NodeSpec = {
   attrs: { level: { default: 1 } },
@@ -250,7 +194,9 @@ const linkMarkSpec: MarkSpec = {
   toDOM: mark => [
     'a',
     {
-      href: isSafeHref(mark.attrs.href) ? mark.attrs.href : null,
+      href: isSafeHref(mark.attrs.href)
+        ? stripControlCharacters(mark.attrs.href)
+        : null,
       rel: 'noopener noreferrer nofollow'
     },
     0
@@ -363,9 +309,4 @@ export function buildSchema(
   const schema = new Schema({ nodes, marks });
   schemaCache.set(key, schema);
   return schema;
-}
-
-/** Whether `schema` has the node or mark behind a format. */
-export function hasFormat(schema: Schema, format: EditorFormat): boolean {
-  return format in schema.nodes || format in schema.marks;
 }

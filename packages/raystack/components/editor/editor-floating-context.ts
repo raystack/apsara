@@ -6,7 +6,6 @@ export interface FloatingToolbarContextValue {
   visible: boolean;
   /** Swaps the buttons for the link field. */
   openLink: () => void;
-  closeLink: () => void;
   /** Keeps the toolbar open while a menu from it is open. Returns the release. */
   hold: () => () => void;
 }

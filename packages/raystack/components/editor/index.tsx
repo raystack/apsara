@@ -1,4 +1,4 @@
-export type { EditorBlock } from './core/commands';
+export { type EditorBlock, editorCommands } from './core/commands';
 export type { EditorJSON } from './core/json';
 export type { EditorMention } from './core/mention';
 export type {

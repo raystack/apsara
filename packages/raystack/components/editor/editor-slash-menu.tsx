@@ -1,5 +1,6 @@
 'use client';
 
+import { rankings } from '@tanstack/match-sorter-utils';
 import { type ReactNode, useMemo } from 'react';
 import {
   SuggestionMenu,
@@ -7,8 +8,9 @@ import {
 } from './core/suggestion-menu';
 import { filterItems } from './core/use-suggestion-menu';
 import styles from './editor.module.css';
-import { useEditorStore } from './editor-context';
+import { useEditorStore, useStoreSelector } from './editor-context';
 import { EditorShortcutKeys } from './editor-control';
+import { sameFlags } from './editor-menu-control';
 import { builtinSlashItem, defaultSlashItems } from './editor-slash-items';
 import type { EditorSlashItem } from './editor-types';
 import { useEditorSuggestion } from './use-editor-suggestion';
@@ -33,9 +35,17 @@ export interface EditorSlashMenuProps {
   onOpenChange?: (open: boolean) => void;
 }
 
+const NO_FLAGS: boolean[] = [];
+
 const slashAccessors = [
   (item: EditorSlashItem) => item.label,
-  (item: EditorSlashItem) => item.keywords ?? []
+  (item: EditorSlashItem) => item.keywords ?? [],
+  // A description matches only at the start of a word, so a short query does
+  // not match most descriptions.
+  {
+    accessor: (item: EditorSlashItem) => item.description ?? '',
+    threshold: rankings.WORD_STARTS_WITH
+  }
 ];
 
 function filterSlashItems(
@@ -68,13 +78,34 @@ export function EditorSlashMenu({
     [items, store]
   );
 
+  // A built-in command that cannot run at the caret is disabled, as a heading
+  // is in the first paragraph of a list item. Checked only while the menu is
+  // open.
+  const blocked = useStoreSelector(
+    store,
+    current =>
+      current.suggestion?.trigger === trigger
+        ? available.map(
+            item => !(builtinSlashItem(item)?.applies(current.api) ?? true)
+          )
+        : NO_FLAGS,
+    sameFlags
+  );
+  const menuItems = useMemo(
+    () =>
+      available.map((item, index) =>
+        blocked[index] && !item.disabled ? { ...item, disabled: true } : item
+      ),
+    [available, blocked]
+  );
+
   const { menu, listboxId } = useEditorSuggestion<EditorSlashItem>({
     store,
     trigger,
     // A space ends the query, the way Linear's slash menu works.
     maxSpaces: 0,
     className: styles['slash-query'],
-    items: available,
+    items: menuItems,
     filter: filterSlashItems,
     onSelect: (item, state) => {
       store.runAfterDelete(state, () => item.run(store.api));
@@ -92,6 +123,7 @@ export function EditorSlashMenu({
       return {
         id: item.id,
         label: item.label,
+        description: item.description,
         icon: item.icon,
         disabled: item.disabled,
         trailing: shortcut ? <EditorShortcutKeys shortcut={shortcut} /> : null

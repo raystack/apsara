@@ -1,18 +1,14 @@
 'use client';
 
-import { type ReactNode, useEffect } from 'react';
-import type { EditorMention } from './core/mention';
-import { isTriggerCharacter } from './core/mention';
+import { type ReactNode, useCallback, useEffect, useRef } from 'react';
+import { isTriggerCharacter, type MentionAttrs } from './core/mention';
 import type {
   EditorMentionItem,
   EditorMentionRef
 } from './core/mention-registry';
 import { docMentions } from './core/serializers';
 import { SuggestionMenu } from './core/suggestion-menu';
-import {
-  useMentionRegistryVersion,
-  useMentionResolution
-} from './core/use-suggestion-menu';
+import { useMentionResolution } from './core/use-suggestion-menu';
 import { useEditorStore, useStoreSelector } from './editor-context';
 import type { EditorStore } from './editor-store';
 import { useEditorSuggestion } from './use-editor-suggestion';
@@ -46,9 +42,9 @@ export interface EditorMentionsProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-const NO_MENTIONS: EditorMention[] = [];
+const NO_MENTIONS: MentionAttrs[] = [];
 
-function sameMentions(a: EditorMention[], b: EditorMention[]): boolean {
+function sameMentions(a: MentionAttrs[], b: MentionAttrs[]): boolean {
   if (a.length !== b.length) return false;
   return a.every(
     (mention, index) =>
@@ -80,7 +76,6 @@ function MentionsMenu({
   onOpenChange
 }: EditorMentionsProps & { store: EditorStore }) {
   const registry = store.mentions;
-  useMentionRegistryVersion(registry);
 
   if (process.env.NODE_ENV !== 'production' && !isTriggerCharacter(trigger)) {
     console.warn(
@@ -91,18 +86,13 @@ function MentionsMenu({
 
   useEffect(() => registry.register(trigger), [registry, trigger]);
 
-  // Pushed after every render and compared field by field, so inline props
-  // stay live without restarting an in-flight search.
-  useEffect(() => {
-    registry.setData(trigger, {
-      items,
-      onSearch,
-      resolveMentions,
-      onOpenChange,
-      emptyMessage,
-      loadingRowCount
-    });
-  });
+  const resolveRef = useRef(resolveMentions);
+  resolveRef.current = resolveMentions;
+  const getResolver = useCallback(
+    (chipTrigger: string) =>
+      chipTrigger === trigger ? resolveRef.current : undefined,
+    [trigger]
+  );
 
   const { menu, listboxId } = useEditorSuggestion<EditorMentionItem>({
     store,
@@ -132,7 +122,12 @@ function MentionsMenu({
         : NO_MENTIONS,
     sameMentions
   );
-  useMentionResolution(registry, mentions, store.refreshMentionLabels);
+  useMentionResolution(
+    registry,
+    mentions,
+    store.refreshMentionLabels,
+    getResolver
+  );
 
   return (
     <SuggestionMenu

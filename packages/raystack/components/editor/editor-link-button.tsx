@@ -3,15 +3,10 @@
 import { useEffect, useState } from 'react';
 import { LinkIcon } from '~/icons';
 import { Popover } from '../popover';
-import { Toolbar } from '../toolbar';
-import { activeLink } from './core/commands';
+import { activeLink, canSetLink } from './core/commands';
 import styles from './editor.module.css';
 import { useEditorStore, useStoreSelector } from './editor-context';
-import {
-  EditorControl,
-  type EditorControlBaseProps,
-  EditorTooltip
-} from './editor-control';
+import { EditorControl, type EditorControlBaseProps } from './editor-control';
 import { useFloatingToolbar } from './editor-floating-context';
 import { EditorLinkForm } from './editor-link-form';
 
@@ -36,14 +31,10 @@ export function EditorLinkButton({
     store,
     current => activeLink(current.state) !== null
   );
-  const enabled = useStoreSelector(store, current => {
-    const type = current.schema.marks.link;
-    return (
-      current.isEditable() &&
-      !!type &&
-      current.state.selection.$from.parent.type.allowsMarkType(type)
-    );
-  });
+  const enabled = useStoreSelector(
+    store,
+    current => current.isEditable() && canSetLink(current.state)
+  );
 
   const openLink = floating?.openLink;
   const visible = floating?.visible ?? false;
@@ -64,18 +55,20 @@ export function EditorLinkButton({
 
   if (!store.schema.marks.link) return null;
 
-  const shortcut = store.shortcuts.link;
+  const control = {
+    'data-slot': 'editor-link-button',
+    label,
+    shortcut: store.shortcuts.link,
+    tooltip,
+    pressed: active,
+    disabled: !enabled
+  };
   const content = children ?? <LinkIcon />;
 
   if (floating) {
     return (
       <EditorControl
-        data-slot='editor-link-button'
-        label={label}
-        shortcut={shortcut}
-        tooltip={tooltip}
-        pressed={active}
-        disabled={!enabled}
+        {...control}
         onClick={event => {
           floating.openLink();
           onClick?.(event);
@@ -89,28 +82,14 @@ export function EditorLinkButton({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <EditorTooltip
-        label={label}
-        shortcut={shortcut}
-        enabled={tooltip}
-        trigger={
-          <Popover.Trigger
-            render={
-              <Toolbar.Button
-                data-slot='editor-link-button'
-                aria-label={label}
-                aria-pressed={active}
-                data-active={active ? '' : undefined}
-                disabled={!enabled}
-                onClick={onClick}
-                {...props}
-              />
-            }
-          >
-            {content}
-          </Popover.Trigger>
-        }
-      />
+      <EditorControl
+        {...control}
+        render={<Popover.Trigger />}
+        onClick={onClick}
+        {...props}
+      >
+        {content}
+      </EditorControl>
       <Popover.Content
         side='bottom'
         align='start'

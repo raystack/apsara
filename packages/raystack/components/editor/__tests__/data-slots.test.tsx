@@ -6,8 +6,6 @@ import { Editor } from '../editor';
 import type { EditorApi } from '../editor-types';
 import { contentOf, doc, flush, p, paste, select } from './test-utils';
 
-const PEOPLE = [{ id: 'u1', label: 'Maya Chen' }];
-
 describe('Editor data-slot contract', () => {
   it('renders the root, content and fixed toolbar slots', async () => {
     const { container } = render(
@@ -40,7 +38,7 @@ describe('Editor data-slot contract', () => {
     expectSlots(document.body, ['editor-link-form', 'editor-link-input']);
   });
 
-  it('renders the floating toolbar slot', async () => {
+  it('renders the floating toolbar and menu slots while they are open', async () => {
     const actionsRef = createRef<EditorApi>();
     const { container } = render(
       <Editor actionsRef={actionsRef} defaultValue={doc(p('Hello'))}>
@@ -48,30 +46,24 @@ describe('Editor data-slot contract', () => {
         <Editor.FloatingToolbar>
           <Editor.MarkButton mark='bold' />
         </Editor.FloatingToolbar>
+        <Editor.SlashMenu />
+        <Editor.Mentions items={[{ id: 'u1', label: 'Maya Chen' }]} />
       </Editor>
     );
     const content = contentOf(container);
-    act(() => content.focus());
-    fireEvent.focus(content);
     const view = actionsRef.current?.view;
     if (!view) throw new Error('no view');
     expect(getSlot(document.body, 'editor-floating-toolbar')).toBeNull();
+    expect(getSlot(document.body, 'editor-slash-menu')).toBeNull();
+
+    act(() => content.focus());
+    fireEvent.focus(content);
     select(view, 1, 6);
     await flush();
     expectSlots(document.body, ['editor-floating-toolbar']);
-  });
 
-  it('renders the menu slots while they are open', async () => {
-    const { container } = render(
-      <Editor>
-        <Editor.Content />
-        <Editor.SlashMenu />
-        <Editor.Mentions items={PEOPLE} />
-      </Editor>
-    );
-    const content = contentOf(container);
-    expect(getSlot(document.body, 'editor-slash-menu')).toBeNull();
-    paste(content, '/');
+    select(view, 6, 6);
+    paste(content, ' /');
     await flush();
     expectSlots(document.body, ['editor-slash-menu']);
     paste(content, ' @');

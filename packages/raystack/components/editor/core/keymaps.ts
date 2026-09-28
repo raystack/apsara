@@ -14,6 +14,7 @@ import {
   splitListItem
 } from 'prosemirror-schema-list';
 import type { Command, Plugin } from 'prosemirror-state';
+import { insertHardBreak } from './base';
 import { deleteAdjacentMention, moveOverMention } from './mention-commands';
 
 const never: Command = () => false;
@@ -60,18 +61,15 @@ const resetBlockAtStart: Command = (state, dispatch) => {
   return setBlockType(state.schema.nodes.paragraph)(state, dispatch);
 };
 
-const insertHardBreak: Command = (state, dispatch) => {
-  const type = state.schema.nodes.hardBreak;
-  if (!type) return false;
-  dispatch?.(state.tr.replaceSelectionWith(type.create()).scrollIntoView());
-  return true;
-};
-
 /**
  * Keys for lists, mentions and block edges. Sits after the shortcut keymap
- * and before history and the base keymap.
+ * and before history and the base keymap. `Mod-y` redoes unless `redo` is
+ * false.
  */
-export function buildEditingKeymap(schema: Schema): Plugin {
+export function buildEditingKeymap(
+  schema: Schema,
+  options: { redo: boolean }
+): Plugin {
   const { listItem, taskItem } = schema.nodes;
   const items = [listItem?.name, taskItem?.name].filter(
     (name): name is string => !!name
@@ -89,7 +87,7 @@ export function buildEditingKeymap(schema: Schema): Plugin {
     taskItem ? liftListItem(taskItem) : null
   );
 
-  return keymap({
+  const bindings: Record<string, Command> = {
     Enter: splitItem,
     'Shift-Enter': chainCommands(newlineInCode, insertHardBreak),
     'Mod-Enter': exitCode,
@@ -105,7 +103,8 @@ export function buildEditingKeymap(schema: Schema): Plugin {
     ),
     Delete: deleteAdjacentMention(1),
     ArrowLeft: moveOverMention(-1),
-    ArrowRight: moveOverMention(1),
-    'Mod-y': redo
-  });
+    ArrowRight: moveOverMention(1)
+  };
+  if (options.redo) bindings['Mod-y'] = redo;
+  return keymap(bindings);
 }

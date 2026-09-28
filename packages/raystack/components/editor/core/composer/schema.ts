@@ -3,7 +3,7 @@ import {
   hardBreakNodeSpec,
   mentionNodeSpec,
   paragraphNodeSpec
-} from '../schema';
+} from '../nodes';
 
 /**
  * The PromptInput composer: one paragraph of text, hard breaks, and atomic

@@ -97,6 +97,11 @@ export function EditorFloatingToolbar({
   );
   const focused = useStoreSelector(store, current => current.focused);
 
+  // Escape hides the toolbar until the selection changes.
+  if (dismissedAt !== null && dismissedAt !== selectionKey) {
+    setDismissedAt(null);
+  }
+
   const visible =
     eligible &&
     (focused || focusWithin || holds > 0 || mode === 'link') &&
@@ -105,6 +110,14 @@ export function EditorFloatingToolbar({
   useEffect(() => {
     if (!eligible) setMode('buttons');
   }, [eligible]);
+
+  // A command run from the keyboard can hide the toolbar while it has focus,
+  // as Code block does. Focus goes back to the text instead of the page.
+  useEffect(() => {
+    if (visible || !focusWithin) return;
+    setFocusWithin(false);
+    store.view?.focus();
+  }, [visible, focusWithin, store]);
 
   const visibleRef = useRef(visible);
   visibleRef.current = visible;
@@ -126,7 +139,6 @@ export function EditorFloatingToolbar({
     () => ({
       visible,
       openLink: () => setMode('link'),
-      closeLink: () => setMode('buttons'),
       hold
     }),
     [visible, hold]
@@ -173,10 +185,17 @@ export function EditorFloatingToolbar({
       <Popover
         open={visible}
         onOpenChange={(open, details) => {
-          if (open || details.reason !== 'escape-key') return;
-          setDismissedAt(selectionKey);
-          setMode('buttons');
-          store.view?.focus();
+          if (open) return;
+          if (details.reason === 'escape-key') {
+            setDismissedAt(selectionKey);
+            setMode('buttons');
+            store.view?.focus();
+          } else if (
+            details.reason === 'outside-press' ||
+            details.reason === 'focus-out'
+          ) {
+            setMode('buttons');
+          }
         }}
       >
         <Popover.Content
@@ -188,7 +207,19 @@ export function EditorFloatingToolbar({
           initialFocus={false}
           finalFocus={false}
           className={styles['floating-popup']}
-          onFocus={() => setFocusWithin(true)}
+          onFocus={event => {
+            // Tab past either end lands on a focus guard beside the popup,
+            // which unmounts with it, so focus goes back to the text.
+            if (
+              event.target instanceof HTMLElement &&
+              event.target.hasAttribute('data-base-ui-focus-guard')
+            ) {
+              setMode('buttons');
+              store.view?.focus();
+              return;
+            }
+            setFocusWithin(true);
+          }}
           onBlur={event => {
             if (!event.currentTarget.contains(event.relatedTarget as Node)) {
               setFocusWithin(false);

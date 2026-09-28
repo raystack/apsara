@@ -1,9 +1,14 @@
 import { baseKeymap } from 'prosemirror-commands';
 import { dropCursor } from 'prosemirror-dropcursor';
 import { gapCursor } from 'prosemirror-gapcursor';
-import { closeHistory, history } from 'prosemirror-history';
+import { closeHistory, history, redo, undo } from 'prosemirror-history';
 import { keymap } from 'prosemirror-keymap';
-import { type Node as PMNode, type Schema, Slice } from 'prosemirror-model';
+import {
+  Fragment,
+  type Node as PMNode,
+  type Schema,
+  Slice
+} from 'prosemirror-model';
 import {
   type Command,
   EditorState,
@@ -12,31 +17,20 @@ import {
   Selection,
   type Transaction
 } from 'prosemirror-state';
-import { Decoration, DecorationSet, type EditorView } from 'prosemirror-view';
+import type { EditorView } from 'prosemirror-view';
+import { EXTERNAL, placeholderPlugin } from './core/base';
 import {
   activeLink,
   activeTextStyle,
-  clearFormatting,
-  insertHorizontalRule,
-  insertText,
+  editorCommands,
   isBlockActive,
   isMarkActive,
-  redoCommand,
-  setHeading,
-  setLink,
-  setParagraph,
-  toggleBlock,
-  toggleList,
-  toggleMarkCommand,
-  undoCommand,
-  unsetLink
+  setLink
 } from './core/commands';
-import coreStyles from './core/editor-core.module.css';
 import { buildInputRules } from './core/input-rules';
 import { docFromJSON, type EditorJSON, emptyDoc } from './core/json';
 import { buildEditingKeymap } from './core/keymaps';
-import { isSafeHref } from './core/link';
-import type { MentionAttrs } from './core/mention';
+import { type MentionAttrs, mentionKey } from './core/mention';
 import {
   MentionNodeView,
   type MentionPortal,
@@ -68,9 +62,6 @@ import type {
   MarkdownAdapter
 } from './editor-types';
 
-/** Marks transactions that came from `value`, so they are not reported back. */
-export const EXTERNAL = 'apsara-editor-external';
-
 export interface EditorStoreProps {
   placeholder?: string;
   disabled: boolean;
@@ -99,12 +90,8 @@ interface Target {
 
 const URL_PATTERN = /^(https?:\/\/|mailto:)\S+$/i;
 
-function leafText(node: PMNode): string {
-  if (node.type.name === 'hardBreak') return '\n';
-  if (node.type.name !== 'mention') return '';
-  const attrs = node.attrs as MentionAttrs;
-  return `${attrs.trigger}${attrs.label}`;
-}
+// Dragging selected text ends with `dragend`, not `mouseup`.
+const POINTER_END_EVENTS = ['mouseup', 'pointerup', 'pointercancel', 'dragend'];
 
 function run(targets: Set<Target>): boolean {
   const sorted = [...targets].sort((a, b) => b.priority - a.priority);
@@ -116,6 +103,27 @@ function register(targets: Set<Target>, target: Target): () => void {
   return () => {
     targets.delete(target);
   };
+}
+
+/**
+ * Pasted Markdown. A single paragraph pastes as inline content and takes the
+ * marks at the caret, as a plain-text paste does.
+ */
+function pastedSlice(state: EditorState, doc: PMNode): Slice {
+  const first = doc.firstChild;
+  if (doc.childCount !== 1 || first?.type !== state.schema.nodes.paragraph) {
+    return Slice.maxOpen(doc.content);
+  }
+  const marks = state.storedMarks ?? state.selection.$from.marks();
+  const nodes: PMNode[] = [];
+  first.forEach(node => {
+    let set = node.marks;
+    for (const mark of marks) {
+      if (!mark.type.isInSet(set)) set = mark.addToSet(set);
+    }
+    nodes.push(node.mark(set));
+  });
+  return new Slice(Fragment.from(nodes), 0, 0);
 }
 
 /**
@@ -145,11 +153,13 @@ export class EditorStore {
 
   /** The last value this store emitted or loaded. */
   private lastValue: EditorJSON | string | undefined;
-  private markdownOut: { doc: PMNode; markdown: string } | null = null;
+  /** Markdown for docs the adapter has converted, so a controlled string that matches the doc does not reload it. */
+  private readonly markdownCache = new WeakMap<PMNode, string>();
   private triggers = new Map<string, EditorTriggerEntry>();
   private toolbars = new Set<Target>();
   private linkOpeners = new Set<Target>();
   private listeners = new Set<() => void>();
+  private taskViews = new Set<TaskItemView>();
   private group: Transaction | null = null;
 
   readonly portalRegistry: MentionPortalRegistry = {
@@ -177,12 +187,23 @@ export class EditorStore {
       node: PMNode,
       view: EditorView,
       getPos: () => number | undefined
-    ) =>
-      new TaskItemView(node, view, getPos, {
-        item: styles['task-item'],
-        checkbox: styles['task-checkbox'],
-        content: styles['task-content']
-      })
+    ) => {
+      const task: TaskItemView = new TaskItemView(
+        node,
+        view,
+        getPos,
+        {
+          item: styles['task-item'],
+          checkbox: styles['task-checkbox'],
+          content: styles['task-content']
+        },
+        () => {
+          this.taskViews.delete(task);
+        }
+      );
+      this.taskViews.add(task);
+      return task;
+    }
   };
 
   constructor(options: {
@@ -245,10 +266,12 @@ export class EditorStore {
 
   private report(doc: PMNode): void {
     const onValueChange = this.props.onValueChange;
+    if (!onValueChange) {
+      this.lastValue = undefined;
+      return;
+    }
     const value = doc.toJSON() as EditorJSON;
     this.lastValue = value;
-    this.markdownOut = null;
-    if (!onValueChange) return;
     onValueChange(value, this.details(doc, value));
   }
 
@@ -266,12 +289,21 @@ export class EditorStore {
     if (!adapter) return details;
     return {
       ...details,
-      getMarkdown: () => {
-        const markdown = adapter.fromEditor(value);
-        this.markdownOut = { doc, markdown };
-        return markdown;
-      }
+      getMarkdown: () => this.markdownOf(doc, adapter, value)
     };
+  }
+
+  private markdownOf(
+    doc: PMNode,
+    adapter: MarkdownAdapter,
+    value?: EditorJSON
+  ): string {
+    let markdown = this.markdownCache.get(doc);
+    if (markdown === undefined) {
+      markdown = adapter.fromEditor(value ?? (doc.toJSON() as EditorJSON));
+      this.markdownCache.set(doc, markdown);
+    }
+    return markdown;
   }
 
   /** Loads a `value` or `defaultValue`. A string is Markdown. */
@@ -298,25 +330,35 @@ export class EditorStore {
 
   /**
    * Applies a controlled `value`. Nothing happens when it is the value the
-   * store last emitted, or when it loads to the doc the editor already has.
+   * store last emitted, when a Markdown string is what the doc converts to, or
+   * when it loads to the doc the editor already has.
    */
   reconcile(value: EditorJSON | string): void {
     if (value === this.lastValue) return;
+    this.lastValue = value;
+    const adapter = this.props.markdown;
     if (
       typeof value === 'string' &&
-      this.markdownOut?.markdown === value &&
-      this.markdownOut.doc === this.state.doc
+      adapter &&
+      this.markdownOf(this.state.doc, adapter) === value
     ) {
-      this.lastValue = value;
       return;
     }
-    this.lastValue = value;
     const doc = this.parse(value);
     if (doc.eq(this.state.doc)) return;
-    const tr = this.replaceDocTransaction(doc);
-    tr.setMeta(EXTERNAL, true);
-    tr.setMeta('addToHistory', false);
-    this.dispatch(tr);
+    this.replaceState(doc);
+  }
+
+  /** Loads `doc` with a new history, so Undo cannot step back past it. */
+  private replaceState(doc: PMNode): void {
+    const pos = Math.min(this.state.selection.from, doc.content.size);
+    this.state = EditorState.create({
+      doc,
+      plugins: this.state.plugins,
+      selection: Selection.near(doc.resolve(pos))
+    });
+    this.view?.updateState(this.state);
+    this.emit();
   }
 
   private replaceDocTransaction(doc: PMNode): Transaction {
@@ -338,6 +380,7 @@ export class EditorStore {
       previous.readOnly !== next.readOnly
     ) {
       this.view?.setProps({ editable: () => this.isEditable() });
+      for (const task of this.taskViews) task.setEditable(this.isEditable());
       this.emit();
     }
     if (previous.placeholder !== next.placeholder) {
@@ -348,21 +391,44 @@ export class EditorStore {
 
   // ---- view ----
 
-  private handleMouseUp = () => {
+  private endPointerSelection = () => {
     if (!this.pointerSelecting) return;
     this.pointerSelecting = false;
     this.emit();
   };
 
   attachView(view: EditorView): void {
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      this.view &&
+      this.view !== view
+    ) {
+      console.warn(
+        '[Apsara] Editor has more than one Editor.Content. Render one per Editor.'
+      );
+    }
     this.view = view;
-    view.dom.ownerDocument.addEventListener('mouseup', this.handleMouseUp);
+    const ownerDocument = view.dom.ownerDocument;
+    for (const type of POINTER_END_EVENTS) {
+      ownerDocument.addEventListener(type, this.endPointerSelection);
+    }
+    ownerDocument.defaultView?.addEventListener(
+      'blur',
+      this.endPointerSelection
+    );
     this.emit();
   }
 
   detachView(view: EditorView): void {
     if (this.view !== view) return;
-    view.dom.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
+    const ownerDocument = view.dom.ownerDocument;
+    for (const type of POINTER_END_EVENTS) {
+      ownerDocument.removeEventListener(type, this.endPointerSelection);
+    }
+    ownerDocument.defaultView?.removeEventListener(
+      'blur',
+      this.endPointerSelection
+    );
     this.view = null;
     this.focused = false;
     this.pointerSelecting = false;
@@ -397,12 +463,14 @@ export class EditorStore {
           this.triggers.get(state.trigger)?.onKeyDown(event, state) ?? false
       }),
       keymap(this.shortcutBindings()),
-      buildEditingKeymap(this.schema),
+      buildEditingKeymap(this.schema, {
+        redo: this.shortcuts.redo !== false
+      }),
       history(),
       keymap(baseKeymap),
       dropCursor({ class: styles['drop-cursor'], color: false }),
       gapCursor(),
-      this.placeholderPlugin(),
+      placeholderPlugin(() => this.props.placeholder, showsPlaceholder),
       this.eventsPlugin()
     ];
     if (inputRules) plugins.splice(3, 0, inputRules);
@@ -411,24 +479,24 @@ export class EditorStore {
 
   private shortcutBindings(): Record<string, Command> {
     const commands: Record<EditorAction, Command> = {
-      bold: toggleMarkCommand('bold'),
-      italic: toggleMarkCommand('italic'),
-      underline: toggleMarkCommand('underline'),
-      strike: toggleMarkCommand('strike'),
-      code: toggleMarkCommand('code'),
+      bold: editorCommands.toggleMark('bold'),
+      italic: editorCommands.toggleMark('italic'),
+      underline: editorCommands.toggleMark('underline'),
+      strike: editorCommands.toggleMark('strike'),
+      code: editorCommands.toggleMark('code'),
       link: () => this.openLink(),
-      paragraph: setParagraph,
-      heading1: setHeading(1),
-      heading2: setHeading(2),
-      heading3: setHeading(3),
-      heading4: setHeading(4),
-      bulletList: toggleList('bulletList'),
-      orderedList: toggleList('orderedList'),
-      taskList: toggleList('taskList'),
-      blockquote: toggleBlock('blockquote'),
-      codeBlock: toggleBlock('codeBlock'),
-      undo: undoCommand,
-      redo: redoCommand,
+      paragraph: editorCommands.setParagraph(),
+      heading1: editorCommands.setHeading(1),
+      heading2: editorCommands.setHeading(2),
+      heading3: editorCommands.setHeading(3),
+      heading4: editorCommands.setHeading(4),
+      bulletList: editorCommands.toggleList('bulletList'),
+      orderedList: editorCommands.toggleList('orderedList'),
+      taskList: editorCommands.toggleList('taskList'),
+      blockquote: editorCommands.toggleBlock('blockquote'),
+      codeBlock: editorCommands.toggleBlock('codeBlock'),
+      undo,
+      redo,
       focusToolbar: () => this.focusToolbar()
     };
     const bindings: Record<string, Command> = {};
@@ -436,24 +504,6 @@ export class EditorStore {
       if (key) bindings[key] = commands[action as EditorAction];
     }
     return bindings;
-  }
-
-  private placeholderPlugin(): Plugin {
-    return new Plugin({
-      props: {
-        decorations: state => {
-          const text = this.props.placeholder;
-          const first = state.doc.firstChild;
-          if (!text || !first || !showsPlaceholder(state.doc)) return null;
-          return DecorationSet.create(state.doc, [
-            Decoration.node(0, first.nodeSize, {
-              class: coreStyles.placeholder,
-              'data-placeholder': text
-            })
-          ]);
-        }
-      }
-    });
   }
 
   private eventsPlugin(): Plugin {
@@ -481,51 +531,48 @@ export class EditorStore {
           const data = event.clipboardData;
           if (!data) return false;
           const text = data.getData('text/plain');
-          const hasHtml = data.types.includes('text/html');
+          const url = text.trim();
 
           // A URL pasted over a selection links the selection.
           if (
-            text &&
             !view.state.selection.empty &&
-            URL_PATTERN.test(text.trim()) &&
-            isSafeHref(text.trim()) &&
-            setLink(text.trim())(view.state, view.dispatch)
+            URL_PATTERN.test(url) &&
+            setLink(url)(view.state, view.dispatch)
           ) {
             return true;
           }
 
           const adapter = this.props.markdown;
+          const { $from } = view.state.selection;
+          const marks = view.state.storedMarks ?? $from.marks();
           if (
             !adapter ||
             adapter.paste === false ||
-            hasHtml ||
             !text ||
-            view.state.selection.$from.parent.type.spec.code
+            data.types.includes('text/html') ||
+            $from.parent.type.spec.code ||
+            marks.some(mark => mark.type.spec.code)
           ) {
             return false;
           }
           const doc = docFromJSON(this.schema, adapter.toEditor(text));
           view.dispatch(
             view.state.tr
-              .replaceSelection(Slice.maxOpen(doc.content))
+              .replaceSelection(pastedSlice(view.state, doc))
               .scrollIntoView()
           );
           return true;
         },
         clipboardTextSerializer: (slice, view) => {
           const adapter = this.props.markdown;
+          // A copied slice includes its parents up to the doc.
           const doc = adapter?.copy
             ? view.state.schema.topNodeType.createAndFill(null, slice.content)
             : null;
           if (adapter && doc) {
             return adapter.fromEditor(doc.toJSON() as EditorJSON);
           }
-          return slice.content.textBetween(
-            0,
-            slice.content.size,
-            '\n\n',
-            leafText
-          );
+          return slice.content.textBetween(0, slice.content.size, '\n\n');
         }
       }
     });
@@ -613,7 +660,10 @@ export class EditorStore {
     this.view?.focus();
   }
 
-  /** Applies fresh labels from `resolveMentions` without touching history. */
+  /**
+   * Applies fresh labels from `resolveMentions`. A label update is not an
+   * edit, so it skips history and `onValueChange`.
+   */
   refreshMentionLabels = (labels: Map<string, string>): void => {
     if (labels.size === 0) return;
     const tr = this.state.tr;
@@ -621,13 +671,14 @@ export class EditorStore {
     this.state.doc.descendants((node, pos) => {
       if (node.type.name !== 'mention') return;
       const attrs = node.attrs as MentionAttrs;
-      const fresh = labels.get(`${attrs.trigger}|${attrs.type}|${attrs.id}`);
+      const fresh = labels.get(mentionKey(attrs.trigger, attrs.type, attrs.id));
       if (fresh && fresh !== attrs.label) {
         tr.setNodeMarkup(pos, undefined, { ...attrs, label: fresh });
         changed = true;
       }
     });
     if (!changed) return;
+    tr.setMeta(EXTERNAL, true);
     tr.setMeta('addToHistory', false);
     this.dispatch(tr);
   };
@@ -655,15 +706,16 @@ export class EditorStore {
     runCommand: (command: Command) => boolean
   ): EditorCommands {
     return {
-      toggleMark: mark => runCommand(toggleMarkCommand(mark)),
-      setParagraph: () => runCommand(setParagraph),
-      setHeading: level => runCommand(setHeading(level)),
-      toggleBlock: block => runCommand(toggleBlock(block)),
-      toggleList: list => runCommand(toggleList(list)),
-      setLink: href => runCommand(setLink(href)),
-      unsetLink: () => runCommand(unsetLink),
-      insertHorizontalRule: () => runCommand(insertHorizontalRule),
-      insertText: text => runCommand(insertText(text)),
+      toggleMark: mark => runCommand(editorCommands.toggleMark(mark)),
+      setParagraph: () => runCommand(editorCommands.setParagraph()),
+      setHeading: level => runCommand(editorCommands.setHeading(level)),
+      toggleBlock: block => runCommand(editorCommands.toggleBlock(block)),
+      toggleList: list => runCommand(editorCommands.toggleList(list)),
+      setLink: href => runCommand(editorCommands.setLink(href)),
+      unsetLink: () => runCommand(editorCommands.unsetLink()),
+      insertHorizontalRule: () =>
+        runCommand(editorCommands.insertHorizontalRule()),
+      insertText: text => runCommand(editorCommands.insertText(text)),
       insertMention: (item, options) =>
         runCommand((state, dispatch) => {
           if (!state.schema.nodes.mention) return false;
@@ -672,22 +724,18 @@ export class EditorStore {
             options?.trigger ?? this.mentions.triggers()[0] ?? '@';
           const type = item.type ?? 'mention';
           this.mentions.remember(trigger, { ...item, type });
-          // Not focused: the chip belongs at the end of the doc.
-          const end = Selection.atEnd(state.doc).from;
-          const range = this.view?.hasFocus()
-            ? undefined
-            : { from: end, to: end };
-          const tr = mentionTransaction(
-            state,
-            { id: item.id, label: item.label, type, trigger },
-            range
-          );
+          const tr = mentionTransaction(state, {
+            id: item.id,
+            label: item.label,
+            type,
+            trigger
+          });
           if (tr) dispatch(tr);
           return true;
         }),
-      clearFormatting: () => runCommand(clearFormatting),
-      undo: () => runCommand(undoCommand),
-      redo: () => runCommand(redoCommand),
+      clearFormatting: () => runCommand(editorCommands.clearFormatting()),
+      undo: () => runCommand(undo),
+      redo: () => runCommand(redo),
       setContent: value =>
         runCommand((state, dispatch) => {
           if (dispatch) dispatch(this.replaceDocTransaction(this.parse(value)));
@@ -728,7 +776,7 @@ export class EditorStore {
           }
           return null;
         }
-        return adapter.fromEditor(store.state.doc.toJSON() as EditorJSON);
+        return store.markdownOf(store.state.doc, adapter);
       },
       focus: position => store.focus(position)
     };

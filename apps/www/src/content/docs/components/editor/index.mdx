@@ -105,7 +105,7 @@ Undoes or redoes. It is disabled when there is nothing to undo or redo.
 
 ### SlashMenu
 
-A menu of block commands that opens on `/` at the start of a block or after a space. It filters on the label and the keywords, and a space in the query closes it. Picking a command removes the typed `/query`, and one undo brings it back.
+A menu of block commands that opens on `/` at the start of a block or after a space. It filters on the label and the keywords, and a space in the query closes it. Picking a command removes the typed `/query`, and one undo brings it back. A built-in command that cannot run at the caret is disabled, for example a heading in the first paragraph of a list item.
 
 <auto-type-table path="./props.ts" name="EditorSlashMenuProps" />
 
@@ -123,6 +123,8 @@ A menu that inserts a mention chip. It takes the same props as `PromptInput.Ment
 
 `useEditor()` returns the editor API inside `<Editor>`. `useEditorState(selector, isEqual?)` selects a value from the ProseMirror state and re-renders only when that value changes. `actionsRef` gives you the same API from outside the editor.
 
+`editorCommands` has the same commands as ProseMirror commands, for code that works on an `EditorState` directly. For example, `editorCommands.setHeading(2)(state, dispatch)` runs what `editor.commands.setHeading(2)` runs. `commands.insertMention` inserts the chip at the selection.
+
 <auto-type-table path="./props.ts" name="EditorApi" />
 
 <auto-type-table path="./props.ts" name="EditorCommands" />
@@ -136,6 +138,8 @@ The second argument of `onValueChange`. The methods convert the doc from that ch
 ### Markdown
 
 `MarkdownAdapter.create(options)` returns an adapter for the `markdown` prop. `MarkdownAdapter.toEditor(markdown)` and `MarkdownAdapter.fromEditor(value)` convert without an editor, for example on the server. An app that never imports `MarkdownAdapter` ships no Markdown code.
+
+Markdown has no form for some content. A hard break at the end of a block is dropped, a hard break in a heading becomes a space, and an empty paragraph is dropped. A controlled Markdown `value` that the current doc converts to does not reload the doc, so these do not change while the user types.
 
 <auto-type-table path="./props.ts" name="MarkdownAdapterOptions" />
 
@@ -167,7 +171,7 @@ Spread `defaultSlashItems` and add your own. `run` gets the editor API after the
 
 ### Controlled
 
-`onValueChange` emits editor JSON, and `details.getHTML()` converts it to HTML. Pass the emitted value back to `value`, and the editor keeps its selection.
+`onValueChange` emits editor JSON, and `details.getHTML()` converts it to HTML. Pass the emitted value back to `value`, and the editor keeps its selection. A different `value` replaces the doc and starts a new undo history.
 
 <Demo data={controlledDemo} />
 
@@ -179,7 +183,7 @@ With the `markdown` prop, `value` can be a Markdown string, pasted plain-text Ma
 
 ### Read only
 
-`readOnly` renders the content and hides the toolbars and menus. Use `editorToHTML(value)` to render stored content without an editor, for example on the server.
+`readOnly` renders the content and hides the toolbars and menus. Use `editorToHTML(value)` to render stored content without an editor, for example on the server, and `editorToText(value)` for plain text.
 
 <Demo data={readOnlyDemo} />
 
@@ -205,17 +209,17 @@ The value is ProseMirror JSON, the output of `doc.toJSON()`. Node and mark names
 | `horizontalRule` | block | | `---` |
 | `hardBreak` | inline | | trailing `\` |
 | `mention` | inline | `id`, `label`, `type`, `trigger` | `@[label](type:id)` |
-| `bold`, `italic`, `strike`, `code` | mark | | `**`, `_`, `~~`, `` ` `` |
+| `bold`, `italic`, `strike`, `code` | mark | | `**`, `*`, `~~`, `` ` `` |
 | `underline` | mark | | `<u>` |
 | `link` | mark | `href` | `[text](href)` |
 
-On load, a node the schema does not have becomes a paragraph with its text, and an unknown mark is dropped.
+On load, a node the schema does not have unwraps into its blocks, or becomes a paragraph when it holds only text. A mark the schema or the parent node does not allow is dropped, and a node in the wrong place is wrapped, for example a list item outside a list.
 
-Typing shortcuts: `#` to `####` and a space make a heading, `-` or `*` a bulleted list, `1.` a numbered list, `[]` a checklist, `>` a quote, ` ``` ` a code block, and `---` a divider. `**bold**`, `_italic_`, `` `code` `` and `~~strike~~` apply marks. Backspace right after a shortcut undoes it.
+Typing shortcuts: `#` to `####` and a space make a heading, `-` or `*` a bulleted list, `1.` a numbered list, `[]` a checklist, `>` a quote, ` ``` ` a code block, and `---`, or `***` or `___` and a space, a divider. `**bold**`, `_italic_`, `` `code` `` and `~~strike~~` apply marks. Backspace right after a shortcut undoes it.
 
 ## Keyboard shortcuts
 
-`Mod` is Cmd on macOS and Ctrl elsewhere. Override or turn off a key with the `shortcuts` prop. Tooltips and menu rows show the key you set.
+`Mod` is Cmd on macOS and Ctrl elsewhere. Override or turn off a key with the `shortcuts` prop. Tooltips and menu rows show the key you set. `defaultShortcuts` holds the default keys.
 
 | Action | Key |
 |--------|-----|
@@ -232,7 +236,7 @@ Typing shortcuts: `#` to `####` and a space make a heading, `-` or `*` a bullete
 | Checklist | `Mod-Shift-7` |
 | Quote | `Alt-Shift-.` |
 | Code block | `Mod-Shift-\` |
-| Undo, redo | `Mod-z`, `Mod-Shift-z` |
+| Undo, redo | `Mod-z`, `Mod-Shift-z` or `Mod-y` |
 | Focus the toolbar | `Alt-F10` |
 
 In a list, Enter splits the item, and Tab and Shift+Tab indent and outdent it. Shift+Enter adds a line break.
@@ -260,9 +264,9 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 
 ## Accessibility
 
-- The content is a `textbox` with `aria-multiline`. While a menu is open it also has `aria-expanded`, `aria-controls` and `aria-activedescendant`, and focus stays in the text.
-- The toolbars have `role="toolbar"` and move focus with the arrow keys. `Alt-F10` moves focus from the text to the toolbar, and Escape in the floating toolbar returns focus to the text.
+- The content is a `textbox` with `aria-multiline`. While a menu is open it also has `aria-controls` and `aria-activedescendant`, and focus stays in the text.
+- The toolbars have `role="toolbar"` and move focus with the arrow keys. `Alt-F10` moves focus from the text to the toolbar. In the floating toolbar, Escape, Tab past either end, and a command that hides the toolbar return focus to the text.
 - Toggle buttons use `aria-pressed`. Each control's accessible name is its label, and the tooltip adds the shortcut.
 - Heading and list menu rows use `menuitemradio` with `aria-checked`.
 - The slash and mention menus use `listbox` and `option` roles.
-- Checklist checkboxes are real `input` elements.
+- Checklist checkboxes are real `input` elements. They are disabled while the editor is read only or disabled.

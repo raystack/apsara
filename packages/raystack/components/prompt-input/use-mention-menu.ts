@@ -2,13 +2,13 @@
 
 import type { EditorView } from 'prosemirror-view';
 import { useCallback } from 'react';
+import type { ComposerEditorActions } from '../editor/core/composer/use-composer-editor';
+import type { SuggestionState } from '../editor/core/suggestion-plugin';
 import {
-  type ComposerEditorActions,
-  type SuggestionState,
   type UseSuggestionMenuResult,
   useMentionRegistryVersion,
   useSuggestionMenu
-} from '../editor/core';
+} from '../editor/core/use-suggestion-menu';
 import type {
   PromptInputMentionItem,
   PromptInputMentionRegistry

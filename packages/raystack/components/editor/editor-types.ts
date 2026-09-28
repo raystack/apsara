@@ -1,7 +1,6 @@
 import type { EditorState } from 'prosemirror-state';
 import type { EditorView } from 'prosemirror-view';
 import type { ReactNode } from 'react';
-import type { EditorBlock } from './core/commands';
 import type { EditorJSON } from './core/json';
 import type { EditorMention } from './core/mention';
 import type { EditorMentionItem } from './core/mention-registry';
@@ -85,15 +84,14 @@ export interface MarkdownAdapter {
 export interface EditorSlashItem {
   id: string;
   label: string;
+  /** Shown under the label. The filter matches it at the start of a word. */
   description?: string;
   icon?: ReactNode;
   group?: string;
   keywords?: string[];
-  /** Shortcut shown on the row, in ProseMirror keymap syntax. */
+  /** Shortcut shown on the row, in ProseMirror keymap syntax. Built-in commands show their default key. */
   shortcut?: string;
   disabled?: boolean;
   /** Runs after the menu removes the typed `/query`. */
   run: (editor: EditorApi) => void;
 }
-
-export type { EditorBlock };

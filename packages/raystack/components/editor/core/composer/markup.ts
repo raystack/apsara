@@ -3,6 +3,7 @@ import {
   type EditorMention,
   isTriggerCharacter,
   type MentionAttrs,
+  mentionText,
   readMention,
   serializeMention
 } from '../mention';
@@ -99,7 +100,7 @@ export function deriveDocDetails(doc: PMNode): EditorDocDetails {
   doc.descendants(node => {
     if (node.type === mentionType) {
       const attrs = node.attrs as MentionAttrs;
-      const label = `${attrs.trigger}${attrs.label}`;
+      const label = mentionText(attrs);
       mentions.push({
         ...attrs,
         start: text.length,
@@ -137,7 +138,7 @@ export function textFromFragment(fragment: Fragment): string {
     content.forEach(node => {
       if (node.type === mentionType) {
         const attrs = node.attrs as MentionAttrs;
-        text += `${attrs.trigger}${attrs.label}`;
+        text += mentionText(attrs);
         return;
       }
       if (node.type === hardBreakType) {

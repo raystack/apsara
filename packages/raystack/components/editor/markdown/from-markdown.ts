@@ -18,6 +18,14 @@ interface MentionToken extends Tokens.Generic {
 /** A trigger character, then `[`. `!` is left out because `![` opens an image. */
 const MENTION_START = /["-/:-@^`{-~]\[/;
 
+/**
+ * A `type:id` that is a link, such as `https://x` or `mailto:a@b.c`, so
+ * `([docs](https://x))` is a link after `(`, not a mention.
+ */
+function isLink(attrs: MentionAttrs): boolean {
+  return /^(?:https?|mailto)$/i.test(attrs.type) || attrs.id.startsWith('//');
+}
+
 const mentionExtension: TokenizerExtension = {
   name: 'mention',
   level: 'inline',
@@ -28,7 +36,7 @@ const mentionExtension: TokenizerExtension = {
   tokenizer: source => {
     if (source[0] === '!') return undefined;
     const match = readMention(source, 0);
-    if (!match) return undefined;
+    if (!match || isLink(match.attrs)) return undefined;
     const token: MentionToken = {
       type: 'mention',
       raw: source.slice(0, match.next),
@@ -57,17 +65,25 @@ const ENTITIES: Record<string, string> = {
   nbsp: ' '
 };
 
+/**
+ * Decodes character references as CommonMark does. A reference with more
+ * digits than CommonMark allows stays literal, and an invalid code point
+ * becomes U+FFFD.
+ */
 function decodeEntities(text: string): string {
-  return text.replace(/&(#x[\da-f]+|#\d+|[a-z]+);/gi, (match, entity) => {
-    if (entity[0] === '#') {
+  return text.replace(
+    /&(#x[\da-f]{1,6}|#\d{1,7}|[a-z]+);/gi,
+    (match, entity: string) => {
+      if (entity[0] !== '#') return ENTITIES[entity.toLowerCase()] ?? match;
       const code =
         entity[1] === 'x' || entity[1] === 'X'
           ? Number.parseInt(entity.slice(2), 16)
           : Number.parseInt(entity.slice(1), 10);
-      return Number.isNaN(code) ? match : String.fromCodePoint(code);
+      const invalid =
+        code === 0 || code > 0x10ffff || (code >= 0xd800 && code <= 0xdfff);
+      return invalid ? '�' : String.fromCodePoint(code);
     }
-    return ENTITIES[entity.toLowerCase()] ?? match;
-  });
+  );
 }
 
 function withMark(marks: JSONMark[], mark: JSONMark): JSONMark[] {
@@ -135,9 +151,10 @@ function inline(tokens: Token[] | undefined, marks: JSONMark[]): EditorJSON[] {
         );
         break;
       case 'codespan':
+        // Code is literal, so `&lt;` stays as typed.
         nodes.push(
           ...textNodes(
-            decodeEntities((token as Tokens.Codespan).text),
+            (token as Tokens.Codespan).text,
             withMark(current, { type: 'code' })
           )
         );
@@ -193,16 +210,31 @@ function itemContent(tokens: Token[]): EditorJSON[] {
   return content;
 }
 
-function list(token: Tokens.List): EditorJSON {
-  if (token.items.some(item => item.task)) {
+/** `- [ ]` with nothing after it. marked reads it as the text `[ ]`. */
+const EMPTY_TASK = /^\[([ xX])\]$/;
+
+function taskItem(item: Tokens.ListItem): EditorJSON {
+  const empty = item.task ? null : item.text.trim().match(EMPTY_TASK);
+  if (empty) {
     return {
-      type: 'taskList',
-      content: token.items.map(item => ({
-        type: 'taskItem',
-        attrs: { checked: item.checked === true },
-        content: itemContent(item.tokens)
-      }))
+      type: 'taskItem',
+      attrs: { checked: empty[1] !== ' ' },
+      content: [paragraph([])]
     };
+  }
+  return {
+    type: 'taskItem',
+    attrs: { checked: item.checked === true },
+    content: itemContent(item.tokens)
+  };
+}
+
+function list(token: Tokens.List): EditorJSON {
+  const tasks = token.items.some(
+    item => item.task || EMPTY_TASK.test(item.text.trim())
+  );
+  if (tasks) {
+    return { type: 'taskList', content: token.items.map(taskItem) };
   }
   const items = token.items.map(item => ({
     type: 'listItem',

@@ -10,6 +10,8 @@ import styles from './editor-core.module.css';
 export interface SuggestionMenuItem {
   id: string;
   label: string;
+  /** Shown under the label. */
+  description?: string;
   type?: string;
   icon?: ReactNode;
   trailing?: ReactNode;
@@ -156,7 +158,16 @@ export function SuggestionMenu({
                       if (!item.disabled) onSelect(item, index);
                     }}
                   >
-                    {item.label}
+                    {item.description ? (
+                      <span className={styles.suggestionText}>
+                        <span>{item.label}</span>
+                        <span className={styles.suggestionDescription}>
+                          {item.description}
+                        </span>
+                      </span>
+                    ) : (
+                      item.label
+                    )}
                   </Cell>
                 );
               })}

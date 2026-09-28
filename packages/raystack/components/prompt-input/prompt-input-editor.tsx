@@ -15,13 +15,13 @@ import {
 import { createPortal } from 'react-dom';
 import {
   deriveDocDetails,
-  docFromMarkup,
-  editorStyles,
-  SuggestionMenu,
-  type SuggestionState,
-  useComposerEditor,
-  useMentionResolution
-} from '../editor/core';
+  docFromMarkup
+} from '../editor/core/composer/markup';
+import { useComposerEditor } from '../editor/core/composer/use-composer-editor';
+import editorStyles from '../editor/core/editor-core.module.css';
+import { SuggestionMenu } from '../editor/core/suggestion-menu';
+import type { SuggestionState } from '../editor/core/suggestion-plugin';
+import { useMentionResolution } from '../editor/core/use-suggestion-menu';
 import styles from './prompt-input.module.css';
 import {
   type PromptInputInputApi,
@@ -190,7 +190,12 @@ export function PromptInputEditor({
       <div
         {...props}
         ref={mergedRef}
-        className={cx(styles.editor, editorStyles.editor, className)}
+        className={cx(
+          styles.editor,
+          editorStyles.editor,
+          editorStyles.composer,
+          className
+        )}
         role='textbox'
         aria-multiline='true'
         aria-disabled={resolvedDisabled || undefined}

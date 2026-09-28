@@ -71,7 +71,7 @@ export interface EditorProps<
   value?: WithMarkdown<M, EditorJSON | string, EditorJSON>;
   /** The first document when uncontrolled. Read once. */
   defaultValue?: WithMarkdown<M, EditorJSON | string, EditorJSON>;
-  /** Fires once per doc change. It does not fire for changes made through `value`. */
+  /** Fires once per doc change. It does not fire for changes made through `value`, or for labels from `resolveMentions`. */
   onValueChange?: (
     value: EditorJSON,
     details: WithMarkdown<M, EditorMarkdownChangeDetails, EditorChangeDetails>

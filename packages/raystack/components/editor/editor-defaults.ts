@@ -18,7 +18,7 @@ import {
   UnderlineIcon
 } from '~/icons';
 import type { EditorBlock } from './core/commands';
-import type { EditorHeadingLevel, EditorList, EditorMark } from './core/schema';
+import type { EditorHeadingLevel, EditorMark } from './core/schema';
 import type { EditorAction } from './core/shortcuts';
 
 interface ControlDefault {
@@ -63,12 +63,6 @@ export const BLOCK_DEFAULTS: Record<EditorBlock, ControlDefault> = {
   taskList: { label: 'Checklist', Icon: ChecklistIcon, action: 'taskList' },
   horizontalRule: { label: 'Divider', Icon: MinusIcon }
 };
-
-export const LIST_TYPES: readonly EditorList[] = [
-  'bulletList',
-  'orderedList',
-  'taskList'
-];
 
 export const PARAGRAPH_DEFAULT: ControlDefault = {
   label: 'Text',

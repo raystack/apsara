@@ -1,13 +1,15 @@
 'use client';
 
 import { activeList, toggleList } from './core/commands';
-import type { EditorList } from './core/schema';
+import { type EditorList, LIST_TYPES } from './core/schema';
 import { useEditorStore, useStoreSelector } from './editor-context';
 import type { EditorControlBaseProps } from './editor-control';
-import { BLOCK_DEFAULTS, LIST_TYPES } from './editor-defaults';
+import { BLOCK_DEFAULTS } from './editor-defaults';
 import {
   EditorMenuControl,
-  type EditorMenuOption
+  EditorMenuItems,
+  type EditorMenuOption,
+  sameFlags
 } from './editor-menu-control';
 
 export interface EditorListMenuProps extends EditorControlBaseProps {
@@ -27,24 +29,9 @@ export function EditorListMenu({
   const store = useEditorStore('Editor.ListMenu');
   const current = useStoreSelector(store, state => activeList(state.state));
   const editable = useStoreSelector(store, state => state.isEditable());
-  const can = useStoreSelector(store, state =>
-    types.map(type => (toggleList(type)(state.state) ? '1' : '0')).join('')
-  );
 
   const available = types.filter(type => type in store.schema.nodes);
   if (available.length === 0) return null;
-
-  const options: EditorMenuOption[] = available.map(type => {
-    const { action, ...rest } = BLOCK_DEFAULTS[type];
-    return {
-      key: type,
-      ...rest,
-      shortcut: action && store.shortcuts[action],
-      active: current === type,
-      disabled: can[types.indexOf(type)] !== '1',
-      run: () => store.run(toggleList(type))
-    };
-  });
 
   const Icon = BLOCK_DEFAULTS[current ?? 'bulletList'].Icon;
 
@@ -53,11 +40,36 @@ export function EditorListMenu({
       data-slot='editor-list-menu'
       label={label}
       trigger={<Icon />}
-      options={options}
       disabled={!editable}
       {...props}
-    />
+    >
+      <ListOptions types={available} />
+    </EditorMenuControl>
   );
 }
 
 EditorListMenu.displayName = 'Editor.ListMenu';
+
+function ListOptions({ types }: { types: EditorList[] }) {
+  const store = useEditorStore('Editor.ListMenu');
+  const current = useStoreSelector(store, state => activeList(state.state));
+  const can = useStoreSelector(
+    store,
+    state => types.map(type => toggleList(type)(state.state)),
+    sameFlags
+  );
+
+  const options: EditorMenuOption[] = types.map((type, index) => {
+    const { action, ...rest } = BLOCK_DEFAULTS[type];
+    return {
+      key: type,
+      ...rest,
+      shortcut: action && store.shortcuts[action],
+      active: current === type,
+      disabled: !can[index],
+      run: () => store.run(toggleList(type))
+    };
+  });
+
+  return <EditorMenuItems options={options} />;
+}

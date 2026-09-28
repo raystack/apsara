@@ -11,6 +11,7 @@ import {
   useState
 } from 'react';
 import { createPortal } from 'react-dom';
+import coreStyles from './core/editor-core.module.css';
 import { docToHTML } from './core/serializers';
 import { useMentionRegistryVersion } from './core/use-suggestion-menu';
 import styles from './editor.module.css';
@@ -45,6 +46,14 @@ export function EditorContent({
     __html: docToHTML(store.state.doc)
   }));
 
+  // ProseMirror adds its own classes to the element, and React would drop
+  // them when it writes a new `className`. React writes the first value only,
+  // and ProseMirror's `attributes` prop applies the later ones.
+  const classes = cx(coreStyles.editor, styles.content, className);
+  const [initialClasses] = useState(classes);
+  const classesRef = useRef(classes);
+  classesRef.current = classes;
+
   useLayoutEffect(() => {
     const host = hostRef.current;
     if (!host) return;
@@ -55,7 +64,8 @@ export function EditorContent({
         state: store.state,
         editable: () => store.isEditable(),
         dispatchTransaction: store.dispatch,
-        nodeViews: store.nodeViews
+        nodeViews: store.nodeViews,
+        attributes: { class: classesRef.current }
       }
     );
     store.attachView(view);
@@ -67,6 +77,10 @@ export function EditorContent({
       view.destroy();
     };
   }, [store]);
+
+  useLayoutEffect(() => {
+    store.view?.setProps({ attributes: { class: classes } });
+  }, [store, classes]);
 
   const readOnly = useStoreSelector(store, current => current.props.readOnly);
   const disabled = useStoreSelector(store, current => current.props.disabled);
@@ -84,13 +98,13 @@ export function EditorContent({
         {...props}
         ref={mergedRef}
         data-slot='editor-content'
-        className={cx(styles.content, className)}
+        className={initialClasses}
         role='textbox'
         aria-multiline='true'
         aria-readonly={readOnly || undefined}
         aria-disabled={disabled || undefined}
+        // No `aria-expanded`: `role="textbox"` does not allow it.
         aria-autocomplete={hasMenus ? 'list' : undefined}
-        aria-expanded={hasMenus ? menu !== undefined : undefined}
         aria-controls={menu?.listboxId}
         aria-activedescendant={menu?.activeOptionId}
         spellCheck={spellCheck}

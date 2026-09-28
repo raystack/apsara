@@ -1,27 +1,41 @@
 import { act, fireEvent } from '@testing-library/react';
 import { TextSelection } from 'prosemirror-state';
 import type { EditorView } from 'prosemirror-view';
+import { getSlot } from '~/test-utils/data-slots';
 import type { EditorJSON } from '../core/json';
 
 export function contentOf(container: ParentNode): HTMLElement {
-  const node = container.querySelector('[data-slot="editor-content"]');
+  const node = getSlot(container, 'editor-content');
   if (!node) throw new Error('editor content not found');
-  return node as HTMLElement;
+  return node;
 }
 
 /**
  * Stands in for typing. A paste is the only synthetic text entry that reaches
  * a contentEditable ProseMirror view in jsdom.
  */
-export function paste(element: HTMLElement, text: string, html?: string) {
+export function paste(element: HTMLElement, text: string) {
   fireEvent.paste(element, {
     clipboardData: {
-      types: html ? ['text/plain', 'text/html'] : ['text/plain'],
+      types: ['text/plain'],
       files: [],
-      getData: (kind: string) =>
-        kind === 'text/plain' ? text : kind === 'text/html' ? (html ?? '') : ''
+      getData: (kind: string) => (kind === 'text/plain' ? text : '')
     }
   });
+}
+
+/** Fires a copy and returns what the editor wrote to `text/plain`. */
+export function copy(element: HTMLElement): string {
+  const data: Record<string, string> = {};
+  fireEvent.copy(element, {
+    clipboardData: {
+      clearData: () => undefined,
+      setData: (kind: string, value: string) => {
+        data[kind] = value;
+      }
+    }
+  });
+  return data['text/plain'] ?? '';
 }
 
 /** Types through ProseMirror's text input path, so input rules run. */

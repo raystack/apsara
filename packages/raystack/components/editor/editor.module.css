@@ -7,18 +7,12 @@
 
 /* ---- Content ---- */
 
+/* The ProseMirror base rules come from `.editor` in editor-core.module.css. */
 .content {
   /* The mention chip sizes itself to this line height. */
   --editor-line-height: var(--rs-line-height-regular);
 
-  box-sizing: border-box;
-  /* ProseMirror positions widget decorations against the editing host. */
-  position: relative;
   min-height: var(--rs-space-8);
-  outline: none;
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
-  word-break: break-word;
   color: var(--rs-color-foreground-base-primary);
   font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-regular);
@@ -45,7 +39,6 @@
 .content h4 {
   font-family: var(--rs-font-title);
   font-weight: var(--rs-font-weight-medium);
-  color: var(--rs-color-foreground-base-primary);
 }
 
 .content h1 {
@@ -66,11 +59,6 @@
   letter-spacing: var(--rs-letter-spacing-large);
 }
 
-.content h4 {
-  font-size: var(--rs-font-size-regular);
-  line-height: var(--rs-line-height-regular);
-}
-
 .content > h1:not(:first-child),
 .content > h2:not(:first-child),
 .content > h3:not(:first-child) {
@@ -83,8 +71,15 @@
 }
 
 .content li + li,
-.content li > * + * {
+.content li > * + *,
+.task-content > * + * {
   margin-top: var(--rs-space-2);
+}
+
+/* The label and the content sit side by side, so the content gets no top
+   margin from the rule above. */
+.task-item > .task-content {
+  margin-top: 0;
 }
 
 .content ul[data-type="taskList"] {
@@ -111,6 +106,10 @@
   margin: 0;
   accent-color: var(--rs-color-background-accent-emphasis);
   cursor: pointer;
+}
+
+.task-checkbox:disabled {
+  cursor: default;
 }
 
 .task-content {
@@ -168,26 +167,8 @@
   border-top-color: var(--rs-color-border-accent-emphasis);
 }
 
-/* prosemirror-view ships a stylesheet the editor does not load. These rules
-   from it are load-bearing. */
-
-/* ProseMirror appends a zero-size <img> after a block that ends in a
-   `contentEditable="false"` node, so the browser can draw a caret past it. An
-   app-level `img { display: block }` reset turns it into a phantom line. */
-.content :global(img.ProseMirror-separator) {
-  display: inline !important;
-  border: none !important;
-  margin: 0 !important;
-}
-
-.content:global(.ProseMirror-hideselection) {
-  caret-color: transparent;
-}
-
-.content:global(.ProseMirror-hideselection) *::selection {
-  background: transparent;
-}
-
+/* The gap cursor rules from prosemirror-gapcursor's stylesheet, which the
+   editor does not load. */
 .content :global(.ProseMirror-gapcursor) {
   display: none;
   position: absolute;
@@ -221,6 +202,15 @@
 
 .toolbar {
   flex-wrap: wrap;
+}
+
+/* A pressed toggle is filled, like a pressed Toggle. */
+.control[aria-pressed="true"] {
+  background-color: var(--rs-color-background-neutral-secondary);
+}
+
+.control[aria-pressed="true"]:hover {
+  background-color: var(--rs-color-background-neutral-secondary-hover);
 }
 
 .floating-popup {

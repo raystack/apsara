@@ -146,6 +146,7 @@ export {
   type EditorSlashItem,
   type EditorSlashMenuProps,
   type EditorToolbarProps,
+  editorCommands,
   editorToHTML,
   editorToText,
   MarkdownAdapter,

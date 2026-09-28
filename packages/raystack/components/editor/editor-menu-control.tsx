@@ -3,13 +3,12 @@
 import { type ComponentType, type ReactNode, useMemo, useState } from 'react';
 import { CheckIcon, ChevronDownIcon } from '~/icons';
 import { Menu } from '../menu';
-import { Toolbar } from '../toolbar';
 import styles from './editor.module.css';
 import { useEditorStore } from './editor-context';
 import {
+  EditorControl,
   type EditorControlBaseProps,
-  EditorShortcutKeys,
-  EditorTooltip
+  EditorShortcutKeys
 } from './editor-control';
 import { useHoldFloatingToolbar } from './editor-floating-context';
 
@@ -23,10 +22,16 @@ export interface EditorMenuOption {
   run: () => void;
 }
 
+/** Compares the flags of a dry run, so an unchanged result skips the render. */
+export function sameFlags(a: boolean[], b: boolean[]): boolean {
+  return a.length === b.length && a.every((flag, index) => flag === b[index]);
+}
+
 interface EditorMenuControlProps extends EditorControlBaseProps {
   label: string;
   trigger: ReactNode;
-  options: EditorMenuOption[];
+  /** The rows. They render only while the menu is open. */
+  children: ReactNode;
 }
 
 /** A toolbar button that opens a menu of block types. */
@@ -34,8 +39,8 @@ export function EditorMenuControl({
   label,
   tooltip = true,
   trigger,
-  options,
   disabled,
+  children,
   ...props
 }: EditorMenuControlProps) {
   const store = useEditorStore('Editor.Toolbar');
@@ -54,49 +59,43 @@ export function EditorMenuControl({
 
   return (
     <Menu open={open} onOpenChange={setOpen} modal={false}>
-      <EditorTooltip
+      <EditorControl
         label={label}
-        enabled={tooltip}
-        trigger={
-          <Menu.Trigger
-            disabled={disabled}
-            render={
-              <Toolbar.Button
-                aria-label={label}
-                disabled={disabled}
-                {...props}
-              />
-            }
-          >
-            {trigger}
-            <ChevronDownIcon className={styles['menu-chevron']} />
-          </Menu.Trigger>
-        }
-      />
+        tooltip={tooltip}
+        disabled={disabled}
+        render={<Menu.Trigger disabled={disabled} />}
+        {...props}
+      >
+        {trigger}
+        <ChevronDownIcon className={styles['menu-chevron']} />
+      </EditorControl>
       <Menu.Content finalFocus={finalFocus} className={styles.menu}>
-        {options.map(option => (
-          <Menu.Item
-            key={option.key}
-            role='menuitemradio'
-            aria-checked={option.active}
-            data-active={option.active ? '' : undefined}
-            disabled={option.disabled}
-            leadingIcon={<option.Icon />}
-            trailingIcon={
-              <span className={styles['menu-trailing']}>
-                <EditorShortcutKeys shortcut={option.shortcut} />
-                <CheckIcon
-                  className={styles['menu-check']}
-                  data-visible={option.active ? '' : undefined}
-                />
-              </span>
-            }
-            onClick={option.run}
-          >
-            {option.label}
-          </Menu.Item>
-        ))}
+        {children}
       </Menu.Content>
     </Menu>
   );
+}
+
+export function EditorMenuItems({ options }: { options: EditorMenuOption[] }) {
+  return options.map(option => (
+    <Menu.Item
+      key={option.key}
+      role='menuitemradio'
+      aria-checked={option.active}
+      disabled={option.disabled}
+      leadingIcon={<option.Icon />}
+      trailingIcon={
+        <span className={styles['menu-trailing']}>
+          <EditorShortcutKeys shortcut={option.shortcut} />
+          <CheckIcon
+            className={styles['menu-check']}
+            data-visible={option.active ? '' : undefined}
+          />
+        </span>
+      }
+      onClick={option.run}
+    >
+      {option.label}
+    </Menu.Item>
+  ));
 }

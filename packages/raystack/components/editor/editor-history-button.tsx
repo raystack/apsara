@@ -1,7 +1,7 @@
 'use client';
 
+import { redo, undo } from 'prosemirror-history';
 import { RedoIcon, UndoIcon } from '~/icons';
-import { redoCommand, undoCommand } from './core/commands';
 import { useEditorStore, useStoreSelector } from './editor-context';
 import { EditorControl, type EditorControlBaseProps } from './editor-control';
 
@@ -19,7 +19,7 @@ export function EditorHistoryButton({
   ...props
 }: EditorHistoryButtonProps) {
   const store = useEditorStore('Editor.HistoryButton');
-  const command = action === 'undo' ? undoCommand : redoCommand;
+  const command = action === 'undo' ? undo : redo;
   const enabled = useStoreSelector(
     store,
     current => current.isEditable() && command(current.state)

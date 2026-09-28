@@ -29,6 +29,13 @@ export function mentionKey(trigger: string, type: string, id: string): string {
   return `${trigger}|${type}|${id}`;
 }
 
+/** A mention as plain text: its trigger and label, as in `@Maya`. */
+export function mentionText(
+  attrs: Pick<MentionAttrs, 'trigger' | 'label'>
+): string {
+  return `${attrs.trigger}${attrs.label}`;
+}
+
 /**
  * A trigger is a single ASCII punctuation character. `[`, `]` and `\` are
  * excluded because the dialect uses them as delimiters, and `_` because it

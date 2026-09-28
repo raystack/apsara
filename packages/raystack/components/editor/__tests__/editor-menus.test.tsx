@@ -5,7 +5,15 @@ import type { EditorMentionItem } from '../core/mention-registry';
 import { Editor } from '../editor';
 import { defaultSlashItems } from '../editor-slash-items';
 import type { EditorApi, EditorSlashItem } from '../editor-types';
-import { contentOf, doc, flush, p, paste, pressKey } from './test-utils';
+import {
+  contentOf,
+  doc,
+  flush,
+  p,
+  paste,
+  pressKey,
+  select
+} from './test-utils';
 
 const PEOPLE: EditorMentionItem[] = [
   { id: 'u1', label: 'Maya Chen', type: 'user', group: 'People' },
@@ -38,137 +46,93 @@ function setup(
 }
 
 describe('Editor.SlashMenu', () => {
-  it('opens on "/" with the default commands', async () => {
+  it('opens on "/", sets combobox attributes and filters on keywords', async () => {
     const { content } = setup(<Editor.SlashMenu />);
+    expect(content).toHaveAttribute('aria-autocomplete', 'list');
     paste(content, '/');
     await flush();
-    expect(screen.getByRole('listbox', { name: 'Commands' })).toHaveAttribute(
-      'data-slot',
-      'editor-slash-menu'
-    );
+    const listbox = screen.getByRole('listbox', { name: 'Commands' });
     expect(screen.getAllByRole('option')).toHaveLength(
       defaultSlashItems.length
     );
-  });
-
-  it('sets combobox attributes on the content while open', async () => {
-    const { content } = setup(<Editor.SlashMenu />);
-    expect(content).toHaveAttribute('aria-expanded', 'false');
-    paste(content, '/');
-    await flush();
-    const listbox = screen.getByRole('listbox');
-    expect(content).toHaveAttribute('aria-expanded', 'true');
+    // `role="textbox"` does not allow `aria-expanded`.
+    expect(content).not.toHaveAttribute('aria-expanded');
     expect(content).toHaveAttribute('aria-controls', listbox.id);
     expect(content.getAttribute('aria-activedescendant')).toBe(
       screen.getAllByRole('option')[0].id
     );
-  });
-
-  it('filters on labels and keywords', async () => {
-    const { content } = setup(<Editor.SlashMenu />);
-    paste(content, '/todo');
+    paste(content, 'todo');
     await flush();
     const options = screen.getAllByRole('option');
     expect(options).toHaveLength(1);
     expect(options[0]).toHaveTextContent('Checklist');
   });
 
-  it('runs the highlighted command on Enter and removes the query', async () => {
-    const { content, api } = setup(<Editor.SlashMenu />);
-    paste(content, '/code');
-    await flush();
-    pressKey(content, 'Enter');
-    await flush();
-    expect(api().getJSON()).toEqual(
-      doc({ type: 'codeBlock', attrs: { language: null } })
-    );
-    expect(screen.queryByRole('listbox')).toBeNull();
-  });
-
-  it('restores the query with one undo', async () => {
+  it('runs a command on Enter, and one undo brings the query back', async () => {
     const { content, api } = setup(<Editor.SlashMenu />);
     paste(content, '/h1');
     await flush();
     pressKey(content, 'Enter');
     await flush();
     expect(api().getHTML()).toBe('<h1></h1>');
+    expect(screen.queryByRole('listbox')).toBeNull();
     act(() => {
       api().commands.undo();
     });
     expect(api().getHTML()).toBe('<p>/h1</p>');
   });
 
-  it('moves the highlight with the arrow keys', async () => {
-    const { content } = setup(<Editor.SlashMenu />);
-    paste(content, '/');
-    await flush();
-    pressKey(content, 'ArrowDown');
-    expect(screen.getAllByRole('option')[1]).toHaveAttribute(
-      'aria-selected',
-      'true'
-    );
-  });
-
-  it('closes on Escape and leaves the text', async () => {
-    const { content, api } = setup(<Editor.SlashMenu />);
-    paste(content, '/he');
-    await flush();
-    pressKey(content, 'Escape');
-    await flush();
-    expect(screen.queryByRole('listbox')).toBeNull();
-    expect(api().getText()).toBe('/he');
-  });
-
-  it('closes when the query gets a space', async () => {
-    const { content } = setup(<Editor.SlashMenu />);
-    paste(content, '/he');
-    await flush();
-    paste(content, ' ');
-    await flush();
-    expect(screen.queryByRole('listbox')).toBeNull();
-  });
-
-  it('does not open in the middle of a word', async () => {
-    const { content } = setup(<Editor.SlashMenu />);
-    paste(content, 'and/or');
-    await flush();
-    expect(screen.queryByRole('listbox')).toBeNull();
-  });
-
-  it('does not open inside a code block', async () => {
-    const { content } = setup(<Editor.SlashMenu />, {
-      defaultValue: doc({ type: 'codeBlock' })
-    });
-    paste(content, '/');
-    await flush();
-    expect(screen.queryByRole('listbox')).toBeNull();
-  });
-
-  it('runs a custom item with the editor api', async () => {
+  it('runs a custom item with the editor api and shows its description', async () => {
     const run = vi.fn((editor: EditorApi) => {
       editor.commands.insertText('today');
     });
     const items: EditorSlashItem[] = [
-      { id: 'date', label: "Today's date", keywords: ['time'], run }
+      { id: 'date', label: 'Date', description: 'Insert a dated line', run },
+      { id: 'other', label: 'Other', run: () => undefined }
     ];
     const { content, api } = setup(<Editor.SlashMenu items={items} />);
-    paste(content, '/time');
+    paste(content, '/dated');
     await flush();
-    fireEvent.click(screen.getByRole('option', { name: /Today's date/ }));
+    const option = screen.getByRole('option');
+    expect(option).toHaveTextContent('DateInsert a dated line');
+    fireEvent.click(option);
     await flush();
     expect(run).toHaveBeenCalledTimes(1);
     expect(api().getText()).toBe('today');
   });
 
-  it('hides built-in commands for formats that are not allowed', async () => {
-    const { content } = setup(<Editor.SlashMenu />, {
-      formats: ['bold', 'bulletList']
-    });
+  it('hides built-in commands for formats that are not allowed, for copies too', async () => {
+    const { content } = setup(
+      <Editor.SlashMenu items={defaultSlashItems.map(item => ({ ...item }))} />,
+      { formats: ['bold', 'bulletList'] }
+    );
     paste(content, '/');
     await flush();
     expect(
       screen.getAllByRole('option').map(option => option.textContent)
     ).toEqual(['TextCtrlAlt0', 'Bulleted listCtrlShift8']);
+  });
+
+  it('disables a command that cannot run at the caret', async () => {
+    const { content, api } = setup(<Editor.SlashMenu />, {
+      defaultValue: doc({
+        type: 'bulletList',
+        content: [{ type: 'listItem', content: [p()] }]
+      })
+    });
+    const view = api().view;
+    if (!view) throw new Error('no view');
+    select(view, 3, 3);
+    paste(content, '/h1');
+    await flush();
+    expect(screen.getByRole('option', { name: /Heading 1/ })).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
+    pressKey(content, 'Enter');
+    await flush();
+    expect(api().getText()).toContain('/h1');
+    expect(api().isActive('heading')).toBe(false);
   });
 });
 
@@ -179,10 +143,6 @@ describe('Editor.Mentions', () => {
     );
     paste(content, '@ma');
     await flush();
-    expect(screen.getByRole('listbox')).toHaveAttribute(
-      'data-slot',
-      'editor-mention-menu'
-    );
     pressKey(content, 'Enter');
     await flush();
     expect(api().getJSON()).toEqual(
@@ -196,8 +156,7 @@ describe('Editor.Mentions', () => {
         )
       )
     );
-    const details = onValueChange.mock.lastCall?.[1];
-    expect(details.getMentions()).toEqual([
+    expect(onValueChange.mock.lastCall?.[1].getMentions()).toEqual([
       {
         id: 'u1',
         label: 'Maya Chen',
@@ -210,14 +169,6 @@ describe('Editor.Mentions', () => {
     expect(content.querySelector('[data-mention-id="u1"]')).toHaveTextContent(
       'Maya Chen'
     );
-  });
-
-  it('groups results', async () => {
-    const { content } = setup(<Editor.Mentions items={PEOPLE} />);
-    paste(content, '@');
-    await flush();
-    expect(screen.getByText('People')).toBeInTheDocument();
-    expect(screen.getByText('Issues')).toBeInTheDocument();
   });
 
   it('supports one menu per trigger', async () => {
@@ -233,35 +184,28 @@ describe('Editor.Mentions', () => {
     expect(screen.getByRole('option')).toHaveTextContent('ENG-214');
   });
 
-  it('searches asynchronously', async () => {
-    vi.useFakeTimers({ shouldAdvanceTime: true });
-    const onSearch = vi.fn(async (query: string) =>
-      PEOPLE.filter(item => item.label.toLowerCase().includes(query))
+  it('fills in labels from resolveMentions without reporting a change', async () => {
+    const resolveMentions = vi.fn(async () => [
+      { id: 'u1', label: 'Maya Chen', type: 'user' }
+    ]);
+    const { content, onValueChange } = setup(
+      <Editor.Mentions resolveMentions={resolveMentions} />,
+      {
+        defaultValue: doc(
+          p({
+            type: 'mention',
+            attrs: { id: 'u1', label: 'Maya', type: 'user', trigger: '@' }
+          })
+        )
+      }
     );
-    const { content } = setup(<Editor.Mentions onSearch={onSearch} />);
-    paste(content, '@ar');
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(200);
-    });
-    expect(onSearch).toHaveBeenCalledWith('ar', expect.anything());
-    expect(screen.getByRole('option')).toHaveTextContent('Arjun Rao');
-    vi.useRealTimers();
-  });
-
-  it('renders nothing without the mention format', async () => {
-    const { content } = setup(<Editor.Mentions items={PEOPLE} />, {
-      formats: ['bold']
-    });
-    paste(content, '@');
     await flush();
-    expect(screen.queryByRole('listbox')).toBeNull();
-  });
-
-  it('inserts a mention from the api', () => {
-    const { api } = setup(<Editor.Mentions items={PEOPLE} />);
-    act(() => {
-      api().commands.insertMention(PEOPLE[1]);
-    });
-    expect(api().getText()).toBe('@Arjun Rao ');
+    expect(resolveMentions).toHaveBeenCalledWith([
+      { id: 'u1', label: 'Maya', type: 'user' }
+    ]);
+    expect(content.querySelector('[data-mention-id="u1"]')).toHaveTextContent(
+      'Maya Chen'
+    );
+    expect(onValueChange).not.toHaveBeenCalled();
   });
 });

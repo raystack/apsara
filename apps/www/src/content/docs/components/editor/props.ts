@@ -13,7 +13,8 @@ export interface EditorProps {
 
   /**
    * Fires once per doc change. It does not fire for changes made through
-   * `value`. The value is always editor JSON.
+   * `value`, or for labels from `resolveMentions`. The value is always editor
+   * JSON.
    */
   onValueChange?: (value: EditorJSON, details: EditorChangeDetails) => void;
 
@@ -31,22 +32,7 @@ export interface EditorProps {
    * Allowlist of nodes and marks. Read once, when the editor is created.
    * @defaultValue all formats
    */
-  formats?: Array<
-    | 'bold'
-    | 'italic'
-    | 'underline'
-    | 'strike'
-    | 'code'
-    | 'link'
-    | 'heading'
-    | 'blockquote'
-    | 'codeBlock'
-    | 'bulletList'
-    | 'orderedList'
-    | 'taskList'
-    | 'horizontalRule'
-    | 'mention'
-  >;
+  formats?: EditorFormat[];
 
   /** Overrides a default key in ProseMirror keymap syntax, or turns it off with `false`. Read once. */
   shortcuts?: Partial<Record<EditorAction, string | false>>;
@@ -288,13 +274,14 @@ export interface EditorMentionItem {
 export interface EditorSlashItem {
   id: string;
   label: string;
+  /** Shown under the label. The filter matches it at the start of a word. */
   description?: string;
   icon?: React.ReactNode;
   /** Section heading. Sections keep the order they are declared in. */
   group?: string;
   /** Extra words the filter matches. */
   keywords?: string[];
-  /** Shortcut shown on the row, in ProseMirror keymap syntax. Built-in commands fill it in. */
+  /** Shortcut shown on the row, in ProseMirror keymap syntax. Built-in commands show their default key. */
   shortcut?: string;
   disabled?: boolean;
   /** Runs after the menu removes the typed `/query`. */
@@ -309,7 +296,7 @@ export interface EditorApi {
   commands: EditorCommands;
   /** Dry runs a command. Nothing is dispatched. */
   can: EditorCommands;
-  isActive: (format: string, attrs?: Record<string, unknown>) => boolean;
+  isActive: (format: EditorFormat, attrs?: Record<string, unknown>) => boolean;
   getJSON: () => EditorJSON;
   getText: () => string;
   getHTML: () => string;
@@ -379,6 +366,22 @@ export interface MarkdownAdapterOptions {
    */
   copy?: boolean;
 }
+
+type EditorFormat =
+  | 'bold'
+  | 'italic'
+  | 'underline'
+  | 'strike'
+  | 'code'
+  | 'link'
+  | 'heading'
+  | 'blockquote'
+  | 'codeBlock'
+  | 'bulletList'
+  | 'orderedList'
+  | 'taskList'
+  | 'horizontalRule'
+  | 'mention';
 
 type EditorAction =
   | 'bold'

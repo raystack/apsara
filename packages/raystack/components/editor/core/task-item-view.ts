@@ -17,7 +17,8 @@ export class TaskItemView implements NodeView {
     node: PMNode,
     private readonly view: EditorView,
     private readonly getPos: () => number | undefined,
-    className: { item: string; checkbox: string; content: string }
+    className: { item: string; checkbox: string; content: string },
+    private readonly onDestroy?: () => void
   ) {
     this.node = node;
 
@@ -45,6 +46,12 @@ export class TaskItemView implements NodeView {
     this.contentDOM = content;
     this.checkbox = checkbox;
     this.write(node);
+    this.setEditable(view.editable);
+  }
+
+  /** A checkbox in a read-only or disabled editor cannot be toggled. */
+  setEditable(editable: boolean) {
+    this.checkbox.disabled = !editable;
   }
 
   private write(node: PMNode) {
@@ -81,5 +88,9 @@ export class TaskItemView implements NodeView {
   ignoreMutation(mutation: ViewMutationRecord) {
     if (mutation.type === 'selection') return false;
     return !this.contentDOM.contains(mutation.target);
+  }
+
+  destroy() {
+    this.onDestroy?.();
   }
 }
