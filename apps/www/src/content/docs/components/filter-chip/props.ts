@@ -25,9 +25,9 @@ export interface FilterChipProps {
 
   /** Callback when the filter value changes; receives the value and the active
    * operation. For `number`, non-numeric input is rejected and never reported,
-   * and the value arrives as a `number` — except for the intermediate states
-   * `""`, `"-"` and `"1."`, which are reported as-is so the field stays
-   * editable. */
+   * and the value arrives as a `number`, except for the intermediate states
+   * `""`, `"-"` and any value ending in `.` (such as `"1."`), which are
+   * reported as-is so the field stays editable. */
   onValueChange?: (
     value: string | string[] | number | Date,
     operation: string

@@ -154,9 +154,10 @@ export const FilterChip = ({
       if (!PARTIAL_NUMBER.test(raw)) return;
 
       setFilterValue(raw); // keep '-' and '1.' visible while typing
-      const parsed = Number(raw);
+      const isIntermediate =
+        raw === '' || raw.endsWith('.') || Number.isNaN(Number(raw));
       onValueChange?.(
-        raw === '' || Number.isNaN(parsed) ? raw : parsed,
+        isIntermediate ? raw : Number(raw),
         operation?.value ?? ''
       );
     },
@@ -233,7 +234,6 @@ export const FilterChip = ({
               variant={variant === 'text' ? 'borderless' : 'default'}
               classNames={{ container: styles.inputField }}
               value={filterValue}
-              inputMode={isNumberColumn ? 'decimal' : undefined}
               onChange={e => handleTextInputChange(e.target.value)}
             />
           </div>

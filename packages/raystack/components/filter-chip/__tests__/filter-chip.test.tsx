@@ -139,18 +139,6 @@ describe('FilterChip', () => {
       expect(getInput(container)).toBeInTheDocument();
     });
 
-    it('sets inputMode="decimal" for number and leaves string unset', () => {
-      const { container: numberContainer } = render(
-        <FilterChip label='Size' columnType={FilterType.number} />
-      );
-      const { container: stringContainer } = render(
-        <FilterChip label='Name' columnType={FilterType.string} />
-      );
-
-      expect(getInput(numberContainer)).toHaveAttribute('inputmode', 'decimal');
-      expect(getInput(stringContainer)).not.toHaveAttribute('inputmode');
-    });
-
     it('emits a number, not a string, for numeric input', () => {
       const onValueChange = vi.fn();
       const { container } = render(
@@ -219,6 +207,40 @@ describe('FilterChip', () => {
       expect(input).toHaveValue('1.');
 
       expect(onValueChange).toHaveBeenCalledTimes(2);
+    });
+
+    it('emits a trailing decimal as a string until digits follow', () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Size'
+          columnType={FilterType.number}
+          onValueChange={onValueChange}
+        />
+      );
+
+      const input = getInput(container);
+
+      fireEvent.change(input, { target: { value: '1.' } });
+      expect(onValueChange).toHaveBeenLastCalledWith('1.', expect.any(String));
+
+      fireEvent.change(input, { target: { value: '1.5' } });
+      expect(onValueChange).toHaveBeenLastCalledWith(1.5, expect.any(String));
+    });
+
+    it('emits a negative trailing decimal as a string', () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Size'
+          columnType={FilterType.number}
+          onValueChange={onValueChange}
+        />
+      );
+
+      fireEvent.change(getInput(container), { target: { value: '-1.' } });
+
+      expect(onValueChange).toHaveBeenCalledWith('-1.', expect.any(String));
     });
 
     it('emits an empty string when the field is cleared', () => {
