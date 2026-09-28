@@ -344,6 +344,44 @@ describe('toInstant', () => {
     );
   });
 
+  it.each([
+    '02/30/2014',
+    '2/30/2026 10:30',
+    '2-30-2026',
+    '2 30 2026',
+    '2026 2 30',
+    'Tue 2/30/2026',
+    'February 30, 2026',
+    'Feb. 30, 2026',
+    '30 Feb 2026',
+    '30-Feb-2026',
+    '2026 Feb 30',
+    'Sep 31, 2026',
+    'Sept 31, 2026',
+    '2023.02.30',
+    'Tue Feb 30 2026 10:30:00 GMT+0530',
+    'Feb 30 2026 10:00 PST'
+  ])('rejects the impossible day in %s', input => {
+    expect(toInstant(input)).toBeNull();
+  });
+
+  it.each([
+    ['02/29/2024', new Date(2024, 1, 29)],
+    ['2-28-2026', new Date(2026, 1, 28)],
+    ['Sept 30, 2026', new Date(2026, 8, 30)],
+    ['Monday, March 2, 2026', new Date(2026, 2, 2)],
+    ['Dec 2023', new Date(2023, 11, 1)],
+    ['Fri, 01 Dec 2023 00:00:00 GMT', new Date(Date.UTC(2023, 11, 1))],
+    [
+      'Fri Dec 01 2023 02:00:00 GMT+0530',
+      new Date(Date.UTC(2023, 10, 30, 20, 30))
+    ],
+    ['Nov 30 2026 23:00 EST', new Date(Date.UTC(2026, 11, 1, 4))],
+    ['Dec 1 2026 01:00 EST', new Date(Date.UTC(2026, 11, 1, 6))]
+  ])('reads the real day in %s as dayjs did', (input, expected) => {
+    expect(toInstant(input)?.getTime()).toBe(expected.getTime());
+  });
+
   it('keeps milliseconds from a longer fraction in a local time', () => {
     expect(toInstant('2023/12/01 10:30:00.123456')?.getTime()).toBe(
       new Date(2023, 11, 1, 10, 30, 0, 123).getTime()

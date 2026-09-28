@@ -59,11 +59,55 @@ export function toInstant(value: unknown): Date | null {
   const parts = LOCAL_SHAPE.exec(value);
   if (parts) return fromLocalParts(parts);
   const native = new Date(value);
-  return isValid(native) ? native : null;
+  return isValid(native) && writesMonthOf(value, native) ? native : null;
 }
 
 /* `new Date` rolls an impossible day over, whatever suffix follows it. */
 const ISO_DAY = /^(\d{4}-\d{2}-\d{2})/;
+
+/* A numeric offset counts only after GMT, UTC or a time, so `2-30-2026`
+   does not read as offset -20:26. The names are the zones V8 reads. */
+const ZONE =
+  /(?:\b(?:GMT|UTC|UT)\s*|(?<=\d:\d{2}(?::\d{2}(?:\.\d+)?)?\s?))([+-])(\d{2}):?(\d{2})(?!\d)|\b(UTC|UT|GMT|[ECMP][SD]T)\b|(?<=\d)(Z)\b/i;
+const ZONE_OFFSETS: Record<string, number> = {
+  UT: 0,
+  UTC: 0,
+  GMT: 0,
+  Z: 0,
+  EST: -300,
+  EDT: -240,
+  CST: -360,
+  CDT: -300,
+  MST: -420,
+  MDT: -360,
+  PST: -480,
+  PDT: -420
+};
+const TIME = /\d{1,2}:\d{2}(?::\d{2}(?:\.\d+)?)?/g;
+const MONTH_PREFIXES = 'janfebmaraprmayjunjulaugsepoctnovdec';
+
+/* `new Date` rolls an impossible day into the next month, in any form it
+   reads. A result in a month the string never writes is that rollover. */
+function writesMonthOf(value: string, date: Date): boolean {
+  const zone = ZONE.exec(value);
+  let month = date.getMonth();
+  if (zone) {
+    const offset = zone[1]
+      ? (zone[1] === '-' ? -1 : 1) * (Number(zone[2]) * 60 + Number(zone[3]))
+      : ZONE_OFFSETS[(zone[4] ?? zone[5]).toUpperCase()];
+    month = new Date(date.getTime() + offset * 60_000).getUTCMonth();
+  }
+  const datePart = value.replace(ZONE, ' ').replace(TIME, ' ');
+  const numbers = (datePart.match(/\d+/g) ?? []).map(Number);
+  const words = datePart.match(/[A-Za-z]+/g) ?? [];
+  return (
+    numbers.includes(month + 1) ||
+    words.some(
+      word =>
+        MONTH_PREFIXES.indexOf(word.slice(0, 3).toLowerCase()) === month * 3
+    )
+  );
+}
 
 /* The shape dayjs parsed as local time. `new Date` reads some of these as UTC
    and rolls out-of-range fields over, so they never reach it. */
