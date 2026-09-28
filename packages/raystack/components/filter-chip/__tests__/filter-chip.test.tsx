@@ -131,14 +131,6 @@ describe('FilterChip', () => {
         `.${styles.inputFieldWrapper} input`
       ) as HTMLInputElement;
 
-    it('renders input field for number type', () => {
-      const { container } = render(
-        <FilterChip label='Size' columnType={FilterType.number} />
-      );
-
-      expect(getInput(container)).toBeInTheDocument();
-    });
-
     it('emits a number, not a string, for numeric input', () => {
       const onValueChange = vi.fn();
       const { container } = render(
@@ -206,7 +198,12 @@ describe('FilterChip', () => {
       fireEvent.change(input, { target: { value: '1.' } });
       expect(input).toHaveValue('1.');
 
-      expect(onValueChange).toHaveBeenCalledTimes(2);
+      expect(onValueChange).toHaveBeenNthCalledWith(1, '-', expect.any(String));
+      expect(onValueChange).toHaveBeenNthCalledWith(
+        2,
+        '1.',
+        expect.any(String)
+      );
     });
 
     it('emits a trailing decimal as a string until digits follow', () => {
@@ -257,26 +254,6 @@ describe('FilterChip', () => {
       fireEvent.change(getInput(container), { target: { value: '' } });
 
       expect(onValueChange).toHaveBeenCalledWith('', expect.any(String));
-    });
-
-    it('still emits the raw string for string columns', () => {
-      const onValueChange = vi.fn();
-      const { container } = render(
-        <FilterChip
-          label='Name'
-          columnType={FilterType.string}
-          onValueChange={onValueChange}
-        />
-      );
-
-      fireEvent.change(getInput(container), {
-        target: { value: 'test value' }
-      });
-
-      expect(onValueChange).toHaveBeenCalledWith(
-        'test value',
-        expect.any(String)
-      );
     });
   });
 

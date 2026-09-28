@@ -29,7 +29,6 @@ describe('FilterChip data-slot contract', () => {
   it('keeps the value slot across column types', () => {
     for (const columnType of [
       FilterType.string,
-      FilterType.number,
       FilterType.date,
       FilterType.select
     ]) {

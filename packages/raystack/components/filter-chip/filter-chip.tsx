@@ -49,11 +49,7 @@ const toDateValue = (value: unknown): Date | undefined => {
   return undefined;
 };
 
-/**
- * Matches a number *mid-typing*: the intermediate states a user passes through
- * ('', '-', '1.', '-.5') stay editable, everything else is rejected. Applied on
- * change rather than keydown so paste and IME input are covered too.
- */
+/** Checked on change, not keydown, so paste and IME input are covered. */
 const PARTIAL_NUMBER = /^-?\d*\.?\d*$/;
 
 /**
@@ -153,7 +149,7 @@ export const FilterChip = ({
       // value, so the character never lands in the controlled input.
       if (!PARTIAL_NUMBER.test(raw)) return;
 
-      setFilterValue(raw); // keep '-' and '1.' visible while typing
+      setFilterValue(raw);
       const isIntermediate =
         raw === '' || raw.endsWith('.') || Number.isNaN(Number(raw));
       onValueChange?.(
