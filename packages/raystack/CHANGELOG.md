@@ -72,6 +72,41 @@ and [Icons](https://apsara.raystack.io/docs/theme/icons).
   `IconComponent`, `IconProps`, `IconProviderProps`, and `IconProvider`
   itself.
 
+### Date filters: DataView and DataTable compare whole days (BREAKING)
+
+DataView, DataTable and FilterChip read, compare and format dates
+through CalendarPreview's date-fns adapter instead of dayjs. A date
+filter compares whole days, and a date that is missing or does not exist
+no longer stands in for another day. `dayjs` stays a dependency, because
+`Calendar`, `DatePicker` and `RangePicker` still import it.
+
+#### Breaking changes
+
+- **A date filter's `stringValue` is a day key.** It is `'2026-08-15'`,
+  not `'2026-08-14T18:30:00.000Z'`. The old value was local midnight as
+  a UTC instant, so a backend that read the date part got the previous
+  day for any viewer east of UTC. `value` passes through unchanged. If
+  your backend parses `stringValue`, check it: a date-only string is
+  valid ISO 8601, but a parser that expects a timestamp may read it
+  differently.
+- **A date filter with no value is dropped.** dayjs read an empty value
+  as today, so clearing a date filter filtered the rows to today.
+- **A date filter holding a day that does not exist is dropped.** dayjs
+  rolled `2026-02-30` over to 2 March and filtered on that.
+- **`gt` and `gte` no longer match a row whose date is missing.** dayjs
+  read it as today, so the row matched whenever today was after the
+  filter day.
+- **A row holding a day that does not exist matches only `neq`.** dayjs
+  rolled it to a real date and compared that, so `2026-02-30` matched
+  `lt` and `lte` against a filter day after 2 March, and `2026-13-01`
+  matched `gt` and `gte` against a filter day before 1 January 2027. A
+  timeline row holding one is not drawn.
+- **`neq` still matches a row with a missing or unreadable date.**
+
+Saved filters and URL parameters that hold an ISO timestamp are still
+read, and there is no migration. They keep the old behaviour until they
+are re-saved.
+
 ## 0.49.0
 
 ### Calendar / DatePicker / RangePicker improvements (PR #819)
