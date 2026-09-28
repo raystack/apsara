@@ -30,6 +30,13 @@ Skills are in `.agents/skills/`. `.claude/skills` is a symlink to that folder, s
 - Every rendered part has a `data-slot` attribute in kebab case, prefixed with the component name, for example `tabs-list`. Slot names are public API. List them in the Slots table on the docs page, and test them in `__tests__/data-slots.test.tsx` with the helpers in `~/test-utils/data-slots`.
 - Do not use `any`. Use a specific type, `unknown`, or a generic.
 
+## Component props
+
+- Do not redeclare a prop that the base props type already has, for example `ref`, `children`, or `className` from `ComponentProps<'div'>`. In React 19, `ref` is part of those types.
+- Use `Omit` on an inherited prop only to replace it with a different type, for example `Omit<ComponentProps<'textarea'>, 'size'>` for a `size` variant.
+- To explain an inherited prop, for example which element `ref` points to, write it in the docs page or in the component's JSDoc.
+- Size icons with `width` and `height`, not a CSS rule. Icons from `createIcon` have no `size` prop.
+
 ## Styling
 
 - Use CSS Modules only. Do not use Tailwind, CSS-in-JS, or static inline styles. Inline `style` is fine for values computed at runtime, for example Grid templates.
