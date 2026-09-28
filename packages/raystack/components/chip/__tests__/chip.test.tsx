@@ -168,12 +168,6 @@ describe('Chip', () => {
       const icon = container.querySelector('[data-icon="XIcon"]');
       expect(icon).toBeInTheDocument();
       expect(icon).toHaveAttribute('data-slot', 'chip-dismiss-icon');
-    });
-
-    it('sizes the dismiss icon at 12px', () => {
-      const { container } = render(<Chip isDismissible>Dismissible Chip</Chip>);
-
-      const icon = container.querySelector('[data-icon="XIcon"]');
       expect(icon).toHaveAttribute('width', '12');
       expect(icon).toHaveAttribute('height', '12');
     });

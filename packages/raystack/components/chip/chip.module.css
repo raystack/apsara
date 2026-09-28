@@ -20,8 +20,15 @@
   -webkit-user-select: none;
 }
 
-/* Each color class supplies only tokens; the variant rules below consume them,
- * so five colors cost one block each instead of a duplicated variant matrix. */
+/* Sizes */
+.chip-size-large {
+  padding: var(--rs-space-2) var(--rs-space-3);
+}
+
+.chip-size-small {
+  padding: var(--rs-space-1) var(--rs-space-2);
+}
+
 .chip-color-neutral {
   --chip-border: var(--rs-color-border-base-secondary);
   /* Neutral outline hover changes text only, not the border. */
@@ -30,7 +37,7 @@
   --chip-fg: var(--rs-color-foreground-base-secondary);
   --chip-fg-hover: var(--rs-color-foreground-base-primary);
   --chip-fg-active: var(--rs-color-foreground-base-primary);
-  /* Preserved as-is: a foreground token used as a border color. */
+  /* A foreground token as the border color. */
   --chip-filled-border-hover: var(--rs-color-foreground-base-primary);
   --chip-filled-fg-hover: var(--rs-color-foreground-base-primary);
   --chip-filled-bg-active: var(--rs-color-background-neutral-primary);
@@ -73,8 +80,7 @@
   --chip-filled-bg-active: var(--rs-color-background-success-primary);
 }
 
-/* `warning` is the public prop name, backed by the `attention` tokens —
- * same mapping Badge already ships. */
+/* The public value is `warning`, backed by the `attention` tokens, as in Badge. */
 .chip-color-warning {
   --chip-border: var(--rs-color-border-attention-primary);
   --chip-border-hover: var(--rs-color-border-attention-emphasis);
@@ -121,15 +127,6 @@
 .chip-variant-filled[data-state="active"] {
   background: var(--chip-filled-bg-active);
   color: var(--chip-fg-active);
-}
-
-/* Sizes */
-.chip-size-large {
-  padding: var(--rs-space-2) var(--rs-space-3);
-}
-
-.chip-size-small {
-  padding: var(--rs-space-1) var(--rs-space-2);
 }
 
 /* Icons */
