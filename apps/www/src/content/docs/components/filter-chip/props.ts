@@ -3,7 +3,8 @@ export interface FilterChipProps {
   label: string;
 
   /** Current value of the filter. `multiselect` takes a `string[]`; `date`
-   * takes a `Date` (a string or epoch number is parsed for you). */
+   * takes a `Date` (a string or epoch number is parsed for you); `number`
+   * shows a value that is not a number as empty. */
   value?: string | string[] | number | Date;
 
   /** Type of input for the filter

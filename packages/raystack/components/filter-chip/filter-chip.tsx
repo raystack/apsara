@@ -116,12 +116,18 @@ export const FilterChip = ({
   const [operation, setOperation] = useState<FilterOperation | undefined>(
     computedOperations?.[0]
   );
+  const isNumberColumn = columnType === FilterType.number;
   // `??` not `||`, since a falsy option value like `0` is a real selection.
-  const [filterValue, setFilterValue] = useState<any>(value ?? '');
+  // A non-numeric number value starts empty, since the regex below would
+  // reject every edit to it.
+  const [filterValue, setFilterValue] = useState<any>(() =>
+    isNumberColumn && !PARTIAL_NUMBER.test(String(value ?? ''))
+      ? ''
+      : (value ?? '')
+  );
 
   const showOnRemove = typeof onRemove === 'function';
   const isMultiSelectColumn = columnType === FilterType.multiselect;
-  const isNumberColumn = columnType === FilterType.number;
 
   const handleOperationChange = useCallback(
     (operation: FilterOperation) => {
@@ -145,8 +151,7 @@ export const FilterChip = ({
         handleFilterValueChange(raw);
         return;
       }
-      // Rejecting without setting state means React re-renders the previous
-      // value, so the character never lands in the controlled input.
+      // Skipping setFilterValue makes React restore the controlled value.
       if (!PARTIAL_NUMBER.test(raw)) return;
 
       setFilterValue(raw);

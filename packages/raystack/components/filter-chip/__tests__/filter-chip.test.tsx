@@ -221,7 +221,7 @@ describe('FilterChip', () => {
       expect(onValueChange).toHaveBeenLastCalledWith(1.5, expect.any(String));
     });
 
-    it('emits a negative trailing decimal as a number', () => {
+    it('rejects a second decimal point', () => {
       const onValueChange = vi.fn();
       const { container } = render(
         <FilterChip
@@ -231,9 +231,24 @@ describe('FilterChip', () => {
         />
       );
 
-      fireEvent.change(getInput(container), { target: { value: '-1.' } });
+      const input = getInput(container);
+      fireEvent.change(input, { target: { value: '1.2' } });
+      fireEvent.change(input, { target: { value: '1.2.' } });
 
-      expect(onValueChange).toHaveBeenCalledWith(-1, expect.any(String));
+      expect(input).toHaveValue('1.2');
+      expect(onValueChange).toHaveBeenCalledTimes(1);
+    });
+
+    it('shows a numeric value and starts empty for a non-numeric one', () => {
+      const { container: numeric } = render(
+        <FilterChip label='Size' value={-1.5} columnType={FilterType.number} />
+      );
+      const { container: nonNumeric } = render(
+        <FilterChip label='Size' value='abc' columnType={FilterType.number} />
+      );
+
+      expect(getInput(numeric)).toHaveValue('-1.5');
+      expect(getInput(nonNumeric)).toHaveValue('');
     });
 
     it('emits an empty string when the field is cleared', () => {
