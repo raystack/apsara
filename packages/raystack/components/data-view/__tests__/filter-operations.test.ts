@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   getDataType,
   getFilterFn,
@@ -64,14 +64,13 @@ describe('filter-operations', () => {
       expect(v.stringValue).toBe('foo%');
     });
 
-    it('emits ISO string for valid dates', () => {
-      const d = new Date('2024-01-15T00:00:00Z');
+    it('emits a day key for valid dates', () => {
       const v = getFilterValue({
-        value: d,
+        value: new Date(2024, 0, 15, 23, 30),
         filterType: 'date',
         operator: 'eq'
       });
-      expect(v.stringValue).toBe(d.toISOString());
+      expect(v).toEqual({ value: '2024-01-15', stringValue: '2024-01-15' });
     });
 
     it('emits boolValue for boolean dataType', () => {
@@ -105,6 +104,164 @@ describe('filter-operations', () => {
     it('returns the filterType for primitives', () => {
       expect(getDataType({ filterType: 'string' })).toBe('string');
       expect(getDataType({ filterType: 'number' })).toBe('number');
+    });
+  });
+});
+
+/* A `ScaleValue` has a `.date`, so a coarse value used to parse happily and
+   then compare as a single day. Every operator is asserted at both scales so
+   that cannot ship green again. */
+describe('date filters by period', () => {
+  const run = (
+    operator: 'eq' | 'neq' | 'lt' | 'lte' | 'gt' | 'gte',
+    filterDate: unknown,
+    rowValue: unknown
+  ) => {
+    const fn = getFilterFn('date', operator);
+    const row = { getValue: () => rowValue } as never;
+    return fn(row, 'when', { date: filterDate } as never, vi.fn());
+  };
+
+  const DAY = new Date(2026, 7, 15);
+  const MONTH = { date: '2026-08-01', scale: 'month' } as const;
+
+  describe('at day scale the day itself is the period', () => {
+    it.each([
+      ['eq', '2026-08-15', true],
+      ['eq', '2026-08-14', false],
+      ['neq', '2026-08-15', false],
+      ['neq', '2026-08-14', true],
+      ['lt', '2026-08-14', true],
+      ['lt', '2026-08-15', false],
+      ['lte', '2026-08-15', true],
+      ['lte', '2026-08-16', false],
+      ['gt', '2026-08-16', true],
+      ['gt', '2026-08-15', false],
+      ['gte', '2026-08-15', true],
+      ['gte', '2026-08-14', false]
+    ] as const)('%s against %s', (operator, row, expected) => {
+      expect(run(operator, DAY, row)).toBe(expected);
+    });
+  });
+
+  describe('at month scale the whole month is the period', () => {
+    it.each([
+      /* The bug: a day inside the month must match `eq`, not just the 1st. */
+      ['eq', '2026-08-15', true],
+      ['eq', '2026-08-01', true],
+      ['eq', '2026-08-31', true],
+      ['eq', '2026-07-31', false],
+      ['eq', '2026-09-01', false],
+      ['neq', '2026-08-15', false],
+      ['neq', '2026-09-01', true],
+      /* before the period start, not before its anchor */
+      ['lt', '2026-07-31', true],
+      ['lt', '2026-08-01', false],
+      ['lt', '2026-08-15', false],
+      ['lte', '2026-08-31', true],
+      ['lte', '2026-09-01', false],
+      /* after the period end, not after its anchor */
+      ['gt', '2026-09-01', true],
+      ['gt', '2026-08-31', false],
+      ['gt', '2026-08-15', false],
+      ['gte', '2026-08-01', true],
+      ['gte', '2026-07-31', false]
+    ] as const)('%s against %s', (operator, row, expected) => {
+      expect(run(operator, MONTH, row)).toBe(expected);
+    });
+  });
+
+  it.each([
+    ['quarter', { date: '2026-07-01', scale: 'quarter' }, '2026-09-30', true],
+    ['quarter', { date: '2026-07-01', scale: 'quarter' }, '2026-10-01', false],
+    ['halfYear', { date: '2026-01-01', scale: 'halfYear' }, '2026-06-30', true],
+    [
+      'halfYear',
+      { date: '2026-01-01', scale: 'halfYear' },
+      '2026-07-01',
+      false
+    ],
+    ['year', { date: '2026-01-01', scale: 'year' }, '2026-12-31', true],
+    ['year', { date: '2026-01-01', scale: 'year' }, '2027-01-01', false]
+  ] as const)('spans a whole %s', (_scale, filterDate, row, expected) => {
+    expect(run('eq', filterDate, row)).toBe(expected);
+  });
+
+  /* The stored value is the anchor and the period is derived from it, so a
+     trailing-edge anchor resolves to the same span as a leading-edge one. */
+  it('reaches both ends whichever edge was stored', () => {
+    const leading = { date: '2026-08-01', scale: 'month' } as const;
+    const trailing = { date: '2026-08-31', scale: 'month' } as const;
+    for (const row of ['2026-08-01', '2026-08-15', '2026-08-31']) {
+      expect(run('eq', leading, row)).toBe(true);
+      expect(run('eq', trailing, row)).toBe(true);
+    }
+  });
+
+  it('matches nothing when the row cannot be read, and neq matches it', () => {
+    expect(run('eq', DAY, 'not a date')).toBe(false);
+    expect(run('neq', DAY, 'not a date')).toBe(true);
+    expect(run('gt', DAY, undefined)).toBe(false);
+  });
+
+  /* dayjs read a missing filter date as "now", so an unset filter quietly
+     matched today's rows. */
+  it('does not fall back to today when the filter has no date', () => {
+    expect(run('eq', undefined, '2026-08-15')).toBe(false);
+  });
+});
+
+/* Filters stored before day keys hold an ISO instant of local midnight. */
+describe('stored date filters', () => {
+  const originalTimeZone = process.env.TZ;
+  afterEach(() => {
+    process.env.TZ = originalTimeZone;
+  });
+
+  const matches = (stored: unknown, row: string) =>
+    getFilterFn('date', 'eq')(
+      { getValue: () => row } as never,
+      'when',
+      { date: stored } as never,
+      vi.fn()
+    );
+
+  it('reads a stored ISO instant as the day the viewer picked', () => {
+    process.env.TZ = 'Asia/Kolkata';
+    expect(matches('2026-08-14T18:30:00.000Z', '2026-08-15')).toBe(true);
+    expect(matches('2026-08-14T18:30:00.000Z', '2026-08-14')).toBe(false);
+  });
+
+  it.each([
+    'UTC',
+    'Asia/Kolkata',
+    'America/Los_Angeles',
+    'Pacific/Kiritimati'
+  ])('reads a stored day key as the same day in %s', timeZone => {
+    process.env.TZ = timeZone;
+    expect(matches('2026-08-15', '2026-08-15')).toBe(true);
+    expect(matches('2026-08-15', '2026-08-14')).toBe(false);
+  });
+
+  it('writes the day the viewer picked, not the UTC day', () => {
+    process.env.TZ = 'Asia/Kolkata';
+    expect(
+      getFilterValue({ value: new Date(2026, 7, 15), filterType: 'date' })
+    ).toEqual({ value: '2026-08-15', stringValue: '2026-08-15' });
+  });
+
+  it('rewrites a stored ISO instant as a day key', () => {
+    process.env.TZ = 'Asia/Kolkata';
+    expect(
+      getFilterValue({ value: '2026-08-14T18:30:00.000Z', filterType: 'date' })
+    ).toEqual({ value: '2026-08-15', stringValue: '2026-08-15' });
+  });
+
+  it('keeps the scale of a period value', () => {
+    const value = { date: '2026-08-01', scale: 'month' };
+    expect(getFilterValue({ value, filterType: 'date' })).toEqual({
+      value,
+      stringValue: '2026-08-01'
     });
   });
 });

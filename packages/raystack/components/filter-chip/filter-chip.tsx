@@ -1,8 +1,8 @@
 'use client';
 
 import { cva, VariantProps } from 'class-variance-authority';
-import dayjs from 'dayjs';
 import { ComponentProps, ReactElement, useCallback, useState } from 'react';
+import { toInstant } from '~/components/calendar-preview/date-adapter';
 import { XIcon } from '~/icons';
 import {
   FilterOperation,
@@ -43,8 +43,7 @@ export type FilterChipValue = string | string[] | number | Date;
 const toDateValue = (value: unknown): Date | undefined => {
   if (value instanceof Date) return value;
   if (typeof value === 'string' || typeof value === 'number') {
-    const parsed = dayjs(value);
-    return parsed.isValid() ? parsed.toDate() : undefined;
+    return toInstant(value) ?? undefined;
   }
   return undefined;
 };

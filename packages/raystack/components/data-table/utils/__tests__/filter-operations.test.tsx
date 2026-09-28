@@ -1,5 +1,4 @@
 import type { Row } from '@tanstack/table-core';
-import dayjs from 'dayjs';
 import { describe, expect, it, vi } from 'vitest';
 import { EmptyFilterValue, FilterType } from '~/types/filters';
 import {
@@ -344,6 +343,30 @@ describe('Filter Operations', () => {
 
       expect(result).toBe(true);
     });
+
+    it.each([
+      ['eq', '2023-12-15', true],
+      ['eq', '2023-11-30', false],
+      ['neq', '2023-12-31', false],
+      ['neq', '2024-01-01', true],
+      ['lt', '2023-11-30', true],
+      ['lt', '2023-12-15', false],
+      ['lte', '2023-12-31', true],
+      ['lte', '2024-01-01', false],
+      ['gt', '2024-01-01', true],
+      ['gt', '2023-12-15', false],
+      ['gte', '2023-12-01', true],
+      ['gte', '2023-11-30', false]
+    ] as const)('should filter %s %s against the whole month', (operator, row, expected) => {
+      const result = filterOperationsMap.date[operator](
+        createMockRow(row),
+        'createdAt',
+        { date: { date: '2023-12-01', scale: 'month' } },
+        addMeta
+      );
+
+      expect(result).toBe(expected);
+    });
   });
 
   describe('Select Filter Operations', () => {
@@ -614,14 +637,13 @@ describe('Filter Operations', () => {
     });
 
     it('should handle date filter type', () => {
-      const date = new Date('2023-12-01');
       const result = getFilterValue({
-        value: date,
+        value: new Date(2023, 11, 1),
         filterType: FilterType.date
       });
       expect(result).toEqual({
-        value: date,
-        stringValue: date.toISOString()
+        value: '2023-12-01',
+        stringValue: '2023-12-01'
       });
     });
 

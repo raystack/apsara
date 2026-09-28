@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { defaultFormatValue } from '../calendar-preview-root';
 import { parseScaleInput } from '../lib/parse';
 
 /* Fixed so the year-inference tests do not change meaning on 1 January. */
@@ -233,5 +234,19 @@ describe('parseScaleInput — rejections', () => {
     ['Q 4 2026', 'a space inside the quarter token']
   ])('rejects %j — %s', input => {
     expect(parseScaleInput(input, IN_2026)).toBeNull();
+  });
+});
+
+describe('parseScaleInput reads what defaultFormatValue displays', () => {
+  it.each([
+    { date: '2026-08-15', scale: 'day' },
+    { date: '2026-08-01', scale: 'month' },
+    { date: '2026-07-01', scale: 'quarter' },
+    { date: '2026-07-01', scale: 'halfYear' },
+    { date: '2026-01-01', scale: 'year' }
+  ] as const)('round-trips $scale', value => {
+    expect(parseScaleInput(defaultFormatValue(value, value.scale))).toEqual(
+      value
+    );
   });
 });

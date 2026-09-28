@@ -15,6 +15,8 @@ import {
   parseKey,
   shiftMonths,
   startOfMonthKey,
+  toDayKey,
+  toInstant,
   yearOf
 } from '../date-adapter';
 
@@ -241,5 +243,147 @@ describe('monthShortNames', () => {
     monthShortNames().forEach((name, index) => {
       expect(monthFromName(name)).toBe(index + 1);
     });
+  });
+});
+
+/* Expected values were captured from `dayjs(v)` in UTC, Asia/Kolkata and
+   America/Los_Angeles before the migration. */
+describe('toInstant', () => {
+  it.each([
+    ['an ISO day', '2023-12-01', new Date(2023, 11, 1)],
+    ['a year and month', '2023-12', new Date(2023, 11, 1)],
+    ['a bare year', '2023', new Date(2023, 0, 1)],
+    ['basic ISO', '20231201', new Date(2023, 11, 1)],
+    ['a local time', '2023-12-01T10:30:00', new Date(2023, 11, 1, 10, 30)],
+    [
+      'a space before the time',
+      '2023-12-01 10:30',
+      new Date(2023, 11, 1, 10, 30)
+    ],
+    ['a lowercase t', '2023-12-01t10:30:00', new Date(2023, 11, 1, 10, 30)],
+    ['slashes', '2023/12/01', new Date(2023, 11, 1)],
+    ['an unpadded day', '2023-1-5', new Date(2023, 0, 5)],
+    ['an unpadded slashed day', '2023/1/5', new Date(2023, 0, 5)],
+    ['a month-first slashed day', '12/01/2023', new Date(2023, 11, 1)],
+    [
+      'a day-first slashed day, read month-first',
+      '01/12/2023',
+      new Date(2023, 0, 12)
+    ],
+    ['a long month name', 'December 1, 2023', new Date(2023, 11, 1)],
+    ['a short month name', '1 Dec 2023', new Date(2023, 11, 1)],
+    ['a dotted day', '2023.12.01', new Date(2023, 11, 1)],
+    ['surrounding whitespace', ' 2023-12-01 ', new Date(2023, 11, 1)],
+    ['a Date', new Date(2023, 11, 1), new Date(2023, 11, 1)],
+    ['an epoch', Date.UTC(2023, 11, 1), new Date(Date.UTC(2023, 11, 1))],
+    ['epoch zero', 0, new Date(0)],
+    [
+      'a UTC instant',
+      '2023-12-01T10:30:00Z',
+      new Date(Date.UTC(2023, 11, 1, 10, 30))
+    ],
+    [
+      'microseconds',
+      '2023-12-01T10:30:00.123456Z',
+      new Date(Date.UTC(2023, 11, 1, 10, 30, 0, 123))
+    ],
+    [
+      'an offset',
+      '2023-12-01T10:30:00+05:30',
+      new Date(Date.UTC(2023, 11, 1, 5, 0))
+    ],
+    [
+      'a negative offset',
+      '2023-11-30T20:00:00-05:00',
+      new Date(Date.UTC(2023, 11, 1, 1, 0))
+    ],
+    [
+      'a Date string',
+      'Fri Dec 01 2023 00:00:00 GMT+0000',
+      new Date(Date.UTC(2023, 11, 1))
+    ]
+  ])('reads %s as dayjs did', (_label, input, expected) => {
+    expect(toInstant(input)?.getTime()).toBe(expected.getTime());
+  });
+
+  it.each([
+    ['an empty string', ''],
+    ['whitespace', '   '],
+    ['a non-date string', 'not a date'],
+    ['null', null],
+    ['an invalid Date', new Date(Number.NaN)],
+    ['an object', { date: '2023-12-01' }]
+  ])('rejects %s as dayjs did', (_label, input) => {
+    expect(toInstant(input)).toBeNull();
+  });
+
+  /* dayjs rolled each of these into a neighbouring day or month. */
+  it.each([
+    ['month 13', '2023-13-01'],
+    ['month 0', '2023-00-10'],
+    ['day 0', '2023-12-00'],
+    ['day 32', '2023-12-32'],
+    ['30 February', '2023-02-30'],
+    ['an epoch as a string', '1701388800000']
+  ])('rejects %s where dayjs rolled it over', (_label, input) => {
+    expect(toInstant(input)).toBeNull();
+  });
+
+  /* dayjs read `undefined` as now, so an unset date filter matched today. */
+  it('rejects undefined', () => {
+    expect(toInstant(undefined)).toBeNull();
+  });
+
+  it('rejects a boolean, which dayjs read as epoch zero', () => {
+    expect(toInstant(true)).toBeNull();
+  });
+
+  /* dayjs rejected or misread these ISO 8601 forms. */
+  it.each([
+    ['an ISO week', '2023-W48', new Date(2023, 10, 27)],
+    ['an ordinal day', '2023-335', new Date(2023, 11, 1)],
+    [
+      'a one-digit fraction',
+      '2023-12-01T10:30:00.5',
+      new Date(2023, 11, 1, 10, 30, 0, 500)
+    ],
+    [
+      'a year below 100',
+      '0050-01-01',
+      new Date(new Date(0, 0, 1).setFullYear(50))
+    ]
+  ])('reads %s as ISO 8601', (_label, input, expected) => {
+    expect(toInstant(input)?.getTime()).toBe(expected.getTime());
+  });
+});
+
+describe('toDayKey', () => {
+  it('reads the local calendar day', () => {
+    expect(toDayKey('2023-12-01')).toBe('2023-12-01');
+    expect(toDayKey(new Date(2023, 11, 1, 23, 59))).toBe('2023-12-01');
+  });
+
+  it.each([
+    'UTC',
+    'Asia/Kolkata',
+    'Pacific/Kiritimati',
+    'Pacific/Niue'
+  ])('keeps a day key as the same day in %s', timeZone => {
+    expect(toDayKey('2026-08-15', timeZone)).toBe('2026-08-15');
+  });
+
+  it('reads the day in the zone it is given', () => {
+    const instant = new Date(Date.UTC(2023, 11, 1, 2, 0));
+    expect(toDayKey(instant, 'UTC')).toBe('2023-12-01');
+    expect(toDayKey(instant, 'Pacific/Niue')).toBe('2023-11-30');
+  });
+
+  it('rejects what toInstant rejects', () => {
+    expect(toDayKey('2023-02-30')).toBeNull();
+    expect(toDayKey(undefined)).toBeNull();
+  });
+
+  it('rejects a year outside four digits', () => {
+    expect(toDayKey(new Date(10000, 0, 1))).toBeNull();
   });
 });

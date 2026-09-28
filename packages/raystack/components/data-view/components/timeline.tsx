@@ -2,7 +2,6 @@
 
 import type { Row } from '@tanstack/react-table';
 import { cx } from 'class-variance-authority';
-import dayjs from 'dayjs';
 import {
   CSSProperties,
   memo,
@@ -15,6 +14,8 @@ import {
   useRef,
   useState
 } from 'react';
+import { defaultFormatValue } from '~/components/calendar-preview/calendar-preview-root';
+import { formatDayMonth } from '~/components/calendar-preview/date-adapter';
 import { useScaling } from '~/hooks/useScaling';
 import { Badge } from '../../badge';
 import styles from '../data-view.module.css';
@@ -353,15 +354,14 @@ const MARKER_BADGE_VARIANT: Record<
 
 /** Axis-badge label for the hover cursor, formatted per scale granularity. */
 function cursorLabel(time: number, scale: TimelineScale): string {
-  const date = dayjs(time);
+  const date = new Date(time);
   switch (scale) {
     case 'day':
     case 'week':
-      return date.format('D MMM');
+      return formatDayMonth(date);
     case 'month':
-      return date.format('MMM YYYY');
     case 'quarter':
-      return `Q${Math.floor(date.month() / 3) + 1} ${date.format('YYYY')}`;
+      return defaultFormatValue(date, scale);
   }
 }
 
@@ -925,7 +925,7 @@ export function DataViewTimeline<TData>({
         key: '__today',
         time: todayTime,
         x: timeScale.x(todayTime),
-        label: dayjs(todayTime).format('D MMM'),
+        label: formatDayMonth(new Date(todayTime)),
         variant: 'accent'
       });
     }
@@ -936,7 +936,7 @@ export function DataViewTimeline<TData>({
         key: `__marker-${index}`,
         time,
         x: timeScale.x(time),
-        label: marker.label ?? dayjs(time).format('D MMM'),
+        label: marker.label ?? formatDayMonth(new Date(time)),
         variant: marker.variant ?? 'default'
       });
     });
@@ -1009,7 +1009,7 @@ export function DataViewTimeline<TData>({
       timeScale.t0,
       Math.min(timeScale.timeAt(canvasX), timeScale.t1)
     );
-    const snapped = startOfUnit(dayjs(time), scale).valueOf();
+    const snapped = startOfUnit(new Date(time), scale).getTime();
     setCursorTime(prev => (prev === snapped ? prev : snapped));
   }, [showCursorLine, timeScale, scale]);
 

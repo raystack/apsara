@@ -1,6 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import dayjs from 'dayjs';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
@@ -40,7 +39,7 @@ describe('toTimestamp', () => {
     const date = new Date('2025-01-05T00:00:00');
     expect(toTimestamp(date)).toBe(date.getTime());
     expect(toTimestamp(1736035200000)).toBe(1736035200000);
-    expect(toTimestamp('2025-01-05')).toBe(dayjs('2025-01-05').valueOf());
+    expect(toTimestamp('2025-01-05')).toBe(new Date(2025, 0, 5).getTime());
   });
 
   it('returns null for missing or invalid values', () => {
@@ -56,42 +55,42 @@ describe('toTimestamp', () => {
 describe('createTimeScale', () => {
   it('snaps the domain to unit boundaries with padding', () => {
     const ts = createTimeScale({
-      minTime: dayjs('2025-01-05T10:30:00').valueOf(),
-      maxTime: dayjs('2025-01-20T18:00:00').valueOf(),
+      minTime: new Date(2025, 0, 5, 10, 30).getTime(),
+      maxTime: new Date(2025, 0, 20, 18, 0).getTime(),
       scale: 'day',
       unitWidth: 20,
       padUnits: 2
     });
-    expect(ts.t0).toBe(dayjs('2025-01-03').startOf('day').valueOf());
+    expect(ts.t0).toBe(new Date(2025, 0, 3).getTime());
     // startOf(max) + (pad + 1) days.
-    expect(ts.t1).toBe(dayjs('2025-01-23').startOf('day').valueOf());
+    expect(ts.t1).toBe(new Date(2025, 0, 23).getTime());
   });
 
   it('extends the domain end to reach minWidth, in whole units', () => {
     // Jan 1 → Feb 1 = 31 days × 20px = 620px; filling to 1000px needs 50 days.
     const ts = createTimeScale({
-      minTime: dayjs('2025-01-01').valueOf(),
-      maxTime: dayjs('2025-01-31').valueOf(),
+      minTime: new Date(2025, 0, 1).getTime(),
+      maxTime: new Date(2025, 0, 31).getTime(),
       scale: 'day',
       unitWidth: 20,
       padUnits: 0,
       minWidth: 1000
     });
-    expect(ts.t0).toBe(dayjs('2025-01-01').valueOf());
-    expect(ts.t1).toBe(dayjs('2025-02-20').valueOf());
+    expect(ts.t0).toBe(new Date(2025, 0, 1).getTime());
+    expect(ts.t1).toBe(new Date(2025, 1, 20).getTime());
     expect(ts.totalWidth).toBe(1000);
   });
 
   it('never shrinks a domain already wider than minWidth', () => {
     const ts = createTimeScale({
-      minTime: dayjs('2025-01-01').valueOf(),
-      maxTime: dayjs('2025-01-31').valueOf(),
+      minTime: new Date(2025, 0, 1).getTime(),
+      maxTime: new Date(2025, 0, 31).getTime(),
       scale: 'day',
       unitWidth: 20,
       padUnits: 0,
       minWidth: 100
     });
-    expect(ts.t1).toBe(dayjs('2025-02-01').valueOf());
+    expect(ts.t1).toBe(new Date(2025, 1, 1).getTime());
     expect(ts.totalWidth).toBe(620);
   });
 
@@ -99,8 +98,8 @@ describe('createTimeScale', () => {
     // Months render at (actual ms × pxPerMs), not exactly unitWidth, so the
     // fill must land at or past minWidth despite short months.
     const ts = createTimeScale({
-      minTime: dayjs('2025-01-15').valueOf(),
-      maxTime: dayjs('2025-02-15').valueOf(),
+      minTime: new Date(2025, 0, 15).getTime(),
+      maxTime: new Date(2025, 1, 15).getTime(),
       scale: 'month',
       unitWidth: 96,
       padUnits: 0,
@@ -108,20 +107,20 @@ describe('createTimeScale', () => {
     });
     expect(ts.totalWidth).toBeGreaterThanOrEqual(500);
     // Still snapped to a month boundary.
-    expect(dayjs(ts.t1).date()).toBe(1);
+    expect(new Date(ts.t1).getDate()).toBe(1);
   });
 
   it('maps time to px linearly and inverts with timeAt', () => {
     const ts = createTimeScale({
-      minTime: dayjs('2025-01-01').valueOf(),
-      maxTime: dayjs('2025-01-31').valueOf(),
+      minTime: new Date(2025, 0, 1).getTime(),
+      maxTime: new Date(2025, 0, 31).getTime(),
       scale: 'day',
       unitWidth: 20,
       padUnits: 0
     });
     expect(ts.x(ts.t0)).toBe(0);
-    expect(ts.x(dayjs('2025-01-05').valueOf())).toBe(80);
-    const time = dayjs('2025-01-11').valueOf();
+    expect(ts.x(new Date(2025, 0, 5).getTime())).toBe(80);
+    const time = new Date(2025, 0, 11).getTime();
     expect(ts.timeAt(ts.x(time))).toBe(time);
     // Domain = Jan 1 → Feb 1 = 31 days.
     expect(ts.totalWidth).toBe(31 * 20);
@@ -131,8 +130,8 @@ describe('createTimeScale', () => {
     // 0 → pxPerMs 0 (NaN geometry); negative → inverted scale whose
     // viewport-fill loop never terminates. Both clamp to a 1px unit.
     const zero = createTimeScale({
-      minTime: dayjs('2025-01-01').valueOf(),
-      maxTime: dayjs('2025-01-31').valueOf(),
+      minTime: new Date(2025, 0, 1).getTime(),
+      maxTime: new Date(2025, 0, 31).getTime(),
       scale: 'day',
       unitWidth: 0,
       padUnits: 0,
@@ -141,8 +140,8 @@ describe('createTimeScale', () => {
     expect(Number.isFinite(zero.totalWidth)).toBe(true);
     expect(zero.totalWidth).toBeGreaterThanOrEqual(500);
     const negative = createTimeScale({
-      minTime: dayjs('2025-01-01').valueOf(),
-      maxTime: dayjs('2025-01-31').valueOf(),
+      minTime: new Date(2025, 0, 1).getTime(),
+      maxTime: new Date(2025, 0, 31).getTime(),
       scale: 'day',
       unitWidth: -20,
       padUnits: 0,
@@ -156,8 +155,8 @@ describe('createTimeScale', () => {
 
 describe('buildAxis', () => {
   const januaryScale = createTimeScale({
-    minTime: dayjs('2025-01-01').valueOf(),
-    maxTime: dayjs('2025-01-31').valueOf(),
+    minTime: new Date(2025, 0, 1).getTime(),
+    maxTime: new Date(2025, 0, 31).getTime(),
     scale: 'day',
     unitWidth: 20,
     padUnits: 0
@@ -181,8 +180,8 @@ describe('buildAxis', () => {
     // 40px per tick → all labels show.
     const roomy = buildAxis(
       createTimeScale({
-        minTime: dayjs('2025-01-01').valueOf(),
-        maxTime: dayjs('2025-01-31').valueOf(),
+        minTime: new Date(2025, 0, 1).getTime(),
+        maxTime: new Date(2025, 0, 31).getTime(),
         scale: 'day',
         unitWidth: 40,
         padUnits: 0
@@ -195,8 +194,8 @@ describe('buildAxis', () => {
 
   it('labels every Nth unit when labelEvery is passed', () => {
     const roomyScale = createTimeScale({
-      minTime: dayjs('2025-01-01').valueOf(),
-      maxTime: dayjs('2025-01-31').valueOf(),
+      minTime: new Date(2025, 0, 1).getTime(),
+      maxTime: new Date(2025, 0, 31).getTime(),
       scale: 'day',
       unitWidth: 40,
       padUnits: 0
@@ -216,8 +215,8 @@ describe('buildAxis', () => {
   it('collision floor wins over a too-dense labelEvery', () => {
     // 10px per tick → auto floor is every 3rd; asking for every 2nd degrades.
     const dense = createTimeScale({
-      minTime: dayjs('2025-01-01').valueOf(),
-      maxTime: dayjs('2025-01-31').valueOf(),
+      minTime: new Date(2025, 0, 1).getTime(),
+      maxTime: new Date(2025, 0, 31).getTime(),
       scale: 'day',
       unitWidth: 10,
       padUnits: 0
@@ -231,8 +230,8 @@ describe('buildAxis', () => {
 
   it('emits month bands over day ticks, with the year on the first band', () => {
     const wide = createTimeScale({
-      minTime: dayjs('2025-01-10').valueOf(),
-      maxTime: dayjs('2025-02-20').valueOf(),
+      minTime: new Date(2025, 0, 10).getTime(),
+      maxTime: new Date(2025, 1, 20).getTime(),
       scale: 'day',
       unitWidth: 20,
       padUnits: 0
@@ -243,8 +242,8 @@ describe('buildAxis', () => {
 
   it('emits year bands over month ticks', () => {
     const yearly = createTimeScale({
-      minTime: dayjs('2024-11-01').valueOf(),
-      maxTime: dayjs('2025-03-01').valueOf(),
+      minTime: new Date(2024, 10, 1).getTime(),
+      maxTime: new Date(2025, 2, 1).getTime(),
       scale: 'month',
       unitWidth: 96,
       padUnits: 0
@@ -254,20 +253,17 @@ describe('buildAxis', () => {
     expect(ticks[0].label).toBe('Nov');
   });
 
-  it('builds quarter ticks and year bands (hand-rolled, non-dayjs path)', () => {
-    // Quarter snapping/stepping is hand-rolled (dayjs has no quarter unit
-    // without a plugin): startOfUnit subtracts month % 3, addUnits steps by
-    // 3 months, and tick labels derive Q1–Q4 from the month index.
+  it('builds quarter ticks and year bands', () => {
     const quarterly = createTimeScale({
-      minTime: dayjs('2024-11-15').valueOf(),
-      maxTime: dayjs('2025-05-10').valueOf(),
+      minTime: new Date(2024, 10, 15).getTime(),
+      maxTime: new Date(2025, 4, 10).getTime(),
       scale: 'quarter',
       unitWidth: 140,
       padUnits: 0
     });
     // Nov 15 snaps back to Q4's start; May 10 is in Q2, +1 unit → Jul 1.
-    expect(dayjs(quarterly.t0).format('YYYY-MM-DD')).toBe('2024-10-01');
-    expect(dayjs(quarterly.t1).format('YYYY-MM-DD')).toBe('2025-07-01');
+    expect(quarterly.t0).toBe(new Date(2024, 9, 1).getTime());
+    expect(quarterly.t1).toBe(new Date(2025, 6, 1).getTime());
     const { ticks, bands } = buildAxis(quarterly, 'quarter', 140);
     expect(ticks.map(t => t.label)).toEqual(['Q4', 'Q1', 'Q2', 'Q3']);
     expect(ticks[0].x).toBe(0);
@@ -276,8 +272,8 @@ describe('buildAxis', () => {
 
   it('builds week ticks snapped to week starts, with month bands', () => {
     const weekly = createTimeScale({
-      minTime: dayjs('2025-01-05').valueOf(), // a Sunday (dayjs week start)
-      maxTime: dayjs('2025-01-20').valueOf(),
+      minTime: new Date(2025, 0, 5).getTime(), // a Sunday (the week start)
+      maxTime: new Date(2025, 0, 20).getTime(),
       scale: 'week',
       unitWidth: 56,
       padUnits: 0
@@ -794,7 +790,7 @@ describe('DataView.Timeline', () => {
     expect(from).toBeInstanceOf(Date);
     expect(to).toBeInstanceOf(Date);
     // jsdom viewport is 0-wide at scrollLeft 0 → both edges sit at t0 (Jan 1).
-    expect(from.getTime()).toBe(dayjs('2025-01-01').valueOf());
+    expect(from.getTime()).toBe(new Date(2025, 0, 1).getTime());
   });
 
   it('does not re-fire onVisibleRangeChange when the window is unchanged', async () => {
@@ -846,7 +842,7 @@ describe('DataView.Timeline', () => {
     expect(onVisibleRangeChange.mock.calls.length).toBe(callsAfterMount + 1);
     const calls = onVisibleRangeChange.mock.calls;
     const [from] = calls[calls.length - 1][0];
-    expect(from.getTime()).toBe(dayjs('2025-01-06').valueOf());
+    expect(from.getTime()).toBe(new Date(2025, 0, 6).getTime());
 
     // Sub-pixel drift (scroll anchoring's float round-trip, device-pixel
     // quantization of scrollLeft) is noise, not a scroll, so no re-fire.
@@ -1767,9 +1763,9 @@ describe('DataView.Timeline actionsRef', () => {
     const range = actionsRef.current!.getVisibleRange();
     expect(range).not.toBeNull();
     const [from, to] = range!;
-    expect(from.getTime()).toBe(dayjs('2025-01-11').valueOf());
+    expect(from.getTime()).toBe(new Date(2025, 0, 11).getTime());
     // 0-wide jsdom viewport → both edges coincide.
-    expect(to.getTime()).toBe(dayjs('2025-01-11').valueOf());
+    expect(to.getTime()).toBe(new Date(2025, 0, 11).getTime());
   });
 
   it('no-ops with a dev warning while hidden, and getVisibleRange is null', () => {

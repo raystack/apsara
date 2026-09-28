@@ -4,8 +4,8 @@ import {
   type RowModel,
   TableState
 } from '@tanstack/table-core';
-import dayjs from 'dayjs';
 
+import { toDayKey } from '~/components/calendar-preview/date-adapter';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import {
   DataViewField,
@@ -29,7 +29,8 @@ export function queryToTableState(query: InternalQuery): Partial<TableState> {
   const columnFilters =
     query.filters
       ?.filter(data => {
-        if (data._type === FilterType.date) return dayjs(data.value).isValid();
+        if (data._type === FilterType.date)
+          return toDayKey(data.value) !== null;
         if (data.value !== '') return true;
         return false;
       })
@@ -262,7 +263,8 @@ export function transformToDataViewQuery(query: InternalQuery): DataViewQuery {
     filters
       ?.filter(data => {
         if (data._type === FilterType.select) return true;
-        if (data._type === FilterType.date) return dayjs(data.value).isValid();
+        if (data._type === FilterType.date)
+          return toDayKey(data.value) !== null;
         if (data.value !== '') return true;
         return false;
       })

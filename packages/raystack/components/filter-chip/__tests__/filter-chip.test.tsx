@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { defaultFormatValue } from '~/components/calendar-preview/calendar-preview-root';
 import { FilterType } from '~/types/filters';
 import { FilterChip } from '../filter-chip';
 import styles from '../filter-chip.module.css';
@@ -196,6 +197,26 @@ describe('FilterChip', () => {
         />
       );
       expect(screen.getByDisplayValue('27/05/2026')).toBeInTheDocument();
+    });
+
+    /* A chip holds a day only, so day is the one scale to match. */
+    it.each([
+      ['a Date', new Date(2026, 7, 15)],
+      ['a day key', '2026-08-15'],
+      ['an epoch', new Date(2026, 7, 15).getTime()]
+    ])('displays %s as CalendarPreview does', (_label, value) => {
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={value}
+        />
+      );
+      expect(
+        screen.getByDisplayValue(
+          defaultFormatValue(new Date(2026, 7, 15), 'day')
+        )
+      ).toBeInTheDocument();
     });
   });
 

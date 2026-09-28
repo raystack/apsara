@@ -692,7 +692,7 @@ describe('Data Table Utils', () => {
     });
 
     it('should keep valid date filters', () => {
-      const date = new Date('2023-12-01');
+      const date = new Date(2023, 11, 1);
       const query: InternalQuery = {
         filters: [
           {
@@ -707,7 +707,7 @@ describe('Data Table Utils', () => {
       const result = transformToDataTableQuery(query);
       expect(result.filters).toHaveLength(1);
       expect(result.filters![0].name).toBe('createdAt');
-      expect(result.filters![0].stringValue).toBe(date.toISOString());
+      expect(result.filters![0].stringValue).toBe('2023-12-01');
     });
 
     it('should preserve other query properties', () => {

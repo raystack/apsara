@@ -3,11 +3,18 @@ import { TZDate } from '@date-fns/tz';
 import {
   addDays,
   addMonths,
+  addWeeks,
+  addYears,
   endOfMonth,
   format,
   isValid,
   parse,
-  startOfMonth
+  parseISO,
+  startOfDay,
+  startOfMonth,
+  startOfQuarter,
+  startOfWeek,
+  startOfYear
 } from 'date-fns';
 
 export type DayKey = string;
@@ -24,6 +31,54 @@ export function dayKey(date: Date, timeZone?: string): DayKey {
     throw new RangeError(`Day is outside the supported range: ${key}`);
   }
   return key;
+}
+
+export function toDayKey(value: unknown, timeZone?: string): DayKey | null {
+  if (typeof value === 'string' && isDayKey(value)) return value;
+  const date = toInstant(value);
+  if (!date) return null;
+  try {
+    return dayKey(date, timeZone);
+  } catch {
+    return null;
+  }
+}
+
+export function toInstant(value: unknown): Date | null {
+  if (value instanceof Date) return isValid(value) ? value : null;
+  if (typeof value === 'number') {
+    const fromEpoch = new Date(value);
+    return isValid(fromEpoch) ? fromEpoch : null;
+  }
+  if (typeof value !== 'string' || value.trim() === '') return null;
+  const iso = parseISO(value);
+  if (isValid(iso)) return iso;
+  const parts = LOCAL_SHAPE.exec(value);
+  if (parts) return fromLocalParts(parts);
+  const native = new Date(value);
+  return isValid(native) ? native : null;
+}
+
+/* The shape dayjs parsed as local time. `new Date` reads some of these as UTC
+   and rolls out-of-range fields over, so they never reach it. */
+const LOCAL_SHAPE =
+  /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/;
+
+function fromLocalParts(parts: RegExpExecArray): Date | null {
+  const year = Number(parts[1]);
+  const [month = 1, day = 1, hour = 0, minute = 0, second = 0] = parts
+    .slice(2, 7)
+    .map(part => (part ? Number(part) : undefined));
+  const ms = Number((parts[7] ?? '0').slice(0, 3));
+  const date = new Date(year, month - 1, day, hour, minute, second, ms);
+  const readsBack =
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day &&
+    date.getHours() === hour &&
+    date.getMinutes() === minute &&
+    date.getSeconds() === second;
+  return readsBack ? date : null;
 }
 
 export function isDayKey(value: string): boolean {
@@ -116,6 +171,42 @@ export function formatCaptionLabel(date: Date, timeZone?: string): string {
 /* Three letters, against RDP's two-letter default. */
 export function formatWeekdayLabel(date: Date, timeZone?: string): string {
   return format(zoned(date, timeZone), 'EEE');
+}
+
+/* `TimelineScale` has `week` and stops at quarter, so it cannot share `lib/scale.ts`. */
+export const startOfUnit = {
+  day: startOfDay,
+  week: startOfWeek,
+  month: startOfMonth,
+  quarter: startOfQuarter,
+  year: startOfYear
+} as const;
+
+export const addUnit = {
+  day: addDays,
+  week: addWeeks,
+  month: addMonths,
+  year: addYears
+} as const;
+
+export function formatDayOfMonth(date: Date): string {
+  return format(date, 'd');
+}
+
+export function formatMonthShort(date: Date): string {
+  return format(date, 'MMM');
+}
+
+export function formatDayMonth(date: Date): string {
+  return format(date, 'd MMM');
+}
+
+export function formatYear(date: Date): string {
+  return format(date, 'yyyy');
+}
+
+export function formatQuarterShort(date: Date): string {
+  return format(date, 'QQQ');
 }
 
 /* Same locale as monthFromName, so the column and the parser cannot disagree. */
