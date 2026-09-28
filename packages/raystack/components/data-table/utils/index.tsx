@@ -15,6 +15,7 @@ import {
 } from '../data-table.types';
 import {
   type FilterPrimitive,
+  getDataType,
   getFilterFn,
   getFilterOperator,
   getFilterValue
@@ -346,7 +347,11 @@ export function hasActiveTableFiltering<T>(table: Table<T>): boolean {
 
 export function getDefaultTableQuery(
   defaultSort?: DataTableSort,
-  oldQuery: DataTableQuery = {}
+  oldQuery: DataTableQuery = {},
+  columns: Pick<
+    DataTableColumnDef<unknown, unknown>,
+    'accessorKey' | 'filterType'
+  >[] = []
 ): InternalQuery {
   // Convert DataTableQuery to InternalQuery
   const internalQuery = dataTableQueryToInternal(oldQuery);
@@ -354,6 +359,30 @@ export function getDefaultTableQuery(
   return {
     sort: defaultSort ? [defaultSort] : [],
     group_by: [defaultGroupOption.id],
-    ...internalQuery
+    ...internalQuery,
+    ...(internalQuery.filters && {
+      filters: withDateFilterTypes(internalQuery.filters, columns)
+    })
   };
+}
+
+/* A query from the consumer carries no filter types, and a date filter without
+   one never reaches the date comparisons. Only dates are typed here, because a
+   type changes how string and number filters are sent. */
+function withDateFilterTypes(
+  filters: InternalFilter[],
+  columns: Pick<
+    DataTableColumnDef<unknown, unknown>,
+    'accessorKey' | 'filterType'
+  >[]
+): InternalFilter[] {
+  return filters.map(filter => {
+    const column = columns.find(c => c.accessorKey === filter.name);
+    if (filter._type || column?.filterType !== FilterType.date) return filter;
+    return {
+      ...filter,
+      _type: FilterType.date,
+      _dataType: getDataType({ filterType: FilterType.date })
+    };
+  });
 }

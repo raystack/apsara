@@ -91,6 +91,9 @@ no longer stands in for another day. `dayjs` stays a dependency, because
   differently.
 - **A date filter with no value is dropped.** dayjs read an empty value
   as today, so clearing a date filter filtered the rows to today.
+- **A date filter restored from `query` filters by its date.** It lost
+  its type when the query was loaded, so it never reached the date
+  comparisons, and dayjs filtered it to today instead.
 - **A date filter holding a day that does not exist is dropped.** dayjs
   rolled `2026-02-30` over to 2 March and filtered on that.
 - **`gt` and `gte` no longer match a row whose date is missing.** dayjs
@@ -104,8 +107,8 @@ no longer stands in for another day. `dayjs` stays a dependency, because
 - **`neq` still matches a row with a missing or unreadable date.**
 
 Saved filters and URL parameters that hold an ISO timestamp are still
-read, and there is no migration. They keep the old behaviour until they
-are re-saved.
+read, as the day the instant falls on in the viewer's zone. There is no
+migration: the next query a stored filter produces carries a day key.
 
 ## 0.49.0
 

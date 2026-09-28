@@ -19,6 +19,7 @@ import {
   SortOrders
 } from '../data-view.types';
 import {
+  getDataType,
   getFilterFn,
   getFilterOperator,
   getFilterValue
@@ -402,12 +403,34 @@ export function hasActiveTableFiltering<T>(table: Table<T>): boolean {
 
 export function getDefaultTableQuery(
   defaultSort: DataViewSort,
-  oldQuery: DataViewQuery = {}
+  oldQuery: DataViewQuery = {},
+  fields: Pick<DataViewField, 'accessorKey' | 'filterType'>[] = []
 ): InternalQuery {
   const internalQuery = dataViewQueryToInternal(oldQuery);
   return {
     sort: [defaultSort],
     group_by: [defaultGroupOption.id],
-    ...internalQuery
+    ...internalQuery,
+    ...(internalQuery.filters && {
+      filters: withDateFilterTypes(internalQuery.filters, fields)
+    })
   };
+}
+
+/* A query from the consumer carries no filter types, and a date filter without
+   one never reaches the date comparisons. Only dates are typed here, because a
+   type changes how string and number filters are sent. */
+function withDateFilterTypes(
+  filters: InternalFilter[],
+  fields: Pick<DataViewField, 'accessorKey' | 'filterType'>[]
+): InternalFilter[] {
+  return filters.map(filter => {
+    const field = fields.find(f => f.accessorKey === filter.name);
+    if (filter._type || field?.filterType !== FilterType.date) return filter;
+    return {
+      ...filter,
+      _type: FilterType.date,
+      _dataType: getDataType({ filterType: FilterType.date })
+    };
+  });
 }
