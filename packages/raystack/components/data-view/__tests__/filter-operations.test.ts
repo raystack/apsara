@@ -65,13 +65,11 @@ describe('filter-operations', () => {
       expect(v.stringValue).toBe('foo%');
     });
 
-    it('emits a day key for valid dates', () => {
-      const v = getFilterValue({
-        value: new Date(2024, 0, 15, 23, 30),
-        filterType: 'date',
-        operator: 'eq'
-      });
-      expect(v).toEqual({ value: '2024-01-15', stringValue: '2024-01-15' });
+    it('emits a day key for valid dates and passes the value through', () => {
+      const value = new Date(2024, 0, 15, 23, 30);
+      const v = getFilterValue({ value, filterType: 'date', operator: 'eq' });
+      expect(v.value).toBe(value);
+      expect(v.stringValue).toBe('2024-01-15');
     });
 
     it('emits boolValue for boolean dataType', () => {
@@ -141,7 +139,6 @@ describe('date filters', () => {
 
   it.each([
     'eq',
-    'neq',
     'lt',
     'lte',
     'gt',
@@ -149,6 +146,16 @@ describe('date filters', () => {
   ] as const)('does not match an unreadable row with %s', operator => {
     expect(run(operator, DAY, 'not a date')).toBe(false);
     expect(run(operator, DAY, undefined)).toBe(false);
+  });
+
+  it('matches an unreadable row with neq', () => {
+    expect(run('neq', DAY, 'not a date')).toBe(true);
+    expect(run('neq', DAY, undefined)).toBe(true);
+    expect(run('neq', DAY, '2026-02-30')).toBe(true);
+  });
+
+  it('does not match with neq when the filter date is unreadable', () => {
+    expect(run('neq', 'not a date', '2026-08-15')).toBe(false);
   });
 
   /* dayjs read a missing filter date as "now", so an unset filter quietly
@@ -192,16 +199,18 @@ describe('stored date filters', () => {
 
   it('writes the day the viewer picked, not the UTC day', () => {
     process.env.TZ = 'Asia/Kolkata';
-    expect(
-      getFilterValue({ value: new Date(2026, 7, 15), filterType: 'date' })
-    ).toEqual({ value: '2026-08-15', stringValue: '2026-08-15' });
+    const value = new Date(2026, 7, 15);
+    const v = getFilterValue({ value, filterType: 'date' });
+    expect(v.value).toBe(value);
+    expect(v.stringValue).toBe('2026-08-15');
   });
 
-  it('rewrites a stored ISO instant as a day key', () => {
+  it('writes a stored ISO instant as its day and keeps the value', () => {
     process.env.TZ = 'Asia/Kolkata';
-    expect(
-      getFilterValue({ value: '2026-08-14T18:30:00.000Z', filterType: 'date' })
-    ).toEqual({ value: '2026-08-15', stringValue: '2026-08-15' });
+    const value = '2026-08-14T18:30:00.000Z';
+    const v = getFilterValue({ value, filterType: 'date' });
+    expect(v.value).toBe(value);
+    expect(v.stringValue).toBe('2026-08-15');
   });
 });
 

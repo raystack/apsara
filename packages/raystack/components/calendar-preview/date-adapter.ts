@@ -54,11 +54,16 @@ export function toInstant(value: unknown): Date | null {
   if (typeof value !== 'string') return null;
   const iso = parseISO(value);
   if (isValid(iso)) return iso;
+  const isoDay = ISO_DAY.exec(value);
+  if (isoDay && !isDayKey(isoDay[1])) return null;
   const parts = LOCAL_SHAPE.exec(value);
   if (parts) return fromLocalParts(parts);
   const native = new Date(value);
   return isValid(native) ? native : null;
 }
+
+/* `new Date` rolls an impossible day over, whatever suffix follows it. */
+const ISO_DAY = /^(\d{4}-\d{2}-\d{2})/;
 
 /* The shape dayjs parsed as local time. `new Date` reads some of these as UTC
    and rolls out-of-range fields over, so they never reach it. */

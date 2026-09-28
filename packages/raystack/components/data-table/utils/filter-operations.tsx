@@ -30,7 +30,8 @@ export type FilterFunctionsMap = {
   multiselect: Record<MultiSelectFilterOperatorType, FilterFn<unknown>>;
 };
 
-/* An unreadable row matches no operator, `neq` included. */
+/* An unreadable row cannot be placed before or after a day, so it matches none
+   of these. */
 function onDay(
   test: (day: DayKey, filterDay: DayKey) => boolean
 ): FilterFn<unknown> {
@@ -40,6 +41,16 @@ function onDay(
     return day !== null && filterDay !== null && test(day, filterDay);
   };
 }
+
+/* A row with no readable date is still not the filter's day. */
+const notOnDay: FilterFn<unknown> = (
+  row,
+  columnId,
+  filterValue: FilterValue
+) => {
+  const filterDay = toDayKey(filterValue.date);
+  return filterDay !== null && toDayKey(row.getValue(columnId)) !== filterDay;
+};
 
 export const filterOperationsMap: FilterFunctionsMap = {
   number: {
@@ -93,7 +104,7 @@ export const filterOperationsMap: FilterFunctionsMap = {
   },
   date: {
     eq: onDay((day, filterDay) => day === filterDay),
-    neq: onDay((day, filterDay) => day !== filterDay),
+    neq: notOnDay,
     lt: onDay((day, filterDay) => day < filterDay),
     lte: onDay((day, filterDay) => day <= filterDay),
     gt: onDay((day, filterDay) => day > filterDay),
@@ -149,7 +160,7 @@ const handleStringBasedTypes = (
   switch (filterType) {
     case FilterType.date: {
       const day = toDayKey(value);
-      return { value: day ?? value, stringValue: day ?? '' };
+      return { value, stringValue: day ?? '' };
     }
     case FilterType.select:
       return {

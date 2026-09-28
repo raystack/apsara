@@ -329,6 +329,21 @@ describe('toInstant', () => {
     expect(toInstant(input)).toBeNull();
   });
 
+  it.each([
+    '2023-02-30',
+    '2026-13-01',
+    '2023-02-30T00:00:00Z',
+    '2026-02-30T12:00:00+05:30'
+  ])('rejects the impossible day in %s', input => {
+    expect(toInstant(input)).toBeNull();
+  });
+
+  it('reads a real day with a zone suffix', () => {
+    expect(toInstant('2023-02-28T00:00:00Z')?.getTime()).toBe(
+      Date.UTC(2023, 1, 28)
+    );
+  });
+
   it('keeps milliseconds from a longer fraction in a local time', () => {
     expect(toInstant('2023/12/01 10:30:00.123456')?.getTime()).toBe(
       new Date(2023, 11, 1, 10, 30, 0, 123).getTime()
