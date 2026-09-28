@@ -54,8 +54,8 @@ export interface ChipProps {
 
   /**
    * Ref to the rendered element. The chip is a `<button>` when `onClick` is set
-   * and it is not dismissible, and a `<span>` otherwise, so the ref accepts
-   * either.
+   * and it is not dismissible, and a `<span>` otherwise, so the ref points to
+   * whichever element is rendered.
    */
-  ref?: React.Ref<HTMLSpanElement | HTMLButtonElement>;
+  ref?: React.Ref<HTMLSpanElement>;
 }

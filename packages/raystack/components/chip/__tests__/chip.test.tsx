@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { type IconProps, IconProvider } from '~/icons';
 import { Chip } from '../chip';
 import styles from '../chip.module.css';
 
@@ -138,8 +139,6 @@ describe('Chip', () => {
     });
 
     it('stays a span when dismissible, even with onClick', () => {
-      // `isInteractive = !!onClick && !isDismissible` — pins the element-switch
-      // rule that the union ref type documents.
       const ref = createRef<HTMLSpanElement>();
       render(
         <Chip ref={ref} isDismissible onClick={vi.fn()} onDismiss={vi.fn()}>
@@ -169,6 +168,30 @@ describe('Chip', () => {
       const icon = container.querySelector('[data-icon="XIcon"]');
       expect(icon).toBeInTheDocument();
       expect(icon).toHaveAttribute('data-slot', 'chip-dismiss-icon');
+    });
+
+    it('sizes the dismiss icon at 12px', () => {
+      const { container } = render(<Chip isDismissible>Dismissible Chip</Chip>);
+
+      const icon = container.querySelector('[data-icon="XIcon"]');
+      expect(icon).toHaveAttribute('width', '12');
+      expect(icon).toHaveAttribute('height', '12');
+    });
+
+    it('passes the dismiss icon size to an XIcon override', () => {
+      const CustomX = (props: IconProps) => (
+        <svg data-testid='custom-x' {...props} />
+      );
+      render(
+        <IconProvider components={{ XIcon: CustomX }}>
+          <Chip isDismissible>Dismissible Chip</Chip>
+        </IconProvider>
+      );
+
+      const icon = screen.getByTestId('custom-x');
+      expect(icon).toHaveAttribute('data-icon', 'XIcon');
+      expect(icon).toHaveAttribute('width', '12');
+      expect(icon).toHaveAttribute('height', '12');
     });
 
     it('calls onDismiss when dismiss button is clicked', () => {

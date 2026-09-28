@@ -68,6 +68,8 @@ Renders a compact element for tags, labels, or attributes.
 
 <auto-type-table path="./props.ts" name="ChipProps" />
 
+The chip renders a `<button>` when `onClick` is set and it is not dismissible, and a `<span>` otherwise, so `ref` points to whichever element is rendered.
+
 ### Slots
 
 Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
