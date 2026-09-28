@@ -150,8 +150,7 @@ export const FilterChip = ({
       if (!PARTIAL_NUMBER.test(raw)) return;
 
       setFilterValue(raw);
-      const isIntermediate =
-        raw === '' || raw.endsWith('.') || Number.isNaN(Number(raw));
+      const isIntermediate = raw === '' || Number.isNaN(Number(raw));
       onValueChange?.(
         isIntermediate ? raw : Number(raw),
         operation?.value ?? ''

@@ -199,14 +199,10 @@ describe('FilterChip', () => {
       expect(input).toHaveValue('1.');
 
       expect(onValueChange).toHaveBeenNthCalledWith(1, '-', expect.any(String));
-      expect(onValueChange).toHaveBeenNthCalledWith(
-        2,
-        '1.',
-        expect.any(String)
-      );
+      expect(onValueChange).toHaveBeenNthCalledWith(2, 1, expect.any(String));
     });
 
-    it('emits a trailing decimal as a string until digits follow', () => {
+    it('emits a trailing decimal as the number it parses to', () => {
       const onValueChange = vi.fn();
       const { container } = render(
         <FilterChip
@@ -219,13 +215,13 @@ describe('FilterChip', () => {
       const input = getInput(container);
 
       fireEvent.change(input, { target: { value: '1.' } });
-      expect(onValueChange).toHaveBeenLastCalledWith('1.', expect.any(String));
+      expect(onValueChange).toHaveBeenLastCalledWith(1, expect.any(String));
 
       fireEvent.change(input, { target: { value: '1.5' } });
       expect(onValueChange).toHaveBeenLastCalledWith(1.5, expect.any(String));
     });
 
-    it('emits a negative trailing decimal as a string', () => {
+    it('emits a negative trailing decimal as a number', () => {
       const onValueChange = vi.fn();
       const { container } = render(
         <FilterChip
@@ -237,7 +233,7 @@ describe('FilterChip', () => {
 
       fireEvent.change(getInput(container), { target: { value: '-1.' } });
 
-      expect(onValueChange).toHaveBeenCalledWith('-1.', expect.any(String));
+      expect(onValueChange).toHaveBeenCalledWith(-1, expect.any(String));
     });
 
     it('emits an empty string when the field is cleared', () => {
