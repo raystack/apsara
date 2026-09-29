@@ -18,14 +18,6 @@
   border-radius: inherit;
 }
 
-.overscroll-behavior-contain {
-  overscroll-behavior: contain;
-}
-
-.overscroll-behavior-none {
-  overscroll-behavior: none;
-}
-
 .scrollbar {
   display: flex;
   user-select: none;

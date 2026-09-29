@@ -180,22 +180,6 @@ describe('ScrollArea', () => {
     });
   });
 
-  describe('Overscroll Behavior', () => {
-    it.each([
-      'contain',
-      'none'
-    ] as const)('applies overscroll-behavior %s to the viewport', value => {
-      const { container } = render(
-        <BasicScrollArea overscrollBehavior={value}>
-          <div>Content</div>
-        </BasicScrollArea>
-      );
-
-      const viewport = container.querySelector(`.${styles.viewport}`);
-      expect(viewport).toHaveClass(styles[`overscroll-behavior-${value}`]);
-    });
-  });
-
   describe('Custom Props', () => {
     it('applies custom data attributes', () => {
       render(

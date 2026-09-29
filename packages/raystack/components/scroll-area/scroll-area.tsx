@@ -9,17 +9,11 @@ export type ScrollAreaType = 'always' | 'hover' | 'scroll';
 
 export interface ScrollAreaProps extends ScrollAreaPrimitive.Root.Props {
   type?: ScrollAreaType;
-  /**
-   * Sets `overscroll-behavior` on the viewport.
-   * @default 'auto'
-   */
-  overscrollBehavior?: 'auto' | 'contain' | 'none';
 }
 
 export function ScrollArea({
   className,
   type = 'hover',
-  overscrollBehavior = 'auto',
   children,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
@@ -33,10 +27,7 @@ export function ScrollArea({
       {...props}
     >
       <ScrollAreaPrimitive.Viewport
-        className={cx(
-          styles.viewport,
-          styles[`overscroll-behavior-${overscrollBehavior}`]
-        )}
+        className={styles.viewport}
         role={hasLabel ? 'region' : undefined}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
