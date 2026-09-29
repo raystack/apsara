@@ -57,13 +57,6 @@ describe('Avatar', () => {
       expect(screen.getByTestId('custom-fallback')).toBeInTheDocument();
     });
 
-    it('applies the disabled class', () => {
-      const { container } = render(<Avatar disabled fallback='JD' />);
-      const avatar = container.querySelector('[data-slot="avatar"]');
-      expect(avatar).toHaveClass(styles['avatar-disabled']);
-      expect(avatar).not.toHaveAttribute('disabled');
-    });
-
     it('calls onLoadingStatusChange with the image status', async () => {
       const onLoadingStatusChange = vi.fn();
       render(

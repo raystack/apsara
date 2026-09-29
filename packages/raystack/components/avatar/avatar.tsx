@@ -40,9 +40,6 @@ const avatar = cva(styles.avatar, {
       solid: styles['avatar-solid'],
       soft: styles['avatar-soft']
     },
-    disabled: {
-      true: styles['avatar-disabled']
-    },
     color: {
       indigo: styles['avatar-color-indigo'],
       orange: styles['avatar-color-orange'],
@@ -160,7 +157,6 @@ export interface AvatarProps
   onLoadingStatusChange?: AvatarPrimitive.Image.Props['onLoadingStatusChange'];
   variant?: 'solid' | 'soft';
   color?: AVATAR_COLORS;
-  disabled?: boolean;
   className?: string;
 }
 
@@ -175,7 +171,6 @@ const AvatarRoot = ({
   radius,
   variant,
   color,
-  disabled,
   ...props
 }: AvatarProps) => {
   const sawLoadingRef = useRef(false);
@@ -197,7 +192,7 @@ const AvatarRoot = ({
     <AvatarPrimitive.Root
       className={cx(
         styles.imageWrapper,
-        avatar({ size, radius, variant, color, disabled }),
+        avatar({ size, radius, variant, color }),
         className
       )}
       data-slot='avatar'

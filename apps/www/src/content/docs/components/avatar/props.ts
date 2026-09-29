@@ -55,12 +55,6 @@ export interface AvatarProps {
    */
   render?: React.ReactElement;
 
-  /**
-   * Dims the avatar
-   * @defaultValue false
-   */
-  disabled?: boolean;
-
   /** Additional CSS class names */
   className?: string;
 

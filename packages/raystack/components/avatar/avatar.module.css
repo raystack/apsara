@@ -16,10 +16,6 @@
   --fallback-letter-spacing: 0.03em;
 }
 
-.avatar-disabled {
-  opacity: 0.5;
-}
-
 .avatar-solid {
   --avatar-opacity: 1;
 }
