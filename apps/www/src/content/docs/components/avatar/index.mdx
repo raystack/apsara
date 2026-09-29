@@ -11,7 +11,8 @@ import {
   colorsDemo,
   radiusDemo,
   imageDemo,
-  generatedColorDemo
+  generatedColorDemo,
+  groupDemo
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -70,6 +71,12 @@ Avatar can display user images with graceful fallback to initials when images fa
 use `getAvatarColor` utility to generate colors based on a string.
 
 <Demo data={generatedColorDemo} />
+
+### Group
+
+`AvatarGroup` overlaps its avatars. Each avatar size sets its own overlap. With `max`, it shows a count avatar for the rest. The count avatar takes its size, radius, and variant from the first avatar, even when that avatar is inside a `Tooltip`.
+
+<Demo data={groupDemo} />
 
 ## API Reference
 

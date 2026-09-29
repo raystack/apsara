@@ -14,6 +14,14 @@ export interface AvatarProps {
   /** Content to display when image fails to load or while loading */
   fallback?: React.ReactNode;
 
+  /** Milliseconds to wait before showing the fallback */
+  fallbackDelay?: number;
+
+  /** Called when the image loading status changes */
+  onLoadingStatusChange?: (
+    status: 'idle' | 'loading' | 'loaded' | 'error'
+  ) => void;
+
   /**
    * Visual style variant
    * @defaultValue "soft"
@@ -46,6 +54,12 @@ export interface AvatarProps {
    * @remarks `ReactElement | function`
    */
   render?: React.ReactElement;
+
+  /**
+   * Dims the avatar
+   * @defaultValue false
+   */
+  disabled?: boolean;
 
   /** Additional CSS class names */
   className?: string;

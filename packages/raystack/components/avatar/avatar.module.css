@@ -395,42 +395,42 @@
 }
 
 /* Avatar Group Size Variants */
-.avatar-size-1 .avatarWrapper {
+.avatarWrapper:has(.avatar-size-1) {
   --avatar-overlap: 0.8em;
 }
-.avatar-size-2 .avatarWrapper {
+.avatarWrapper:has(.avatar-size-2) {
   --avatar-overlap: 0.9em;
 }
-.avatar-size-3 .avatarWrapper {
+.avatarWrapper:has(.avatar-size-3) {
   --avatar-overlap: 1em;
 }
-.avatar-size-4 .avatarWrapper {
+.avatarWrapper:has(.avatar-size-4) {
   --avatar-overlap: 1.1em;
 }
-.avatar-size-5 .avatarWrapper {
+.avatarWrapper:has(.avatar-size-5) {
   --avatar-overlap: 1.2em;
 }
-.avatar-size-6 .avatarWrapper {
+.avatarWrapper:has(.avatar-size-6) {
   --avatar-overlap: 1.3em;
 }
-.avatar-size-7 .avatarWrapper {
+.avatarWrapper:has(.avatar-size-7) {
   --avatar-overlap: 1.4em;
 }
-.avatar-size-8 .avatarWrapper {
+.avatarWrapper:has(.avatar-size-8) {
   --avatar-overlap: 1.5em;
 }
-.avatar-size-9 .avatarWrapper {
+.avatarWrapper:has(.avatar-size-9) {
   --avatar-overlap: 1.6em;
 }
-.avatar-size-10 .avatarWrapper {
+.avatarWrapper:has(.avatar-size-10) {
   --avatar-overlap: 1.7em;
 }
-.avatar-size-11 .avatarWrapper {
+.avatarWrapper:has(.avatar-size-11) {
   --avatar-overlap: 1.8em;
 }
-.avatar-size-12 .avatarWrapper {
+.avatarWrapper:has(.avatar-size-12) {
   --avatar-overlap: 1.9em;
 }
-.avatar-size-13 .avatarWrapper {
+.avatarWrapper:has(.avatar-size-13) {
   --avatar-overlap: 2em;
 }

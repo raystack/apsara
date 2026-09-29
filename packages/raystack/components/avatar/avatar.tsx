@@ -3,9 +3,9 @@
 import { Avatar as AvatarPrimitive } from '@base-ui/react/avatar';
 import { cva, cx, VariantProps } from 'class-variance-authority';
 import {
+  Children,
   ComponentProps,
   isValidElement,
-  ReactElement,
   ReactNode,
   useRef,
   useState
@@ -132,24 +132,21 @@ const avatar = cva(styles.avatar, {
 const image = cva(styles.image);
 
 /*
- * @desc Recursively get the avatar props even if it's
- * wrapped in another component like Tooltip, Flex, etc.
+ * @desc Finds the first Avatar in `children` or `render`, so it works
+ * when wrapped in another component like Tooltip, Flex, etc.
  */
-export const getAvatarProps = (
-  element: ReactElement<AvatarProps>
-): AvatarProps => {
-  const props = element.props as AvatarProps & { children?: ReactNode };
-
-  if (element.type === Avatar) {
-    return props;
+export const getAvatarProps = (node: ReactNode): AvatarProps | undefined => {
+  if (!isValidElement<{ children?: ReactNode; render?: ReactNode }>(node)) {
+    return undefined;
   }
+  if (node.type === Avatar) return node.props as AvatarProps;
 
-  if (props.children) {
-    if (isValidElement<AvatarProps>(props.children)) {
-      return getAvatarProps(props.children);
-    }
+  const { render, children } = node.props;
+  for (const child of [render, ...Children.toArray(children)]) {
+    const props = getAvatarProps(child);
+    if (props) return props;
   }
-  return {};
+  return undefined;
 };
 
 export interface AvatarProps
@@ -159,8 +156,11 @@ export interface AvatarProps
   src?: string;
   alt?: string;
   fallback?: ReactNode;
+  fallbackDelay?: AvatarPrimitive.Fallback.Props['delay'];
+  onLoadingStatusChange?: AvatarPrimitive.Image.Props['onLoadingStatusChange'];
   variant?: 'solid' | 'soft';
   color?: AVATAR_COLORS;
+  disabled?: boolean;
   className?: string;
 }
 
@@ -169,15 +169,19 @@ const AvatarRoot = ({
   alt,
   src,
   fallback,
+  fallbackDelay,
+  onLoadingStatusChange,
   size,
   radius,
   variant,
   color,
+  disabled,
   ...props
 }: AvatarProps) => {
   const sawLoadingRef = useRef(false);
   const [fadeIn, setFadeIn] = useState(false);
   const handleLoadingStatusChange = (status: ImageLoadingStatus) => {
+    onLoadingStatusChange?.(status);
     if (status === 'loading') {
       sawLoadingRef.current = true;
       setFadeIn(false);
@@ -193,7 +197,7 @@ const AvatarRoot = ({
     <AvatarPrimitive.Root
       className={cx(
         styles.imageWrapper,
-        avatar({ size, radius, variant, color }),
+        avatar({ size, radius, variant, color, disabled }),
         className
       )}
       data-slot='avatar'
@@ -207,6 +211,7 @@ const AvatarRoot = ({
         data-slot='avatar-image'
       />
       <AvatarPrimitive.Fallback
+        delay={fallbackDelay}
         className={styles.fallback}
         data-slot='avatar-fallback'
       >
@@ -243,21 +248,17 @@ export const AvatarGroup = ({
       data-slot='avatar-group'
       {...props}
     >
-      {avatars.map((avatar, index) => (
-        <div
-          key={index}
-          className={styles.avatarWrapper}
-          data-slot='avatar-group-item'
-        >
+      {Children.map(avatars, avatar => (
+        <div className={styles.avatarWrapper} data-slot='avatar-group-item'>
           {avatar}
         </div>
       ))}
       {count > 0 && (
         <div className={styles.avatarWrapper} data-slot='avatar-group-item'>
           <Avatar
-            size={firstAvatarProps.size}
-            radius={firstAvatarProps.radius}
-            variant={firstAvatarProps.variant}
+            size={firstAvatarProps?.size}
+            radius={firstAvatarProps?.radius}
+            variant={firstAvatarProps?.variant}
             color='neutral'
             fallback={`+${count}`}
           />
