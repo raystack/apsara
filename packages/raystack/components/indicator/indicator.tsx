@@ -11,9 +11,6 @@ const indicator = cva(styles.indicator, {
       danger: styles['indicator-variant-danger'],
       success: styles['indicator-variant-success'],
       neutral: styles['indicator-variant-neutral']
-    },
-    pulse: {
-      true: styles['indicator-pulse']
     }
   },
   defaultVariants: {
@@ -58,11 +55,18 @@ export const Indicator = ({
     >
       {children}
       <div
-        className={indicator({ variant, pulse, className })}
+        className={indicator({ variant, className })}
         role='status'
         aria-label={accessibilityLabel}
         data-slot='indicator-badge'
       >
+        {pulse && (
+          <span
+            className={styles.pulse}
+            aria-hidden='true'
+            data-slot='indicator-pulse'
+          />
+        )}
         {label ? (
           <span
             className={styles.label}

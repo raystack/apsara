@@ -40,16 +40,19 @@
   border-radius: var(--rs-radius-full);
 }
 
+/* Sits under the label: `.indicator` has a transform, so it is the stacking context. */
+.pulse {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: inherit;
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  /* Sits under the label: `.indicator` has a transform, so it is the stacking context. */
-  .indicator-pulse::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    background-color: inherit;
-    animation: indicator-pulse 1.5s var(--rs-ease-out) infinite;
+  .pulse {
+    animation: indicator-pulse var(--indicator-pulse-duration, 1.5s)
+      var(--rs-ease-out) infinite;
   }
 }
 

@@ -38,6 +38,18 @@ When no label is provided, the Indicator will show as a dot
 
 Set `pulse` to mark a live or active state. The badge does not animate when the user's system asks for reduced motion.
 
+To change the speed, set `--indicator-pulse-duration` (default `1.5s`) on the Indicator or any ancestor:
+
+```css
+.slow-pulse {
+  --indicator-pulse-duration: 3s;
+}
+```
+
+```tsx
+<Indicator pulse className="slow-pulse" />
+```
+
 <Demo data={pulseDemo} />
 
 ## API Reference
@@ -56,6 +68,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `indicator-badge` | The `role="status"` indicator itself |
 | `indicator-label` | The label text (when `label` is set) |
 | `indicator-dot` | The dot (when no `label` is set) |
+| `indicator-pulse` | The pulse ring (when `pulse` is set) |
 
 ## Accessibility
 
