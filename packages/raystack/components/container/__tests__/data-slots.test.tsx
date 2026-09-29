@@ -10,6 +10,11 @@ describe('Container data-slot contract', () => {
     expect(getSlot(container, 'container')?.tagName).toBe('DIV');
   });
 
+  it('keeps the slot on the rendered element with a custom render', () => {
+    const { container } = render(<Container render={<section />} />);
+    expect(getSlot(container, 'container')?.tagName).toBe('SECTION');
+  });
+
   it('lets callers override the slot name', () => {
     const { container } = render(<Container data-slot='custom' />);
     expect(getSlot(container, 'custom')).not.toBeNull();
