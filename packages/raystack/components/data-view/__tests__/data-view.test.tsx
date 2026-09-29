@@ -381,6 +381,36 @@ describe('DataView', () => {
       expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
       expect(screen.getByText('Jane Smith')).toBeInTheDocument();
     });
+
+    it('Filters forwards positioning props to the add-filter menu', async () => {
+      const user = userEvent.setup();
+      render(
+        <DataView data={mockData} fields={mockFields} defaultSort={defaultSort}>
+          <DataView.Filters align='end' side='top' />
+          <DataView.List variant='table' columns={mockColumns} />
+        </DataView>
+      );
+      await user.click(screen.getByRole('button', { name: /filter/i }));
+      const item = await screen.findByRole('menuitem', { name: 'Name' });
+      const positioner = item.closest('[data-align]');
+      expect(positioner).toHaveAttribute('data-align', 'end');
+      expect(positioner).toHaveAttribute('data-side', 'top');
+    });
+
+    it('DisplayControls forwards positioning props to the popover', async () => {
+      const user = userEvent.setup();
+      render(
+        <DataView data={mockData} fields={mockFields} defaultSort={defaultSort}>
+          <DataView.DisplayControls align='start' side='top' />
+          <DataView.List variant='table' columns={mockColumns} />
+        </DataView>
+      );
+      await user.click(screen.getByRole('button', { name: 'Display' }));
+      const reset = await screen.findByText('Reset to default');
+      const positioner = reset.closest('[data-align]');
+      expect(positioner).toHaveAttribute('data-align', 'start');
+      expect(positioner).toHaveAttribute('data-side', 'top');
+    });
   });
 
   describe('Multi-view', () => {

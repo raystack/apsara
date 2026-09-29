@@ -433,9 +433,51 @@ export interface DataViewClearFiltersProps {
   className?: string;
 }
 
+export interface DataViewFiltersProps {
+  /** Custom trigger for the add-filter menu. A function receives the available and applied filters. */
+  trigger?:
+    | ReactNode
+    | ((args: {
+        availableFilters: DataViewField[];
+        appliedFilters: Set<string>;
+      }) => ReactNode);
+  /** Class applied to the filters row. */
+  className?: string;
+  /**
+   * Alignment of the add-filter menu against its trigger.
+   * @default "start"
+   */
+  align?: 'start' | 'center' | 'end';
+  /**
+   * Side of the trigger that the add-filter menu opens on.
+   * @default "bottom"
+   */
+  side?: 'top' | 'bottom' | 'left' | 'right' | 'inline-end' | 'inline-start';
+  /**
+   * Distance in pixels between the trigger and the add-filter menu.
+   * @default 4
+   */
+  sideOffset?: number;
+}
+
 export interface DataViewDisplayControlsProps {
   /** Custom trigger element for the popover. */
   trigger?: ReactNode;
+  /**
+   * Alignment of the popover against its trigger.
+   * @default "end"
+   */
+  align?: 'start' | 'center' | 'end';
+  /**
+   * Side of the trigger that the popover opens on.
+   * @default "bottom"
+   */
+  side?: 'top' | 'bottom' | 'left' | 'right' | 'inline-end' | 'inline-start';
+  /**
+   * Distance in pixels between the trigger and the popover.
+   * @default 4
+   */
+  sideOffset?: number;
   /** Hide the multi-view switcher (shown by default when `views.length > 1`). */
   hideViewSwitcher?: boolean;
   /** Hide the Ordering (sort) control. */
