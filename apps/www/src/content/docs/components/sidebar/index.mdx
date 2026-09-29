@@ -132,10 +132,8 @@ so hover the thin strip at the edge instead, as the "Hidden" tab below shows.
 The peek waits 100ms so it does not fire when the mouse only passes over.
 Change that with `peekDelay`.
 
-The overlay always has an opaque background, also with `variant="inset"`.
-Set `peekBackdrop` to dim the page behind it, as the "Backdrop" tab shows. Style
-the backdrop with the `sidebar-backdrop` slot. `onPeekChange` reports when a
-peek starts or ends, for UI outside the sidebar.
+`onPeekChange` reports when a peek starts or ends, for example to dim the page
+behind the sidebar.
 
 <Demo data={peekOnHoverDemo} />
 
@@ -219,7 +217,7 @@ The footer section is a container that accepts all `div` props. It's commonly us
 
 A button that toggles the sidebar open/closed. It works whether the Sidebar is controlled or uncontrolled, so you can drop it into a header without wiring up any state yourself. It accepts all `IconButton` props (e.g. `size`) plus the ones below.
 
-*Note: disabled automatically when the Sidebar has `collapsible="none"`. If you use `collapsible="hidden"`, don't place `Sidebar.Trigger` inside `Sidebar.Header`/`Main`/`Footer`, because those sections are hidden along with the rest of the collapsed content, taking the trigger with them. Render it as a direct child of `<Sidebar>` instead, or drive `open`/`onOpenChange` yourself with a toggle button that lives outside `<Sidebar>` entirely (e.g. in your app's top bar).*
+*Note: disabled automatically when the Sidebar has `collapsible="none"`. If you use `collapsible="hidden"`, don't place `Sidebar.Trigger` inside `Sidebar.Header`/`Main`/`Footer`, because those sections are hidden along with the rest of the collapsed content, taking the trigger with them. Render it as a direct child of `<Sidebar>` instead, or use [external control](#external-control).*
 
 <auto-type-table path="./props.ts" name="SidebarTriggerProps" />
 
@@ -239,7 +237,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 |------|---------|
 | `sidebar` | The root `<aside>` |
 | `sidebar-toggle` | The resize handle that expands/collapses the sidebar (when `collapsible`) |
-| `sidebar-backdrop` | Backdrop behind a peeking sidebar (when `peekBackdrop`) |
 | `sidebar-trigger` | `Sidebar.Trigger` button |
 | `sidebar-header` | `Sidebar.Header` container |
 | `sidebar-main` | `Sidebar.Main` container |

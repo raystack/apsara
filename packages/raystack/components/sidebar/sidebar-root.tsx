@@ -98,11 +98,6 @@ export interface SidebarRootProps extends ComponentProps<'aside'> {
   peekDelay?: number;
   /** Called when a hover peek starts or ends. */
   onPeekChange?: (isPeeking: boolean) => void;
-  /**
-   * Renders a backdrop behind the sidebar while it peeks.
-   * @default false
-   */
-  peekBackdrop?: boolean;
   /** Tooltip shown when hovering the collapse/expand handle. */
   collapseTooltip?: ReactNode;
   open?: boolean;
@@ -126,7 +121,6 @@ export function SidebarRoot({
   peekOnHover = false,
   peekDelay = DEFAULT_PEEK_DELAY,
   onPeekChange,
-  peekBackdrop = false,
   collapseTooltip,
   defaultOpen = true,
   children,
@@ -222,9 +216,6 @@ export function SidebarRoot({
       }}
     >
       <SidebarPopupContext value={handlePopupOpenChange}>
-        {peekBackdrop && isPeeking && (
-          <div className={styles.backdrop} data-slot='sidebar-backdrop' />
-        )}
         <aside
           id={sidebarId}
           className={cx(styles.root, className)}

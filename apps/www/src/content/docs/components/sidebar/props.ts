@@ -39,11 +39,6 @@ export interface SidebarRootProps {
   /** Called when a hover peek starts or ends. */
   onPeekChange?: (isPeeking: boolean) => void;
 
-  /** Renders a backdrop behind the sidebar while it peeks.
-   * @default false
-   */
-  peekBackdrop?: boolean;
-
   /** Position of the Sidebar.
    * @default "left"
    */
