@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { createRef } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ColorPicker } from '../color-picker';
 
@@ -45,6 +46,19 @@ describe('ColorPicker', () => {
       const picker = screen.getByTestId('color-picker');
       expect(picker).toBeInTheDocument();
       expect(picker).toHaveClass('custom-picker');
+    });
+
+    it('attaches refs to Root and Input', () => {
+      const rootRef = createRef<HTMLDivElement>();
+      const inputRef = createRef<HTMLInputElement>();
+      render(
+        <ColorPicker ref={rootRef} data-testid='color-picker'>
+          <ColorPicker.Input ref={inputRef} data-testid='color-input' />
+        </ColorPicker>
+      );
+
+      expect(rootRef.current).toBe(screen.getByTestId('color-picker'));
+      expect(inputRef.current).toBe(screen.getByTestId('color-input'));
     });
   });
 
@@ -138,6 +152,31 @@ describe('ColorPicker', () => {
 
       expect(onValueChange).toHaveBeenCalled();
     });
+
+    it('updates the color on pointer drag when a ref is passed', () => {
+      const onValueChange = vi.fn();
+      const ref = createRef<HTMLDivElement>();
+      render(
+        <ColorPicker mode='oklch' onValueChange={onValueChange}>
+          <ColorPicker.Area ref={ref} />
+        </ColorPicker>
+      );
+
+      const area = screen.getByRole('slider', { name: /color area/i });
+      expect(ref.current).toBe(area);
+      area.getBoundingClientRect = () =>
+        ({ left: 0, top: 0, width: 100, height: 100 }) as DOMRect;
+      area.setPointerCapture = vi.fn();
+      area.hasPointerCapture = vi.fn().mockReturnValue(true);
+
+      fireEvent.pointerDown(area, { pointerId: 1, clientX: 0, clientY: 0 });
+      expect(onValueChange).toHaveBeenLastCalledWith('oklch(1 0 0)', 'oklch');
+      fireEvent.pointerMove(area, { pointerId: 1, clientX: 50, clientY: 50 });
+      expect(onValueChange).toHaveBeenLastCalledWith(
+        'oklch(0.5 0.2 0)',
+        'oklch'
+      );
+    });
   });
 
   describe('ColorPicker.Hue', () => {
@@ -229,7 +268,41 @@ describe('ColorPicker', () => {
 
       const input = screen.getByTestId('color-input');
       expect(input).toBeInTheDocument();
-      expect(input).toHaveAttribute('readonly');
+      expect(input).not.toHaveAttribute('readonly');
+    });
+
+    it('applies a typed color on Enter', () => {
+      const onValueChange = vi.fn();
+      render(
+        <ColorPicker onValueChange={onValueChange}>
+          <ColorPicker.Input data-testid='color-input' />
+        </ColorPicker>
+      );
+
+      const input = screen.getByTestId('color-input');
+      fireEvent.change(input, { target: { value: 'rgb(0, 255, 0)' } });
+      expect(onValueChange).not.toHaveBeenCalled();
+      fireEvent.keyDown(input, { key: 'Enter' });
+
+      expect(onValueChange).toHaveBeenCalledWith('#00FF00', 'hex');
+      expect(input).toHaveValue('#00FF00');
+    });
+
+    it('reverts an invalid color on blur', () => {
+      const onValueChange = vi.fn();
+      render(
+        <ColorPicker defaultValue='#ff0000' onValueChange={onValueChange}>
+          <ColorPicker.Input data-testid='color-input' />
+        </ColorPicker>
+      );
+
+      const input = screen.getByTestId('color-input');
+      fireEvent.change(input, { target: { value: 'not a color' } });
+      expect(input).toHaveValue('not a color');
+      fireEvent.blur(input);
+
+      expect(onValueChange).not.toHaveBeenCalled();
+      expect(input).toHaveValue('#FF0000');
     });
 
     it('displays color value in default mode', () => {
