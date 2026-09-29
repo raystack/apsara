@@ -5,6 +5,7 @@ import { PropsWithChildren } from 'react';
 import { Flex } from '../../flex';
 import styles from '../data-view.module.css';
 import { useDataView } from '../hooks/useDataView';
+import { countLeafRows, hasActiveTableFiltering } from '../utils';
 import { DisplayControls } from './display-controls';
 import { Filters } from './filters';
 
@@ -23,22 +24,13 @@ export function Toolbar<TData>({
   className,
   children
 }: PropsWithChildren<ToolbarProps>) {
-  const { shouldShowFilters } = useDataView<TData>();
+  const { shouldShowFilters, table, isLoading } = useDataView<TData>();
   if (!shouldShowFilters) return null;
 
-  if (children) {
-    return (
-      <Flex
-        className={cx(styles['toolbar'], className)}
-        justify='between'
-        gap={3}
-        align='start'
-        data-slot='data-view-toolbar'
-      >
-        {children}
-      </Flex>
-    );
-  }
+  const resultCount =
+    !isLoading && hasActiveTableFiltering(table)
+      ? countLeafRows(table.getFilteredRowModel().rows)
+      : null;
 
   return (
     <Flex
@@ -48,8 +40,21 @@ export function Toolbar<TData>({
       align='start'
       data-slot='data-view-toolbar'
     >
-      <Filters<TData> />
-      <DisplayControls<TData> />
+      {children || (
+        <>
+          <Filters<TData> />
+          <DisplayControls<TData> />
+        </>
+      )}
+      <span
+        role='status'
+        className={styles['sr-only']}
+        data-slot='data-view-toolbar-status'
+      >
+        {resultCount === null
+          ? ''
+          : `${resultCount} ${resultCount === 1 ? 'result' : 'results'}`}
+      </span>
     </Flex>
   );
 }

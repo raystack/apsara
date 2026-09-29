@@ -381,6 +381,70 @@ describe('DataView', () => {
       expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
       expect(screen.getByText('Jane Smith')).toBeInTheDocument();
     });
+
+    it('announces the result count while a search is active', async () => {
+      const user = userEvent.setup();
+      render(
+        <DataView data={mockData} fields={mockFields} defaultSort={defaultSort}>
+          <DataView.Toolbar>
+            <DataView.Search />
+          </DataView.Toolbar>
+          <DataView.List variant='table' columns={mockColumns} />
+        </DataView>
+      );
+      const status = screen.getByRole('status');
+      expect(status).toBeEmptyDOMElement();
+
+      const search = screen.getByRole('textbox');
+      await user.type(search, 'jo');
+      expect(status).toHaveTextContent('2 results');
+
+      await user.type(search, 'hn d');
+      expect(status).toHaveTextContent('1 result');
+
+      await user.clear(search);
+      expect(status).toBeEmptyDOMElement();
+    });
+
+    it('counts only data rows in the announced result count when grouped', () => {
+      render(
+        <DataView
+          data={mockData}
+          fields={mockFields}
+          defaultSort={defaultSort}
+          query={{
+            group_by: ['status'],
+            filters: [{ name: 'status', operator: 'eq', value: 'active' }]
+          }}
+        >
+          <DataView.Toolbar />
+        </DataView>
+      );
+      expect(screen.getByRole('status')).toHaveTextContent('2 results');
+    });
+
+    it('names the icon-only add-filter and sort direction buttons', async () => {
+      const user = userEvent.setup();
+      render(
+        <DataView
+          data={mockData}
+          fields={mockFields}
+          defaultSort={defaultSort}
+          query={{ filters: [{ name: 'name', operator: 'eq', value: 'x' }] }}
+        >
+          <DataView.Toolbar />
+        </DataView>
+      );
+      expect(
+        screen.getByRole('button', { name: 'Add filter' })
+      ).toBeInTheDocument();
+
+      await user.click(screen.getByRole('button', { name: 'Display' }));
+      await user.click(screen.getByRole('button', { name: 'Sort ascending' }));
+      expect(
+        screen.getByRole('button', { name: 'Sort descending' })
+      ).toBeInTheDocument();
+    });
   });
 
   describe('Multi-view', () => {
