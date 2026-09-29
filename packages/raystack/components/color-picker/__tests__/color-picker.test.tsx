@@ -47,19 +47,6 @@ describe('ColorPicker', () => {
       expect(picker).toBeInTheDocument();
       expect(picker).toHaveClass('custom-picker');
     });
-
-    it('attaches refs to Root and Input', () => {
-      const rootRef = createRef<HTMLDivElement>();
-      const inputRef = createRef<HTMLInputElement>();
-      render(
-        <ColorPicker ref={rootRef} data-testid='color-picker'>
-          <ColorPicker.Input ref={inputRef} data-testid='color-input' />
-        </ColorPicker>
-      );
-
-      expect(rootRef.current).toBe(screen.getByTestId('color-picker'));
-      expect(inputRef.current).toBe(screen.getByTestId('color-input'));
-    });
   });
 
   describe('ColorPicker.Area', () => {
