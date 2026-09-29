@@ -8,6 +8,8 @@ import {
   playground,
   sizesDemo,
   variantDemo,
+  outlineDemo,
+  dotDemo,
   iconDemo,
   screenReaderTextDemo,
 } from "./demo.ts";
@@ -34,9 +36,21 @@ Choose between different variants to convey different meanings or importance lev
 
 <Demo data={variantDemo} />
 
+### Outline
+
+Set `outline` to draw a border in the variant color and remove the fill.
+
+<Demo data={outlineDemo} />
+
+### Dot
+
+Set `dot` to render a small colored circle, for example a notification or status marker. The badge does not render `children` or `icon` in this mode. Pass `screenReaderText` so screen readers can announce the dot.
+
+<Demo data={dotDemo} />
+
 ### Size
 
-Three sizes. `regular` is the default; `small` and `micro` fit inside table rows and beside dense labels.
+Three sizes. `small` is the default. `micro` fits inside table rows and beside dense labels.
 
 <Demo data={sizesDemo} />
 

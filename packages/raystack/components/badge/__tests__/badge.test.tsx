@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { createRef } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Badge } from '../badge';
 import styles from '../badge.module.css';
@@ -28,6 +29,12 @@ describe('Badge', () => {
       expect(screen.getByText('Count:')).toBeInTheDocument();
       expect(screen.getByText('5')).toBeInTheDocument();
     });
+
+    it('passes ref to the root span', () => {
+      const ref = createRef<HTMLSpanElement>();
+      const { container } = render(<Badge ref={ref} />);
+      expect(ref.current).toBe(container.firstChild);
+    });
   });
 
   describe('Variants', () => {
@@ -50,6 +57,28 @@ describe('Badge', () => {
       const { container } = render(<Badge>Default</Badge>);
       const badge = container.querySelector('span');
       expect(badge).toHaveClass(styles['badge-accent']);
+    });
+
+    it('renders outline', () => {
+      const { container } = render(<Badge outline>Outline</Badge>);
+      const badge = container.querySelector('span');
+      expect(badge).toHaveClass(styles['badge-outline']);
+    });
+
+    it('renders a dot without children or icon', () => {
+      const { container } = render(
+        <Badge
+          dot
+          icon={<svg data-testid='icon' />}
+          screenReaderText='3 unread'
+        >
+          3
+        </Badge>
+      );
+      const badge = container.querySelector('span');
+      expect(badge).toHaveClass(styles['badge-dot']);
+      expect(badge).toHaveTextContent(/^3 unread$/);
+      expect(screen.queryByTestId('icon')).not.toBeInTheDocument();
     });
   });
 
