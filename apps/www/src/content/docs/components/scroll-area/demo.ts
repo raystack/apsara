@@ -24,6 +24,11 @@ export const playground = {
       type: 'select',
       options: ['always', 'hover', 'scroll'],
       defaultValue: 'hover'
+    },
+    overscrollBehavior: {
+      type: 'select',
+      options: ['auto', 'contain', 'none'],
+      defaultValue: 'auto'
     }
   },
   getCode
@@ -140,4 +145,18 @@ export const typeDemo = {
 </ScrollArea>`
     }
   ]
+};
+
+export const overscrollDemo = {
+  type: 'code',
+  code: `
+<ScrollArea style={{ height: '200px', width: '300px' }} overscrollBehavior="contain">
+  <Flex direction="column" gap={2}>
+    {Array.from({ length: 20 }, (_, i) => (
+      <Text key={i} size="small">
+        Item {i + 1}
+      </Text>
+    ))}
+  </Flex>
+</ScrollArea>`
 };

@@ -11,6 +11,12 @@ export interface ScrollAreaProps {
   type?: 'always' | 'hover' | 'scroll';
 
   /**
+   * Sets `overscroll-behavior` on the viewport.
+   * @default 'auto'
+   */
+  overscrollBehavior?: 'auto' | 'contain' | 'none';
+
+  /**
    * Custom className for the root element.
    */
   className?: string;

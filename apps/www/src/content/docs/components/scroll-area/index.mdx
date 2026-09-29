@@ -11,6 +11,7 @@ import {
   horizontalDemo,
   bothScrollbarsDemo,
   typeDemo,
+  overscrollDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -21,7 +22,7 @@ Both scrollbars are always rendered and appear only when content overflows, so a
 container never jumps as content grows. The scrollbar widens from 4px to 6px on hover, a
 corner element is added automatically when both axes are visible, and scrolling chains to
 the parent page once you reach a boundary. Use the `type` prop to control when scrollbars
-appear.
+appear, and `overscrollBehavior` to stop scroll chaining.
 
 ## Anatomy
 
@@ -60,6 +61,12 @@ When content overflows both vertically and horizontally, both scrollbars appear 
 Control when the scrollbar appears using the `type` prop.
 
 <Demo data={typeDemo} />
+
+### Overscroll behavior
+
+Set `overscrollBehavior` to `contain` or `none` to keep the page from scrolling when the viewport reaches a boundary.
+
+<Demo data={overscrollDemo} />
 
 ## API Reference
 

@@ -16,7 +16,14 @@
   width: 100%;
   height: 100%;
   border-radius: inherit;
-  overscroll-behavior: auto;
+}
+
+.overscroll-behavior-contain {
+  overscroll-behavior: contain;
+}
+
+.overscroll-behavior-none {
+  overscroll-behavior: none;
 }
 
 .scrollbar {
