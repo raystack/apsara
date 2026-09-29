@@ -80,7 +80,7 @@ export function CodeBlockCollapseTrigger({
   const canCollapse = maxLines && maxLines > 0;
   const lineCount = code?.split('\n').length ?? 0;
 
-  if (!canCollapse || lineCount < maxLines) return null;
+  if (!canCollapse || lineCount <= maxLines) return null;
 
   return (
     <Button

@@ -186,5 +186,21 @@ describe('CodeBlock', () => {
 
       expect(screen.getByText('Show Code')).toBeInTheDocument();
     });
+
+    it('renders maxLines lines when collapsed', () => {
+      const { container } = render(
+        <BasicCodeBlock maxLines={2} hasCollapseTrigger />
+      );
+
+      expect(
+        container.querySelectorAll('[data-slot="code-block-line"]')
+      ).toHaveLength(2);
+    });
+
+    it('hides collapse trigger when code fits in maxLines', () => {
+      render(<BasicCodeBlock maxLines={3} hasCollapseTrigger />);
+
+      expect(screen.queryByText('Show Code')).not.toBeInTheDocument();
+    });
   });
 });
