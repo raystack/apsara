@@ -91,6 +91,24 @@ The sidebar expands and collapses, animating between the two. Collapsed keeps ic
 
 <Demo data={stateDemo} />
 
+### External control
+
+`Sidebar.Trigger` and `useSidebar` work only inside `<Sidebar>`. To toggle the sidebar from elsewhere, for example a top bar, control it with `open` and `onOpenChange`:
+
+```tsx
+const [open, setOpen] = useState(true);
+
+<IconButton
+  aria-label="Toggle sidebar"
+  aria-expanded={open}
+  aria-controls="app-sidebar"
+  onClick={() => setOpen(!open)}
+>
+  <PanelLeft />
+</IconButton>
+<Sidebar id="app-sidebar" open={open} onOpenChange={setOpen}>…</Sidebar>
+```
+
 ### Non-collapsible
 
 Set `collapsible="none"` to hide the resize handle and prevent the sidebar from being collapsed or expanded.
@@ -113,6 +131,11 @@ so hover the thin strip at the edge instead, as the "Hidden" tab below shows.
 
 The peek waits 100ms so it does not fire when the mouse only passes over.
 Change that with `peekDelay`.
+
+The overlay always has an opaque background, also with `variant="inset"`.
+Set `peekBackdrop` to dim the page behind it, as the "Backdrop" tab shows. Style
+the backdrop with the `sidebar-backdrop` slot. `onPeekChange` reports when a
+peek starts or ends, for UI outside the sidebar.
 
 <Demo data={peekOnHoverDemo} />
 
@@ -216,6 +239,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 |------|---------|
 | `sidebar` | The root `<aside>` |
 | `sidebar-toggle` | The resize handle that expands/collapses the sidebar (when `collapsible`) |
+| `sidebar-backdrop` | Backdrop behind a peeking sidebar (when `peekBackdrop`) |
 | `sidebar-trigger` | `Sidebar.Trigger` button |
 | `sidebar-header` | `Sidebar.Header` container |
 | `sidebar-main` | `Sidebar.Main` container |

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { expectSlots, getSlot } from '~/test-utils/data-slots';
 import { Sidebar } from '../sidebar';
@@ -51,6 +51,22 @@ describe('Sidebar data-slot contract', () => {
       </Sidebar>
     );
     expect(getSlot(container, 'sidebar-toggle')).toBeNull();
+  });
+
+  it('exposes the backdrop slot only while peeking with peekBackdrop', async () => {
+    const { container } = render(
+      <Sidebar open={false} peekOnHover peekBackdrop />
+    );
+    expect(getSlot(container, 'sidebar-backdrop')).toBeNull();
+
+    const nav = screen.getByRole('navigation');
+    fireEvent.mouseEnter(nav);
+    await waitFor(() =>
+      expect(getSlot(container, 'sidebar-backdrop')).not.toBeNull()
+    );
+
+    fireEvent.mouseLeave(nav);
+    expect(getSlot(container, 'sidebar-backdrop')).toBeNull();
   });
 
   it('exposes trailing icon slot on a group when provided', () => {

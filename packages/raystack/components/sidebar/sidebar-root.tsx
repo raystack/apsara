@@ -96,6 +96,13 @@ export interface SidebarRootProps extends ComponentProps<'aside'> {
    * @default 100
    */
   peekDelay?: number;
+  /** Called when a hover peek starts or ends. */
+  onPeekChange?: (isPeeking: boolean) => void;
+  /**
+   * Renders a backdrop behind the sidebar while it peeks.
+   * @default false
+   */
+  peekBackdrop?: boolean;
   /** Tooltip shown when hovering the collapse/expand handle. */
   collapseTooltip?: ReactNode;
   open?: boolean;
@@ -118,6 +125,8 @@ export function SidebarRoot({
   collapsible = 'icon',
   peekOnHover = false,
   peekDelay = DEFAULT_PEEK_DELAY,
+  onPeekChange,
+  peekBackdrop = false,
   collapseTooltip,
   defaultOpen = true,
   children,
@@ -187,6 +196,13 @@ export function SidebarRoot({
     setIsPeeking(false);
   }, [open]);
 
+  const lastPeekRef = useRef(false);
+  useEffect(() => {
+    if (lastPeekRef.current === isPeeking) return;
+    lastPeekRef.current = isPeeking;
+    onPeekChange?.(isPeeking);
+  }, [isPeeking, onPeekChange]);
+
   // data-open/data-closed drive the visuals, so a peek counts as open,
   // every collapse-hiding CSS rule turns off during a peek for free. The
   // real state stays in `open` (and the toggle controls' aria-expanded).
@@ -206,6 +222,9 @@ export function SidebarRoot({
       }}
     >
       <SidebarPopupContext value={handlePopupOpenChange}>
+        {peekBackdrop && isPeeking && (
+          <div className={styles.backdrop} data-slot='sidebar-backdrop' />
+        )}
         <aside
           id={sidebarId}
           className={cx(styles.root, className)}

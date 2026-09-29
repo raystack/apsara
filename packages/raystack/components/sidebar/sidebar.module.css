@@ -72,6 +72,8 @@
   width: var(--sidebar-open-width);
   z-index: var(--rs-z-index-portal);
   box-shadow: var(--rs-shadow-lifted);
+  /* The inset variant is transparent, and the overlay must hide the content under it. */
+  background: var(--rs-color-background-base-primary);
 }
 
 .root[data-peeking][data-position="left"] {
@@ -83,6 +85,16 @@
 
 .root[data-peeking][data-position="right"] {
   margin-left: calc(var(--sidebar-collapsed-width) - var(--sidebar-open-width));
+}
+
+/* Same z-index as the peeking sidebar. The backdrop comes first in the DOM,
+   so it paints below it. The peek ends on mouse leave, so it never takes clicks. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--rs-z-index-portal);
+  background-color: var(--rs-color-overlay);
+  pointer-events: none;
 }
 
 .header {

@@ -393,6 +393,16 @@ export const peekOnHoverDemo = {
             </Sidebar.Group>
           </Sidebar.Main>
         </Sidebar>`)
+    },
+    {
+      name: 'Backdrop',
+      code: sidebarLayout(`<Sidebar defaultOpen={false} variant="inset" peekOnHover peekBackdrop>
+          <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<Building2 size={16} strokeWidth={1.5} />}>Overview</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Bell size={16} strokeWidth={1.5} />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+          </Sidebar.Main>
+        </Sidebar>`)
     }
   ],
   style: styleDemo
