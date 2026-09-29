@@ -63,5 +63,12 @@ describe('Indicator', () => {
       const dot = container.querySelector(`.${styles.dot}`);
       expect(dot).toBeInTheDocument();
     });
+    it('applies pulse class only when pulse is set', () => {
+      const { container, rerender } = render(<Indicator />);
+      const indicator = container.querySelector(`.${styles.indicator}`);
+      expect(indicator).not.toHaveClass(styles['indicator-pulse']);
+      rerender(<Indicator pulse />);
+      expect(indicator).toHaveClass(styles['indicator-pulse']);
+    });
   });
 });

@@ -11,6 +11,9 @@ const indicator = cva(styles.indicator, {
       danger: styles['indicator-variant-danger'],
       success: styles['indicator-variant-success'],
       neutral: styles['indicator-variant-neutral']
+    },
+    pulse: {
+      true: styles['indicator-pulse']
     }
   },
   defaultVariants: {
@@ -22,6 +25,11 @@ export interface IndicatorProps
   extends ComponentProps<'div'>,
     VariantProps<typeof indicator> {
   label?: string;
+  /**
+   * Pulses the badge to mark a live or active state.
+   * @default false
+   */
+  pulse?: boolean;
   children?: ReactNode;
   'aria-label'?: string;
   classNames?: {
@@ -34,6 +42,7 @@ export const Indicator = ({
   className,
   classNames,
   variant,
+  pulse,
   label,
   children,
   'aria-label': ariaLabel,
@@ -49,7 +58,7 @@ export const Indicator = ({
     >
       {children}
       <div
-        className={indicator({ variant, className })}
+        className={indicator({ variant, pulse, className })}
         role='status'
         aria-label={accessibilityLabel}
         data-slot='indicator-badge'

@@ -4,7 +4,7 @@ description: A small dot indicator with small information that can be positioned
 source: packages/raystack/components/indicator
 ---
 
-import { playground, labelDemo, variantDemo } from "./demo.ts";
+import { playground, labelDemo, pulseDemo, variantDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -33,6 +33,12 @@ Five variants that carry meaning: `accent`, `success`, `warning`, `danger`, and 
 When no label is provided, the Indicator will show as a dot
 
 <Demo data={labelDemo} />
+
+### Pulse
+
+Set `pulse` to mark a live or active state. The badge does not animate when the user's system asks for reduced motion.
+
+<Demo data={pulseDemo} />
 
 ## API Reference
 

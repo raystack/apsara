@@ -40,6 +40,30 @@
   border-radius: var(--rs-radius-full);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  /* Sits under the label: `.indicator` has a transform, so it is the stacking context. */
+  .indicator-pulse::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background-color: inherit;
+    animation: indicator-pulse 1.5s var(--rs-ease-out) infinite;
+  }
+}
+
+@keyframes indicator-pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
 .indicator-variant-accent {
   background-color: var(--rs-color-background-accent-emphasis);
   color: var(--rs-color-foreground-accent-emphasis);
