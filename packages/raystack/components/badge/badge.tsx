@@ -19,12 +19,6 @@ const badge = cva(styles['badge'], {
       micro: styles['badge-micro'],
       small: styles['badge-small'],
       regular: styles['badge-regular']
-    },
-    outline: {
-      true: styles['badge-outline']
-    },
-    dot: {
-      true: styles['badge-dot']
     }
   },
   defaultVariants: {
@@ -43,8 +37,6 @@ export const Badge = ({
   variant,
   size,
   radius,
-  outline,
-  dot,
   icon,
   children,
   className,
@@ -53,11 +45,11 @@ export const Badge = ({
 }: BadgeProps) => {
   return (
     <span
-      className={badge({ variant, size, radius, outline, dot, className })}
+      className={badge({ variant, size, radius, className })}
       data-slot='badge'
       {...props}
     >
-      {icon && !dot && (
+      {icon && (
         <span className={styles['icon']} data-slot='badge-icon'>
           {icon}
         </span>
@@ -70,7 +62,7 @@ export const Badge = ({
           {screenReaderText}
         </span>
       )}
-      {!dot && children}
+      {children}
     </span>
   );
 };

@@ -17,18 +17,6 @@ export interface BadgeProps {
    */
   size?: 'micro' | 'small' | 'regular';
 
-  /**
-   * Draws a border and removes the fill
-   * @defaultValue false
-   */
-  outline?: boolean;
-
-  /**
-   * Renders a colored dot without `children` or `icon`
-   * @defaultValue false
-   */
-  dot?: boolean;
-
   /** Optional ReactNode to display an icon before the text */
   icon?: React.ReactNode;
 
