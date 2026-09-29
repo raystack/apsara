@@ -15,18 +15,19 @@ import {
 import { createPortal } from 'react-dom';
 import {
   deriveDocDetails,
-  docFromMarkup,
-  editorStyles,
-  SuggestionMenu,
-  type SuggestionState,
-  useEditor
-} from '../editor';
+  docFromMarkup
+} from '../editor/core/composer/markup';
+import { useComposerEditor } from '../editor/core/composer/use-composer-editor';
+import editorStyles from '../editor/core/editor-core.module.css';
+import { SuggestionMenu } from '../editor/core/suggestion-menu';
+import type { SuggestionState } from '../editor/core/suggestion-plugin';
+import { useMentionResolution } from '../editor/core/use-suggestion-menu';
 import styles from './prompt-input.module.css';
 import {
   type PromptInputInputApi,
   usePromptInputContext
 } from './prompt-input-context';
-import { useMentionMenu, useMentionResolution } from './use-mention-menu';
+import { useMentionMenu } from './use-mention-menu';
 
 export interface PromptInputEditorProps
   extends Omit<
@@ -85,23 +86,24 @@ export function PromptInputEditor({
     ((event: KeyboardEvent, state: SuggestionState) => boolean) | null
   >(null);
 
-  const { hostRef, initialHtml, viewRef, mentionPortals, actions } = useEditor({
-    initialMarkup: context.value,
-    placeholder,
-    disabled: resolvedDisabled,
-    spellCheck,
-    maxLength,
-    getTriggers: () => registry.triggers(),
-    onChange: details =>
-      setValueRef.current(details.markup, {
-        text: details.text,
-        mentions: details.mentions
-      }),
-    onSubmit: () => requestSubmitRef.current(),
-    onSuggestionChange: setSuggestion,
-    onSuggestionKeyDown: (event, state) =>
-      keyDownRef.current?.(event, state) ?? false
-  });
+  const { hostRef, initialHtml, viewRef, mentionPortals, actions } =
+    useComposerEditor({
+      initialMarkup: context.value,
+      placeholder,
+      disabled: resolvedDisabled,
+      spellCheck,
+      maxLength,
+      getTriggers: () => registry.triggers(),
+      onChange: details =>
+        setValueRef.current(details.markup, {
+          text: details.text,
+          mentions: details.mentions
+        }),
+      onSubmit: () => requestSubmitRef.current(),
+      onSuggestionChange: setSuggestion,
+      onSuggestionKeyDown: (event, state) =>
+        keyDownRef.current?.(event, state) ?? false
+    });
 
   const menu = useMentionMenu({
     viewRef,
@@ -113,7 +115,11 @@ export function PromptInputEditor({
   });
   keyDownRef.current = menu.handleKeyDown;
 
-  useMentionResolution(registry, context.details.mentions, actions);
+  useMentionResolution(
+    registry,
+    context.details.mentions,
+    actions.refreshMentionLabels
+  );
 
   const api = useMemo<PromptInputInputApi>(
     () => ({
@@ -184,7 +190,12 @@ export function PromptInputEditor({
       <div
         {...props}
         ref={mergedRef}
-        className={cx(styles.editor, editorStyles.editor, className)}
+        className={cx(
+          styles.editor,
+          editorStyles.editor,
+          editorStyles.composer,
+          className
+        )}
         role='textbox'
         aria-multiline='true'
         aria-disabled={resolvedDisabled || undefined}

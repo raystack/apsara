@@ -4,16 +4,24 @@ import { baseKeymap } from 'prosemirror-commands';
 import { history, redo, undo } from 'prosemirror-history';
 import { keymap } from 'prosemirror-keymap';
 import { Slice } from 'prosemirror-model';
-import {
-  type Command,
-  EditorState,
-  Plugin,
-  Selection,
-  TextSelection
-} from 'prosemirror-state';
-import { Decoration, DecorationSet, EditorView } from 'prosemirror-view';
+import { EditorState, Plugin, Selection } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import styles from './editor.module.css';
+import { EXTERNAL, insertHardBreak, placeholderPlugin } from '../base';
+import { escapeText } from '../html';
+import { type MentionAttrs, mentionKey } from '../mention';
+import { deleteAdjacentMention, moveOverMention } from '../mention-commands';
+import {
+  MentionNodeView,
+  type MentionPortal,
+  type MentionPortalRegistry
+} from '../mention-node-view';
+import {
+  dismissSuggestion,
+  insertMention as insertMentionAt,
+  type SuggestionState,
+  suggestionPlugin
+} from '../suggestion-plugin';
 import {
   deriveDocDetails,
   docFromMarkup,
@@ -25,24 +33,9 @@ import {
   textFromFragment,
   textLength
 } from './markup';
-import { type MentionAttrs, mentionKey } from './mention';
-import {
-  MentionNodeView,
-  type MentionPortal,
-  type MentionPortalRegistry
-} from './mention-node-view';
-import { hardBreakType, mentionType } from './schema';
-import {
-  dismissSuggestion,
-  insertMention as insertMentionAt,
-  type SuggestionState,
-  suggestionPlugin
-} from './suggestion-plugin';
+import { mentionType } from './schema';
 
-/** Marks transactions that came from outside the editor, so they are not echoed back. */
-const EXTERNAL = 'apsara-editor-external';
-
-export interface UseEditorOptions {
+export interface UseComposerEditorOptions {
   /** Markup for the first document. Read once. */
   initialMarkup: string;
   /** Placeholder shown while the document is empty. */
@@ -65,7 +58,7 @@ export interface UseEditorOptions {
   ) => boolean;
 }
 
-export interface EditorActions {
+export interface ComposerEditorActions {
   focus: () => void;
   /**
    * Replaces the document when `markup` differs from what the document already
@@ -83,7 +76,7 @@ export interface EditorActions {
   dismissSuggestion: () => void;
 }
 
-export interface UseEditorResult {
+export interface UseComposerEditorResult {
   /** Attach to the element that becomes the editing host. */
   hostRef: (node: HTMLDivElement | null) => void;
   /**
@@ -93,66 +86,12 @@ export interface UseEditorResult {
   initialHtml: { __html: string };
   viewRef: React.RefObject<EditorView | null>;
   mentionPortals: MentionPortal[];
-  actions: EditorActions;
+  actions: ComposerEditorActions;
 }
 
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}
-
-/** Backspace/Delete take out the whole chip rather than selecting it first. */
-function deleteAdjacentMention(direction: -1 | 1): Command {
-  return (state, dispatch) => {
-    if (!state.selection.empty) return false;
-    const $pos = state.doc.resolve(state.selection.from);
-    const node = direction === -1 ? $pos.nodeBefore : $pos.nodeAfter;
-    if (!node || node.type !== mentionType) return false;
-    if (dispatch) {
-      const from = direction === -1 ? $pos.pos - node.nodeSize : $pos.pos;
-      dispatch(state.tr.delete(from, from + node.nodeSize));
-    }
-    return true;
-  };
-}
-
-/**
- * Arrow keys step over a chip in one press. ProseMirror's default for a
- * selectable inline atom is to make it a NodeSelection first, which puts a
- * selection ring on the chip on the way past it, a stop the user never asked
- * for while moving the caret through a sentence. Clicking a chip still selects
- * it, which is where the ring belongs.
- */
-function moveOverMention(direction: -1 | 1): Command {
-  return (state, dispatch) => {
-    if (!state.selection.empty) return false;
-    const $pos = state.doc.resolve(state.selection.from);
-    const node = direction === -1 ? $pos.nodeBefore : $pos.nodeAfter;
-    if (!node || node.type !== mentionType) return false;
-    if (dispatch) {
-      const target = $pos.pos + direction * node.nodeSize;
-      dispatch(
-        state.tr
-          .setSelection(TextSelection.create(state.doc, target))
-          .scrollIntoView()
-      );
-    }
-    return true;
-  };
-}
-
-const insertHardBreak: Command = (state, dispatch) => {
-  if (dispatch) {
-    dispatch(
-      state.tr.replaceSelectionWith(hardBreakType.create()).scrollIntoView()
-    );
-  }
-  return true;
-};
-
-export function useEditor(options: UseEditorOptions): UseEditorResult {
+export function useComposerEditor(
+  options: UseComposerEditorOptions
+): UseComposerEditorResult {
   const optionsRef = useRef(options);
   optionsRef.current = options;
 
@@ -165,7 +104,7 @@ export function useEditor(options: UseEditorOptions): UseEditorResult {
   const initialMarkupRef = useRef(options.initialMarkup);
   const initialHtml = useMemo(
     () => ({
-      __html: escapeHtml(serializeText(docFromMarkup(initialMarkupRef.current)))
+      __html: escapeText(serializeText(docFromMarkup(initialMarkupRef.current)))
     }),
     []
   );
@@ -210,21 +149,6 @@ export function useEditor(options: UseEditorOptions): UseEditorResult {
           if (event.shiftKey) return insertHardBreak(view.state, view.dispatch);
           optionsRef.current.onSubmit?.();
           return true;
-        }
-      }
-    });
-
-    const placeholderPlugin = new Plugin({
-      props: {
-        decorations(state) {
-          const text = optionsRef.current.placeholder;
-          if (!text || !isDocEmpty(state.doc)) return null;
-          return DecorationSet.create(state.doc, [
-            Decoration.node(0, state.doc.content.size, {
-              class: styles.placeholder,
-              'data-placeholder': text
-            })
-          ]);
         }
       }
     });
@@ -320,7 +244,8 @@ export function useEditor(options: UseEditorOptions): UseEditorResult {
       plugins: [
         // First in the list, so an open menu wins ↑ ↓ Enter Tab Escape.
         suggestionPlugin({
-          getTriggers: () => optionsRef.current.getTriggers?.() ?? [],
+          getTriggers: () =>
+            (optionsRef.current.getTriggers?.() ?? []).map(char => ({ char })),
           onStateChange: next => optionsRef.current.onSuggestionChange?.(next),
           onKeyDown: (event, suggestion) =>
             optionsRef.current.onSuggestionKeyDown?.(event, suggestion) ?? false
@@ -339,7 +264,7 @@ export function useEditor(options: UseEditorOptions): UseEditorResult {
         keymap(baseKeymap),
         maxLengthPlugin,
         scrollPlugin,
-        placeholderPlugin,
+        placeholderPlugin(() => optionsRef.current.placeholder, isDocEmpty),
         clipboardPlugin,
         focusPlugin
       ]
@@ -399,7 +324,7 @@ export function useEditor(options: UseEditorOptions): UseEditorResult {
     view.dispatch(view.state.tr.setMeta(EXTERNAL, true));
   }, [options.placeholder]);
 
-  const actions = useMemo<EditorActions>(
+  const actions = useMemo<ComposerEditorActions>(
     () => ({
       focus: () => viewRef.current?.focus(),
 
