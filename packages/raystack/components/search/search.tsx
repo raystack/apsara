@@ -80,7 +80,7 @@ export function Search({
         size={size === 'small' ? 2 : 3}
         onClick={e => {
           e.stopPropagation();
-          if (disabled) return;
+          if (disabled || inputRef.current?.readOnly) return;
           clear();
           onClear?.(e);
           // The button hides once the input is empty, so focus would

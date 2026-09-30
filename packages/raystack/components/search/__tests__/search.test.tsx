@@ -133,6 +133,22 @@ describe('Search', () => {
       fireEvent.click(clearButton);
       expect(handleClear).not.toHaveBeenCalled();
     });
+
+    it('does not clear or call onClear when readOnly', () => {
+      const handleClear = vi.fn();
+      render(
+        <Search
+          showClearButton
+          defaultValue='test'
+          onClear={handleClear}
+          readOnly
+        />
+      );
+
+      fireEvent.click(screen.getByLabelText('Clear search'));
+      expect(screen.getByRole('searchbox')).toHaveValue('test');
+      expect(handleClear).not.toHaveBeenCalled();
+    });
   });
 
   describe('Sizes', () => {
