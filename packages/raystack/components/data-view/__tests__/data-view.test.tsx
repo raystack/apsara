@@ -357,7 +357,7 @@ describe('DataView', () => {
         </DataView>
       );
       // Search input
-      expect(screen.getByRole('textbox')).toBeInTheDocument();
+      expect(screen.getByRole('searchbox')).toBeInTheDocument();
       // Filter button
       expect(
         screen.getByRole('button', { name: /filter/i })
@@ -374,7 +374,7 @@ describe('DataView', () => {
           <DataView.List variant='table' columns={mockColumns} />
         </DataView>
       );
-      const search = screen.getByRole('textbox') as HTMLInputElement;
+      const search = screen.getByRole('searchbox') as HTMLInputElement;
       await user.type(search, 'jane');
       expect(search.value).toBe('jane');
       // John row should no longer appear (client-mode global filter)
@@ -794,7 +794,7 @@ describe('DataView', () => {
           <DataView.List variant='table' columns={mockColumns} />
         </DataView>
       );
-      await user.type(screen.getByRole('textbox'), 'jane');
+      await user.type(screen.getByRole('searchbox'), 'jane');
       expect(onTableQueryChange).not.toHaveBeenCalled();
     });
 
@@ -815,7 +815,7 @@ describe('DataView', () => {
           <DataView.List variant='table' columns={mockColumns} />
         </DataView>
       );
-      await user.type(screen.getByRole('textbox'), 'a');
+      await user.type(screen.getByRole('searchbox'), 'a');
       expect(onTableQueryChange).toHaveBeenCalled();
       const calls = onTableQueryChange.mock.calls;
       const lastCall = calls[calls.length - 1]?.[0];
