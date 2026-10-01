@@ -69,3 +69,28 @@ export interface AvatarGroupProps {
   /** Additional CSS class names */
   className?: string;
 }
+
+export interface GetAvatarColorOptions {
+  /** Mixed into the hash so the same string can map to a different color. A number and its string form give the same color. */
+  seed?: string | number;
+
+  /**
+   * Restricts the result to these colors. Order matters. Duplicates and unknown colors are ignored. If none remain, all colors are used.
+   * @defaultValue `AVATAR_COLOR_PALETTE`
+   */
+  palette?: Array<
+    | 'indigo'
+    | 'orange'
+    | 'mint'
+    | 'neutral'
+    | 'sky'
+    | 'lime'
+    | 'grass'
+    | 'cyan'
+    | 'iris'
+    | 'purple'
+    | 'pink'
+    | 'crimson'
+    | 'gold'
+  >;
+}

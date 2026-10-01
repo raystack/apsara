@@ -3,7 +3,12 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { radiusClasses } from '../../../shared/radius';
 import { Avatar, AvatarGroup } from '../avatar';
 import styles from '../avatar.module.css';
-import { getAvatarColor } from '../utils';
+import {
+  AVATAR_COLOR_PALETTE,
+  type AVATAR_COLORS,
+  COLORS,
+  getAvatarColor
+} from '../utils';
 
 describe('Avatar', () => {
   const ogImage = window.Image;
@@ -317,6 +322,109 @@ describe('Avatar', () => {
         ];
         const color = getAvatarColor('test');
         expect(validColors).toContain(color);
+      });
+
+      it('maps anagrams to different colors', () => {
+        expect(getAvatarColor('abc')).toBe('cyan');
+        expect(getAvatarColor('cba')).toBe('orange');
+        expect(getAvatarColor('amy')).toBe('sky');
+        expect(getAvatarColor('may')).toBe('gold');
+        expect(getAvatarColor('listen')).toBe('iris');
+        expect(getAvatarColor('silent')).toBe('cyan');
+      });
+
+      it('returns a known color for a known string', () => {
+        expect(getAvatarColor('john.doe@example.com')).toBe('pink');
+      });
+
+      it('returns the same color for the same input and options', () => {
+        const options = {
+          seed: 'workspace',
+          palette: ['mint', 'sky']
+        } as const;
+        const first = getAvatarColor('alice', options);
+        for (let i = 0; i < 10; i++) {
+          expect(getAvatarColor('alice', options)).toBe(first);
+        }
+      });
+
+      it('changes the color with the seed', () => {
+        expect(getAvatarColor('alice', { seed: 'a' })).toBe('iris');
+        expect(getAvatarColor('alice', { seed: 'b' })).toBe('crimson');
+        expect(getAvatarColor('alice', { seed: 1 })).toBe('mint');
+        expect(getAvatarColor('alice', { seed: '1' })).toBe('mint');
+      });
+
+      it('returns only and all colors from the palette', () => {
+        const palette = ['indigo', 'mint', 'sky'] as const;
+        const hit = new Set(
+          Array.from({ length: 200 }, (_, i) =>
+            getAvatarColor(`u${i}`, { palette })
+          )
+        );
+        expect([...hit].sort()).toEqual([...palette].sort());
+      });
+
+      it('returns the only color of a single-color palette', () => {
+        for (let i = 0; i < 20; i++) {
+          expect(getAvatarColor(`u${i}`, { palette: ['gold'] })).toBe('gold');
+        }
+      });
+
+      it('ignores duplicate palette colors', () => {
+        for (let i = 0; i < 50; i++) {
+          expect(
+            getAvatarColor(`u${i}`, { palette: ['sky', 'sky', 'mint'] })
+          ).toBe(getAvatarColor(`u${i}`, { palette: ['sky', 'mint'] }));
+        }
+      });
+
+      it('ignores unknown palette colors', () => {
+        const palette = ['sky', 'teal', 'mint'] as unknown as AVATAR_COLORS[];
+        for (let i = 0; i < 50; i++) {
+          expect(getAvatarColor(`u${i}`, { palette })).toBe(
+            getAvatarColor(`u${i}`, { palette: ['sky', 'mint'] })
+          );
+        }
+      });
+
+      it('falls back to all colors for an empty palette and warns once', async () => {
+        vi.resetModules();
+        const utils = await import('../utils');
+        const warn = vi
+          .spyOn(console, 'warn')
+          .mockImplementation(() => undefined);
+        for (let i = 0; i < 20; i++) {
+          expect(utils.getAvatarColor(`u${i}`, { palette: [] })).toBe(
+            utils.getAvatarColor(`u${i}`)
+          );
+        }
+        expect(warn).toHaveBeenCalledTimes(1);
+        warn.mockRestore();
+      });
+
+      it('uses every color over many strings', () => {
+        const hit = new Set(
+          Array.from({ length: 1000 }, (_, i) => getAvatarColor(`user-${i}`))
+        );
+        expect(hit.size).toBe(COLORS.length);
+      });
+
+      it('returns a valid color for an empty string', () => {
+        expect(getAvatarColor('')).toBe('neutral');
+      });
+
+      it('has a color variant class for every palette color', () => {
+        expect(AVATAR_COLOR_PALETTE).toBe(COLORS);
+        for (const color of COLORS) {
+          const { container, unmount } = render(
+            <Avatar color={color} fallback='A' />
+          );
+          const className = styles[`avatar-color-${color}`];
+          expect(className).toBeTruthy();
+          expect(container.firstElementChild).toHaveClass(className);
+          unmount();
+        }
       });
     });
   });

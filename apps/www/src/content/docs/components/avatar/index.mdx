@@ -67,7 +67,24 @@ Avatar can display user images with graceful fallback to initials when images fa
 
 ### With generated colors
 
-use `getAvatarColor` utility to generate colors based on a string.
+`getAvatarColor` derives a color from a string, such as a user's email. The same string always returns the same color, on the server and in the browser.
+
+```tsx
+getAvatarColor(user.email);
+
+// A different seed maps the same email to a different color.
+getAvatarColor(user.email, { seed: workspaceId });
+
+// Pick only from these colors.
+getAvatarColor(user.email, { palette: ['indigo', 'mint', 'sky'] });
+```
+
+`AVATAR_COLOR_PALETTE` lists every color `getAvatarColor` can return. Use it to build a `palette`, for example to leave out `'neutral'`, which `AvatarGroup` uses for the overflow count:
+
+```tsx
+const palette = AVATAR_COLOR_PALETTE.filter(color => color !== 'neutral');
+getAvatarColor(user.email, { palette });
+```
 
 <Demo data={generatedColorDemo} />
 
@@ -86,6 +103,14 @@ Renders an individual avatar with image or initials fallback.
 Groups multiple avatars with overlap and count indicator.
 
 <auto-type-table path="./props.ts" name="AvatarGroupProps" />
+
+### getAvatarColor
+
+`getAvatarColor(str: string, options?: GetAvatarColorOptions)` returns one of the colors in `AVATAR_COLOR_PALETTE`.
+
+<auto-type-table path="./props.ts" name="GetAvatarColorOptions" />
+
+`getAvatarColor` ignores duplicate and unknown colors in `palette`. If no valid color is left, it uses all of `AVATAR_COLOR_PALETTE` and logs one warning in development.
 
 ### Slots
 
