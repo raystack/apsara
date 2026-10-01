@@ -17,6 +17,7 @@ export const playground = {
       defaultValue: 'accent'
     },
     label: { type: 'text', initialValue: '' },
+    pulse: { type: 'checkbox', defaultValue: false },
     children: {
       type: 'text',
       initialValue: "<Button color='neutral'>Notification</Button>"
@@ -55,6 +56,18 @@ export const labelDemo = {
     </Indicator>
     <Indicator variant="accent">
       <Button color='neutral'>Notification</Button>
+    </Indicator>
+  </Flex>`
+};
+export const pulseDemo = {
+  type: 'code',
+  code: `
+  <Flex gap={9}>
+    <Indicator variant="success" pulse>
+      <Button color='neutral'>Live</Button>
+    </Indicator>
+    <Indicator variant="danger" label="3" pulse>
+      <Button color='neutral'>Alerts</Button>
     </Indicator>
   </Flex>`
 };
