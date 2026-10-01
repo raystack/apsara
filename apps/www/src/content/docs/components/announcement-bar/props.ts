@@ -8,7 +8,7 @@ export interface AnnouncementBarProps {
   /**
    * Text content for the component
    */
-  text: string;
+  text: React.ReactNode;
 
   /** Icon element to display before the text */
   leadingIcon?: React.ReactNode;
@@ -18,6 +18,18 @@ export interface AnnouncementBarProps {
 
   /** Icon of the onClick action.*/
   actionIcon?: React.ReactNode;
+
+  /** Called when the action button is clicked. */
+  onActionClick?: () => void;
+
+  /**
+   * Shows a dismiss (close) button at the end of the bar.
+   * @defaultValue false
+   */
+  dismissible?: boolean;
+
+  /** Called when the dismiss button is clicked. When set, the bar does not hide itself. */
+  onDismiss?: () => void;
 
   /** Additional CSS class names */
   className?: string;
