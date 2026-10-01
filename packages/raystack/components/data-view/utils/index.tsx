@@ -6,6 +6,7 @@ import {
 } from '@tanstack/table-core';
 
 import { toDayKey } from '~/components/calendar-preview/date-adapter';
+import { withDateFilterTypes } from '~/shared/date-filters';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import {
   DataViewField,
@@ -19,7 +20,6 @@ import {
   SortOrders
 } from '../data-view.types';
 import {
-  getDataType,
   getFilterFn,
   getFilterOperator,
   getFilterValue
@@ -415,22 +415,4 @@ export function getDefaultTableQuery(
       filters: withDateFilterTypes(internalQuery.filters, fields)
     })
   };
-}
-
-/* A query from the consumer carries no filter types, and a date filter without
-   one never reaches the date comparisons. Only dates are typed here, because a
-   type changes how string and number filters are sent. */
-function withDateFilterTypes(
-  filters: InternalFilter[],
-  fields: Pick<DataViewField, 'accessorKey' | 'filterType'>[]
-): InternalFilter[] {
-  return filters.map(filter => {
-    const field = fields.find(f => f.accessorKey === filter.name);
-    if (filter._type || field?.filterType !== FilterType.date) return filter;
-    return {
-      ...filter,
-      _type: FilterType.date,
-      _dataType: getDataType({ filterType: FilterType.date })
-    };
-  });
 }

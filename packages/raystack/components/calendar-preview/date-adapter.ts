@@ -66,9 +66,13 @@ export function toInstant(value: unknown): Date | null {
 const ISO_DAY = /^(\d{4}-\d{2}-\d{2})/;
 
 /* A numeric offset counts only after GMT, UTC or a time, so `2-30-2026`
-   does not read as offset -20:26. The names are the zones V8 reads. */
-const ZONE =
-  /(?:\b(?:GMT|UTC|UT)\s*|(?<=\d:\d{2}(?::\d{2}(?:\.\d+)?)?\s?))([+-])(\d{2}):?(\d{2})(?!\d)|\b(UTC|UT|GMT|[ECMP][SD]T)\b|(?<=\d)(Z)\b/i;
+   does not read as offset -20:26. The names are the zones V8 reads. The
+   prefixes are tested in code: Safari before 16.4 has no regex lookbehind. */
+const OFFSET = /([+-])(\d{2}):?(\d{2})(?!\d)/g;
+const AFTER_ZONE_NAME = /\b(?:GMT|UTC|UT)\s*$/i;
+const AFTER_TIME = /\d:\d{2}(?::\d{2}(?:\.\d+)?)?\s?$/;
+const ZONE_NAME = /\b(UTC|UT|GMT|[ECMP][SD]T)\b/gi;
+const ZULU = /\d(Z)\b/gi;
 const ZONE_OFFSETS: Record<string, number> = {
   UT: 0,
   UTC: 0,
@@ -86,27 +90,67 @@ const ZONE_OFFSETS: Record<string, number> = {
 const TIME = /\d{1,2}:\d{2}(?::\d{2}(?:\.\d+)?)?/g;
 const MONTH_PREFIXES = 'janfebmaraprmayjunjulaugsepoctnovdec';
 
+type Zone = { start: number; end: number; offset: number };
+
+/* The leftmost zone, and the longest at that position. */
+function findZone(value: string): Zone | null {
+  const zones: Zone[] = [];
+  for (const match of value.matchAll(OFFSET)) {
+    const before = value.slice(0, match.index);
+    const name = AFTER_ZONE_NAME.exec(before);
+    if (!name && !AFTER_TIME.test(before)) continue;
+    const sign = match[1] === '-' ? -1 : 1;
+    zones.push({
+      start: name ? name.index : match.index,
+      end: match.index + match[0].length,
+      offset: sign * (Number(match[2]) * 60 + Number(match[3]))
+    });
+  }
+  for (const match of value.matchAll(ZONE_NAME)) {
+    zones.push({
+      start: match.index,
+      end: match.index + match[0].length,
+      offset: ZONE_OFFSETS[match[1].toUpperCase()]
+    });
+  }
+  for (const match of value.matchAll(ZULU)) {
+    zones.push({ start: match.index + 1, end: match.index + 2, offset: 0 });
+  }
+  zones.sort((a, b) => a.start - b.start || b.end - a.end);
+  return zones[0] ?? null;
+}
+
+/* The month a named month word writes, or `null` for none. */
+function monthOfWord(word: string): number | null {
+  if (word.length < 3) return null;
+  const at = MONTH_PREFIXES.indexOf(word.slice(0, 3).toLowerCase());
+  return at >= 0 && at % 3 === 0 ? at / 3 : null;
+}
+
 /* `new Date` rolls an impossible day into the next month, in any form it
    reads. A result in a month the string never writes is that rollover. */
 function writesMonthOf(value: string, date: Date): boolean {
-  const zone = ZONE.exec(value);
-  let month = date.getMonth();
-  if (zone) {
-    const offset = zone[1]
-      ? (zone[1] === '-' ? -1 : 1) * (Number(zone[2]) * 60 + Number(zone[3]))
-      : ZONE_OFFSETS[(zone[4] ?? zone[5]).toUpperCase()];
-    month = new Date(date.getTime() + offset * 60_000).getUTCMonth();
-  }
-  const datePart = value.replace(ZONE, ' ').replace(TIME, ' ');
-  const numbers = (datePart.match(/\d+/g) ?? []).map(Number);
-  const words = datePart.match(/[A-Za-z]+/g) ?? [];
-  return (
-    numbers.includes(month + 1) ||
-    words.some(
-      word =>
-        MONTH_PREFIXES.indexOf(word.slice(0, 3).toLowerCase()) === month * 3
-    )
-  );
+  const zone = findZone(value);
+  const month = zone
+    ? new Date(date.getTime() + zone.offset * 60_000).getUTCMonth()
+    : date.getMonth();
+  const datePart = (
+    zone ? `${value.slice(0, zone.start)} ${value.slice(zone.end)}` : value
+  ).replace(TIME, ' ');
+  const named = (datePart.match(/[A-Za-z]+/g) ?? [])
+    .map(monthOfWord)
+    .filter(word => word !== null);
+  if (named.length > 0) return named.includes(month);
+  /* A number after the year is not a month, so `2/30/2026 3` is not March. */
+  const numbers = datePart.match(/\d+/g) ?? [];
+  const yearAt = numbers.findIndex(number => number.length >= 3);
+  const candidates =
+    yearAt === 0
+      ? numbers.slice(1, 3)
+      : yearAt > 0
+        ? numbers.slice(0, yearAt)
+        : numbers;
+  return candidates.map(Number).includes(month + 1);
 }
 
 /* The shape dayjs parsed as local time. `new Date` reads some of these as UTC

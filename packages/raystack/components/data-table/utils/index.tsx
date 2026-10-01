@@ -2,6 +2,7 @@ import type { Row, Table } from '@tanstack/react-table';
 import { TableState } from '@tanstack/table-core';
 
 import { toDayKey } from '~/components/calendar-preview/date-adapter';
+import { withDateFilterTypes } from '~/shared/date-filters';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import {
   DataTableColumnDef,
@@ -15,7 +16,6 @@ import {
 } from '../data-table.types';
 import {
   type FilterPrimitive,
-  getDataType,
   getFilterFn,
   getFilterOperator,
   getFilterValue
@@ -364,25 +364,4 @@ export function getDefaultTableQuery(
       filters: withDateFilterTypes(internalQuery.filters, columns)
     })
   };
-}
-
-/* A query from the consumer carries no filter types, and a date filter without
-   one never reaches the date comparisons. Only dates are typed here, because a
-   type changes how string and number filters are sent. */
-function withDateFilterTypes(
-  filters: InternalFilter[],
-  columns: Pick<
-    DataTableColumnDef<unknown, unknown>,
-    'accessorKey' | 'filterType'
-  >[]
-): InternalFilter[] {
-  return filters.map(filter => {
-    const column = columns.find(c => c.accessorKey === filter.name);
-    if (filter._type || column?.filterType !== FilterType.date) return filter;
-    return {
-      ...filter,
-      _type: FilterType.date,
-      _dataType: getDataType({ filterType: FilterType.date })
-    };
-  });
 }

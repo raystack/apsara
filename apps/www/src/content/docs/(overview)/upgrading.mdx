@@ -40,6 +40,12 @@ full timestamp may read a date-only string differently, so test it.
 Saved filters and URL parameters that hold an old timestamp still load, as the
 day that instant falls on in the viewer's time zone.
 
+DataView and DataTable compare and write the day in the viewer's time zone. If
+you set `calendarProps.timeZone` or `filterProps.calendar.timeZone` to another
+zone, a picked day can shift by one: 1 October picked in `Asia/Tokyo` is 30
+September for a viewer in New York. Leave `timeZone` unset for filters, or set
+it to the viewer's zone.
+
 ### 2. Move `calendarProps` to CalendarPreview props
 
 `FilterChip`'s `calendarProps` and `DataTable`'s `filterProps.calendar` take

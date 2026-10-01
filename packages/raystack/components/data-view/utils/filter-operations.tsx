@@ -1,9 +1,7 @@
 import type { FilterFn } from '@tanstack/table-core';
 
-import {
-  type DayKey,
-  toDayKey
-} from '~/components/calendar-preview/date-adapter';
+import { toDayKey } from '~/components/calendar-preview/date-adapter';
+import { notOnDay, onDay } from '~/shared/date-filters';
 import {
   DataTableFilterOperatorTypes,
   DateFilterOperatorType,
@@ -26,28 +24,6 @@ export type FilterFunctionsMap = {
   date: Record<DateFilterOperatorType, FilterFn<unknown>>;
   select: Record<SelectFilterOperatorType, FilterFn<unknown>>;
   multiselect: Record<MultiSelectFilterOperatorType, FilterFn<unknown>>;
-};
-
-/* An unreadable row cannot be placed before or after a day, so it matches none
-   of these. */
-function onDay(
-  test: (day: DayKey, filterDay: DayKey) => boolean
-): FilterFn<unknown> {
-  return (row, columnId, filterValue: FilterValue) => {
-    const day = toDayKey(row.getValue(columnId));
-    const filterDay = toDayKey(filterValue.date);
-    return day !== null && filterDay !== null && test(day, filterDay);
-  };
-}
-
-/* A row with no readable date is still not the filter's day. */
-const notOnDay: FilterFn<unknown> = (
-  row,
-  columnId,
-  filterValue: FilterValue
-) => {
-  const filterDay = toDayKey(filterValue.date);
-  return filterDay !== null && toDayKey(row.getValue(columnId)) !== filterDay;
 };
 
 export const filterOperationsMap: FilterFunctionsMap = {

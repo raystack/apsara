@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -360,7 +362,9 @@ describe('toInstant', () => {
     'Sept 31, 2026',
     '2023.02.30',
     'Tue Feb 30 2026 10:30:00 GMT+0530',
-    'Feb 30 2026 10:00 PST'
+    'Feb 30 2026 10:00 PST',
+    'February 30, 2026 3',
+    '2/30/2026 3'
   ])('rejects the impossible day in %s', input => {
     expect(toInstant(input)).toBeNull();
   });
@@ -414,6 +418,12 @@ describe('toInstant', () => {
   ])('reads %s as ISO 8601', (_label, input, expected) => {
     expect(toInstant(input)?.getTime()).toBe(expected.getTime());
   });
+});
+
+/* Safari before 16.4 throws on a lookbehind when the module loads. */
+it('uses no regex lookbehind', () => {
+  const source = readFileSync(resolve(__dirname, '../date-adapter.ts'), 'utf8');
+  expect(source).not.toMatch(/\(\?<[=!]/);
 });
 
 describe('toDayKey', () => {

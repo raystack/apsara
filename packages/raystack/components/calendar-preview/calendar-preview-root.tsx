@@ -400,6 +400,10 @@ export function CalendarPreviewRoot({
         dismissedByOutsidePress.current = outside;
         armFocusGuard(outside);
         dropDraftRef.current?.();
+        /* A controlled parent can keep `open`, so the mark must not outlive this close. */
+        setTimeout(() => {
+          closingThroughSetOpen.current = false;
+        });
       }
       setOpenUnwrapped(next);
       onOpenChange?.(next, details);

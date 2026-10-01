@@ -53,6 +53,7 @@ export interface FilterChipProps {
   calendarProps?: {
     /** Formats the selected date for the input. The chip calls it with a `Date` and the `timeZone`. */
     formatValue?: (date: Date, timeZone?: string) => string;
+    /** The zone the calendar reads days in. DataView and DataTable filter in the viewer's zone, so a different zone can shift the filter day. */
     timeZone?: string;
     minDate?: Date;
     maxDate?: Date;

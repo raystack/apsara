@@ -131,6 +131,47 @@ describe('CalendarPreview picker composition', () => {
     expect(onOpenChange).toHaveBeenCalledTimes(1);
   });
 
+  it('stays shut when a controlled open closes it after ignoring a close', async () => {
+    let close: () => void = () => undefined;
+    function Controlled() {
+      const [open, setOpen] = useState(false);
+      close = () => setOpen(false);
+      return (
+        <CalendarPreview
+          today={TODAY}
+          defaultMonth={AUGUST}
+          open={open}
+          onOpenChange={next => {
+            if (next) setOpen(true);
+          }}
+        >
+          <CalendarPreview.Trigger>
+            <CalendarPreview.Input />
+          </CalendarPreview.Trigger>
+          <CalendarPreview.Content>
+            <CalendarPreview.Days />
+          </CalendarPreview.Content>
+        </CalendarPreview>
+      );
+    }
+    const { container } = render(<Controlled />);
+    const input = getSlot(container, 'calendar-preview-input') as HTMLElement;
+    act(() => input.focus());
+    const day = getAllSlots(document.body, 'calendar-preview-day').find(
+      cell =>
+        getSlot(cell, 'calendar-preview-day-number')?.textContent === '12' &&
+        !cell.hasAttribute('data-outside')
+    ) as HTMLElement;
+    act(() => day.focus());
+    fireEvent.keyDown(day, { key: 'Escape' });
+    await act(() => new Promise(resolve => setTimeout(resolve, 10)));
+    expect(isOpen()).toBe(true);
+    fireEvent.keyDown(day, { key: 'Shift' });
+    act(() => close());
+    await act(() => new Promise(resolve => setTimeout(resolve, 100)));
+    expect(isOpen()).toBe(false);
+  });
+
   it('opens on focus again after Escape closed it', () => {
     const { input } = renderPicker();
     /* Real focus, so the guard can see where it is; the event drives it. */
