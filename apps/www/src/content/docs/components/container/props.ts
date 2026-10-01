@@ -15,12 +15,21 @@ export interface ContainerProps {
    */
   align?: 'left' | 'center' | 'right';
 
+  /**
+   * Renders the container as a different element.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?:
+    | React.ReactElement
+    | ((props: React.HTMLAttributes<HTMLDivElement>) => React.ReactElement);
+
   /** Additional CSS class names */
   className?: string;
 
   /** Accessible label for the container region */
-  ariaLabel?: string;
+  'aria-label'?: string;
 
   /** ID of element that labels this container region */
-  ariaLabelledby?: string;
+  'aria-labelledby'?: string;
 }
