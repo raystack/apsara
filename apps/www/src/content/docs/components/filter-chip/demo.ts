@@ -123,16 +123,33 @@ export const autocompleteDemo = {
 };
 export const calendarPropsDemo = {
   type: 'code',
-  code: `
+  tabs: [
+    {
+      name: 'Max date',
+      code: `
 <FilterChip
   label="Created"
   leadingIcon={<Info />}
   columnType="date"
   calendarProps={{
-    formatValue: date => date.toLocaleDateString('en-CA'),
     maxDate: new Date()
   }}
 />`
+    },
+    {
+      name: 'Custom format',
+      code: `
+<FilterChip
+  label="Created"
+  leadingIcon={<Info />}
+  columnType="date"
+  calendarProps={{
+    formatValue: (date, timeZone) =>
+      date.toLocaleDateString('en-CA', { timeZone })
+  }}
+/>`
+    }
+  ]
 };
 export const iconDemo = {
   type: 'code',
