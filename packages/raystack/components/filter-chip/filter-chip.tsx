@@ -1,12 +1,17 @@
 'use client';
 
-import { cva, VariantProps } from 'class-variance-authority';
+import { cva, cx, VariantProps } from 'class-variance-authority';
 import { ComponentProps, ReactElement, useCallback, useState } from 'react';
 import {
   CalendarPreview,
+  type CalendarPreviewContentProps,
+  type CalendarPreviewInputProps,
   type CalendarPreviewProps
 } from '~/components/calendar-preview';
-import { toInstant } from '~/components/calendar-preview/date-adapter';
+import {
+  parseKey,
+  toInstant
+} from '~/components/calendar-preview/date-adapter';
 import { XIcon } from '~/icons';
 import {
   FilterOperation,
@@ -38,6 +43,9 @@ const chip = cva(styles.chip, {
 
 export type FilterChipValue = string | string[] | number | Date;
 
+/* The message `DatePicker` reports, so `onErrorChange` reads the same. */
+const INVALID_DATE = 'Invalid date';
+
 /**
  * Coerce a `FilterChipValue` to the `Date` the calendar expects, since filter
  * state hydrated from a serialized query arrives as a string or epoch number.
@@ -57,7 +65,6 @@ const toDateValue = (value: unknown): Date | undefined => {
  */
 export type FilterChipCalendarProps = Pick<
   CalendarPreviewProps,
-  | 'formatValue'
   | 'timeZone'
   | 'minDate'
   | 'maxDate'
@@ -65,7 +72,22 @@ export type FilterChipCalendarProps = Pick<
   | 'yearRange'
   | 'defaultMonth'
   | 'today'
->;
+> & {
+  /** Formats the selected date for the input. */
+  formatValue?: (date: Date, timeZone?: string) => string;
+  /** Props for the chip's date input and its popup. */
+  slotProps?: {
+    input?: Omit<CalendarPreviewInputProps, 'field'>;
+    popover?: Omit<CalendarPreviewContentProps, 'children'>;
+  };
+  /**
+   * Shows the calendar icon in the date input.
+   * @default false
+   */
+  showCalendarIcon?: boolean;
+  /** Called with a message when the typed date is invalid, and with `undefined` when it is valid again. */
+  onErrorChange?: (error: string | undefined) => void;
+};
 
 export interface FilterChipProps
   extends ComponentProps<'div'>,
@@ -118,6 +140,17 @@ export const FilterChip = ({
   );
   // `??` not `||`, since a falsy option value like `0` is a real selection.
   const [filterValue, setFilterValue] = useState<any>(value ?? '');
+
+  const [dateOpen, setDateOpen] = useState(false);
+  const {
+    formatValue: formatDate,
+    slotProps: dateSlotProps,
+    showCalendarIcon = false,
+    onErrorChange,
+    ...calendarRest
+  } = calendarProps ?? {};
+  const { classNames: inputClassNames, ...inputProps } =
+    dateSlotProps?.input ?? {};
 
   const showOnRemove = typeof onRemove === 'function';
   const isMultiSelectColumn = columnType === FilterType.multiselect;
@@ -184,17 +217,46 @@ export const FilterChip = ({
             data-slot='filter-chip-value'
           >
             <CalendarPreview
-              {...calendarProps}
+              {...calendarRest}
+              formatValue={
+                formatDate &&
+                ((date, _scale, timeZone) =>
+                  formatDate(
+                    date instanceof Date ? date : parseKey(date.date),
+                    timeZone
+                  ))
+              }
               value={toDateValue(filterValue) ?? null}
-              onValueChange={date => handleFilterValueChange(date ?? '')}
+              onValueChange={date => {
+                handleFilterValueChange(date ?? '');
+                if (date) setDateOpen(false);
+              }}
+              open={dateOpen}
+              onOpenChange={setDateOpen}
             >
               <CalendarPreview.Trigger>
                 <CalendarPreview.Input
-                  trailingIcon={null}
-                  classNames={{ container: styles.dateField }}
+                  trailingIcon={showCalendarIcon ? undefined : null}
+                  {...inputProps}
+                  classNames={{
+                    ...inputClassNames,
+                    container: cx(styles.dateField, inputClassNames?.container)
+                  }}
+                  errorMessages={{
+                    unparseable: INVALID_DATE,
+                    'out-of-bounds': INVALID_DATE,
+                    unavailable: INVALID_DATE,
+                    ...inputProps.errorMessages
+                  }}
+                  onValidityChange={validity => {
+                    inputProps.onValidityChange?.(validity);
+                    onErrorChange?.(
+                      validity.valid ? undefined : validity.message
+                    );
+                  }}
                 />
               </CalendarPreview.Trigger>
-              <CalendarPreview.Content>
+              <CalendarPreview.Content {...dateSlotProps?.popover}>
                 <CalendarPreview.Days />
               </CalendarPreview.Content>
             </CalendarPreview>

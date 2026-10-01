@@ -1,6 +1,7 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { defaultFormatValue } from '~/components/calendar-preview/calendar-preview-root';
+import { getAllSlots, getSlot } from '~/test-utils/data-slots';
 import { FilterType } from '~/types/filters';
 import { FilterChip } from '../filter-chip';
 import styles from '../filter-chip.module.css';
@@ -200,10 +201,13 @@ describe('FilterChip', () => {
           label='Created'
           columnType={FilterType.date}
           value={new Date(2026, 4, 27)}
-          calendarProps={{ formatValue: () => 'custom label' }}
+          calendarProps={{
+            formatValue: (date, timeZone) =>
+              `${date.getDate()} ${timeZone ?? 'local'}`
+          }}
         />
       );
-      expect(screen.getByDisplayValue('custom label')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('27 local')).toBeInTheDocument();
     });
 
     it('emits the typed date', () => {
@@ -239,6 +243,113 @@ describe('FilterChip', () => {
       fireEvent.blur(input);
       expect(onValueChange).toHaveBeenCalledWith('', expect.any(String));
       expect(input).toHaveValue('');
+    });
+
+    const isOpen = () =>
+      getSlot(document.body, 'calendar-preview-content') !== null;
+    const clickDay = (day: string) => {
+      const cell = getAllSlots(document.body, 'calendar-preview-day').find(
+        one =>
+          getSlot(one, 'calendar-preview-day-number')?.textContent === day &&
+          !one.hasAttribute('data-outside')
+      ) as HTMLElement;
+      fireEvent.pointerDown(cell);
+      act(() => cell.focus());
+      fireEvent.click(cell);
+    };
+
+    it('closes the calendar when a day is picked', async () => {
+      const onValueChange = vi.fn();
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2026, 4, 27)}
+          onValueChange={onValueChange}
+        />
+      );
+      const input = screen.getByPlaceholderText('Select date');
+      act(() => input.focus());
+      expect(isOpen()).toBe(true);
+      clickDay('12');
+      expect(onValueChange).toHaveBeenCalledWith(
+        new Date(2026, 4, 12),
+        expect.any(String)
+      );
+      await act(() => new Promise(resolve => setTimeout(resolve, 100)));
+      expect(isOpen()).toBe(false);
+    });
+
+    it('keeps the calendar open when the picked day is cleared', () => {
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2026, 4, 27)}
+        />
+      );
+      fireEvent.focus(screen.getByPlaceholderText('Select date'));
+      clickDay('27');
+      expect(isOpen()).toBe(true);
+    });
+
+    it('forwards slotProps to the input and the popup', () => {
+      const { container } = render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          calendarProps={{
+            slotProps: {
+              input: {
+                placeholder: 'Pick a day',
+                classNames: { container: 'custom-input' }
+              },
+              popover: { className: 'custom-popup' }
+            }
+          }}
+        />
+      );
+      const input = screen.getByPlaceholderText('Pick a day');
+      expect(container.querySelector('.custom-input')).toHaveClass(
+        styles.dateField
+      );
+      fireEvent.focus(input);
+      expect(
+        getSlot(document.body, 'calendar-preview-content')?.querySelector(
+          '.custom-popup'
+        )
+      ).toBeInTheDocument();
+    });
+
+    it('shows the calendar icon only with showCalendarIcon', () => {
+      const icons = (showCalendarIcon?: boolean) =>
+        render(
+          <FilterChip
+            label='Created'
+            columnType={FilterType.date}
+            calendarProps={{ showCalendarIcon }}
+          />
+        ).container.querySelectorAll('[data-slot="filter-chip-value"] svg')
+          .length;
+      expect(icons()).toBe(0);
+      expect(icons(true)).toBe(1);
+    });
+
+    it('reports a typed error through onErrorChange', () => {
+      const onErrorChange = vi.fn();
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          calendarProps={{ onErrorChange }}
+        />
+      );
+      const input = screen.getByPlaceholderText('Select date');
+      fireEvent.focus(input);
+      fireEvent.change(input, { target: { value: 'not a date' } });
+      expect(onErrorChange).toHaveBeenLastCalledWith('Invalid date');
+      fireEvent.change(input, { target: { value: '27 May 2026' } });
+      expect(onErrorChange).toHaveBeenLastCalledWith(undefined);
     });
   });
 
