@@ -72,6 +72,8 @@
   width: var(--sidebar-open-width);
   z-index: var(--rs-z-index-portal);
   box-shadow: var(--rs-shadow-lifted);
+  /* The inset variant is transparent, and the overlay must hide the content under it. */
+  background: var(--rs-color-background-base-primary);
 }
 
 .root[data-peeking][data-position="left"] {
