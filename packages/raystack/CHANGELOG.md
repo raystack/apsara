@@ -72,6 +72,73 @@ and [Icons](https://apsara.raystack.io/docs/theme/icons).
   `IconComponent`, `IconProps`, `IconProviderProps`, and `IconProvider`
   itself.
 
+### Date filters: DataView and DataTable compare whole days (BREAKING)
+
+DataView, DataTable and FilterChip read, compare and format dates
+through CalendarPreview's date-fns adapter instead of dayjs. A date
+filter compares whole days, and a date that is missing or does not exist
+no longer stands in for another day. `dayjs` stays a dependency, because
+`Calendar`, `DatePicker` and `RangePicker` still import it.
+
+#### Breaking changes
+
+- **A date filter's `stringValue` is a day key.** It is `'2026-08-15'`,
+  not `'2026-08-14T18:30:00.000Z'`. The old value was local midnight as
+  a UTC instant, so a backend that read the date part got the previous
+  day for any viewer east of UTC. `value` passes through unchanged. If
+  your backend parses `stringValue`, check it: a date-only string is
+  valid ISO 8601, but a parser that expects a timestamp may read it
+  differently.
+- **A date filter with no value is dropped.** dayjs read an empty value
+  as today, so clearing a date filter filtered the rows to today.
+- **A date filter restored from `query` filters by its date.** It lost
+  its type when the query was loaded, so the date comparison got no
+  date, and dayjs read that as today.
+- **A date filter holding a day that does not exist is dropped.** dayjs
+  rolled `2026-02-30` over to 2 March and filtered on that.
+- **A row whose date is missing matches only `neq`.** dayjs read it as
+  today, so the row matched `eq`, `lte` and `gte` on a filter day of
+  today, `lt` and `lte` on a later filter day, and `gt` and `gte` on an
+  earlier one.
+- **A row holding a numeric string or a boolean matches only `neq`.**
+  dayjs read `'1786752000000'` as the year 1792 and `true` as 1970, and
+  compared those. A timeline row holding one is not drawn.
+- **A row holding a day that does not exist matches only `neq`.** dayjs
+  rolled it to a real date and compared that, so `2026-02-30` matched
+  `lt` and `lte` against a filter day after 2 March, and `2026-13-01`
+  matched `gt` and `gte` against a filter day before 1 January 2027. A
+  timeline row holding one is not drawn.
+- **`neq` still matches a row with a missing or unreadable date.**
+
+Saved filters and URL parameters that hold an ISO timestamp are still
+read, as the day the instant falls on in the viewer's zone. There is no
+migration: the next query a stored filter produces carries a day key.
+
+### FilterChip: the date control is CalendarPreview (BREAKING)
+
+A date FilterChip renders `CalendarPreview` instead of `DatePicker`, so
+the date filters in DataView and DataTable do too. No component inside
+Apsara renders `Calendar`, `DatePicker` or `RangePicker` now.
+
+#### Breaking changes
+
+- **`calendarProps` takes CalendarPreview props.** `FilterChipCalendarProps`
+  is `formatValue`, `timeZone`, `minDate`, `maxDate`, `isDateUnavailable`,
+  `yearRange`, `defaultMonth` and `today`, plus `slotProps.input`,
+  `slotProps.popover`, `showCalendarIcon` and `onErrorChange`.
+  `formatValue(date, timeZone)` takes the date and returns its label.
+  `slotProps.input` takes `CalendarPreview.Input` props, which have no
+  `value` or `defaultValue`. `onErrorChange` still reports
+  `'Invalid date'`, and its error no longer clears when the popup closes,
+  only when the typed text is valid or empty, or a date is committed. `dateFormat`, `slotProps.calendar`, `inputProps`,
+  `calendarProps` and `popoverProps` are gone. Replace `dateFormat` with
+  `formatValue`, move calendar options such as `disabled` days to
+  `minDate`, `maxDate` or `isDateUnavailable`, and move `inputProps` and
+  `popoverProps` to `slotProps.input` and `slotProps.popover`.
+  DataTable's `filterProps.calendar` has the same type.
+- **A date filter can be cleared.** Clicking the selected day or emptying
+  the input clears it, and `onValueChange` receives `''`.
+
 ## 0.49.0
 
 ### Calendar / DatePicker / RangePicker improvements (PR #819)

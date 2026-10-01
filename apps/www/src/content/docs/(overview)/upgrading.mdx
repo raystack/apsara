@@ -7,6 +7,109 @@ One section per release, newest first, with only the changes that need action
 from you. The full record of every release, features and fixes included, is
 on [GitHub releases](https://github.com/raystack/apsara/releases).
 
+## Unreleased: date filters compare whole days
+
+`DataView`, `DataTable` and `FilterChip` read and compare dates as calendar
+days, without dayjs. A date filter's control is
+[CalendarPreview](/docs/components/calendar-preview) instead of `DatePicker`.
+`Calendar`, `DatePicker` and `RangePicker` are still exported and do not change.
+
+### 1. Check how your backend reads `stringValue`
+
+A date filter's `stringValue` is a day key, `'2026-08-15'`. It used to be local
+midnight as a UTC instant, `'2026-08-14T18:30:00.000Z'` for a viewer in India.
+`value` does not change.
+
+```ts
+// Before
+onTableQueryChange={query => {
+  // '2026-08-14T18:30:00.000Z'
+  const day = query.filters?.[0]?.stringValue?.slice(0, 10); // '2026-08-14'
+}}
+
+// After
+onTableQueryChange={query => {
+  const day = query.filters?.[0]?.stringValue; // '2026-08-15'
+}}
+```
+
+If your backend took the date part of the old string, it read the day before
+for every viewer east of UTC. The new value fixes that. A backend that expects a
+full timestamp may read a date-only string differently, so test it.
+
+Saved filters and URL parameters that hold an old timestamp still load, as the
+day that instant falls on in the viewer's time zone.
+
+DataView and DataTable compare and write the day in the viewer's time zone. If
+you set `calendarProps.timeZone` or `filterProps.calendar.timeZone` to another
+zone, a picked day can shift by one: 1 October picked in `Asia/Tokyo` is 30
+September for a viewer in New York. Leave `timeZone` unset for filters, or set
+it to the viewer's zone.
+
+### 2. Move `calendarProps` to CalendarPreview props
+
+`FilterChip`'s `calendarProps` and `DataTable`'s `filterProps.calendar` take
+CalendarPreview props now. `slotProps.popover` and `showCalendarIcon` work as
+before. `slotProps.input` takes `CalendarPreview.Input` props, which have no
+`value` or `defaultValue`. `onErrorChange` still reports `'Invalid date'`, but
+the error clears only when the typed text is valid or empty, or a date is
+committed. Closing the popup does not clear it.
+
+| Removed | Replacement |
+|---|---|
+| `dateFormat` | `formatValue(date, timeZone)`, which returns the label |
+| `slotProps.calendar` / `calendarProps` | `minDate`, `maxDate`, `isDateUnavailable`, `defaultMonth`, `yearRange` |
+| `inputProps` | `slotProps.input` |
+| `popoverProps` | `slotProps.popover` |
+
+```tsx
+// Before
+<FilterChip
+  columnType="date"
+  calendarProps={{
+    dateFormat: "YYYY-MM-DD",
+    slotProps: { calendar: { disabled: { after: new Date() } } }
+  }}
+/>
+
+// After
+<FilterChip
+  columnType="date"
+  calendarProps={{
+    formatValue: (date, timeZone) =>
+      date.toLocaleDateString("en-CA", { timeZone }),
+    maxDate: new Date()
+  }}
+/>
+```
+
+`formatValue` changes only the label. The input still reads typed text in the
+default formats, such as `15 Aug 2026`.
+
+### 3. Handle a cleared date
+
+A date filter can be cleared: click the selected day, or empty the input. The
+chip then calls `onValueChange` with `''`. In `DataView` and `DataTable` the
+chip stays, and the filter stops matching until a date is picked again. If you
+render `FilterChip` yourself, handle `''`.
+
+### 4. Expect different rows from some filters
+
+These filters used to match by mistake, and now match differently:
+
+- A date filter with no value used to filter to today. It is now dropped.
+- A date filter passed in `query` used to filter to today. It now filters by its
+  own date.
+- A date filter on a day that does not exist, such as `2026-02-30`, used to roll
+  over to 2 March. It is now dropped.
+- A row with no date used to be read as today, so it could match any operator,
+  depending on the filter day. It now matches only `neq`.
+- A row holding a day that does not exist used to roll over to a real date. It
+  now matches only `neq`, and the timeline does not draw it.
+- A row holding a numeric string or a boolean used to be read as a date, such
+  as the year 1792 for `'1786752000000'`. It now matches only `neq`, and the
+  timeline does not draw it.
+
 ## 2.0: `Theme` is rewritten
 
 `Theme` used to put its tokens on `<html>` from an effect, so it could not

@@ -1,5 +1,4 @@
 import type { Row } from '@tanstack/table-core';
-import dayjs from 'dayjs';
 import { describe, expect, it, vi } from 'vitest';
 import { EmptyFilterValue, FilterType } from '~/types/filters';
 import {
@@ -344,6 +343,28 @@ describe('Filter Operations', () => {
 
       expect(result).toBe(true);
     });
+
+    it('should match an unreadable row with neq', () => {
+      const result = filterOperationsMap.date.neq(
+        createMockRow('not a date'),
+        'createdAt',
+        { date: new Date(2023, 11, 1) },
+        addMeta
+      );
+
+      expect(result).toBe(true);
+    });
+
+    it('should not match an unreadable row with gt', () => {
+      const result = filterOperationsMap.date.gt(
+        createMockRow(undefined),
+        'createdAt',
+        { date: new Date(2023, 11, 1) },
+        addMeta
+      );
+
+      expect(result).toBe(false);
+    });
   });
 
   describe('Select Filter Operations', () => {
@@ -614,15 +635,13 @@ describe('Filter Operations', () => {
     });
 
     it('should handle date filter type', () => {
-      const date = new Date('2023-12-01');
+      const date = new Date(2023, 11, 1);
       const result = getFilterValue({
         value: date,
         filterType: FilterType.date
       });
-      expect(result).toEqual({
-        value: date,
-        stringValue: date.toISOString()
-      });
+      expect(result.value).toBe(date);
+      expect(result.stringValue).toBe('2023-12-01');
     });
 
     it('should return empty stringValue for invalid date', () => {

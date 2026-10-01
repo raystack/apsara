@@ -1,9 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { DataTable } from '../data-table';
 import styles from '../data-table.module.css';
-import { DataTableColumnDef } from '../data-table.types';
+import { DataTableColumnDef, DataTableQuery } from '../data-table.types';
+import { useDataTable } from '../hooks/useDataTable';
 
 beforeAll(() => {
   global.IntersectionObserver = vi.fn().mockImplementation(() => ({
@@ -665,6 +666,103 @@ describe('DataTable', () => {
       );
       expect(screen.getByRole('table')).toBeInTheDocument();
       expect(screen.getByText('John Doe')).toBeInTheDocument();
+    });
+  });
+
+  describe('Restored date filters', () => {
+    type Dated = { id: string; when?: string };
+    const dated: Dated[] = [
+      { id: 'd14', when: '2026-08-14' },
+      { id: 'd15', when: '2026-08-15' },
+      { id: 'd16', when: '2026-08-16' },
+      { id: 'dNone' }
+    ];
+    const datedColumns: DataTableColumnDef<Dated, unknown>[] = [
+      { accessorKey: 'id', header: 'ID' },
+      { accessorKey: 'when', header: 'When', filterType: 'date' }
+    ];
+    const originalTimeZone = process.env.TZ;
+    afterEach(() => {
+      process.env.TZ = originalTimeZone;
+    });
+
+    const Rows = () => {
+      const { table } = useDataTable();
+      return (
+        <output data-testid='rows'>
+          {table
+            .getRowModel()
+            .rows.map(row => (row.original as Dated).id)
+            .join(',')}
+        </output>
+      );
+    };
+
+    const renderRestored = (
+      filters: NonNullable<DataTableQuery['filters']>,
+      mode: 'client' | 'server' = 'client',
+      onTableQueryChange?: (query: DataTableQuery) => void
+    ) =>
+      render(
+        <DataTable
+          data={dated}
+          columns={datedColumns}
+          defaultSort={{ name: 'id', order: 'asc' }}
+          mode={mode}
+          query={{ filters }}
+          onTableQueryChange={onTableQueryChange}
+        >
+          <Rows />
+        </DataTable>
+      );
+
+    it.each([
+      ['eq', 'd15'],
+      ['neq', 'd14,d16,dNone'],
+      ['lt', 'd14'],
+      ['gt', 'd16']
+    ] as const)('filters rows by a restored %s date filter', (operator, rows) => {
+      renderRestored([{ name: 'when', operator, value: '2026-08-15' }]);
+      expect(screen.getByTestId('rows')).toHaveTextContent(rows);
+    });
+
+    it('reads a restored ISO instant as the day the viewer picked', () => {
+      process.env.TZ = 'Asia/Kolkata';
+      renderRestored([
+        { name: 'when', operator: 'eq', value: '2026-08-14T18:30:00.000Z' }
+      ]);
+      expect(screen.getByTestId('rows')).toHaveTextContent('d15');
+    });
+
+    it('emits a restored date filter as a day key', () => {
+      const onTableQueryChange = vi.fn();
+      renderRestored(
+        [{ name: 'when', operator: 'eq', value: new Date(2026, 7, 15) }],
+        'server',
+        onTableQueryChange
+      );
+      const last = onTableQueryChange.mock.calls[
+        onTableQueryChange.mock.calls.length - 1
+      ]?.[0] as DataTableQuery;
+      expect(last.filters?.[0]?.stringValue).toBe('2026-08-15');
+    });
+
+    it('leaves a restored string filter as it was sent', () => {
+      const onTableQueryChange = vi.fn();
+      renderRestored(
+        [{ name: 'id', operator: 'eq', value: 'd15' }],
+        'server',
+        onTableQueryChange
+      );
+      const last = onTableQueryChange.mock.calls[
+        onTableQueryChange.mock.calls.length - 1
+      ]?.[0] as DataTableQuery;
+      expect(last.filters?.[0]).toEqual({
+        name: 'id',
+        operator: 'eq',
+        value: 'd15',
+        stringValue: 'd15'
+      });
     });
   });
 });

@@ -4,7 +4,14 @@ import { mergeProps, Popover, useRender } from '@base-ui/react';
 import { REASONS } from '@base-ui/react/internals/reasons';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import styles from './calendar-preview.module.css';
 import {
   type CalendarPreviewChangeDetails,
@@ -230,14 +237,19 @@ export function CalendarPreviewRoot({
     state: 'value'
   });
 
-  const [month, setMonthUnwrapped] = useControlled<Date>({
-    controlled: monthProp,
-    /* `valueProp` first: `defaultValue` is nulled once `value` is controlled. */
-    default:
+  /* Read once: a controlled `value` that starts empty would otherwise move the default. */
+  const [initialMonth] = useState(
+    () =>
+      /* `valueProp` first: `defaultValue` is nulled once `value` is controlled. */
       defaultMonth ??
       monthAnchor(valueProp) ??
       monthAnchor(defaultValue) ??
-      today,
+      today
+  );
+
+  const [month, setMonthUnwrapped] = useControlled<Date>({
+    controlled: monthProp,
+    default: initialMonth,
     name: 'CalendarPreview',
     state: 'month'
   });
@@ -249,16 +261,20 @@ export function CalendarPreviewRoot({
     return list.length > 0 ? Array.from(new Set(list)) : ['day'];
   }, [scalesProp]);
 
-  const [scale, setScaleUnwrapped] = useControlled<Scale>({
-    controlled: scaleProp,
-    /* The value's own scale, or a quarter opens on the day grid unmarked. */
-    default:
+  const [initialScale] = useState<Scale>(
+    () =>
+      /* The value's own scale, or a quarter opens on the day grid unmarked. */
       defaultScale ??
       (isScaleValue(valueProp)
         ? valueProp.scale
         : isScaleValue(defaultValue)
           ? defaultValue.scale
-          : scales[0]),
+          : scales[0])
+  );
+
+  const [scale, setScaleUnwrapped] = useControlled<Scale>({
+    controlled: scaleProp,
+    default: initialScale,
     name: 'CalendarPreview',
     state: 'scale'
   });
@@ -374,20 +390,38 @@ export function CalendarPreviewRoot({
   const settleScaleRef = useRef<((scale: Scale) => void) | null>(null);
 
   const dismissedByOutsidePress = useRef(false);
+  const closingThroughSetOpen = useRef(false);
 
   const setOpen = useCallback(
     (next: boolean, details: CalendarPreviewOpenChangeDetails) => {
+      closingThroughSetOpen.current = !next;
       if (!next) {
         const outside = details.reason === REASONS.outsidePress;
         dismissedByOutsidePress.current = outside;
         armFocusGuard(outside);
         dropDraftRef.current?.();
+        /* A controlled parent can keep `open`, so the mark must not outlive this close. */
+        setTimeout(() => {
+          closingThroughSetOpen.current = false;
+        });
       }
       setOpenUnwrapped(next);
       onOpenChange?.(next, details);
     },
     [setOpenUnwrapped, onOpenChange, armFocusGuard]
   );
+
+  /* A controlled `open` can close without `setOpen`, and the focus Base UI gives back would reopen it. */
+  const wasOpen = useRef(open);
+  useLayoutEffect(() => {
+    if (wasOpen.current && !open && !closingThroughSetOpen.current) {
+      dismissedByOutsidePress.current = false;
+      armFocusGuard(false);
+      dropDraftRef.current?.();
+    }
+    closingThroughSetOpen.current = false;
+    wasOpen.current = open;
+  }, [open, armFocusGuard]);
 
   /* Base UI returns focus to the trigger's first tabbable child — the `.Input`. */
   const shouldRestoreFinalFocus = useCallback(
