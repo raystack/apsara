@@ -38,7 +38,7 @@ Use `selectProps` to enable autocomplete search on select and multiselect filter
 
 ### Date with calendarProps
 
-Use `calendarProps` to forward [CalendarPreview](/docs/components/calendar-preview) props such as `formatValue`, `timeZone`, `minDate` and `maxDate` to the chip's date control. `FilterChip` owns the value and the calendar parts.
+Use `calendarProps` to forward [CalendarPreview](/docs/components/calendar-preview) props such as `timeZone`, `minDate` and `maxDate` to the chip's date control. `formatValue(date, timeZone)` returns the label for the selected date. The chip is day-only, so the callback gets no scale. `slotProps.input` and `slotProps.popover` go to the date input and its popup. `FilterChip` owns the value and the calendar parts, and closes the popup when a day is picked.
 
 <Demo data={calendarPropsDemo} />
 
