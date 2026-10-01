@@ -46,16 +46,16 @@ export interface FilterChipProps {
     defaultSearchValue?: string;
   };
 
-  /** Props forwarded to the underlying DatePicker for `columnType="date"`. Refer to DatePicker for full props list. `dateFormat` defaults to `"DD MMM YYYY"`. */
+  /** Props forwarded to the `CalendarPreview` for `columnType="date"`. Refer to CalendarPreview for each prop. */
   calendarProps?: {
-    dateFormat?: string;
-    showCalendarIcon?: boolean;
+    formatValue?: (value: Date, scale: 'day', timeZone?: string) => string;
     timeZone?: string;
-    slotProps?: {
-      input?: Record<string, unknown>;
-      calendar?: Record<string, unknown>;
-      popover?: Record<string, unknown>;
-    };
+    minDate?: Date;
+    maxDate?: Date;
+    isDateUnavailable?: (date: Date) => boolean;
+    yearRange?: { from: number; to: number };
+    defaultMonth?: Date;
+    today?: Date;
   };
 
   /** Additional CSS class names */

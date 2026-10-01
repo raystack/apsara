@@ -127,10 +127,7 @@ describe('FilterChip', () => {
   });
 
   describe('Date Filter Type', () => {
-    it('renders the date picker without crashing when no value is set', () => {
-      // Regression: an unset date chip seeds its value with '' and forwarded
-      // that string to DatePicker, whose controlled-sync effect ran
-      // `valueProp?.getTime()` → "getTime is not a function".
+    it('renders the calendar without crashing when no value is set', () => {
       expect(() =>
         render(<FilterChip label='Created' columnType={FilterType.date} />)
       ).not.toThrow();
@@ -197,18 +194,51 @@ describe('FilterChip', () => {
       ).toBeInTheDocument();
     });
 
-    it('forwards calendarProps to the underlying DatePicker', () => {
-      // dateFormat is the easiest forwarded prop to observe, since the formatted
-      // string in the input changes when it lands on DatePicker.
+    it('forwards calendarProps to the calendar', () => {
       render(
         <FilterChip
           label='Created'
           columnType={FilterType.date}
           value={new Date(2026, 4, 27)}
-          calendarProps={{ dateFormat: 'DD/MM/YYYY' }}
+          calendarProps={{ formatValue: () => 'custom label' }}
         />
       );
-      expect(screen.getByDisplayValue('27/05/2026')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('custom label')).toBeInTheDocument();
+    });
+
+    it('emits the typed date', () => {
+      const onValueChange = vi.fn();
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          onValueChange={onValueChange}
+        />
+      );
+      const input = screen.getByPlaceholderText('Select date');
+      fireEvent.change(input, { target: { value: '27 May 2026' } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(onValueChange).toHaveBeenCalledWith(
+        new Date(2026, 4, 27),
+        expect.any(String)
+      );
+    });
+
+    it('emits an empty value when the date is cleared', () => {
+      const onValueChange = vi.fn();
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2026, 4, 27)}
+          onValueChange={onValueChange}
+        />
+      );
+      const input = screen.getByPlaceholderText('Select date');
+      fireEvent.change(input, { target: { value: '' } });
+      fireEvent.blur(input);
+      expect(onValueChange).toHaveBeenCalledWith('', expect.any(String));
+      expect(input).toHaveValue('');
     });
   });
 

@@ -129,10 +129,8 @@ export const calendarPropsDemo = {
   leadingIcon={<Info />}
   columnType="date"
   calendarProps={{
-    dateFormat: "YYYY-MM-DD",
-    slotProps: {
-      calendar: { captionLayout: "dropdown" }
-    }
+    formatValue: date => date.toLocaleDateString('en-CA'),
+    maxDate: new Date()
   }}
 />`
 };

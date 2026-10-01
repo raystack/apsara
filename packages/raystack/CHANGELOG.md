@@ -110,6 +110,24 @@ Saved filters and URL parameters that hold an ISO timestamp are still
 read, as the day the instant falls on in the viewer's zone. There is no
 migration: the next query a stored filter produces carries a day key.
 
+### FilterChip: the date control is CalendarPreview (BREAKING)
+
+A date FilterChip renders `CalendarPreview` instead of `DatePicker`, so
+the date filters in DataView and DataTable do too. No component inside
+Apsara renders `Calendar`, `DatePicker` or `RangePicker` now.
+
+#### Breaking changes
+
+- **`calendarProps` takes CalendarPreview props.** `FilterChipCalendarProps`
+  is `formatValue`, `timeZone`, `minDate`, `maxDate`, `isDateUnavailable`,
+  `yearRange`, `defaultMonth` and `today`. `dateFormat`, `slotProps`,
+  `inputProps`, `popoverProps`, `showCalendarIcon` and `onErrorChange` are
+  gone. Replace `dateFormat` with `formatValue`, and move calendar options
+  such as `disabled` days to `minDate`, `maxDate` or `isDateUnavailable`.
+  DataTable's `filterProps.calendar` has the same type.
+- **A date filter can be cleared.** Clicking the selected day or emptying
+  the input clears it, and `onValueChange` receives `''`.
+
 ## 0.49.0
 
 ### Calendar / DatePicker / RangePicker improvements (PR #819)

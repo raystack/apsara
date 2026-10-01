@@ -230,14 +230,19 @@ export function CalendarPreviewRoot({
     state: 'value'
   });
 
-  const [month, setMonthUnwrapped] = useControlled<Date>({
-    controlled: monthProp,
-    /* `valueProp` first: `defaultValue` is nulled once `value` is controlled. */
-    default:
+  /* Read once: a controlled `value` that starts empty would otherwise move the default. */
+  const [initialMonth] = useState(
+    () =>
+      /* `valueProp` first: `defaultValue` is nulled once `value` is controlled. */
       defaultMonth ??
       monthAnchor(valueProp) ??
       monthAnchor(defaultValue) ??
-      today,
+      today
+  );
+
+  const [month, setMonthUnwrapped] = useControlled<Date>({
+    controlled: monthProp,
+    default: initialMonth,
     name: 'CalendarPreview',
     state: 'month'
   });
@@ -249,16 +254,20 @@ export function CalendarPreviewRoot({
     return list.length > 0 ? Array.from(new Set(list)) : ['day'];
   }, [scalesProp]);
 
-  const [scale, setScaleUnwrapped] = useControlled<Scale>({
-    controlled: scaleProp,
-    /* The value's own scale, or a quarter opens on the day grid unmarked. */
-    default:
+  const [initialScale] = useState<Scale>(
+    () =>
+      /* The value's own scale, or a quarter opens on the day grid unmarked. */
       defaultScale ??
       (isScaleValue(valueProp)
         ? valueProp.scale
         : isScaleValue(defaultValue)
           ? defaultValue.scale
-          : scales[0]),
+          : scales[0])
+  );
+
+  const [scale, setScaleUnwrapped] = useControlled<Scale>({
+    controlled: scaleProp,
+    default: initialScale,
     name: 'CalendarPreview',
     state: 'scale'
   });

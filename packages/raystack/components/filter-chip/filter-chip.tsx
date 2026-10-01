@@ -2,6 +2,10 @@
 
 import { cva, VariantProps } from 'class-variance-authority';
 import { ComponentProps, ReactElement, useCallback, useState } from 'react';
+import {
+  CalendarPreview,
+  type CalendarPreviewProps
+} from '~/components/calendar-preview';
 import { toInstant } from '~/components/calendar-preview/date-adapter';
 import { XIcon } from '~/icons';
 import {
@@ -12,7 +16,6 @@ import {
   FilterTypes,
   filterOperators
 } from '~/types/filters';
-import { DatePicker, type DatePickerProps } from '../calendar';
 import { Flex } from '../flex';
 import { Input } from '../input';
 import { Select } from '../select';
@@ -36,7 +39,7 @@ const chip = cva(styles.chip, {
 export type FilterChipValue = string | string[] | number | Date;
 
 /**
- * Coerce a `FilterChipValue` to the `Date` the DatePicker expects, since filter
+ * Coerce a `FilterChipValue` to the `Date` the calendar expects, since filter
  * state hydrated from a serialized query arrives as a string or epoch number.
  * Unparseable values leave the field unselected.
  */
@@ -49,14 +52,19 @@ const toDateValue = (value: unknown): Date | undefined => {
 };
 
 /**
- * Subset of `DatePickerProps` that consumers may forward to the chip's
- * built-in DatePicker via `calendarProps`. `value`/`onSelect`/`defaultValue`
- * are owned by `FilterChip`; `children` would replace the input trigger and
- * break the chip layout.
+ * The `CalendarPreview` props that consumers may forward to the chip's
+ * calendar via `calendarProps`. `FilterChip` owns the value and the parts.
  */
-export type FilterChipCalendarProps = Omit<
-  DatePickerProps,
-  'value' | 'onSelect' | 'defaultValue' | 'children'
+export type FilterChipCalendarProps = Pick<
+  CalendarPreviewProps,
+  | 'formatValue'
+  | 'timeZone'
+  | 'minDate'
+  | 'maxDate'
+  | 'isDateUnavailable'
+  | 'yearRange'
+  | 'defaultMonth'
+  | 'today'
 >;
 
 export interface FilterChipProps
@@ -72,18 +80,14 @@ export interface FilterChipProps
   leadingIcon?: ReactElement;
   operations?: FilterOperator<string>[];
   selectProps?: BaseSelectProps;
-  /**
-   * Props forwarded to the underlying `DatePicker` for `columnType="date"`.
-   * `value`/`onSelect`/`defaultValue` are owned by `FilterChip` and excluded;
-   * `children` is excluded so the chip's input trigger isn't replaced.
-   */
+  /** Props forwarded to the `CalendarPreview` for `columnType="date"`. */
   calendarProps?: FilterChipCalendarProps;
 }
 
 /**
  * A compact, removable filter pill that pairs a label and operator with a
  * value control chosen by `columnType`: a `Select` (`select`/`multiselect`),
- * a `DatePicker` (`date`), or a text `Input` (`string`/`number`). The value
+ * a `CalendarPreview` (`date`), or a text `Input` (`string`/`number`). The value
  * control sizes to its content so the chip hugs the active filter. Emits
  * `onValueChange`/`onOperationChange` and renders a remove button when
  * `onRemove` is provided.
@@ -179,19 +183,21 @@ export const FilterChip = ({
             className={styles.dateFieldWrapper}
             data-slot='filter-chip-value'
           >
-            <DatePicker
-              showCalendarIcon={false}
+            <CalendarPreview
               {...calendarProps}
-              value={toDateValue(filterValue)}
-              onSelect={date => handleFilterValueChange(date)}
-              slotProps={{
-                ...calendarProps?.slotProps,
-                input: {
-                  classNames: { container: styles.dateField },
-                  ...calendarProps?.slotProps?.input
-                }
-              }}
-            />
+              value={toDateValue(filterValue) ?? null}
+              onValueChange={date => handleFilterValueChange(date ?? '')}
+            >
+              <CalendarPreview.Trigger>
+                <CalendarPreview.Input
+                  trailingIcon={null}
+                  classNames={{ container: styles.dateField }}
+                />
+              </CalendarPreview.Trigger>
+              <CalendarPreview.Content>
+                <CalendarPreview.Days />
+              </CalendarPreview.Content>
+            </CalendarPreview>
           </div>
         );
       default:
