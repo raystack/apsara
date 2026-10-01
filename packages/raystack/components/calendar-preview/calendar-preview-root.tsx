@@ -4,7 +4,14 @@ import { mergeProps, Popover, useRender } from '@base-ui/react';
 import { REASONS } from '@base-ui/react/internals/reasons';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import styles from './calendar-preview.module.css';
 import {
   type CalendarPreviewChangeDetails,
@@ -383,9 +390,11 @@ export function CalendarPreviewRoot({
   const settleScaleRef = useRef<((scale: Scale) => void) | null>(null);
 
   const dismissedByOutsidePress = useRef(false);
+  const closingThroughSetOpen = useRef(false);
 
   const setOpen = useCallback(
     (next: boolean, details: CalendarPreviewOpenChangeDetails) => {
+      closingThroughSetOpen.current = !next;
       if (!next) {
         const outside = details.reason === REASONS.outsidePress;
         dismissedByOutsidePress.current = outside;
@@ -397,6 +406,18 @@ export function CalendarPreviewRoot({
     },
     [setOpenUnwrapped, onOpenChange, armFocusGuard]
   );
+
+  /* A controlled `open` can close without `setOpen`, and the focus Base UI gives back would reopen it. */
+  const wasOpen = useRef(open);
+  useLayoutEffect(() => {
+    if (wasOpen.current && !open && !closingThroughSetOpen.current) {
+      dismissedByOutsidePress.current = false;
+      armFocusGuard(false);
+      dropDraftRef.current?.();
+    }
+    closingThroughSetOpen.current = false;
+    wasOpen.current = open;
+  }, [open, armFocusGuard]);
 
   /* Base UI returns focus to the trigger's first tabbable child — the `.Input`. */
   const shouldRestoreFinalFocus = useCallback(
