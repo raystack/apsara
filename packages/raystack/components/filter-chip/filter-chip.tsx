@@ -1,7 +1,13 @@
 'use client';
 
 import { cva, cx, VariantProps } from 'class-variance-authority';
-import { ComponentProps, ReactElement, useCallback, useState } from 'react';
+import {
+  ComponentProps,
+  ReactElement,
+  useCallback,
+  useMemo,
+  useState
+} from 'react';
 import {
   CalendarPreview,
   type CalendarPreviewContentProps,
@@ -151,6 +157,11 @@ export const FilterChip = ({
   } = calendarProps ?? {};
   const { classNames: inputClassNames, ...inputProps } =
     dateSlotProps?.input ?? {};
+  /* A new `Date` each render reads as a new value, and the input drops its typed text. */
+  const dateValue = useMemo(
+    () => toDateValue(filterValue) ?? null,
+    [filterValue]
+  );
 
   const showOnRemove = typeof onRemove === 'function';
   const isMultiSelectColumn = columnType === FilterType.multiselect;
@@ -226,7 +237,9 @@ export const FilterChip = ({
                     timeZone
                   ))
               }
-              value={toDateValue(filterValue) ?? null}
+              disabled={inputProps.disabled}
+              readOnly={inputProps.readOnly}
+              value={dateValue}
               onValueChange={date => {
                 handleFilterValueChange(date ?? '');
                 if (date) setDateOpen(false);

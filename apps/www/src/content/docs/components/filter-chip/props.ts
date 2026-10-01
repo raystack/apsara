@@ -61,7 +61,7 @@ export interface FilterChipProps {
     yearRange?: { from: number; to: number };
     defaultMonth?: Date;
     today?: Date;
-    /** Props for the date input (`CalendarPreview.Input`) and its popup (`CalendarPreview.Content`). */
+    /** Props for the date input (`CalendarPreview.Input`) and its popup (`CalendarPreview.Content`). `input.disabled` and `input.readOnly` also apply to the calendar. */
     slotProps?: {
       input?: Omit<CalendarPreviewInputProps, 'field'>;
       popover?: Omit<PopoverContentProps, 'children'>;

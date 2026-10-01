@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { defaultFormatValue } from '~/components/calendar-preview/calendar-preview-root';
 import { getAllSlots, getSlot } from '~/test-utils/data-slots';
@@ -350,6 +351,49 @@ describe('FilterChip', () => {
       expect(onErrorChange).toHaveBeenLastCalledWith('Invalid date');
       fireEvent.change(input, { target: { value: '27 May 2026' } });
       expect(onErrorChange).toHaveBeenLastCalledWith(undefined);
+    });
+
+    it('keeps a typed error when a string value rerenders the chip', () => {
+      function Parent() {
+        const [error, setError] = useState<string>();
+        return (
+          <>
+            <span data-testid='error'>{error}</span>
+            <FilterChip
+              label='Created'
+              columnType={FilterType.date}
+              value='2026-05-27'
+              calendarProps={{ onErrorChange: setError }}
+            />
+          </>
+        );
+      }
+      render(<Parent />);
+      const input = screen.getByDisplayValue(
+        defaultFormatValue(new Date(2026, 4, 27), 'day')
+      );
+      fireEvent.focus(input);
+      fireEvent.change(input, { target: { value: 'not a date' } });
+      expect(input).toHaveValue('not a date');
+      expect(screen.getByTestId('error')).toHaveTextContent('Invalid date');
+    });
+
+    it('does not select a day when slotProps.input is disabled', () => {
+      const onValueChange = vi.fn();
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2026, 4, 27)}
+          onValueChange={onValueChange}
+          calendarProps={{ slotProps: { input: { disabled: true } } }}
+        />
+      );
+      fireEvent.click(
+        getSlot(document.body, 'calendar-preview-trigger') as HTMLElement
+      );
+      if (isOpen()) clickDay('12');
+      expect(onValueChange).not.toHaveBeenCalled();
     });
   });
 
