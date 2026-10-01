@@ -78,7 +78,7 @@ export function CodeBlockCollapseTrigger({
 }: CodeBlockCollapseTriggerProps) {
   const { maxLines, collapsed, toggleCollapsed, code } = useCodeBlockContext();
   const canCollapse = maxLines && maxLines > 0;
-  const lineCount = code?.split('\n').length ?? 0;
+  const lineCount = code?.split(/\r\n|\r|\n/).length ?? 0;
 
   if (!canCollapse || lineCount <= maxLines) return null;
 
