@@ -92,13 +92,17 @@ no longer stands in for another day. `dayjs` stays a dependency, because
 - **A date filter with no value is dropped.** dayjs read an empty value
   as today, so clearing a date filter filtered the rows to today.
 - **A date filter restored from `query` filters by its date.** It lost
-  its type when the query was loaded, so it never reached the date
-  comparisons, and dayjs filtered it to today instead.
+  its type when the query was loaded, so the date comparison got no
+  date, and dayjs read that as today.
 - **A date filter holding a day that does not exist is dropped.** dayjs
   rolled `2026-02-30` over to 2 March and filtered on that.
-- **`gt` and `gte` no longer match a row whose date is missing.** dayjs
-  read it as today, so the row matched whenever today was after the
-  filter day.
+- **A row whose date is missing matches only `neq`.** dayjs read it as
+  today, so the row matched `eq`, `lte` and `gte` on a filter day of
+  today, `lt` and `lte` on a later filter day, and `gt` and `gte` on an
+  earlier one.
+- **A row holding a numeric string or a boolean matches only `neq`.**
+  dayjs read `'1786752000000'` as the year 1792 and `true` as 1970, and
+  compared those. A timeline row holding one is not drawn.
 - **A row holding a day that does not exist matches only `neq`.** dayjs
   rolled it to a real date and compared that, so `2026-02-30` matched
   `lt` and `lte` against a filter day after 2 March, and `2026-13-01`
@@ -120,10 +124,17 @@ Apsara renders `Calendar`, `DatePicker` or `RangePicker` now.
 
 - **`calendarProps` takes CalendarPreview props.** `FilterChipCalendarProps`
   is `formatValue`, `timeZone`, `minDate`, `maxDate`, `isDateUnavailable`,
-  `yearRange`, `defaultMonth` and `today`. `dateFormat`, `slotProps`,
-  `inputProps`, `popoverProps`, `showCalendarIcon` and `onErrorChange` are
-  gone. Replace `dateFormat` with `formatValue`, and move calendar options
-  such as `disabled` days to `minDate`, `maxDate` or `isDateUnavailable`.
+  `yearRange`, `defaultMonth` and `today`, plus `slotProps.input`,
+  `slotProps.popover`, `showCalendarIcon` and `onErrorChange`.
+  `formatValue(date, timeZone)` takes the date and returns its label.
+  `slotProps.input` takes `CalendarPreview.Input` props, which have no
+  `value` or `defaultValue`. `onErrorChange` still reports
+  `'Invalid date'`, and its error no longer clears when the popup closes,
+  only when the typed text is valid or empty, or a date is committed. `dateFormat`, `slotProps.calendar`, `inputProps`,
+  `calendarProps` and `popoverProps` are gone. Replace `dateFormat` with
+  `formatValue`, move calendar options such as `disabled` days to
+  `minDate`, `maxDate` or `isDateUnavailable`, and move `inputProps` and
+  `popoverProps` to `slotProps.input` and `slotProps.popover`.
   DataTable's `filterProps.calendar` has the same type.
 - **A date filter can be cleared.** Clicking the selected day or emptying
   the input clears it, and `onValueChange` receives `''`.
