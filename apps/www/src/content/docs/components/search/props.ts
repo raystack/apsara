@@ -26,8 +26,20 @@ export interface SearchProps {
    */
   onValueChange?: (value: string, eventDetails: unknown) => void;
 
-  /** Callback when clear button is clicked. */
-  onClear?: () => void;
+  /**
+   * Called when the clear button is clicked or Escape clears the input. Receives the triggering event.
+   */
+  onClear?: (
+    event:
+      | React.MouseEvent<HTMLButtonElement>
+      | React.KeyboardEvent<HTMLInputElement>
+  ) => void;
+
+  /**
+   * Native input type. The default gives the input the `searchbox` role.
+   * @default "search"
+   */
+  type?: string;
 
   /** Additional CSS class names. */
   className?: string;
