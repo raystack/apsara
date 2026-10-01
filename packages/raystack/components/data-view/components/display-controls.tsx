@@ -6,6 +6,7 @@ import { DisplayIcon } from '~/icons';
 import { Button } from '../../button';
 import { Flex } from '../../flex';
 import { Popover } from '../../popover';
+import type { PopoverContentProps } from '../../popover/popover';
 import styles from '../data-view.module.css';
 import { defaultGroupOption, SortOrdersValues } from '../data-view.types';
 import { useDataView } from '../hooks/useDataView';
@@ -14,7 +15,8 @@ import { Grouping } from './grouping';
 import { Ordering } from './ordering';
 import { ViewSwitcher } from './view-switcher';
 
-interface DisplayControlsProps {
+interface DisplayControlsProps
+  extends Pick<PopoverContentProps, 'align' | 'side' | 'sideOffset'> {
   trigger?: ReactNode;
   hideViewSwitcher?: boolean;
   hideOrdering?: boolean;
@@ -44,7 +46,8 @@ export function DisplayControls<TData>({
   hideViewSwitcher = false,
   hideOrdering = false,
   hideGrouping = false,
-  hideDisplayProperties = false
+  hideDisplayProperties = false,
+  ...positionerProps
 }: DisplayControlsProps) {
   const {
     fields,
@@ -84,6 +87,7 @@ export function DisplayControls<TData>({
       <Popover.Content
         className={styles['display-popover-content']}
         align='end'
+        {...positionerProps}
       >
         <Flex direction='column' data-slot='data-view-display-content'>
           {showViewSwitcher ? (

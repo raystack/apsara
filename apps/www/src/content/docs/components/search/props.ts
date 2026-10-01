@@ -11,6 +11,12 @@ export interface SearchProps {
   /** Whether the search input is disabled. */
   disabled?: boolean;
 
+  /**
+   * Icon before the input. Pass `null` to hide it.
+   * @default <SearchIcon />
+   */
+  leadingIcon?: React.ReactNode;
+
   /** Shows a clear button when the input has a value. */
   showClearButton?: boolean;
 

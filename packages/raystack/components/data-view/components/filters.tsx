@@ -9,6 +9,7 @@ import { FilterChip } from '../../filter-chip';
 import { Flex } from '../../flex';
 import { IconButton } from '../../icon-button';
 import { Menu } from '../../menu';
+import type { MenuContentProps } from '../../menu/menu-content';
 import styles from '../data-view.module.css';
 import { DataViewField } from '../data-view.types';
 import { useDataView } from '../hooks/useDataView';
@@ -21,7 +22,9 @@ type Trigger<TData> =
       appliedFilters: Set<string>;
     }) => ReactNode);
 
-interface AddFilterProps<TData> {
+type PositionerProps = Pick<MenuContentProps, 'align' | 'side' | 'sideOffset'>;
+
+interface AddFilterProps<TData> extends PositionerProps {
   fieldList: DataViewField<TData>[];
   appliedFiltersSet: Set<string>;
   onAddFilter: (field: DataViewField<TData>) => void;
@@ -35,7 +38,8 @@ function AddFilter<TData>({
   appliedFiltersSet,
   onAddFilter,
   children,
-  className
+  className,
+  ...positionerProps
 }: AddFilterProps<TData>) {
   const availableFilters = fieldList?.filter(
     f => !appliedFiltersSet.has(f.accessorKey)
@@ -75,7 +79,7 @@ function AddFilter<TData>({
       <Menu.Trigger
         render={isValidElement(trigger) ? trigger : <button>{trigger}</button>}
       />
-      <Menu.Content>
+      <Menu.Content {...positionerProps}>
         {availableFilters?.map(field => (
           <Menu.Item
             key={field.accessorKey}
@@ -90,7 +94,7 @@ function AddFilter<TData>({
   ) : null;
 }
 
-export interface DataViewFiltersProps<TData> {
+export interface DataViewFiltersProps<TData> extends PositionerProps {
   classNames?: {
     /** @deprecated Use `[data-slot="filter-chip"]` instead. */
     filterChips?: string;
@@ -104,7 +108,8 @@ export interface DataViewFiltersProps<TData> {
 export function Filters<TData>({
   classNames,
   className,
-  trigger
+  trigger,
+  ...positionerProps
 }: DataViewFiltersProps<TData>) {
   const { fields, tableQuery } = useDataView<TData>();
 
@@ -167,6 +172,7 @@ export function Filters<TData>({
         appliedFiltersSet={appliedFiltersSet}
         onAddFilter={onAddFilter}
         className={classNames?.addFilter}
+        {...positionerProps}
       >
         {trigger}
       </AddFilter>

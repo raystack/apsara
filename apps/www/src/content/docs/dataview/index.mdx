@@ -87,6 +87,8 @@ The split is what lets one set of filters, sorts, and toggles drive every render
 
 By default search auto-disables in the zero state (no data and no active query) and re-enables the moment the user types. Pass `autoDisableInZeroState={false}` to keep it always enabled, or `disabled` to control it yourself. In server mode, read `query.search` in `onTableQueryChange` and filter on the backend.
 
+`DataView.Search` accepts every [Search](/docs/components/search) prop. For example, `leadingIcon={null}` hides the search icon.
+
 ### Display properties
 
 Column visibility is a **single global map** on context. `DataView.List` honours it for free, since TanStack column visibility hides the grid track. For free-form renderers, wrap fields in `DataView.DisplayAccess`:
@@ -239,9 +241,15 @@ The shape `query` accepts and `onTableQueryChange` hands back. In [server mode](
 
 <auto-type-table path="./props.ts" name="DataViewZeroStateProps" />
 
+### DataView.Filters
+
+The row of applied filter chips and the add-filter menu. `align`, `side`, and `sideOffset` position the menu.
+
+<auto-type-table path="./props.ts" name="DataViewFiltersProps" />
+
 ### DataView.DisplayControls
 
-The popover housing the view switcher, Ordering, Grouping, and Display Properties. The view switcher appears at the top whenever `views.length > 1`. Each section can be hidden individually.
+The popover housing the view switcher, Ordering, Grouping, and Display Properties. The view switcher appears at the top whenever `views.length > 1`. Each section can be hidden individually. `align`, `side`, and `sideOffset` position the popover.
 
 <auto-type-table path="./props.ts" name="DataViewDisplayControlsProps" />
 
