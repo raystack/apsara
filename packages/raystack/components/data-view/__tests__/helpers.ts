@@ -1,3 +1,5 @@
+import { fnv1a } from '~/shared/hash';
+
 /**
  * Fixtures shared by the data-view util suites.
  *
@@ -17,13 +19,9 @@ export function seededRandom(seed: number) {
 
 /** FNV-1a over the decimal text, so [1, 23] and [12, 3] can't collide. */
 export function digest(values: readonly number[]): string {
-  let hash = 0x811c9dc5;
+  let hash = fnv1a('');
   for (const value of values) {
-    const text = `${value},`;
-    for (let i = 0; i < text.length; i++) {
-      hash ^= text.charCodeAt(i);
-      hash = Math.imul(hash, 0x01000193) >>> 0;
-    }
+    hash = fnv1a(`${value},`, hash);
   }
   return hash.toString(16).padStart(8, '0');
 }
