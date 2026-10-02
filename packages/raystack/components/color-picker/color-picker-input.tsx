@@ -1,10 +1,11 @@
 'use client';
 
-import { ComponentProps, useMemo } from 'react';
+import { parse } from 'culori';
+import { ComponentProps, useMemo, useState } from 'react';
 import { CopyButton } from '../copy-button';
 import { Input } from '../input';
 import { useColorPicker } from './color-picker-root';
-import { getColorString } from './utils';
+import { getColorString, parseColor } from './utils';
 
 export interface ColorPickerInputProps extends ComponentProps<typeof Input> {
   /**
@@ -18,9 +19,12 @@ export interface ColorPickerInputProps extends ComponentProps<typeof Input> {
 export const ColorPickerInput = ({
   copyable = false,
   trailingIcon,
+  onChange,
+  onBlur,
+  onKeyDown,
   ...props
 }: ColorPickerInputProps) => {
-  const { lightness, chroma, hue, alpha, mode } = useColorPicker();
+  const { lightness, chroma, hue, alpha, mode, setColor } = useColorPicker();
   const value = useMemo(
     () =>
       getColorString(
@@ -29,6 +33,14 @@ export const ColorPickerInput = ({
       ),
     [lightness, chroma, hue, alpha, mode]
   );
+  // Typed text, held until Enter or blur applies it.
+  const [draft, setDraft] = useState<string | null>(null);
+
+  const commit = () => {
+    if (draft === null) return;
+    setDraft(null);
+    if (draft !== value && parse(draft)) setColor(parseColor(draft));
+  };
 
   // A consumer-supplied trailingIcon always wins; copyable only fills the slot
   // when no trailingIcon was provided. size=2 matches the Input's trailing-icon
@@ -39,8 +51,19 @@ export const ColorPickerInput = ({
 
   return (
     <Input
-      value={value}
-      readOnly
+      value={draft ?? value}
+      onChange={event => {
+        setDraft(event.target.value);
+        onChange?.(event);
+      }}
+      onBlur={event => {
+        commit();
+        onBlur?.(event);
+      }}
+      onKeyDown={event => {
+        if (event.key === 'Enter') commit();
+        onKeyDown?.(event);
+      }}
       trailingIcon={resolvedTrailingIcon}
       data-slot='color-picker-input'
       {...props}

@@ -32,6 +32,28 @@ const STEP_LARGE = 0.1;
 
 export type ColorPickerAreaProps = ComponentProps<'div'>;
 
+// Pointer capture sends the drag's move events to the pad, so the pad needs
+// no window listeners.
+const getPointerHandlers = (applyPosition: (x: number, y: number) => void) => {
+  const apply = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    applyPosition(
+      (e.clientX - rect.left) / rect.width,
+      (e.clientY - rect.top) / rect.height
+    );
+  };
+  return {
+    onPointerDown: (e: ReactPointerEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      e.currentTarget.setPointerCapture(e.pointerId);
+      apply(e);
+    },
+    onPointerMove: (e: ReactPointerEvent<HTMLDivElement>) => {
+      if (e.currentTarget.hasPointerCapture(e.pointerId)) apply(e);
+    }
+  };
+};
+
 export const ColorPickerArea = (props: ColorPickerAreaProps) => {
   const { mode } = useColorPicker();
   return mode === 'oklch' ? <OklchArea {...props} /> : <HslArea {...props} />;
@@ -42,10 +64,8 @@ ColorPickerArea.displayName = 'ColorPicker.Area';
 // OKLCH mode: chroma × lightness plane covering the full P3 gamut. Channels
 // outside sRGB are channel-clipped for display; the input remains true OKLCH.
 const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
-  const isDragging = useRef(false);
   const isThumbVisible = useRef(false);
 
   const { lightness, chroma, hue, setColor } = useColorPicker();
@@ -115,41 +135,6 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
     [setColor]
   );
 
-  const handlePointerMove = useCallback(
-    (event: PointerEvent) => {
-      if (!(isDragging.current && containerRef.current)) return;
-      event.preventDefault();
-      event.stopPropagation();
-      const rect = containerRef.current.getBoundingClientRect();
-      const x = clamp01((event.clientX - rect.left) / rect.width);
-      const y = clamp01((event.clientY - rect.top) / rect.height);
-      applyPosition(x, y);
-    },
-    [applyPosition]
-  );
-
-  const handlePointerUp = useCallback(() => {
-    isDragging.current = false;
-    window.removeEventListener('pointermove', handlePointerMove);
-    window.removeEventListener('pointerup', handlePointerUp);
-    window.removeEventListener('pointercancel', handlePointerUp);
-  }, [handlePointerMove]);
-
-  const handlePointerDown = useCallback(
-    (e: ReactPointerEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      isDragging.current = true;
-      handlePointerMove(e.nativeEvent);
-      window.addEventListener('pointermove', handlePointerMove);
-      window.addEventListener('pointerup', handlePointerUp);
-      // pointercancel fires instead of pointerup when the OS/browser preempts
-      // the gesture (system dialog, palm rejection, etc.). Handling it with the
-      // same cleanup prevents stranded listeners + isDragging stuck at true.
-      window.addEventListener('pointercancel', handlePointerUp);
-    },
-    [handlePointerMove, handlePointerUp]
-  );
-
   const handleKeyDown = useCallback(
     (e: ReactKeyboardEvent<HTMLDivElement>) => {
       // Current thumb position, mirrored from the same math the thumb effect
@@ -198,9 +183,8 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
   return (
     <div
       className={cx(styles.selectionRoot, className)}
-      onPointerDown={handlePointerDown}
+      {...getPointerHandlers(applyPosition)}
       onKeyDown={handleKeyDown}
-      ref={containerRef}
       role='slider'
       tabIndex={0}
       aria-label='Color area, chroma and lightness'
@@ -233,9 +217,7 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
 // convert back on edit so the rest of the picker keeps a single source of
 // truth.
 const HslArea = ({ className, ...props }: ColorPickerAreaProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
-  const isDragging = useRef(false);
   const isThumbVisible = useRef(false);
 
   const { lightness, chroma, hue, setColor } = useColorPicker();
@@ -279,41 +261,6 @@ const HslArea = ({ className, ...props }: ColorPickerAreaProps) => {
       setColor({ l: next.l, c: next.c, h: next.h });
     },
     [hsl.h, setColor]
-  );
-
-  const handlePointerMove = useCallback(
-    (event: PointerEvent) => {
-      if (!(isDragging.current && containerRef.current)) return;
-      event.preventDefault();
-      event.stopPropagation();
-      const rect = containerRef.current.getBoundingClientRect();
-      const x = clamp01((event.clientX - rect.left) / rect.width);
-      const y = clamp01((event.clientY - rect.top) / rect.height);
-      applyPosition(x, y);
-    },
-    [applyPosition]
-  );
-
-  const handlePointerUp = useCallback(() => {
-    isDragging.current = false;
-    window.removeEventListener('pointermove', handlePointerMove);
-    window.removeEventListener('pointerup', handlePointerUp);
-    window.removeEventListener('pointercancel', handlePointerUp);
-  }, [handlePointerMove]);
-
-  const handlePointerDown = useCallback(
-    (e: ReactPointerEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      isDragging.current = true;
-      handlePointerMove(e.nativeEvent);
-      window.addEventListener('pointermove', handlePointerMove);
-      window.addEventListener('pointerup', handlePointerUp);
-      // pointercancel fires instead of pointerup when the OS/browser preempts
-      // the gesture (system dialog, palm rejection, etc.). Handling it with the
-      // same cleanup prevents stranded listeners + isDragging stuck at true.
-      window.addEventListener('pointercancel', handlePointerUp);
-    },
-    [handlePointerMove, handlePointerUp]
   );
 
   const handleKeyDown = useCallback(
@@ -366,9 +313,8 @@ const HslArea = ({ className, ...props }: ColorPickerAreaProps) => {
   return (
     <div
       className={cx(styles.selectionRoot, className)}
-      onPointerDown={handlePointerDown}
+      {...getPointerHandlers(applyPosition)}
       onKeyDown={handleKeyDown}
-      ref={containerRef}
       role='slider'
       tabIndex={0}
       aria-label='Color area, saturation and brightness'
