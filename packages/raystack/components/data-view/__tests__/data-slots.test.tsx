@@ -183,6 +183,7 @@ describe('DataView data-slot contract', () => {
     );
     expectSlots(container, [
       'data-view-toolbar',
+      'data-view-toolbar-status',
       'data-view-filters',
       'data-view-add-filter',
       'data-view-display-trigger',
