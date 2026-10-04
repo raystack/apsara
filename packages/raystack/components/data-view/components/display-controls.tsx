@@ -47,6 +47,7 @@ export function DisplayControls<TData>({
   hideOrdering = false,
   hideGrouping = false,
   hideDisplayProperties = false,
+  align = 'end',
   ...positionerProps
 }: DisplayControlsProps) {
   const {
@@ -86,7 +87,7 @@ export function DisplayControls<TData>({
       />
       <Popover.Content
         className={styles['display-popover-content']}
-        align='end'
+        align={align}
         {...positionerProps}
       >
         <Flex direction='column' data-slot='data-view-display-content'>

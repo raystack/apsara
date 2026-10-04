@@ -411,6 +411,22 @@ describe('DataView', () => {
       expect(positioner).toHaveAttribute('data-align', 'start');
       expect(positioner).toHaveAttribute('data-side', 'top');
     });
+
+    it('DisplayControls keeps align end when align is undefined', async () => {
+      const user = userEvent.setup();
+      render(
+        <DataView data={mockData} fields={mockFields} defaultSort={defaultSort}>
+          <DataView.DisplayControls align={undefined} />
+          <DataView.List variant='table' columns={mockColumns} />
+        </DataView>
+      );
+      await user.click(screen.getByRole('button', { name: 'Display' }));
+      const reset = await screen.findByText('Reset to default');
+      expect(reset.closest('[data-align]')).toHaveAttribute(
+        'data-align',
+        'end'
+      );
+    });
   });
 
   describe('Multi-view', () => {
