@@ -409,6 +409,7 @@ describe('DataView', () => {
             <DataView.Toolbar>
               <DataView.Search />
             </DataView.Toolbar>
+            <DataView.List variant='table' columns={mockColumns} />
           </DataView>
         );
         const status = screen.getByRole('status');
@@ -438,7 +439,7 @@ describe('DataView', () => {
               filters: [{ name: 'name', operator: 'neq', value: 'John Doe' }]
             }}
           >
-            <DataView.Toolbar />
+            <DataView.List variant='table' columns={mockColumns} />
           </DataView>
         );
         act(() => {
