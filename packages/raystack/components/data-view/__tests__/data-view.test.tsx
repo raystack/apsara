@@ -468,9 +468,11 @@ describe('DataView', () => {
       ).toBeInTheDocument();
 
       await user.click(screen.getByRole('button', { name: 'Display' }));
-      await user.click(screen.getByRole('button', { name: 'Sort ascending' }));
+      await user.click(
+        screen.getByRole('button', { name: 'Sort direction: ascending' })
+      );
       expect(
-        screen.getByRole('button', { name: 'Sort descending' })
+        screen.getByRole('button', { name: 'Sort direction: descending' })
       ).toBeInTheDocument();
     });
   });

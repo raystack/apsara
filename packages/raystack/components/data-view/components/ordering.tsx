@@ -71,8 +71,8 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
           disabled={columnList.length === 0}
           aria-label={
             value.order === SortOrders.ASC
-              ? 'Sort ascending'
-              : 'Sort descending'
+              ? 'Sort direction: ascending'
+              : 'Sort direction: descending'
           }
           data-slot='data-view-ordering-direction'
         >
