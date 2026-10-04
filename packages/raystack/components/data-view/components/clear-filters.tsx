@@ -18,24 +18,11 @@ export interface DataViewClearFiltersProps {
 }
 
 /**
- * The filter-summary row plus a "Clear Filters" action. Reads everything from
- * `DataView` context and renders nothing when there is nothing to clear.
- *
- * Flat by default (the footer `DataView.List` renders when rows are hidden by
- * filters); a bordered panel in the empty state. Shared between the List footer
- * and `DataView.ClearFilters` so the markup lives in one place.
- *
- * Internal, not exported from the package.
+ * What the filter summary shows, or `null` when it renders nothing. `count` is
+ * `null` in server mode without `totalRowCount`.
  */
-export function FilterSummary({ className }: DataViewClearFiltersProps) {
-  const {
-    table,
-    mode,
-    isLoading,
-    totalRowCount,
-    isEmptyState,
-    updateTableQuery
-  } = useDataView();
+export function useFilterSummary() {
+  const { table, mode, isLoading, totalRowCount } = useDataView();
 
   const rows = table?.getRowModel()?.rows ?? [];
   const hiddenLeafRowCount =
@@ -50,13 +37,40 @@ export function FilterSummary({ className }: DataViewClearFiltersProps) {
     (mode === 'server' ||
       (typeof hiddenLeafRowCount === 'number' && hiddenLeafRowCount > 0));
 
+  if (!showFilterSummary) return null;
+  if (hiddenLeafRowCount === null) {
+    const label = 'Some items might be hidden by filters';
+    return { count: null, label, text: label };
+  }
+  const label = 'items hidden by filters';
+  return {
+    count: hiddenLeafRowCount,
+    label,
+    text: `${hiddenLeafRowCount} ${label}`
+  };
+}
+
+/**
+ * The filter-summary row plus a "Clear Filters" action. Reads everything from
+ * `DataView` context and renders nothing when there is nothing to clear.
+ *
+ * Flat by default (the footer `DataView.List` renders when rows are hidden by
+ * filters); a bordered panel in the empty state. Shared between the List footer
+ * and `DataView.ClearFilters` so the markup lives in one place.
+ *
+ * Internal, not exported from the package.
+ */
+export function FilterSummary({ className }: DataViewClearFiltersProps) {
+  const { isEmptyState, updateTableQuery } = useDataView();
+  const summary = useFilterSummary();
+
   const handleClearFilters = useCallback(() => {
     updateTableQuery(prev => ({ ...prev, filters: [], search: '' }));
   }, [updateTableQuery]);
 
   // Matches DataTable: render only when rows are hidden by filters.
   // `isEmptyState` controls styling (bordered panel), not visibility.
-  if (!showFilterSummary) return null;
+  if (!summary) return null;
 
   return (
     <Flex
@@ -69,12 +83,12 @@ export function FilterSummary({ className }: DataViewClearFiltersProps) {
       align='center'
       data-slot='data-view-filter-summary'
     >
-      {mode === 'server' && hiddenLeafRowCount === null ? (
+      {summary.count === null ? (
         <span
           className={styles.filterSummaryLabel}
           data-slot='data-view-filter-summary-label'
         >
-          Some items might be hidden by filters
+          {summary.label}
         </span>
       ) : (
         <Flex align='center' gap={2} data-slot='data-view-filter-summary-text'>
@@ -82,13 +96,13 @@ export function FilterSummary({ className }: DataViewClearFiltersProps) {
             className={styles.filterSummaryCount}
             data-slot='data-view-filter-summary-count'
           >
-            {hiddenLeafRowCount}
+            {summary.count}
           </span>
           <span
             className={styles.filterSummaryLabel}
             data-slot='data-view-filter-summary-label'
           >
-            items hidden by filters
+            {summary.label}
           </span>
         </Flex>
       )}

@@ -1,6 +1,14 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi
+} from 'vitest';
 
 // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
 import { DataView } from '../data-view';
@@ -382,45 +390,64 @@ describe('DataView', () => {
       expect(screen.getByText('Jane Smith')).toBeInTheDocument();
     });
 
-    it('announces the result count while a search is active', async () => {
-      const user = userEvent.setup();
-      render(
-        <DataView data={mockData} fields={mockFields} defaultSort={defaultSort}>
-          <DataView.Toolbar>
-            <DataView.Search />
-          </DataView.Toolbar>
-          <DataView.List variant='table' columns={mockColumns} />
-        </DataView>
-      );
-      const status = screen.getByRole('status');
-      expect(status).toBeEmptyDOMElement();
+    describe('status region', () => {
+      beforeEach(() => {
+        vi.useFakeTimers();
+      });
 
-      const search = screen.getByRole('textbox');
-      await user.type(search, 'jo');
-      expect(status).toHaveTextContent('2 results');
+      afterEach(() => {
+        vi.useRealTimers();
+      });
 
-      await user.type(search, 'hn d');
-      expect(status).toHaveTextContent('1 result');
+      it('announces the filter summary 500ms after the search changes', () => {
+        render(
+          <DataView
+            data={mockData}
+            fields={mockFields}
+            defaultSort={defaultSort}
+          >
+            <DataView.Toolbar>
+              <DataView.Search />
+            </DataView.Toolbar>
+          </DataView>
+        );
+        const status = screen.getByRole('status');
 
-      await user.clear(search);
-      expect(status).toBeEmptyDOMElement();
-    });
+        fireEvent.change(screen.getByRole('textbox'), {
+          target: { value: 'jane' }
+        });
+        act(() => {
+          vi.advanceTimersByTime(499);
+        });
+        expect(status).toBeEmptyDOMElement();
 
-    it('counts only data rows in the announced result count when grouped', () => {
-      render(
-        <DataView
-          data={mockData}
-          fields={mockFields}
-          defaultSort={defaultSort}
-          query={{
-            group_by: ['status'],
-            filters: [{ name: 'status', operator: 'eq', value: 'active' }]
-          }}
-        >
-          <DataView.Toolbar />
-        </DataView>
-      );
-      expect(screen.getByRole('status')).toHaveTextContent('2 results');
+        act(() => {
+          vi.advanceTimersByTime(1);
+        });
+        expect(status).toHaveTextContent('2 items hidden by filters');
+      });
+
+      it('announces that items might be hidden in server mode without totalRowCount', () => {
+        render(
+          <DataView
+            data={mockData}
+            fields={mockFields}
+            defaultSort={defaultSort}
+            mode='server'
+            query={{
+              filters: [{ name: 'name', operator: 'neq', value: 'John Doe' }]
+            }}
+          >
+            <DataView.Toolbar />
+          </DataView>
+        );
+        act(() => {
+          vi.advanceTimersByTime(500);
+        });
+        expect(screen.getByRole('status')).toHaveTextContent(
+          'Some items might be hidden by filters'
+        );
+      });
     });
 
     it('names the icon-only add-filter and sort direction buttons', async () => {

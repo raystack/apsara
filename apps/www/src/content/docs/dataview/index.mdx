@@ -260,7 +260,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | Slot | Element |
 |------|---------|
 | `data-view-toolbar` | Toolbar container |
-| `data-view-toolbar-status` | Visually hidden result-count live region |
+| `data-view-toolbar-status` | Visually hidden live region for the filter summary |
 | `data-view-filters` | Filter chip row |
 | `data-view-add-filter` | Default add-filter trigger |
 | `data-view-add-filter-item` | An entry in the add-filter menu |
@@ -298,9 +298,10 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
   cells stay associated with their row, and key presses bubbling up from
   interactive children (buttons, links in cells) are ignored so they don't also
   trigger row activation.
-- `DataView.Toolbar` has a visually hidden `role="status"` region. While a
-  search or filter is active, it announces the number of matching rows, for
-  example "3 results". In server mode the count is the rows loaded so far.
+- `DataView.Toolbar` has a visually hidden `role="status"` region. It
+  announces the same text as the "hidden by filters" footer, for example
+  "3 items hidden by filters", once the search and filters stop changing for
+  500ms.
 - Renderer-specific semantics are documented on the
   [List](/docs/dataview/list#accessibility) and
   [Timeline](/docs/dataview/timeline#accessibility) pages.

@@ -1,11 +1,12 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect } from 'react';
+import { useDebouncedState } from '~/hooks';
 import { Flex } from '../../flex';
 import styles from '../data-view.module.css';
 import { useDataView } from '../hooks/useDataView';
-import { countLeafRows, hasActiveTableFiltering } from '../utils';
+import { useFilterSummary } from './clear-filters';
 import { DisplayControls } from './display-controls';
 import { Filters } from './filters';
 
@@ -24,13 +25,16 @@ export function Toolbar<TData>({
   className,
   children
 }: PropsWithChildren<ToolbarProps>) {
-  const { shouldShowFilters, table, isLoading } = useDataView<TData>();
-  if (!shouldShowFilters) return null;
+  const { shouldShowFilters, isLoading } = useDataView<TData>();
+  const summaryText = useFilterSummary()?.text ?? '';
+  const [status, setStatus] = useDebouncedState('', 500);
 
-  const resultCount =
-    !isLoading && hasActiveTableFiltering(table)
-      ? countLeafRows(table.getFilteredRowModel().rows)
-      : null;
+  useEffect(() => {
+    // Keep the last text while loading so a refetch does not re-announce it.
+    setStatus(previous => (isLoading ? previous : summaryText));
+  }, [isLoading, summaryText, setStatus]);
+
+  if (!shouldShowFilters) return null;
 
   return (
     <Flex
@@ -51,9 +55,7 @@ export function Toolbar<TData>({
         className={styles['sr-only']}
         data-slot='data-view-toolbar-status'
       >
-        {resultCount === null
-          ? ''
-          : `${resultCount} ${resultCount === 1 ? 'result' : 'results'}`}
+        {status}
       </span>
     </Flex>
   );
