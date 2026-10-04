@@ -140,12 +140,18 @@ describe('ColorPicker', () => {
       expect(onValueChange).toHaveBeenCalled();
     });
 
-    it('updates the color on pointer drag when a ref is passed', () => {
+    it('updates the color on pointer drag when a ref and handlers are passed', () => {
       const onValueChange = vi.fn();
+      const onPointerDown = vi.fn();
+      const onPointerMove = vi.fn();
       const ref = createRef<HTMLDivElement>();
       render(
         <ColorPicker mode='oklch' onValueChange={onValueChange}>
-          <ColorPicker.Area ref={ref} />
+          <ColorPicker.Area
+            ref={ref}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+          />
         </ColorPicker>
       );
 
@@ -163,6 +169,8 @@ describe('ColorPicker', () => {
         'oklch(0.5 0.2 0)',
         'oklch'
       );
+      expect(onPointerDown).toHaveBeenCalledTimes(1);
+      expect(onPointerMove).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -268,11 +276,34 @@ describe('ColorPicker', () => {
 
       const input = screen.getByTestId('color-input');
       fireEvent.change(input, { target: { value: 'rgb(0, 255, 0)' } });
+      fireEvent.keyDown(input, { key: 'Enter', isComposing: true });
       expect(onValueChange).not.toHaveBeenCalled();
-      fireEvent.keyDown(input, { key: 'Enter' });
+      // false means the keydown was default-prevented, so a form won't submit.
+      expect(fireEvent.keyDown(input, { key: 'Enter' })).toBe(false);
 
       expect(onValueChange).toHaveBeenCalledWith('#00FF00', 'hex');
       expect(input).toHaveValue('#00FF00');
+    });
+
+    it('drops typed text when the color changes elsewhere', () => {
+      const onValueChange = vi.fn();
+      const { rerender } = render(
+        <ColorPicker value='#ff0000' onValueChange={onValueChange}>
+          <ColorPicker.Input data-testid='color-input' />
+        </ColorPicker>
+      );
+
+      const input = screen.getByTestId('color-input');
+      fireEvent.change(input, { target: { value: '#112233' } });
+      rerender(
+        <ColorPicker value='#00ff00' onValueChange={onValueChange}>
+          <ColorPicker.Input data-testid='color-input' />
+        </ColorPicker>
+      );
+      expect(input).toHaveValue('#00FF00');
+      fireEvent.blur(input);
+
+      expect(onValueChange).not.toHaveBeenCalled();
     });
 
     it('reverts an invalid color on blur', () => {

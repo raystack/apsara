@@ -7,7 +7,8 @@ import { Input } from '../input';
 import { useColorPicker } from './color-picker-root';
 import { getColorString, parseColor } from './utils';
 
-export interface ColorPickerInputProps extends ComponentProps<typeof Input> {
+export interface ColorPickerInputProps
+  extends Omit<ComponentProps<typeof Input>, 'value' | 'defaultValue'> {
   /**
    * Render a copy-to-clipboard button inside the input's trailing slot.
    * The button copies the current formatted color string in the active mode.
@@ -33,8 +34,14 @@ export const ColorPickerInput = ({
       ),
     [lightness, chroma, hue, alpha, mode]
   );
-  // Typed text, held until Enter or blur applies it.
+  // Typed text, held until Enter or blur applies it. A color change from
+  // another control drops it.
   const [draft, setDraft] = useState<string | null>(null);
+  const [prevValue, setPrevValue] = useState(value);
+  if (value !== prevValue) {
+    setPrevValue(value);
+    setDraft(null);
+  }
 
   const commit = () => {
     if (draft === null) return;
@@ -61,7 +68,14 @@ export const ColorPickerInput = ({
         onBlur?.(event);
       }}
       onKeyDown={event => {
-        if (event.key === 'Enter') commit();
+        if (
+          event.key === 'Enter' &&
+          !event.nativeEvent.isComposing &&
+          event.keyCode !== 229
+        ) {
+          event.preventDefault();
+          commit();
+        }
         onKeyDown?.(event);
       }}
       trailingIcon={resolvedTrailingIcon}

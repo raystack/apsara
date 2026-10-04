@@ -1,5 +1,6 @@
 'use client';
 
+import { mergeProps } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import {
   ComponentProps,
@@ -63,7 +64,7 @@ ColorPickerArea.displayName = 'ColorPicker.Area';
 
 // OKLCH mode: chroma × lightness plane covering the full P3 gamut. Channels
 // outside sRGB are channel-clipped for display; the input remains true OKLCH.
-const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
+const OklchArea = (props: ColorPickerAreaProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
   const isThumbVisible = useRef(false);
@@ -182,9 +183,6 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
 
   return (
     <div
-      className={cx(styles.selectionRoot, className)}
-      {...getPointerHandlers(applyPosition)}
-      onKeyDown={handleKeyDown}
       role='slider'
       tabIndex={0}
       aria-label='Color area, chroma and lightness'
@@ -193,7 +191,14 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
       aria-valuemax={100}
       aria-valuenow={Math.round((chroma / CHROMA_MAX) * 100)}
       data-slot='color-picker-area'
-      {...props}
+      {...mergeProps<'div'>(
+        {
+          className: styles.selectionRoot,
+          onKeyDown: handleKeyDown,
+          ...getPointerHandlers(applyPosition)
+        },
+        props
+      )}
     >
       <canvas
         ref={canvasRef}
@@ -216,7 +221,7 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
 // behavior). State is still stored as OKLCH; we derive HSL for display and
 // convert back on edit so the rest of the picker keeps a single source of
 // truth.
-const HslArea = ({ className, ...props }: ColorPickerAreaProps) => {
+const HslArea = (props: ColorPickerAreaProps) => {
   const thumbRef = useRef<HTMLDivElement>(null);
   const isThumbVisible = useRef(false);
 
@@ -312,9 +317,6 @@ const HslArea = ({ className, ...props }: ColorPickerAreaProps) => {
 
   return (
     <div
-      className={cx(styles.selectionRoot, className)}
-      {...getPointerHandlers(applyPosition)}
-      onKeyDown={handleKeyDown}
       role='slider'
       tabIndex={0}
       aria-label='Color area, saturation and brightness'
@@ -322,9 +324,16 @@ const HslArea = ({ className, ...props }: ColorPickerAreaProps) => {
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={Math.round(hsl.s)}
-      style={{ background }}
       data-slot='color-picker-area'
-      {...props}
+      {...mergeProps<'div'>(
+        {
+          className: styles.selectionRoot,
+          style: { background },
+          onKeyDown: handleKeyDown,
+          ...getPointerHandlers(applyPosition)
+        },
+        props
+      )}
     >
       <div
         className={cx(styles.sliderThumb, styles.selectionThumb)}
