@@ -37,8 +37,14 @@ function AddFilter<TData>({
   children,
   className
 }: AddFilterProps<TData>) {
-  const availableFilters = fieldList?.filter(
+  const unappliedFields = fieldList.filter(
     f => !appliedFiltersSet.has(f.accessorKey)
+  );
+  const availableFilters = unappliedFields.filter(
+    f =>
+      f.filterOptions?.length ||
+      (f.filterType !== FilterType.select &&
+        f.filterType !== FilterType.multiselect)
   );
 
   const trigger = useMemo(() => {
@@ -70,9 +76,10 @@ function AddFilter<TData>({
     );
   }, [children, appliedFiltersSet, availableFilters, className]);
 
-  return availableFilters.length > 0 ? (
+  return unappliedFields.length > 0 ? (
     <Menu>
       <Menu.Trigger
+        disabled={availableFilters.length === 0}
         render={isValidElement(trigger) ? trigger : <button>{trigger}</button>}
       />
       <Menu.Content>
@@ -115,14 +122,7 @@ export function Filters<TData>({
     handleFilterOperationChange
   } = useFilters<TData>();
 
-  const filterableFields =
-    fields?.filter(
-      f =>
-        f.filterable &&
-        (f.filterOptions?.length ||
-          (f.filterType !== FilterType.select &&
-            f.filterType !== FilterType.multiselect))
-    ) ?? [];
+  const filterableFields = fields?.filter(f => f.filterable) ?? [];
 
   const appliedFiltersSet = new Set(
     tableQuery?.filters?.map(filter => filter.name)

@@ -402,6 +402,26 @@ describe('DataView', () => {
       expect(screen.getByRole('button')).toHaveTextContent(/^Name,Status$/);
     });
 
+    it('disables the filter trigger while select options are loading', () => {
+      render(
+        <DataView
+          data={mockData}
+          fields={[
+            {
+              accessorKey: 'name',
+              label: 'Name',
+              filterable: true,
+              filterType: 'select'
+            }
+          ]}
+          defaultSort={defaultSort}
+        >
+          <DataView.Filters />
+        </DataView>
+      );
+      expect(screen.getByRole('button', { name: /filter/i })).toBeDisabled();
+    });
+
     it('search input updates the query', async () => {
       const user = userEvent.setup();
       render(
