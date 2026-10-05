@@ -284,6 +284,31 @@ describe('Command', () => {
       const option = screen.getByText('Calendar').closest('[role="option"]');
       expect(option).toHaveAttribute('aria-disabled', 'true');
     });
+
+    it('reaches disabled items with the arrow keys but does not activate them', async () => {
+      const user = userEvent.setup();
+      const handleClick = vi.fn();
+      render(
+        <Command>
+          <Command.Input placeholder='Search' />
+          <Command.Content>
+            <Command.Item>Calendar</Command.Item>
+            <Command.Item disabled onClick={handleClick}>
+              Billing
+            </Command.Item>
+          </Command.Content>
+        </Command>
+      );
+
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('{ArrowDown}');
+      expect(screen.getByRole('option', { name: 'Billing' })).toHaveAttribute(
+        'data-highlighted'
+      );
+
+      await user.keyboard('{Enter}');
+      expect(handleClick).not.toHaveBeenCalled();
+    });
   });
 
   describe('CommandDialog', () => {

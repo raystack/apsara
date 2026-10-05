@@ -1,7 +1,8 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
+import { useDebouncedState } from '~/hooks';
 import { XIcon } from '~/icons';
 import { Button } from '../../button';
 import { Flex } from '../../flex';
@@ -50,59 +51,87 @@ export function FilterSummary({ className }: DataViewClearFiltersProps) {
     (mode === 'server' ||
       (typeof hiddenLeafRowCount === 'number' && hiddenLeafRowCount > 0));
 
+  const label =
+    hiddenLeafRowCount === null
+      ? 'Some items might be hidden by filters'
+      : 'items hidden by filters';
+  const message = !showFilterSummary
+    ? ''
+    : hiddenLeafRowCount === null
+      ? label
+      : `${hiddenLeafRowCount} ${label}`;
+  const [status, setStatus] = useDebouncedState('', 500);
+  useEffect(() => {
+    setStatus(message);
+  }, [message, setStatus]);
+
   const handleClearFilters = useCallback(() => {
     updateTableQuery(prev => ({ ...prev, filters: [], search: '' }));
   }, [updateTableQuery]);
 
-  // Matches DataTable: render only when rows are hidden by filters.
-  // `isEmptyState` controls styling (bordered panel), not visibility.
-  if (!showFilterSummary) return null;
-
   return (
-    <Flex
-      className={cx(
-        styles.filterSummaryFooter,
-        isEmptyState && styles.filterSummaryFooterEmpty,
-        className
-      )}
-      justify='center'
-      align='center'
-      data-slot='data-view-filter-summary'
-    >
-      {mode === 'server' && hiddenLeafRowCount === null ? (
-        <span
-          className={styles.filterSummaryLabel}
-          data-slot='data-view-filter-summary-label'
+    <>
+      {/* Always rendered: a live region announces only text that changes after it mounts. */}
+      <span
+        role='status'
+        className={styles['sr-only']}
+        data-slot='data-view-filter-summary-status'
+      >
+        {status}
+      </span>
+      {/* Matches DataTable: render only when rows are hidden by filters.
+          `isEmptyState` controls styling (bordered panel), not visibility. */}
+      {showFilterSummary && (
+        <Flex
+          className={cx(
+            styles.filterSummaryFooter,
+            isEmptyState && styles.filterSummaryFooterEmpty,
+            className
+          )}
+          justify='center'
+          align='center'
+          data-slot='data-view-filter-summary'
         >
-          Some items might be hidden by filters
-        </span>
-      ) : (
-        <Flex align='center' gap={2} data-slot='data-view-filter-summary-text'>
-          <span
-            className={styles.filterSummaryCount}
-            data-slot='data-view-filter-summary-count'
+          {hiddenLeafRowCount === null ? (
+            <span
+              className={styles.filterSummaryLabel}
+              data-slot='data-view-filter-summary-label'
+            >
+              {label}
+            </span>
+          ) : (
+            <Flex
+              align='center'
+              gap={2}
+              data-slot='data-view-filter-summary-text'
+            >
+              <span
+                className={styles.filterSummaryCount}
+                data-slot='data-view-filter-summary-count'
+              >
+                {hiddenLeafRowCount}
+              </span>
+              <span
+                className={styles.filterSummaryLabel}
+                data-slot='data-view-filter-summary-label'
+              >
+                {label}
+              </span>
+            </Flex>
+          )}
+          <Button
+            variant='text'
+            color='neutral'
+            size='small'
+            trailingIcon={<XIcon />}
+            onClick={handleClearFilters}
+            data-slot='data-view-filter-summary-clear'
           >
-            {hiddenLeafRowCount}
-          </span>
-          <span
-            className={styles.filterSummaryLabel}
-            data-slot='data-view-filter-summary-label'
-          >
-            items hidden by filters
-          </span>
+            Clear Filters
+          </Button>
         </Flex>
       )}
-      <Button
-        variant='text'
-        color='neutral'
-        size='small'
-        trailingIcon={<XIcon />}
-        onClick={handleClearFilters}
-        data-slot='data-view-filter-summary-clear'
-      >
-        Clear Filters
-      </Button>
-    </Flex>
+    </>
   );
 }
 
