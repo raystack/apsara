@@ -1,7 +1,16 @@
 .announcement-bar {
+  position: relative;
   width: 100%;
   min-height: var(--rs-space-10);
   padding: var(--rs-space-3) var(--rs-space-7);
+}
+
+/* Out of the flex flow so the message stays centered in the bar. */
+.dismiss {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: var(--rs-space-3);
+  translate: 0 -50%;
 }
 
 .announcement-bar-gradient {

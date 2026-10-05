@@ -93,7 +93,9 @@ Lets users switch between different color models (HEX, RGB, HSL, OKLCH) via a dr
 
 ### Input
 
-Displays the current color value in the selected color model as a read-only string. The value is updated automatically as the user interacts with the area, hue, or alpha controls. Pass `copyable` to render a copy-to-clipboard button in the input's trailing slot.
+Displays the current color value in the selected color model. The value is updated automatically as the user interacts with the area, hue, or alpha controls. Pass `copyable` to render a copy-to-clipboard button in the input's trailing slot.
+
+Users can type any CSS color string, for example `#00FF00`, `rgb(0, 255, 0)`, or `green`. The picker applies it on Enter or blur and shows it in the active mode. Enter does not submit a surrounding form. Invalid text reverts to the current color. Pass `readOnly` to turn off editing.
 
 ### Slots
 
@@ -112,7 +114,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `color-picker-slider-track` | The slider track (shared by hue and alpha) |
 | `color-picker-slider-range` | The filled range indicator inside the track (shared by hue and alpha) |
 | `color-picker-slider-thumb` | The slider thumb (shared by hue and alpha) |
-| `color-picker-input` | The read-only color value input |
+| `color-picker-input` | The color value input |
 | `color-picker-mode` | The mode select trigger |
 | `color-picker-mode-content` | The mode select dropdown content (when open) |
 

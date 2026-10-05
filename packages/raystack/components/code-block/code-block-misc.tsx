@@ -54,6 +54,7 @@ export function CodeBlockLabel({
 }: ComponentProps<typeof Text>) {
   return (
     <Text
+      size='regular'
       className={cx(styles.label, className)}
       data-slot='code-block-label'
       {...props}

@@ -30,6 +30,21 @@ describe('Search', () => {
       expect(svg).toBeInTheDocument();
     });
 
+    it('replaces the search icon with a custom leadingIcon', () => {
+      const { container } = render(
+        <Search leadingIcon={<span data-testid='custom-icon' />} />
+      );
+      expect(screen.getByTestId('custom-icon')).toBeInTheDocument();
+      expect(container.querySelector('svg')).toBeNull();
+    });
+
+    it('hides the leading icon when leadingIcon is null', () => {
+      const { container } = render(<Search leadingIcon={null} />);
+      expect(
+        container.querySelector('[data-slot="input-leading-icon"]')
+      ).toBeNull();
+    });
+
     it('applies default placeholder', () => {
       render(<Search />);
       const input = screen.getByPlaceholderText('Search');

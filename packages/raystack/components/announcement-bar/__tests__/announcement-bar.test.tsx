@@ -10,6 +10,13 @@ describe('AnnouncementBar', () => {
       expect(screen.getByText('Important announcement')).toBeInTheDocument();
     });
 
+    it('renders a node as text', () => {
+      render(<AnnouncementBar text={<a href='/changelog'>Changelog</a>} />);
+      expect(
+        screen.getByRole('link', { name: 'Changelog' })
+      ).toBeInTheDocument();
+    });
+
     it('applies custom className', () => {
       const { container } = render(
         <AnnouncementBar text='Test' className='custom-class' />
@@ -103,6 +110,32 @@ describe('AnnouncementBar', () => {
 
       const actionBtn = screen.getByText('Click me');
       expect(() => fireEvent.click(actionBtn)).not.toThrow();
+    });
+
+    it('hides itself on dismiss when onDismiss is not provided', () => {
+      render(<AnnouncementBar text='Announcement' dismissible />);
+
+      fireEvent.click(
+        screen.getByRole('button', { name: 'Dismiss announcement' })
+      );
+      expect(screen.queryByText('Announcement')).not.toBeInTheDocument();
+    });
+
+    it('calls onDismiss and stays mounted when onDismiss is provided', () => {
+      const handleDismiss = vi.fn();
+      render(
+        <AnnouncementBar
+          text='Announcement'
+          dismissible
+          onDismiss={handleDismiss}
+        />
+      );
+
+      fireEvent.click(
+        screen.getByRole('button', { name: 'Dismiss announcement' })
+      );
+      expect(handleDismiss).toHaveBeenCalledTimes(1);
+      expect(screen.getByText('Announcement')).toBeInTheDocument();
     });
   });
 

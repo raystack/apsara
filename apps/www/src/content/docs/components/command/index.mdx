@@ -177,5 +177,5 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 - Follows the [WAI-ARIA Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
 - Input uses `role="combobox"`, list uses `role="listbox"`, items use `role="option"`.
 - Keyboard: `ArrowDown` / `ArrowUp` move the highlight, `Enter` activates the highlighted item, `Escape` closes the dialog.
-- Disabled items expose `aria-disabled="true"` and are skipped in keyboard navigation.
+- Disabled items expose `aria-disabled="true"`. The arrow keys still highlight them, and `Enter` does not activate them.
 - When used inside `Command.Dialog`, focus is trapped in the dialog and returned to the trigger on close.

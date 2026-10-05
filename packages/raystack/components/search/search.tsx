@@ -9,7 +9,7 @@ import { InputProps } from '../input/input';
 
 import styles from './search.module.css';
 
-export interface SearchProps extends Omit<InputProps, 'leadingIcon'> {
+export interface SearchProps extends InputProps {
   showClearButton?: boolean;
   onClear?: (
     event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
@@ -40,6 +40,7 @@ export function Search({
   variant = 'default',
   type = 'search',
   ref,
+  leadingIcon = <SearchIcon />,
   ...props
 }: SearchProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -106,7 +107,7 @@ export function Search({
     >
       <Input
         data-slot='search-input'
-        leadingIcon={<SearchIcon />}
+        leadingIcon={leadingIcon}
         trailingIcon={trailingIconWithClear}
         placeholder={placeholder}
         disabled={disabled}
