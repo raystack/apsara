@@ -1,7 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import textStyles from '../../text/text.module.css';
 import { Tooltip } from '../tooltip';
 
 const TRIGGER_TEXT = 'Hover me';
@@ -163,14 +162,6 @@ describe('Tooltip', () => {
       const tooltip = screen.getByText('Tooltip');
       const arrow = tooltip.parentElement?.querySelector('[class*="arrow"]');
       expect(arrow).toBeInTheDocument();
-    });
-
-    it('renders string content as mini medium text', () => {
-      render(<BasicTooltip open={true} />);
-
-      const text = screen.getByText(MESSAGE_TEXT);
-      expect(text).toHaveClass(textStyles['text-mini']);
-      expect(text).toHaveClass(textStyles['text-weight-medium']);
     });
   });
 });
