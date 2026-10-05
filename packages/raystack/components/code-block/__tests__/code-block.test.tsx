@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import textStyles from '../../text/text.module.css';
 import { CodeBlock } from '../code-block';
 
 // Mock the clipboard API
@@ -101,6 +102,20 @@ describe('CodeBlock', () => {
       );
 
       expect(screen.getByTestId('label')).toBeInTheDocument();
+    });
+
+    it('renders label as regular text', () => {
+      render(
+        <BasicCodeBlock>
+          <CodeBlock.Header>
+            <CodeBlock.Label data-testid='label'>JavaScript</CodeBlock.Label>
+          </CodeBlock.Header>
+        </BasicCodeBlock>
+      );
+
+      expect(screen.getByTestId('label')).toHaveClass(
+        textStyles['text-regular']
+      );
     });
 
     it('renders multiple code blocks with different languages', () => {
