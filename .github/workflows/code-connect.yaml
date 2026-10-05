@@ -8,8 +8,8 @@ on:
   push:
     branches: [main]
     paths:
-      - "packages/raystack/figma/**"
-      - "packages/raystack/figma.config.json"
+      - "packages/react/figma/**"
+      - "packages/react/figma.config.json"
       - ".github/workflows/code-connect.yaml"
 
 # Avoid overlapping publishes racing against the same Figma file.
@@ -54,7 +54,7 @@ jobs:
 
       # Substitute the real Figma file URL into figma.config.json.
       - name: Update Figma config 🔧
-        working-directory: ./packages/raystack
+        working-directory: ./packages/react
         env:
           FIGMA_FILE_URL: ${{ secrets.FIGMA_FILE_URL }}
         run: pnpm figma:update-config
@@ -62,7 +62,7 @@ jobs:
       # Redact the file key from publish output at the source (belt-and-suspenders
       # with the add-mask step). pipefail preserves figma:publish's exit code.
       - name: Publish to Figma 🚀
-        working-directory: ./packages/raystack
+        working-directory: ./packages/react
         env:
           FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
         run: |

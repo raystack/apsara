@@ -43,7 +43,7 @@ importers:
     dependencies:
       '@raystack/apsara':
         specifier: workspace:*
-        version: link:../../packages/raystack
+        version: link:../../packages/react
       '@types/mdast':
         specifier: ^4.0.4
         version: 4.0.4
@@ -164,7 +164,7 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1
 
-  packages/raystack:
+  packages/react:
     dependencies:
       '@base-ui/react':
         specifier: ~1.7.0

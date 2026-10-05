@@ -20,8 +20,8 @@ Skills are in `.agents/skills/`. `.claude/skills` is a symlink to that folder, s
 
 ## Code
 
-- Each component is in `packages/raystack/components/<name>/`. Its `index.tsx` only re-exports.
-- Export new components from `packages/raystack/index.tsx`, in alphabetical order.
+- Each component is in `packages/react/components/<name>/`. Its `index.tsx` only re-exports.
+- Export new components from `packages/react/index.tsx`, in alphabetical order.
 - Wrap Base UI primitives, for example `import { Tabs as TabsPrimitive } from '@base-ui/react'`. Do not rebuild behavior that Base UI already has.
 - For plain elements, use `useRender` and `mergeProps` so the `render` prop works.
 - Pass `ref` as a normal prop (React 19). Do not use `forwardRef`.
@@ -49,12 +49,12 @@ Skills are in `.agents/skills/`. `.claude/skills` is a symlink to that folder, s
 - Use `pnpm`. Do not use `npm` or `yarn`. If a command fails because dependencies are missing, for example in a new worktree, run `pnpm install` and try again.
 - Biome lints and formats the code. The pre-commit hook runs `pnpm format` on staged files.
 - Run `pnpm lint` before you push. Fix the issues instead of suppressing them.
-- Run `pnpm exec tsc --noEmit` in `packages/raystack` to check types. Do not add new errors.
+- Run `pnpm exec tsc --noEmit` in `packages/react` to check types. Do not add new errors.
 
 ## Tests
 
 - Tests use Vitest and Testing Library in jsdom. Import from `vitest`, not `jest`.
-- To test one component, run `pnpm test -- components/<name>` in `packages/raystack`, for example `pnpm test -- components/flex`. To run all tests from the root, run `pnpm test:apsara`.
+- To test one component, run `pnpm test -- components/<name>` in `packages/react`, for example `pnpm test -- components/flex`. To run all tests from the root, run `pnpm test:apsara`.
 - Check class names through the imported CSS module, for example `styles['direction-row']`. Do not hardcode class strings.
 - Base UI popups do not behave like a browser in jsdom:
   - To select a portaled item, call `fireEvent.pointerDown` and then `fireEvent.click`. See `combobox.test.tsx`.
