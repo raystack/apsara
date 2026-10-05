@@ -191,9 +191,9 @@
 }
 
 .description {
-  font-size: var(--rs-font-size-regular);
-  line-height: var(--rs-line-height-regular);
-  letter-spacing: var(--rs-letter-spacing-regular);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
   color: var(--rs-color-foreground-base-secondary);
   text-wrap: pretty;
 }
