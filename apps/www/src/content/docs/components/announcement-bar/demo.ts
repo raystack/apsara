@@ -58,3 +58,13 @@ export const actionDemo = {
   actionIcon={<ExternalLink size={12} />}
 />`
 };
+
+export const dismissDemo = {
+  type: 'code',
+  code: `
+<AnnouncementBar
+  text="Apsara v1 is now available"
+  dismissible
+  onDismiss={() => alert("Dismissed")}
+/>`
+};
