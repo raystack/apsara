@@ -61,7 +61,9 @@ export function TooltipContent({
           data-slot='tooltip-content'
         >
           {typeof children === 'string' ? (
-            <Text data-slot='tooltip-text'>{children}</Text>
+            <Text size='mini' weight='medium' data-slot='tooltip-text'>
+              {children}
+            </Text>
           ) : (
             children
           )}
