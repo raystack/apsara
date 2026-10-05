@@ -15,7 +15,7 @@ Replace `Calendar`, `DatePicker` and `RangePicker` with one subcomposed root.
 - **react-day-picker behind one file** — its prop union never reaches a consumer
 - **New capability:** selection at scales coarser than a day — month, quarter, half-year, year — with the scale carried by the value, not inferred from a prop
 - **Breaking, no shim.** Ships alongside the current family; old exports go one release later
-- **Target:** `@raystack/apsara` (`packages/raystack/components/calendar-preview/`)
+- **Target:** `@raystack/apsara` (`packages/react/components/calendar-preview/`)
 
 The body is the proposal. [Appendix A](#appendix-a--implementation-reference) holds the implementation reference — part props, file layout, slot map, prop migration. [Appendix B](#appendix-b--evidence) backs every factual claim below.
 
@@ -417,7 +417,7 @@ Accepted, with no shim. Slot map and prop-by-prop migration: [Appendix A](#appen
 - [ ] `displayName` on every part
 - [ ] `data-slot` **and** the state `data-*` attributes on every rendered element, covered by `data-slots.test.tsx` (portaled parts asserted against `document.body`)
 - [ ] CSS uses `--rs-*` tokens only — **zero** `Todo: var does not exist`
-- [ ] Alphabetical export in `packages/raystack/index.tsx`; interactive `playground` in `demo.ts`
+- [ ] Alphabetical export in `packages/react/index.tsx`; interactive `playground` in `demo.ts`
 - [ ] **Zero `biome-ignore`** and **zero `slotProps`**; every part spreads `...props` last
 - [ ] `open` / `onOpenChange` on the root; `use-picker-popover.ts` deleted
 - [ ] **Focus-to-open verified in a real browser**, and **zero `Select`s mounted**
@@ -507,7 +507,7 @@ interface RangeProps extends CalendarPreviewBaseProps {
 ### File layout
 
 ```
-packages/raystack/components/calendar-preview/
+packages/react/components/calendar-preview/
 ├── index.tsx                     # re-export only
 ├── calendar-preview.tsx          # Object.assign composition
 ├── calendar-preview-root.tsx     # state, context provider
