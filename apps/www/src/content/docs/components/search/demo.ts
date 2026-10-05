@@ -31,6 +31,15 @@ export const sizeDemo = {
   </Flex>`
 };
 
+export const leadingIconDemo = {
+  type: 'code',
+  code: `
+  <Flex direction="column" gap={5} align="center">
+    <Search placeholder="Filter..." leadingIcon={<FilterIcon />} />
+    <Search placeholder="No icon..." leadingIcon={null} />
+  </Flex>`
+};
+
 export const clearDemo = {
   type: 'code',
   code: `
