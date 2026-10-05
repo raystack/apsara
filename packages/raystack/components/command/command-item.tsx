@@ -20,7 +20,6 @@ export const CommandItem = ({
   value: providedValue,
   leadingIcon,
   trailingIcon,
-  disabled,
   ...props
 }: CommandItemProps) => {
   const value =
@@ -41,8 +40,13 @@ export const CommandItem = ({
     if (!isMatched) return null;
   }
 
-  const content = (
-    <>
+  return (
+    <AutocompletePrimitive.Item
+      data-slot='command-item'
+      value={value}
+      className={cx(styles.item, className)}
+      {...props}
+    >
       {leadingIcon && (
         <span data-slot='command-item-leading-icon' className={styles.itemIcon}>
           {leadingIcon}
@@ -59,35 +63,6 @@ export const CommandItem = ({
           {trailingIcon}
         </span>
       )}
-    </>
-  );
-
-  /**
-   * TODO: Fix this when Base UI fixes this issue
-   * This is a workaround to prevent item focus when the disabled prop is true.
-   */
-  if (disabled) {
-    return (
-      <div
-        data-slot='command-item'
-        className={cx(styles.item, className)}
-        role='option'
-        data-disabled={true}
-        aria-disabled={true}
-      >
-        {content}
-      </div>
-    );
-  }
-
-  return (
-    <AutocompletePrimitive.Item
-      data-slot='command-item'
-      value={value}
-      className={cx(styles.item, className)}
-      {...props}
-    >
-      {content}
     </AutocompletePrimitive.Item>
   );
 };

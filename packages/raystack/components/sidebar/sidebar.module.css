@@ -74,6 +74,11 @@
   box-shadow: var(--rs-shadow-lifted);
 }
 
+/* Inset is transparent, so its overlay needs a background to hide the content under it. */
+.root[data-peeking][data-variant="inset"] {
+  background: var(--rs-color-background-base-primary);
+}
+
 .root[data-peeking][data-position="left"] {
   margin-right: calc(
     var(--sidebar-collapsed-width) -

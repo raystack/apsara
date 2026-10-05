@@ -25,13 +25,14 @@ function PopoverContent({
   render,
   children,
   radius,
+  sideOffset = 4,
   ...positionerProps
 }: PopoverContentProps) {
   const theme = useThemeInjection();
   return (
     <PopoverPrimitive.Portal {...theme}>
       <PopoverPrimitive.Positioner
-        sideOffset={4}
+        sideOffset={sideOffset}
         collisionPadding={3}
         className={styles.popoverPositioner}
         data-slot='popover-positioner'

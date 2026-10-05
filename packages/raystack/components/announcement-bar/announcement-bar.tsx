@@ -1,8 +1,8 @@
 'use client';
 
-import { cva, type VariantProps } from 'class-variance-authority';
-import { ReactNode } from 'react';
-
+import { cva, cx, type VariantProps } from 'class-variance-authority';
+import { type ReactNode, useState } from 'react';
+import { XIcon } from '~/icons';
 import { Flex } from '../flex';
 import { Text } from '../text';
 import styles from './announcement-bar.module.css';
@@ -23,10 +23,12 @@ const announcementBar = cva(styles['announcement-bar'], {
 type AnnouncementBarProps = VariantProps<typeof announcementBar> & {
   leadingIcon?: ReactNode;
   className?: string;
-  text: string;
+  text: ReactNode;
   actionLabel?: string;
   actionIcon?: ReactNode;
   onActionClick?: () => void;
+  dismissible?: boolean;
+  onDismiss?: () => void;
 };
 
 export const AnnouncementBar = ({
@@ -37,8 +39,13 @@ export const AnnouncementBar = ({
   actionLabel,
   actionIcon,
   onActionClick = () => {},
+  dismissible,
+  onDismiss,
   ...props
 }: AnnouncementBarProps) => {
+  const [dismissed, setDismissed] = useState(false);
+  if (dismissed) return null;
+
   return (
     <Flex
       className={announcementBar({ className, variant })}
@@ -86,6 +93,17 @@ export const AnnouncementBar = ({
           )}
         </button>
       ) : null}
+      {dismissible && (
+        <button
+          type='button'
+          className={cx(styles['action-btn'], styles.dismiss)}
+          onClick={onDismiss ?? (() => setDismissed(true))}
+          aria-label='Dismiss announcement'
+          data-slot='announcement-bar-dismiss'
+        >
+          <XIcon />
+        </button>
+      )}
     </Flex>
   );
 };

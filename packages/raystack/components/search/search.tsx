@@ -7,7 +7,7 @@ import { InputProps } from '../input/input';
 
 import styles from './search.module.css';
 
-export interface SearchProps extends Omit<InputProps, 'leadingIcon'> {
+export interface SearchProps extends InputProps {
   showClearButton?: boolean;
   onClear?: () => void;
   variant?: 'default' | 'borderless';
@@ -22,6 +22,7 @@ export function Search({
   value,
   width = '100%',
   variant = 'default',
+  leadingIcon = <SearchIcon />,
   ...props
 }: SearchProps) {
   const trailingIconWithClear = showClearButton ? (
@@ -53,7 +54,7 @@ export function Search({
     >
       <Input
         data-slot='search-input'
-        leadingIcon={<SearchIcon />}
+        leadingIcon={leadingIcon}
         trailingIcon={trailingIconWithClear}
         placeholder={placeholder}
         disabled={disabled}

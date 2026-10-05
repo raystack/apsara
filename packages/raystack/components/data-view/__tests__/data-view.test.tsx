@@ -1,6 +1,14 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi
+} from 'vitest';
 
 // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
 import { DataView } from '../data-view';
@@ -380,6 +388,122 @@ describe('DataView', () => {
       // John row should no longer appear (client-mode global filter)
       expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
       expect(screen.getByText('Jane Smith')).toBeInTheDocument();
+    });
+
+    it('Filters forwards positioning props to the add-filter menu', async () => {
+      const user = userEvent.setup();
+      render(
+        <DataView data={mockData} fields={mockFields} defaultSort={defaultSort}>
+          <DataView.Filters align='end' side='top' />
+          <DataView.List variant='table' columns={mockColumns} />
+        </DataView>
+      );
+      await user.click(screen.getByRole('button', { name: /filter/i }));
+      const item = await screen.findByRole('menuitem', { name: 'Name' });
+      const positioner = item.closest('[data-align]');
+      expect(positioner).toHaveAttribute('data-align', 'end');
+      expect(positioner).toHaveAttribute('data-side', 'top');
+    });
+
+    it('DisplayControls forwards positioning props to the popover', async () => {
+      const user = userEvent.setup();
+      render(
+        <DataView data={mockData} fields={mockFields} defaultSort={defaultSort}>
+          <DataView.DisplayControls align='start' side='top' />
+          <DataView.List variant='table' columns={mockColumns} />
+        </DataView>
+      );
+      await user.click(screen.getByRole('button', { name: 'Display' }));
+      const reset = await screen.findByText('Reset to default');
+      const positioner = reset.closest('[data-align]');
+      expect(positioner).toHaveAttribute('data-align', 'start');
+      expect(positioner).toHaveAttribute('data-side', 'top');
+    });
+
+    describe('status region', () => {
+      beforeEach(() => {
+        vi.useFakeTimers();
+      });
+
+      afterEach(() => {
+        vi.useRealTimers();
+      });
+
+      it('announces the filter summary 500ms after the search changes', () => {
+        render(
+          <DataView
+            data={mockData}
+            fields={mockFields}
+            defaultSort={defaultSort}
+          >
+            <DataView.Toolbar>
+              <DataView.Search />
+            </DataView.Toolbar>
+            <DataView.List variant='table' columns={mockColumns} />
+          </DataView>
+        );
+        const status = screen.getByRole('status');
+
+        fireEvent.change(screen.getByRole('textbox'), {
+          target: { value: 'jane' }
+        });
+        act(() => {
+          vi.advanceTimersByTime(499);
+        });
+        expect(status).toBeEmptyDOMElement();
+
+        act(() => {
+          vi.advanceTimersByTime(1);
+        });
+        expect(status).toHaveTextContent('2 items hidden by filters');
+      });
+
+      it('announces that items might be hidden in server mode without totalRowCount', () => {
+        render(
+          <DataView
+            data={mockData}
+            fields={mockFields}
+            defaultSort={defaultSort}
+            mode='server'
+            query={{
+              filters: [{ name: 'name', operator: 'neq', value: 'John Doe' }]
+            }}
+          >
+            <DataView.List variant='table' columns={mockColumns} />
+          </DataView>
+        );
+        act(() => {
+          vi.advanceTimersByTime(500);
+        });
+        expect(screen.getByRole('status')).toHaveTextContent(
+          'Some items might be hidden by filters'
+        );
+      });
+    });
+
+    it('names the icon-only add-filter and sort direction buttons', async () => {
+      const user = userEvent.setup();
+      render(
+        <DataView
+          data={mockData}
+          fields={mockFields}
+          defaultSort={defaultSort}
+          query={{ filters: [{ name: 'name', operator: 'eq', value: 'x' }] }}
+        >
+          <DataView.Toolbar />
+        </DataView>
+      );
+      expect(
+        screen.getByRole('button', { name: 'Add filter' })
+      ).toBeInTheDocument();
+
+      await user.click(screen.getByRole('button', { name: 'Display' }));
+      await user.click(
+        screen.getByRole('button', { name: 'Sort direction: ascending' })
+      );
+      expect(
+        screen.getByRole('button', { name: 'Sort direction: descending' })
+      ).toBeInTheDocument();
     });
   });
 

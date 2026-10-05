@@ -6,6 +6,7 @@ source: packages/raystack/components/announcement-bar
 
 import { playground, variantsDemo,
   actionDemo,
+  dismissDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -36,6 +37,12 @@ Variants convey the tone of the announcement. Default is `normal`; use `error` f
 
 <Demo data={actionDemo} />
 
+### Dismissible
+
+Set `dismissible` to add a close button at the end of the bar. Without `onDismiss`, the bar hides itself. With `onDismiss`, the bar stays mounted and you remove it, for example after you save the dismissal so the bar stays hidden on the next visit.
+
+<Demo data={dismissDemo} />
+
 ## API Reference
 
 Renders a dismissible banner for announcements and alerts.
@@ -54,6 +61,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `announcement-bar-action` | The action `<button>` (when `actionLabel` or `actionIcon` is set) |
 | `announcement-bar-action-label` | The action button's text label |
 | `announcement-bar-action-icon` | Wrapper around the action icon (when `actionIcon` is set) |
+| `announcement-bar-dismiss` | The dismiss `<button>` (when `dismissible` is set) |
 
 ## Accessibility
 
@@ -61,5 +69,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
   as a real `<button>`, so it's focusable, reachable by Tab, and activated
   by Enter/Space, not as a `<Text>` with an `onClick` handler.
 - The action button exposes a focus ring via `:focus-visible`.
+- The dismiss button has `aria-label="Dismiss announcement"` and the same
+  focus ring.
 - Decorative `leadingIcon` and `actionIcon` are marked `aria-hidden="true"`
   so they don't add noise to screen readers.
