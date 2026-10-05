@@ -1,6 +1,4 @@
-import { fnv1a } from '../../shared/hash';
-
-export const COLORS = [
+export const AVATAR_COLORS = [
   'indigo',
   'orange',
   'mint',
@@ -16,49 +14,27 @@ export const COLORS = [
   'gold'
 ] as const;
 
-export type AVATAR_COLORS = (typeof COLORS)[number];
-
-/** All avatar colors, in hash order. Use it to build a `palette` subset. */
-export const AVATAR_COLOR_PALETTE = COLORS;
+export type AvatarColor = (typeof AVATAR_COLORS)[number];
 
 export interface GetAvatarColorOptions {
-  /** Mixed into the hash so the same string can map to a different color. A number and its string form give the same color. */
-  seed?: string | number;
-  /** Restricts the result to these colors. Order matters. Duplicates and unknown colors are ignored. If none remain, all colors are used. */
-  palette?: readonly AVATAR_COLORS[];
-}
-
-const COLOR_SET: ReadonlySet<string> = new Set(COLORS);
-let warnedEmptyPalette = false;
-
-function resolvePalette(
-  palette?: readonly AVATAR_COLORS[]
-): readonly AVATAR_COLORS[] {
-  if (!palette) return COLORS;
-  const resolved = [...new Set(palette)].filter(color => COLOR_SET.has(color));
-  if (resolved.length > 0) return resolved;
-  if (process.env.NODE_ENV !== 'production' && !warnedEmptyPalette) {
-    warnedEmptyPalette = true;
-    console.warn(
-      'getAvatarColor: `palette` has no valid colors. Falling back to all avatar colors.'
-    );
-  }
-  return COLORS;
-}
-
-// The lowest bit of FNV-1a is an XOR of each character's lowest bit, so it
-// ignores order. Mixing the high bits in keeps a 2-color palette order-sensitive.
-function mix(hash: number): number {
-  hash ^= hash >>> 16;
-  return Math.imul(hash, 0x45d9f3b) >>> 0;
+  /** Restricts the result to these colors. Order matters. If empty, all colors are used. */
+  palette?: readonly AvatarColor[];
 }
 
 export function getAvatarColor(
   str: string,
-  { seed, palette }: GetAvatarColorOptions = {}
-): AVATAR_COLORS {
-  const colors = resolvePalette(palette);
-  // The separator keeps seed 'ab' + 'c' apart from seed 'a' + 'bc'.
-  const start = seed === undefined ? undefined : fnv1a(`${seed}\u0000`);
-  return colors[mix(fnv1a(str, start)) % colors.length];
+  { palette }: GetAvatarColorOptions = {}
+): AvatarColor {
+  const colors = palette?.length ? palette : AVATAR_COLORS;
+  // 32-bit FNV-1a
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < str.length; i++) {
+    hash ^= str.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  // The lowest bit of FNV-1a is an XOR of each character's lowest bit, so it
+  // ignores order. Mixing the high bits in keeps a 2-color palette order-sensitive.
+  hash ^= hash >>> 16;
+  hash = Math.imul(hash, 0x45d9f3b) >>> 0;
+  return colors[hash % colors.length];
 }

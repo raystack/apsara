@@ -6,8 +6,9 @@ export { AlertDialog } from './components/alert-dialog';
 export { Amount, type AmountProps } from './components/amount';
 export { AnnouncementBar } from './components/announcement-bar';
 export {
-  AVATAR_COLOR_PALETTE,
+  AVATAR_COLORS,
   Avatar,
+  type AvatarColor,
   AvatarGroup,
   type GetAvatarColorOptions,
   getAvatarColor

@@ -1,6 +1,7 @@
 export { Avatar, AvatarGroup } from './avatar';
 export {
-  AVATAR_COLOR_PALETTE,
+  AVATAR_COLORS,
+  type AvatarColor,
   type GetAvatarColorOptions,
   getAvatarColor
 } from './utils';
