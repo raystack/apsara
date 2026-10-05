@@ -53,14 +53,19 @@ const INVALID_DATE = 'Invalid date';
 /**
  * Coerce a `FilterChipValue` to the `Date` the calendar expects, since filter
  * state hydrated from a serialized query arrives as a string or epoch number.
- * Unparseable values leave the field unselected.
+ * Unparseable values, and years the calendar cannot show, leave the field
+ * unselected.
  */
 const toDateValue = (value: unknown): Date | undefined => {
-  if (value instanceof Date) return value;
-  if (typeof value === 'string' || typeof value === 'number') {
-    return toInstant(value) ?? undefined;
-  }
-  return undefined;
+  const date =
+    value instanceof Date ||
+    typeof value === 'string' ||
+    typeof value === 'number'
+      ? toInstant(value)
+      : null;
+  if (!date) return undefined;
+  const year = date.getFullYear();
+  return year >= 1 && year <= 9999 ? date : undefined;
 };
 
 /** Checked on change, not keydown, so paste and IME input are covered. */

@@ -352,6 +352,23 @@ describe('FilterChip', () => {
       expect(screen.getByPlaceholderText('Select date')).toHaveValue('');
     });
 
+    it.each([
+      ['an invalid Date', new Date('')],
+      ['a year above 9999', new Date(10000, 0, 1)],
+      ['a timestamp in a year above 9999', Date.UTC(10000, 6, 1)]
+    ])('renders %s as unselected instead of crashing', (_label, value) => {
+      expect(() =>
+        render(
+          <FilterChip
+            label='Created'
+            columnType={FilterType.date}
+            value={value}
+          />
+        )
+      ).not.toThrow();
+      expect(screen.getByPlaceholderText('Select date')).toHaveValue('');
+    });
+
     it('formats a Date value with the default month-as-text format', () => {
       // Local-component Date so the formatted string is timezone-stable.
       render(
