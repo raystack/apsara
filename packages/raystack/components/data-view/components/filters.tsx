@@ -115,7 +115,14 @@ export function Filters<TData>({
     handleFilterOperationChange
   } = useFilters<TData>();
 
-  const filterableFields = fields?.filter(f => f.filterable) ?? [];
+  const filterableFields =
+    fields?.filter(
+      f =>
+        f.filterable &&
+        (f.filterOptions?.length ||
+          (f.filterType !== FilterType.select &&
+            f.filterType !== FilterType.multiselect))
+    ) ?? [];
 
   const appliedFiltersSet = new Set(
     tableQuery?.filters?.map(filter => filter.name)

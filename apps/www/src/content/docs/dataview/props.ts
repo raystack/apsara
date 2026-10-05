@@ -92,7 +92,7 @@ export interface DataViewField {
   /** Filter input type. */
   filterType?: 'string' | 'number' | 'date' | 'select' | 'multiselect';
 
-  /** Options when filterType is select/multiselect. */
+  /** Options when filterType is select/multiselect. The add-filter menu leaves out the field while this is empty. */
   filterOptions?: Array<{ label: string; value: string }>;
 
   /** Allow sorting. */
