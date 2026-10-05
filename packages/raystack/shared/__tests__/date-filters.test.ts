@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import dayjs from 'dayjs';
 import { describe, expect, it } from 'vitest';
 import { toDayKey, toInstant } from '../date-filters';
 
@@ -141,6 +142,21 @@ describe('toInstant', () => {
     expect(toInstant(input)?.getTime()).toBe(expected.getTime());
   });
 
+  it('reads a dayjs or moment object as its timestamp', () => {
+    const time = Date.UTC(2026, 7, 15, 12);
+    expect(toInstant(dayjs(time))?.getTime()).toBe(time);
+    expect(toInstant({ valueOf: () => time })?.getTime()).toBe(time);
+  });
+
+  it.each([
+    ['an object without a numeric valueOf', { valueOf: () => 'x' }],
+    ['an object with no prototype', Object.create(null)],
+    ['an invalid dayjs', dayjs('')],
+    ['false', false]
+  ])('rejects %s', (_label, input) => {
+    expect(toInstant(input)).toBeNull();
+  });
+
   it('keeps milliseconds from a longer fraction in a local time', () => {
     expect(toInstant('2023/12/01 10:30:00.123456')?.getTime()).toBe(
       new Date(2023, 11, 1, 10, 30, 0, 123).getTime()
@@ -190,6 +206,10 @@ describe('toDayKey', () => {
   it('rejects what toInstant rejects', () => {
     expect(toDayKey('2023-02-30')).toBeNull();
     expect(toDayKey(undefined)).toBeNull();
+  });
+
+  it('reads a dayjs object', () => {
+    expect(toDayKey(dayjs('2026-08-15'))).toBe('2026-08-15');
   });
 
   it('rejects a year outside four digits', () => {

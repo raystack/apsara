@@ -20,6 +20,14 @@ export function toDayKey(value: unknown): string | null {
 }
 
 export function toInstant(value: unknown): Date | null {
+  /* A dayjs or moment object reads as its epoch. */
+  if (typeof value === 'object' && value !== null && !(value instanceof Date)) {
+    const epoch =
+      typeof value.valueOf === 'function' ? value.valueOf() : undefined;
+    return typeof epoch === 'number' && Number.isFinite(epoch)
+      ? new Date(epoch)
+      : null;
+  }
   if (value instanceof Date) return isValid(value) ? value : null;
   if (typeof value === 'number') {
     const fromEpoch = new Date(value);

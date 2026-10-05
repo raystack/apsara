@@ -109,6 +109,8 @@ another day. `dayjs` stays a dependency, because `Calendar`,
   matched `gt` and `gte` against a filter day before 1 January 2027. A
   timeline row holding one is not drawn.
 - **`neq` still matches a row with a missing or unreadable date.**
+- **A row holding a dayjs or moment object is still read**, as its
+  timestamp.
 
 Saved filters and URL parameters that hold an ISO timestamp are still
 read, as the day the instant falls on in the viewer's zone. There is no

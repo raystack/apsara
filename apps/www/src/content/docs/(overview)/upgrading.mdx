@@ -39,6 +39,8 @@ full timestamp may read a date-only string differently, so test it.
 
 Saved filters and URL parameters that hold an old timestamp still load, as the
 day that instant falls on in the viewer's time zone.
+Rows that hold a `Date`, an epoch number, or a dayjs or moment object are read
+as before.
 
 DataView and DataTable compare and write the day in the viewer's time zone. If
 you set `calendarProps.timeZone` or `filterProps.calendar.timeZone` to another
