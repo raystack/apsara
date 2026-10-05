@@ -163,3 +163,22 @@ export const generatedColorDemo = {
     );
   }`
 };
+
+export const groupDemo = {
+  type: 'code',
+  code: `
+  <Flex gap={5} direction="column">
+    <AvatarGroup max={3}>
+      <Avatar size={3} fallback="RC" />
+      <Avatar size={3} fallback="AB" color="mint" />
+      <Avatar size={3} fallback="JD" color="orange" />
+      <Avatar size={3} fallback="KL" color="sky" />
+    </AvatarGroup>
+    <AvatarGroup max={3}>
+      <Avatar size={7} fallback="RC" />
+      <Avatar size={7} fallback="AB" color="mint" />
+      <Avatar size={7} fallback="JD" color="orange" />
+      <Avatar size={7} fallback="KL" color="sky" />
+    </AvatarGroup>
+  </Flex>`
+};

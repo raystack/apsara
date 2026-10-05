@@ -25,6 +25,8 @@ export interface TableRowProps {
 }
 
 export interface TableHeadProps {
+  /** Additional CSS class names. */
+  className?: string;
   /**
    * Associates the header cell with rows or columns it labels.
    * @default "col"
@@ -40,4 +42,6 @@ export interface TableCellProps {
 export interface TableSectionHeaderProps {
   /** Number of columns the row spans. Set it to the table's total column count so the section header covers the full width. (Required) */
   colSpan: number;
+  /** Additional CSS class names. */
+  className?: string;
 }

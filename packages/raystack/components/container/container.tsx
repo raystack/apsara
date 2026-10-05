@@ -1,5 +1,5 @@
+import { mergeProps, useRender } from '@base-ui/react';
 import { cva, VariantProps } from 'class-variance-authority';
-import { ComponentProps } from 'react';
 
 import styles from './container.module.css';
 
@@ -23,32 +23,32 @@ const container = cva(styles.container, {
   }
 });
 
-type ContainerProps = VariantProps<typeof container> & ComponentProps<'div'>;
+type ContainerProps = VariantProps<typeof container> &
+  useRender.ComponentProps<'div'>;
 
 export function Container({
-  children,
   size,
   align,
   className,
   role,
-  'aria-label': ariaLabel,
-  'aria-labelledby': ariaLabelledBy,
+  render,
+  ref,
   ...props
 }: ContainerProps) {
-  const hasLabel = !!(ariaLabel || ariaLabelledBy);
-  const resolvedRole = role ?? (hasLabel ? 'region' : undefined);
-  return (
-    <div
-      data-slot='container'
-      className={container({ size, align, className })}
-      role={resolvedRole}
-      aria-label={ariaLabel}
-      aria-labelledby={ariaLabelledBy}
-      {...props}
-    >
-      {children}
-    </div>
-  );
+  const hasLabel = !!(props['aria-label'] || props['aria-labelledby']);
+  const containerProps = {
+    'data-slot': 'container',
+    className: container({ size, align, className }),
+    // A custom element keeps its implicit role, for example `main`.
+    role: role ?? (hasLabel && !render ? 'region' : undefined)
+  };
+
+  return useRender({
+    defaultTagName: 'div',
+    ref,
+    render,
+    props: mergeProps<'div'>(containerProps, props)
+  });
 }
 
 Container.displayName = 'Container';

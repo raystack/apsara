@@ -38,6 +38,16 @@ The `align` prop positions the container within its parent: left, center, or rig
 
 <Demo data={alignDemo} />
 
+### Custom render
+
+Container renders a `div` by default. Use the `render` prop to render a semantic element such as `main`, `section`, or `article`.
+
+```tsx
+<Container size="medium" render={<main />}>
+  <Text>Page content</Text>
+</Container>
+```
+
 ## API Reference
 
 Renders a centered content wrapper with max-width constraints.
@@ -50,7 +60,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 
 | Slot | Element |
 |------|---------|
-| `container` | The container `<div>` |
+| `container` | The container `<div>` (or the element supplied via `render`) |
 
 ## Accessibility
 
@@ -61,3 +71,5 @@ The Container component is designed with accessibility in mind:
 - Without a label, no role is applied, and Container stays a generic `<div>`
   to avoid emitting unlabeled regions that clutter assistive-tech output.
 - Pass `role` explicitly to override (e.g. `role="main"`).
+- With `render`, Container applies no automatic role. The rendered element
+  keeps its implicit role, so `render={<main />}` stays a `main` landmark.

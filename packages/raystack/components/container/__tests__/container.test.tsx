@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { Container } from '../container';
 import styles from '../container.module.css';
 
@@ -14,6 +14,23 @@ describe('Container', () => {
       const { container } = render(<Container>Test</Container>);
       const element = container.firstChild;
       expect(element?.nodeName).toBe('DIV');
+    });
+
+    it('renders the element passed to render', () => {
+      const { container: root } = render(
+        <Container render={<section />} size='small'>
+          Content
+        </Container>
+      );
+      const container = root.firstChild as HTMLElement;
+      expect(container.nodeName).toBe('SECTION');
+      expect(container).toHaveClass(styles['container-small']);
+    });
+
+    it('forwards ref', () => {
+      const ref = vi.fn();
+      render(<Container ref={ref}>Content</Container>);
+      expect(ref).toHaveBeenCalledWith(expect.any(HTMLDivElement));
     });
 
     it('applies custom className', () => {
@@ -102,6 +119,15 @@ describe('Container', () => {
     it('applies role="region" automatically when aria-label is provided', () => {
       render(<Container aria-label='Labeled section'>Content</Container>);
       expect(screen.getByRole('region')).toBeInTheDocument();
+    });
+
+    it('keeps the implicit role of a custom element', () => {
+      render(
+        <Container render={<main />} aria-label='Content'>
+          Content
+        </Container>
+      );
+      expect(screen.getByRole('main')).not.toHaveAttribute('role');
     });
   });
 });

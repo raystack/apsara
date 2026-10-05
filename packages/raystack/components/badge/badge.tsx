@@ -19,25 +19,23 @@ const badge = cva(styles['badge'], {
       micro: styles['badge-micro'],
       small: styles['badge-small'],
       regular: styles['badge-regular']
-    },
-    defaultVariants: {
-      variant: 'accent',
-      size: 'small'
     }
+  },
+  defaultVariants: {
+    variant: 'accent',
+    size: 'small'
   }
 });
 
 type BadgeProps = VariantProps<typeof badge> &
   ComponentProps<'span'> & {
     icon?: ReactNode;
-    children: ReactNode;
-    className?: string;
     screenReaderText?: string;
   };
 
 export const Badge = ({
-  variant = 'accent',
-  size = 'small',
+  variant,
+  size,
   radius,
   icon,
   children,
