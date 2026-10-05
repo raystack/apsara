@@ -96,6 +96,8 @@ export interface SidebarRootProps extends ComponentProps<'aside'> {
    * @default 100
    */
   peekDelay?: number;
+  /** Called when a hover peek starts or ends. */
+  onPeekChange?: (isPeeking: boolean) => void;
   /** Tooltip shown when hovering the collapse/expand handle. */
   collapseTooltip?: ReactNode;
   open?: boolean;
@@ -118,6 +120,7 @@ export function SidebarRoot({
   collapsible = 'icon',
   peekOnHover = false,
   peekDelay = DEFAULT_PEEK_DELAY,
+  onPeekChange,
   collapseTooltip,
   defaultOpen = true,
   children,
@@ -186,6 +189,13 @@ export function SidebarRoot({
     clearTimeout(peekTimeoutRef.current);
     setIsPeeking(false);
   }, [open]);
+
+  const lastPeekRef = useRef(false);
+  useEffect(() => {
+    if (lastPeekRef.current === isPeeking) return;
+    lastPeekRef.current = isPeeking;
+    onPeekChange?.(isPeeking);
+  }, [isPeeking, onPeekChange]);
 
   // data-open/data-closed drive the visuals, so a peek counts as open,
   // every collapse-hiding CSS rule turns off during a peek for free. The

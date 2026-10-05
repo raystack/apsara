@@ -95,7 +95,7 @@ export const CodeBlockRoot = ({
         setValue,
         code,
         setCode,
-        maxLines: maxLines && maxLines + 1, // to compensate for the absolute collapse trigger
+        maxLines,
         collapsed,
         toggleCollapsed
       }}

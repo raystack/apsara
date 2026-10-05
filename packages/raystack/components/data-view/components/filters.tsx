@@ -54,6 +54,7 @@ function AddFilter<TData>({
         <IconButton
           size={4}
           className={className}
+          aria-label='Add filter'
           data-slot='data-view-add-filter'
         >
           <FilterIcon />

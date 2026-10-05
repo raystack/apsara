@@ -253,6 +253,7 @@ describe('DataView data-slot contract', () => {
       </DataView>
     );
     expectSlots(container, [
+      'data-view-filter-summary-status',
       'data-view-filter-summary',
       'data-view-filter-summary-text',
       'data-view-filter-summary-count',

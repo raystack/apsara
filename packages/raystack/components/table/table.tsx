@@ -1,4 +1,4 @@
-import { cva, type VariantProps } from 'class-variance-authority';
+import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ComponentProps } from 'react';
 import styles from './table.module.css';
 
@@ -86,6 +86,7 @@ TableCell.displayName = 'Table.Cell';
 const sectionHeader = cva(styles['sectionHeader']);
 type SectionHeaderClassNames = 'row' | 'cell';
 function SectionHeader({
+  className,
   classNames,
   colSpan,
   children,
@@ -102,7 +103,7 @@ function SectionHeader({
   return (
     <tr
       ref={ref}
-      className={sectionHeader({ className: classNames?.row })}
+      className={sectionHeader({ className: cx(classNames?.row, className) })}
       data-slot='table-section-header'
       {...rest}
     >

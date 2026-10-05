@@ -323,6 +323,20 @@ describe('Sidebar', () => {
       );
     });
 
+    it('reports peek start and end via onPeekChange', async () => {
+      const onPeekChange = vi.fn();
+      render(<Sidebar open={false} peekOnHover onPeekChange={onPeekChange} />);
+      expect(onPeekChange).not.toHaveBeenCalled();
+
+      const nav = screen.getByRole('navigation');
+      fireEvent.mouseEnter(nav);
+      await waitFor(() => expect(onPeekChange).toHaveBeenCalledWith(true));
+
+      fireEvent.mouseLeave(nav);
+      await waitFor(() => expect(onPeekChange).toHaveBeenLastCalledWith(false));
+      expect(onPeekChange).toHaveBeenCalledTimes(2);
+    });
+
     it('pins the sidebar open when the handle is clicked while peeking', async () => {
       const onOpenChange = vi.fn();
       render(
