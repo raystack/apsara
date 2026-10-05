@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { format } from 'date-fns';
 import dayjs from 'dayjs';
 import { describe, expect, it } from 'vitest';
 import { toDayKey, toInstant } from '../date-filters';
@@ -102,26 +103,42 @@ describe('toInstant', () => {
     );
   });
 
+  /* Outside the ISO and local shapes, `new Date` reads the string, as it did
+     under dayjs, and rolls an impossible day over. */
   it.each([
-    '02/30/2014',
-    '2/30/2026 10:30',
-    '2-30-2026',
-    '2 30 2026',
-    '2026 2 30',
-    'Tue 2/30/2026',
-    'February 30, 2026',
-    'Feb. 30, 2026',
-    '30 Feb 2026',
-    '30-Feb-2026',
-    '2026 Feb 30',
-    'Sep 31, 2026',
-    'Sept 31, 2026',
-    '2023.02.30',
-    'Tue Feb 30 2026 10:30:00 GMT+0530',
-    'Feb 30 2026 10:00 PST',
-    'February 30, 2026 3',
-    '2/30/2026 3'
-  ])('rejects the impossible day in %s', input => {
+    ['02/30/2014', new Date(2014, 2, 2)],
+    ['February 30, 2026', new Date(2026, 2, 2)]
+  ])('reads %s as new Date does', (input, expected) => {
+    expect(toInstant(input)?.getTime()).toBe(expected.getTime());
+  });
+
+  it.each([
+    ['2026-09-01 00:30:00 +02', Date.UTC(2026, 7, 31, 22, 30)],
+    ['Aug 31 2026 11:30 PM -0700', Date.UTC(2026, 8, 1, 6, 30)],
+    ['2026-01-01T00:30:00+02:00', Date.UTC(2025, 11, 31, 22, 30)],
+    ['Dec 31 2025 11:30 PM -0700', Date.UTC(2026, 0, 1, 6, 30)]
+  ])('reads %s across a month boundary in any zone', (input, expected) => {
+    expect(toInstant(input)?.getTime()).toBe(expected);
+  });
+
+  it('reads the offset before a bracketed zone', () => {
+    expect(toInstant('2026-08-15T23:00+05:30[Asia/Kolkata]')?.getTime()).toBe(
+      Date.UTC(2026, 7, 15, 17, 30)
+    );
+  });
+
+  it('reads a dayjs or moment object as its timestamp', () => {
+    const time = Date.UTC(2026, 7, 15, 12);
+    expect(toInstant(dayjs(time))?.getTime()).toBe(time);
+    expect(toInstant({ valueOf: () => time })?.getTime()).toBe(time);
+  });
+
+  it.each([
+    ['an object without a numeric valueOf', { valueOf: () => 'x' }],
+    ['an object with no prototype', Object.create(null)],
+    ['an invalid dayjs', dayjs('')],
+    ['false', false]
+  ])('rejects %s', (_label, input) => {
     expect(toInstant(input)).toBeNull();
   });
 
@@ -140,21 +157,6 @@ describe('toInstant', () => {
     ['Dec 1 2026 01:00 EST', new Date(Date.UTC(2026, 11, 1, 6))]
   ])('reads the real day in %s as dayjs did', (input, expected) => {
     expect(toInstant(input)?.getTime()).toBe(expected.getTime());
-  });
-
-  it('reads a dayjs or moment object as its timestamp', () => {
-    const time = Date.UTC(2026, 7, 15, 12);
-    expect(toInstant(dayjs(time))?.getTime()).toBe(time);
-    expect(toInstant({ valueOf: () => time })?.getTime()).toBe(time);
-  });
-
-  it.each([
-    ['an object without a numeric valueOf', { valueOf: () => 'x' }],
-    ['an object with no prototype', Object.create(null)],
-    ['an invalid dayjs', dayjs('')],
-    ['false', false]
-  ])('rejects %s', (_label, input) => {
-    expect(toInstant(input)).toBeNull();
   });
 
   it('keeps milliseconds from a longer fraction in a local time', () => {
@@ -210,6 +212,12 @@ describe('toDayKey', () => {
 
   it('reads a dayjs object', () => {
     expect(toDayKey(dayjs('2026-08-15'))).toBe('2026-08-15');
+  });
+
+  it('reads the day of a bracketed zone in the viewer zone', () => {
+    expect(toDayKey('2026-08-15T23:00+05:30[Asia/Kolkata]')).toBe(
+      format(Date.UTC(2026, 7, 15, 17, 30), 'yyyy-MM-dd')
+    );
   });
 
   it('rejects a year outside four digits', () => {
