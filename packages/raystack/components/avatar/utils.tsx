@@ -46,6 +46,13 @@ function resolvePalette(
   return COLORS;
 }
 
+// The lowest bit of FNV-1a is an XOR of each character's lowest bit, so it
+// ignores order. Mixing the high bits in keeps a 2-color palette order-sensitive.
+function mix(hash: number): number {
+  hash ^= hash >>> 16;
+  return Math.imul(hash, 0x45d9f3b) >>> 0;
+}
+
 export function getAvatarColor(
   str: string,
   { seed, palette }: GetAvatarColorOptions = {}
@@ -53,5 +60,5 @@ export function getAvatarColor(
   const colors = resolvePalette(palette);
   // The separator keeps seed 'ab' + 'c' apart from seed 'a' + 'bc'.
   const start = seed === undefined ? undefined : fnv1a(`${seed}\u0000`);
-  return colors[fnv1a(str, start) % colors.length];
+  return colors[mix(fnv1a(str, start)) % colors.length];
 }

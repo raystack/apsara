@@ -382,16 +382,22 @@ describe('Avatar', () => {
       });
 
       it('maps anagrams to different colors', () => {
-        expect(getAvatarColor('abc')).toBe('cyan');
-        expect(getAvatarColor('cba')).toBe('orange');
-        expect(getAvatarColor('amy')).toBe('sky');
-        expect(getAvatarColor('may')).toBe('gold');
-        expect(getAvatarColor('listen')).toBe('iris');
-        expect(getAvatarColor('silent')).toBe('cyan');
+        expect(getAvatarColor('abc')).toBe('iris');
+        expect(getAvatarColor('cba')).toBe('neutral');
+        expect(getAvatarColor('amy')).toBe('neutral');
+        expect(getAvatarColor('may')).toBe('cyan');
+        expect(getAvatarColor('night')).toBe('mint');
+        expect(getAvatarColor('thing')).toBe('purple');
+      });
+
+      it('maps anagrams to different colors with a 2-color palette', () => {
+        const palette = ['sky', 'mint'] as const;
+        expect(getAvatarColor('amy', { palette })).toBe('mint');
+        expect(getAvatarColor('may', { palette })).toBe('sky');
       });
 
       it('returns a known color for a known string', () => {
-        expect(getAvatarColor('john.doe@example.com')).toBe('pink');
+        expect(getAvatarColor('john.doe@example.com')).toBe('mint');
       });
 
       it('returns the same color for the same input and options', () => {
@@ -406,10 +412,10 @@ describe('Avatar', () => {
       });
 
       it('changes the color with the seed', () => {
-        expect(getAvatarColor('alice', { seed: 'a' })).toBe('iris');
-        expect(getAvatarColor('alice', { seed: 'b' })).toBe('crimson');
-        expect(getAvatarColor('alice', { seed: 1 })).toBe('mint');
-        expect(getAvatarColor('alice', { seed: '1' })).toBe('mint');
+        expect(getAvatarColor('alice', { seed: 'a' })).toBe('orange');
+        expect(getAvatarColor('alice', { seed: 'b' })).toBe('lime');
+        expect(getAvatarColor('alice', { seed: 1 })).toBe('lime');
+        expect(getAvatarColor('alice', { seed: '1' })).toBe('lime');
       });
 
       it('returns only and all colors from the palette', () => {
@@ -468,7 +474,7 @@ describe('Avatar', () => {
       });
 
       it('returns a valid color for an empty string', () => {
-        expect(getAvatarColor('')).toBe('neutral');
+        expect(getAvatarColor('')).toBe('pink');
       });
 
       it('has a color variant class for every palette color', () => {
