@@ -1,6 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { radiusClasses } from '../../../shared/radius';
+import { Tooltip } from '../../tooltip';
 import { Avatar, AvatarGroup } from '../avatar';
 import styles from '../avatar.module.css';
 import { getAvatarColor } from '../utils';
@@ -54,6 +55,26 @@ describe('Avatar', () => {
         <Avatar fallback={<span data-testid='custom-fallback'>👤</span>} />
       );
       expect(screen.getByTestId('custom-fallback')).toBeInTheDocument();
+    });
+
+    it('calls onLoadingStatusChange with the image status', async () => {
+      const onLoadingStatusChange = vi.fn();
+      render(
+        <Avatar
+          src='https://example.com/avatar.png'
+          alt='JD'
+          onLoadingStatusChange={onLoadingStatusChange}
+        />
+      );
+      await waitFor(() =>
+        expect(onLoadingStatusChange).toHaveBeenCalledWith('loaded')
+      );
+    });
+
+    it('waits for fallbackDelay before showing the fallback', async () => {
+      render(<Avatar fallback='JD' fallbackDelay={50} />);
+      expect(screen.queryByText('JD')).not.toBeInTheDocument();
+      expect(await screen.findByText('JD')).toBeInTheDocument();
     });
   });
 
@@ -174,6 +195,23 @@ describe('Avatar', () => {
         render(<AvatarGroup ref={ref}>{createAvatars(2)}</AvatarGroup>);
         expect(ref).toHaveBeenCalled();
       });
+
+      it('keeps each avatar mounted when the order changes', () => {
+        const { rerender } = render(
+          <AvatarGroup>
+            {[<Avatar key='a' fallback='A' />, <Avatar key='b' fallback='B' />]}
+          </AvatarGroup>
+        );
+        const avatarA = screen.getByText('A').closest('[data-slot="avatar"]');
+        rerender(
+          <AvatarGroup>
+            {[<Avatar key='b' fallback='B' />, <Avatar key='a' fallback='A' />]}
+          </AvatarGroup>
+        );
+        expect(screen.getByText('A').closest('[data-slot="avatar"]')).toBe(
+          avatarA
+        );
+      });
     });
 
     describe('Max Property', () => {
@@ -225,6 +263,25 @@ describe('Avatar', () => {
         const overflowAvatar = screen
           .getByText('+1')
           .closest('[class*="avatar"]');
+        expect(overflowAvatar).toHaveClass(styles['avatar-size-5']);
+      });
+
+      it('matches the size of a first avatar inside a Tooltip', () => {
+        render(
+          <AvatarGroup max={1}>
+            {[
+              <Tooltip key={0}>
+                <Tooltip.Trigger render={<Avatar size={5} fallback='U1' />} />
+                <Tooltip.Content>User 1</Tooltip.Content>
+              </Tooltip>,
+              <Avatar key={1} fallback='U2' />
+            ]}
+          </AvatarGroup>
+        );
+
+        const overflowAvatar = screen
+          .getByText('+1')
+          .closest('[data-slot="avatar"]');
         expect(overflowAvatar).toHaveClass(styles['avatar-size-5']);
       });
 

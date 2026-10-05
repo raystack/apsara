@@ -22,6 +22,11 @@ export interface IndicatorProps
   extends ComponentProps<'div'>,
     VariantProps<typeof indicator> {
   label?: string;
+  /**
+   * Pulses the badge to mark a live or active state.
+   * @default false
+   */
+  pulse?: boolean;
   children?: ReactNode;
   'aria-label'?: string;
   classNames?: {
@@ -34,6 +39,7 @@ export const Indicator = ({
   className,
   classNames,
   variant,
+  pulse,
   label,
   children,
   'aria-label': ariaLabel,
@@ -54,6 +60,13 @@ export const Indicator = ({
         aria-label={accessibilityLabel}
         data-slot='indicator-badge'
       >
+        {pulse && (
+          <span
+            className={styles.pulse}
+            aria-hidden='true'
+            data-slot='indicator-pulse'
+          />
+        )}
         {label ? (
           <span
             className={styles.label}
