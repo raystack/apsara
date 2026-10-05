@@ -1,7 +1,6 @@
 import type { FilterFn } from '@tanstack/table-core';
 
-import { toDayKey } from '~/components/calendar-preview/date-adapter';
-import { notOnDay, onDay } from '~/shared/date-filters';
+import { notOnDay, onDay, toDayKey } from '~/shared/date-filters';
 import {
   DataTableFilterOperatorTypes,
   DateFilterOperatorType,

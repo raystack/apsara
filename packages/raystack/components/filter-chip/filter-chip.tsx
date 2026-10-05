@@ -1,6 +1,7 @@
 'use client';
 
 import { cva, cx, VariantProps } from 'class-variance-authority';
+import { parseISO } from 'date-fns';
 import {
   ComponentProps,
   ReactElement,
@@ -14,11 +15,8 @@ import {
   type CalendarPreviewInputProps,
   type CalendarPreviewProps
 } from '~/components/calendar-preview';
-import {
-  parseKey,
-  toInstant
-} from '~/components/calendar-preview/date-adapter';
 import { XIcon } from '~/icons';
+import { toInstant } from '~/shared/date-filters';
 import {
   FilterOperation,
   FilterOperator,
@@ -267,7 +265,7 @@ export const FilterChip = ({
                 formatDate &&
                 ((date, _scale, timeZone) =>
                   formatDate(
-                    date instanceof Date ? date : parseKey(date.date),
+                    date instanceof Date ? date : parseISO(date.date),
                     timeZone
                   ))
               }

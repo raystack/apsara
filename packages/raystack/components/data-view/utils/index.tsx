@@ -5,8 +5,7 @@ import {
   TableState
 } from '@tanstack/table-core';
 
-import { toDayKey } from '~/components/calendar-preview/date-adapter';
-import { withDateFilterTypes } from '~/shared/date-filters';
+import { toDayKey, withDateFilterTypes } from '~/shared/date-filters';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import {
   DataViewField,

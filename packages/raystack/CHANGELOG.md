@@ -75,10 +75,10 @@ and [Icons](https://apsara.raystack.io/docs/theme/icons).
 ### Date filters: DataView and DataTable compare whole days (BREAKING)
 
 DataView, DataTable and FilterChip read, compare and format dates
-through CalendarPreview's date-fns adapter instead of dayjs. A date
-filter compares whole days, and a date that is missing or does not exist
-no longer stands in for another day. `dayjs` stays a dependency, because
-`Calendar`, `DatePicker` and `RangePicker` still import it.
+through date-fns instead of dayjs. A date filter compares whole days,
+and a date that is missing or does not exist no longer stands in for
+another day. `dayjs` stays a dependency, because `Calendar`,
+`DatePicker` and `RangePicker` still import it.
 
 #### Breaking changes
 

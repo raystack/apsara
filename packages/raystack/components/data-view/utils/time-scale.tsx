@@ -1,13 +1,17 @@
 import {
-  addUnit,
-  formatDayOfMonth,
-  formatMonthLabel,
-  formatMonthShort,
-  formatQuarterShort,
-  formatYear,
-  startOfUnit as startOfCalendarUnit,
-  toInstant
-} from '~/components/calendar-preview/date-adapter';
+  addDays,
+  addMonths,
+  addQuarters,
+  addWeeks,
+  addYears,
+  format,
+  startOfDay,
+  startOfMonth,
+  startOfQuarter,
+  startOfWeek,
+  startOfYear
+} from 'date-fns';
+import { toInstant } from '~/shared/date-filters';
 import type { TimelineScale } from '../data-view.types';
 
 /**
@@ -47,12 +51,28 @@ export function toTimestamp(value: unknown): number | null {
   return null;
 }
 
+const START_OF = {
+  day: startOfDay,
+  week: startOfWeek,
+  month: startOfMonth,
+  quarter: startOfQuarter,
+  year: startOfYear
+};
+
+const ADD = {
+  day: addDays,
+  week: addWeeks,
+  month: addMonths,
+  quarter: addQuarters,
+  year: addYears
+};
+
 export function startOfUnit(date: Date, scale: TimelineScale): Date {
-  return startOfCalendarUnit[scale](date);
+  return START_OF[scale](date);
 }
 
 export function addUnits(date: Date, scale: TimelineScale, n: number): Date {
-  return addUnit[scale](date, n);
+  return ADD[scale](date, n);
 }
 
 export interface TimelineTimeScale {
@@ -141,11 +161,11 @@ function tickLabel(date: Date, scale: TimelineScale): string {
   switch (scale) {
     case 'day':
     case 'week':
-      return formatDayOfMonth(date);
+      return format(date, 'd');
     case 'month':
-      return formatMonthShort(date);
+      return format(date, 'MMM');
     case 'quarter':
-      return formatQuarterShort(date);
+      return format(date, 'QQQ');
   }
 }
 
@@ -198,18 +218,18 @@ export function buildAxis(
 
   const bands: TimelineBand[] = [];
   const bandUnit = scale === 'day' || scale === 'week' ? 'month' : 'year';
-  let band = startOfCalendarUnit[bandUnit](new Date(timeScale.t0));
+  let band = START_OF[bandUnit](new Date(timeScale.t0));
   let isFirst = true;
   while (band.getTime() < timeScale.t1) {
-    const next = addUnit[bandUnit](band, 1);
+    const next = ADD[bandUnit](band, 1);
     const from = Math.max(band.getTime(), timeScale.t0);
     const to = Math.min(next.getTime(), timeScale.t1);
     const label =
       bandUnit === 'month'
         ? isFirst || band.getMonth() === 0
-          ? formatMonthLabel(band)
-          : formatMonthShort(band)
-        : formatYear(band);
+          ? format(band, 'MMM yyyy')
+          : format(band, 'MMM')
+        : format(band, 'yyyy');
     bands.push({
       time: band.getTime(),
       x: timeScale.x(from),

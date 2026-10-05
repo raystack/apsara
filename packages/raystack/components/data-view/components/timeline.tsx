@@ -2,6 +2,7 @@
 
 import type { Row } from '@tanstack/react-table';
 import { cx } from 'class-variance-authority';
+import { format } from 'date-fns';
 import {
   CSSProperties,
   memo,
@@ -14,12 +15,6 @@ import {
   useRef,
   useState
 } from 'react';
-import {
-  formatDayMonth,
-  formatMonthLabel,
-  formatQuarterShort,
-  formatYear
-} from '~/components/calendar-preview/date-adapter';
 import { useScaling } from '~/hooks/useScaling';
 import { Badge } from '../../badge';
 import styles from '../data-view.module.css';
@@ -362,11 +357,11 @@ function cursorLabel(time: number, scale: TimelineScale): string {
   switch (scale) {
     case 'day':
     case 'week':
-      return formatDayMonth(date);
+      return format(date, 'd MMM');
     case 'month':
-      return formatMonthLabel(date);
+      return format(date, 'MMM yyyy');
     case 'quarter':
-      return `${formatQuarterShort(date)} ${formatYear(date)}`;
+      return format(date, 'QQQ yyyy');
   }
 }
 
@@ -930,7 +925,7 @@ export function DataViewTimeline<TData>({
         key: '__today',
         time: todayTime,
         x: timeScale.x(todayTime),
-        label: formatDayMonth(new Date(todayTime)),
+        label: format(todayTime, 'd MMM'),
         variant: 'accent'
       });
     }
@@ -941,7 +936,7 @@ export function DataViewTimeline<TData>({
         key: `__marker-${index}`,
         time,
         x: timeScale.x(time),
-        label: marker.label ?? formatDayMonth(new Date(time)),
+        label: marker.label ?? format(time, 'd MMM'),
         variant: marker.variant ?? 'default'
       });
     });
