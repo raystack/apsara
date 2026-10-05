@@ -91,6 +91,24 @@ The sidebar expands and collapses, animating between the two. Collapsed keeps ic
 
 <Demo data={stateDemo} />
 
+### External control
+
+`Sidebar.Trigger` and `useSidebar` work only inside `<Sidebar>`. To toggle the sidebar from elsewhere, for example a top bar, control it with `open` and `onOpenChange`:
+
+```tsx
+const [open, setOpen] = useState(true);
+
+<IconButton
+  aria-label="Toggle sidebar"
+  aria-expanded={open}
+  aria-controls="app-sidebar"
+  onClick={() => setOpen(!open)}
+>
+  <PanelLeft />
+</IconButton>
+<Sidebar id="app-sidebar" open={open} onOpenChange={setOpen}>…</Sidebar>
+```
+
 ### Non-collapsible
 
 Set `collapsible="none"` to hide the resize handle and prevent the sidebar from being collapsed or expanded.
@@ -113,6 +131,9 @@ so hover the thin strip at the edge instead, as the "Hidden" tab below shows.
 
 The peek waits 100ms so it does not fire when the mouse only passes over.
 Change that with `peekDelay`.
+
+`onPeekChange` reports when a peek starts or ends, for example to dim the page
+behind the sidebar.
 
 <Demo data={peekOnHoverDemo} />
 
@@ -196,7 +217,7 @@ The footer section is a container that accepts all `div` props. It's commonly us
 
 A button that toggles the sidebar open/closed. It works whether the Sidebar is controlled or uncontrolled, so you can drop it into a header without wiring up any state yourself. It accepts all `IconButton` props (e.g. `size`) plus the ones below.
 
-*Note: disabled automatically when the Sidebar has `collapsible="none"`. If you use `collapsible="hidden"`, don't place `Sidebar.Trigger` inside `Sidebar.Header`/`Main`/`Footer`, because those sections are hidden along with the rest of the collapsed content, taking the trigger with them. Render it as a direct child of `<Sidebar>` instead, or drive `open`/`onOpenChange` yourself with a toggle button that lives outside `<Sidebar>` entirely (e.g. in your app's top bar).*
+*Note: disabled automatically when the Sidebar has `collapsible="none"`. If you use `collapsible="hidden"`, don't place `Sidebar.Trigger` inside `Sidebar.Header`/`Main`/`Footer`, because those sections are hidden along with the rest of the collapsed content, taking the trigger with them. Render it as a direct child of `<Sidebar>` instead, or use [external control](#external-control).*
 
 <auto-type-table path="./props.ts" name="SidebarTriggerProps" />
 

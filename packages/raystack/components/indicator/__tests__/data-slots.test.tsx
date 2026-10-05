@@ -23,4 +23,11 @@ describe('Indicator data-slot contract', () => {
     expectSlots(container, ['indicator', 'indicator-badge', 'indicator-dot']);
     expect(getSlot(container, 'indicator-label')).toBeNull();
   });
+
+  it('renders the pulse slot only when pulse is set', () => {
+    const { container, rerender } = render(<Indicator />);
+    expect(getSlot(container, 'indicator-pulse')).toBeNull();
+    rerender(<Indicator pulse />);
+    expectSlots(container, ['indicator-pulse']);
+  });
 });

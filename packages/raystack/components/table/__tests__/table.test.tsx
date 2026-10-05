@@ -335,6 +335,20 @@ describe('Table', () => {
       expect(row).toHaveClass(styles.sectionHeader);
     });
 
+    it('merges className with the sectionHeader class', () => {
+      render(
+        <Table>
+          <Table.Body>
+            <Table.SectionHeader colSpan={2} className='custom-row'>
+              Section
+            </Table.SectionHeader>
+          </Table.Body>
+        </Table>
+      );
+      const row = screen.getByRole('row');
+      expect(row).toHaveClass(styles.sectionHeader, 'custom-row');
+    });
+
     it('sets colSpan on th element', () => {
       render(
         <Table>

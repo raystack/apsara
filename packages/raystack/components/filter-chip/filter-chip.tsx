@@ -65,6 +65,9 @@ const toDateValue = (value: unknown): Date | undefined => {
   return undefined;
 };
 
+/** Checked on change, not keydown, so paste and IME input are covered. */
+const PARTIAL_NUMBER = /^-?\d*\.?\d*$/;
+
 /**
  * The `CalendarPreview` props that consumers may forward to the chip's
  * calendar via `calendarProps`. `FilterChip` owns the value and the parts.
@@ -144,8 +147,21 @@ export const FilterChip = ({
   const [operation, setOperation] = useState<FilterOperation | undefined>(
     computedOperations?.[0]
   );
+  const isNumberColumn = columnType === FilterType.number;
   // `??` not `||`, since a falsy option value like `0` is a real selection.
-  const [filterValue, setFilterValue] = useState<any>(value ?? '');
+  // For `number`, the value is shown without an exponent (`1e-7`), and a
+  // non-numeric value starts empty, since the regex would reject every edit.
+  const [filterValue, setFilterValue] = useState<any>(() => {
+    if (!isNumberColumn) return value ?? '';
+    const text =
+      typeof value === 'number'
+        ? value.toLocaleString('en-US', {
+            useGrouping: false,
+            maximumFractionDigits: 20
+          })
+        : String(value ?? '');
+    return PARTIAL_NUMBER.test(text) ? text : '';
+  });
 
   const [dateOpen, setDateOpen] = useState(false);
   const {
@@ -180,6 +196,24 @@ export const FilterChip = ({
       onValueChange?.(value, operation?.value ?? '');
     },
     [operation, onValueChange]
+  );
+
+  const handleTextInputChange = useCallback(
+    (raw: string) => {
+      if (!isNumberColumn) {
+        handleFilterValueChange(raw);
+        return;
+      }
+      // Skipping setFilterValue makes React restore the controlled value.
+      if (!PARTIAL_NUMBER.test(raw)) return;
+      const parsed = Number(raw);
+      if (parsed === Infinity || parsed === -Infinity) return;
+
+      setFilterValue(raw);
+      const isIntermediate = raw === '' || Number.isNaN(parsed);
+      onValueChange?.(isIntermediate ? raw : parsed, operation?.value ?? '');
+    },
+    [isNumberColumn, handleFilterValueChange, onValueChange, operation]
   );
 
   const renderValueInput = () => {
@@ -285,7 +319,7 @@ export const FilterChip = ({
               variant={variant === 'text' ? 'borderless' : 'default'}
               classNames={{ container: styles.inputField }}
               value={filterValue}
-              onChange={e => handleFilterValueChange(e.target.value)}
+              onChange={e => handleTextInputChange(e.target.value)}
             />
           </div>
         );

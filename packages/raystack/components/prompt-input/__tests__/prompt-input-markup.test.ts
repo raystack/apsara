@@ -6,8 +6,12 @@ import {
   isDocEmpty,
   serializeMarkup,
   serializeText
-} from '../markup';
-import { isTriggerCharacter, serializeMention, trimDetails } from '../mention';
+} from '../../editor/core/composer/markup';
+import {
+  isTriggerCharacter,
+  serializeMention,
+  trimDetails
+} from '../../editor/core/mention';
 
 const derive = (markup: string) => deriveDocDetails(docFromMarkup(markup));
 const roundTrip = (markup: string) => serializeMarkup(docFromMarkup(markup));

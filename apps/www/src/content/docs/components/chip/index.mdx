@@ -46,7 +46,7 @@ Two sizes. `large` is the default; `small` fits inside inputs and table cells.
 
 ### Color
 
-Choose between neutral and accent styles to control the visual emphasis.
+Five colors. `neutral` and `accent` set emphasis. `danger`, `success` and `warning` show status.
 
 <Demo data={colorDemo} />
 
@@ -67,6 +67,8 @@ Chips can be made dismissible by adding the isDismissible prop and an onDismiss 
 Renders a compact element for tags, labels, or attributes.
 
 <auto-type-table path="./props.ts" name="ChipProps" />
+
+The chip renders a `<button>` when `onClick` is set and it is not dismissible, and a `<span>` otherwise, so `ref` points to whichever element is rendered.
 
 ### Slots
 
@@ -89,3 +91,5 @@ The Chip component has some accessibility features:
 - Provides keyboard navigation support
 - Makes decorative elements hidden from screen readers
 - Keeps contrast ratios correct in all variants and states
+
+`children` is optional, so a chip can be icon-only. When you omit `children`, pass an `aria-label`. The chip derives its label from string children, so without one it has no accessible name.

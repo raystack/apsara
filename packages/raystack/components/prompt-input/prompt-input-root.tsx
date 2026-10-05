@@ -16,7 +16,7 @@ import {
 } from 'react';
 // Imported from the leaf module, not the barrel: the root must not pull the
 // editor engine into a composer that only ever renders `Textarea`.
-import { trimDetails } from '../editor/mention';
+import { trimDetails } from '../editor/core/mention';
 import styles from './prompt-input.module.css';
 import {
   isEmptyValue,

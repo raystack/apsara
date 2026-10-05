@@ -128,6 +128,178 @@ describe('FilterChip', () => {
     });
   });
 
+  describe('Number Filter Type', () => {
+    const getInput = (container: HTMLElement) =>
+      container.querySelector(
+        `.${styles.inputFieldWrapper} input`
+      ) as HTMLInputElement;
+
+    it('emits a number, not a string, for numeric input', () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Size'
+          columnType={FilterType.number}
+          onValueChange={onValueChange}
+        />
+      );
+
+      fireEvent.change(getInput(container), { target: { value: '42' } });
+
+      expect(onValueChange).toHaveBeenCalledWith(42, expect.any(String));
+    });
+
+    it('rejects non-numeric input', () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Size'
+          columnType={FilterType.number}
+          onValueChange={onValueChange}
+        />
+      );
+
+      const input = getInput(container);
+      fireEvent.change(input, { target: { value: 'abc' } });
+
+      expect(onValueChange).not.toHaveBeenCalled();
+      expect(input).toHaveValue('');
+    });
+
+    it('rejects a partially numeric paste wholesale', () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Size'
+          columnType={FilterType.number}
+          onValueChange={onValueChange}
+        />
+      );
+
+      const input = getInput(container);
+      fireEvent.change(input, { target: { value: '12ab' } });
+
+      expect(onValueChange).not.toHaveBeenCalled();
+      expect(input).toHaveValue('');
+    });
+
+    it('keeps intermediate states typeable', () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Size'
+          columnType={FilterType.number}
+          onValueChange={onValueChange}
+        />
+      );
+
+      const input = getInput(container);
+
+      fireEvent.change(input, { target: { value: '-' } });
+      expect(input).toHaveValue('-');
+
+      fireEvent.change(input, { target: { value: '1.' } });
+      expect(input).toHaveValue('1.');
+
+      expect(onValueChange).toHaveBeenNthCalledWith(1, '-', expect.any(String));
+      expect(onValueChange).toHaveBeenNthCalledWith(2, 1, expect.any(String));
+    });
+
+    it('emits a trailing decimal as the number it parses to', () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Size'
+          columnType={FilterType.number}
+          onValueChange={onValueChange}
+        />
+      );
+
+      const input = getInput(container);
+
+      fireEvent.change(input, { target: { value: '1.' } });
+      expect(onValueChange).toHaveBeenLastCalledWith(1, expect.any(String));
+
+      fireEvent.change(input, { target: { value: '1.5' } });
+      expect(onValueChange).toHaveBeenLastCalledWith(1.5, expect.any(String));
+    });
+
+    it('rejects a second decimal point', () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Size'
+          columnType={FilterType.number}
+          onValueChange={onValueChange}
+        />
+      );
+
+      const input = getInput(container);
+      fireEvent.change(input, { target: { value: '1.2' } });
+      fireEvent.change(input, { target: { value: '1.2.' } });
+
+      expect(input).toHaveValue('1.2');
+      expect(onValueChange).toHaveBeenCalledTimes(1);
+    });
+
+    it('rejects input that parses to Infinity', () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Size'
+          columnType={FilterType.number}
+          onValueChange={onValueChange}
+        />
+      );
+
+      const input = getInput(container);
+      fireEvent.change(input, { target: { value: '9'.repeat(309) } });
+
+      expect(onValueChange).not.toHaveBeenCalled();
+      expect(input).toHaveValue('');
+    });
+
+    it('shows a numeric value without an exponent', () => {
+      const { container: small } = render(
+        <FilterChip label='Size' value={1e-7} columnType={FilterType.number} />
+      );
+      const { container: large } = render(
+        <FilterChip label='Size' value={1e21} columnType={FilterType.number} />
+      );
+
+      expect(getInput(small)).toHaveValue('0.0000001');
+      expect(getInput(large)).toHaveValue('1000000000000000000000');
+    });
+
+    it('shows a numeric value and starts empty for a non-numeric one', () => {
+      const { container: numeric } = render(
+        <FilterChip label='Size' value={-1.5} columnType={FilterType.number} />
+      );
+      const { container: nonNumeric } = render(
+        <FilterChip label='Size' value='abc' columnType={FilterType.number} />
+      );
+
+      expect(getInput(numeric)).toHaveValue('-1.5');
+      expect(getInput(nonNumeric)).toHaveValue('');
+    });
+
+    it('emits an empty string when the field is cleared', () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Size'
+          value={7}
+          columnType={FilterType.number}
+          onValueChange={onValueChange}
+        />
+      );
+
+      fireEvent.change(getInput(container), { target: { value: '' } });
+
+      expect(onValueChange).toHaveBeenCalledWith('', expect.any(String));
+    });
+  });
+
   describe('Date Filter Type', () => {
     it('renders the calendar without crashing when no value is set', () => {
       expect(() =>

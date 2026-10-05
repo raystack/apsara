@@ -2,14 +2,16 @@
 
 import { cx } from 'class-variance-authority';
 import type { CSSProperties, ReactNode } from 'react';
-import { Cell } from '../menu/cell';
-import { Popover } from '../popover';
-import { Skeleton } from '../skeleton';
-import styles from './editor.module.css';
+import { Cell } from '../../menu/cell';
+import { Popover } from '../../popover';
+import { Skeleton } from '../../skeleton';
+import styles from './editor-core.module.css';
 
 export interface SuggestionMenuItem {
   id: string;
   label: string;
+  /** Shown under the label. */
+  description?: string;
   type?: string;
   icon?: ReactNode;
   trailing?: ReactNode;
@@ -19,9 +21,9 @@ export interface SuggestionMenuItem {
 }
 
 /** Rendered in first-appearance order; the leading group has no label. */
-export interface SuggestionGroup {
+export interface SuggestionGroup<Item = SuggestionMenuItem> {
   label?: string;
-  items: SuggestionMenuItem[];
+  items: Item[];
 }
 
 /** A zero-width caret rect, re-measured by the positioner as the caret moves. */
@@ -54,6 +56,8 @@ export interface SuggestionMenuProps {
   /** Width the popup takes, in pixels, matching the composer frame's width. */
   width?: number;
   'aria-label'?: string;
+  /** Slot name on the listbox. */
+  'data-slot'?: string;
 }
 
 /** Row ids are derived, so the editor can name the highlighted one. */
@@ -74,7 +78,8 @@ export function SuggestionMenu({
   loadingRowCount = 3,
   emptyMessage = 'No results',
   width,
-  'aria-label': ariaLabel = 'Suggestions'
+  'aria-label': ariaLabel = 'Suggestions',
+  'data-slot': slot
 }: SuggestionMenuProps) {
   const total = groups.reduce((count, group) => count + group.items.length, 0);
   let cursor = -1;
@@ -97,7 +102,7 @@ export function SuggestionMenu({
           } as CSSProperties
         }
       >
-        <div id={id} role='listbox' aria-label={ariaLabel}>
+        <div id={id} role='listbox' aria-label={ariaLabel} data-slot={slot}>
           {loading && total === 0
             ? Array.from({ length: loadingRowCount }).map((_, index) => (
                 <div
@@ -153,7 +158,16 @@ export function SuggestionMenu({
                       if (!item.disabled) onSelect(item, index);
                     }}
                   >
-                    {item.label}
+                    {item.description ? (
+                      <span className={styles.suggestionText}>
+                        <span>{item.label}</span>
+                        <span className={styles.suggestionDescription}>
+                          {item.description}
+                        </span>
+                      </span>
+                    ) : (
+                      item.label
+                    )}
                   </Cell>
                 );
               })}
