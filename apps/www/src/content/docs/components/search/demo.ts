@@ -61,7 +61,6 @@ export const onValueChangeDemo = {
         value={query}
         onValueChange={setQuery}
         showClearButton
-        onClear={() => setQuery("")}
       />
       <Text size="small">Query: {query || "(empty)"}</Text>
     </Flex>

@@ -24,10 +24,6 @@ export function DataViewSearch({
     updateTableQuery(query => ({ ...query, search: value }));
   };
 
-  const handleClear = () => {
-    updateTableQuery(query => ({ ...query, search: '' }));
-  };
-
   // Keep enabled once the user has typed, even if zero-state otherwise applies.
   const hasSearch = Boolean(
     tableQuery?.search && tableQuery.search.trim() !== ''
@@ -40,7 +36,6 @@ export function DataViewSearch({
       {...props}
       onChange={handleSearch}
       value={tableQuery?.search ?? ''}
-      onClear={handleClear}
       disabled={isDisabled}
     />
   );

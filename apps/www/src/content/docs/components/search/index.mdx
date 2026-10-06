@@ -42,11 +42,11 @@ The Search component can include a clear button that appears when there is input
 
 ### Clearing
 
-Escape clears the input when it has a value. After a clear, from the clear button or from Escape, focus is on the input and `onClear` receives the triggering event.
+The clear button and Escape clear the input. A clear fires `onChange` and `onValueChange` with an empty value, for controlled and uncontrolled inputs. `onClear` runs after the clear and receives the triggering event. Use it for side effects only.
 
-When you pass `value` and `onClear`, `onClear` must reset `value`. In every other case, a clear empties the input and fires `onChange` and `onValueChange` with an empty value. Escape clears whether or not `showClearButton` is set.
+After the clear button, focus stays on the input. Escape clears the input when it has a value, then removes focus from it. Set `clearOnEscape={false}` to keep the value, or `blurOnEscape={false}` to keep focus. Escape clears whether or not `showClearButton` is set.
 
-When the input is empty, Escape is not handled, so it can close an enclosing Dialog, Popover, or Menu.
+When Escape clears a value, Search stops the event. When there is nothing to clear, Escape is not stopped, so it can close an enclosing Dialog, Popover, or Menu.
 
 ### Controlled value
 
@@ -98,4 +98,4 @@ The component supports keyboard navigation:
 - Tab to focus on the search input
 - Tab again to focus on the clear button (when visible)
 - Enter or Space to trigger the clear button
-- Escape to clear the input when it has a value
+- Escape to clear the input when it has a value and remove focus from it

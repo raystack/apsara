@@ -15,6 +15,16 @@ export interface SearchProps extends InputProps {
     event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
   ) => void;
   variant?: 'default' | 'borderless';
+  /**
+   * Clears the input when Escape is pressed and the input has a value.
+   * @default true
+   */
+  clearOnEscape?: boolean;
+  /**
+   * Removes focus from the input when Escape is pressed.
+   * @default true
+   */
+  blurOnEscape?: boolean;
 }
 
 // Uses the native setter and an `input` event so React's onChange and
@@ -41,38 +51,35 @@ export function Search({
   type = 'search',
   ref,
   leadingIcon = <SearchIcon />,
+  clearOnEscape = true,
+  blurOnEscape = true,
   ...props
 }: SearchProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const mergedRef = useMergedRefs(inputRef, ref);
-  // A controlled Search with `onClear` resets `value` itself. Otherwise the
-  // clear goes through `onChange` and `onValueChange`.
-  const clear = () => {
-    if (value !== undefined && onClear) return;
-    if (inputRef.current) clearInputValue(inputRef.current);
+
+  const handleClear = (
+    event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
+  ) => {
+    const input = inputRef.current;
+    if (!input || disabled || input.readOnly) return;
+    clearInputValue(input);
+    onClear?.(event);
   };
 
   const handleKeyDown: InputProps['onKeyDown'] = event => {
-    onKeyDown?.(event);
-    if (event.defaultPrevented) return;
-
     const input = event.currentTarget;
-    if (
-      event.key !== 'Escape' ||
-      event.nativeEvent.isComposing ||
-      input.disabled ||
-      input.readOnly ||
-      input.value === ''
-    ) {
-      return;
+    if (event.key === 'Escape' && !event.nativeEvent.isComposing) {
+      if (clearOnEscape && !input.disabled && !input.readOnly && input.value) {
+        // Stop only when there is a value to clear, so an empty field lets
+        // Escape reach an enclosing Dialog, Popover or Menu.
+        event.preventDefault();
+        event.stopPropagation();
+        handleClear(event);
+      }
+      if (blurOnEscape) input.blur();
     }
-
-    // Stop only when there is a value to clear, so an empty field lets
-    // Escape reach an enclosing Dialog, Popover or Menu.
-    event.preventDefault();
-    event.stopPropagation();
-    clear();
-    onClear?.(event);
+    onKeyDown?.(event);
   };
 
   const trailingIconWithClear = showClearButton ? (
@@ -81,9 +88,7 @@ export function Search({
         size={size === 'small' ? 2 : 3}
         onClick={e => {
           e.stopPropagation();
-          if (disabled || inputRef.current?.readOnly) return;
-          clear();
-          onClear?.(e);
+          handleClear(e);
           // The button hides once the input is empty, so focus would
           // otherwise fall back to <body>.
           inputRef.current?.focus();

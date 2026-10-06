@@ -318,11 +318,10 @@ describe('Search', () => {
       expect(handleClear).toHaveBeenCalledTimes(1);
       expect(handleClear.mock.calls[0][0].type).toBe('keydown');
       expect(handleClear.mock.calls[0][0].key).toBe('Escape');
-      expect(input).toHaveFocus();
       expect(parentKeyDown).not.toHaveBeenCalled();
     });
 
-    it('lets Escape bubble when the input is empty', async () => {
+    it('lets Escape bubble and blurs when the input is empty', async () => {
       const user = userEvent.setup();
       const handleClear = vi.fn();
       const parentKeyDown = vi.fn();
@@ -331,12 +330,62 @@ describe('Search', () => {
           <Search value='' onClear={handleClear} />
         </div>
       );
+      const input = screen.getByRole('searchbox');
 
-      await user.click(screen.getByRole('searchbox'));
+      await user.click(input);
       await user.keyboard('{Escape}');
 
       expect(handleClear).not.toHaveBeenCalled();
       expect(parentKeyDown).toHaveBeenCalledTimes(1);
+      expect(input).not.toHaveFocus();
+    });
+
+    it('blurs the input after clearing', async () => {
+      const user = userEvent.setup();
+      render(<Search defaultValue='test' />);
+      const input = screen.getByRole('searchbox');
+
+      await user.click(input);
+      await user.keyboard('{Escape}');
+
+      expect(input).toHaveValue('');
+      expect(input).not.toHaveFocus();
+    });
+
+    it('keeps focus when blurOnEscape is false', async () => {
+      const user = userEvent.setup();
+      render(<Search defaultValue='test' blurOnEscape={false} />);
+      const input = screen.getByRole('searchbox');
+
+      await user.click(input);
+      await user.keyboard('{Escape}');
+
+      expect(input).toHaveValue('');
+      expect(input).toHaveFocus();
+    });
+
+    it('does not clear and lets Escape bubble when clearOnEscape is false', async () => {
+      const user = userEvent.setup();
+      const handleClear = vi.fn();
+      const parentKeyDown = vi.fn();
+      render(
+        <div onKeyDown={parentKeyDown}>
+          <Search
+            defaultValue='test'
+            onClear={handleClear}
+            clearOnEscape={false}
+          />
+        </div>
+      );
+      const input = screen.getByRole('searchbox');
+
+      await user.click(input);
+      await user.keyboard('{Escape}');
+
+      expect(input).toHaveValue('test');
+      expect(handleClear).not.toHaveBeenCalled();
+      expect(parentKeyDown).toHaveBeenCalledTimes(1);
+      expect(input).not.toHaveFocus();
     });
 
     it('does nothing when disabled', () => {
@@ -357,20 +406,20 @@ describe('Search', () => {
       expect(handleClear).not.toHaveBeenCalled();
     });
 
-    it('does nothing when the consumer onKeyDown prevents default', async () => {
+    it('calls the consumer onKeyDown after clearing', async () => {
       const user = userEvent.setup();
-      const handleClear = vi.fn();
+      const calls: string[] = [];
       render(
         <Search
-          value='test'
-          onClear={handleClear}
-          onKeyDown={e => e.preventDefault()}
+          defaultValue='test'
+          onClear={() => calls.push('clear')}
+          onKeyDown={e => calls.push(`keydown:${e.currentTarget.value}`)}
         />
       );
 
       await user.click(screen.getByRole('searchbox'));
       await user.keyboard('{Escape}');
-      expect(handleClear).not.toHaveBeenCalled();
+      expect(calls).toEqual(['clear', 'keydown:']);
     });
 
     it('clears an uncontrolled input and fires onChange', async () => {
@@ -417,7 +466,27 @@ describe('Search', () => {
     });
   });
 
-  describe('Controlled without onClear', () => {
+  describe('Controlled value', () => {
+    it('clears through onValueChange when onClear is set', async () => {
+      const user = userEvent.setup();
+      const handleValueChange = vi.fn();
+      const handleClear = vi.fn();
+      render(
+        <Search
+          showClearButton
+          value='test'
+          onValueChange={handleValueChange}
+          onClear={handleClear}
+        />
+      );
+
+      await user.click(screen.getByLabelText('Clear search'));
+
+      expect(handleValueChange).toHaveBeenCalledTimes(1);
+      expect(handleValueChange.mock.calls[0][0]).toBe('');
+      expect(handleClear).toHaveBeenCalledTimes(1);
+    });
+
     it('clears on Escape through onValueChange and stops propagation', async () => {
       const user = userEvent.setup();
       const handleValueChange = vi.fn();

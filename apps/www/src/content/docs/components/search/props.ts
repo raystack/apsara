@@ -33,13 +33,25 @@ export interface SearchProps {
   onValueChange?: (value: string, eventDetails: unknown) => void;
 
   /**
-   * Called when the clear button is clicked or Escape clears the input. Receives the triggering event.
+   * Called after the clear button or Escape clears the input. Receives the triggering event.
    */
   onClear?: (
     event:
       | React.MouseEvent<HTMLButtonElement>
       | React.KeyboardEvent<HTMLInputElement>
   ) => void;
+
+  /**
+   * Clears the input when Escape is pressed and the input has a value.
+   * @default true
+   */
+  clearOnEscape?: boolean;
+
+  /**
+   * Removes focus from the input when Escape is pressed.
+   * @default true
+   */
+  blurOnEscape?: boolean;
 
   /**
    * Native input type. The default gives the input the `searchbox` role.
