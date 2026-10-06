@@ -45,4 +45,4 @@ jobs:
         run: pnpm build:apsara
 
       - name: Publish 🚀
-        run: pnpm exec pkg-pr-new publish ./packages/raystack --previewVersion --packageManager=pnpm --comment=update
+        run: pnpm exec pkg-pr-new publish ./packages/react --previewVersion --packageManager=pnpm --comment=update

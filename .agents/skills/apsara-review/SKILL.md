@@ -62,7 +62,7 @@ Pass on every candidate that has a nameable failure scenario. A finder that drop
   - Tokens and themes: styles use `--rs-*` tokens and work in light and dark themes and with the accent and gray options of `Theme`.
   - Focus, keyboard, and ARIA come from Base UI. Check that the wrapper does not break them, for example by adding an extra element around a trigger or by dropping `aria-*` props.
   - SSR and hydration: no `window` or `document` access during render, and no ids that differ between server and client.
-  - Public exports: new components and their types are exported from `packages/raystack/index.tsx`.
+  - Public exports: new components and their types are exported from `packages/react/index.tsx`.
 - For every line the diff deletes or replaces, name the behavior it enforced, then find where the new code enforces it. If you cannot find it, that is a candidate: a removed guard, a dropped error path, looser validation, or a deleted test for a real case.
 - For each changed function, find its callers with a search and check each call site: new preconditions, a changed return shape, new exceptions, or new ordering needs. Apsara components compose each other, so check other components that use the changed one.
 
@@ -105,7 +105,7 @@ Flag docs and comments that the diff makes wrong or leaves out of date:
 - Playground controls in `demo.ts` offer values the component does not accept.
 - The Slots table in `index.mdx` does not match the `data-slot` names in the code.
 - `index.mdx` prose or examples that no longer match the behavior, or examples that no longer run.
-- Figma Code Connect templates in `packages/raystack/figma/<name>.figma.ts` that map a prop the diff renamed or removed.
+- Figma Code Connect templates in `packages/react/figma/<name>.figma.ts` that map a prop the diff renamed or removed.
 - JSDoc whose params or types no longer match the code.
 - Comments that describe old behavior, comments that narrate the change, or comments that break the Writing style rules in `AGENTS.md`.
 - A resolved TODO or FIXME that is still in the code.

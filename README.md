@@ -1,1 +1,1 @@
-packages/raystack/README.md
+packages/react/README.md

@@ -6,7 +6,7 @@ export const preview = {
   const RESPONSES = [
     'Done — I created the task and assigned it to you.',
     'On it. I\\'ll ping you when the draft is ready to review.',
-    'Good question — the design tokens live in packages/raystack/styles.',
+    'Good question — the design tokens live in packages/react/styles.',
     'That shipped in the last release; update and it should just work.',
     'I\\'ve noted it down. Anything else you\\'d like me to pick up?'
   ];
