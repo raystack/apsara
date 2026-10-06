@@ -110,7 +110,8 @@ another day. `dayjs` stays a dependency, because `Calendar`,
   timeline row holding one is not drawn.
 - **`neq` still matches a row with a missing or unreadable date.**
 - **A row holding a dayjs or moment object is still read**, as its
-  timestamp.
+  timestamp. The timeline now draws such a row, and a date FilterChip
+  shows such a value. Before, both left it out.
 
 Saved filters and URL parameters that hold an ISO timestamp are still
 read, as the day the instant falls on in the viewer's zone. There is no

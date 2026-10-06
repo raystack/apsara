@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { defaultFormatValue } from '~/components/calendar-preview/calendar-preview-root';
@@ -367,6 +368,21 @@ describe('FilterChip', () => {
         )
       ).not.toThrow();
       expect(screen.getByPlaceholderText('Select date')).toHaveValue('');
+    });
+
+    it('shows a dayjs value as its day', () => {
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={dayjs('2026-05-27') as never}
+        />
+      );
+      expect(
+        screen.getByDisplayValue(
+          defaultFormatValue(new Date(2026, 4, 27), 'day')
+        )
+      ).toBeInTheDocument();
     });
 
     it('formats a Date value with the default month-as-text format', () => {

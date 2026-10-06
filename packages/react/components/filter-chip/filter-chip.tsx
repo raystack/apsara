@@ -51,18 +51,13 @@ export type FilterChipValue = string | string[] | number | Date;
 const INVALID_DATE = 'Invalid date';
 
 /**
- * Coerce a `FilterChipValue` to the `Date` the calendar expects, since filter
- * state hydrated from a serialized query arrives as a string or epoch number.
- * Unparseable values, and years the calendar cannot show, leave the field
- * unselected.
+ * Coerce a filter value to the `Date` the calendar expects, since filter state
+ * hydrated from a serialized query arrives as a string or epoch number, and a
+ * consumer may pass a dayjs or moment object. Unparseable values, and years the
+ * calendar cannot show, leave the field unselected.
  */
 const toDateValue = (value: unknown): Date | undefined => {
-  const date =
-    value instanceof Date ||
-    typeof value === 'string' ||
-    typeof value === 'number'
-      ? toInstant(value)
-      : null;
+  const date = toInstant(value);
   if (!date) return undefined;
   const year = date.getFullYear();
   return year >= 1 && year <= 9999 ? date : undefined;
