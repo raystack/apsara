@@ -60,7 +60,7 @@ committed. Closing the popup does not clear it.
 | Removed | Replacement |
 |---|---|
 | `dateFormat` | `formatValue(date, timeZone)`, which returns the label |
-| `slotProps.calendar` / `calendarProps` | `minDate`, `maxDate`, `isDateUnavailable`, `defaultMonth`, `yearRange` |
+| `slotProps.calendar` / nested `calendarProps` | `minDate`, `maxDate`, `isDateUnavailable`, `defaultMonth`, `yearRange` |
 | `inputProps` | `slotProps.input` |
 | `popoverProps` | `slotProps.popover` |
 
@@ -92,8 +92,8 @@ default formats, such as `15 Aug 2026`.
 
 A date filter can be cleared: click the selected day, or empty the input. The
 chip then calls `onValueChange` with `''`. In `DataView` and `DataTable` the
-chip stays, and the filter stops matching until a date is picked again. If you
-render `FilterChip` yourself, handle `''`.
+chip stays, and the filter is left out of the query until a date is picked
+again. If you render `FilterChip` yourself, handle `''`.
 
 ### 4. Expect different rows from some filters
 

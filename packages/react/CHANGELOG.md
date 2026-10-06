@@ -134,7 +134,7 @@ Apsara renders `Calendar`, `DatePicker` or `RangePicker` now.
   `value` or `defaultValue`. `onErrorChange` still reports
   `'Invalid date'`, and its error no longer clears when the popup closes,
   only when the typed text is valid or empty, or a date is committed. `dateFormat`, `slotProps.calendar`, `inputProps`,
-  `calendarProps` and `popoverProps` are gone. Replace `dateFormat` with
+  the nested `calendarProps` and `popoverProps` are gone. Replace `dateFormat` with
   `formatValue`, move calendar options such as `disabled` days to
   `minDate`, `maxDate` or `isDateUnavailable`, and move `inputProps` and
   `popoverProps` to `slotProps.input` and `slotProps.popover`.
