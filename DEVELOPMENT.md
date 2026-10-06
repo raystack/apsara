@@ -24,7 +24,7 @@ The repo includes Biome settings for VS Code (`.vscode/`) and Zed (`.zed/`). Ins
 
 ```
 apps/www/                 Docs site (Next.js and Fumadocs)
-packages/raystack/        The @raystack/apsara library
+packages/react/           The @raystack/apsara library
 packages/tools-config/    Shared Biome and TypeScript config
 packages/plugin-vscode/   VS Code extension for design tokens
 docs/                     Migration guide and RFCs
@@ -33,7 +33,7 @@ docs/                     Migration guide and RFCs
 ### Library
 
 ```
-packages/raystack/
+packages/react/
   components/<name>/
     <name>.tsx            Component
     <name>.module.css     Styles
@@ -86,7 +86,7 @@ Run these from the repo root:
 | `pnpm format` | Format and fix staged files. The pre-commit hook runs it. |
 | `pnpm clean` | Delete the library build output |
 
-Run these from `packages/raystack/`:
+Run these from `packages/react/`:
 
 | Script | What it does |
 | --- | --- |
@@ -117,11 +117,11 @@ describe('Flex', () => {
 
 ## Build
 
-`pnpm build:apsara` runs Rollup (`packages/raystack/rollup.config.mjs`) and writes ESM and CommonJS builds, type declarations, and CSS to `packages/raystack/dist/`. `pnpm dev` runs the same build in watch mode.
+`pnpm build:apsara` runs Rollup (`packages/react/rollup.config.mjs`) and writes ESM and CommonJS builds, type declarations, and CSS to `packages/react/dist/`. `pnpm dev` runs the same build in watch mode.
 
 ## Icons
 
-All icons are in `packages/raystack/icons/icons.tsx`, one `createIcon` call per icon. There is no generator. To add, remove, or change an icon, edit that file. `icons/types.ts` derives `IconName` from the exports, so it cannot drift. `icons/__tests__/bundle.test.ts` checks that unused icons are removed from a bundle.
+All icons are in `packages/react/icons/icons.tsx`, one `createIcon` call per icon. There is no generator. To add, remove, or change an icon, edit that file. `icons/types.ts` derives `IconName` from the exports, so it cannot drift. `icons/__tests__/bundle.test.ts` checks that unused icons are removed from a bundle.
 
 ## VS Code extension
 

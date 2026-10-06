@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "start": "concurrently \"cd packages/raystack && pnpm dev\" \"cd apps/www && pnpm dev\"",
+    "start": "concurrently \"cd packages/react && pnpm dev\" \"cd apps/www && pnpm dev\"",
     "build": "turbo build",
     "build:apsara": "turbo build --filter=@raystack/apsara",
     "test:apsara": "pnpm --filter=@raystack/apsara test",

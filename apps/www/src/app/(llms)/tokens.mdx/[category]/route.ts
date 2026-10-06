@@ -2,10 +2,7 @@ import { promises as fs } from 'fs';
 import { notFound } from 'next/navigation';
 import path from 'path';
 
-const STYLES_DIR = path.resolve(
-  process.cwd(),
-  '../../packages/raystack/styles'
-);
+const STYLES_DIR = path.resolve(process.cwd(), '../../packages/react/styles');
 
 export const revalidate = false;
 

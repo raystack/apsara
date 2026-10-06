@@ -48,7 +48,7 @@ This RFC proposes replacing the current `DataTable` with a unified `DataView` ro
 
 ## Background
 
-Apsara currently ships a single data-presentation primitive: `DataTable` (`packages/raystack/components/data-table/`). It bundles two layers that are conceptually separate:
+Apsara currently ships a single data-presentation primitive: `DataTable` (`packages/react/components/data-table/`). It bundles two layers that are conceptually separate:
 
 - **Data-modeling layer** — query state (`filters`, `sort`, `group_by`, `search`, `offset`, `limit`), client-vs-server mode, row model derivation via TanStack Table.
 - **Tabular rendering layer** — table header/body/row/cell DOM, column visibility UI, virtualization, sticky group headers.
