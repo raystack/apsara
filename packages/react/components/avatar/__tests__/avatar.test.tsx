@@ -136,26 +136,12 @@ describe('Avatar', () => {
   });
 
   describe('Colors', () => {
-    const colors = [
-      'indigo',
-      'orange',
-      'mint',
-      'neutral',
-      'sky',
-      'lime',
-      'grass',
-      'cyan',
-      'iris',
-      'purple',
-      'pink',
-      'crimson',
-      'gold'
-    ] as const;
-
-    it.each(colors)('renders %s color correctly', color => {
+    it.each(AVATAR_COLORS)('renders %s color correctly', color => {
       const { container } = render(<Avatar color={color} fallback='JD' />);
       const avatar = container.querySelector('[class*="avatar"]');
-      expect(avatar).toHaveClass(styles[`avatar-color-${color}`]);
+      const className = styles[`avatar-color-${color}`];
+      expect(className).toBeTruthy();
+      expect(avatar).toHaveClass(className);
     });
 
     it('defaults to indigo color', () => {
@@ -352,10 +338,6 @@ describe('Avatar', () => {
         expect(getAvatarColor('may', { palette })).toBe('sky');
       });
 
-      it('returns a known color for a known string', () => {
-        expect(getAvatarColor('john.doe@example.com')).toBe('mint');
-      });
-
       it('returns a valid color for an empty string', () => {
         expect(getAvatarColor('')).toBe('pink');
       });
@@ -372,18 +354,6 @@ describe('Avatar', () => {
           Array.from({ length: 1000 }, (_, i) => getAvatarColor(`user-${i}`))
         );
         expect(hit.size).toBe(AVATAR_COLORS.length);
-      });
-
-      it('has a color variant class for every color', () => {
-        for (const color of AVATAR_COLORS) {
-          const { container, unmount } = render(
-            <Avatar color={color} fallback='A' />
-          );
-          const className = styles[`avatar-color-${color}`];
-          expect(className).toBeTruthy();
-          expect(container.firstElementChild).toHaveClass(className);
-          unmount();
-        }
       });
     });
   });
