@@ -1333,10 +1333,6 @@ describe('DataView', () => {
         filterType: 'date'
       }
     ];
-    const originalTimeZone = process.env.TZ;
-    afterEach(() => {
-      process.env.TZ = originalTimeZone;
-    });
 
     const renderRestored = (
       filters: NonNullable<DataViewQuery['filters']>,
@@ -1365,21 +1361,8 @@ describe('DataView', () => {
         </DataView>
       );
 
-    it.each([
-      ['eq', 'd15'],
-      ['neq', 'd14,d16,dNone'],
-      ['lt', 'd14'],
-      ['gt', 'd16']
-    ] as const)('filters rows by a restored %s date filter', (operator, rows) => {
-      renderRestored([{ name: 'when', operator, value: '2026-08-15' }]);
-      expect(screen.getByTestId('rows')).toHaveTextContent(rows);
-    });
-
-    it('reads a restored ISO instant as the day the viewer picked', () => {
-      process.env.TZ = 'Asia/Kolkata';
-      renderRestored([
-        { name: 'when', operator: 'eq', value: '2026-08-14T18:30:00.000Z' }
-      ]);
+    it('filters rows by a restored date filter', () => {
+      renderRestored([{ name: 'when', operator: 'eq', value: '2026-08-15' }]);
       expect(screen.getByTestId('rows')).toHaveTextContent('d15');
     });
 

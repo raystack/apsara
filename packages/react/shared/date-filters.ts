@@ -1,6 +1,7 @@
 import type { FilterFn } from '@tanstack/table-core';
 import { format, isExists, isValid, parseISO } from 'date-fns';
 import type {
+  DateFilterOperatorType,
   FilterTypes,
   FilterValue,
   FilterValueType
@@ -77,7 +78,7 @@ function fromLocalParts(parts: RegExpExecArray): Date | null {
 
 /* An unreadable row cannot be placed before or after a day, so it matches none
    of these. */
-export function onDay(
+function onDay(
   test: (day: string, filterDay: string) => boolean
 ): FilterFn<unknown> {
   return (row, columnId, filterValue: FilterValue) => {
@@ -88,13 +89,25 @@ export function onDay(
 }
 
 /* A row with no readable date is still not the filter's day. */
-export const notOnDay: FilterFn<unknown> = (
+const notOnDay: FilterFn<unknown> = (
   row,
   columnId,
   filterValue: FilterValue
 ) => {
   const filterDay = toDayKey(filterValue.date);
   return filterDay !== null && toDayKey(row.getValue(columnId)) !== filterDay;
+};
+
+export const dateFilterFns: Record<
+  DateFilterOperatorType,
+  FilterFn<unknown>
+> = {
+  eq: onDay((day, filterDay) => day === filterDay),
+  neq: notOnDay,
+  lt: onDay((day, filterDay) => day < filterDay),
+  lte: onDay((day, filterDay) => day <= filterDay),
+  gt: onDay((day, filterDay) => day > filterDay),
+  gte: onDay((day, filterDay) => day >= filterDay)
 };
 
 type TypedFilter = {

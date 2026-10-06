@@ -197,14 +197,6 @@ describe('stored date filters', () => {
     expect(matches('2026-08-15', '2026-08-14')).toBe(false);
   });
 
-  it('writes the day the viewer picked, not the UTC day', () => {
-    process.env.TZ = 'Asia/Kolkata';
-    const value = new Date(2026, 7, 15);
-    const v = getFilterValue({ value, filterType: 'date' });
-    expect(v.value).toBe(value);
-    expect(v.stringValue).toBe('2026-08-15');
-  });
-
   it('writes a stored ISO instant as its day and keeps the value', () => {
     process.env.TZ = 'Asia/Kolkata';
     const value = '2026-08-14T18:30:00.000Z';

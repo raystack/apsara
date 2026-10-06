@@ -1,6 +1,6 @@
 import type { FilterFn } from '@tanstack/table-core';
 
-import { notOnDay, onDay, toDayKey } from '~/shared/date-filters';
+import { dateFilterFns, toDayKey } from '~/shared/date-filters';
 import {
   DataTableFilterOperatorTypes,
   DateFilterOperatorType,
@@ -77,14 +77,7 @@ export const filterOperationsMap: FilterFunctionsMap = {
       return columnValue.endsWith(filterStr);
     }
   },
-  date: {
-    eq: onDay((day, filterDay) => day === filterDay),
-    neq: notOnDay,
-    lt: onDay((day, filterDay) => day < filterDay),
-    lte: onDay((day, filterDay) => day <= filterDay),
-    gt: onDay((day, filterDay) => day > filterDay),
-    gte: onDay((day, filterDay) => day >= filterDay)
-  },
+  date: dateFilterFns,
   select: {
     eq: (row, columnId, filterValue: FilterValue, _addMeta) => {
       if (String(filterValue.value) === EmptyFilterValue) {
