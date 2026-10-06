@@ -1,0 +1,95 @@
+'use client';
+
+import { Tooltip as TooltipPrimitive } from '@base-ui/react';
+import { cx } from 'class-variance-authority';
+import { type Radius, radiusStyle } from '../../shared/radius';
+import { Text } from '../text';
+import { useThemeInjection } from '../theme/portal';
+import styles from './tooltip.module.css';
+
+export interface TooltipContentProps
+  extends Omit<
+      TooltipPrimitive.Positioner.Props,
+      'className' | 'style' | 'render' | 'ref'
+    >,
+    TooltipPrimitive.Popup.Props {
+  /**
+   * Controls whether to show the arrow
+   * `@default` false
+   */
+  showArrow?: boolean;
+  /** Corner radius for this tooltip only. Overrides the theme's `radius`. */
+  radius?: Radius;
+}
+
+export function TooltipContent({
+  ref,
+  className,
+  children,
+  showArrow = false,
+  style,
+  render,
+  radius,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
+  ...positionerProps
+}: TooltipContentProps) {
+  const theme = useThemeInjection();
+  return (
+    <TooltipPrimitive.Portal {...theme}>
+      <TooltipPrimitive.Positioner
+        side='top'
+        align='center'
+        sideOffset={showArrow ? 10 : 4}
+        className={styles.positioner}
+        data-slot='tooltip-positioner'
+        {...positionerProps}
+      >
+        <TooltipPrimitive.Popup
+          ref={ref}
+          {...theme}
+          className={cx(
+            styles.content,
+            theme?.className,
+            radiusStyle({ radius }),
+            className
+          )}
+          style={style}
+          render={render}
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledBy}
+          data-slot='tooltip-content'
+        >
+          {typeof children === 'string' ? (
+            <Text size='mini' weight='medium' data-slot='tooltip-text'>
+              {children}
+            </Text>
+          ) : (
+            children
+          )}
+          {showArrow && (
+            <TooltipPrimitive.Arrow
+              className={styles.arrow}
+              data-slot='tooltip-arrow'
+            >
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                width='6'
+                height='7'
+                viewBox='0 0 6 7'
+                fill='none'
+              >
+                <path
+                  d='M2.90809 6.78553L0 0H6L3.09191 6.78553C3.05728 6.86634 2.94272 6.86634 2.90809 6.78553Z'
+                  fill='currentColor'
+                />
+              </svg>
+            </TooltipPrimitive.Arrow>
+          )}
+        </TooltipPrimitive.Popup>
+      </TooltipPrimitive.Positioner>
+    </TooltipPrimitive.Portal>
+  );
+}
+
+TooltipContent.displayName = 'Tooltip.Content';

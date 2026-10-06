@@ -1,10 +1,10 @@
 ---
 title: Search
 description: A search input component with built-in search icon and optional clear button.
-source: packages/raystack/components/search
+source: packages/react/components/search
 ---
 
-import { playground, sizeDemo, clearDemo, onValueChangeDemo } from "./demo.ts";
+import { playground, sizeDemo, leadingIconDemo, clearDemo, onValueChangeDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -27,6 +27,12 @@ A text input with the search icon already in place. Set its size, whether it can
 Two sizes. `large` is the default; `small` fits a toolbar or a table header.
 
 <Demo data={sizeDemo} />
+
+### Leading icon
+
+Pass a node to `leadingIcon` to replace the search icon, or `null` to hide it.
+
+<Demo data={leadingIconDemo} />
 
 ### Clear Button
 

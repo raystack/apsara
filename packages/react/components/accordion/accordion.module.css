@@ -1,0 +1,103 @@
+.accordion {
+  width: 100%;
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.accordion-header {
+  display: flex;
+}
+
+.accordion-trigger {
+  display: flex;
+  /* Todo: var does not exist for 36px */
+  min-height: calc(36px * var(--rs-scaling, 1));
+  padding: 0 var(--rs-space-4);
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--rs-space-5);
+  flex-shrink: 0;
+  flex: 1;
+  border: 0.5px solid var(--rs-color-border-base-primary);
+  background: var(--rs-color-background-base-primary);
+  cursor: pointer;
+  text-align: left;
+  outline: none;
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+
+.accordion-item:not(:first-child) .accordion-trigger {
+  border-top: none;
+}
+
+.accordion-trigger:hover {
+  background-color: var(--rs-color-background-base-primary-hover);
+}
+
+/* Trigger has its own border: hug it with the ring so they don't read as
+   two separate lines. */
+.accordion-trigger:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-inset-border);
+}
+
+.accordion-trigger:active:not(:disabled) {
+  background-color: var(--rs-color-background-neutral-secondary);
+}
+
+.accordion-trigger:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.accordion-trigger[data-panel-open] .accordion-icon {
+  transform: rotate(180deg);
+}
+
+.accordion-icon {
+  color: var(--rs-color-foreground-base-secondary);
+  pointer-events: none;
+  flex-shrink: 0;
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
+}
+
+.accordion-content {
+  height: var(--accordion-panel-height);
+  overflow: hidden;
+}
+
+.accordion-content[data-starting-style],
+.accordion-content[data-ending-style] {
+  height: 0;
+}
+
+.accordion-content-body {
+  border: 0.5px solid var(--rs-color-border-base-primary);
+  background: var(--rs-color-background-base-primary);
+  box-shadow: var(--rs-shadow-inset);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-5);
+  align-self: stretch;
+  padding: var(--rs-space-5) var(--rs-space-4);
+  border-top: 0px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .accordion-icon {
+    transition: transform var(--rs-duration-fast) var(--rs-ease-out);
+  }
+
+  .accordion-content {
+    transition: height var(--rs-duration-fast) var(--rs-ease-out);
+  }
+
+  .accordion-trigger {
+    transition: var(--rs-transition-interactive);
+  }
+}

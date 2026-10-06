@@ -36,6 +36,9 @@ export interface SidebarRootProps {
    */
   peekDelay?: number;
 
+  /** Called when a hover peek starts or ends. */
+  onPeekChange?: (isPeeking: boolean) => void;
+
   /** Position of the Sidebar.
    * @default "left"
    */

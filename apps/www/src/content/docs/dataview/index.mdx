@@ -1,7 +1,7 @@
 ---
 title: DataView
 description: A unified data primitive whose query state drives swappable renderers. List, timeline, custom, all on one filter/sort/group/search model.
-source: packages/raystack/components/data-view
+source: packages/react/components/data-view
 ---
 
 import {
@@ -86,6 +86,8 @@ The split is what lets one set of filters, sorts, and toggles drive every render
 <Demo data={searchPreview} />
 
 By default search auto-disables in the zero state (no data and no active query) and re-enables the moment the user types. Pass `autoDisableInZeroState={false}` to keep it always enabled, or `disabled` to control it yourself. In server mode, read `query.search` in `onTableQueryChange` and filter on the backend.
+
+`DataView.Search` accepts every [Search](/docs/components/search) prop. For example, `leadingIcon={null}` hides the search icon.
 
 ### Display properties
 
@@ -239,9 +241,15 @@ The shape `query` accepts and `onTableQueryChange` hands back. In [server mode](
 
 <auto-type-table path="./props.ts" name="DataViewZeroStateProps" />
 
+### DataView.Filters
+
+The row of applied filter chips and the add-filter menu. `align`, `side`, and `sideOffset` position the menu.
+
+<auto-type-table path="./props.ts" name="DataViewFiltersProps" />
+
 ### DataView.DisplayControls
 
-The popover housing the view switcher, Ordering, Grouping, and Display Properties. The view switcher appears at the top whenever `views.length > 1`. Each section can be hidden individually.
+The popover housing the view switcher, Ordering, Grouping, and Display Properties. The view switcher appears at the top whenever `views.length > 1`. Each section can be hidden individually. `align`, `side`, and `sideOffset` position the popover.
 
 <auto-type-table path="./props.ts" name="DataViewDisplayControlsProps" />
 
@@ -263,6 +271,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `data-view-filters` | Filter chip row |
 | `data-view-add-filter` | Default add-filter trigger |
 | `data-view-add-filter-item` | An entry in the add-filter menu |
+| `data-view-filter-summary-status` | Visually hidden live region that announces the footer text |
 | `data-view-filter-summary` | "Items hidden by filters" footer |
 | `data-view-filter-summary-text` | Count + label group |
 | `data-view-filter-summary-count` | Hidden-row count |
@@ -297,6 +306,9 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
   cells stay associated with their row, and key presses bubbling up from
   interactive children (buttons, links in cells) are ignored so they don't also
   trigger row activation.
+- The "hidden by filters" footer of List and Timeline has a visually hidden
+  `role="status"` region. It announces the footer text, for example "3 items
+  hidden by filters", once the search and filters stop changing for 500ms.
 - Renderer-specific semantics are documented on the
   [List](/docs/dataview/list#accessibility) and
   [Timeline](/docs/dataview/timeline#accessibility) pages.

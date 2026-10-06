@@ -97,7 +97,7 @@ Apsara is a public repo. Anyone can read PR titles, descriptions, branch names, 
 
 - Tests pass: `pnpm test:apsara`.
 - Lint passes: `pnpm lint`. CI does not run lint, so check it locally.
-- The change adds no type errors: `pnpm exec tsc --noEmit` in `packages/raystack`. CI does not run this either.
+- The change adds no type errors: `pnpm exec tsc --noEmit` in `packages/react`. CI does not run this either.
 - The library builds: `pnpm build:apsara`.
 - New or changed behavior has tests.
 - The docs page is up to date: `index.mdx`, `demo.ts`, and `props.ts` in `apps/www/src/content/docs/components/<name>/`.

@@ -1,0 +1,88 @@
+.announcement-bar {
+  position: relative;
+  width: 100%;
+  min-height: var(--rs-space-10);
+  padding: var(--rs-space-3) var(--rs-space-7);
+}
+
+/* Out of the flex flow so the message stays centered in the bar. */
+.dismiss {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: var(--rs-space-3);
+  translate: 0 -50%;
+}
+
+.announcement-bar-gradient {
+  background: radial-gradient(
+    36.63% 405.48% at 50% 50%,
+    oklch(0.8184 0.0825 351.13) 0%,
+    oklch(0.7701 0.1422 322.63) 100%
+  );
+}
+
+.announcement-bar-normal {
+  background: var(--rs-color-foreground-base-primary);
+}
+
+.announcement-bar-error {
+  background: var(--rs-color-background-danger-emphasis);
+}
+
+.announcement-bar-normal > .text,
+.announcement-bar-error > .text,
+.announcement-bar-normal > .icon,
+.announcement-bar-error > .icon,
+.announcement-bar-normal > .action-btn,
+.announcement-bar-error > .action-btn {
+  color: var(--rs-color-foreground-base-emphasis);
+}
+
+.announcement-bar-gradient > .text,
+.announcement-bar-gradient > .icon {
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.icon,
+.icon > svg {
+  min-height: var(--rs-space-5);
+  min-width: var(--rs-space-5);
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rs-space-1);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-1));
+}
+
+.action-btn:hover {
+  opacity: 0.8;
+}
+
+/* Press reads as scale, not a second dim, since 0.64 text mid-press is barely
+   legible on the gradient variant, and hover's 0.8 still applies. */
+.action-btn:active {
+  transform: scale(var(--rs-scale-pressed));
+}
+
+.action-btn:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .action-btn {
+    transition: var(--rs-transition-interactive);
+  }
+
+  .action-btn:active {
+    transition: var(--rs-transition-pressed);
+  }
+}

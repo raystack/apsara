@@ -9,12 +9,12 @@ metadata:
 
 # Add New Component to Apsara
 
-Step-by-step ultrathink instructions for adding a new component to the Apsara design system. Each component requires changes across two packages: `packages/raystack/` (source, styles, tests) and `apps/www/` (docs, demos, playground).
+Step-by-step ultrathink instructions for adding a new component to the Apsara design system. Each component requires changes across two packages: `packages/react/` (source, styles, tests) and `apps/www/` (docs, demos, playground).
 
 ## Files to Create/Modify
 
 ```
-packages/raystack/
+packages/react/
 ├── index.tsx                                      # Add export (alphabetical)
 └── components/<name>/
     ├── index.tsx                                   # Re-export only
@@ -30,7 +30,7 @@ apps/www/src/content/docs/components/<name>/
 
 ## Step 1: Create the Component Source
 
-Create `packages/raystack/components/<name>/`.
+Create `packages/react/components/<name>/`.
 
 For simple components, define everything in a single file. For complex components with multiple sub-components, split into separate files:
 
@@ -180,7 +180,7 @@ Key rules:
 Simple re-export:
 
 ```tsx
-// packages/raystack/components/<name>/index.tsx
+// packages/react/components/<name>/index.tsx
 export { Component } from './<name>';
 ```
 
@@ -236,7 +236,7 @@ Common `--rs-*` tokens:
 
 ## Step 4: Register the Export
 
-Add to `packages/raystack/index.tsx` in **alphabetical order**:
+Add to `packages/react/index.tsx` in **alphabetical order**:
 
 ```tsx
 export { Chip } from './components/chip';
@@ -303,7 +303,7 @@ The sidebar auto-discovers component pages from this directory structure (no con
 ---
 title: ComponentName
 description: Short description of the component.
-source: packages/raystack/components/<name>
+source: packages/react/components/<name>
 tag: new
 ---
 
@@ -505,5 +505,5 @@ Checklist:
 - [ ] `displayName` set on all sub-components
 - [ ] Every rendered element has a `data-slot`, with a `data-slots.test.tsx` covering them
 - [ ] CSS uses `--rs-*` tokens only
-- [ ] Export in `packages/raystack/index.tsx` in alphabetical order
+- [ ] Export in `packages/react/index.tsx` in alphabetical order
 - [ ] Interactive `playground` added to `demo.ts`, covering the component's main props
