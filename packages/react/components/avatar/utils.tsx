@@ -1,4 +1,4 @@
-export const COLORS = [
+export const AVATAR_COLORS = [
   'indigo',
   'orange',
   'mint',
@@ -14,10 +14,27 @@ export const COLORS = [
   'gold'
 ] as const;
 
-export type AVATAR_COLORS = (typeof COLORS)[number];
+export type AvatarColor = (typeof AVATAR_COLORS)[number];
 
-export function getAvatarColor(str: string): AVATAR_COLORS {
-  const hash = str.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const index = hash % COLORS.length;
-  return COLORS[index];
+export interface GetAvatarColorOptions {
+  /** Restricts the result to these colors. Order matters. If empty, all colors are used. */
+  palette?: readonly AvatarColor[];
+}
+
+export function getAvatarColor(
+  str: string,
+  { palette }: GetAvatarColorOptions = {}
+): AvatarColor {
+  const colors = palette?.length ? palette : AVATAR_COLORS;
+  // 32-bit FNV-1a
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < str.length; i++) {
+    hash ^= str.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  // The lowest bit of FNV-1a is an XOR of each character's lowest bit, so it
+  // ignores order. Mixing the high bits in keeps a 2-color palette order-sensitive.
+  hash ^= hash >>> 16;
+  hash = Math.imul(hash, 0x45d9f3b) >>> 0;
+  return colors[hash % colors.length];
 }

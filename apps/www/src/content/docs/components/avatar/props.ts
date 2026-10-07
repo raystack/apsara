@@ -77,3 +77,25 @@ export interface AvatarGroupProps {
   /** Additional CSS class names */
   className?: string;
 }
+
+export interface GetAvatarColorOptions {
+  /**
+   * Restricts the result to these colors. Order matters. If empty, all colors are used.
+   * @defaultValue `AVATAR_COLORS`
+   */
+  palette?: Array<
+    | 'indigo'
+    | 'orange'
+    | 'mint'
+    | 'neutral'
+    | 'sky'
+    | 'lime'
+    | 'grass'
+    | 'cyan'
+    | 'iris'
+    | 'purple'
+    | 'pink'
+    | 'crimson'
+    | 'gold'
+  >;
+}

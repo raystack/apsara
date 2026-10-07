@@ -133,9 +133,35 @@ export const imageDemo = {
 export const generatedColorDemo = {
   type: 'code',
   code: `
-  <Flex gap={5} align="end">
-    <Avatar size={6} color={getAvatarColor("abcde")} fallback="RC" />
-  </Flex>`
+  function GeneratedColors() {
+    const people = [
+      { name: "Ravi Chopra", initials: "RC" },
+      { name: "Alice", initials: "A" },
+      { name: "Bob", initials: "B" },
+      { name: "amy", initials: "AM" },
+      { name: "may", initials: "MA" }
+    ];
+
+    return (
+      <Flex direction="column" gap={5}>
+        <Flex gap={5} align="end">
+          {people.map(({ name, initials }) => (
+            <Avatar key={name} size={6} color={getAvatarColor(name)} fallback={initials} />
+          ))}
+        </Flex>
+        <Flex gap={5} align="end">
+          {people.map(({ name, initials }) => (
+            <Avatar
+              key={name}
+              size={6}
+              color={getAvatarColor(name, { palette: ["indigo", "mint", "sky"] })}
+              fallback={initials}
+            />
+          ))}
+        </Flex>
+      </Flex>
+    );
+  }`
 };
 
 export const groupDemo = {

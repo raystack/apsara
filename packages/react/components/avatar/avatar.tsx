@@ -12,7 +12,7 @@ import {
 } from 'react';
 import { radiusVariants } from '../../shared/radius';
 import styles from './avatar.module.css';
-import { AVATAR_COLORS } from './utils';
+import type { AvatarColor } from './utils';
 
 // Matches Base UI's AvatarRoot ImageLoadingStatus union.
 type ImageLoadingStatus = 'idle' | 'loading' | 'loaded' | 'error';
@@ -156,7 +156,7 @@ export interface AvatarProps
   fallbackDelay?: AvatarPrimitive.Fallback.Props['delay'];
   onLoadingStatusChange?: AvatarPrimitive.Image.Props['onLoadingStatusChange'];
   variant?: 'solid' | 'soft';
-  color?: AVATAR_COLORS;
+  color?: AvatarColor;
   className?: string;
 }
 

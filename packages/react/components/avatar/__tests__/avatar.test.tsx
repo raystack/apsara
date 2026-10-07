@@ -4,7 +4,7 @@ import { radiusClasses } from '../../../shared/radius';
 import { Tooltip } from '../../tooltip';
 import { Avatar, AvatarGroup } from '../avatar';
 import styles from '../avatar.module.css';
-import { getAvatarColor } from '../utils';
+import { AVATAR_COLORS, getAvatarColor } from '../utils';
 
 describe('Avatar', () => {
   const ogImage = window.Image;
@@ -136,26 +136,12 @@ describe('Avatar', () => {
   });
 
   describe('Colors', () => {
-    const colors = [
-      'indigo',
-      'orange',
-      'mint',
-      'neutral',
-      'sky',
-      'lime',
-      'grass',
-      'cyan',
-      'iris',
-      'purple',
-      'pink',
-      'crimson',
-      'gold'
-    ] as const;
-
-    it.each(colors)('renders %s color correctly', color => {
+    it.each(AVATAR_COLORS)('renders %s color correctly', color => {
       const { container } = render(<Avatar color={color} fallback='JD' />);
       const avatar = container.querySelector('[class*="avatar"]');
-      expect(avatar).toHaveClass(styles[`avatar-color-${color}`]);
+      const className = styles[`avatar-color-${color}`];
+      expect(className).toBeTruthy();
+      expect(avatar).toHaveClass(className);
     });
 
     it('defaults to indigo color', () => {
@@ -337,43 +323,37 @@ describe('Avatar', () => {
 
   describe('Utility Functions', () => {
     describe('getAvatarColor', () => {
-      it('returns consistent color for same string', () => {
-        const color1 = getAvatarColor('john.doe@example.com');
-        const color2 = getAvatarColor('john.doe@example.com');
-        expect(color1).toBe(color2);
+      it('maps anagrams to different colors', () => {
+        expect(getAvatarColor('abc')).toBe('iris');
+        expect(getAvatarColor('cba')).toBe('neutral');
+        expect(getAvatarColor('amy')).toBe('neutral');
+        expect(getAvatarColor('may')).toBe('cyan');
+        expect(getAvatarColor('night')).toBe('mint');
+        expect(getAvatarColor('thing')).toBe('purple');
       });
 
-      it('returns different colors for different strings', () => {
-        const color1 = getAvatarColor('user1');
-        const color2 = getAvatarColor('user2');
-        // While not guaranteed to be different, testing with known different hashes
-        const colors = new Set([
-          color1,
-          color2,
-          getAvatarColor('user3'),
-          getAvatarColor('user4')
-        ]);
-        expect(colors.size).toBeGreaterThan(1);
+      it('maps anagrams to different colors with a 2-color palette', () => {
+        const palette = ['sky', 'mint'] as const;
+        expect(getAvatarColor('amy', { palette })).toBe('mint');
+        expect(getAvatarColor('may', { palette })).toBe('sky');
       });
 
-      it('returns valid avatar color', () => {
-        const validColors = [
-          'indigo',
-          'orange',
-          'mint',
-          'neutral',
-          'sky',
-          'lime',
-          'grass',
-          'cyan',
-          'iris',
-          'purple',
-          'pink',
-          'crimson',
-          'gold'
-        ];
-        const color = getAvatarColor('test');
-        expect(validColors).toContain(color);
+      it('returns a valid color for an empty string', () => {
+        expect(getAvatarColor('')).toBe('pink');
+      });
+
+      it('returns only colors from the palette', () => {
+        const palette = ['indigo', 'mint', 'sky'] as const;
+        for (let i = 0; i < 200; i++) {
+          expect(palette).toContain(getAvatarColor(`u${i}`, { palette }));
+        }
+      });
+
+      it('uses every color over many strings', () => {
+        const hit = new Set(
+          Array.from({ length: 1000 }, (_, i) => getAvatarColor(`user-${i}`))
+        );
+        expect(hit.size).toBe(AVATAR_COLORS.length);
       });
     });
   });

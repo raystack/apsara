@@ -5,7 +5,14 @@ export { Accordion } from './components/accordion';
 export { AlertDialog } from './components/alert-dialog';
 export { Amount, type AmountProps } from './components/amount';
 export { AnnouncementBar } from './components/announcement-bar';
-export { Avatar, AvatarGroup, getAvatarColor } from './components/avatar';
+export {
+  AVATAR_COLORS,
+  Avatar,
+  type AvatarColor,
+  AvatarGroup,
+  type GetAvatarColorOptions,
+  getAvatarColor
+} from './components/avatar';
 export { Badge } from './components/badge';
 export { Box } from './components/box';
 export { Breadcrumb } from './components/breadcrumb';

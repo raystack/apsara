@@ -1,2 +1,7 @@
 export { Avatar, AvatarGroup } from './avatar';
-export { getAvatarColor } from './utils';
+export {
+  AVATAR_COLORS,
+  type AvatarColor,
+  type GetAvatarColorOptions,
+  getAvatarColor
+} from './utils';
