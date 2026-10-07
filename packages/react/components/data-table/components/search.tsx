@@ -33,15 +33,6 @@ export function TableSearch({
     });
   };
 
-  const handleClear = () => {
-    updateTableQuery(query => {
-      return {
-        ...query,
-        search: ''
-      };
-    });
-  };
-
   // Auto-disable in zero state if enabled, but allow manual override
   // Once search is applied, keep it enabled (even if shouldShowFilters is false)
   const hasSearch = Boolean(
@@ -55,7 +46,6 @@ export function TableSearch({
       {...props}
       onChange={handleSearch}
       value={tableQuery?.search ?? ''}
-      onClear={handleClear}
       disabled={isDisabled}
     />
   );

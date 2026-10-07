@@ -40,6 +40,14 @@ The Search component can include a clear button that appears when there is input
 
 <Demo data={clearDemo} />
 
+### Clearing
+
+The clear button and Escape clear the input. A clear fires `onChange` and `onValueChange` with an empty value, for controlled and uncontrolled inputs. `onClear` runs after the clear and receives the triggering event. Use it for side effects only.
+
+After the clear button, focus stays on the input. Escape clears the input when it has a value, then removes focus from it. Set `clearOnEscape={false}` to keep the value, or `blurOnEscape={false}` to keep focus. Escape clears whether or not `showClearButton` is set.
+
+When Escape clears a value, Search stops the event. When there is nothing to clear, Escape is not stopped, so it can close an enclosing Dialog, Popover, or Menu.
+
 ### Controlled value
 
 Use `onValueChange` to receive only the new query string, or `onChange` for the full React change event. The Search component forwards both to the underlying [Input](/docs/components/input).
@@ -68,7 +76,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 The Search component is built with accessibility in mind, following ARIA best practices:
 
 - Container has `role="search"` to identify it as a search landmark
-- Input has `type="search"` for semantic HTML
+- Input has `role="searchbox"` and `enterKeyHint="search"`. It does not use `type="search"`, because Chrome and Safari clear that input on Escape even when `clearOnEscape` is `false`
 - Search icon is marked as decorative with `aria-hidden="true"`
 - Clear button has appropriate `aria-label` for screen readers
 - Keyboard navigation support for the clear button
@@ -90,3 +98,4 @@ The component supports keyboard navigation:
 - Tab to focus on the search input
 - Tab again to focus on the clear button (when visible)
 - Enter or Space to trigger the clear button
+- Escape to clear the input when it has a value and remove focus from it

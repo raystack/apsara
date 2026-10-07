@@ -14,7 +14,7 @@ describe('Search', () => {
 
     it('renders input field', () => {
       render(<Search />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('searchbox');
       expect(input).toBeInTheDocument();
     });
 
@@ -59,7 +59,7 @@ describe('Search', () => {
 
     it('sets aria-label from placeholder', () => {
       render(<Search placeholder='Search items' />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('searchbox');
       expect(input).toHaveAttribute('aria-label', 'Search items');
     });
   });
@@ -67,14 +67,14 @@ describe('Search', () => {
   describe('Value and Change', () => {
     it('displays value', () => {
       render(<Search value='test query' />);
-      const input = screen.getByRole('textbox') as HTMLInputElement;
+      const input = screen.getByRole('searchbox') as HTMLInputElement;
       expect(input.value).toBe('test query');
     });
 
     it('calls onChange when typing', () => {
       const handleChange = vi.fn();
       render(<Search onChange={handleChange} />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('searchbox');
 
       fireEvent.change(input, { target: { value: 'new value' } });
       expect(handleChange).toHaveBeenCalled();
@@ -82,7 +82,7 @@ describe('Search', () => {
 
     it('works as uncontrolled component', () => {
       render(<Search />);
-      const input = screen.getByRole('textbox') as HTMLInputElement;
+      const input = screen.getByRole('searchbox') as HTMLInputElement;
 
       fireEvent.change(input, { target: { value: 'search term' } });
       expect(input.value).toBe('search term');
@@ -148,18 +148,34 @@ describe('Search', () => {
       fireEvent.click(clearButton);
       expect(handleClear).not.toHaveBeenCalled();
     });
+
+    it('does not clear or call onClear when readOnly', () => {
+      const handleClear = vi.fn();
+      render(
+        <Search
+          showClearButton
+          defaultValue='test'
+          onClear={handleClear}
+          readOnly
+        />
+      );
+
+      fireEvent.click(screen.getByLabelText('Clear search'));
+      expect(screen.getByRole('searchbox')).toHaveValue('test');
+      expect(handleClear).not.toHaveBeenCalled();
+    });
   });
 
   describe('Sizes', () => {
     it('renders default size', () => {
       render(<Search />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('searchbox');
       expect(input).toBeInTheDocument();
     });
 
     it('renders small size', () => {
       render(<Search size='small' />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('searchbox');
       expect(input).toBeInTheDocument();
     });
   });
@@ -167,13 +183,13 @@ describe('Search', () => {
   describe('Variants', () => {
     it('defaults to default variant', () => {
       render(<Search />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('searchbox');
       expect(input).toBeInTheDocument();
     });
 
     it('renders borderless variant', () => {
       render(<Search variant='borderless' />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('searchbox');
       expect(input).toBeInTheDocument();
     });
   });
@@ -195,7 +211,7 @@ describe('Search', () => {
   describe('Disabled State', () => {
     it('disables input when disabled', () => {
       render(<Search disabled />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('searchbox');
       expect(input).toBeDisabled();
     });
 
@@ -203,7 +219,7 @@ describe('Search', () => {
       const user = userEvent.setup();
       const handleChange = vi.fn();
       render(<Search disabled onChange={handleChange} />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('searchbox');
 
       await user.type(input, 'test');
 
@@ -214,14 +230,14 @@ describe('Search', () => {
   describe('Input Props', () => {
     it('passes className to input', () => {
       render(<Search className='custom-search' />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('searchbox');
       expect(input).toHaveClass('custom-search');
     });
 
     it('supports onFocus event', () => {
       const handleFocus = vi.fn();
       render(<Search onFocus={handleFocus} />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('searchbox');
 
       fireEvent.focus(input);
       expect(handleFocus).toHaveBeenCalled();
@@ -230,7 +246,7 @@ describe('Search', () => {
     it('supports onBlur event', () => {
       const handleBlur = vi.fn();
       render(<Search onBlur={handleBlur} />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('searchbox');
 
       fireEvent.blur(input);
       expect(handleBlur).toHaveBeenCalled();
@@ -239,7 +255,7 @@ describe('Search', () => {
     it('supports onKeyDown event', () => {
       const handleKeyDown = vi.fn();
       render(<Search onKeyDown={handleKeyDown} />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('searchbox');
 
       fireEvent.keyDown(input, { key: 'Enter' });
       expect(handleKeyDown).toHaveBeenCalled();
@@ -247,14 +263,261 @@ describe('Search', () => {
 
     it('supports name attribute', () => {
       render(<Search name='search-field' />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('searchbox');
       expect(input).toHaveAttribute('name', 'search-field');
     });
 
     it('supports id attribute', () => {
       render(<Search id='search-input' />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('searchbox');
       expect(input).toHaveAttribute('id', 'search-input');
+    });
+  });
+
+  describe('Role', () => {
+    it('has the searchbox role and search enter key hint without type="search"', () => {
+      render(<Search />);
+      const input = screen.getByRole('searchbox');
+      expect(input).not.toHaveAttribute('type');
+      expect(input).toHaveAttribute('enterkeyhint', 'search');
+    });
+  });
+
+  describe('Ref', () => {
+    it('passes the input element to the consumer ref', () => {
+      let node: HTMLInputElement | null = null;
+      render(
+        <Search
+          ref={el => {
+            node = el;
+          }}
+        />
+      );
+      expect(node).toBe(screen.getByRole('searchbox'));
+    });
+  });
+
+  describe('Clear with Escape', () => {
+    it('clears, calls onClear with the keyboard event, and stops propagation', async () => {
+      const user = userEvent.setup();
+      const handleClear = vi.fn();
+      const parentKeyDown = vi.fn();
+      render(
+        <div onKeyDown={parentKeyDown}>
+          <Search value='test' onClear={handleClear} />
+        </div>
+      );
+      const input = screen.getByRole('searchbox');
+
+      await user.click(input);
+      await user.keyboard('{Escape}');
+
+      expect(handleClear).toHaveBeenCalledTimes(1);
+      expect(handleClear.mock.calls[0][0].type).toBe('keydown');
+      expect(handleClear.mock.calls[0][0].key).toBe('Escape');
+      expect(parentKeyDown).not.toHaveBeenCalled();
+    });
+
+    it('lets Escape bubble and blurs when the input is empty', async () => {
+      const user = userEvent.setup();
+      const handleClear = vi.fn();
+      const parentKeyDown = vi.fn();
+      render(
+        <div onKeyDown={parentKeyDown}>
+          <Search value='' onClear={handleClear} />
+        </div>
+      );
+      const input = screen.getByRole('searchbox');
+
+      await user.click(input);
+      await user.keyboard('{Escape}');
+
+      expect(handleClear).not.toHaveBeenCalled();
+      expect(parentKeyDown).toHaveBeenCalledTimes(1);
+      expect(input).not.toHaveFocus();
+    });
+
+    it('blurs the input after clearing', async () => {
+      const user = userEvent.setup();
+      render(<Search defaultValue='test' />);
+      const input = screen.getByRole('searchbox');
+
+      await user.click(input);
+      await user.keyboard('{Escape}');
+
+      expect(input).toHaveValue('');
+      expect(input).not.toHaveFocus();
+    });
+
+    it('keeps focus when blurOnEscape is false', async () => {
+      const user = userEvent.setup();
+      render(<Search defaultValue='test' blurOnEscape={false} />);
+      const input = screen.getByRole('searchbox');
+
+      await user.click(input);
+      await user.keyboard('{Escape}');
+
+      expect(input).toHaveValue('');
+      expect(input).toHaveFocus();
+    });
+
+    it('does not clear and lets Escape bubble when clearOnEscape is false', async () => {
+      const user = userEvent.setup();
+      const handleClear = vi.fn();
+      const parentKeyDown = vi.fn();
+      render(
+        <div onKeyDown={parentKeyDown}>
+          <Search
+            defaultValue='test'
+            onClear={handleClear}
+            clearOnEscape={false}
+          />
+        </div>
+      );
+      const input = screen.getByRole('searchbox');
+
+      await user.click(input);
+      await user.keyboard('{Escape}');
+
+      expect(input).toHaveValue('test');
+      expect(handleClear).not.toHaveBeenCalled();
+      expect(parentKeyDown).toHaveBeenCalledTimes(1);
+      expect(input).not.toHaveFocus();
+    });
+
+    it('does nothing when disabled', () => {
+      const handleClear = vi.fn();
+      render(<Search value='test' onClear={handleClear} disabled />);
+
+      fireEvent.keyDown(screen.getByRole('searchbox'), { key: 'Escape' });
+      expect(handleClear).not.toHaveBeenCalled();
+    });
+
+    it('does nothing when readOnly', async () => {
+      const user = userEvent.setup();
+      const handleClear = vi.fn();
+      render(<Search value='test' onClear={handleClear} readOnly />);
+
+      await user.click(screen.getByRole('searchbox'));
+      await user.keyboard('{Escape}');
+      expect(handleClear).not.toHaveBeenCalled();
+    });
+
+    it('calls the consumer onKeyDown after clearing', async () => {
+      const user = userEvent.setup();
+      const calls: string[] = [];
+      render(
+        <Search
+          defaultValue='test'
+          onClear={() => calls.push('clear')}
+          onKeyDown={e => calls.push(`keydown:${e.currentTarget.value}`)}
+        />
+      );
+
+      await user.click(screen.getByRole('searchbox'));
+      await user.keyboard('{Escape}');
+      expect(calls).toEqual(['clear', 'keydown:']);
+    });
+
+    it('clears an uncontrolled input and fires onChange', async () => {
+      const user = userEvent.setup();
+      const handleChange = vi.fn();
+      render(<Search onChange={handleChange} />);
+      const input = screen.getByRole('searchbox') as HTMLInputElement;
+
+      await user.type(input, 'abc');
+      handleChange.mockClear();
+      await user.keyboard('{Escape}');
+
+      expect(input.value).toBe('');
+      expect(handleChange).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('Clear button focus and events', () => {
+    it('passes the mouse event to onClear and focuses the input', async () => {
+      const user = userEvent.setup();
+      const handleClear = vi.fn();
+      render(<Search showClearButton value='test' onClear={handleClear} />);
+
+      await user.click(screen.getByLabelText('Clear search'));
+
+      expect(handleClear).toHaveBeenCalledTimes(1);
+      expect(handleClear.mock.calls[0][0].type).toBe('click');
+      expect(document.activeElement).toBe(screen.getByRole('searchbox'));
+    });
+
+    it('clears an uncontrolled input and fires onChange', async () => {
+      const user = userEvent.setup();
+      const handleChange = vi.fn();
+      render(<Search showClearButton onChange={handleChange} />);
+      const input = screen.getByRole('searchbox') as HTMLInputElement;
+
+      await user.type(input, 'abc');
+      handleChange.mockClear();
+      await user.click(screen.getByLabelText('Clear search'));
+
+      expect(input.value).toBe('');
+      expect(handleChange).toHaveBeenCalledTimes(1);
+      expect(input).toHaveFocus();
+    });
+  });
+
+  describe('Controlled value', () => {
+    it('clears through onValueChange when onClear is set', async () => {
+      const user = userEvent.setup();
+      const handleValueChange = vi.fn();
+      const handleClear = vi.fn();
+      render(
+        <Search
+          showClearButton
+          value='test'
+          onValueChange={handleValueChange}
+          onClear={handleClear}
+        />
+      );
+
+      await user.click(screen.getByLabelText('Clear search'));
+
+      expect(handleValueChange).toHaveBeenCalledTimes(1);
+      expect(handleValueChange.mock.calls[0][0]).toBe('');
+      expect(handleClear).toHaveBeenCalledTimes(1);
+    });
+
+    it('clears on Escape through onValueChange and stops propagation', async () => {
+      const user = userEvent.setup();
+      const handleValueChange = vi.fn();
+      const parentKeyDown = vi.fn();
+      render(
+        <div onKeyDown={parentKeyDown}>
+          <Search value='test' onValueChange={handleValueChange} />
+        </div>
+      );
+
+      await user.click(screen.getByRole('searchbox'));
+      await user.keyboard('{Escape}');
+
+      expect(handleValueChange).toHaveBeenCalledTimes(1);
+      expect(handleValueChange.mock.calls[0][0]).toBe('');
+      expect(parentKeyDown).not.toHaveBeenCalled();
+    });
+
+    it('clears on clear click through onValueChange', async () => {
+      const user = userEvent.setup();
+      const handleValueChange = vi.fn();
+      render(
+        <Search
+          showClearButton
+          value='test'
+          onValueChange={handleValueChange}
+        />
+      );
+
+      await user.click(screen.getByLabelText('Clear search'));
+
+      expect(handleValueChange).toHaveBeenCalledTimes(1);
+      expect(handleValueChange.mock.calls[0][0]).toBe('');
+      expect(screen.getByRole('searchbox')).toHaveFocus();
     });
   });
 });
