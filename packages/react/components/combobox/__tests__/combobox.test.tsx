@@ -484,3 +484,60 @@ describe('Combobox', () => {
     });
   });
 });
+
+describe('Combobox.createItems', () => {
+  const USERS = [
+    { id: 'u1', name: 'Jane Doe' },
+    { id: 'u2', name: 'John Smith' },
+    { id: 'u3', name: 'Ada Lovelace' }
+  ];
+  const USER_ITEMS = Combobox.createItems(USERS, {
+    getValue: user => user.id,
+    getLabel: user => user.name
+  });
+
+  const UserCombobox = (props: {
+    defaultValue?: string | null;
+    onValueChange?: (value: string | null) => void;
+  }) => (
+    <Combobox items={USER_ITEMS} {...props}>
+      <Combobox.Input placeholder='Pick a user' />
+      <Combobox.Content>
+        {(user: (typeof USERS)[number]) => (
+          <Combobox.Item key={user.id} value={user.id}>
+            {user.name}
+          </Combobox.Item>
+        )}
+      </Combobox.Content>
+    </Combobox>
+  );
+
+  it('calls onValueChange with the derived value', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(<UserCombobox onValueChange={onValueChange} />);
+
+    await user.click(screen.getByRole('combobox'));
+    await clickOption(await screen.findByText('John Smith'));
+
+    expect(onValueChange).toHaveBeenCalledWith('u2');
+  });
+
+  it('shows the derived label for the selected value', () => {
+    render(<UserCombobox defaultValue='u3' />);
+    expect(screen.getByRole('combobox')).toHaveValue('Ada Lovelace');
+  });
+
+  it('filters by the derived label', async () => {
+    const user = userEvent.setup();
+    render(<UserCombobox />);
+
+    await user.type(screen.getByRole('combobox'), 'jo');
+
+    await waitFor(() => {
+      expect(screen.getByText('John Smith')).toBeInTheDocument();
+      expect(screen.queryByText('Jane Doe')).not.toBeInTheDocument();
+      expect(screen.queryByText('Ada Lovelace')).not.toBeInTheDocument();
+    });
+  });
+});

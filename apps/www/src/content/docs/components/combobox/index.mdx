@@ -12,6 +12,7 @@ import {
   iconDemo,
   withFieldDemo,
   controlledDemo,
+  createItemsDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -68,6 +69,14 @@ Pass the `multiple` prop to enable multi-select. Selected values appear as chips
 Use `value` and `onValueChange` for controlled behavior.
 
 <Demo data={controlledDemo} />
+
+### Using IDs as values
+
+When your app stores IDs instead of item objects, wrap the data with `Combobox.createItems`. `getValue` returns the value that `value` and `onValueChange` use. `getLabel` returns the text shown in the input and used for filtering. Pass a function as the child of `Combobox.Content` to render each item that matches the input.
+
+Create the collection at module scope for static data. For data that changes, wrap it in `React.useMemo` keyed by the data.
+
+<Demo data={createItemsDemo} />
 
 ## API Reference
 

@@ -17,5 +17,6 @@ export const Combobox = Object.assign(ComboboxRoot, {
   Label: ComboboxLabel,
   Separator: ComboboxSeparator,
   useFilter: ComboboxPrimitive.useFilter,
-  useFilteredItems: ComboboxPrimitive.useFilteredItems
+  useFilteredItems: ComboboxPrimitive.useFilteredItems,
+  createItems: ComboboxPrimitive.createItems
 });
