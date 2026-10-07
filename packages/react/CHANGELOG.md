@@ -89,8 +89,8 @@ another day. `dayjs` stays a dependency, because `Calendar`,
   your backend parses `stringValue`, check it: a date-only string is
   valid ISO 8601, but a parser that expects a timestamp may read it
   differently.
-- **A date filter with no value is dropped.** dayjs read an empty value
-  as today, so clearing a date filter filtered the rows to today.
+- **A date filter with no value is dropped.** dayjs read a missing
+  (`undefined`) value as today, so the filter matched today's rows.
 - **A date filter restored from `query` filters by its date.** It lost
   its type when the query was loaded, so the date comparison got no
   date, and dayjs read that as today.
