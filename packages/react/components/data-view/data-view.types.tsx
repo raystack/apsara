@@ -30,8 +30,17 @@ export interface DataViewSort {
   order: SortOrdersValues;
 }
 
+export type DataViewFilterValue =
+  | string
+  | string[]
+  | number
+  | boolean
+  | Date
+  | null
+  | undefined;
+
 export interface DataViewFilterValues {
-  value: any;
+  value: DataViewFilterValue;
   boolValue?: boolean;
   stringValue?: string;
   numberValue?: number;
@@ -68,8 +77,9 @@ export interface DataViewQuery extends Omit<InternalQuery, 'filters'> {
  * visibility behaviour across every renderer. Cell/header rendering belongs on
  * each renderer's own column spec, not here.
  */
-export interface DataViewField<TData = any> {
-  accessorKey: string;
+export interface DataViewField<TData = unknown> {
+  /** A key of `TData`, or a dotted path to a nested value. */
+  accessorKey: Extract<keyof TData, string> | (string & {});
   /** Human-readable label shown in filter chips, Display controls, and the default Table header. */
   label: string;
   icon?: React.ReactNode;
@@ -79,7 +89,7 @@ export interface DataViewField<TData = any> {
   filterType?: FilterTypes;
   dataType?: FilterValueType;
   filterOptions?: FilterSelectOption[];
-  defaultFilterValue?: unknown;
+  defaultFilterValue?: DataViewFilterValue;
   filterProps?: {
     select?: BaseSelectProps;
   };

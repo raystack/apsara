@@ -166,7 +166,7 @@ export const ContextMenuContent = ({
                 placeholder={searchPlaceholder}
                 className={styles.comboboxInput}
                 ref={inputRef}
-                onPointerEnter={e => {
+                onPointerEnter={() => {
                   focusInput();
                 }}
                 onKeyDown={e => {

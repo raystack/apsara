@@ -123,6 +123,6 @@ export type Filter = {
 };
 
 export interface FilterSelectOption {
-  value: FilterValueType;
+  value: string | number | boolean;
   label: string;
 }

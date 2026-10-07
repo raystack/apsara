@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import {
   DataViewField,
+  DataViewFilterValue,
   DataViewQuery,
   DataViewSort,
   defaultGroupOption,
@@ -21,7 +22,8 @@ import {
 import {
   getFilterFn,
   getFilterOperator,
-  getFilterValue
+  getFilterValue,
+  toDateInput
 } from './filter-operations';
 import { orderBucketKeys } from './order-bucket-keys';
 
@@ -29,7 +31,8 @@ export function queryToTableState(query: InternalQuery): Partial<TableState> {
   const columnFilters =
     query.filters
       ?.filter(data => {
-        if (data._type === FilterType.date) return dayjs(data.value).isValid();
+        if (data._type === FilterType.date)
+          return dayjs(toDateInput(data.value)).isValid();
         if (data.value !== '') return true;
         return false;
       })
@@ -163,7 +166,7 @@ export function createRowIdResolver<TData>(
 
 const generateFilterMap = (
   filters: InternalFilter[] = []
-): Map<string, any> => {
+): Map<string, DataViewFilterValue> => {
   return new Map(
     filters
       ?.filter(data => data._type === FilterType.select || data.value !== '')
@@ -262,7 +265,8 @@ export function transformToDataViewQuery(query: InternalQuery): DataViewQuery {
     filters
       ?.filter(data => {
         if (data._type === FilterType.select) return true;
-        if (data._type === FilterType.date) return dayjs(data.value).isValid();
+        if (data._type === FilterType.date)
+          return dayjs(toDateInput(data.value)).isValid();
         if (data.value !== '') return true;
         return false;
       })

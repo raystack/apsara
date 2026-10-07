@@ -1,5 +1,4 @@
 import type { Row } from '@tanstack/table-core';
-import dayjs from 'dayjs';
 import { describe, expect, it, vi } from 'vitest';
 import { EmptyFilterValue, FilterType } from '~/types/filters';
 import {
@@ -576,9 +575,9 @@ describe('Filter Operations', () => {
       const result = getFilterOperator({
         value: EmptyFilterValue,
         filterType: FilterType.string,
-        operator: 'like'
+        operator: 'eq'
       });
-      expect(result).toBe('like');
+      expect(result).toBe('eq');
     });
 
     it('should handle undefined filterType', () => {

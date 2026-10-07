@@ -33,7 +33,6 @@ type IOInstance = {
 let ioInstances: IOInstance[] = [];
 
 beforeAll(() => {
-  // biome-ignore lint/suspicious/noExplicitAny: jsdom doesn't ship IntersectionObserver
   global.IntersectionObserver = vi.fn().mockImplementation(function (
     this: IOInstance,
     cb: IntersectionObserverCallback
@@ -62,17 +61,6 @@ beforeAll(() => {
     };
     ioInstances.push(this);
   }) as unknown as typeof IntersectionObserver;
-
-  // jsdom doesn't implement ResizeObserver, and TanStack Virtual uses it for
-  // measureElement.
-  // biome-ignore lint/suspicious/noExplicitAny: jsdom lacks ResizeObserver
-  (global as any).ResizeObserver =
-    (global as any).ResizeObserver ||
-    vi.fn().mockImplementation(() => ({
-      observe: vi.fn(),
-      unobserve: vi.fn(),
-      disconnect: vi.fn()
-    }));
 });
 
 afterEach(() => {
@@ -167,7 +155,7 @@ describe('DataView', () => {
         useDataViewForTest();
         return null;
       };
-      const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const spy = vi.spyOn(console, 'error').mockImplementation(vi.fn());
       expect(() => render(<Probe />)).toThrow(/useDataView/);
       spy.mockRestore();
     });

@@ -218,7 +218,7 @@ export function Content({
   }, []);
 
   useEffect(() => {
-    if (mode !== 'server') return;
+    if (mode !== 'server' || rows.length === 0) return;
 
     if (observerRef.current) {
       observerRef.current.disconnect();

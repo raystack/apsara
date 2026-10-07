@@ -4,9 +4,9 @@ import '@testing-library/jest-dom/vitest';
 if (typeof window !== 'undefined') {
   // Polyfill ResizeObserver for tests
   global.ResizeObserver = class ResizeObserver {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
+    observe = () => undefined;
+    unobserve = () => undefined;
+    disconnect = () => undefined;
   };
 
   const emptyRectList = () => [] as unknown as DOMRectList;

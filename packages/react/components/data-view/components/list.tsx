@@ -93,9 +93,10 @@ export function DataViewList<TData, TValue = unknown>({
   // root `fields`) gate on the current visibility map. Accessors with no
   // matching field are "unmanaged" display columns (selection, row actions,
   // drag handles, …), so render unconditionally.
+  const allLeafColumns = table.getAllLeafColumns();
   const allLeafIds = useMemo(
-    () => new Set(table.getAllLeafColumns().map(c => c.id)),
-    [table, visibleLeafColumns]
+    () => new Set(allLeafColumns.map(c => c.id)),
+    [allLeafColumns]
   );
   const renderedAccessors = useMemo(() => {
     const visibleSet = new Set(visibleLeafColumns.map(c => c.id));
@@ -115,7 +116,10 @@ export function DataViewList<TData, TValue = unknown>({
   const lastHeaderGroup = headerGroups[headerGroups.length - 1];
   const headerByAccessor = useMemo(() => {
     const map = new Map<string, Header<TData, TValue>>();
-    lastHeaderGroup?.headers.forEach(h => map.set(h.column.id, h));
+    // The table does not track per-column value types, so headers come back as `unknown`.
+    lastHeaderGroup?.headers.forEach(h =>
+      map.set(h.column.id, h as Header<TData, TValue>)
+    );
     return map;
   }, [lastHeaderGroup]);
 

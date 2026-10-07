@@ -7,24 +7,13 @@ import { DataView } from '../data-view';
 import type { DataViewField, DataViewListColumn } from '../data-view.types';
 
 beforeAll(() => {
-  // jsdom lacks both observers; List/Timeline use them for infinite scroll
-  // and measurement.
-  // biome-ignore lint/suspicious/noExplicitAny: jsdom polyfill
-  (global as any).IntersectionObserver =
-    (global as any).IntersectionObserver ||
-    vi.fn().mockImplementation(() => ({
-      observe: vi.fn(),
-      unobserve: vi.fn(),
-      disconnect: vi.fn()
-    }));
-  // biome-ignore lint/suspicious/noExplicitAny: jsdom polyfill
-  (global as any).ResizeObserver =
-    (global as any).ResizeObserver ||
-    vi.fn().mockImplementation(() => ({
-      observe: vi.fn(),
-      unobserve: vi.fn(),
-      disconnect: vi.fn()
-    }));
+  // jsdom lacks IntersectionObserver; List/Timeline use it for infinite scroll.
+  // ResizeObserver is polyfilled in vitest.setup.ts.
+  globalThis.IntersectionObserver ??= vi.fn().mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn()
+  })) as unknown as typeof IntersectionObserver;
 });
 
 interface TestData {
