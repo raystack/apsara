@@ -1,33 +1,34 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { radiusClasses } from '../../../shared/radius';
 import { Tooltip } from '../../tooltip';
 import { Avatar, AvatarGroup } from '../avatar';
 import styles from '../avatar.module.css';
 import { AVATAR_COLORS, getAvatarColor } from '../utils';
 
+const SRC = 'https://example.com/avatar.png';
+
 describe('Avatar', () => {
-  const ogImage = window.Image;
-
-  beforeAll(() => {
-    window.Image = MockImage as unknown as typeof Image;
-  });
-
-  afterAll(() => {
-    window.Image = ogImage;
-  });
-
   describe('Basic Rendering', () => {
-    it('renders with image source', async () => {
-      const src =
-        'https://images.unsplash.com/photo-1511485977113-f34c92461ad9';
-      const rendered = render(
-        <Avatar src={src} alt='John Doe' fallback='JD' />
-      );
+    it('renders the image before it loads, hidden behind the fallback', () => {
+      const { container } = render(<Avatar src={SRC} alt='JD' fallback='JD' />);
+      const img = container.querySelector('img');
+      expect(img).toHaveAttribute('src', SRC);
+      expect(img).toHaveAttribute('data-loading');
+      expect(img).toHaveAttribute('aria-hidden', 'true');
+      expect(screen.getByText('JD')).toBeInTheDocument();
+    });
 
-      const img = await rendered.findByRole('img');
-      expect(img).toBeInTheDocument();
-      expect(img).toHaveAttribute('src', src);
+    it('shows the image once it loads', async () => {
+      const { container } = render(<Avatar src={SRC} alt='JD' fallback='JD' />);
+      fireEvent.load(container.querySelector('img')!);
+      expect(await screen.findByRole('img', { name: 'JD' })).toBeVisible();
+      expect(screen.queryByText('JD')).not.toBeInTheDocument();
+    });
+
+    it('renders no image without src', () => {
+      const { container } = render(<Avatar fallback='JD' />);
+      expect(container.querySelector('img')).toBeNull();
     });
 
     it('applies custom className', () => {
@@ -59,16 +60,47 @@ describe('Avatar', () => {
 
     it('calls onLoadingStatusChange with the image status', async () => {
       const onLoadingStatusChange = vi.fn();
-      render(
+      const { container } = render(
         <Avatar
-          src='https://example.com/avatar.png'
+          src={SRC}
           alt='JD'
           onLoadingStatusChange={onLoadingStatusChange}
         />
       );
+      expect(onLoadingStatusChange).toHaveBeenCalledWith('loading');
+      fireEvent.load(container.querySelector('img')!);
       await waitFor(() =>
-        expect(onLoadingStatusChange).toHaveBeenCalledWith('loaded')
+        expect(onLoadingStatusChange).toHaveBeenLastCalledWith('loaded')
       );
+    });
+
+    it('marks the image as failed on error', async () => {
+      const { container } = render(<Avatar src={SRC} alt='JD' fallback='JD' />);
+      const img = container.querySelector('img')!;
+      fireEvent.error(img);
+      await waitFor(() => expect(img).toHaveAttribute('data-error'));
+      expect(screen.getByText('JD')).toBeInTheDocument();
+    });
+
+    it('skips the fade for a fast load', async () => {
+      const now = vi.spyOn(performance, 'now').mockReturnValue(0);
+      const { container } = render(<Avatar src={SRC} alt='JD' />);
+      const img = container.querySelector('img')!;
+      now.mockReturnValue(20);
+      fireEvent.load(img);
+      await waitFor(() => expect(img).not.toHaveAttribute('data-loading'));
+      expect(img).not.toHaveClass(styles['image-fade-in']);
+      now.mockRestore();
+    });
+
+    it('fades in after a slow load', async () => {
+      const now = vi.spyOn(performance, 'now').mockReturnValue(0);
+      const { container } = render(<Avatar src={SRC} alt='JD' />);
+      const img = container.querySelector('img')!;
+      now.mockReturnValue(500);
+      fireEvent.load(img);
+      await waitFor(() => expect(img).toHaveClass(styles['image-fade-in']));
+      now.mockRestore();
     });
 
     it('waits for fallbackDelay before showing the fallback', async () => {
@@ -358,47 +390,3 @@ describe('Avatar', () => {
     });
   });
 });
-
-class MockImage extends EventTarget {
-  _src: string = '';
-  _complete: boolean = false;
-  onload: (() => void) | null = null;
-
-  constructor() {
-    super();
-    return this;
-  }
-
-  get src() {
-    return this._src;
-  }
-
-  set src(src: string) {
-    if (!src) {
-      return;
-    }
-    this._src = src;
-    // Simulate async image loading
-    setTimeout(() => {
-      this._complete = true;
-      // Call onload callback if set
-      if (this.onload) {
-        this.onload();
-      }
-      // Also dispatch the event
-      this.dispatchEvent(new Event('load'));
-    }, 0);
-  }
-
-  get complete() {
-    return this._complete;
-  }
-
-  get naturalWidth() {
-    return this._complete ? 300 : 0;
-  }
-
-  get naturalHeight() {
-    return this._complete ? 300 : 0;
-  }
-}

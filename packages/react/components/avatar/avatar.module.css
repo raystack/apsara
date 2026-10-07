@@ -223,6 +223,25 @@
   vertical-align: middle;
 }
 
+/* The img is mounted before it loads. Keep it in layout so lazy loading still starts. */
+.image[data-loading],
+.image[data-error] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+/* Hide the fallback briefly so cached images don't flash the initials first. */
+.image[data-loading] ~ .fallback {
+  animation: avatar-fallback-delay 0s 100ms backwards;
+}
+
+@keyframes avatar-fallback-delay {
+  from {
+    visibility: hidden;
+  }
+}
+
 @keyframes avatar-image-in {
   from {
     opacity: 0;
