@@ -187,7 +187,6 @@ describe('Data Table Utils', () => {
       expect(result.columnFilters).toHaveLength(0);
     });
 
-    /* dayjs read `undefined` as now, so this filter was kept and matched today. */
     it('should filter out a date filter with no value', () => {
       const query: InternalQuery = {
         filters: [

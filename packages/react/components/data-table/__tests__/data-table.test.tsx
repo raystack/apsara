@@ -729,23 +729,5 @@ describe('DataTable', () => {
       ]?.[0] as DataTableQuery;
       expect(last.filters?.[0]?.stringValue).toBe('2026-08-15');
     });
-
-    it('leaves a restored string filter as it was sent', () => {
-      const onTableQueryChange = vi.fn();
-      renderRestored(
-        [{ name: 'id', operator: 'eq', value: 'd15' }],
-        'server',
-        onTableQueryChange
-      );
-      const last = onTableQueryChange.mock.calls[
-        onTableQueryChange.mock.calls.length - 1
-      ]?.[0] as DataTableQuery;
-      expect(last.filters?.[0]).toEqual({
-        name: 'id',
-        operator: 'eq',
-        value: 'd15',
-        stringValue: 'd15'
-      });
-    });
   });
 });

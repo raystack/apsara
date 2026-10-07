@@ -1,6 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import dayjs from 'dayjs';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
@@ -43,9 +42,9 @@ describe('toTimestamp', () => {
     expect(toTimestamp('2025-01-05')).toBe(new Date(2025, 0, 5).getTime());
   });
 
-  it('reads a dayjs object as its epoch', () => {
+  it('reads an object with a numeric valueOf as its epoch', () => {
     const date = new Date('2025-01-05T00:00:00');
-    expect(toTimestamp(dayjs(date))).toBe(date.getTime());
+    expect(toTimestamp({ valueOf: () => date.getTime() })).toBe(date.getTime());
   });
 
   it('returns null for missing or invalid values', () => {

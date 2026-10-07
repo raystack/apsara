@@ -158,8 +158,6 @@ describe('date filters', () => {
     expect(run('neq', 'not a date', '2026-08-15')).toBe(false);
   });
 
-  /* dayjs read a missing filter date as "now", so an unset filter quietly
-     matched today's rows. */
   it('does not fall back to today when the filter has no date', () => {
     expect(run('eq', undefined, '2026-08-15')).toBe(false);
   });
@@ -169,7 +167,8 @@ describe('date filters', () => {
 describe('stored date filters', () => {
   const originalTimeZone = process.env.TZ;
   afterEach(() => {
-    process.env.TZ = originalTimeZone;
+    if (originalTimeZone === undefined) delete process.env.TZ;
+    else process.env.TZ = originalTimeZone;
   });
 
   const matches = (stored: unknown, row: string) =>
@@ -206,8 +205,6 @@ describe('stored date filters', () => {
   });
 });
 
-/* dayjs read `undefined` as now, so an unset date filter was kept and matched
-   today. */
 describe('date filter with no value', () => {
   const query = {
     filters: [{ name: 'when', operator: 'eq', value: undefined, _type: 'date' }]

@@ -212,7 +212,6 @@ button.selectValue:hover {
   box-shadow: none;
 }
 
-/* match height of the date input when FilterChip variant is text */
 .chip[data-variant="text"] .dateField {
   height: var(--rs-space-7);
   min-height: var(--rs-space-7);
