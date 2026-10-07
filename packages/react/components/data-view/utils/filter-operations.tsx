@@ -15,7 +15,10 @@ import {
   SelectFilterOperatorType,
   StringFilterOperatorType
 } from '~/types/filters';
-import { DataViewFilterValues } from '../data-view.types';
+import type {
+  DataViewFilterValue,
+  DataViewFilterValues
+} from '../data-view.types';
 
 export type FilterFunctionsMap = {
   number: Record<NumberFilterOperatorType, FilterFn<unknown>>;
@@ -100,9 +103,12 @@ export function getFilterFn<T extends keyof FilterFunctionsMap>(
   return filterOperationsMap[type][operator];
 }
 
+const toStringValue = (value: DataViewFilterValue) =>
+  value == null ? undefined : typeof value === 'string' ? value : String(value);
+
 const handleStringBasedTypes = (
   filterType: FilterTypes,
-  value: any,
+  value: DataViewFilterValue,
   operator?: FilterOperatorTypes | DataTableFilterOperatorTypes
 ): DataViewFilterValues => {
   switch (filterType) {
@@ -112,28 +118,29 @@ const handleStringBasedTypes = (
     }
     case FilterType.select:
       return {
-        stringValue: value === EmptyFilterValue ? '' : value,
+        stringValue: value === EmptyFilterValue ? '' : toStringValue(value),
         value
       };
     case FilterType.multiselect:
       return {
         value,
-        stringValue: value
-          .map((v: any) => (v === EmptyFilterValue ? '' : String(v)))
+        stringValue: (Array.isArray(value) ? value : [])
+          .map(v => (v === EmptyFilterValue ? '' : v))
           .join()
       };
     case FilterType.string: {
-      let processedValue = value;
-      if (operator === 'contains') processedValue = `%${value}%`;
-      else if (operator === 'starts_with') processedValue = `${value}%`;
-      else if (operator === 'ends_with') processedValue = `%${value}`;
+      const text = toStringValue(value) ?? '';
+      let processedValue = toStringValue(value);
+      if (operator === 'contains') processedValue = `%${text}%`;
+      else if (operator === 'starts_with') processedValue = `${text}%`;
+      else if (operator === 'ends_with') processedValue = `%${text}`;
       else if (operator === 'ilike') {
-        if (!value.includes('%')) processedValue = `%${value}%`;
+        if (!text.includes('%')) processedValue = `%${text}%`;
       }
       return { stringValue: processedValue, value };
     }
     default:
-      return { stringValue: value, value };
+      return { stringValue: toStringValue(value), value };
   }
 };
 
@@ -142,7 +149,7 @@ export const getFilterOperator = ({
   filterType,
   operator
 }: {
-  value: any;
+  value: DataViewFilterValue;
   filterType?: FilterTypes;
   operator: FilterOperatorTypes;
 }): DataTableFilterOperatorTypes => {
@@ -165,13 +172,14 @@ export const getFilterValue = ({
   filterType = FilterType.string,
   operator
 }: {
-  value: any;
+  value: DataViewFilterValue;
   dataType?: FilterValueType;
   filterType?: FilterTypes;
   operator?: FilterOperatorTypes | DataTableFilterOperatorTypes;
 }): DataViewFilterValues => {
-  if (dataType === 'boolean') return { boolValue: value, value };
-  if (dataType === 'number') return { numberValue: value, value };
+  // Boolean and number filters pass the value through unchanged.
+  if (dataType === 'boolean') return { boolValue: value as boolean, value };
+  if (dataType === 'number') return { numberValue: value as number, value };
   return handleStringBasedTypes(filterType, value, operator);
 };
 
