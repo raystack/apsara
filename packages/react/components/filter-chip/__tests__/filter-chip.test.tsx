@@ -357,6 +357,19 @@ describe('FilterChip', () => {
       expect(screen.getByPlaceholderText('Select date')).toHaveValue('');
     });
 
+    it('opens the calendar on 31 December 9999', () => {
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(9999, 11, 31)}
+        />
+      );
+      const input = screen.getByPlaceholderText('Select date');
+      act(() => input.focus());
+      expect(isOpen()).toBe(true);
+    });
+
     it('renders a value that is past 9999 in calendarProps.timeZone as unselected', () => {
       /* In UTC the value is still in 9999, so only the calendar zone rejects it. */
       const previous = process.env.TZ;

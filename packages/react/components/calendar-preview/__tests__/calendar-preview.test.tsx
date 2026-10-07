@@ -56,6 +56,13 @@ describe('CalendarPreview root', () => {
     error.mockRestore();
   });
 
+  it('renders December 9999, whose grid runs into 10000', () => {
+    const { container } = renderCalendar(undefined, {
+      defaultMonth: new Date(9999, 11, 1)
+    });
+    expect(dayCell(container, '31')).toBeInTheDocument();
+  });
+
   it('does not warn when a controlled value that started empty is set', () => {
     const error = vi
       .spyOn(console, 'error')

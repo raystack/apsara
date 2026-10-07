@@ -474,7 +474,13 @@ export function CalendarPreviewRoot({
   /* Day-keys, so a `minDate` carrying a time of day leaves its own day selectable. */
   const isDateUnavailable = useCallback(
     (date: Date) => {
-      const key = dayKey(date, timeZone);
+      /* The December 9999 grid runs into 10000, which has no day key. */
+      let key: string;
+      try {
+        key = dayKey(date, timeZone);
+      } catch {
+        return true;
+      }
       if (minDate && key < dayKey(minDate, timeZone)) return true;
       if (maxDate && key > dayKey(maxDate, timeZone)) return true;
       return isDateUnavailableProp?.(date) ?? false;
