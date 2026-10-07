@@ -94,8 +94,10 @@ another day. `dayjs` stays a dependency, because `Calendar`,
 - **A date filter restored from `query` filters by its date.** It lost
   its type when the query was loaded, so the date comparison got no
   date, and dayjs read that as today.
-- **A date filter holding a day that does not exist is dropped.** dayjs
-  rolled `2026-02-30` over to 2 March and filtered on that.
+- **A date filter holding a year-first day that does not exist is
+  dropped.** dayjs rolled `2026-02-30` over to 2 March and filtered on
+  that. A month-first or month-name form such as `02/30/2026` still rolls
+  over, as with dayjs.
 - **A row whose date is missing matches only `neq`.** dayjs read it as
   today, so the row matched `eq`, `lte` and `gte` on a filter day of
   today, `lt` and `lte` on a later filter day, and `gt` and `gte` on an
@@ -103,8 +105,8 @@ another day. `dayjs` stays a dependency, because `Calendar`,
 - **A row holding a numeric string or a boolean matches only `neq`.**
   dayjs read `'1786752000000'` as the year 1792 and `true` as 1970, and
   compared those. A timeline row holding one is not drawn.
-- **A row holding a day that does not exist matches only `neq`.** dayjs
-  rolled it to a real date and compared that, so `2026-02-30` matched
+- **A row holding a year-first day that does not exist matches only
+  `neq`.** dayjs rolled it to a real date and compared that, so `2026-02-30` matched
   `lt` and `lte` against a filter day after 2 March, and `2026-13-01`
   matched `gt` and `gte` against a filter day before 1 January 2027. A
   timeline row holding one is not drawn.

@@ -1,5 +1,6 @@
 'use client';
 
+import { TZDate } from '@date-fns/tz';
 import { cva, cx, VariantProps } from 'class-variance-authority';
 import { parseISO } from 'date-fns';
 import {
@@ -50,16 +51,11 @@ export type FilterChipValue = string | string[] | number | Date;
 /* The message `DatePicker` reports, so `onErrorChange` reads the same. */
 const INVALID_DATE = 'Invalid date';
 
-/**
- * Coerce a filter value to the `Date` the calendar expects, since filter state
- * hydrated from a serialized query arrives as a string or epoch number, and a
- * consumer may pass a dayjs or moment object. Unparseable values, and years the
- * calendar cannot show, leave the field unselected.
- */
-const toDateValue = (value: unknown): Date | undefined => {
+/* A year the calendar cannot show leaves the field empty. */
+const toDateValue = (value: unknown, timeZone?: string): Date | undefined => {
   const date = toInstant(value);
   if (!date) return undefined;
-  const year = date.getFullYear();
+  const year = (timeZone ? new TZDate(date, timeZone) : date).getFullYear();
   return year >= 1 && year <= 9999 ? date : undefined;
 };
 
@@ -173,8 +169,8 @@ export const FilterChip = ({
     dateSlotProps?.input ?? {};
   /* A new `Date` each render reads as a new value, and the input drops its typed text. */
   const dateValue = useMemo(
-    () => toDateValue(filterValue) ?? null,
-    [filterValue]
+    () => toDateValue(filterValue, calendarRest.timeZone) ?? null,
+    [filterValue, calendarRest.timeZone]
   );
 
   const showOnRemove = typeof onRemove === 'function';

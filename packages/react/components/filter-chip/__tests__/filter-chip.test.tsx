@@ -1,5 +1,4 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import dayjs from 'dayjs';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { defaultFormatValue } from '~/components/calendar-preview/calendar-preview-root';
@@ -309,12 +308,20 @@ describe('FilterChip', () => {
       expect(screen.getByPlaceholderText('Select date')).toBeInTheDocument();
     });
 
-    it('parses a serialized string date value instead of rendering blank', () => {
+    it.each([
+      ['a serialized string', '2026-05-27'],
+      ['an epoch number', new Date(2026, 4, 27).getTime()],
+      ['a Date', new Date(2026, 4, 27)],
+      [
+        'an object with a numeric valueOf',
+        { valueOf: () => new Date(2026, 4, 27).getTime() }
+      ]
+    ])('shows %s as its day', (_label, value) => {
       render(
         <FilterChip
           label='Created'
           columnType={FilterType.date}
-          value='2026-05-27'
+          value={value as never}
         />
       );
       expect(
@@ -322,83 +329,54 @@ describe('FilterChip', () => {
           defaultFormatValue(new Date(2026, 4, 27), 'day')
         )
       ).toBeInTheDocument();
-    });
-
-    it('parses an epoch number value', () => {
-      // Local-component Date so the timestamp is timezone-stable.
-      render(
-        <FilterChip
-          label='Created'
-          columnType={FilterType.date}
-          value={new Date(2026, 4, 27).getTime()}
-        />
-      );
-      expect(
-        screen.getByDisplayValue(
-          defaultFormatValue(new Date(2026, 4, 27), 'day')
-        )
-      ).toBeInTheDocument();
-    });
-
-    it('coerces an unparseable value to unselected instead of crashing', () => {
-      expect(() =>
-        render(
-          <FilterChip
-            label='Created'
-            columnType={FilterType.date}
-            value='not-a-date'
-          />
-        )
-      ).not.toThrow();
-      expect(screen.getByPlaceholderText('Select date')).toHaveValue('');
     });
 
     it.each([
+      ['an unparseable string', 'not-a-date'],
       ['an invalid Date', new Date('')],
       ['a year above 9999', new Date(10000, 0, 1)],
-      ['a timestamp in a year above 9999', Date.UTC(10000, 6, 1)]
+      ['a timestamp in a year above 9999', Date.UTC(10000, 6, 1)],
+      [
+        'an object whose valueOf throws',
+        {
+          valueOf() {
+            throw new TypeError('valueOf');
+          }
+        }
+      ]
     ])('renders %s as unselected instead of crashing', (_label, value) => {
       expect(() =>
         render(
           <FilterChip
             label='Created'
             columnType={FilterType.date}
-            value={value}
+            value={value as never}
           />
         )
       ).not.toThrow();
       expect(screen.getByPlaceholderText('Select date')).toHaveValue('');
     });
 
-    it('shows a dayjs value as its day', () => {
-      render(
-        <FilterChip
-          label='Created'
-          columnType={FilterType.date}
-          value={dayjs('2026-05-27') as never}
-        />
-      );
-      expect(
-        screen.getByDisplayValue(
-          defaultFormatValue(new Date(2026, 4, 27), 'day')
-        )
-      ).toBeInTheDocument();
-    });
-
-    it('formats a Date value with the default month-as-text format', () => {
-      // Local-component Date so the formatted string is timezone-stable.
-      render(
-        <FilterChip
-          label='Created'
-          columnType={FilterType.date}
-          value={new Date(2026, 4, 27)}
-        />
-      );
-      expect(
-        screen.getByDisplayValue(
-          defaultFormatValue(new Date(2026, 4, 27), 'day')
-        )
-      ).toBeInTheDocument();
+    it('renders a value that is past 9999 in calendarProps.timeZone as unselected', () => {
+      /* In UTC the value is still in 9999, so only the calendar zone rejects it. */
+      const previous = process.env.TZ;
+      process.env.TZ = 'UTC';
+      try {
+        expect(() =>
+          render(
+            <FilterChip
+              label='Created'
+              columnType={FilterType.date}
+              value={new Date(Date.UTC(9999, 11, 31, 20))}
+              calendarProps={{ timeZone: 'Pacific/Kiritimati' }}
+            />
+          )
+        ).not.toThrow();
+        expect(screen.getByPlaceholderText('Select date')).toHaveValue('');
+      } finally {
+        if (previous === undefined) delete process.env.TZ;
+        else process.env.TZ = previous;
+      }
     });
 
     it('forwards calendarProps to the calendar', () => {

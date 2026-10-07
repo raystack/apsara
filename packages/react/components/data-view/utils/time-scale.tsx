@@ -37,7 +37,7 @@ export const TIMELINE_DEFAULT_UNIT_WIDTH: Record<TimelineScale, number> = {
 /** Minimum px between rendered tick labels. Denser ticks skip labels. */
 const TICK_LABEL_MIN_SPACE = 28;
 
-/** Coerce a consumer-provided date (Date | epoch ms | string | dayjs or moment object) to ms. */
+/** Coerce a consumer-provided date (Date | epoch ms | parseable string | object with a numeric `valueOf`) to ms. */
 export function toTimestamp(value: unknown): number | null {
   return toInstant(value)?.getTime() ?? null;
 }

@@ -21,10 +21,14 @@ export function toDayKey(value: unknown): string | null {
 }
 
 export function toInstant(value: unknown): Date | null {
-  /* A dayjs or moment object reads as its epoch. */
+  /* A date-library object reads as its numeric `valueOf`. */
   if (typeof value === 'object' && value !== null && !(value instanceof Date)) {
-    const epoch =
-      typeof value.valueOf === 'function' ? value.valueOf() : undefined;
+    let epoch: unknown;
+    try {
+      epoch = typeof value.valueOf === 'function' ? value.valueOf() : undefined;
+    } catch {
+      return null;
+    }
     return typeof epoch === 'number' && Number.isFinite(epoch)
       ? new Date(epoch)
       : null;
@@ -54,7 +58,7 @@ const ZONE_ANNOTATION = /(\[[^\]]*\])+$/;
 /* `new Date` rolls an impossible day over, whatever suffix follows it. */
 const ISO_DAY = /^(\d{4})-(\d{2})-(\d{2})/;
 
-/* The shape dayjs parsed as local time. `new Date` reads some of these as UTC
+/* Year-first strings read as local time. `new Date` reads some of these as UTC
    and rolls out-of-range fields over, so they never reach it. */
 const LOCAL_SHAPE =
   /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/;
@@ -65,14 +69,14 @@ function fromLocalParts(parts: RegExpExecArray): Date | null {
     .slice(2, 7)
     .map(part => (part ? Number(part) : undefined));
   const ms = Number((parts[7] ?? '0').slice(0, 3));
+  if (hour > 23 || minute > 59 || second > 59) return null;
+  /* A time in a daylight-saving gap moves forward, so only the day is read
+     back. */
   const date = new Date(year, month - 1, day, hour, minute, second, ms);
   const readsBack =
     date.getFullYear() === year &&
     date.getMonth() === month - 1 &&
-    date.getDate() === day &&
-    date.getHours() === hour &&
-    date.getMinutes() === minute &&
-    date.getSeconds() === second;
+    date.getDate() === day;
   return readsBack ? date : null;
 }
 

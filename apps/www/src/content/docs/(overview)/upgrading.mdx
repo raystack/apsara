@@ -102,12 +102,13 @@ These filters used to match by mistake, and now match differently:
 - A date filter with no value used to filter to today. It is now dropped.
 - A date filter passed in `query` used to filter to today. It now filters by its
   own date.
-- A date filter on a day that does not exist, such as `2026-02-30`, used to roll
-  over to 2 March. It is now dropped.
+- A date filter on a year-first day that does not exist, such as `2026-02-30`,
+  used to roll over to 2 March. It is now dropped. A month-first or month-name
+  form such as `02/30/2026` still rolls over.
 - A row with no date used to be read as today, so it could match any operator,
   depending on the filter day. It now matches only `neq`.
-- A row holding a day that does not exist used to roll over to a real date. It
-  now matches only `neq`, and the timeline does not draw it.
+- A row holding a year-first day that does not exist used to roll over to a
+  real date. It now matches only `neq`, and the timeline does not draw it.
 - A row holding a numeric string or a boolean used to be read as a date, such
   as the year 1792 for `'1786752000000'`. It now matches only `neq`, and the
   timeline does not draw it.
