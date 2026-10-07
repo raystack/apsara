@@ -120,7 +120,7 @@ export const FilterChip = ({
   // `??` not `||`, since a falsy option value like `0` is a real selection.
   // For `number`, the value is shown without an exponent (`1e-7`), and a
   // non-numeric value starts empty, since the regex would reject every edit.
-  const [filterValue, setFilterValue] = useState<any>(() => {
+  const [filterValue, setFilterValue] = useState<FilterChipValue>(() => {
     if (!isNumberColumn) return value ?? '';
     const text =
       typeof value === 'number'
@@ -134,6 +134,7 @@ export const FilterChip = ({
 
   const showOnRemove = typeof onRemove === 'function';
   const isMultiSelectColumn = columnType === FilterType.multiselect;
+  const selectedValues = Array.isArray(filterValue) ? filterValue : [];
 
   const handleOperationChange = useCallback(
     (operation: FilterOperation) => {
@@ -144,7 +145,7 @@ export const FilterChip = ({
   );
 
   const handleFilterValueChange = useCallback(
-    (value: any) => {
+    (value: FilterChipValue) => {
       setFilterValue(value);
       onValueChange?.(value, operation?.value ?? '');
     },
@@ -175,9 +176,10 @@ export const FilterChip = ({
       case FilterType.select:
         return (
           <Select
-            value={isMultiSelectColumn ? filterValue : filterValue.toString()}
+            {...(isMultiSelectColumn
+              ? { multiple: true, value: selectedValues }
+              : { multiple: false, value: filterValue.toString() })}
             onValueChange={handleFilterValueChange}
-            multiple={isMultiSelectColumn}
             {...selectProps}
           >
             <Select.Trigger
@@ -191,8 +193,8 @@ export const FilterChip = ({
               data-slot='filter-chip-value'
             >
               <Select.Value placeholder='Select value'>
-                {isMultiSelectColumn && filterValue.length > 1
-                  ? `${filterValue.length} selected`
+                {isMultiSelectColumn && selectedValues.length > 1
+                  ? `${selectedValues.length} selected`
                   : undefined}
               </Select.Value>
             </Select.Trigger>
@@ -238,7 +240,7 @@ export const FilterChip = ({
             <Input
               variant={variant === 'text' ? 'borderless' : 'default'}
               classNames={{ container: styles.inputField }}
-              value={filterValue}
+              value={filterValue.toString()}
               onChange={e => handleTextInputChange(e.target.value)}
             />
           </div>
@@ -281,7 +283,7 @@ export const FilterChip = ({
         label={label}
         value={operation}
         onChange={handleOperationChange}
-        showAlternateLabel={isMultiSelectColumn && filterValue.length <= 1}
+        showAlternateLabel={isMultiSelectColumn && selectedValues.length <= 1}
       />
       {renderValueInput()}
       {showOnRemove && (

@@ -153,7 +153,11 @@ export function Filters<TData>({
         <FilterChip
           key={filter.name}
           label={filter.label}
-          value={filter.value}
+          value={
+            typeof filter.value === 'boolean'
+              ? String(filter.value)
+              : (filter.value ?? undefined)
+          }
           onRemove={() => handleRemoveFilter(filter.name)}
           onValueChange={value => handleFilterValueChange(filter.name, value)}
           onOperationChange={operator =>

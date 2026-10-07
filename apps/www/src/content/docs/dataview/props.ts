@@ -77,7 +77,7 @@ export interface DataViewProps {
 }
 
 export interface DataViewField {
-  /** Key into the row object. */
+  /** Key into the row object, or a dotted path to a nested value. */
   accessorKey: string;
 
   /** Human-readable label. */
@@ -93,7 +93,7 @@ export interface DataViewField {
   filterType?: 'string' | 'number' | 'date' | 'select' | 'multiselect';
 
   /** Options when filterType is select/multiselect. */
-  filterOptions?: Array<{ label: string; value: string }>;
+  filterOptions?: Array<{ label: string; value: string | number | boolean }>;
 
   /** Allow sorting. */
   sortable?: boolean;

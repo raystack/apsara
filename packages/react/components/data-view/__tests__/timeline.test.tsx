@@ -1750,7 +1750,7 @@ describe('DataView.Timeline actionsRef', () => {
   });
 
   it('warns and no-ops on an invalid date', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const warn = vi.spyOn(console, 'warn').mockImplementation(vi.fn());
     const actionsRef = makeActionsRef();
     const { container } = renderTimeline({ actionsRef });
     const root = container.firstElementChild as HTMLElement;
@@ -1773,7 +1773,7 @@ describe('DataView.Timeline actionsRef', () => {
   });
 
   it('no-ops with a dev warning while hidden, and getVisibleRange is null', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const warn = vi.spyOn(console, 'warn').mockImplementation(vi.fn());
     const actionsRef = makeActionsRef();
     renderTimeline({ actionsRef }, []); // no data + not loading → renders null
     expect(actionsRef.current).not.toBeNull();
@@ -1948,7 +1948,7 @@ describe('DataView.Timeline sort-value lanes', () => {
   });
 
   it('lanes non-primitive values last, with a dev warning', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const warn = vi.spyOn(console, 'warn').mockImplementation(vi.fn());
     renderSortValueLanes(undefined, [
       {
         id: 'obj',
@@ -2155,7 +2155,7 @@ describe('DataView.Timeline sort-value lanes', () => {
   });
 
   it('warns when the sort key matches no field', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const warn = vi.spyOn(console, 'warn').mockImplementation(vi.fn());
     renderSortValueLanes(undefined, tasks, {
       sort: { name: 'nope', order: 'asc' }
     });

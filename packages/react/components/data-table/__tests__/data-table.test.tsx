@@ -658,7 +658,7 @@ describe('DataTable', () => {
           data={mockData}
           columns={mockColumns}
           defaultSort={{ name: 'name', order: 'asc' }}
-          getRowId={row => row.id}
+          getRowId={row => String(row.id)}
         >
           <DataTable.Content />
         </DataTable>

@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { expectSlots, getSlot } from '~/test-utils/data-slots';
 import { Chat } from '../chat';
 
@@ -20,7 +20,7 @@ describe('Chat data-slot contract', () => {
           <Chat.JumpButton />
         </Chat.Messages>
         <Chat.Composer>
-          <Chat.Attachment title='spec.pdf' onRemove={() => {}} />
+          <Chat.Attachment title='spec.pdf' onRemove={vi.fn()} />
           <textarea placeholder='Reply…' />
         </Chat.Composer>
       </Chat>

@@ -440,6 +440,8 @@ export function DataViewTimeline<TData>({
   // spans the full width. It only ever widens, so a wider `range` is untouched.
   const [containerWidth, setContainerWidth] = useState(0);
   useLayoutEffect(() => {
+    // The scroll element only exists while the view is active and has data.
+    if (!isActive || !hasData) return;
     const el = scrollRef.current;
     if (!el) return;
     const measure = () => setContainerWidth(el.clientWidth);
@@ -448,8 +450,6 @@ export function DataViewTimeline<TData>({
     const observer = new ResizeObserver(measure);
     observer.observe(el);
     return () => observer.disconnect();
-    // Re-attach when the renderer mounts its DOM (ref is null while the view
-    // is gated or there's no data yet).
   }, [isActive, hasData]);
 
   // Quantized to whole units so sub-unit resizes (e.g. dragging a panel
@@ -724,7 +724,7 @@ export function DataViewTimeline<TData>({
       return entry;
     });
     return { laidOutSections: list, laneCount: offset };
-  }, [positionedSections, lanePacking, sortValueLanes, laneField]);
+  }, [positionedSections, lanePacking, sortValueLanes]);
 
   // An off-screen card never mounts and so never measures, which would resize
   // lanes under the user mid-scroll. Virtualized lanes therefore take

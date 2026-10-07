@@ -111,7 +111,7 @@ export const NavbarRoot = ({
       target.removeEventListener('scroll', handleScroll);
       el.removeAttribute('data-hidden');
     };
-  }, [hideOnScroll]);
+  }, [hideOnScroll, scrollContainerRef]);
 
   const mergedRef = useMergedRefs(navRef, ref);
 

@@ -5,7 +5,7 @@ import {
   FilterType,
   filterOperators
 } from '~/types/filters';
-import { DataViewField } from '../data-view.types';
+import type { DataViewField, DataViewFilterValue } from '../data-view.types';
 import { getDataType } from '../utils/filter-operations';
 import { useDataView } from './useDataView';
 
@@ -47,7 +47,10 @@ export function useFilters<TData>() {
     }));
   }
 
-  function handleFilterValueChange(fieldAccessor: string, value: any) {
+  function handleFilterValueChange(
+    fieldAccessor: string,
+    value: DataViewFilterValue
+  ) {
     updateTableQuery(query => ({
       ...query,
       filters: query.filters?.map(f =>

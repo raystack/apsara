@@ -329,7 +329,13 @@ function DataViewRoot<TData>({
     ]
   );
 
-  return <DataViewContext value={contextValue}>{children}</DataViewContext>;
+  return (
+    <DataViewContext
+      value={contextValue as unknown as DataViewContextType<unknown>}
+    >
+      {children}
+    </DataViewContext>
+  );
 }
 
 DataViewRoot.displayName = 'DataView';

@@ -5,7 +5,7 @@ import {
   Select as SelectPrimitive
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { Fragment, ReactNode } from 'react';
+import { Fragment } from 'react';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';
 

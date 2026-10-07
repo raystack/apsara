@@ -119,7 +119,7 @@ function DataTableRoot<TData, TValue>({
       onTableQueryChange(transformToDataTableQuery(tableQuery));
       oldQueryRef.current = tableQuery;
     }
-  }, [tableQuery, onTableQueryChange]);
+  }, [tableQuery, onTableQueryChange, mode]);
 
   const table = useReactTable({
     data: groupedData as unknown as TData[],
@@ -146,9 +146,9 @@ function DataTableRoot<TData, TValue>({
     }
   });
 
-  function updateTableQuery(fn: TableQueryUpdateFn) {
+  const updateTableQuery = useCallback((fn: TableQueryUpdateFn) => {
     setTableQuery(prev => fn(prev));
-  }
+  }, []);
 
   const loadMoreData = useCallback(() => {
     if (mode === 'server' && onLoadMore) {
@@ -164,7 +164,7 @@ function DataTableRoot<TData, TValue>({
         search: searchQuery
       }));
     }
-  }, [searchQuery]);
+  }, [searchQuery, updateTableQuery]);
 
   // Determine if filters should be visible
   // Filters should be visible if there is data OR if filters are applied (empty state)
@@ -218,7 +218,13 @@ function DataTableRoot<TData, TValue>({
     stickyGroupHeader
   ]);
 
-  return <TableContext value={contextValue}>{children}</TableContext>;
+  return (
+    <TableContext
+      value={contextValue as unknown as TableContextType<unknown, unknown>}
+    >
+      {children}
+    </TableContext>
+  );
 }
 
 DataTableRoot.displayName = 'DataTable';
