@@ -11,6 +11,7 @@ import {
   useState
 } from 'react';
 import { useFieldContext } from '../field';
+import { getItemLabel } from './combobox-items';
 
 interface ComboboxContextValue<Value = string> {
   multiple: boolean;
@@ -19,6 +20,7 @@ interface ComboboxContextValue<Value = string> {
   inputContainerRef: RefObject<HTMLDivElement | null>;
   value: Value | Value[] | null | undefined;
   onValueChange?: (value: Value | Value[] | null) => void;
+  getLabel: (value: Value) => string;
 }
 
 const ComboboxContext = createContext<
@@ -124,7 +126,8 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
       hasItems: !!items,
       inputContainerRef,
       value: computedValue,
-      onValueChange: handleValueChange
+      onValueChange: handleValueChange,
+      getLabel: (value: Value) => getItemLabel(items, value) ?? String(value)
     }),
     [multiple, inputValue, items, computedValue, handleValueChange]
   );

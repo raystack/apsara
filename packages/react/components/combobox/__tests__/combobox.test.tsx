@@ -541,3 +541,31 @@ describe('Combobox.createItems', () => {
     });
   });
 });
+
+describe('Combobox.createItems chips', () => {
+  const USERS = [
+    { id: 'u1', name: 'Jane Doe' },
+    { id: 'u2', name: 'John Smith' }
+  ];
+  const USER_ITEMS = Combobox.createItems(USERS, {
+    getValue: user => user.id,
+    getLabel: user => user.name
+  });
+
+  it('labels chips with the derived label', () => {
+    render(
+      <Combobox items={USER_ITEMS} multiple defaultValue={['u2']}>
+        <Combobox.Input placeholder='Pick users' />
+        <Combobox.Content>
+          {(user: (typeof USERS)[number]) => (
+            <Combobox.Item key={user.id} value={user.id}>
+              {user.name}
+            </Combobox.Item>
+          )}
+        </Combobox.Content>
+      </Combobox>
+    );
+    expect(screen.getByText('John Smith')).toBeInTheDocument();
+    expect(screen.queryByText('u2')).not.toBeInTheDocument();
+  });
+});
