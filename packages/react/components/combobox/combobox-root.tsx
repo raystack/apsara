@@ -37,35 +37,35 @@ export const useComboboxContext = <
   return context as ComboboxContextValue<Value>;
 };
 
-export interface BaseComboboxRootProps<Value>
+export interface BaseComboboxRootProps<Value, Item = Value>
   extends Omit<
-    ComboboxPrimitive.Root.Props<Value, boolean>,
+    ComboboxPrimitive.Root.Props<Value, boolean, Item>,
     'onValueChange' | 'onInputValueChange' | 'multiple'
   > {
   onInputValueChange?: (inputValue: string) => void;
 }
 
-export interface SingleComboboxProps<Value = string>
-  extends BaseComboboxRootProps<Value> {
+export interface SingleComboboxProps<Value = string, Item = Value>
+  extends BaseComboboxRootProps<Value, Item> {
   multiple?: false;
   value?: Value | null;
   defaultValue?: Value | null;
   onValueChange?: (value: Value | null) => void;
 }
 
-export interface MultipleComboboxProps<Value = string>
-  extends BaseComboboxRootProps<Value> {
+export interface MultipleComboboxProps<Value = string, Item = Value>
+  extends BaseComboboxRootProps<Value, Item> {
   multiple: true;
   value?: Value[];
   defaultValue?: Value[];
   onValueChange?: (value: Value[]) => void;
 }
 
-export type ComboboxRootProps<Value = string> =
-  | SingleComboboxProps<Value>
-  | MultipleComboboxProps<Value>;
+export type ComboboxRootProps<Value = string, Item = Value> =
+  | SingleComboboxProps<Value, Item>
+  | MultipleComboboxProps<Value, Item>;
 
-export const ComboboxRoot = <Value extends unknown | unknown[]>({
+export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
   multiple = false,
   children,
   onValueChange,
@@ -75,7 +75,7 @@ export const ComboboxRoot = <Value extends unknown | unknown[]>({
   items,
   required,
   ...props
-}: ComboboxRootProps<Value>) => {
+}: ComboboxRootProps<Value, Item>) => {
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
 
@@ -105,11 +105,11 @@ export const ComboboxRoot = <Value extends unknown | unknown[]>({
     ) => {
       setInternalValue(value);
       if (multiple) {
-        (onValueChange as MultipleComboboxProps<Value>['onValueChange'])?.(
-          value as Value[]
-        );
+        (
+          onValueChange as MultipleComboboxProps<Value, Item>['onValueChange']
+        )?.(value as Value[]);
       } else {
-        (onValueChange as SingleComboboxProps<Value>['onValueChange'])?.(
+        (onValueChange as SingleComboboxProps<Value, Item>['onValueChange'])?.(
           value as Value | null
         );
       }
