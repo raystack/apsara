@@ -274,15 +274,12 @@ describe('Search', () => {
     });
   });
 
-  describe('Type', () => {
-    it('defaults to type="search"', () => {
+  describe('Role', () => {
+    it('has the searchbox role and search enter key hint without type="search"', () => {
       render(<Search />);
-      expect(screen.getByRole('searchbox')).toHaveAttribute('type', 'search');
-    });
-
-    it('lets type be overridden', () => {
-      render(<Search type='text' />);
-      expect(screen.getByRole('textbox')).toHaveAttribute('type', 'text');
+      const input = screen.getByRole('searchbox');
+      expect(input).not.toHaveAttribute('type');
+      expect(input).toHaveAttribute('enterkeyhint', 'search');
     });
   });
 

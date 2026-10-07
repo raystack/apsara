@@ -76,7 +76,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 The Search component is built with accessibility in mind, following ARIA best practices:
 
 - Container has `role="search"` to identify it as a search landmark
-- Input has `type="search"` for semantic HTML
+- Input has `role="searchbox"` and `enterKeyHint="search"`. It does not use `type="search"`, because Chrome and Safari clear that input on Escape even when `clearOnEscape` is `false`
 - Search icon is marked as decorative with `aria-hidden="true"`
 - Clear button has appropriate `aria-label` for screen readers
 - Keyboard navigation support for the clear button

@@ -53,12 +53,6 @@ export interface SearchProps {
    */
   blurOnEscape?: boolean;
 
-  /**
-   * Native input type. The default gives the input the `searchbox` role.
-   * @default "search"
-   */
-  type?: string;
-
   /** Additional CSS class names. */
   className?: string;
 }

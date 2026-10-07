@@ -48,7 +48,6 @@ export function Search({
   value,
   width = '100%',
   variant = 'default',
-  type = 'search',
   ref,
   leadingIcon = <SearchIcon />,
   clearOnEscape = true,
@@ -120,7 +119,8 @@ export function Search({
         size={size}
         aria-label={placeholder}
         variant={variant}
-        type={type}
+        role='searchbox'
+        enterKeyHint='search'
         ref={mergedRef}
         onKeyDown={handleKeyDown}
         {...props}
