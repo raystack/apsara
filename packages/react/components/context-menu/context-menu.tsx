@@ -2,12 +2,19 @@ import {
   ContextMenuContent,
   ContextMenuSubContent
 } from './context-menu-content';
-import { ContextMenuItem } from './context-menu-item';
+import {
+  ContextMenuCheckboxItem,
+  ContextMenuItem,
+  ContextMenuLinkItem,
+  ContextMenuRadioGroup,
+  ContextMenuRadioItem
+} from './context-menu-item';
 import {
   ContextMenuEmptyState,
   ContextMenuGroup,
   ContextMenuLabel,
-  ContextMenuSeparator
+  ContextMenuSeparator,
+  ContextMenuStatus
 } from './context-menu-misc';
 import { ContextMenuRoot, ContextMenuSubMenu } from './context-menu-root';
 import {
@@ -19,10 +26,15 @@ export const ContextMenu = Object.assign(ContextMenuRoot, {
   Trigger: ContextMenuTrigger,
   Content: ContextMenuContent,
   Item: ContextMenuItem,
+  CheckboxItem: ContextMenuCheckboxItem,
+  RadioGroup: ContextMenuRadioGroup,
+  RadioItem: ContextMenuRadioItem,
+  LinkItem: ContextMenuLinkItem,
   Group: ContextMenuGroup,
   Label: ContextMenuLabel,
   Separator: ContextMenuSeparator,
   EmptyState: ContextMenuEmptyState,
+  Status: ContextMenuStatus,
   Submenu: ContextMenuSubMenu,
   SubmenuTrigger: ContextMenuSubTrigger,
   SubmenuContent: ContextMenuSubContent

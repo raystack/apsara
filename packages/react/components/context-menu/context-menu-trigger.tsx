@@ -5,6 +5,7 @@ import {
   ContextMenu as ContextMenuPrimitive
 } from '@base-ui/react';
 import { ChevronRightIcon } from '~/icons';
+import { useRegisterItem } from '~/shared/item-count';
 import { Cell, CellBaseProps } from '../menu/cell';
 import { useMenuContext } from '../menu/menu-root';
 import { getMatch } from '../menu/utils';
@@ -39,9 +40,11 @@ export const ContextMenuSubTrigger = ({
 }: ContextMenuSubTriggerProps) => {
   const { parent, inputRef } = useMenuContext();
 
-  if (parent?.shouldFilter && !getMatch(value, children, parent?.inputValue)) {
-    return null;
-  }
+  const hidden =
+    parent?.shouldFilter && !getMatch(value, children, parent?.inputValue);
+  useRegisterItem(!hidden);
+
+  if (hidden) return null;
 
   const cell = <Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />;
   return (

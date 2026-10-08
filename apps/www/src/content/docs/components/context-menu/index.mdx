@@ -12,6 +12,8 @@ import {
   submenuDemo,
   autocompleteDemo,
   controlledDemo,
+  selectionDemo,
+  emptyDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -59,6 +61,12 @@ Use `ContextMenu.Submenu`, `ContextMenu.SubmenuTrigger`, and `ContextMenu.Submen
 
 <Demo data={submenuDemo} />
 
+### Checkbox, radio, and link items
+
+`ContextMenu.CheckboxItem`, `ContextMenu.RadioGroup`, `ContextMenu.RadioItem`, and `ContextMenu.LinkItem` work the same way as in [Menu](/docs/components/menu#checkbox-items). Checkbox and radio items keep the menu open on click. Link items render an `<a>` element.
+
+<Demo data={selectionDemo} />
+
 ### Autocomplete
 
 Pass `autocomplete` to the ContextMenu root. Each menu manages its own autocomplete state.
@@ -67,6 +75,12 @@ Pass `autocomplete` to the ContextMenu root. Each menu manages its own autocompl
 - **Submenus** opt in separately: pass `autocomplete` to `ContextMenu.Submenu`.
 
 <Demo data={autocompleteDemo} />
+
+### Empty state and status
+
+`ContextMenu.EmptyState` shows its children only when the menu has no items, for example when nothing matches the search. `ContextMenu.Status` announces the number of matching items to screen readers while the search input has text. It is not visible.
+
+<Demo data={emptyDemo} />
 
 ### Controlled
 
@@ -104,6 +118,30 @@ Renders as a `role='option'` when used in an autocomplete menu. By default, the 
 
 <auto-type-table path="./props.ts" name="ContextMenuItemProps" />
 
+### CheckboxItem
+
+A menu item that toggles a setting on or off. Renders a check mark before the label when checked.
+
+<auto-type-table path="./props.ts" name="ContextMenuCheckboxItemProps" />
+
+### RadioGroup
+
+Groups related radio items and holds the selected value.
+
+<auto-type-table path="./props.ts" name="ContextMenuRadioGroupProps" />
+
+### RadioItem
+
+A menu item that works like a radio button in a `ContextMenu.RadioGroup`. Renders a dot before the label when checked. The `value` prop is also used for search matching when it is a string.
+
+<auto-type-table path="./props.ts" name="ContextMenuRadioItemProps" />
+
+### LinkItem
+
+A menu item that renders an `<a>` element. Pass a router link to `render` to use client-side routing.
+
+<auto-type-table path="./props.ts" name="ContextMenuLinkItemProps" />
+
 ### Group
 
 A way to group related menu items together. When filtering is active, the group wrapper is removed and items are rendered flat.
@@ -124,9 +162,15 @@ Visual divider between menu items or groups. Hidden when filtering is active.
 
 ### EmptyState
 
-Placeholder content when there are no menu items to display.
+Content to show when the menu has no items. With `autocomplete`, it shows when nothing matches the search. The element stays in the DOM as a live region (`role="status"`), so screen readers announce it when it appears.
 
 <auto-type-table path="./props.ts" name="ContextMenuEmptyStateProps" />
+
+### Status
+
+A live region that announces the number of matching items while the search input has text. It is visually hidden. It renders only in a searchable menu (`autocomplete`), and renders nothing otherwise.
+
+<auto-type-table path="./props.ts" name="ContextMenuStatusProps" />
 
 ### Submenu
 
@@ -165,7 +209,14 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `context-menu-group` | `ContextMenu.Group` wrapper |
 | `context-menu-label` | `ContextMenu.Label` |
 | `context-menu-separator` | `ContextMenu.Separator` |
+| `context-menu-checkbox-item` | Each `ContextMenu.CheckboxItem` |
+| `context-menu-checkbox-item-indicator` | Check mark inside a checkbox item |
+| `context-menu-radio-group` | `ContextMenu.RadioGroup` wrapper |
+| `context-menu-radio-item` | Each `ContextMenu.RadioItem` |
+| `context-menu-radio-item-indicator` | Dot inside a radio item |
+| `context-menu-link-item` | Each `ContextMenu.LinkItem` |
 | `context-menu-empty-state` | `ContextMenu.EmptyState` |
+| `context-menu-status` | `ContextMenu.Status` (when `autocomplete`) |
 | `menu-subtrigger` | `ContextMenu.SubmenuTrigger` (shared with `Menu`'s internals) |
 | `menu-cell-leading-icon` | Leading icon inside an item or submenu trigger (when provided; shared with `Menu`'s internals) |
 | `menu-cell-trailing-icon` | Trailing icon inside an item or submenu trigger (when provided; shared with `Menu`'s internals) |
@@ -184,3 +235,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
   arrow keys move the highlight, and Escape first closes an open submenu.
 - `ContextMenu.Label` must be wrapped in `ContextMenu.Group` so the group is
   labelled via `aria-labelledby`.
+- Checkbox items use `role="menuitemcheckbox"` and radio items use
+  `role="menuitemradio"`, both with `aria-checked`. In a searchable menu they
+  render as `role="option"` and keep `aria-checked`.
+- `ContextMenu.EmptyState` and `ContextMenu.Status` are polite live regions.
