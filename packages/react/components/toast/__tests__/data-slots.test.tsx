@@ -42,6 +42,30 @@ describe('Toast data-slot contract', () => {
     ]);
   });
 
+  it('exposes positioner and arrow slots for an anchored toast', async () => {
+    const manager = renderProvider();
+    const anchor = screen.getByText('App content');
+    act(() => {
+      manager.add({ title: 'Copied', positionerProps: { anchor } });
+    });
+    await screen.findByText('Copied');
+    expectSlots(document.body, [
+      'toast-anchored-viewport',
+      'toast-positioner',
+      'toast-arrow'
+    ]);
+  });
+
+  it('omits the positioner and arrow slots for a stacked toast', async () => {
+    const manager = renderProvider();
+    act(() => {
+      manager.add({ title: 'Stacked' });
+    });
+    await screen.findByText('Stacked');
+    expect(getSlot(document.body, 'toast-positioner')).toBeNull();
+    expect(getSlot(document.body, 'toast-arrow')).toBeNull();
+  });
+
   it('omits the description slot when only a title is given', async () => {
     const manager = renderProvider();
     act(() => {

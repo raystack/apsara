@@ -6,9 +6,11 @@ import { useThemeInjection } from '../theme/portal';
 import styles from './toast.module.css';
 import {
   toastManager as defaultToastManager,
-  type ToastManager
+  getAnchoredManager,
+  type ToastManager,
+  ToastManagerContext
 } from './toast-manager';
-import { ToastRoot } from './toast-root';
+import { AnchoredToastRoot, ToastRoot } from './toast-root';
 
 export type ToastPosition =
   | 'top-left'
@@ -40,6 +42,13 @@ function ToastList({ position }: { position: ToastPosition }) {
   ));
 }
 
+function AnchoredToastList() {
+  const { toasts } = ToastPrimitive.useToastManager();
+  return toasts.map(toast => (
+    <AnchoredToastRoot key={toast.id} toast={toast} />
+  ));
+}
+
 export function ToastProvider({
   position = 'bottom-right',
   toastManager = defaultToastManager,
@@ -47,23 +56,39 @@ export function ToastProvider({
   ...props
 }: ToastProviderProps) {
   const theme = useThemeInjection();
+  const anchoredManager = getAnchoredManager(toastManager);
   return (
-    <ToastPrimitive.Provider toastManager={toastManager} {...props}>
-      {children}
-      <ToastPrimitive.Portal {...theme}>
-        <ToastPrimitive.Viewport
-          {...theme}
-          className={cx(
-            styles.viewport,
-            styles[`viewport-${position}`],
-            theme?.className
-          )}
-          data-slot='toast-viewport'
-        >
-          <ToastList position={position} />
-        </ToastPrimitive.Viewport>
-      </ToastPrimitive.Portal>
-    </ToastPrimitive.Provider>
+    <ToastManagerContext.Provider value={toastManager}>
+      <ToastPrimitive.Provider toastManager={toastManager} {...props}>
+        {children}
+        <ToastPrimitive.Portal {...theme}>
+          <ToastPrimitive.Viewport
+            {...theme}
+            className={cx(
+              styles.viewport,
+              styles[`viewport-${position}`],
+              theme?.className
+            )}
+            data-slot='toast-viewport'
+          >
+            <ToastList position={position} />
+          </ToastPrimitive.Viewport>
+        </ToastPrimitive.Portal>
+      </ToastPrimitive.Provider>
+      {anchoredManager && (
+        <ToastPrimitive.Provider toastManager={anchoredManager} {...props}>
+          <ToastPrimitive.Portal {...theme}>
+            <ToastPrimitive.Viewport
+              {...theme}
+              className={cx(styles.anchoredViewport, theme?.className)}
+              data-slot='toast-anchored-viewport'
+            >
+              <AnchoredToastList />
+            </ToastPrimitive.Viewport>
+          </ToastPrimitive.Portal>
+        </ToastPrimitive.Provider>
+      )}
+    </ToastManagerContext.Provider>
   );
 }
 

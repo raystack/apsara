@@ -4,7 +4,7 @@ description: Displays temporary notification messages using Base UI Toast primit
 source: packages/react/components/toast
 ---
 
-import { playground, basicDemo, typesDemo, descriptionDemo, leadingIconDemo, actionDemo, promiseDemo, positionDemo, updateDemo, hookDemo } from "./demo.ts";
+import { playground, basicDemo, typesDemo, descriptionDemo, leadingIconDemo, actionDemo, promiseDemo, positionDemo, anchoredDemo, updateDemo, hookDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -70,6 +70,14 @@ Control where toasts appear on screen with the `position` prop on `Toast.Provide
 
 <Demo data={positionDemo} />
 
+### Anchored toast
+
+Pass `positionerProps.anchor` to show the toast next to an element, with an arrow that points at it. Use it for short feedback near the control that caused it, such as "Copied".
+
+`Toast.Provider` renders anchored toasts in their own layer. They do not join the stack, and `limit` applies to each group on its own. The same `toastManager` and `useToastManager()` add, update, and close both kinds. Pass `side`, `align`, or `sideOffset` in `positionerProps` to place the toast. It shows on the `top` side by default, 10px from the anchor.
+
+<Demo data={anchoredDemo} />
+
 ### Close and update
 
 Create a toast, then update or close it programmatically using the returned ID.
@@ -130,7 +138,7 @@ The `promise(promise, options)` method drives a toast through the resolve/reject
 
 ### useToastManager()
 
-Hook for dispatching toasts from inside a component tree wrapped by `<Toast.Provider>`. Returns the same methods as `createToastManager()`, including built-in `leadingIcon` support, plus a reactive `toasts` array reflecting the toasts on screen.
+Hook for dispatching toasts from inside a component tree wrapped by `<Toast.Provider>`. Returns the same methods as `createToastManager()`, including built-in `leadingIcon` support, plus a reactive `toasts` array reflecting the stacked toasts on screen. The array does not include anchored toasts.
 
 ```tsx
 import { useToastManager } from '@raystack/apsara'
@@ -166,6 +174,9 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `toast-action` | The action button (when `actionProps`) |
 | `toast-close` | The close button |
 | `toast-description` | The description (when both title and description are set) |
+| `toast-anchored-viewport` | The region that holds anchored toasts |
+| `toast-positioner` | Positioner that places an anchored toast next to its anchor |
+| `toast-arrow` | The arrow of an anchored toast |
 
 ## Accessibility
 

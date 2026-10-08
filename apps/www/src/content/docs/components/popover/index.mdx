@@ -4,7 +4,7 @@ description: Displays rich content in a portal, triggered by a button.
 source: packages/react/components/popover
 ---
 
-import { playground, alignDemo, positionDemo,
+import { playground, alignDemo, positionDemo, arrowDemo,
   controlledDemo,
 } from "./demo.ts";
 
@@ -38,6 +38,12 @@ Control the position and alignment of your popover relative to its trigger.
 Customize how the popover aligns with its trigger.
 
 <Demo data={alignDemo} />
+
+### Arrow
+
+Set `showArrow` to draw an arrow that points at the trigger. It is off by default. With the arrow on, `sideOffset` defaults to 10 to make room for it.
+
+<Demo data={arrowDemo} />
 
 ### Controlled
 
@@ -75,6 +81,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 |------|---------|
 | `popover-positioner` | Positioner that places the popup |
 | `popover-content` | The popover popup |
+| `popover-arrow` | The arrow (when `showArrow`) |
 
 ## Accessibility
 
