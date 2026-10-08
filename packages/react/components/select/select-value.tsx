@@ -1,19 +1,27 @@
 'use client';
 
+import {
+  Combobox as ComboboxPrimitive,
+  Select as SelectPrimitive
+} from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { ComponentProps, ReactNode, useMemo } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import styles from './select.module.css';
 import { SelectMultipleValue } from './select-multiple-value';
 import { useSelectContext } from './select-root';
-import { ItemType } from './types';
 
-type ValueType = Omit<ItemType, 'children'>;
+type SelectValueRenderer = (value: string | string[]) => ReactNode;
 
-type SelectValueProps = ComponentProps<'span'> & {
-  placeholder?: string;
-  children?: ((value?: ValueType | ValueType[]) => ReactNode) | ReactNode;
-  className?: string;
-};
+export interface SelectValueProps
+  extends Omit<ComponentProps<'span'>, 'children' | 'placeholder'> {
+  /** Shown when nothing is selected. */
+  placeholder?: ReactNode;
+  /** Replaces the label. A function receives the selected value. */
+  children?: ReactNode | SelectValueRenderer;
+}
+
+const isEmpty = (value: unknown) =>
+  value == null || value === '' || (Array.isArray(value) && !value.length);
 
 export function SelectValue({
   children,
@@ -21,66 +29,50 @@ export function SelectValue({
   className,
   ...props
 }: SelectValueProps) {
-  const { value, items, multiple } = useSelectContext();
+  const { multiple, autocomplete, getLabel, value } = useSelectContext();
 
-  const hasValue = multiple
-    ? Array.isArray(value) && value.length > 0
-    : !!value;
-
-  const item = useMemo(() => {
-    if (!value) return undefined;
-    if (multiple && Array.isArray(value)) {
-      const itemValues = value.map(v => items[v]);
-      if (itemValues.length === 1) return itemValues[0];
-      return itemValues;
+  const renderSelected = (selected: string | string[]) => {
+    if (typeof children === 'function') return children(selected);
+    if (children != null) return children;
+    if (Array.isArray(selected)) {
+      return (
+        <SelectMultipleValue
+          data={selected.map(v => ({ value: v, label: getLabel(v) }))}
+        />
+      );
     }
-    return items[value as string];
-  }, [value, items, multiple]);
+    return getLabel(selected);
+  };
 
-  if (!hasValue) {
+  const renderValue = (selected: string | string[] | null) =>
+    isEmpty(selected)
+      ? placeholder
+      : renderSelected(selected as string | string[]);
+
+  if (autocomplete) {
     return (
       <span
-        data-placeholder=''
+        data-placeholder={isEmpty(value) ? '' : undefined}
         data-slot='select-value'
-        className={cx(styles.placeholder, className)}
+        className={cx(styles.value, className)}
         {...props}
       >
-        {placeholder}
+        <ComboboxPrimitive.Value>{renderValue}</ComboboxPrimitive.Value>
       </span>
     );
   }
 
-  if (typeof children === 'function') {
-    return (
-      <span data-slot='select-value' className={className} {...props}>
-        {children(item)}
-      </span>
-    );
-  }
-
-  if (children) {
-    return (
-      <span data-slot='select-value' className={className} {...props}>
-        {children}
-      </span>
-    );
-  }
-
-  if (Array.isArray(item)) {
-    return <SelectMultipleValue data={item} />;
-  }
+  const useDefaultLabel = !multiple && children == null;
 
   return (
-    <span data-slot='select-value' className={className} {...props}>
-      <div className={cx(styles.valueContent)} data-slot='select-value-content'>
-        {typeof item?.children === 'string' && item?.leadingIcon && (
-          <div className={styles.itemIcon} data-slot='select-value-icon'>
-            {item.leadingIcon}
-          </div>
-        )}
-        {item?.children ?? value}
-      </div>
-    </span>
+    <SelectPrimitive.Value
+      placeholder={placeholder}
+      data-slot='select-value'
+      className={cx(styles.value, className)}
+      {...props}
+    >
+      {useDefaultLabel ? undefined : renderValue}
+    </SelectPrimitive.Value>
   );
 }
 SelectValue.displayName = 'Select.Value';

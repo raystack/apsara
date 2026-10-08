@@ -54,7 +54,17 @@ export function Grouping<TData, TValue>({
         align='center'
         className={styles['display-popover-properties-control']}
       >
-        <Select onValueChange={handleGroupChange} value={value}>
+        <Select
+          onValueChange={handleGroupChange}
+          value={value}
+          items={[
+            { value: defaultGroupOption.id, label: defaultGroupOption.label },
+            ...columnList.map(column => ({
+              value: column.id,
+              label: column.label
+            }))
+          ]}
+        >
           <Select.Trigger
             size='small'
             className={styles['display-popover-properties-select']}

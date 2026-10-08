@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { FilterType } from '~/types/filters';
+import { FilterSelectOption, FilterType } from '~/types/filters';
 import { FilterChip } from '../filter-chip';
 import styles from '../filter-chip.module.css';
 
@@ -294,6 +294,48 @@ describe('FilterChip', () => {
       fireEvent.change(getInput(container), { target: { value: '' } });
 
       expect(onValueChange).toHaveBeenCalledWith('', expect.any(String));
+    });
+  });
+
+  describe('Select Filter Type', () => {
+    const options: FilterSelectOption[] = [
+      { value: 'string', label: 'Text' },
+      { value: 'number', label: 'Count' }
+    ];
+
+    it('shows the option label for a select value', () => {
+      render(
+        <FilterChip
+          label='Status'
+          columnType={FilterType.select}
+          options={options}
+          value='number'
+        />
+      );
+      expect(screen.getByText('Count')).toBeInTheDocument();
+    });
+
+    it('shows the label for one multiselect value and a count for more', () => {
+      const { rerender } = render(
+        <FilterChip
+          label='Status'
+          columnType={FilterType.multiselect}
+          options={options}
+          value={['string']}
+        />
+      );
+      expect(screen.getByText('Text')).toBeInTheDocument();
+
+      rerender(
+        <FilterChip
+          key='many'
+          label='Status'
+          columnType={FilterType.multiselect}
+          options={options}
+          value={['string', 'number']}
+        />
+      );
+      expect(screen.getByText('2 selected')).toBeInTheDocument();
     });
   });
 

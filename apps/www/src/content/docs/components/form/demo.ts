@@ -203,7 +203,7 @@ export const rhfDemo = {
           control={control}
           rules={{ required: 'Please select a role' }}
           render={({ field }) => (
-            <Select value={field.value} onValueChange={field.onChange}>
+            <Select value={field.value} onValueChange={field.onChange} items={{ dev: "Developer", design: "Designer" }}>
               <Select.Trigger><Select.Value placeholder="Select role" /></Select.Trigger>
               <Select.Content>
                 <Select.Item value="dev">Developer</Select.Item>

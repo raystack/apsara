@@ -6,7 +6,7 @@ import { getPropsString } from '@/lib/utils';
 export const getCode = (props: ComponentPropsType) => {
   const { autocomplete, multiple, ...rest } = props;
   return `
-  <Select${getPropsString({ ...(autocomplete ? { autocomplete } : {}), ...(multiple ? { multiple } : {}) })}>
+  <Select items={{ apple: "Apple", banana: "Banana", blueberry: "Blueberry", grapes: "Grapes", pineapple: "Pineapple" }}${getPropsString({ ...(autocomplete ? { autocomplete } : {}), ...(multiple ? { multiple } : {}) })}>
     <Select.Trigger width={200}${getPropsString(rest)}>
       <Select.Value placeholder="Select a fruit" />
     </Select.Trigger>
@@ -50,7 +50,7 @@ export const playground = {
 export const iconDemo = {
   type: 'code',
   code: `
-  <Select>
+  <Select items={{ apple: "Apple", banana: "Banana", grape: "Grape", orange: "Orange" }}>
   <Select.Trigger aria-label="Fruit selection">
     <Select.Value placeholder="Select a fruit" />
   </Select.Trigger>
@@ -58,14 +58,14 @@ export const iconDemo = {
     <Select.Item value="apple" leadingIcon={<Info size={16} />}>Apple</Select.Item>
     <Select.Item value="banana" leadingIcon={<X size={16} />}>Banana</Select.Item>
     <Select.Item value="grape" leadingIcon={<Home size={16} />}>Grape</Select.Item>
-    <Select.Item value="Orange" leadingIcon={<Laugh size={16} />}>Orange</Select.Item>
+    <Select.Item value="orange" leadingIcon={<Laugh size={16} />}>Orange</Select.Item>
   </Select.Content>
 </Select>`
 };
 export const basicDemo = {
   type: 'code',
   code: `
-  <Select>
+  <Select items={{ apple: "Apple", banana: "Banana" }}>
   <Select.Trigger aria-label="Fruit selection">
     <Select.Value placeholder="Select a fruit" />
   </Select.Trigger>
@@ -80,7 +80,7 @@ export const sizeDemo = {
   type: 'code',
   code: `
   <Flex align="center" gap={9}>
-  <Select>
+  <Select items={{ "1": "Option 1", "2": "Option 2" }}>
   <Select.Trigger size="small">
     <Select.Value placeholder="Small select" />
   </Select.Trigger>
@@ -89,9 +89,9 @@ export const sizeDemo = {
     <Select.Item value="2">Option 2</Select.Item>
   </Select.Content>
 </Select>
-  <Select>
+  <Select items={{ "1": "Option 1", "2": "Option 2" }}>
   <Select.Trigger>
-    <Select.Value placeholder="Small select" />
+    <Select.Value placeholder="Medium select" />
   </Select.Trigger>
   <Select.Content>
     <Select.Item value="1">Option 1</Select.Item>
@@ -107,7 +107,7 @@ export const variantDemo = {
     {
       name: 'Default',
       code: `
-  <Select>
+  <Select items={{ all: "All", active: "Active", inactive: "Inactive" }}>
   <Select.Trigger>
     <Select.Value placeholder="Select..." />
   </Select.Trigger>
@@ -121,7 +121,7 @@ export const variantDemo = {
     {
       name: 'Filter',
       code: `
-  <Select>
+  <Select items={{ all: "All", active: "Active", inactive: "Inactive" }}>
   <Select.Trigger variant="filter">
     <Select.Value placeholder="Filter..." />
   </Select.Trigger>
@@ -137,7 +137,7 @@ export const variantDemo = {
 export const separatorDemo = {
   type: 'code',
   code: `
-  <Select>
+  <Select items={{ "1": "Option 1", "2": "Option 2", "3": "Option 3", "4": "Option 4" }}>
   <Select.Trigger>
     <Select.Value placeholder="Select..." />
   </Select.Trigger>
@@ -157,7 +157,10 @@ export const separatorDemo = {
 export const multipleDemo = {
   type: 'code',
   code: `
-  <Select multiple>
+  <Select
+    multiple
+    items={Array.from({ length: 10 }, (_, i) => ({ value: String(i + 1), label: "Option " + (i + 1) }))}
+  >
   <Select.Trigger>
     <Select.Value placeholder="Select..." />
   </Select.Trigger>
@@ -182,20 +185,17 @@ export const autocompleteDemo = {
     {
       name: 'Default Autocomplete',
       code: `
-      <Select autocomplete>
+      <Select autocomplete items={{ apple: "Apple", banana: "Banana", blueberry: "Blueberry", grapes: "Grapes", pineapple: "Pineapple" }}>
   <Select.Trigger>
-    <Select.Value placeholder="Select..." />
+    <Select.Value placeholder="Select a fruit" />
   </Select.Trigger>
   <Select.Content>
-    <Select.Group>
-      <Select.Item value="1">Option 1</Select.Item>
-      <Select.Item value="2">Option 2</Select.Item>
-    </Select.Group>
-    <Select.Separator />
-    <Select.Group>
-      <Select.Item value="3">Option 3</Select.Item>
-      <Select.Item value="4">Option 4</Select.Item>
-    </Select.Group>
+    <Select.Empty>No fruit found</Select.Empty>
+    <Select.Item value="apple">Apple</Select.Item>
+    <Select.Item value="banana">Banana</Select.Item>
+    <Select.Item value="blueberry">Blueberry</Select.Item>
+    <Select.Item value="grapes">Grapes</Select.Item>
+    <Select.Item value="pineapple">Pineapple</Select.Item>
   </Select.Content>
 </Select>`
     },
@@ -236,7 +236,11 @@ function ControlledSelect() {
 
   return (
     <Flex direction="column" gap={5}>
-      <Select value={fruit} onValueChange={setFruit}>
+      <Select
+        value={fruit}
+        onValueChange={setFruit}
+        items={{ apple: "Apple", banana: "Banana", grapes: "Grapes" }}
+      >
         <Select.Trigger width={200}>
           <Select.Value />
         </Select.Trigger>
@@ -250,6 +254,56 @@ function ControlledSelect() {
         Reset to Grapes
       </Button>
     </Flex>
+  );
+}`
+};
+
+export const labelDemo = {
+  type: 'code',
+  code: `
+  <Flex direction="column" gap={2}>
+  <Select items={{ apple: "Apple", banana: "Banana" }}>
+    <Select.Label>Fruit</Select.Label>
+    <Select.Trigger>
+      <Select.Value placeholder="Select a fruit" />
+    </Select.Trigger>
+    <Select.Content>
+      <Select.Item value="apple">Apple</Select.Item>
+      <Select.Item value="banana">Banana</Select.Item>
+    </Select.Content>
+  </Select>
+</Flex>`
+};
+
+export const valueRenderDemo = {
+  type: 'code',
+  code: `
+function IconValue() {
+  const fruits = {
+    apple: { label: "Apple", icon: <Info size={16} /> },
+    banana: { label: "Banana", icon: <Home size={16} /> }
+  };
+
+  return (
+    <Select defaultValue="apple">
+      <Select.Trigger>
+        <Select.Value placeholder="Select a fruit">
+          {value => (
+            <Flex align="center" gap={2}>
+              {fruits[value].icon}
+              {fruits[value].label}
+            </Flex>
+          )}
+        </Select.Value>
+      </Select.Trigger>
+      <Select.Content>
+        {Object.entries(fruits).map(([value, fruit]) => (
+          <Select.Item key={value} value={value} leadingIcon={fruit.icon}>
+            {fruit.label}
+          </Select.Item>
+        ))}
+      </Select.Content>
+    </Select>
   );
 }`
 };

@@ -169,6 +169,10 @@ export const FilterChip = ({
     [isNumberColumn, handleFilterValueChange, onValueChange, operation]
   );
 
+  const getOptionLabel = (optionValue: string) =>
+    options.find(opt => opt.value.toString() === optionValue)?.label ??
+    optionValue;
+
   const renderValueInput = () => {
     switch (columnType) {
       case FilterType.multiselect:
@@ -178,6 +182,10 @@ export const FilterChip = ({
             value={isMultiSelectColumn ? filterValue : filterValue.toString()}
             onValueChange={handleFilterValueChange}
             multiple={isMultiSelectColumn}
+            items={options.map(opt => ({
+              value: opt.value.toString(),
+              label: opt.label
+            }))}
             {...selectProps}
           >
             <Select.Trigger
@@ -191,9 +199,11 @@ export const FilterChip = ({
               data-slot='filter-chip-value'
             >
               <Select.Value placeholder='Select value'>
-                {isMultiSelectColumn && filterValue.length > 1
-                  ? `${filterValue.length} selected`
-                  : undefined}
+                {selected =>
+                  Array.isArray(selected) && selected.length > 1
+                    ? `${selected.length} selected`
+                    : getOptionLabel([selected].flat()[0])
+                }
               </Select.Value>
             </Select.Trigger>
             <Select.Content data-variant='filter'>
