@@ -93,3 +93,18 @@ export function TooltipContent({
 }
 
 TooltipContent.displayName = 'Tooltip.Content';
+
+export function TooltipViewport({
+  className,
+  ...props
+}: TooltipPrimitive.Viewport.Props) {
+  return (
+    <TooltipPrimitive.Viewport
+      className={cx(styles.viewport, className)}
+      data-slot='tooltip-viewport'
+      {...props}
+    />
+  );
+}
+
+TooltipViewport.displayName = 'Tooltip.Viewport';

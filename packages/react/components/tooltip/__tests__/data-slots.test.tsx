@@ -39,4 +39,13 @@ describe('Tooltip data-slot contract', () => {
     );
     expect(getSlot(document.body, 'tooltip-text')).toBeNull();
   });
+
+  it('exposes the viewport slot', () => {
+    render(
+      <OpenTooltip>
+        <Tooltip.Viewport>Custom content</Tooltip.Viewport>
+      </OpenTooltip>
+    );
+    expectSlots(document.body, ['tooltip-viewport']);
+  });
 });

@@ -165,6 +165,40 @@ export const arrowDemo = {
   </Tooltip>`
 };
 
+export const closeOnClickDemo = {
+  type: 'code',
+  code: `
+  <Tooltip>
+    <Tooltip.Trigger closeOnClick={false} render={<Button />}>Click me</Tooltip.Trigger>
+    <Tooltip.Content>Stays open after a click</Tooltip.Content>
+  </Tooltip>`
+};
+
+export const viewportDemo = {
+  type: 'code',
+  code: `
+function ToolbarTooltips() {
+  const [handle] = React.useState(() => Tooltip.createHandle());
+
+  return (
+    <Tooltip.Provider>
+      <Flex gap={3} align="center">
+        <Tooltip.Trigger handle={handle} payload="Bold" render={<Button variant="outline" />}>B</Tooltip.Trigger>
+        <Tooltip.Trigger handle={handle} payload="Italic" render={<Button variant="outline" />}>I</Tooltip.Trigger>
+        <Tooltip.Trigger handle={handle} payload="Strikethrough" render={<Button variant="outline" />}>S</Tooltip.Trigger>
+      </Flex>
+      <Tooltip handle={handle}>
+        {({ payload }) => (
+          <Tooltip.Content>
+            <Tooltip.Viewport>{payload}</Tooltip.Viewport>
+          </Tooltip.Content>
+        )}
+      </Tooltip>
+    </Tooltip.Provider>
+  );
+}`
+};
+
 export const controlledDemo = {
   type: 'code',
   code: `

@@ -143,6 +143,22 @@
   display: none;
 }
 
+/* The outgoing panel leaves at once. Panels stack in the flex column, so
+   fading it out would push the incoming panel down for the duration. */
+.content[data-ending-style] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .content {
+    transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
+  }
+
+  .content[data-starting-style] {
+    opacity: 0;
+  }
+}
+
 /* Shared non-segmented list reset */
 .variant-standalone .list,
 .variant-plain .list {

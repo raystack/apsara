@@ -119,3 +119,52 @@
     transform: translate(var(--rs-space-1), var(--rs-space-1));
   }
 }
+
+/* Freezes the positioner at the measured popup size while the viewport swaps
+   content, so the popup does not flip sides mid-transition. */
+.positioner:has(.viewport) {
+  width: var(--positioner-width);
+  height: var(--positioner-height);
+}
+
+.viewport {
+  position: relative;
+  overflow: clip;
+}
+
+.viewport > [data-previous],
+.viewport > [data-current] {
+  transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
+}
+
+.viewport > [data-current][data-starting-style],
+.viewport > [data-previous][data-ending-style] {
+  opacity: 0;
+}
+
+.viewport[data-instant] > * {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .viewport > [data-previous],
+  .viewport > [data-current] {
+    transition:
+      opacity var(--rs-duration-fast) var(--rs-ease-out),
+      translate var(--rs-duration-normal) var(--rs-ease-out);
+  }
+
+  .viewport[data-activation-direction~="right"]
+    > [data-current][data-starting-style],
+  .viewport[data-activation-direction~="left"]
+    > [data-previous][data-ending-style] {
+    translate: var(--rs-space-3) 0;
+  }
+
+  .viewport[data-activation-direction~="left"]
+    > [data-current][data-starting-style],
+  .viewport[data-activation-direction~="right"]
+    > [data-previous][data-ending-style] {
+    translate: calc(-1 * var(--rs-space-3)) 0;
+  }
+}

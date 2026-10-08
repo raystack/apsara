@@ -5,7 +5,7 @@ source: packages/react/components/tooltip
 ---
 
 import { playground, sideDemo, alignDemo, customDemo, providerDemo, trackCursorDemo, arrowDemo,
-  controlledDemo,
+  controlledDemo, closeOnClickDemo, viewportDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -68,6 +68,18 @@ Pass `open` with `onOpenChange` to own the state. Use it to show a tooltip from 
 
 <Demo data={controlledDemo} />
 
+### Close on click
+
+A tooltip closes when its trigger is clicked. Set `closeOnClick={false}` on `Tooltip.Trigger` to keep it open.
+
+<Demo data={closeOnClickDemo} />
+
+### Shared tooltip
+
+Create a handle with `Tooltip.createHandle()` and pass it to several triggers and one `Tooltip`. Each trigger sends its own `payload`, and the tooltip moves between them. Wrap the content in `Tooltip.Viewport` to fade and slide the old content out and the new content in.
+
+<Demo data={viewportDemo} />
+
 ## API Reference
 
 A trigger and its content, with a provider for sharing one delay across many tooltips.
@@ -90,6 +102,12 @@ The Content component displays the tooltip content and controls positioning.
 
 <auto-type-table path="./props.ts" name="TooltipContentProps" />
 
+### Viewport
+
+Wraps the content inside `Tooltip.Content` and animates the swap when a shared tooltip moves to another trigger. Optional.
+
+<auto-type-table path="./props.ts" name="TooltipViewportProps" />
+
 ### Provider
 
 The Provider component serves as a context wrapper that provides global configuration and functionality to all tooltip instances within your application.
@@ -107,6 +125,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `tooltip-content` | The tooltip popup |
 | `tooltip-text` | Text wrapper (when children is a string) |
 | `tooltip-arrow` | The arrow (when `showArrow`) |
+| `tooltip-viewport` | The `Tooltip.Viewport` element |
 
 ## Accessibility
 

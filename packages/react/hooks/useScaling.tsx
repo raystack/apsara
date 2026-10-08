@@ -1,8 +1,7 @@
 'use client';
 
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { type RefObject, useCallback, useEffect, useState } from 'react';
-
-import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 
 /**
  * The resolved `--rs-scaling` for a subtree, for geometry a component keeps in
@@ -25,7 +24,7 @@ export function useScaling(ref: RefObject<HTMLElement | null>): number {
     setScaling(previous => (previous === next ? previous : next));
   }, [ref]);
 
-  useIsomorphicLayoutEffect(read, [read]);
+  useIsoLayoutEffect(read, [read]);
 
   // A theme anywhere above may change its scaling without re-rendering here.
   useEffect(() => {
