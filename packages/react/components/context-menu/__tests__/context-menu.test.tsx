@@ -144,4 +144,81 @@ describe('ContextMenu', () => {
       expect(onOpenChange).toHaveBeenCalled();
     });
   });
+
+  describe('Selection and Link Items', () => {
+    it('toggles checkbox items and keeps one radio item checked', async () => {
+      await renderAndOpenContextMenu(
+        <ContextMenu>
+          <ContextMenu.Trigger>{TRIGGER_TEXT}</ContextMenu.Trigger>
+          <ContextMenu.Content>
+            <ContextMenu.CheckboxItem>Show grid</ContextMenu.CheckboxItem>
+            <ContextMenu.RadioGroup defaultValue='list'>
+              <ContextMenu.RadioItem value='list'>List</ContextMenu.RadioItem>
+              <ContextMenu.RadioItem value='board'>Board</ContextMenu.RadioItem>
+            </ContextMenu.RadioGroup>
+          </ContextMenu.Content>
+        </ContextMenu>
+      );
+
+      const checkbox = screen.getByRole('menuitemcheckbox');
+      fireEvent.click(checkbox);
+      expect(checkbox).toHaveAttribute('aria-checked', 'true');
+
+      const [list, board] = screen.getAllByRole('menuitemradio');
+      fireEvent.click(board);
+      expect(list).toHaveAttribute('aria-checked', 'false');
+      expect(board).toHaveAttribute('aria-checked', 'true');
+    });
+
+    it('renders link items as anchors with role menuitem', async () => {
+      await renderAndOpenContextMenu(
+        <ContextMenu>
+          <ContextMenu.Trigger>{TRIGGER_TEXT}</ContextMenu.Trigger>
+          <ContextMenu.Content>
+            <ContextMenu.LinkItem href='/docs'>Docs</ContextMenu.LinkItem>
+          </ContextMenu.Content>
+        </ContextMenu>
+      );
+
+      const link = screen.getByRole('menuitem', { name: 'Docs' });
+      expect(link.tagName).toBe('A');
+      expect(link).toHaveAttribute('href', '/docs');
+    });
+  });
+
+  describe('Autocomplete', () => {
+    it('filters items and shows the empty state only with no matches', async () => {
+      await renderAndOpenContextMenu(
+        <ContextMenu autocomplete>
+          <ContextMenu.Trigger>{TRIGGER_TEXT}</ContextMenu.Trigger>
+          <ContextMenu.Content>
+            {MENU_ITEMS.map(item => (
+              <ContextMenu.Item key={item.id}>{item.label}</ContextMenu.Item>
+            ))}
+            <ContextMenu.CheckboxItem>Show grid</ContextMenu.CheckboxItem>
+            <ContextMenu.EmptyState>No results</ContextMenu.EmptyState>
+            <ContextMenu.Status />
+          </ContextMenu.Content>
+        </ContextMenu>
+      );
+
+      const input = screen.getByRole('combobox');
+      const empty = document.querySelector(
+        '[data-slot="context-menu-empty-state"]'
+      );
+      const status = document.querySelector(
+        '[data-slot="context-menu-status"]'
+      );
+      expect(empty).toBeEmptyDOMElement();
+
+      fireEvent.change(input, { target: { value: 'grid' } });
+      expect(screen.getAllByRole('option')).toHaveLength(1);
+      expect(status).toHaveTextContent('1 result');
+      expect(empty).toBeEmptyDOMElement();
+
+      fireEvent.change(input, { target: { value: 'zzz' } });
+      expect(screen.queryAllByRole('option')).toHaveLength(0);
+      expect(empty).toHaveTextContent('No results');
+    });
+  });
 });
