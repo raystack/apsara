@@ -28,6 +28,7 @@ export function SelectContent({
   sideOffset = 4,
   side = 'bottom',
   align = 'start',
+  alignItemWithTrigger = false,
   radius,
   ...props
 }: SelectContentProps) {
@@ -80,7 +81,7 @@ export function SelectContent({
       side={side}
       align={align}
       className={styles.positioner}
-      alignItemWithTrigger={false}
+      alignItemWithTrigger={alignItemWithTrigger}
       data-slot='select-positioner'
     >
       <SelectPrimitive.Popup
