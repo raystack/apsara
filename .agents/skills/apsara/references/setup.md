@@ -105,7 +105,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 |---|---|
 | `@raystack/apsara` | All components, `Theme`/`useTheme`/`ThemeSwitcher`, `toastManager`/`useToastManager`, type exports |
 | `@raystack/apsara/icons` | The 31 icons Apsara's components draw, plus `createIcon` |
-| `@raystack/apsara/hooks` | Utility hooks (`useCopyToClipboard`, `useDebouncedState`, `useIsomorphicLayoutEffect`, `useMouse`) |
+| `@raystack/apsara/hooks` | Utility hooks (`useCopyToClipboard`, `useDebouncedState`, `useMouse`) |
 | `@raystack/apsara/style.css` | The full stylesheet (required) |
 | `@raystack/apsara/normalize.css` | Optional CSS reset |
 

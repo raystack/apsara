@@ -4,7 +4,7 @@ description: Displays temporary notification messages using Base UI Toast primit
 source: packages/react/components/toast
 ---
 
-import { playground, basicDemo, typesDemo, descriptionDemo, leadingIconDemo, actionDemo, promiseDemo, positionDemo, updateDemo, hookDemo } from "./demo.ts";
+import { playground, basicDemo, typesDemo, descriptionDemo, leadingIconDemo, actionDemo, promiseDemo, positionDemo, updateDemo, upsertDemo, hookDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -76,6 +76,12 @@ Create a toast, then update or close it programmatically using the returned ID.
 
 <Demo data={updateDemo} />
 
+### Add or update by ID
+
+Pass your own `id` to `toastManager.add`. If a toast with that ID is open, `add` updates it in place and does not stack a second toast. Use it for events that can fire many times, such as a sync status.
+
+<Demo data={upsertDemo} />
+
 ### Dispatching from a component
 
 Use `useToastManager()` inside a component to dispatch toasts and/or read the reactive list of active toasts. The component must be a descendant of `<Toast.Provider>`.
@@ -94,7 +100,7 @@ Renders the toast viewport and manages the toast lifecycle. Place once at the ro
 
 ### toastManager.add(options)
 
-Creates a new toast and returns its unique ID. The `toastManager` can be imported and used anywhere, including outside React components (e.g., API interceptors, utility functions).
+Creates a new toast and returns its unique ID. If `id` matches an open toast, it updates that toast instead. The `toastManager` can be imported and used anywhere, including outside React components (e.g., API interceptors, utility functions).
 
 <auto-type-table path="./props.ts" name="ToastManagerAddOptions" />
 

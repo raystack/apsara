@@ -4,7 +4,7 @@ description: A container for grouping interactive controls with accessible keybo
 source: packages/react/components/toolbar
 ---
 
-import { preview, groupDemo, verticalDemo, compositionDemo, disabledDemo } from "./demo.ts";
+import { preview, groupDemo, verticalDemo, compositionDemo, disabledDemo, linkInputDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -42,6 +42,12 @@ Use `Toolbar.Group` to group related buttons.
 Use the `orientation` prop to render the toolbar vertically.
 
 <Demo data={verticalDemo} />
+
+### Link and input
+
+`Toolbar.Link` and `Toolbar.Input` join the same arrow-key order as the buttons. The left and right arrow keys also move the text cursor in an input, so use one input at most and put it last.
+
+<Demo data={linkInputDemo} />
 
 ### Composition
 
@@ -105,6 +111,8 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `toolbar-button` | `Toolbar.Button` |
 | `toolbar-group` | `Toolbar.Group` wrapper |
 | `toolbar-separator` | `Toolbar.Separator` |
+| `toolbar-link` | `Toolbar.Link` |
+| `toolbar-input` | `Toolbar.Input` |
 
 ## Accessibility
 

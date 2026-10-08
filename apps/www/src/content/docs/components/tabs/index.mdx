@@ -95,7 +95,7 @@ Renders an individual tab button.
 
 ### Content
 
-Renders the content panel for a tab.
+Renders the content panel for a tab. The new panel fades in when the active tab changes.
 
 <auto-type-table path="./props.ts" name="TabsContentProps" />
 
@@ -119,4 +119,4 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 - Uses `role="tablist"`, `role="tab"`, and `role="tabpanel"`
 - Active tab is indicated with `aria-selected`
 - Leading icon is wrapped with `aria-hidden` so it is not announced (treated as decorative)
-- Respects motion preferences: tab indicator motion is enabled only when `prefers-reduced-motion: no-preference`
+- Respects motion preferences: the indicator motion and the panel fade run only when `prefers-reduced-motion: no-preference`

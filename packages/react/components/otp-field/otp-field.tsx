@@ -1,7 +1,6 @@
 'use client';
 
 import { OTPField as OTPFieldPrimitive } from '@base-ui/react/otp-field';
-import { Separator as SeparatorPrimitive } from '@base-ui/react/separator';
 import { cx } from 'class-variance-authority';
 import { useFieldContext } from '../field';
 import styles from './otp-field.module.css';
@@ -49,7 +48,7 @@ const OTPFieldInput = ({ className, ref, ...props }: OTPFieldInputProps) => (
 OTPFieldInput.displayName = 'OTPField.Input';
 
 export type OTPFieldSeparatorProps = Omit<
-  SeparatorPrimitive.Props,
+  OTPFieldPrimitive.Separator.Props,
   'orientation'
 >;
 
@@ -58,7 +57,7 @@ const OTPFieldSeparator = ({
   ref,
   ...props
 }: OTPFieldSeparatorProps) => (
-  <SeparatorPrimitive
+  <OTPFieldPrimitive.Separator
     ref={ref}
     orientation='horizontal'
     className={cx(styles['otp-field-separator'], className)}

@@ -76,3 +76,14 @@ export interface FieldDescriptionProps {
   /** Additional CSS class names. */
   className?: string;
 }
+
+export interface FieldItemProps {
+  /**
+   * Whether the control in this item ignores user interaction. The `disabled` prop on `Field` takes precedence.
+   * @defaultValue false
+   */
+  disabled?: boolean;
+
+  /** Additional CSS class names. */
+  className?: string;
+}

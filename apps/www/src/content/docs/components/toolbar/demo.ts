@@ -47,6 +47,18 @@ export const verticalDemo = {
 </Toolbar>`
 };
 
+export const linkInputDemo = {
+  type: 'code',
+  code: `<Toolbar>
+  <Toolbar.Button>Bold</Toolbar.Button>
+  <Toolbar.Button>Italic</Toolbar.Button>
+  <Toolbar.Separator />
+  <Toolbar.Link href="#">Edited 2 minutes ago</Toolbar.Link>
+  <Toolbar.Separator />
+  <Toolbar.Input aria-label="Search" placeholder="Search" />
+</Toolbar>`
+};
+
 export const compositionDemo = {
   type: 'code',
   code: `<Toolbar>
