@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
-import { describe, it } from 'vitest';
-import { expectSlots } from '~/test-utils/data-slots';
+import { describe, expect, it } from 'vitest';
+import { expectSlots, getSlot } from '~/test-utils/data-slots';
 import { Popover } from '../popover';
 
 describe('Popover data-slot contract', () => {
@@ -13,5 +13,25 @@ describe('Popover data-slot contract', () => {
     );
     // Popover content portals to the body.
     expectSlots(document.body, ['popover-positioner', 'popover-content']);
+  });
+
+  it('exposes the arrow slot with showArrow', () => {
+    render(
+      <Popover open>
+        <Popover.Trigger>Open</Popover.Trigger>
+        <Popover.Content showArrow>Content</Popover.Content>
+      </Popover>
+    );
+    expectSlots(document.body, ['popover-arrow']);
+  });
+
+  it('omits the arrow slot by default', () => {
+    render(
+      <Popover open>
+        <Popover.Trigger>Open</Popover.Trigger>
+        <Popover.Content>Content</Popover.Content>
+      </Popover>
+    );
+    expect(getSlot(document.body, 'popover-arrow')).toBeNull();
   });
 });
