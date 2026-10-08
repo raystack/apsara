@@ -52,7 +52,8 @@ export interface ToastPromiseOptions<Value> {
 
 function lift<O extends { leadingIcon?: ReactNode }>(options: O) {
   const { leadingIcon, ...rest } = options;
-  if (leadingIcon === undefined) return rest;
+  // An explicit `leadingIcon: undefined` resets the toast to its type's default icon.
+  if (!('leadingIcon' in options)) return rest;
   return { ...rest, data: { leadingIcon } };
 }
 

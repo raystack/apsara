@@ -289,6 +289,29 @@ describe('Toast', () => {
         expect(screen.getByTestId('updated-icon')).toBeInTheDocument();
       });
     });
+
+    it('restores the default icon when update() sets leadingIcon to undefined', async () => {
+      let id: string;
+      act(() => {
+        id = toastManager.add({
+          title: 'Custom',
+          leadingIcon: <svg data-testid='custom-icon' />
+        });
+      });
+      expect(await screen.findByTestId('custom-icon')).toBeInTheDocument();
+
+      act(() => {
+        toastManager.update(id!, () => ({ leadingIcon: undefined }));
+      });
+
+      await waitFor(() => {
+        expect(screen.queryByTestId('custom-icon')).not.toBeInTheDocument();
+      });
+      const toast = screen.getByText('Custom').closest('[data-slot="toast"]');
+      expect(
+        toast?.querySelector('[data-slot="toast-leading-icon"]')
+      ).toBeInTheDocument();
+    });
   });
 
   describe('Multiple toasts', () => {

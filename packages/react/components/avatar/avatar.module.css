@@ -221,13 +221,13 @@
   width: 100%;
   height: 100%;
   vertical-align: middle;
-}
-
-/* The img is mounted before it loads. Keep it in layout so lazy loading still starts. */
-.image[data-loading],
-.image[data-error] {
+  /* The img is mounted before it loads, so it sits on top of the fallback instead of next to it. */
   position: absolute;
   inset: 0;
+}
+
+.image[data-loading],
+.image[data-error] {
   opacity: 0;
 }
 

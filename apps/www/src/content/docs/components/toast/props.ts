@@ -147,6 +147,8 @@ export interface ToastObject {
   type?: 'success' | 'error' | 'info' | 'warning' | 'loading';
   timeout?: number;
   priority?: 'low' | 'high';
+  /** Extra toast data. `leadingIcon` holds the custom icon, if one was set. */
+  data?: { leadingIcon?: React.ReactNode };
 }
 
 /**
