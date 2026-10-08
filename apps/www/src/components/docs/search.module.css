@@ -26,6 +26,10 @@
   min-height: 320px;
 }
 
+.searchEmpty:empty {
+  min-height: 0;
+}
+
 .searchList .searchGroupLabel {
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);

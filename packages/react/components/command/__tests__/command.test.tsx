@@ -133,6 +133,96 @@ describe('Command', () => {
     });
   });
 
+  describe('Empty and Status', () => {
+    it('keeps the empty element mounted and fills it only with no matches', async () => {
+      const user = userEvent.setup();
+      const { container } = render(<BasicCommand />);
+      const empty = container.querySelector('[data-slot="command-empty"]');
+      expect(empty).toHaveAttribute('role', 'status');
+      expect(empty).toBeEmptyDOMElement();
+
+      const input = screen.getByRole('combobox');
+      await user.type(input, 'zzz');
+      await waitFor(() => expect(empty).toHaveTextContent('No results found.'));
+
+      await user.clear(input);
+      await user.type(input, 'cal');
+      await waitFor(() => expect(empty).toBeEmptyDOMElement());
+    });
+
+    it('shows the empty state with the items prop when nothing matches', async () => {
+      const user = userEvent.setup();
+      const items = ['Calendar', 'Calculator'];
+      const { container } = render(
+        <Command items={items}>
+          <Command.Input />
+          <Command.Content>
+            {(item: string) => (
+              <Command.Item key={item} value={item}>
+                {item}
+              </Command.Item>
+            )}
+          </Command.Content>
+          <Command.Empty>No results found.</Command.Empty>
+        </Command>
+      );
+      const empty = container.querySelector('[data-slot="command-empty"]');
+      expect(empty).toBeEmptyDOMElement();
+
+      await user.type(screen.getByRole('combobox'), 'zzz');
+      await waitFor(() => expect(empty).toHaveTextContent('No results found.'));
+    });
+
+    it('announces the number of matches while searching', async () => {
+      const user = userEvent.setup();
+      const { container } = render(
+        <Command>
+          <Command.Input />
+          <Command.Content>
+            {ITEMS.map(item => (
+              <Command.Item key={item.value} value={item.value}>
+                {item.label}
+              </Command.Item>
+            ))}
+          </Command.Content>
+          <Command.Status />
+        </Command>
+      );
+      const status = container.querySelector('[data-slot="command-status"]');
+      expect(status).toHaveAttribute('role', 'status');
+      expect(status).toBeEmptyDOMElement();
+
+      const input = screen.getByRole('combobox');
+      await user.type(input, 'cal');
+      await waitFor(() => expect(status).toHaveTextContent('2 results'));
+
+      await user.type(input, 'e');
+      await waitFor(() => expect(status).toHaveTextContent('1 result'));
+    });
+
+    it('counts filtered items with the items prop', async () => {
+      const user = userEvent.setup();
+      const items = ['Calendar', 'Calculator', 'Profile'];
+      const { container } = render(
+        <Command items={items}>
+          <Command.Input />
+          <Command.Content>
+            {(item: string) => (
+              <Command.Item key={item} value={item}>
+                {item}
+              </Command.Item>
+            )}
+          </Command.Content>
+          <Command.Status>{count => `${count} commands`}</Command.Status>
+        </Command>
+      );
+      const status = container.querySelector('[data-slot="command-status"]');
+
+      await user.type(screen.getByRole('combobox'), 'cal');
+      await waitFor(() => expect(status).toHaveTextContent('2 commands'));
+    });
+  });
+
   describe('Auto-search disabled when items prop is passed', () => {
     it('does not apply custom filtering to CommandItem when items is provided', async () => {
       const user = userEvent.setup();
