@@ -44,7 +44,7 @@ const MyChevron = props => (
 render(
   <Flex gap={7} align="center">
     <Flex direction="column" gap={3} align="center">
-      <Select defaultValue="apple">
+      <Select defaultValue="apple" items={{ apple: "Apple" }}>
         <Select.Trigger style={{ width: 140 }}>
           <Select.Value />
         </Select.Trigger>
@@ -57,7 +57,7 @@ render(
 
     <Theme icons={{ components: { ChevronDownIcon: MyChevron } }}>
       <Flex direction="column" gap={3} align="center">
-        <Select defaultValue="apple">
+        <Select defaultValue="apple" items={{ apple: "Apple" }}>
           <Select.Trigger style={{ width: 140 }}>
             <Select.Value />
           </Select.Trigger>

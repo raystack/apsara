@@ -57,7 +57,9 @@ const LanguageSelectCodeBlock = (
     <BasicCodeBlock defaultValue='jsx' hasMultipleCodeBlocks {...props}>
       <CodeBlock.Header>
         <CodeBlock.Label>Code</CodeBlock.Label>
-        <CodeBlock.LanguageSelect>
+        <CodeBlock.LanguageSelect
+          items={{ jsx: 'JavaScript', python: 'Python' }}
+        >
           <CodeBlock.LanguageSelectTrigger data-testid='language-select-trigger' />
           <CodeBlock.LanguageSelectContent>
             <CodeBlock.LanguageSelectItem value='jsx'>

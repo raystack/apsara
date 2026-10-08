@@ -216,7 +216,7 @@ export const portalDemo = {
         </Popover.Content>
       </Popover>
 
-      <Select defaultValue="mint">
+      <Select defaultValue="mint" items={{ indigo: "Indigo", orange: "Orange", mint: "Mint" }}>
         <Select.Trigger style={{ width: 140 }}>
           <Select.Value />
         </Select.Trigger>

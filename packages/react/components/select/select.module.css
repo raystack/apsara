@@ -63,10 +63,38 @@
   pointer-events: none;
 }
 
-.label {
+.groupLabel {
   padding: var(--rs-space-2) var(--rs-space-3);
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-mini);
+}
+
+.label {
+  color: var(--rs-color-foreground-base-secondary);
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+  cursor: default;
+}
+
+.label[data-disabled] {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.empty:not(:empty) {
+  padding: var(--rs-space-4);
+  color: var(--rs-color-foreground-base-secondary);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+
+.status:not(:empty) {
+  padding: var(--rs-space-3) var(--rs-space-4) 0;
+  color: var(--rs-color-foreground-base-secondary);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
 }
 
 .separator {
@@ -191,6 +219,14 @@
   white-space: nowrap;
 }
 
+.value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .valueContent {
   flex: 1;
   display: flex;
@@ -203,7 +239,15 @@
   text-overflow: ellipsis;
 }
 
-.trigger-small .valueContent {
+.trigger-small .value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.valueContent {
   gap: var(--rs-space-2);
 }
 

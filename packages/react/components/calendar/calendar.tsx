@@ -77,6 +77,10 @@ function DropDown({
     <Select
       value={value?.toString()}
       onValueChange={handleChange}
+      items={options.map(opt => ({
+        value: opt.value.toString(),
+        label: opt.label
+      }))}
       open={open}
       onOpenChange={setOpen}
     >
