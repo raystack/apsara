@@ -78,9 +78,49 @@ export interface ToastManagerAddOptions {
   leadingIcon?: React.ReactNode;
 
   /**
+   * Shows the toast next to `anchor` with an arrow, instead of in the stack.
+   * Also takes `side`, `align`, `sideOffset`, and `alignOffset`.
+   *
+   * @remarks `{ anchor?: Element | null; side?: 'top' | 'right' | 'bottom' | 'left'; align?: 'start' | 'center' | 'end'; sideOffset?: number; alignOffset?: number }`
+   */
+  positionerProps?: ToastPositionerOptions;
+
+  /**
    * Optional custom ID for the toast. Auto-generated if not provided.
    */
   id?: string;
+}
+
+/**
+ * Placement of an anchored toast, passed as `positionerProps`.
+ */
+export interface ToastPositionerOptions {
+  /** The element to show the toast next to. */
+  anchor?: Element | null;
+
+  /**
+   * Side of the anchor to show the toast on.
+   * @default "top"
+   */
+  side?: 'top' | 'right' | 'bottom' | 'left';
+
+  /**
+   * Alignment against the anchor.
+   * @default "center"
+   */
+  align?: 'start' | 'center' | 'end';
+
+  /**
+   * Distance in pixels from the anchor.
+   * @default 10
+   */
+  sideOffset?: number;
+
+  /**
+   * Offset in pixels along the alignment edge.
+   * @default 0
+   */
+  alignOffset?: number;
 }
 
 /**

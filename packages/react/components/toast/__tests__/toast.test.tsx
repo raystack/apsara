@@ -1,7 +1,7 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { Toast, toastManager } from '../toast';
+import { Toast, toastManager, useToastManager } from '../toast';
 
 const renderWithProvider = (
   props?: Partial<React.ComponentProps<typeof Toast.Provider>>
@@ -286,6 +286,111 @@ describe('Toast', () => {
       expect(await screen.findByText('First toast')).toBeInTheDocument();
       expect(await screen.findByText('Second toast')).toBeInTheDocument();
       expect(await screen.findByText('Third toast')).toBeInTheDocument();
+    });
+  });
+
+  describe('Anchored toasts', () => {
+    const renderWithAnchor = () => {
+      const manager = Toast.createToastManager();
+      render(
+        <Toast.Provider toastManager={manager}>
+          <button type='button'>Copy</button>
+        </Toast.Provider>
+      );
+      return { manager, anchor: screen.getByText('Copy') };
+    };
+
+    it('renders a toast with an anchor in a positioner with an arrow', async () => {
+      const { manager, anchor } = renderWithAnchor();
+      act(() => {
+        manager.add({
+          title: 'Copied',
+          positionerProps: { anchor, side: 'bottom' }
+        });
+      });
+      const toastEl = (await screen.findByText('Copied')).closest(
+        '[data-slot="toast"]'
+      );
+      const positioner = toastEl?.closest('[data-slot="toast-positioner"]');
+      expect(positioner).toHaveAttribute('data-side', 'bottom');
+      expect(
+        toastEl?.querySelector('[data-slot="toast-arrow"]')
+      ).toBeInTheDocument();
+      expect(
+        toastEl?.closest('[data-slot="toast-anchored-viewport"]')
+      ).toBeInTheDocument();
+    });
+
+    it('keeps toasts without an anchor in the stacked viewport', async () => {
+      const { manager, anchor } = renderWithAnchor();
+      act(() => {
+        manager.add({ title: 'Anchored', positionerProps: { anchor } });
+        manager.add({ title: 'Stacked' });
+      });
+      const stacked = (await screen.findByText('Stacked')).closest(
+        '[data-slot="toast"]'
+      );
+      expect(stacked).toHaveAttribute('data-position', 'bottom-right');
+      // The anchored toast does not count toward the stack.
+      expect(
+        (stacked as HTMLElement).style.getPropertyValue('--toast-index')
+      ).toBe('0');
+      expect(
+        stacked?.closest('[data-slot="toast-positioner"]')
+      ).not.toBeInTheDocument();
+      expect(
+        stacked?.querySelector('[data-slot="toast-arrow"]')
+      ).not.toBeInTheDocument();
+      expect(stacked?.closest('[data-slot="toast-viewport"]')).not.toBeNull();
+    });
+
+    it('closes an anchored toast by id', async () => {
+      const { manager, anchor } = renderWithAnchor();
+      const onClose = vi.fn();
+      let id: string;
+      act(() => {
+        id = manager.add({
+          title: 'Copied',
+          positionerProps: { anchor },
+          onClose
+        });
+      });
+      await screen.findByText('Copied');
+      act(() => {
+        manager.close(id!);
+      });
+      await waitFor(() => {
+        expect(onClose).toHaveBeenCalled();
+      });
+    });
+
+    it('routes anchored toasts from useToastManager', async () => {
+      function CopyButton() {
+        const { add } = useToastManager();
+        return (
+          <button
+            type='button'
+            onClick={event =>
+              add({
+                title: 'Copied',
+                positionerProps: { anchor: event.currentTarget }
+              })
+            }
+          >
+            Copy
+          </button>
+        );
+      }
+      render(
+        <Toast.Provider toastManager={Toast.createToastManager()}>
+          <CopyButton />
+        </Toast.Provider>
+      );
+      await userEvent.click(screen.getByText('Copy'));
+      const toastEl = await screen.findByText('Copied');
+      expect(
+        toastEl.closest('[data-slot="toast-positioner"]')
+      ).toBeInTheDocument();
     });
   });
 
