@@ -1,4 +1,4 @@
-export interface AccordionRootProps {
+export interface AccordionRootProps<Value = string> {
   /**
    * Whether multiple  accordion items can be open at the same time.
    * @defaultValue false
@@ -6,25 +6,25 @@ export interface AccordionRootProps {
   multiple?: boolean;
 
   /**
-   * The controlled value of the accordion.
-   * For single mode: string | undefined
-   * For multiple mode: string[]
+   * The controlled value of the accordion. `Value` in single mode, `Value[]` with `multiple`.
+   *
+   * @remarks `Value | Value[]`
    */
-  value?: string | string[];
+  value?: Value | Value[];
 
   /**
-   * The default value of the accordion.
-   * For single mode: string | undefined
-   * For multiple mode: string[]
+   * The default value of the accordion. `Value` in single mode, `Value[]` with `multiple`.
+   *
+   * @remarks `Value | Value[]`
    */
-  defaultValue?: string | string[];
+  defaultValue?: Value | Value[];
 
   /**
-   * Event handler called when the value changes.
-   * For single mode: (value?: string) => void
-   * For multiple mode: (value?: string[]) => void
+   * Event handler called when the value changes. In single mode it receives `''` when every item closes.
+   *
+   * @remarks `(value: Value | '') => void` in single mode, `(value: Value[]) => void` with `multiple`
    */
-  onValueChange?: (value?: string | string[]) => void;
+  onValueChange?: (value: Value | '' | Value[]) => void;
 
   /**
    * Whether the accordion is disabled

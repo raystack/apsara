@@ -4,64 +4,74 @@ import { Accordion as AccordionPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import styles from './accordion.module.css';
 
-type AccordionSingleProps = Omit<
-  AccordionPrimitive.Root.Props,
+type AccordionBaseProps<Value> = Omit<
+  AccordionPrimitive.Root.Props<Value>,
   'multiple' | 'value' | 'defaultValue' | 'onValueChange'
-> & {
+>;
+
+type AccordionSingleProps<Value> = AccordionBaseProps<Value> & {
   multiple?: false;
-  value?: string;
-  defaultValue?: string;
-  onValueChange?: (value?: string) => void;
+  value?: Value;
+  defaultValue?: Value;
+  onValueChange?: (value: Value | '') => void;
 };
 
-type AccordionMultipleProps = Omit<
-  AccordionPrimitive.Root.Props,
-  'multiple' | 'value' | 'defaultValue' | 'onValueChange'
-> & {
+type AccordionMultipleProps<Value> = AccordionBaseProps<Value> & {
   multiple: true;
-  value?: string[];
-  defaultValue?: string[];
-  onValueChange?: (value?: string[]) => void;
+  value?: Value[];
+  defaultValue?: Value[];
+  onValueChange?: (value: Value[]) => void;
 };
 
-export type AccordionRootProps = AccordionSingleProps | AccordionMultipleProps;
+export type AccordionRootProps<Value = string> =
+  | AccordionSingleProps<Value>
+  | AccordionMultipleProps<Value>;
 
 /**
- * Convert the wrapper's `string | string[]` API into Base UI's `string[]` format.
+ * Convert the wrapper's `Value | Value[]` API into Base UI's `Value[]` format.
  *
  * Only `undefined` maps to `undefined` (uncontrolled).
  * Empty string and empty array map to `[]` (controlled, nothing open), which prevents the
  * controlled → uncontrolled flip that would otherwise break reopen-after-close.
  */
-const toArray = (v: string | string[] | undefined): string[] | undefined => {
+function toArray<Value>(
+  v: Value | Value[] | '' | undefined
+): Value[] | undefined {
   if (v === undefined) return undefined;
   if (Array.isArray(v)) return v;
-  return v === '' ? [] : [v];
-};
+  return v === '' ? [] : [v as Value];
+}
 
-export const AccordionRoot = ({
+// Overloads let `multiple` pick the props shape before `Value` is inferred.
+export function AccordionRoot<Value = string>(
+  props: AccordionSingleProps<Value>
+): React.JSX.Element;
+export function AccordionRoot<Value = string>(
+  props: AccordionMultipleProps<Value>
+): React.JSX.Element;
+export function AccordionRoot<Value = string>(
+  props: AccordionRootProps<Value>
+): React.JSX.Element;
+export function AccordionRoot<Value = string>({
   className,
   multiple = false,
   value,
   defaultValue,
   onValueChange,
   ...rest
-}: AccordionRootProps) => {
-  const handleValueChange = (
-    newValue: string[],
-    eventDetails: AccordionPrimitive.Root.ChangeEventDetails
-  ) => {
+}: AccordionRootProps<Value>) {
+  const handleValueChange = (newValue: Value[]) => {
     if (!onValueChange) return;
 
     if (multiple) {
-      (onValueChange as (v: string[]) => void)(newValue);
+      (onValueChange as (v: Value[]) => void)(newValue);
     } else {
-      (onValueChange as (v: string) => void)(newValue[0] ?? '');
+      (onValueChange as (v: Value | '') => void)(newValue[0] ?? '');
     }
   };
 
   return (
-    <AccordionPrimitive.Root
+    <AccordionPrimitive.Root<Value>
       className={cx(styles.accordion, className)}
       multiple={multiple}
       value={toArray(value)}
@@ -71,6 +81,6 @@ export const AccordionRoot = ({
       {...rest}
     />
   );
-};
+}
 
 AccordionRoot.displayName = 'Accordion';
