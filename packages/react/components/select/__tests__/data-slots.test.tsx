@@ -45,10 +45,10 @@ describe('Select data-slot contract', () => {
     ]);
   });
 
-  it('exposes content, list, group, label, separator and item slots when open', async () => {
+  it('exposes content, list, group, label, separator, item and indicator slots when open', async () => {
     const user = userEvent.setup();
     render(
-      <Select>
+      <Select defaultValue='apple'>
         <Select.Trigger>
           <Select.Value placeholder='Select a fruit' />
         </Select.Trigger>
@@ -76,7 +76,8 @@ describe('Select data-slot contract', () => {
       'select-label',
       'select-separator',
       'select-item',
-      'select-item-text'
+      'select-item-text',
+      'select-item-indicator'
     ]);
   });
 

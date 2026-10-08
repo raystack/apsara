@@ -81,6 +81,23 @@ describe('Select', () => {
   });
 
   describe('Single Selection', () => {
+    it('marks only the selected item with an indicator', async () => {
+      const user = userEvent.setup();
+      render(<BasicSelect defaultValue='banana' />);
+      await flushMicrotasks();
+      await openSelect(user);
+      await flushMicrotasks();
+
+      const options = screen.getAllByRole('option');
+      expect(
+        options[1].querySelector('[data-slot="select-item-indicator"]')
+      ).not.toBeNull();
+      expect(
+        options[0].querySelector('[data-slot="select-item-indicator"]')
+      ).toBeNull();
+      expect(within(options[1]).queryByRole('checkbox')).toBeNull();
+    });
+
     it('displays selected value in trigger', async () => {
       render(<BasicSelect defaultValue='apple' />);
       await flushMicrotasks();
@@ -279,6 +296,21 @@ describe('Select', () => {
       expect(screen.getByRole('listbox')).toBeInTheDocument();
       const searchInput = screen.getByPlaceholderText('Search...');
       expect(searchInput).toBeInTheDocument();
+    });
+
+    it('marks the selected item with an indicator', async () => {
+      render(<BasicSelect autocomplete defaultValue='banana' />);
+
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+
+      const options = screen.getAllByRole('option');
+      expect(
+        options[1].querySelector('[data-slot="select-item-indicator"]')
+      ).not.toBeNull();
+      expect(
+        options[0].querySelector('[data-slot="select-item-indicator"]')
+      ).toBeNull();
     });
 
     it('filters options based on search', async () => {
