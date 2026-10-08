@@ -372,6 +372,64 @@ describe('DataView', () => {
       ).toBeInTheDocument();
     });
 
+    it('does not offer select or multiselect fields without filterOptions', () => {
+      const fields: DataViewField<TestData>[] = [
+        { accessorKey: 'name', label: 'Name', filterable: true },
+        {
+          accessorKey: 'status',
+          label: 'Status',
+          filterable: true,
+          filterType: 'select',
+          filterOptions: [{ label: 'Active', value: 'string' }]
+        },
+        {
+          accessorKey: 'email',
+          label: 'Email',
+          filterable: true,
+          filterType: 'select',
+          filterOptions: []
+        },
+        {
+          accessorKey: 'id',
+          label: 'Id',
+          filterable: true,
+          filterType: 'multiselect'
+        }
+      ];
+      render(
+        <DataView data={mockData} fields={fields} defaultSort={defaultSort}>
+          <DataView.Filters
+            trigger={({ availableFilters }) => (
+              <button type='button'>
+                {availableFilters.map(f => f.label).join(',')}
+              </button>
+            )}
+          />
+        </DataView>
+      );
+      expect(screen.getByRole('button')).toHaveTextContent(/^Name,Status$/);
+    });
+
+    it('disables the filter trigger while select options are loading', () => {
+      render(
+        <DataView
+          data={mockData}
+          fields={[
+            {
+              accessorKey: 'name',
+              label: 'Name',
+              filterable: true,
+              filterType: 'select'
+            }
+          ]}
+          defaultSort={defaultSort}
+        >
+          <DataView.Filters />
+        </DataView>
+      );
+      expect(screen.getByRole('button', { name: /filter/i })).toBeDisabled();
+    });
+
     it('search input updates the query', async () => {
       const user = userEvent.setup();
       render(
