@@ -17,6 +17,7 @@ import {
   withInputDemo,
   withTextAreaDemo,
   withSelectDemo,
+  itemDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -74,6 +75,12 @@ Field wraps a TextArea the same way it wraps an Input, so the label, description
 Base UI-based components like Select auto-connect with Field for accessibility.
 
 <Demo data={withSelectDemo} />
+
+### With a checkbox or radio group
+
+Wrap each option in `Field.Item` to give it its own label and description.
+
+<Demo data={itemDemo} />
 
 ### Error state
 
@@ -160,6 +167,12 @@ A paragraph with additional information about the field. Renders a `<p>` element
 
 <auto-type-table path="./props.ts" name="FieldDescriptionProps" />
 
+### Item
+
+Groups one option of a checkbox group or radio group with its own label and description. Renders a `<div>` element.
+
+<auto-type-table path="./props.ts" name="FieldItemProps" />
+
 ### Validity
 
 Provides field validity state to a render function. Use for custom validity-based rendering.
@@ -177,6 +190,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `field-helper` | Wrapper around the description and error (simple API, when either is set) |
 | `field-description` | The description text (when set) |
 | `field-error` | The error message (when the field is invalid) |
+| `field-item` | One option in a checkbox or radio group (`Field.Item`) |
 
 ## Accessibility
 

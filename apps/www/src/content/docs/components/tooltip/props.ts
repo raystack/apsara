@@ -39,6 +39,19 @@ export interface TooltipTriggerProps {
   render?: React.ReactElement;
 
   /**
+   * Whether the tooltip closes when the trigger is clicked.
+   * @default true
+   */
+  closeOnClick?: boolean;
+
+  /**
+   * Additional CSS class names
+   */
+  className?: string;
+}
+
+export interface TooltipViewportProps {
+  /**
    * Additional CSS class names
    */
   className?: string;

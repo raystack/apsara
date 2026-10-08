@@ -154,3 +154,30 @@ function ControlledPopover() {
   );
 }`
 };
+
+export const viewportDemo = {
+  type: 'code',
+  code: `
+function SharedPopover() {
+  const [handle] = React.useState(() => Popover.createHandle());
+
+  return (
+    <>
+      <Flex gap={3} align="center">
+        <Popover.Trigger handle={handle} payload="Two unread messages." render={<Button variant="outline" />}>Inbox</Popover.Trigger>
+        <Popover.Trigger handle={handle} payload="Nothing scheduled for today." render={<Button variant="outline" />}>Calendar</Popover.Trigger>
+        <Popover.Trigger handle={handle} payload="All tasks are done." render={<Button variant="outline" />}>Tasks</Popover.Trigger>
+      </Flex>
+      <Popover handle={handle}>
+        {({ payload }) => (
+          <Popover.Content>
+            <Popover.Viewport>
+              <Text size="small">{payload}</Text>
+            </Popover.Viewport>
+          </Popover.Content>
+        )}
+      </Popover>
+    </>
+  );
+}`
+};

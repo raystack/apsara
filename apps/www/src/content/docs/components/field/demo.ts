@@ -127,3 +127,25 @@ export const withSelectDemo = {
   </Select>
 </Field>`
 };
+
+export const itemDemo = {
+  type: 'code',
+  code: `<Field name="notifications" label="Notifications">
+  <Checkbox.Group defaultValue={['email']}>
+    <Field.Item>
+      <Field.Label>
+        <Checkbox value="email" />
+        Email
+      </Field.Label>
+      <Field.Description>A summary once a day</Field.Description>
+    </Field.Item>
+    <Field.Item>
+      <Field.Label>
+        <Checkbox value="sms" />
+        SMS
+      </Field.Label>
+      <Field.Description>Only for security alerts</Field.Description>
+    </Field.Item>
+  </Checkbox.Group>
+</Field>`
+};
