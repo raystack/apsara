@@ -99,8 +99,14 @@ export type ThemeProps = {
    */
   disableTransitionOnChange?: boolean;
 
-  /** CSP nonce for the inline script. */
+  /** CSP nonce for the theme's inline tags and Base UI's inline tags. */
   nonce?: string;
+
+  /**
+   * Text direction for this scope and its Base UI components. A nested theme inherits it when unset.
+   * @defaultValue "ltr"
+   */
+  dir?: 'ltr' | 'rtl';
 
   /** `asChild`-style escape hatch: merges the theme onto your own element. */
   render?: React.ReactElement | ((props: object) => React.ReactElement);
