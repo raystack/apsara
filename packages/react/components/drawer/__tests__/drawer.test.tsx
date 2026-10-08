@@ -249,4 +249,96 @@ describe('Drawer', () => {
       });
     });
   });
+
+  describe('Swipe Area', () => {
+    const renderSwipeArea = (side?: 'top' | 'right' | 'bottom' | 'left') =>
+      render(
+        <Drawer side={side}>
+          <Drawer.SwipeArea data-testid='swipe-area' />
+          <Drawer.Content side={side}>{DRAWER_CONTENT}</Drawer.Content>
+        </Drawer>
+      ).getByTestId('swipe-area');
+
+    it('applies the swipe area class', () => {
+      expect(renderSwipeArea()).toHaveClass(styles.swipeArea);
+    });
+
+    it.each([
+      ['right', 'left'],
+      ['left', 'right'],
+      ['top', 'down'],
+      ['bottom', 'up']
+    ] as const)('opens a %s drawer with a %s swipe', (side, direction) => {
+      expect(renderSwipeArea(side)).toHaveAttribute(
+        'data-swipe-direction',
+        direction
+      );
+    });
+
+    it('follows a swipeDirection set on the root', () => {
+      const swipeArea = render(
+        <Drawer side='right' swipeDirection='down'>
+          <Drawer.SwipeArea data-testid='swipe-area' />
+        </Drawer>
+      ).getByTestId('swipe-area');
+      expect(swipeArea).toHaveAttribute('data-swipe-direction', 'up');
+    });
+
+    it('accepts its own swipeDirection', () => {
+      const swipeArea = render(
+        <Drawer side='right'>
+          <Drawer.SwipeArea data-testid='swipe-area' swipeDirection='up' />
+        </Drawer>
+      ).getByTestId('swipe-area');
+      expect(swipeArea).toHaveAttribute('data-swipe-direction', 'up');
+    });
+
+    it('marks the swipe area as disabled', () => {
+      const swipeArea = render(
+        <Drawer>
+          <Drawer.SwipeArea data-testid='swipe-area' disabled />
+        </Drawer>
+      ).getByTestId('swipe-area');
+      expect(swipeArea).toHaveAttribute('data-disabled');
+    });
+  });
+
+  describe('Indent', () => {
+    const IndentedDrawer = ({ open }: { open: boolean }) => (
+      <Drawer.Provider>
+        <Drawer.IndentBackground data-testid='indent-background' />
+        <Drawer.Indent data-testid='indent'>
+          <Drawer open={open} side='bottom'>
+            <Drawer.Content side='bottom'>{DRAWER_CONTENT}</Drawer.Content>
+          </Drawer>
+        </Drawer.Indent>
+      </Drawer.Provider>
+    );
+
+    it('applies the indent classes', () => {
+      render(<IndentedDrawer open={false} />);
+      expect(screen.getByTestId('indent')).toHaveClass(styles.indent);
+      expect(screen.getByTestId('indent-background')).toHaveClass(
+        styles.indentBackground
+      );
+    });
+
+    it('is inactive while every drawer is closed', () => {
+      render(<IndentedDrawer open={false} />);
+      expect(screen.getByTestId('indent')).not.toHaveAttribute('data-active');
+      expect(screen.getByTestId('indent-background')).not.toHaveAttribute(
+        'data-active'
+      );
+    });
+
+    it('becomes active when a drawer opens', async () => {
+      render(<IndentedDrawer open />);
+      await waitFor(() => {
+        expect(screen.getByTestId('indent')).toHaveAttribute('data-active');
+        expect(screen.getByTestId('indent-background')).toHaveAttribute(
+          'data-active'
+        );
+      });
+    });
+  });
 });
