@@ -118,6 +118,18 @@ One theme per document owns the page colour scheme: the scrollbar, the overscrol
 </Theme>
 ```
 
+### dir
+
+`dir` sets the text direction for a scope. Theme sets the `dir` attribute on its element and on portalled popups. It also wraps its children in Base UI's `DirectionProvider`, so keyboard navigation follows the direction. In `rtl`, `ArrowLeft` moves to the next tab.
+
+```tsx
+<Theme dir="rtl">
+  <App />
+</Theme>
+```
+
+A nested theme without `dir` inherits its parent's direction and sets no attribute of its own. With no `dir` anywhere, Base UI components use `ltr`.
+
 ### render
 
 Merge the theme onto your own element instead of adding a wrapper:
@@ -161,7 +173,7 @@ Themes sharing a `persistKey` stay in step, across tabs as well. Writes merge in
 
 ## Server rendering
 
-Settings are props, so the server renders them. An inline script, the theme element's first child, patches in what the server cannot know before first paint: stored values, and the OS answer for a `system` appearance. A pinned appearance with no `persistKey` ships no script. Pass `nonce` if your CSP needs one.
+Settings are props, so the server renders them. An inline script, the theme element's first child, patches in what the server cannot know before first paint: stored values, and the OS answer for a `system` appearance. A pinned appearance with no `persistKey` ships no script. Pass `nonce` if your CSP needs one. Theme puts it on its own inline tags and passes it to Base UI's `CSPProvider`, so the inline `<style>` tags that Base UI components render (for example `ScrollArea`) get it too. A nested theme without `nonce` keeps its parent's.
 
 ```tsx
 // Next.js App Router: app/layout.tsx
