@@ -78,16 +78,50 @@ export const groupDemo = {
     <Combobox.Input placeholder="Search items" width={240} />
     <Combobox.Content>
       <Combobox.Group>
-        <Combobox.Label>Fruits</Combobox.Label>
+        <Combobox.GroupLabel>Fruits</Combobox.GroupLabel>
         <Combobox.Item value="apple">Apple</Combobox.Item>
         <Combobox.Item value="banana">Banana</Combobox.Item>
       </Combobox.Group>
       <Combobox.Separator />
       <Combobox.Group>
-        <Combobox.Label>Vegetables</Combobox.Label>
+        <Combobox.GroupLabel>Vegetables</Combobox.GroupLabel>
         <Combobox.Item value="carrot">Carrot</Combobox.Item>
         <Combobox.Item value="broccoli">Broccoli</Combobox.Item>
       </Combobox.Group>
+    </Combobox.Content>
+  </Combobox>`
+};
+
+export const labelDemo = {
+  type: 'code',
+  code: `
+  <Combobox multiple>
+    <Flex direction="column" gap={2}>
+      <Combobox.Label>Fruits</Combobox.Label>
+      <Flex align="center" gap={2}>
+        <Combobox.Input placeholder="Select fruits" width={300} />
+        <Combobox.Clear />
+      </Flex>
+    </Flex>
+    <Combobox.Content>
+      <Combobox.Item>Apple</Combobox.Item>
+      <Combobox.Item>Banana</Combobox.Item>
+      <Combobox.Item>Grape</Combobox.Item>
+      <Combobox.Item>Orange</Combobox.Item>
+    </Combobox.Content>
+  </Combobox>`
+};
+
+export const emptyDemo = {
+  type: 'code',
+  code: `
+  <Combobox>
+    <Combobox.Input placeholder="Type 'xyz'" width={240} />
+    <Combobox.Content>
+      <Combobox.Empty>No fruit matches your search</Combobox.Empty>
+      <Combobox.Item>Apple</Combobox.Item>
+      <Combobox.Item>Banana</Combobox.Item>
+      <Combobox.Item>Grape</Combobox.Item>
     </Combobox.Content>
   </Combobox>`
 };
