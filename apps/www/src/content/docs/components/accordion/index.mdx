@@ -43,6 +43,8 @@ Start with how many sections may be open at once, then decide whether you own th
 
 Pass `value` with `onValueChange` to own which item is open. Do this when something outside the accordion has to open or close a section.
 
+The value type is `string` by default. `Accordion` infers it from `value`, or you can set it, as in `<Accordion<Section>>`. A value of the wrong type is a type error.
+
 <Demo data={controlledDemo} />
 
 ### Disabled items
