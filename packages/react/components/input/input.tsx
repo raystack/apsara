@@ -40,6 +40,96 @@ export interface InputProps
   classNames?: { container?: string };
 }
 
+interface InputFrameProps extends VariantProps<typeof inputWrapper> {
+  disabled?: boolean;
+  hasChips?: boolean;
+  leadingIcon?: ReactNode;
+  trailingIcon?: ReactNode;
+  prefix?: string;
+  suffix?: string;
+  containerRef?: RefObject<HTMLDivElement | null>;
+  className?: string;
+  children: ReactNode;
+}
+
+/** The input box around the field. Combobox uses it to place Base UI chips. */
+export function InputFrame({
+  disabled,
+  hasChips,
+  leadingIcon,
+  trailingIcon,
+  prefix,
+  suffix,
+  size,
+  radius,
+  variant,
+  containerRef,
+  className,
+  children
+}: InputFrameProps) {
+  return (
+    <div
+      className={cx(
+        inputWrapper({ size, variant, radius }),
+        hasChips && styles['has-chips'],
+        className
+      )}
+      data-disabled={disabled || undefined}
+      data-slot='input-container'
+      ref={containerRef}
+    >
+      {leadingIcon && (
+        <div
+          className={styles['leading-icon']}
+          aria-hidden='true'
+          data-slot='input-leading-icon'
+        >
+          {leadingIcon}
+        </div>
+      )}
+      {prefix && (
+        <div className={styles.prefix} data-slot='input-prefix'>
+          {prefix}
+        </div>
+      )}
+      {children}
+      {suffix && (
+        <div className={styles.suffix} data-slot='input-suffix'>
+          {suffix}
+        </div>
+      )}
+      {trailingIcon && (
+        <div
+          className={styles['trailing-icon']}
+          aria-hidden='true'
+          data-slot='input-trailing-icon'
+        >
+          {trailingIcon}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function inputFieldClassName({
+  leadingIcon,
+  trailingIcon,
+  prefix,
+  suffix,
+  className
+}: Pick<InputProps, 'leadingIcon' | 'trailingIcon' | 'prefix' | 'suffix'> & {
+  className?: string;
+}) {
+  return cx(
+    styles['input-field'],
+    leadingIcon && styles['has-leading-icon'],
+    trailingIcon && styles['has-trailing-icon'],
+    prefix && styles['has-prefix'],
+    suffix && styles['has-suffix'],
+    className
+  );
+}
+
 export function Input({
   className,
   disabled,
@@ -62,31 +152,19 @@ export function Input({
   const resolvedRequired = required ?? fieldContext?.required;
 
   return (
-    <div
-      className={cx(
-        inputWrapper({ size, variant, radius }),
-        chips?.length && styles['has-chips'],
-        classNames?.container
-      )}
-      data-disabled={disabled || undefined}
-      data-slot='input-container'
-      ref={containerRef}
+    <InputFrame
+      disabled={disabled}
+      hasChips={!!chips?.length}
+      leadingIcon={leadingIcon}
+      trailingIcon={trailingIcon}
+      prefix={prefix}
+      suffix={suffix}
+      size={size}
+      radius={radius}
+      variant={variant}
+      containerRef={containerRef}
+      className={classNames?.container}
     >
-      {leadingIcon && (
-        <div
-          className={styles['leading-icon']}
-          aria-hidden='true'
-          data-slot='input-leading-icon'
-        >
-          {leadingIcon}
-        </div>
-      )}
-      {prefix && (
-        <div className={styles.prefix} data-slot='input-prefix'>
-          {prefix}
-        </div>
-      )}
-
       <div
         className={styles['chip-input-container']}
         data-slot='input-chip-container'
@@ -114,36 +192,23 @@ export function Input({
         )}
         <InputPrimitive
           data-slot='input'
-          className={cx(
-            styles['input-field'],
-            leadingIcon && styles['has-leading-icon'],
-            trailingIcon && styles['has-trailing-icon'],
-            prefix && styles['has-prefix'],
-            suffix && styles['has-suffix'],
-            className
-          )}
+          className={state =>
+            inputFieldClassName({
+              leadingIcon,
+              trailingIcon,
+              prefix,
+              suffix,
+              className:
+                typeof className === 'function' ? className(state) : className
+            })
+          }
           placeholder={chips?.length ? undefined : placeholder}
           disabled={disabled}
           required={resolvedRequired}
           {...props}
         />
       </div>
-
-      {suffix && (
-        <div className={styles.suffix} data-slot='input-suffix'>
-          {suffix}
-        </div>
-      )}
-      {trailingIcon && (
-        <div
-          className={styles['trailing-icon']}
-          aria-hidden='true'
-          data-slot='input-trailing-icon'
-        >
-          {trailingIcon}
-        </div>
-      )}
-    </div>
+    </InputFrame>
   );
 }
 
