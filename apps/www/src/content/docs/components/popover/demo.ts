@@ -139,8 +139,8 @@ function ControlledPopover() {
   return (
     <Flex align="center" gap={5}>
       <Popover open={open} onOpenChange={setOpen}>
-        <Popover.Trigger asChild>
-          <Button variant="outline">Filters</Button>
+        <Popover.Trigger render={<Button variant="outline" />}>
+          Filters
         </Popover.Trigger>
         <Popover.Content>
           <Flex direction="column" gap={4} style={{ padding: 4 }}>

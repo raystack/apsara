@@ -12,18 +12,24 @@ export interface TooltipProps {
   /**
    * Event handler called when the open state of the tooltip changes.
    */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (open: boolean, eventDetails: unknown) => void;
 
   /**
-   * Delay before showing the tooltip, in milliseconds.
-   * @default 200
+   * Event handler called after any animations complete when the tooltip is opened or closed.
    */
-  delayDuration?: number;
+  onOpenChangeComplete?: (open: boolean) => void;
 
   /**
-   * Prevents Tooltip from remaining open when hovering. Disabling this has accessibility consequences.
+   * Whether the tooltip contents can be hovered without closing the tooltip.
+   * @default false
    */
-  disableHoverableContent?: boolean;
+  disableHoverablePopup?: boolean;
+
+  /**
+   * Whether the tooltip is disabled.
+   * @default false
+   */
+  disabled?: boolean;
 
   /**
    * Track cursor axis ('none', 'x', 'y', or 'both')
@@ -39,10 +45,28 @@ export interface TooltipTriggerProps {
   render?: React.ReactElement;
 
   /**
+   * How long to wait before opening the tooltip on hover, in milliseconds.
+   * @default 200
+   */
+  delay?: number;
+
+  /**
+   * How long to wait before closing the tooltip, in milliseconds.
+   * @default 0
+   */
+  closeDelay?: number;
+
+  /**
    * Whether the tooltip closes when the trigger is clicked.
    * @default true
    */
   closeOnClick?: boolean;
+
+  /**
+   * Stops the tooltip from opening from this trigger. It does not disable the trigger element.
+   * @default false
+   */
+  disabled?: boolean;
 
   /**
    * Additional CSS class names
