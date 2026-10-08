@@ -57,6 +57,9 @@ export interface ComboboxRootProps {
    * @remarks `unknown[] | ReturnType<typeof Combobox.createItems>`
    */
   items?: unknown[];
+
+  /** The `id` of the input. `Combobox.Label` uses it. */
+  id?: string;
 }
 
 export interface ComboboxInputProps {
@@ -135,6 +138,65 @@ export interface ComboboxGroupProps {
 }
 
 export interface ComboboxLabelProps {
+  /** Shows `optionalText` after the label when `false`. */
+  required?: boolean;
+
+  /**
+   * Text shown after the label when `required` is `false`.
+   * @default "(optional)"
+   */
+  optionalText?: string;
+
+  /** Additional CSS class names. */
+  className?: string;
+}
+
+export interface ComboboxClearProps {
+  /**
+   * Size of the button.
+   * @default 2
+   */
+  size?: 1 | 2 | 3 | 4;
+
+  /**
+   * Accessible name of the button.
+   * @default "Clear"
+   */
+  'aria-label'?: string;
+
+  /**
+   * The icon inside the button.
+   * @default <ClearIcon />
+   */
+  children?: React.ReactNode;
+
+  /** Additional CSS class names. */
+  className?: string;
+}
+
+export interface ComboboxEmptyProps {
+  /**
+   * The text shown when no item matches.
+   * @default "No results"
+   */
+  children?: React.ReactNode;
+
+  /** Additional CSS class names. */
+  className?: string;
+}
+
+export interface ComboboxStatusProps {
+  /**
+   * The text to announce.
+   * @defaultValue The number of matching items, for example "3 results"
+   */
+  children?: React.ReactNode;
+
+  /** Additional CSS class names. */
+  className?: string;
+}
+
+export interface ComboboxGroupLabelProps {
   /** Additional CSS class names. */
   className?: string;
 }
