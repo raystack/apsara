@@ -25,12 +25,20 @@ export interface ThemeContextValue extends ThemeHandle {
   isRoot: boolean;
 }
 
+export type ThemeDirection = 'ltr' | 'rtl';
+
 export const ThemeContext = createContext<ThemeContextValue | null>(null);
 ThemeContext.displayName = 'ThemeContext';
 
 /** The root provider's handle, carried past every nested scope. */
 export const RootThemeContext = createContext<ThemeHandle | null>(null);
 RootThemeContext.displayName = 'RootThemeContext';
+
+/** The nearest `dir` a theme set. Unset when no theme in the chain set one. */
+export const ThemeDirectionContext = createContext<ThemeDirection | undefined>(
+  undefined
+);
+ThemeDirectionContext.displayName = 'ThemeDirectionContext';
 
 export interface UseThemeReturn extends ThemeHandle {
   /** The same shape bound to the root provider. */

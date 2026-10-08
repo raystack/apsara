@@ -1,5 +1,6 @@
 'use client';
 
+import { CSPProvider, DirectionProvider } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import {
   type CSSProperties,
@@ -25,6 +26,8 @@ import {
   RootThemeContext,
   ThemeContext,
   type ThemeContextValue,
+  type ThemeDirection,
+  ThemeDirectionContext,
   type ThemeHandle,
   useThemeContextOrNull
 } from './context';
@@ -56,7 +59,10 @@ export type ThemeRenderProp =
   | ((props: Record<string, unknown>) => ReactElement);
 
 export interface ThemeProps
-  extends Omit<HTMLAttributes<HTMLElement>, 'defaultValue' | 'onChange'> {
+  extends Omit<
+    HTMLAttributes<HTMLElement>,
+    'defaultValue' | 'onChange' | 'dir'
+  > {
   /** Seeds uncontrolled keys. A stored user choice overrides it. */
   defaultValue?: Partial<ThemeSettings>;
   /** Per-key control. Wins over storage and is never persisted. */
@@ -79,8 +85,13 @@ export interface ThemeProps
   hasBackground?: boolean;
   /** Switches appearance with no crossfade, and no component transitions either. */
   disableTransitionOnChange?: boolean;
-  /** CSP nonce for the inline script. */
+  /** CSP nonce for the theme's inline tags and Base UI's inline tags. */
   nonce?: string;
+  /**
+   * Text direction for this scope and its Base UI components. A nested theme inherits it when unset.
+   * @default 'ltr'
+   */
+  dir?: ThemeDirection;
   /**
    * Icon overrides. `components` replaces a drawing by key, `props` applies to
    * every icon built by `createIcon`. Both layer per key across nested themes,
@@ -218,6 +229,7 @@ export function Theme({
   hasBackground,
   disableTransitionOnChange = false,
   nonce,
+  dir,
   icons,
   render,
   className,
@@ -396,7 +408,7 @@ export function Theme({
 
   // Only when configured, so a tree without icon overrides gains no provider.
   const { components: iconComponents, props: iconProps } = icons ?? {};
-  const content =
+  let content =
     iconComponents || iconProps ? (
       <IconProvider components={iconComponents} props={iconProps}>
         {children}
@@ -404,6 +416,17 @@ export function Theme({
     ) : (
       children
     );
+  // Unset props add no provider, so a nested theme keeps its parent's values.
+  if (dir) {
+    content = (
+      <ThemeDirectionContext.Provider value={dir}>
+        <DirectionProvider direction={dir}>{content}</DirectionProvider>
+      </ThemeDirectionContext.Provider>
+    );
+  }
+  if (nonce) {
+    content = <CSPProvider nonce={nonce}>{content}</CSPProvider>;
+  }
 
   // Where no script ran, the server's guess survives hydration silently.
   useEffect(() => {
@@ -430,6 +453,7 @@ export function Theme({
     ref: setRef,
     className: cx(THEME_CLASS, className),
     ...attributes,
+    dir,
     [ROOT_ATTRIBUTE]: isRootTheme ? '' : undefined,
     'data-rs-background': paints ? '' : undefined,
     [THEME_ID_ATTRIBUTE]: script ? elementId : undefined,
