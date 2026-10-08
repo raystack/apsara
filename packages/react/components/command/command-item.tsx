@@ -3,6 +3,7 @@
 import { Autocomplete as AutocompletePrimitive } from '@base-ui/react/autocomplete';
 import { cx } from 'class-variance-authority';
 import { type ReactNode } from 'react';
+import { useRegisterItem } from '~/shared/item-count';
 import { getMatch } from '../menu/utils';
 import styles from './command.module.css';
 import { useCommandContext } from './command-root';
@@ -31,14 +32,17 @@ export const CommandItem = ({
 
   const { inputValue, hasItems } = useCommandContext();
 
-  if (!hasItems && inputValue?.length) {
-    const isMatched = getMatch(
+  const hidden =
+    !hasItems &&
+    !!inputValue?.length &&
+    !getMatch(
       typeof value === 'string' ? value : undefined,
       children,
       inputValue
     );
-    if (!isMatched) return null;
-  }
+  useRegisterItem(!hidden);
+
+  if (hidden) return null;
 
   return (
     <AutocompletePrimitive.Item

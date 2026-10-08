@@ -11,6 +11,7 @@ import {
   useRef,
   useState
 } from 'react';
+import { ItemCountProvider } from '~/shared/item-count';
 import styles from './command.module.css';
 
 interface CommandContextValue {
@@ -98,7 +99,7 @@ export const CommandRoot = ({
         {...props}
       >
         <div data-slot='command' className={cx(styles.panel, className)}>
-          {children}
+          <ItemCountProvider>{children}</ItemCountProvider>
         </div>
       </AutocompletePrimitive.Root>
     </CommandContext.Provider>

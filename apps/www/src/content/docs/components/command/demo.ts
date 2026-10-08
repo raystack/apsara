@@ -102,6 +102,7 @@ export const inlineDemo = {
         <Command.Item>Billing</Command.Item>
         <Command.Item>Settings</Command.Item>
       </Command.Content>
+      <Command.Status />
     </Command>
   </Flex>`
 };

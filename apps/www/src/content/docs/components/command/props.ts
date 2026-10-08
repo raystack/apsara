@@ -83,6 +83,20 @@ export interface CommandContentProps {
 }
 
 export interface CommandEmptyProps {
+  /** Content to show when no items match. */
+  children?: React.ReactNode;
+
+  /** Additional CSS class names. */
+  className?: string;
+}
+
+export interface CommandStatusProps {
+  /**
+   * Text to announce while the input has text. A function receives the number of matching items.
+   * @default count => `${count} results`
+   */
+  children?: React.ReactNode | ((count: number) => React.ReactNode);
+
   /** Additional CSS class names. */
   className?: string;
 }

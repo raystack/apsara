@@ -4,7 +4,7 @@ import {
   CommandDialogContent,
   CommandDialogTrigger
 } from './command-dialog';
-import { CommandEmpty } from './command-empty';
+import { CommandEmpty, CommandStatus } from './command-empty';
 import { CommandInput } from './command-input';
 import { CommandItem } from './command-item';
 import { CommandGroup, CommandLabel, CommandSeparator } from './command-misc';
@@ -15,6 +15,7 @@ export const Command = Object.assign(CommandRoot, {
   Content: CommandContent,
   Item: CommandItem,
   Empty: CommandEmpty,
+  Status: CommandStatus,
   Group: CommandGroup,
   Label: CommandLabel,
   Separator: CommandSeparator,
