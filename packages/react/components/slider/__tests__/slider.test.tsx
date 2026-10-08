@@ -1,4 +1,4 @@
-import { act, render, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Slider } from '../slider';
@@ -91,24 +91,127 @@ describe('Slider', () => {
     });
   });
 
-  describe('Labels', () => {
-    it('renders single label', () => {
-      const { container } = render(<Slider label='Volume' />);
+  describe('Thumb labels', () => {
+    it('renders single thumb label', () => {
+      const { container } = render(<Slider thumbLabel='Volume' />);
       expect(container.textContent).toContain('Volume');
     });
 
-    it('renders range labels', () => {
+    it('renders range thumb labels', () => {
       const { container } = render(
-        <Slider variant='range' label={['Min', 'Max']} />
+        <Slider variant='range' thumbLabel={['Min', 'Max']} />
       );
       expect(container.textContent).toContain('Min');
       expect(container.textContent).toContain('Max');
     });
 
     it('sets aria-label for thumbs', () => {
-      const { container } = render(<Slider label='Volume' />);
+      const { container } = render(<Slider thumbLabel='Volume' />);
       const slider = container.querySelector('input[type="range"]');
       expect(slider).toHaveAttribute('aria-label', 'Volume');
+    });
+
+    it('sets aria-label on both thumbs of a range', () => {
+      const { container } = render(
+        <Slider variant='range' thumbLabel={['Min', 'Max']} />
+      );
+      const inputs = container.querySelectorAll('input[type="range"]');
+      expect(inputs[0]).toHaveAttribute('aria-label', 'Min');
+      expect(inputs[1]).toHaveAttribute('aria-label', 'Max');
+    });
+
+    it('uses one string for both thumbs of a range', () => {
+      const { container } = render(
+        <Slider variant='range' thumbLabel='Price' />
+      );
+      const inputs = container.querySelectorAll('input[type="range"]');
+      expect(inputs[0]).toHaveAttribute('aria-label', 'Price');
+      expect(inputs[1]).toHaveAttribute('aria-label', 'Price');
+    });
+
+    it('falls back to default thumb names', () => {
+      const { container, rerender } = render(<Slider />);
+      expect(container.querySelector('input[type="range"]')).toHaveAttribute(
+        'aria-label',
+        'Slider thumb'
+      );
+
+      rerender(<Slider variant='range' />);
+      const inputs = container.querySelectorAll('input[type="range"]');
+      expect(inputs[0]).toHaveAttribute('aria-label', 'Thumb 1');
+      expect(inputs[1]).toHaveAttribute('aria-label', 'Thumb 2');
+    });
+  });
+
+  describe('Label', () => {
+    it('labels the thumb with Slider.Label', () => {
+      const { container } = render(
+        <Slider defaultValue={50}>
+          <Slider.Label>Volume</Slider.Label>
+        </Slider>
+      );
+      const label = screen.getByText('Volume');
+      const input = container.querySelector('input[type="range"]');
+      expect(input).not.toHaveAttribute('aria-label');
+      expect(input).toHaveAttribute('aria-labelledby', label.id);
+    });
+
+    it('labels the root group with Slider.Label', () => {
+      render(
+        <Slider defaultValue={50}>
+          <Slider.Label>Volume</Slider.Label>
+        </Slider>
+      );
+      expect(screen.getByRole('group', { name: 'Volume' })).toBeInTheDocument();
+    });
+
+    it('labels both thumbs of a range with Slider.Label', () => {
+      const { container } = render(
+        <Slider variant='range' defaultValue={[20, 80]}>
+          <Slider.Label>Price</Slider.Label>
+        </Slider>
+      );
+      const label = screen.getByText('Price');
+      const inputs = container.querySelectorAll('input[type="range"]');
+      expect(inputs[0]).toHaveAttribute('aria-labelledby', label.id);
+      expect(inputs[1]).toHaveAttribute('aria-labelledby', label.id);
+    });
+
+    it('prefers thumbLabel over Slider.Label for thumb names', () => {
+      const { container } = render(
+        <Slider
+          variant='range'
+          defaultValue={[20, 80]}
+          thumbLabel={['Min', 'Max']}
+        >
+          <Slider.Label>Price</Slider.Label>
+        </Slider>
+      );
+      const inputs = container.querySelectorAll('input[type="range"]');
+      expect(inputs[0]).toHaveAttribute('aria-label', 'Min');
+      expect(inputs[1]).toHaveAttribute('aria-label', 'Max');
+      expect(screen.getByRole('group', { name: 'Price' })).toBeInTheDocument();
+    });
+
+    it('applies the label class and custom className', () => {
+      render(
+        <Slider>
+          <Slider.Label className='custom-label'>Volume</Slider.Label>
+        </Slider>
+      );
+      const label = screen.getByText('Volume');
+      expect(label).toHaveClass(styles.label);
+      expect(label).toHaveClass('custom-label');
+    });
+
+    it('renders Slider.Value next to the label', () => {
+      render(
+        <Slider defaultValue={30}>
+          <Slider.Label>Volume</Slider.Label>
+          <Slider.Value />
+        </Slider>
+      );
+      expect(screen.getByText('30')).toHaveClass(styles.value);
     });
   });
 
