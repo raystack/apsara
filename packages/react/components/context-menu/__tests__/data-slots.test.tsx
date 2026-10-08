@@ -34,6 +34,13 @@ describe('ContextMenu data-slot contract', () => {
               <ContextMenu.Item>Nested</ContextMenu.Item>
             </ContextMenu.SubmenuContent>
           </ContextMenu.Submenu>
+          <ContextMenu.CheckboxItem defaultChecked>
+            Checkbox
+          </ContextMenu.CheckboxItem>
+          <ContextMenu.RadioGroup defaultValue='a'>
+            <ContextMenu.RadioItem value='a'>Radio</ContextMenu.RadioItem>
+          </ContextMenu.RadioGroup>
+          <ContextMenu.LinkItem href='/docs'>Link</ContextMenu.LinkItem>
           <ContextMenu.EmptyState>Nothing here</ContextMenu.EmptyState>
         </ContextMenu.Content>
       </ContextMenu>
@@ -53,6 +60,12 @@ describe('ContextMenu data-slot contract', () => {
       'context-menu-item',
       'context-menu-separator',
       'context-menu-empty-state',
+      'context-menu-checkbox-item',
+      'context-menu-checkbox-item-indicator',
+      'context-menu-radio-group',
+      'context-menu-radio-item',
+      'context-menu-radio-item-indicator',
+      'context-menu-link-item',
       'menu-subtrigger',
       'menu-cell-leading-icon',
       'menu-cell-trailing-icon'
@@ -92,6 +105,7 @@ describe('ContextMenu data-slot contract', () => {
         <ContextMenu.Trigger>{TRIGGER_TEXT}</ContextMenu.Trigger>
         <ContextMenu.Content>
           <ContextMenu.Item value='item'>Item</ContextMenu.Item>
+          <ContextMenu.Status />
         </ContextMenu.Content>
       </ContextMenu>
     );
@@ -99,7 +113,8 @@ describe('ContextMenu data-slot contract', () => {
     expectSlots(document.body, [
       'context-menu-search-input',
       'context-menu-search-list',
-      'context-menu-item'
+      'context-menu-item',
+      'context-menu-status'
     ]);
   });
 });

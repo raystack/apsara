@@ -34,6 +34,11 @@ describe('Menu data-slot contract', () => {
               <Menu.Item>Nested</Menu.Item>
             </Menu.SubmenuContent>
           </Menu.Submenu>
+          <Menu.CheckboxItem defaultChecked>Checkbox</Menu.CheckboxItem>
+          <Menu.RadioGroup defaultValue='a'>
+            <Menu.RadioItem value='a'>Radio</Menu.RadioItem>
+          </Menu.RadioGroup>
+          <Menu.LinkItem href='/docs'>Link</Menu.LinkItem>
           <Menu.EmptyState>Nothing here</Menu.EmptyState>
         </Menu.Content>
       </Menu>
@@ -53,7 +58,13 @@ describe('Menu data-slot contract', () => {
       'menu-cell-trailing-icon',
       'menu-separator',
       'menu-subtrigger',
-      'menu-empty-state'
+      'menu-empty-state',
+      'menu-checkbox-item',
+      'menu-checkbox-item-indicator',
+      'menu-radio-group',
+      'menu-radio-item',
+      'menu-radio-item-indicator',
+      'menu-link-item'
     ]);
   });
 
@@ -104,6 +115,7 @@ describe('Menu data-slot contract', () => {
         <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
         <Menu.Content>
           <Menu.Item value='item'>Item</Menu.Item>
+          <Menu.Status />
         </Menu.Content>
       </Menu>
     );
@@ -111,7 +123,8 @@ describe('Menu data-slot contract', () => {
     expectSlots(document.body, [
       'menu-search-input',
       'menu-search-list',
-      'menu-item'
+      'menu-item',
+      'menu-status'
     ]);
   });
 });

@@ -4,6 +4,7 @@ import { Autocomplete as AutocompletePrimitive } from '@base-ui/react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { cx } from 'class-variance-authority';
 import { ChevronRightIcon } from '~/icons';
+import { useRegisterItem } from '~/shared/item-count';
 import { Button } from '../button';
 import { useMenubarContext } from '../menubar/menubar';
 import { Cell, CellBaseProps } from './cell';
@@ -63,9 +64,11 @@ export function MenuSubTrigger({
 }: MenuSubTriggerProps) {
   const { parent, inputRef } = useMenuContext();
 
-  if (parent?.shouldFilter && !getMatch(value, children, parent?.inputValue)) {
-    return null;
-  }
+  const hidden =
+    parent?.shouldFilter && !getMatch(value, children, parent?.inputValue);
+  useRegisterItem(!hidden);
+
+  if (hidden) return null;
 
   const cell = <Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />;
   return (
