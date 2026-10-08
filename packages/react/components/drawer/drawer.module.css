@@ -211,6 +211,62 @@
   border-top: 1px solid var(--rs-color-border-base-primary);
 }
 
+/* Base UI sets `data-swipe-direction` to the direction that opens the
+   drawer, which is the opposite of `side`. Swiping left opens a right drawer,
+   so that swipe area sits on the right edge. */
+.swipeArea {
+  position: fixed;
+  z-index: var(--rs-z-index-portal);
+}
+
+.swipeArea[data-swipe-direction="left"],
+.swipeArea[data-swipe-direction="right"] {
+  top: 0;
+  bottom: 0;
+  width: var(--rs-space-7);
+}
+
+.swipeArea[data-swipe-direction="up"],
+.swipeArea[data-swipe-direction="down"] {
+  left: 0;
+  right: 0;
+  height: var(--rs-space-7);
+}
+
+.swipeArea[data-swipe-direction="left"] {
+  right: 0;
+}
+
+.swipeArea[data-swipe-direction="right"] {
+  left: 0;
+}
+
+.swipeArea[data-swipe-direction="up"] {
+  bottom: 0;
+}
+
+.swipeArea[data-swipe-direction="down"] {
+  top: 0;
+}
+
+.indentBackground {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--rs-color-background-neutral-emphasis);
+  opacity: 0;
+  transition: opacity var(--rs-duration-drawer) var(--rs-ease-drawer);
+}
+
+.indentBackground[data-active] {
+  opacity: 1;
+}
+
+.indent {
+  position: relative;
+  background-color: var(--rs-color-background-base-primary);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .drawerPopup-right,
   .drawerPopup-left,
@@ -244,5 +300,36 @@
   .drawerPopup-bottom[data-starting-style],
   .drawerPopup-bottom[data-ending-style] {
     transform: translateY(100%);
+  }
+
+  /* Base UI writes `--drawer-swipe-progress` on the indent. The transition
+     turns off while it is above 0, so the indent follows the finger. */
+  .indent {
+    --drawer-indent-settled: calc(
+      1 -
+      clamp(0, calc(var(--drawer-swipe-progress, 0) * 100000), 1)
+    );
+    transform-origin: center top;
+    transition:
+      transform var(--rs-duration-drawer) var(--rs-ease-drawer),
+      border-radius var(--rs-duration-drawer) var(--rs-ease-drawer);
+    transition-duration: calc(
+      var(--rs-duration-drawer) *
+      var(--drawer-indent-settled)
+    );
+  }
+
+  .indent[data-active] {
+    --drawer-indent-rest: calc(1 - var(--drawer-swipe-progress, 0));
+    transform: scale(calc(1 - 0.02 * var(--drawer-indent-rest)))
+      translateY(calc(var(--rs-space-3) * var(--drawer-indent-rest)));
+    border-top-left-radius: calc(
+      var(--rs-radius-4) *
+      var(--drawer-indent-rest)
+    );
+    border-top-right-radius: calc(
+      var(--rs-radius-4) *
+      var(--drawer-indent-rest)
+    );
   }
 }

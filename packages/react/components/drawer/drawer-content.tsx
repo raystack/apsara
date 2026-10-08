@@ -50,47 +50,49 @@ export function DrawerContent({
     ariaLabel ?? (ariaLabelledBy ? undefined : 'Drawer');
   const theme = useThemeInjection();
   return (
-    <DrawerPrimitive.Portal {...theme}>
-      <DrawerPrimitive.Backdrop
-        data-slot='drawer-backdrop'
-        {...overlayProps}
-        className={cx(styles.backdrop, overlayProps?.className)}
-      />
-      <DrawerPrimitive.Viewport
-        className={styles.viewport}
-        data-slot='drawer-viewport'
-      >
-        <DrawerPrimitive.Popup
-          {...theme}
-          className={drawerPopup({
-            side,
-            radius,
-            className: cx(theme?.className, className)
-          })}
-          aria-label={resolvedAriaLabel}
-          aria-labelledby={ariaLabelledBy}
-          data-slot='drawer-content'
-          {...props}
+    <DrawerPrimitive.VirtualKeyboardProvider>
+      <DrawerPrimitive.Portal {...theme}>
+        <DrawerPrimitive.Backdrop
+          data-slot='drawer-backdrop'
+          {...overlayProps}
+          className={cx(styles.backdrop, overlayProps?.className)}
+        />
+        <DrawerPrimitive.Viewport
+          className={styles.viewport}
+          data-slot='drawer-viewport'
         >
-          <DrawerPrimitive.Content
-            className={styles.content}
-            data-slot='drawer-content-body'
+          <DrawerPrimitive.Popup
+            {...theme}
+            className={drawerPopup({
+              side,
+              radius,
+              className: cx(theme?.className, className)
+            })}
+            aria-label={resolvedAriaLabel}
+            aria-labelledby={ariaLabelledBy}
+            data-slot='drawer-content'
+            {...props}
           >
-            {children}
-            {showCloseButton && (
-              <DrawerPrimitive.Close
-                className={styles.close}
-                aria-label={closeLabel}
-                render={<IconButton size={3} />}
-                data-slot='drawer-close'
-              >
-                <XIcon aria-hidden='true' />
-              </DrawerPrimitive.Close>
-            )}
-          </DrawerPrimitive.Content>
-        </DrawerPrimitive.Popup>
-      </DrawerPrimitive.Viewport>
-    </DrawerPrimitive.Portal>
+            <DrawerPrimitive.Content
+              className={styles.content}
+              data-slot='drawer-content-body'
+            >
+              {children}
+              {showCloseButton && (
+                <DrawerPrimitive.Close
+                  className={styles.close}
+                  aria-label={closeLabel}
+                  render={<IconButton size={3} />}
+                  data-slot='drawer-close'
+                >
+                  <XIcon aria-hidden='true' />
+                </DrawerPrimitive.Close>
+              )}
+            </DrawerPrimitive.Content>
+          </DrawerPrimitive.Popup>
+        </DrawerPrimitive.Viewport>
+      </DrawerPrimitive.Portal>
+    </DrawerPrimitive.VirtualKeyboardProvider>
   );
 }
 DrawerContent.displayName = 'Drawer.Content';

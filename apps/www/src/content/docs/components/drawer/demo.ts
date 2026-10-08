@@ -120,3 +120,57 @@ function ControlledDrawer() {
   );
 }`
 };
+
+export const swipeAreaDemo = {
+  type: 'code',
+  code: `
+  <Drawer side="right">
+    <Drawer.Trigger render={<Button />}>Open Drawer</Drawer.Trigger>
+    <Drawer.SwipeArea />
+    <Drawer.Content>
+      <Drawer.Header>
+        <Drawer.Title>Library</Drawer.Title>
+        <Drawer.Description>You can also swipe in from the right edge of the screen.</Drawer.Description>
+      </Drawer.Header>
+      <Drawer.Body>Content here</Drawer.Body>
+    </Drawer.Content>
+  </Drawer>`
+};
+
+export const keyboardDemo = {
+  type: 'code',
+  code: `
+  <Drawer side="bottom">
+    <Drawer.Trigger render={<Button />}>Edit profile</Drawer.Trigger>
+    <Drawer.Content side="bottom">
+      <Drawer.Header>
+        <Drawer.Title>Edit profile</Drawer.Title>
+      </Drawer.Header>
+      <Drawer.Body>
+        <Flex direction="column" gap={3}>
+          <Input placeholder="Name" />
+          <Input type="email" placeholder="Email" />
+        </Flex>
+      </Drawer.Body>
+    </Drawer.Content>
+  </Drawer>`
+};
+
+export const indentDemo = {
+  type: 'code',
+  code: `
+  <Drawer.Provider>
+    <Drawer.IndentBackground />
+    <Drawer.Indent>
+      <Drawer side="bottom">
+        <Drawer.Trigger render={<Button />}>Open Drawer</Drawer.Trigger>
+        <Drawer.Content side="bottom">
+          <Drawer.Header>
+            <Drawer.Title>Notifications</Drawer.Title>
+            <Drawer.Description>The content behind this drawer scales down.</Drawer.Description>
+          </Drawer.Header>
+        </Drawer.Content>
+      </Drawer>
+    </Drawer.Indent>
+  </Drawer.Provider>`
+};
