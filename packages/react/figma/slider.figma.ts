@@ -10,14 +10,14 @@ const variant = figma.selectedInstance.getEnum('Variant', {
 const handle = (function () {
   const nestedLayer0 = figma.selectedInstance.findInstance('Handle');
   if (!nestedLayer0 || nestedLayer0.type !== 'INSTANCE') {
-    return { thumbSize: undefined, label: undefined };
+    return { thumbSize: undefined, thumbLabel: undefined };
   }
   const labelText = nestedLayer0.findText('Label');
   return {
     thumbSize: nestedLayer0.getEnum('Size', {
       Small: 'small'
     }),
-    label: nestedLayer0.getBoolean('Handle Label', {
+    thumbLabel: nestedLayer0.getBoolean('Handle Label', {
       true:
         labelText && labelText.type === 'TEXT'
           ? labelText.textContent
@@ -34,8 +34,8 @@ export default {
     'thumbSize',
     handle.thumbSize
   )}${figma.helpers.react.renderProp(
-    'label',
-    handle.label
+    'thumbLabel',
+    handle.thumbLabel
   )}${figma.helpers.react.renderProp('variant', variant)}/>`,
   metadata: { nestable: true }
 };

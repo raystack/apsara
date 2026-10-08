@@ -27,10 +27,9 @@ export interface SliderProps {
   step?: number;
 
   /**
-   * Label text to display above thumb(s).
-   * For range slider, can be a string or [string, string] for individual thumb labels.
+   * Text shown above each thumb and used as its `aria-label`. Pass a tuple to name each thumb of a range.
    */
-  label?: string | [string, string];
+  thumbLabel?: string | [string, string];
 
   /**
    * Size of the slider thumb.
@@ -49,6 +48,11 @@ export interface SliderProps {
 
   /** Name attribute for form submission. */
   name?: string;
+}
+
+export interface SliderLabelProps {
+  /** Additional CSS class name. */
+  className?: string;
 }
 
 export interface SliderValueProps {

@@ -5,7 +5,12 @@ import { Slider } from '../slider';
 
 describe('Slider data-slot contract', () => {
   it('exposes slots for every rendered part', () => {
-    const { container } = render(<Slider defaultValue={50} label='Volume' />);
+    const { container } = render(
+      <Slider defaultValue={50} thumbLabel='Volume'>
+        <Slider.Label>Volume</Slider.Label>
+        <Slider.Value />
+      </Slider>
+    );
     expectSlots(container, [
       'slider',
       'slider-control',
@@ -14,7 +19,9 @@ describe('Slider data-slot contract', () => {
       'slider-thumb',
       'slider-thumb-grip',
       'slider-thumb-grip-line',
-      'slider-label'
+      'slider-thumb-label',
+      'slider-label',
+      'slider-value'
     ]);
   });
 
@@ -33,8 +40,9 @@ describe('Slider data-slot contract', () => {
     expect(getAllSlots(container, 'slider-thumb')).toHaveLength(2);
   });
 
-  it('omits the label slot when no label is passed', () => {
+  it('omits the thumb label slot when no thumbLabel is passed', () => {
     const { container } = render(<Slider defaultValue={50} />);
+    expect(getSlot(container, 'slider-thumb-label')).toBeNull();
     expect(getSlot(container, 'slider-label')).toBeNull();
   });
 });

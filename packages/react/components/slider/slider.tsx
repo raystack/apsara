@@ -2,7 +2,13 @@
 
 import { Slider as SliderPrimitive } from '@base-ui/react';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
-import { useCallback } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useState
+} from 'react';
 import { Text } from '../text';
 import styles from './slider.module.css';
 
@@ -21,28 +27,43 @@ const slider = cva(styles.slider, {
 export interface SliderProps
   extends SliderPrimitive.Root.Props,
     VariantProps<typeof slider> {
-  label?: string | [string, string];
+  /** Text shown above each thumb and used as its `aria-label`. */
+  thumbLabel?: string | [string, string];
   thumbSize?: 'small' | 'large';
 }
+
+const SliderLabelContext = createContext<
+  ((hasLabel: boolean) => void) | undefined
+>(undefined);
 
 function SliderRoot({
   className,
   variant = 'single',
-  label,
+  thumbLabel,
   thumbSize = 'large',
+  children,
   ...props
 }: SliderProps) {
   const isRange = variant === 'range';
   const isThumbSmall = thumbSize === 'small';
+  const [hasLabel, setHasLabel] = useState(false);
 
   const getLabel = useCallback(
     (index: number) => {
-      if (!label) return undefined;
-      if (typeof label === 'string') return label;
-      return label[index];
+      if (!thumbLabel) return undefined;
+      if (typeof thumbLabel === 'string') return thumbLabel;
+      return thumbLabel[index];
     },
-    [label]
+    [thumbLabel]
   );
+
+  // Base UI links thumbs to Slider.Label only when the thumb has no aria-label.
+  const getAriaLabel = (index: number) => {
+    const label = getLabel(index);
+    if (label) return label;
+    if (hasLabel) return undefined;
+    return isRange ? `Thumb ${index + 1}` : 'Slider thumb';
+  };
 
   const thumbCount = isRange ? 2 : 1;
 
@@ -53,6 +74,9 @@ function SliderRoot({
       data-slot='slider'
       {...props}
     >
+      <SliderLabelContext.Provider value={setHasLabel}>
+        {children}
+      </SliderLabelContext.Provider>
       <SliderPrimitive.Control
         className={styles.control}
         data-slot='slider-control'
@@ -70,9 +94,7 @@ function SliderRoot({
               key={i}
               index={isRange ? i : undefined}
               className={cx(styles.thumb)}
-              aria-label={
-                getLabel(i) || (isRange ? `Thumb ${i + 1}` : 'Slider thumb')
-              }
+              aria-label={getAriaLabel(i)}
               data-size={thumbSize}
               data-slot='slider-thumb'
             >
@@ -102,10 +124,10 @@ function SliderRoot({
               )}
               {getLabel(i) && (
                 <Text
-                  className={styles.label}
+                  className={styles.thumbLabel}
                   size={isThumbSmall ? 'micro' : 'mini'}
                   weight='medium'
-                  data-slot='slider-label'
+                  data-slot='slider-thumb-label'
                 >
                   {getLabel(i)}
                 </Text>
@@ -120,12 +142,38 @@ function SliderRoot({
 
 SliderRoot.displayName = 'Slider';
 
-function SliderValue(props: SliderPrimitive.Value.Props) {
-  return <SliderPrimitive.Value data-slot='slider-value' {...props} />;
+function SliderLabel({ className, ...props }: SliderPrimitive.Label.Props) {
+  const setHasLabel = useContext(SliderLabelContext);
+
+  useLayoutEffect(() => {
+    setHasLabel?.(true);
+    return () => setHasLabel?.(false);
+  }, [setHasLabel]);
+
+  return (
+    <SliderPrimitive.Label
+      className={cx(styles.label, className)}
+      data-slot='slider-label'
+      {...props}
+    />
+  );
+}
+
+SliderLabel.displayName = 'Slider.Label';
+
+function SliderValue({ className, ...props }: SliderPrimitive.Value.Props) {
+  return (
+    <SliderPrimitive.Value
+      className={cx(styles.value, className)}
+      data-slot='slider-value'
+      {...props}
+    />
+  );
 }
 
 SliderValue.displayName = 'Slider.Value';
 
 export const Slider = Object.assign(SliderRoot, {
+  Label: SliderLabel,
   Value: SliderValue
 });
