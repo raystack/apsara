@@ -12,12 +12,12 @@
   padding: var(--rs-space-1);
 }
 
-.iconButton:hover:not(:disabled) {
+.iconButton:hover:not([data-disabled]) {
   background-color: var(--rs-color-background-base-primary-hover);
   color: var(--rs-color-foreground-base-primary);
 }
 
-.iconButton:active:not(:disabled) {
+.iconButton:active:not([data-disabled]) {
   background-color: var(--rs-color-background-neutral-secondary);
   color: var(--rs-color-foreground-base-primary);
   transform: scale(var(--rs-scale-pressed));
@@ -35,9 +35,14 @@
   }
 }
 
-.iconButton:disabled {
+.iconButton[data-disabled] {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.iconButton[aria-busy="true"] {
+  opacity: 1;
+  cursor: default;
 }
 
 .iconButton:focus-visible {
