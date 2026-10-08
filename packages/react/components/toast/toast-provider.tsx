@@ -48,7 +48,14 @@ export function ToastProvider({
 }: ToastProviderProps) {
   const theme = useThemeInjection();
   return (
-    <ToastPrimitive.Provider toastManager={toastManager} {...props}>
+    <ToastPrimitive.Provider
+      // The Provider only reads the subscribe channel, which our manager keeps from
+      // Base UI's. The cast is needed because Base UI's `update` is generic over toast data.
+      toastManager={
+        toastManager as unknown as ToastPrimitive.Provider.Props['toastManager']
+      }
+      {...props}
+    >
       {children}
       <ToastPrimitive.Portal {...theme}>
         <ToastPrimitive.Viewport

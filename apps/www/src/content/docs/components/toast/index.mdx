@@ -120,6 +120,12 @@ The returned object exposes the four manager methods:
 
 The `update(id, options)` method accepts a partial of the toast, with every field optional, used to patch an existing toast in place.
 
+To build the update from the current toast, pass a function. It receives the current toast and returns the update options.
+
+```tsx
+toastManager.update(id, prev => ({ title: `${prev.title} (retrying)` }));
+```
+
 <auto-type-table path="./props.ts" name="ToastManagerUpdateOptions" />
 
 #### Promise options

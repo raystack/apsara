@@ -147,6 +147,8 @@ export interface ToastObject {
   type?: 'success' | 'error' | 'info' | 'warning' | 'loading';
   timeout?: number;
   priority?: 'low' | 'high';
+  /** Extra toast data. `leadingIcon` holds the custom icon, if one was set. */
+  data?: { leadingIcon?: React.ReactNode };
 }
 
 /**
@@ -172,11 +174,17 @@ export interface CreateToastManagerReturn {
 
   /**
    * Update an existing toast in place. Typically used to swap a loading
-   * toast to a success or error state without dismissing it.
+   * toast to a success or error state without dismissing it. Pass a
+   * function to derive the update from the current toast.
    *
-   * @remarks `(id: string, options: ToastManagerUpdateOptions) => void`
+   * @remarks `(id: string, options: ToastManagerUpdateOptions | ((prevToast: ToastObject) => ToastManagerUpdateOptions)) => void`
    */
-  update: (id: string, options: ToastManagerUpdateOptions) => void;
+  update: (
+    id: string,
+    options:
+      | ToastManagerUpdateOptions
+      | ((prevToast: ToastObject) => ToastManagerUpdateOptions)
+  ) => void;
 
   /**
    * Tie a toast's lifecycle to a promise. Renders the `loading` toast
