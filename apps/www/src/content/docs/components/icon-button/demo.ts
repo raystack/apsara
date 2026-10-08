@@ -18,6 +18,7 @@ export const playground = {
       initialValue: 4
     },
     disabled: { type: 'checkbox', defaultValue: false },
+    loading: { type: 'checkbox', defaultValue: false },
     children: {
       type: 'icon',
       initialValue: '<Info size={16} />',
@@ -43,5 +44,26 @@ export const stateDemo = {
   <Flex gap={9}>
     <IconButton size={4}><Info size={16} /></IconButton>
     <IconButton size={4} disabled><Info size={16} /></IconButton>
+    <IconButton size={4} loading><Info size={16} /></IconButton>
   </Flex>`
+};
+
+export const focusableWhenDisabledDemo = {
+  type: 'code',
+  code: `
+  <IconButton size={4} disabled focusableWhenDisabled aria-label="Info">
+    <Info size={16} />
+  </IconButton>`
+};
+
+export const renderDemo = {
+  type: 'code',
+  code: `
+  <IconButton
+    size={4}
+    render={<a href="/docs/components/button" />}
+    aria-label="Go to Button docs"
+  >
+    <Info size={16} />
+  </IconButton>`
 };

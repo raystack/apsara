@@ -77,6 +77,77 @@ describe('IconButton', () => {
     });
   });
 
+  describe('Focusable When Disabled', () => {
+    it('keeps the button focusable and blocks clicks', () => {
+      const handleClick = vi.fn();
+      render(
+        <IconButton disabled focusableWhenDisabled onClick={handleClick}>
+          Icon
+        </IconButton>
+      );
+      const button = screen.getByRole('button');
+      expect(button).not.toBeDisabled();
+      expect(button).toHaveAttribute('aria-disabled', 'true');
+      expect(button).toHaveAttribute('data-disabled');
+      button.focus();
+      expect(button).toHaveFocus();
+      fireEvent.click(button);
+      expect(handleClick).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Loading State', () => {
+    it('sets aria-busy and shows a spinner in place of the icon', () => {
+      const { container } = render(
+        <IconButton loading>
+          <span data-testid='icon'>i</span>
+        </IconButton>
+      );
+      const button = screen.getByRole('button');
+      expect(button).toHaveAttribute('aria-busy', 'true');
+      expect(screen.queryByTestId('icon')).not.toBeInTheDocument();
+      expect(
+        container.querySelector('[data-slot="icon-button-loader"]')
+      ).toBeInTheDocument();
+    });
+
+    it('blocks clicks and stays focusable', () => {
+      const handleClick = vi.fn();
+      render(
+        <IconButton loading onClick={handleClick}>
+          Icon
+        </IconButton>
+      );
+      const button = screen.getByRole('button');
+      expect(button).not.toBeDisabled();
+      expect(button).toHaveAttribute('aria-disabled', 'true');
+      button.focus();
+      expect(button).toHaveFocus();
+      fireEvent.click(button);
+      expect(handleClick).not.toHaveBeenCalled();
+    });
+
+    it('does not set aria-busy when not loading', () => {
+      render(<IconButton>Icon</IconButton>);
+      expect(screen.getByRole('button')).not.toHaveAttribute('aria-busy');
+    });
+  });
+
+  describe('Render Prop', () => {
+    it('renders as a link', () => {
+      render(
+        <IconButton render={<a href='/settings' />} aria-label='Settings'>
+          Icon
+        </IconButton>
+      );
+      const link = screen.getByRole('button', { name: 'Settings' });
+      expect(link.tagName).toBe('A');
+      expect(link).toHaveAttribute('href', '/settings');
+      expect(link).toHaveClass(styles.iconButton);
+      expect(link).toHaveAttribute('data-slot', 'icon-button');
+    });
+  });
+
   describe('Accessibility', () => {
     it('sets aria-label', () => {
       render(<IconButton aria-label='Close dialog'>X</IconButton>);

@@ -22,6 +22,19 @@ describe('IconButton data-slot contract', () => {
     expect(getSlot(container, 'icon-button')?.tagName).toBe('BUTTON');
   });
 
+  it('exposes the loader slot when loading', () => {
+    const { container } = render(
+      <IconButton aria-label='Save' loading>
+        <span>x</span>
+      </IconButton>
+    );
+    expectSlots(container, [
+      'icon-button',
+      'icon-button-icon',
+      'icon-button-loader'
+    ]);
+  });
+
   it('lets callers override the root slot via props', () => {
     const { container } = render(
       <IconButton aria-label='Close' data-slot='custom'>
