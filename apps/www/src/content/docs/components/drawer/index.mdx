@@ -5,7 +5,7 @@ source: packages/react/components/drawer
 ---
 
 import { playground, basicDemo, positionDemo,
-  controlledDemo,
+  controlledDemo, swipeAreaDemo, keyboardDemo, indentDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -18,6 +18,8 @@ Import and assemble the component:
 import { Drawer } from "@raystack/apsara";
 
 <Drawer side="right">
+  <Drawer.Trigger />
+  <Drawer.SwipeArea />
   <Drawer.Content>
     <Drawer.Header>
       <Drawer.Title />
@@ -27,6 +29,15 @@ import { Drawer } from "@raystack/apsara";
     <Drawer.Footer />
   </Drawer.Content>
 </Drawer>
+```
+
+The indent parts are optional. They wrap your app:
+
+```tsx
+<Drawer.Provider>
+  <Drawer.IndentBackground />
+  <Drawer.Indent>{/* your app, with its drawers */}</Drawer.Indent>
+</Drawer.Provider>
 ```
 
 ## Usage
@@ -50,6 +61,24 @@ The Drawer can slide in from different sides of the screen. Swipe-to-dismiss is 
 Pass `open` with `onOpenChange` to own the state. Do this when the drawer has to open from elsewhere on the page, or stay open until a save completes.
 
 <Demo data={controlledDemo} />
+
+### Swipe to open
+
+`Drawer.SwipeArea` is an invisible strip along a screen edge. Users drag from it to open the drawer. It sits on the edge named by `side`. Pass `swipeDirection` to change the drag direction that opens it. The swipe area ignores pointer events while the drawer is open.
+
+<Demo data={swipeAreaDemo} />
+
+### Forms and the phone keyboard
+
+`Drawer.Content` handles the on-screen keyboard on phones. When an input inside the drawer gets focus and the keyboard opens, the drawer scrolls to keep the input visible. You do not need to set anything up. Base UI also sets `--drawer-keyboard-inset` on the `drawer-viewport` slot while the keyboard is open. Use `var(--drawer-keyboard-inset, 0px)` to lift a pinned footer above the keyboard.
+
+<Demo data={keyboardDemo} />
+
+### Indent
+
+Wrap your app in `Drawer.Provider`, then put `Drawer.IndentBackground` and `Drawer.Indent` at the top of the tree. While any drawer inside the provider is open, the indent scales down and rounds its top corners, and the background shows behind it. Both parts get a `data-active` attribute while a drawer is open. The effect follows the swipe as users drag the drawer closed. With reduced motion, the indent does not move.
+
+<Demo data={indentDemo} />
 
 ## API Reference
 
@@ -88,6 +117,30 @@ Renders the drawer panel that slides in from a screen edge.
 
 - Inherits all HTML div element props
 
+### SwipeArea
+
+An invisible edge zone that opens the drawer on swipe. Place it inside `Drawer`.
+
+<auto-type-table path="./props.ts" name="DrawerSwipeAreaProps" />
+
+### Provider
+
+Tracks whether any drawer inside it is open. It renders no element. You only need it for the indent parts.
+
+<auto-type-table path="./props.ts" name="DrawerProviderProps" />
+
+### Indent
+
+Wraps your app content. It scales down while a drawer is open.
+
+<auto-type-table path="./props.ts" name="DrawerIndentProps" />
+
+### IndentBackground
+
+The layer behind `Drawer.Indent`. It fades in while a drawer is open.
+
+<auto-type-table path="./props.ts" name="DrawerIndentBackgroundProps" />
+
 ### Slots
 
 Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
@@ -104,6 +157,9 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `drawer-description` | The `Drawer.Description` element |
 | `drawer-body` | The `Drawer.Body` container |
 | `drawer-footer` | The `Drawer.Footer` container |
+| `drawer-swipe-area` | The `Drawer.SwipeArea` edge zone |
+| `drawer-indent` | The `Drawer.Indent` wrapper |
+| `drawer-indent-background` | The `Drawer.IndentBackground` layer |
 
 ## Accessibility
 
