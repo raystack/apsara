@@ -507,8 +507,8 @@ function ControlledMenu() {
   return (
     <Flex align="center" gap={5}>
       <Menu open={open} onOpenChange={setOpen}>
-        <Menu.Trigger asChild>
-          <Button variant="outline">Actions</Button>
+        <Menu.Trigger render={<Button variant="outline" />}>
+          Actions
         </Menu.Trigger>
         <Menu.Content>
           <Menu.Item onClick={() => setOpen(false)}>Rename</Menu.Item>
