@@ -149,3 +149,40 @@ export const controlledDemo = {
     );
   }`
 };
+
+export const createItemsDemo = {
+  type: 'code',
+  code: `
+  function CreateItemsDemo() {
+    const users = [
+      { id: "u1", name: "Jane Doe" },
+      { id: "u2", name: "John Smith" },
+      { id: "u3", name: "Ada Lovelace" }
+    ];
+    const items = React.useMemo(
+      () =>
+        Combobox.createItems(users, {
+          getValue: user => user.id,
+          getLabel: user => user.name
+        }),
+      []
+    );
+    const [value, setValue] = React.useState(null);
+
+    return (
+      <Flex direction="column" gap={5}>
+        <Text>Selected ID: {value || "None"}</Text>
+        <Combobox items={items} value={value} onValueChange={setValue}>
+          <Combobox.Input placeholder="Pick a user" />
+          <Combobox.Content>
+            {user => (
+              <Combobox.Item key={user.id} value={user.id}>
+                {user.name}
+              </Combobox.Item>
+            )}
+          </Combobox.Content>
+        </Combobox>
+      </Flex>
+    );
+  }`
+};
