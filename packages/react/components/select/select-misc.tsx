@@ -5,9 +5,9 @@ import {
   Select as SelectPrimitive
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { Fragment } from 'react';
+import { Fragment, useContext } from 'react';
 import styles from './select.module.css';
-import { useSelectContext } from './select-root';
+import { SelectRegistrationContext, useSelectContext } from './select-root';
 
 export interface SelectGroupProps extends SelectPrimitive.Group.Props {}
 
@@ -17,8 +17,9 @@ export function SelectGroup({
   ...props
 }: SelectGroupProps) {
   const { shouldFilter, autocomplete } = useSelectContext();
+  const registering = useContext(SelectRegistrationContext);
 
-  if (shouldFilter) return <Fragment>{children}</Fragment>;
+  if (shouldFilter || registering) return <Fragment>{children}</Fragment>;
 
   const GroupPrimitive = autocomplete
     ? ComboboxPrimitive.Group
@@ -44,8 +45,9 @@ export function SelectGroupLabel({
   ...props
 }: SelectGroupLabelProps) {
   const { shouldFilter, autocomplete } = useSelectContext();
+  const registering = useContext(SelectRegistrationContext);
 
-  if (shouldFilter) return null;
+  if (shouldFilter || registering) return null;
 
   const LabelPrimitive = autocomplete
     ? ComboboxPrimitive.GroupLabel
@@ -125,8 +127,9 @@ export interface SelectSeparatorProps extends SelectPrimitive.Separator.Props {}
 
 export function SelectSeparator({ className, ...props }: SelectSeparatorProps) {
   const { shouldFilter, autocomplete } = useSelectContext();
+  const registering = useContext(SelectRegistrationContext);
 
-  if (shouldFilter) return null;
+  if (shouldFilter || registering) return null;
 
   const SeparatorPrimitive = autocomplete
     ? ComboboxPrimitive.Separator

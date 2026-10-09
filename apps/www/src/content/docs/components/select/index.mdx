@@ -52,7 +52,7 @@ Appearance first, meaning size and variant, then how many items can be chosen, a
 
 A trigger and a list of items. `Select.Value` renders the current selection in the trigger. A check mark shows the selected item in the list. In multiple mode, each item has a checkbox instead.
 
-Pass `items` to the root so `Select.Value` can show the label of the selected value. It takes `{ value, label }[]` or a value-to-label record. The list mounts only when it opens, so without `items` the trigger shows the raw value.
+Each `Select.Item` registers its label and icon, so `Select.Value` shows them for the selected value, even before the list first opens. You can also pass `items` to the root, as `{ value, label }[]` or a value-to-label record. Use it for search by label, or for values whose item is not rendered.
 
 <Demo data={basicDemo} />
 
@@ -62,7 +62,7 @@ Pass `leadingIcon` to `Select.Item` to show an icon before the item text.
 
 <Demo data={iconDemo} />
 
-To show the icon in the trigger too, pass a function as the child of `Select.Value`. It receives the selected value.
+The trigger shows the selected item's icon too. To render the value yourself, pass a function as the child of `Select.Value`. It receives the selected item as `{ value, children, leadingIcon }`, or an array of items in multiple mode.
 
 <Demo data={valueRenderDemo} />
 

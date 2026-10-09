@@ -40,7 +40,7 @@ const getCode = (props: ComponentPropsType) => {
   return `<CodeBlock${getPropsString({ ...rest, ...(maxLines ? { maxLines: Number(maxLines) } : {}), defaultValue })}>
   <CodeBlock.Header>
           <CodeBlock.Label>Code</CodeBlock.Label>
-          <CodeBlock.LanguageSelect items={{ jsx: 'JSX', tsx: 'TSX' }}>
+          <CodeBlock.LanguageSelect>
             <CodeBlock.LanguageSelectTrigger />
             <CodeBlock.LanguageSelectContent>
               <CodeBlock.LanguageSelectItem value='jsx'>
@@ -115,7 +115,7 @@ export const languageSwitcherDemo = {
   code: `<CodeBlock>
         <CodeBlock.Header>
           <CodeBlock.Label>Code</CodeBlock.Label>
-          <CodeBlock.LanguageSelect items={{ jsx: 'JSX', tsx: 'TSX' }}>
+          <CodeBlock.LanguageSelect>
             <CodeBlock.LanguageSelectTrigger />
             <CodeBlock.LanguageSelectContent>
               <CodeBlock.LanguageSelectItem value='jsx'>

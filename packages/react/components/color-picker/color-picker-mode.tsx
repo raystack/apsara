@@ -19,14 +19,7 @@ export const ColorPickerMode = ({
 }: ColorPickerModeProps) => {
   const { mode, setMode } = useColorPicker();
   return (
-    <Select
-      onValueChange={value => setMode(value as ModeType)}
-      value={mode}
-      items={options.map(option => ({
-        value: option,
-        label: option.toUpperCase()
-      }))}
-    >
+    <Select onValueChange={value => setMode(value as ModeType)} value={mode}>
       <Select.Trigger
         className={cx(styles.selectTrigger, className)}
         data-slot='color-picker-mode'

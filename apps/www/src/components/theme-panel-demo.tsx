@@ -148,10 +148,7 @@ function Sampler() {
           </Menu.Content>
         </Menu>
 
-        <Select
-          defaultValue='medium'
-          items={{ small: 'Small', medium: 'Medium', large: 'Large' }}
-        >
+        <Select defaultValue='medium'>
           <Select.Trigger style={{ width: 120 }}>
             <Select.Value />
           </Select.Trigger>

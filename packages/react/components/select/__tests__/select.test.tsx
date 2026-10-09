@@ -117,11 +117,49 @@ describe('Select', () => {
       expect(screen.getByRole('combobox')).toHaveTextContent('Red apple');
     });
 
-    it('shows the raw value when items are not given', async () => {
+    it('shows the item label without items before the first open', async () => {
       render(<BasicSelect items={undefined} defaultValue='apple' />);
       await flushMicrotasks();
 
-      expect(screen.getByRole('combobox')).toHaveTextContent('apple');
+      expect(screen.getByRole('combobox')).toHaveTextContent('Apple');
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    it('shows the item icon in the trigger without items', async () => {
+      render(
+        <Select defaultValue='apple'>
+          <Select.Trigger>
+            <Select.Value placeholder={TRIGGER_TEXT} />
+          </Select.Trigger>
+          <Select.Content>
+            <Select.Item
+              value='apple'
+              leadingIcon={<svg data-testid='apple-icon' />}
+            >
+              Apple
+            </Select.Item>
+          </Select.Content>
+        </Select>
+      );
+      await flushMicrotasks();
+
+      const trigger = screen.getByRole('combobox');
+      expect(trigger).toHaveTextContent('Apple');
+      expect(
+        trigger.querySelector('[data-slot="select-value-icon"]')
+      ).toBeInTheDocument();
+    });
+
+    it('keeps the label after the list opens and closes', async () => {
+      render(<BasicSelect items={undefined} defaultValue='apple' />);
+      await flushMicrotasks();
+
+      fireEvent.click(screen.getByRole('combobox'));
+      await flushMicrotasks();
+      fireEvent.keyDown(screen.getByRole('listbox'), { key: 'Escape' });
+      await flushMicrotasks();
+
+      expect(screen.getByRole('combobox')).toHaveTextContent('Apple');
     });
 
     it('shows the placeholder when nothing is selected', async () => {
@@ -132,12 +170,18 @@ describe('Select', () => {
       expect(value).toHaveAttribute('data-placeholder');
     });
 
-    it('passes the selected value to a function child', async () => {
+    it('passes the selected item to a function child', async () => {
       render(
-        <Select items={FRUIT_OPTIONS} defaultValue='banana'>
+        <Select defaultValue='banana'>
           <Select.Trigger>
             <Select.Value placeholder={TRIGGER_TEXT}>
-              {value => <span data-testid='custom'>icon-{value}</span>}
+              {item =>
+                Array.isArray(item) ? null : (
+                  <span data-testid='custom'>
+                    icon-{item.value}-{item.children}
+                  </span>
+                )
+              }
             </Select.Value>
           </Select.Trigger>
           <Select.Content>
@@ -147,7 +191,9 @@ describe('Select', () => {
       );
       await flushMicrotasks();
 
-      expect(screen.getByTestId('custom')).toHaveTextContent('icon-banana');
+      expect(screen.getByTestId('custom')).toHaveTextContent(
+        'icon-banana-Banana'
+      );
     });
 
     it('shows chips with labels in multiple mode', async () => {

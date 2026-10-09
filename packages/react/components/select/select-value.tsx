@@ -9,14 +9,15 @@ import { ComponentProps, ReactNode } from 'react';
 import styles from './select.module.css';
 import { SelectMultipleValue } from './select-multiple-value';
 import { useSelectContext } from './select-root';
+import { ItemType } from './types';
 
-type SelectValueRenderer = (value: string | string[]) => ReactNode;
+type SelectValueRenderer = (item: ItemType | ItemType[]) => ReactNode;
 
 export interface SelectValueProps
   extends Omit<ComponentProps<'span'>, 'children' | 'placeholder'> {
   /** Shown when nothing is selected. */
   placeholder?: ReactNode;
-  /** Replaces the label. A function receives the selected value. */
+  /** Replaces the label. A function receives the selected item, or items in multiple mode. */
   children?: ReactNode | SelectValueRenderer;
 }
 
@@ -29,19 +30,31 @@ export function SelectValue({
   className,
   ...props
 }: SelectValueProps) {
-  const { multiple, autocomplete, getLabel, value } = useSelectContext();
+  const { autocomplete, getItem, value } = useSelectContext();
 
   const renderSelected = (selected: string | string[]) => {
-    if (typeof children === 'function') return children(selected);
+    const item = Array.isArray(selected)
+      ? selected.map(getItem)
+      : getItem(selected);
+    if (typeof children === 'function') return children(item);
     if (children != null) return children;
-    if (Array.isArray(selected)) {
+    if (Array.isArray(item)) {
       return (
         <SelectMultipleValue
-          data={selected.map(v => ({ value: v, label: getLabel(v) }))}
+          data={item.map(i => ({ value: i.value, label: i.children }))}
         />
       );
     }
-    return getLabel(selected);
+    return (
+      <span className={styles.valueContent} data-slot='select-value-content'>
+        {typeof item.children === 'string' && item.leadingIcon && (
+          <span className={styles.itemIcon} data-slot='select-value-icon'>
+            {item.leadingIcon}
+          </span>
+        )}
+        {item.children}
+      </span>
+    );
   };
 
   const renderValue = (selected: string | string[] | null) =>
@@ -62,8 +75,6 @@ export function SelectValue({
     );
   }
 
-  const useDefaultLabel = !multiple && children == null;
-
   return (
     <SelectPrimitive.Value
       placeholder={placeholder}
@@ -71,7 +82,7 @@ export function SelectValue({
       className={cx(styles.value, className)}
       {...props}
     >
-      {useDefaultLabel ? undefined : renderValue}
+      {renderValue}
     </SelectPrimitive.Value>
   );
 }

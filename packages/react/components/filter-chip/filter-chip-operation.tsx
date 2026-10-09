@@ -47,13 +47,6 @@ export const Operation = ({
     <Select
       value={operationValue}
       onValueChange={handleValueChange}
-      items={operations.map(operation => ({
-        value: operation.value,
-        label:
-          showAlternateLabel && operation?.alternateLabel
-            ? operation.alternateLabel
-            : operation.label
-      }))}
       aria-labelledby={`${label}-label`}
     >
       <Select.Trigger
