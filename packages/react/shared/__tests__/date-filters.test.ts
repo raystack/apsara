@@ -18,13 +18,6 @@ describe('toInstant', () => {
     ['an unpadded day', '2023-1-5', new Date(2023, 0, 5)],
     ['an unpadded slashed day', '2023/1/5', new Date(2023, 0, 5)],
     [
-      'a slashed day with a T time',
-      '2026/1/1T10:30',
-      new Date(2026, 0, 1, 10, 30)
-    ],
-    ['an unpadded day with a T hour', '2026-1-5T10', new Date(2026, 0, 5, 10)],
-    ['a bare year with a t hour', '2026t10', new Date(2026, 0, 1, 10)],
-    [
       'a local time with a longer fraction',
       '2023/12/01 10:30:00.123456',
       new Date(2023, 11, 1, 10, 30, 0, 123)
@@ -112,10 +105,11 @@ describe('toInstant', () => {
     expect(toInstant(input)).toBeNull();
   });
 
-  /* Outside the ISO and local shapes, `new Date` reads the string and rolls an
-     impossible day over. */
+  /* Outside ISO 8601, `new Date` reads the string and rolls an impossible day
+     over. */
   it.each([
     ['02/30/2014', new Date(2014, 2, 2)],
+    ['2026/02/30', new Date(2026, 2, 2)],
     ['February 30, 2026', new Date(2026, 2, 2)]
   ])('reads %s as new Date does', (input, expected) => {
     expect(toInstant(input)?.getTime()).toBe(expected.getTime());

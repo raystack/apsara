@@ -46,8 +46,6 @@ export function toInstant(value: unknown): Date | null {
     const [, year, month, day] = isoDay.map(Number);
     if (!isExists(year, month - 1, day)) return null;
   }
-  const parts = LOCAL_SHAPE.exec(value);
-  if (parts) return fromLocalParts(parts);
   const native = new Date(value);
   return isValid(native) ? native : null;
 }
@@ -57,28 +55,6 @@ const ZONE_ANNOTATION = /(\[[^\]]*\])+$/;
 
 /* `new Date` rolls an impossible day over, whatever suffix follows it. */
 const ISO_DAY = /^(\d{4})-(\d{2})-(\d{2})/;
-
-/* Year-first strings read as local time. `new Date` reads some of these as UTC
-   and rolls out-of-range fields over, so they never reach it. */
-const LOCAL_SHAPE =
-  /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/;
-
-function fromLocalParts(parts: RegExpExecArray): Date | null {
-  const year = Number(parts[1]);
-  const [month = 1, day = 1, hour = 0, minute = 0, second = 0] = parts
-    .slice(2, 7)
-    .map(part => (part ? Number(part) : undefined));
-  const ms = Number((parts[7] ?? '0').slice(0, 3));
-  if (hour > 23 || minute > 59 || second > 59) return null;
-  /* A time in a daylight-saving gap moves forward, so only the day is read
-     back. */
-  const date = new Date(year, month - 1, day, hour, minute, second, ms);
-  const readsBack =
-    date.getFullYear() === year &&
-    date.getMonth() === month - 1 &&
-    date.getDate() === day;
-  return readsBack ? date : null;
-}
 
 /* An unreadable row cannot be placed before or after a day, so it matches none
    of these. */
