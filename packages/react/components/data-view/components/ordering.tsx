@@ -48,10 +48,6 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
         <Select
           onValueChange={handleColumnChange}
           value={value.name}
-          items={columnList.map(column => ({
-            value: column.id,
-            label: column.label
-          }))}
           disabled={columnList.length === 0}
         >
           <Select.Trigger

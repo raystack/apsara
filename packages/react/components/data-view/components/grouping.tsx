@@ -46,17 +46,7 @@ export function Grouping<TData>({
         className={styles['display-popover-properties-control']}
         data-slot='data-view-grouping-control'
       >
-        <Select
-          onValueChange={handleGroupChange}
-          value={value}
-          items={[
-            { value: defaultGroupOption.id, label: defaultGroupOption.label },
-            ...groupableFields.map(field => ({
-              value: field.accessorKey,
-              label: field.label
-            }))
-          ]}
-        >
+        <Select onValueChange={handleGroupChange} value={value}>
           <Select.Trigger
             size='small'
             className={styles['display-popover-properties-select']}

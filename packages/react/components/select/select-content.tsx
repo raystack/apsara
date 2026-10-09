@@ -10,7 +10,7 @@ import { type Radius, radiusStyle } from '../../shared/radius';
 import { useThemeInjection } from '../theme/portal';
 import styles from './select.module.css';
 import { SelectEmpty, SelectStatus } from './select-misc';
-import { useSelectContext } from './select-root';
+import { SelectRegistrationContext, useSelectContext } from './select-root';
 
 // Base UI expects Empty and Status as siblings of the list, not inside the listbox.
 const splitLiveRegions = (children: ReactNode) => {
@@ -93,36 +93,42 @@ export function SelectContent({
   }
 
   return (
-    <SelectPrimitive.Portal {...theme}>
-      <SelectPrimitive.Positioner
-        sideOffset={sideOffset}
-        side={side}
-        align={align}
-        className={styles.positioner}
-        alignItemWithTrigger={alignItemWithTrigger}
-        data-slot='select-positioner'
-      >
-        <SelectPrimitive.Popup
-          {...theme}
-          className={cx(
-            styles.content,
-            theme?.className,
-            radiusStyle({ radius }),
-            className
-          )}
-          data-multiselectable={multiple ? true : undefined}
-          data-slot='select-content'
-          {...props}
+    <>
+      {/* The portal mounts the list only when open, so items register their labels here. */}
+      <SelectRegistrationContext value={true}>
+        {children}
+      </SelectRegistrationContext>
+      <SelectPrimitive.Portal {...theme}>
+        <SelectPrimitive.Positioner
+          sideOffset={sideOffset}
+          side={side}
+          align={align}
+          className={styles.positioner}
+          alignItemWithTrigger={alignItemWithTrigger}
+          data-slot='select-positioner'
         >
-          <SelectPrimitive.List
-            className={styles.viewport}
-            data-slot='select-list'
+          <SelectPrimitive.Popup
+            {...theme}
+            className={cx(
+              styles.content,
+              theme?.className,
+              radiusStyle({ radius }),
+              className
+            )}
+            data-multiselectable={multiple ? true : undefined}
+            data-slot='select-content'
+            {...props}
           >
-            {children}
-          </SelectPrimitive.List>
-        </SelectPrimitive.Popup>
-      </SelectPrimitive.Positioner>
-    </SelectPrimitive.Portal>
+            <SelectPrimitive.List
+              className={styles.viewport}
+              data-slot='select-list'
+            >
+              {children}
+            </SelectPrimitive.List>
+          </SelectPrimitive.Popup>
+        </SelectPrimitive.Positioner>
+      </SelectPrimitive.Portal>
+    </>
   );
 }
 SelectContent.displayName = 'Select.Content';

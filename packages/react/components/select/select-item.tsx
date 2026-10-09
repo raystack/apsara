@@ -4,14 +4,19 @@ import {
   Combobox as ComboboxPrimitive,
   Select as SelectPrimitive
 } from '@base-ui/react';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { cx } from 'class-variance-authority';
-import { ReactNode } from 'react';
+import { ReactNode, useContext } from 'react';
 import { CheckIcon } from '~/icons';
 import { Checkbox } from '../checkbox';
 import { getMatch } from '../menu/utils';
 import { Text } from '../text';
 import styles from './select.module.css';
-import { useFilteredValues, useSelectContext } from './select-root';
+import {
+  SelectRegistrationContext,
+  useFilteredValues,
+  useSelectContext
+} from './select-root';
 
 export interface SelectItemProps extends SelectPrimitive.Item.Props {
   leadingIcon?: ReactNode;
@@ -31,9 +36,18 @@ export function SelectItem({
     searchValue,
     value: selectValue,
     shouldFilter,
-    multiple
+    multiple,
+    registerItem
   } = useSelectContext();
   const filteredValues = useFilteredValues();
+  const registering = useContext(SelectRegistrationContext);
+
+  useIsoLayoutEffect(
+    () => registerItem({ value, children, leadingIcon }),
+    [registerItem, value, children, leadingIcon]
+  );
+
+  if (registering) return null;
 
   // With `items`, Base UI filters by label and maps list positions to the
   // filtered items, so every unmatched item must leave the list.

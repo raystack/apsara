@@ -26,18 +26,27 @@ export interface SelectRootProps {
   /** Callback fired when the search value changes */
   onSearch?: (value: string) => void;
 
-  /** Labels for each value, as `{ value, label }[]` or a value-to-label record. `Select.Value` shows the label of the selected value. In autocomplete mode, Base UI filters by label. */
+  /** Optional labels for each value, as `{ value, label }[]` or a value-to-label record. Items register their own labels, so this is only needed for search by label or for values whose item is not rendered. */
   items?:
     | { value: string; label: React.ReactNode }[]
     | Record<string, React.ReactNode>;
+}
+
+export interface SelectValueItem {
+  value: string;
+  /** The item's label. */
+  children: React.ReactNode;
+  leadingIcon?: React.ReactNode;
 }
 
 export interface SelectValueProps {
   /** Shown when nothing is selected. */
   placeholder?: React.ReactNode;
 
-  /** Replaces the label. A function receives the selected value (an array in multiple mode). */
-  children?: React.ReactNode | ((value: string | string[]) => React.ReactNode);
+  /** Replaces the label. A function receives the selected item (an array in multiple mode). */
+  children?:
+    | React.ReactNode
+    | ((item: SelectValueItem | SelectValueItem[]) => React.ReactNode);
 
   /** Additional CSS class names. */
   className?: string;
