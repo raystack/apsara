@@ -1,7 +1,7 @@
 import type { Row, Table } from '@tanstack/react-table';
 import { TableState } from '@tanstack/table-core';
-import dayjs from 'dayjs';
 
+import { toDayKey, withDateFilterTypes } from '~/shared/date-filters';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import {
   DataTableColumnDef,
@@ -25,7 +25,7 @@ export function queryToTableState(query: InternalQuery): Partial<TableState> {
     query.filters
       ?.filter(data => {
         if (data._type === FilterType.date)
-          return dayjs(data.value as string | Date).isValid();
+          return toDayKey(data.value) !== null;
         if (data.value !== '') return true;
         return false;
       })
@@ -223,7 +223,7 @@ export function transformToDataTableQuery(
       ?.filter(data => {
         if (data._type === FilterType.select) return true;
         if (data._type === FilterType.date)
-          return dayjs(data.value as string | Date).isValid();
+          return toDayKey(data.value) !== null;
         if (data.value !== '') return true;
         return false;
       })
@@ -346,7 +346,11 @@ export function hasActiveTableFiltering<T>(table: Table<T>): boolean {
 
 export function getDefaultTableQuery(
   defaultSort?: DataTableSort,
-  oldQuery: DataTableQuery = {}
+  oldQuery: DataTableQuery = {},
+  columns: Pick<
+    DataTableColumnDef<unknown, unknown>,
+    'accessorKey' | 'filterType'
+  >[] = []
 ): InternalQuery {
   // Convert DataTableQuery to InternalQuery
   const internalQuery = dataTableQueryToInternal(oldQuery);
@@ -354,6 +358,9 @@ export function getDefaultTableQuery(
   return {
     sort: defaultSort ? [defaultSort] : [],
     group_by: [defaultGroupOption.id],
-    ...internalQuery
+    ...internalQuery,
+    ...(internalQuery.filters && {
+      filters: withDateFilterTypes(internalQuery.filters, columns)
+    })
   };
 }

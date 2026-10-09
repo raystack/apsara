@@ -69,8 +69,8 @@ function DataViewRoot<TData>({
   groupByResolvers
 }: React.PropsWithChildren<DataViewProps<TData>>) {
   const defaultTableQuery = useMemo(
-    () => getDefaultTableQuery(defaultSort, query),
-    [defaultSort, query]
+    () => getDefaultTableQuery(defaultSort, query, fields),
+    [defaultSort, query, fields]
   );
 
   // Active view (controlled / uncontrolled).

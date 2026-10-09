@@ -53,8 +53,8 @@ function DataTableRoot<TData, TValue>({
   getRowId
 }: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
   const defaultTableQuery = useMemo(
-    () => getDefaultTableQuery(defaultSort, query),
-    [defaultSort, query]
+    () => getDefaultTableQuery(defaultSort, query, columns),
+    [defaultSort, query, columns]
   );
   const initialColumnVisibility = getInitialColumnVisibility(columns);
 
