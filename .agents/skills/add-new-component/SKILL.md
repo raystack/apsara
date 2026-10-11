@@ -500,7 +500,10 @@ Notes:
 pnpm --filter @raystack/apsara build
 pnpm --filter @raystack/apsara test -- --reporter=verbose components/<name>
 pnpm --filter www build
+grep -n "from './components/<name>'" packages/react/dist/index.d.ts
 ```
+
+The `grep` prints the root export of the component. Check that it lists the props type of every part that declares its own type. Type-only exports are erased at runtime, so the tests and the build still pass when one is missing. Parts that take Base UI or HTML props unchanged have no type to export.
 
 Checklist:
 - [ ] Component builds without errors
@@ -510,5 +513,5 @@ Checklist:
 - [ ] Every rendered element has a `data-slot`, with a `data-slots.test.tsx` covering them
 - [ ] CSS uses `--rs-*` tokens only
 - [ ] Export in `packages/react/index.tsx` in alphabetical order
-- [ ] Props types exported from the component index and `packages/react/index.tsx` (`__tests__/exports.test.ts` passes)
+- [ ] Props types exported from the component index and `packages/react/index.tsx`, and listed in `dist/index.d.ts`
 - [ ] Interactive `playground` added to `demo.ts`, covering the component's main props

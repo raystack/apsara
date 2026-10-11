@@ -21,7 +21,7 @@ Skills are in `.agents/skills/`. `.claude/skills` is a symlink to that folder, s
 ## Code
 
 - Each component is in `packages/react/components/<name>/`. Its `index.tsx` only re-exports.
-- Export new components from `packages/react/index.tsx`, in alphabetical order, with their props types: `<Component>Props` for the root part and `<Component><Part>Props` for each part with its own type. `__tests__/exports.test.ts` checks this.
+- Export new components from `packages/react/index.tsx`, in alphabetical order, with their props types: `<Component>Props` for the root part and `<Component><Part>Props` for each part with its own type.
 - Wrap Base UI primitives, for example `import { Tabs as TabsPrimitive } from '@base-ui/react'`. Do not rebuild behavior that Base UI already has.
 - For plain elements, use `useRender` and `mergeProps` so the `render` prop works.
 - Pass `ref` as a normal prop (React 19). Do not use `forwardRef`.
