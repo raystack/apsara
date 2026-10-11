@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { ContextMenu } from '../context-menu';
@@ -142,6 +142,30 @@ describe('ContextMenu', () => {
       fireEvent.contextMenu(trigger);
 
       expect(onOpenChange).toHaveBeenCalled();
+    });
+
+    it('stays open until the parent closes a controlled menu', async () => {
+      const onOpenChange = vi.fn();
+      const renderMenu = (open: boolean) => (
+        <ContextMenu open={open} onOpenChange={onOpenChange}>
+          <ContextMenu.Trigger>{TRIGGER_TEXT}</ContextMenu.Trigger>
+          <ContextMenu.Content>
+            <ContextMenu.Item>Profile</ContextMenu.Item>
+          </ContextMenu.Content>
+        </ContextMenu>
+      );
+      const { rerender } = render(renderMenu(true));
+
+      fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
+
+      expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
+      expect(screen.getByText('Profile')).toBeInTheDocument();
+
+      rerender(renderMenu(false));
+
+      await waitFor(() => {
+        expect(screen.queryByText('Profile')).not.toBeInTheDocument();
+      });
     });
   });
 });

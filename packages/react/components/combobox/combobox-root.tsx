@@ -1,6 +1,7 @@
 'use client';
 
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
+import { useControlled } from '@base-ui/utils/useControlled';
 import {
   createContext,
   RefObject,
@@ -80,12 +81,15 @@ export const ComboboxRoot = <Value extends unknown | unknown[]>({
   const resolvedRequired = required ?? fieldContext?.required;
 
   const [inputValue, setInputValue] = useState('');
-  const [internalValue, setInternalValue] = useState<
-    Value | Value[] | null | undefined
-  >(defaultValue ?? null);
+  const [computedValue, setValueUnwrapped] = useControlled<
+    Value | Value[] | null
+  >({
+    controlled: providedValue,
+    default: defaultValue ?? null,
+    name: 'Combobox',
+    state: 'value'
+  });
   const inputContainerRef = useRef<HTMLDivElement>(null);
-
-  const computedValue = providedValue ?? internalValue;
 
   const handleInputValueChange = useCallback(
     (
@@ -103,7 +107,7 @@ export const ComboboxRoot = <Value extends unknown | unknown[]>({
       value: Value | Value[] | null,
       eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
     ) => {
-      setInternalValue(value);
+      setValueUnwrapped(value);
       if (multiple) {
         (onValueChange as MultipleComboboxProps<Value>['onValueChange'])?.(
           value as Value[]
@@ -114,7 +118,7 @@ export const ComboboxRoot = <Value extends unknown | unknown[]>({
         );
       }
     },
-    [onValueChange, multiple]
+    [onValueChange, multiple, setValueUnwrapped]
   );
 
   const contextValue = useMemo(
