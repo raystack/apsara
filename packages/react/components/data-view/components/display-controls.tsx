@@ -15,7 +15,7 @@ import { Grouping } from './grouping';
 import { Ordering } from './ordering';
 import { ViewSwitcher } from './view-switcher';
 
-interface DisplayControlsProps
+export interface DataViewDisplayControlsProps
   extends Pick<PopoverContentProps, 'align' | 'side' | 'sideOffset'> {
   trigger?: ReactNode;
   hideViewSwitcher?: boolean;
@@ -49,7 +49,7 @@ export function DisplayControls<TData>({
   hideDisplayProperties = false,
   align = 'end',
   ...positionerProps
-}: DisplayControlsProps) {
+}: DataViewDisplayControlsProps) {
   const {
     fields,
     updateTableQuery,

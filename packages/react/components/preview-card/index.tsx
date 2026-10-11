@@ -1,1 +1,1 @@
-export { PreviewCard } from './preview-card';
+export { PreviewCard, type PreviewCardContentProps } from './preview-card';

@@ -187,6 +187,7 @@ export interface DataViewProps<TData> {
    * to compute the bucket id per row when a key matches one in this map.
    */
   groupByResolvers?: Record<string, GroupByResolver<TData>>;
+  children?: React.ReactNode;
 }
 
 /** @deprecated Every key here has an equivalent `[data-slot]` selector. See the List slot table in the DataView docs. Prefer styling by `data-slot` over threading class names through props. */

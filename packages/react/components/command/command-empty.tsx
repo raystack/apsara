@@ -10,7 +10,7 @@ export const CommandEmpty = ({
   ref,
   className,
   ...props
-}: CommandEmptyProps & { ref?: React.Ref<HTMLDivElement> }) => {
+}: CommandEmptyProps) => {
   return (
     <div
       ref={ref}

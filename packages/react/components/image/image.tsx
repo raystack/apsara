@@ -22,7 +22,9 @@ const image = cva(styles.image, {
   }
 });
 
-interface ImageProps extends ComponentProps<'img'>, VariantProps<typeof image> {
+export interface ImageProps
+  extends ComponentProps<'img'>,
+    VariantProps<typeof image> {
   fallback?: string;
 }
 

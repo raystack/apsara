@@ -120,6 +120,7 @@ export interface DataTableProps<TData, TValue> {
   stickyGroupHeader?: boolean;
   /** Return a stable unique id for each row (used as React key). Use for sortable/filterable tables. */
   getRowId?: (row: TData, index: number) => string;
+  children?: React.ReactNode;
 }
 
 export type DataTableContentClassNames = {
@@ -138,7 +139,7 @@ export type DataTableContentBaseProps = {
 
 export type DataTableContentProps = DataTableContentBaseProps;
 
-export type VirtualizedContentProps = DataTableContentBaseProps & {
+export type DataTableVirtualizedContentProps = DataTableContentBaseProps & {
   /** Height of each row in pixels. */
   rowHeight?: number;
   /** Height of group header rows in pixels. Defaults to 40 (matches the non-virtualized section header height). */

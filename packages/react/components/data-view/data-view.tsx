@@ -67,7 +67,7 @@ function DataViewRoot<TData>({
   view,
   onViewChange,
   groupByResolvers
-}: React.PropsWithChildren<DataViewProps<TData>>) {
+}: DataViewProps<TData>) {
   const defaultTableQuery = useMemo(
     () => getDefaultTableQuery(defaultSort, query),
     [defaultSort, query]

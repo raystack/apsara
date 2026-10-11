@@ -51,7 +51,7 @@ function DataTableRoot<TData, TValue>({
   onColumnVisibilityChange,
   stickyGroupHeader = false,
   getRowId
-}: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
+}: DataTableProps<TData, TValue>) {
   const defaultTableQuery = useMemo(
     () => getDefaultTableQuery(defaultSort, query),
     [defaultSort, query]

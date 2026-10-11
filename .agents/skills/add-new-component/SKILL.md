@@ -177,11 +177,13 @@ Key rules:
 
 ## Step 2: Create the Index File
 
-Simple re-export:
+Re-export the component and its props types:
 
 ```tsx
 // packages/react/components/<name>/index.tsx
 export { Component } from './<name>';
+export type { ComponentContentProps } from './<name>-content';
+export type { ComponentRootProps as ComponentProps } from './<name>-root';
 ```
 
 ## Step 3: Add CSS Module Styles
@@ -239,10 +241,12 @@ Common `--rs-*` tokens:
 Add to `packages/react/index.tsx` in **alphabetical order**:
 
 ```tsx
-export { Chip } from './components/chip';
-export { CodeBlock } from './components/code-block';
-export { Collapsible } from './components/collapsible';  // <-- new
-export { Combobox } from './components/combobox';
+export { Chip, type ChipProps } from './components/chip';
+export {
+  Component,
+  type ComponentContentProps,
+  type ComponentProps
+} from './components/<name>'; // <-- new
 ```
 
 ## Step 5: Write Tests
@@ -506,4 +510,5 @@ Checklist:
 - [ ] Every rendered element has a `data-slot`, with a `data-slots.test.tsx` covering them
 - [ ] CSS uses `--rs-*` tokens only
 - [ ] Export in `packages/react/index.tsx` in alphabetical order
+- [ ] Props types exported from the component index and `packages/react/index.tsx` (`__tests__/exports.test.ts` passes)
 - [ ] Interactive `playground` added to `demo.ts`, covering the component's main props

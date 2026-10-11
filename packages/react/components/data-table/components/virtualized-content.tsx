@@ -14,9 +14,9 @@ import { Skeleton } from '../../skeleton';
 import styles from '../data-table.module.css';
 import {
   DataTableColumnDef,
+  DataTableVirtualizedContentProps,
   defaultGroupOption,
-  GroupedData,
-  VirtualizedContentProps
+  GroupedData
 } from '../data-table.types';
 import { useDataTable } from '../hooks/useDataTable';
 import { useStickyGroupAnchor } from '../hooks/useStickyGroupAnchor';
@@ -220,7 +220,7 @@ export function VirtualizedContent({
   emptyState,
   zeroState,
   classNames = {}
-}: VirtualizedContentProps) {
+}: DataTableVirtualizedContentProps) {
   const {
     onRowClick,
     table,

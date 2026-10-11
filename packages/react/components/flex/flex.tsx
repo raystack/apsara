@@ -44,7 +44,8 @@ const flex = cva(styles.flex, {
   }
 });
 
-type BoxProps = VariantProps<typeof flex> & useRender.ComponentProps<'div'>;
+export type FlexProps = VariantProps<typeof flex> &
+  useRender.ComponentProps<'div'>;
 
 export function Flex({
   inline,
@@ -57,7 +58,7 @@ export function Flex({
   render,
   ref,
   ...props
-}: BoxProps) {
+}: FlexProps) {
   const flexProps = {
     'data-slot': 'flex',
     className: flex({

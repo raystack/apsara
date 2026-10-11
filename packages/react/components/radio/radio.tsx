@@ -31,7 +31,7 @@ const radioVariants = cva(styles.radioitem, {
   }
 });
 
-interface RadioGroupProps
+export interface RadioGroupProps
   extends RadioGroupPrimitive.Props,
     Omit<VariantProps<typeof radioGroupVariants>, 'orientation'> {
   orientation?: 'vertical' | 'horizontal';
@@ -60,7 +60,7 @@ function RadioGroup({
 
 RadioGroup.displayName = 'Radio.Group';
 
-interface RadioItemProps
+export interface RadioItemProps
   extends RadioPrimitive.Root.Props,
     VariantProps<typeof radioVariants> {}
 
