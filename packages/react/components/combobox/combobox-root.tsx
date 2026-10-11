@@ -8,8 +8,7 @@ import {
   useCallback,
   useContext,
   useMemo,
-  useRef,
-  useState
+  useRef
 } from 'react';
 import { useFieldContext } from '../field';
 
@@ -73,6 +72,8 @@ export const ComboboxRoot = <Value extends unknown | unknown[]>({
   onInputValueChange,
   value: providedValue,
   defaultValue,
+  inputValue: providedInputValue,
+  defaultInputValue,
   items,
   required,
   ...props
@@ -80,7 +81,13 @@ export const ComboboxRoot = <Value extends unknown | unknown[]>({
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
 
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValueUnwrapped] = useControlled({
+    controlled:
+      typeof providedInputValue === 'string' ? providedInputValue : undefined,
+    default: typeof defaultInputValue === 'string' ? defaultInputValue : '',
+    name: 'Combobox',
+    state: 'inputValue'
+  });
   const [computedValue, setValueUnwrapped] = useControlled<
     Value | Value[] | null
   >({
@@ -96,10 +103,10 @@ export const ComboboxRoot = <Value extends unknown | unknown[]>({
       value: string,
       eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
     ) => {
-      setInputValue(value);
+      setInputValueUnwrapped(value);
       onInputValueChange?.(value);
     },
-    [onInputValueChange]
+    [onInputValueChange, setInputValueUnwrapped]
   );
 
   const handleValueChange = useCallback(
@@ -139,6 +146,8 @@ export const ComboboxRoot = <Value extends unknown | unknown[]>({
         multiple={multiple}
         onValueChange={handleValueChange}
         onInputValueChange={handleInputValueChange}
+        inputValue={providedInputValue}
+        defaultInputValue={defaultInputValue}
         items={items}
         value={providedValue}
         defaultValue={defaultValue}
