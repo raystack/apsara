@@ -372,7 +372,8 @@ describe('DataView', () => {
       ).toBeInTheDocument();
     });
 
-    it('does not offer select or multiselect fields without filterOptions', () => {
+    it('does not offer select or multiselect fields without filterOptions', async () => {
+      const user = userEvent.setup();
       const fields: DataViewField<TestData>[] = [
         { accessorKey: 'name', label: 'Name', filterable: true },
         {
@@ -380,7 +381,7 @@ describe('DataView', () => {
           label: 'Status',
           filterable: true,
           filterType: 'select',
-          filterOptions: [{ label: 'Active', value: 'string' }]
+          filterOptions: [{ label: 'Active', value: 'active' }]
         },
         {
           accessorKey: 'email',
@@ -407,7 +408,14 @@ describe('DataView', () => {
           />
         </DataView>
       );
-      expect(screen.getByRole('button')).toHaveTextContent(/^Name,Status$/);
+      const trigger = screen.getByRole('button');
+      expect(trigger).toHaveTextContent(/^Name,Status$/);
+      await user.click(trigger);
+      await screen.findByRole('menuitem', { name: 'Status' });
+      expect(screen.getAllByRole('menuitem').map(i => i.textContent)).toEqual([
+        'Name',
+        'Status'
+      ]);
     });
 
     it('disables the filter trigger while select options are loading', () => {
