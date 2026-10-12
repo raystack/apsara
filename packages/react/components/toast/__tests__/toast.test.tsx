@@ -108,6 +108,26 @@ describe('Toast', () => {
         expect(screen.getByText('Updated title')).toBeInTheDocument();
       });
     });
+
+    it('accepts a function that receives the current toast', async () => {
+      let id: string;
+      act(() => {
+        id = toastManager.add({ title: 'Count 1' });
+      });
+      expect(await screen.findByText('Count 1')).toBeInTheDocument();
+
+      act(() => {
+        toastManager.update(id!, prev => ({
+          title: `${prev.title} + 1`,
+          leadingIcon: <svg data-testid='fn-icon' />
+        }));
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Count 1 + 1')).toBeInTheDocument();
+        expect(screen.getByTestId('fn-icon')).toBeInTheDocument();
+      });
+    });
   });
 
   describe('toastManager.promise()', () => {
@@ -268,6 +288,29 @@ describe('Toast', () => {
         expect(screen.getByText('Updated')).toBeInTheDocument();
         expect(screen.getByTestId('updated-icon')).toBeInTheDocument();
       });
+    });
+
+    it('restores the default icon when update() sets leadingIcon to undefined', async () => {
+      let id: string;
+      act(() => {
+        id = toastManager.add({
+          title: 'Custom',
+          leadingIcon: <svg data-testid='custom-icon' />
+        });
+      });
+      expect(await screen.findByTestId('custom-icon')).toBeInTheDocument();
+
+      act(() => {
+        toastManager.update(id!, () => ({ leadingIcon: undefined }));
+      });
+
+      await waitFor(() => {
+        expect(screen.queryByTestId('custom-icon')).not.toBeInTheDocument();
+      });
+      const toast = screen.getByText('Custom').closest('[data-slot="toast"]');
+      expect(
+        toast?.querySelector('[data-slot="toast-leading-icon"]')
+      ).toBeInTheDocument();
     });
   });
 

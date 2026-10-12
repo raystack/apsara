@@ -56,6 +56,31 @@ describe('CalendarPreview root', () => {
     error.mockRestore();
   });
 
+  it('renders December 9999, whose grid runs into 10000', () => {
+    const { container } = renderCalendar(undefined, {
+      defaultMonth: new Date(9999, 11, 1)
+    });
+    expect(dayCell(container, '31')).toBeInTheDocument();
+  });
+
+  it('does not warn when a controlled value that started empty is set', () => {
+    const error = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+    const { rerender } = render(
+      <CalendarPreview today={TODAY} value={null}>
+        <CalendarPreview.Days />
+      </CalendarPreview>
+    );
+    rerender(
+      <CalendarPreview today={TODAY} value={new Date(2026, 4, 27)}>
+        <CalendarPreview.Days />
+      </CalendarPreview>
+    );
+    expect(error).not.toHaveBeenCalled();
+    error.mockRestore();
+  });
+
   it('commits a clicked day and reports the period and the day acted on', () => {
     const onValueChange = vi.fn();
     const { container } = renderCalendar(undefined, { onValueChange });

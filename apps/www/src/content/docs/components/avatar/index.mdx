@@ -66,6 +66,8 @@ Avatar can display user images with graceful fallback to initials when images fa
 
 <Demo data={imageDemo} />
 
+The `<img>` renders right away and loads in place, so an image in server-rendered HTML can show before hydration. While the image loads, or after it fails, the `<img>` is hidden and the fallback shows. A load that takes 100ms or more fades in. A faster load, such as one from the cache, appears at once. The fallback stays hidden for the first 100ms of a load, so cached images do not flash the initials.
+
 ### With generated colors
 
 `getAvatarColor` derives a color from a string, such as a user's email. The same string always returns the same color, on the server and in the browser. Pass a stable ID, such as `user.id`, so the color does not change when someone is renamed.

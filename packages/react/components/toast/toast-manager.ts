@@ -1,6 +1,10 @@
 'use client';
 
-import { Toast as ToastPrimitive } from '@base-ui/react';
+import {
+  type ToastManagerUpdateOptions,
+  type ToastObject,
+  Toast as ToastPrimitive
+} from '@base-ui/react';
 import { type ReactNode, useMemo } from 'react';
 
 export interface ToastData {
@@ -27,8 +31,12 @@ export type ToastAddOptions = WithModifiedOptions<
 >;
 
 export type ToastUpdateOptions = WithModifiedOptions<
-  Parameters<BaseManager['update']>[1]
+  ToastManagerUpdateOptions<ToastData>
 >;
+
+export type ToastUpdater =
+  | ToastUpdateOptions
+  | ((prevToast: ToastObject<ToastData>) => ToastUpdateOptions);
 
 export interface ToastPromiseOptions<Value> {
   loading: string | ToastUpdateOptions;
@@ -44,8 +52,16 @@ export interface ToastPromiseOptions<Value> {
 
 function lift<O extends { leadingIcon?: ReactNode }>(options: O) {
   const { leadingIcon, ...rest } = options;
-  if (leadingIcon === undefined) return rest;
+  // An explicit `leadingIcon: undefined` resets the toast to its type's default icon.
+  if (!('leadingIcon' in options)) return rest;
   return { ...rest, data: { leadingIcon } };
+}
+
+function liftUpdater(updater: ToastUpdater) {
+  if (typeof updater === 'function') {
+    return (prevToast: ToastObject<ToastData>) => lift(updater(prevToast));
+  }
+  return lift(updater);
 }
 
 function liftDescriptor(option: string | ToastUpdateOptions) {
@@ -84,7 +100,7 @@ function liftPromiseOptions<Value>({
 export interface ToastManager
   extends Omit<BaseManager, 'add' | 'update' | 'promise'> {
   add: (options: ToastAddOptions) => string;
-  update: (id: string, options: ToastUpdateOptions) => void;
+  update: (id: string, options: ToastUpdater) => void;
   promise: <Value>(
     promise: Promise<Value>,
     options: ToastPromiseOptions<Value>
@@ -96,7 +112,7 @@ export function createToastManager(): ToastManager {
   return {
     ...base,
     add: options => base.add(lift(options)),
-    update: (id, options) => base.update(id, lift(options)),
+    update: (id, options) => base.update(id, liftUpdater(options)),
     promise: (promise, options) =>
       base.promise(promise, liftPromiseOptions(options))
   };
@@ -126,7 +142,7 @@ export function useToastManager(): UseToastManagerReturn {
     () => ({
       ...base,
       add: options => base.add(lift(options)),
-      update: (id, options) => base.update(id, lift(options)),
+      update: (id, options) => base.update(id, liftUpdater(options)),
       promise: (promise, options) =>
         base.promise(promise, liftPromiseOptions(options))
     }),
