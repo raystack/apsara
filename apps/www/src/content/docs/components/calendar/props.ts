@@ -138,6 +138,11 @@ export interface CalendarProps {
 
 export interface RangePickerProps {
   /**
+   * Additional CSS class names for the group that holds the start and end inputs.
+   */
+  pickerGroupClassName?: string;
+
+  /**
    * Format for displaying the date. Supports various formats:
    * - With slashes: "DD/MM/YYYY", "MM/DD/YYYY", "YYYY/MM/DD"
    * - With dashes: "DD-MM-YYYY", "MM-DD-YYYY", "YYYY-MM-DD"

@@ -15,7 +15,7 @@ export interface IndicatorProps {
   pulse?: boolean;
 
   /** Optional custom description for screen readers */
-  ariaLabel?: string;
+  'aria-label'?: string;
 
   /** The content to show the indicator on */
   children: React.ReactNode;

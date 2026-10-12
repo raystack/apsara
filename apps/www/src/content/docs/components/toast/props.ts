@@ -23,6 +23,11 @@ export interface ToastProviderProps {
    */
   timeout?: number;
 
+  /**
+   * Toast manager instance. Defaults to the exported `toastManager`. Pass one from `Toast.createToastManager()` to scope toasts to this provider.
+   */
+  toastManager?: CreateToastManagerReturn;
+
   children?: React.ReactNode;
 }
 

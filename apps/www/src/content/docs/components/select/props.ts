@@ -93,6 +93,9 @@ export interface SelectItemProps {
   /** The value of the item. */
   value: string;
 
+  /** Icon rendered before the item text. */
+  leadingIcon?: React.ReactNode;
+
   /** Additional CSS class names. */
   className?: string;
 }

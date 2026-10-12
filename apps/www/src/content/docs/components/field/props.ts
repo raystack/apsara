@@ -52,6 +52,17 @@ export interface FieldLabelProps {
    */
   required?: boolean;
 
+  /**
+   * Text rendered next to the label when `required={false}`.
+   * @defaultValue "(optional)"
+   */
+  optionalText?: string;
+
+  /**
+   * Text rendered next to the label when `required={true}`. No indicator is rendered when it is omitted.
+   */
+  requiredText?: string;
+
   /** Additional CSS class names. */
   className?: string;
 }
