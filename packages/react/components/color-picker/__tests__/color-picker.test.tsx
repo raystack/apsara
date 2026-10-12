@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ColorPicker } from '../color-picker';
@@ -426,6 +427,24 @@ describe('ColorPicker', () => {
 
       const modeSelector = screen.getByTestId('mode-selector');
       expect(modeSelector).toHaveTextContent('HEX');
+    });
+
+    it('switches an uncontrolled mode and calls onModeChange', async () => {
+      const user = userEvent.setup();
+      const onModeChange = vi.fn();
+      render(
+        <ColorPicker defaultValue='#ff0000' onModeChange={onModeChange}>
+          <ColorPicker.Input data-testid='color-input' />
+          <ColorPicker.Mode data-testid='mode-selector' />
+        </ColorPicker>
+      );
+
+      await user.click(screen.getByTestId('mode-selector'));
+      await user.click(await screen.findByRole('option', { name: 'RGB' }));
+
+      expect(onModeChange).toHaveBeenCalledWith('rgb');
+      expect(screen.getByTestId('mode-selector')).toHaveTextContent('RGB');
+      expect(screen.getByTestId('color-input')).toHaveValue('rgb(255, 0, 0)');
     });
 
     it('accepts custom options', () => {

@@ -1,5 +1,6 @@
 'use client';
 
+import { useControlled } from '@base-ui/utils/useControlled';
 import {
   ComponentProps,
   createContext,
@@ -67,9 +68,12 @@ export const ColorPickerRoot = ({
   const [internalColor, setInternalColor] = useState(() =>
     parseColor(defaultValue)
   );
-  const [internalMode, setInternalMode] = useState(defaultMode);
-
-  const mode = providedMode ?? internalMode;
+  const [mode, setModeUnwrapped] = useControlled({
+    controlled: providedMode,
+    default: defaultMode,
+    name: 'ColorPicker',
+    state: 'mode'
+  });
 
   // In non-oklch modes, derive a display value clamped to the sRGB gamut so
   // the pad / thumb / input only reflect colors the active output mode can
@@ -114,10 +118,10 @@ export const ColorPickerRoot = ({
 
   const setMode = useCallback<ColorPickerContextValue['setMode']>(
     value => {
-      setInternalMode(value);
+      setModeUnwrapped(value);
       onModeChange?.(value);
     },
-    [onModeChange]
+    [onModeChange, setModeUnwrapped]
   );
 
   // Memoize the context value so consumers (Area, Hue, Alpha, Input, Mode) only

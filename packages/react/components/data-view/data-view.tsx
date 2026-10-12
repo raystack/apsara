@@ -1,5 +1,6 @@
 'use client';
 
+import { useControlled } from '@base-ui/utils/useControlled';
 import {
   getCoreRowModel,
   getExpandedRowModel,
@@ -74,17 +75,20 @@ function DataViewRoot<TData>({
   );
 
   // Active view (controlled / uncontrolled).
-  const isViewControlled = view !== undefined;
-  const [internalActiveView, setInternalActiveView] = useState<
+  const [activeView, setActiveViewUnwrapped] = useControlled<
     string | undefined
-  >(defaultView ?? views?.[0]?.value);
-  const activeView = isViewControlled ? view : internalActiveView;
+  >({
+    controlled: view,
+    default: defaultView ?? views?.[0]?.value,
+    name: 'DataView',
+    state: 'view'
+  });
   const setActiveView = useCallback(
     (next: string) => {
-      if (!isViewControlled) setInternalActiveView(next);
+      setActiveViewUnwrapped(next);
       onViewChange?.(next);
     },
-    [isViewControlled, onViewChange]
+    [onViewChange, setActiveViewUnwrapped]
   );
 
   // Per-view field overrides registered by mounted renderers.

@@ -1,6 +1,7 @@
 'use client';
 
 import { Autocomplete as AutocompletePrimitive } from '@base-ui/react/autocomplete';
+import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
 import {
   createContext,
@@ -8,8 +9,7 @@ import {
   useCallback,
   useContext,
   useMemo,
-  useRef,
-  useState
+  useRef
 } from 'react';
 import styles from './command.module.css';
 
@@ -56,23 +56,23 @@ export const CommandRoot = ({
   children,
   ...props
 }: CommandRootProps) => {
-  const [internalValue, setInternalValue] = useState<string>(
-    typeof defaultValue === 'string' ? defaultValue : ''
-  );
+  const [computedValue, setValueUnwrapped] = useControlled({
+    controlled: typeof providedValue === 'string' ? providedValue : undefined,
+    default: typeof defaultValue === 'string' ? defaultValue : '',
+    name: 'Command',
+    state: 'value'
+  });
   const inputContainerRef = useRef<HTMLDivElement>(null);
-
-  const computedValue =
-    typeof providedValue === 'string' ? providedValue : internalValue;
 
   const handleValueChange = useCallback(
     (
       value: string,
       eventDetails: AutocompletePrimitive.Root.ChangeEventDetails
     ) => {
-      setInternalValue(value);
+      setValueUnwrapped(value);
       onValueChange?.(value, eventDetails);
     },
-    [onValueChange]
+    [onValueChange, setValueUnwrapped]
   );
 
   const contextValue = useMemo(
