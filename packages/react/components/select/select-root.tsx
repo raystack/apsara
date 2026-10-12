@@ -219,6 +219,8 @@ export const SelectRoot = (props: SelectRootProps) => {
       <SelectContext value={contextValue}>
         <ComboboxPrimitive.Root
           {...commonProps}
+          inputValue={providedSearchValue}
+          defaultInputValue={defaultSearchValue}
           onInputValueChange={handleSearchValueChange}
           filter={itemsProp ? undefined : null}
           items={itemsProp}
