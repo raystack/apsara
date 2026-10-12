@@ -417,6 +417,33 @@ describe('Combobox', () => {
       const input = screen.getByRole('combobox');
       expect(input).toHaveValue('test');
     });
+
+    it('filters items by a controlled inputValue', () => {
+      const handleInputChange = vi.fn();
+      render(
+        <BasicCombobox
+          defaultOpen
+          inputValue='ban'
+          onInputValueChange={handleInputChange}
+        />
+      );
+      const input = screen.getByRole('combobox');
+
+      fireEvent.change(input, { target: { value: 'app' } });
+
+      expect(handleInputChange).toHaveBeenCalledWith('app');
+      expect(input).toHaveValue('ban');
+      expect(screen.getByText('Banana')).toBeInTheDocument();
+      expect(screen.queryByText('Apple')).not.toBeInTheDocument();
+    });
+
+    it('filters items by defaultInputValue', () => {
+      render(<BasicCombobox defaultOpen defaultInputValue='ban' />);
+
+      expect(screen.getByRole('combobox')).toHaveValue('ban');
+      expect(screen.getByText('Banana')).toBeInTheDocument();
+      expect(screen.queryByText('Apple')).not.toBeInTheDocument();
+    });
   });
 
   describe('Accessibility', () => {
