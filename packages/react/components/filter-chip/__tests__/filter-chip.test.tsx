@@ -1,5 +1,8 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { defaultFormatValue } from '~/components/calendar-preview/calendar-preview-root';
+import { getAllSlots, getSlot } from '~/test-utils/data-slots';
 import { FilterType } from '~/types/filters';
 import { FilterChip } from '../filter-chip';
 import styles from '../filter-chip.module.css';
@@ -298,76 +301,295 @@ describe('FilterChip', () => {
   });
 
   describe('Date Filter Type', () => {
-    it('renders the date picker without crashing when no value is set', () => {
-      // Regression: an unset date chip seeds its value with '' and forwarded
-      // that string to DatePicker, whose controlled-sync effect ran
-      // `valueProp?.getTime()` → "getTime is not a function".
+    it('renders the calendar without crashing when no value is set', () => {
       expect(() =>
         render(<FilterChip label='Created' columnType={FilterType.date} />)
       ).not.toThrow();
       expect(screen.getByPlaceholderText('Select date')).toBeInTheDocument();
     });
 
-    it('parses a serialized string date value instead of rendering blank', () => {
+    it.each([
+      ['a serialized string', '2026-05-27'],
+      ['an epoch number', new Date(2026, 4, 27).getTime()],
+      ['a Date', new Date(2026, 4, 27)],
+      [
+        'an object with a numeric valueOf',
+        { valueOf: () => new Date(2026, 4, 27).getTime() }
+      ]
+    ])('shows %s as its day', (_label, value) => {
       render(
         <FilterChip
           label='Created'
           columnType={FilterType.date}
-          value='2026-05-27'
+          value={value as never}
         />
       );
-      expect(screen.getByDisplayValue('27 May 2026')).toBeInTheDocument();
+      expect(
+        screen.getByDisplayValue(
+          defaultFormatValue(new Date(2026, 4, 27), 'day')
+        )
+      ).toBeInTheDocument();
     });
 
-    it('parses an epoch number value', () => {
-      // Local-component Date so the timestamp is timezone-stable.
-      render(
-        <FilterChip
-          label='Created'
-          columnType={FilterType.date}
-          value={new Date(2026, 4, 27).getTime()}
-        />
-      );
-      expect(screen.getByDisplayValue('27 May 2026')).toBeInTheDocument();
-    });
-
-    it('coerces an unparseable value to unselected instead of crashing', () => {
+    it.each([
+      ['an unparseable string', 'not-a-date'],
+      ['an invalid Date', new Date('')],
+      ['a year above 9999', new Date(10000, 0, 1)],
+      ['a timestamp in a year above 9999', Date.UTC(10000, 6, 1)],
+      [
+        'an object whose valueOf throws',
+        {
+          valueOf() {
+            throw new TypeError('valueOf');
+          }
+        }
+      ]
+    ])('renders %s as unselected instead of crashing', (_label, value) => {
       expect(() =>
         render(
           <FilterChip
             label='Created'
             columnType={FilterType.date}
-            value='not-a-date'
+            value={value as never}
           />
         )
       ).not.toThrow();
       expect(screen.getByPlaceholderText('Select date')).toHaveValue('');
     });
 
-    it('formats a Date value with the default month-as-text format', () => {
-      // Local-component Date so the formatted string is timezone-stable.
+    it('opens the calendar on 31 December 9999', () => {
       render(
         <FilterChip
           label='Created'
           columnType={FilterType.date}
-          value={new Date(2026, 4, 27)}
+          value={new Date(9999, 11, 31)}
         />
       );
-      expect(screen.getByDisplayValue('27 May 2026')).toBeInTheDocument();
+      const input = screen.getByPlaceholderText('Select date');
+      act(() => input.focus());
+      expect(isOpen()).toBe(true);
     });
 
-    it('forwards calendarProps to the underlying DatePicker', () => {
-      // dateFormat is the easiest forwarded prop to observe, since the formatted
-      // string in the input changes when it lands on DatePicker.
+    it('renders a value that is past 9999 in calendarProps.timeZone as unselected', () => {
+      /* In UTC the value is still in 9999, so only the calendar zone rejects it. */
+      const previous = process.env.TZ;
+      process.env.TZ = 'UTC';
+      try {
+        expect(() =>
+          render(
+            <FilterChip
+              label='Created'
+              columnType={FilterType.date}
+              value={new Date(Date.UTC(9999, 11, 31, 20))}
+              calendarProps={{ timeZone: 'Pacific/Kiritimati' }}
+            />
+          )
+        ).not.toThrow();
+        expect(screen.getByPlaceholderText('Select date')).toHaveValue('');
+      } finally {
+        if (previous === undefined) delete process.env.TZ;
+        else process.env.TZ = previous;
+      }
+    });
+
+    it('forwards calendarProps to the calendar', () => {
       render(
         <FilterChip
           label='Created'
           columnType={FilterType.date}
           value={new Date(2026, 4, 27)}
-          calendarProps={{ dateFormat: 'DD/MM/YYYY' }}
+          calendarProps={{
+            formatValue: (date, timeZone) =>
+              `${date.getDate()} ${timeZone ?? 'local'}`
+          }}
         />
       );
-      expect(screen.getByDisplayValue('27/05/2026')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('27 local')).toBeInTheDocument();
+    });
+
+    it('emits the typed date', () => {
+      const onValueChange = vi.fn();
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          onValueChange={onValueChange}
+        />
+      );
+      const input = screen.getByPlaceholderText('Select date');
+      fireEvent.change(input, { target: { value: '27 May 2026' } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(onValueChange).toHaveBeenCalledWith(
+        new Date(2026, 4, 27),
+        expect.any(String)
+      );
+    });
+
+    it('emits an empty value when the date is cleared', () => {
+      const onValueChange = vi.fn();
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2026, 4, 27)}
+          onValueChange={onValueChange}
+        />
+      );
+      const input = screen.getByPlaceholderText('Select date');
+      fireEvent.change(input, { target: { value: '' } });
+      fireEvent.blur(input);
+      expect(onValueChange).toHaveBeenCalledWith('', expect.any(String));
+      expect(input).toHaveValue('');
+    });
+
+    const isOpen = () =>
+      getSlot(document.body, 'calendar-preview-content') !== null;
+    const clickDay = (day: string) => {
+      const cell = getAllSlots(document.body, 'calendar-preview-day').find(
+        one =>
+          getSlot(one, 'calendar-preview-day-number')?.textContent === day &&
+          !one.hasAttribute('data-outside')
+      ) as HTMLElement;
+      fireEvent.pointerDown(cell);
+      act(() => cell.focus());
+      fireEvent.click(cell);
+    };
+
+    it('closes the calendar when a day is picked', async () => {
+      const onValueChange = vi.fn();
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2026, 4, 27)}
+          onValueChange={onValueChange}
+        />
+      );
+      const input = screen.getByPlaceholderText('Select date');
+      act(() => input.focus());
+      expect(isOpen()).toBe(true);
+      clickDay('12');
+      expect(onValueChange).toHaveBeenCalledWith(
+        new Date(2026, 4, 12),
+        expect.any(String)
+      );
+      await act(() => new Promise(resolve => setTimeout(resolve, 100)));
+      expect(isOpen()).toBe(false);
+    });
+
+    it('keeps the calendar open when the picked day is cleared', () => {
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2026, 4, 27)}
+        />
+      );
+      fireEvent.focus(screen.getByPlaceholderText('Select date'));
+      clickDay('27');
+      expect(isOpen()).toBe(true);
+    });
+
+    it('forwards slotProps to the input and the popup', () => {
+      const { container } = render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          calendarProps={{
+            slotProps: {
+              input: {
+                placeholder: 'Pick a day',
+                classNames: { container: 'custom-input' }
+              },
+              popover: { className: 'custom-popup' }
+            }
+          }}
+        />
+      );
+      const input = screen.getByPlaceholderText('Pick a day');
+      expect(container.querySelector('.custom-input')).toHaveClass(
+        styles.dateField
+      );
+      fireEvent.focus(input);
+      expect(
+        getSlot(document.body, 'calendar-preview-content')?.querySelector(
+          '.custom-popup'
+        )
+      ).toBeInTheDocument();
+    });
+
+    it('shows the calendar icon only with showCalendarIcon', () => {
+      const icons = (showCalendarIcon?: boolean) =>
+        render(
+          <FilterChip
+            label='Created'
+            columnType={FilterType.date}
+            calendarProps={{ showCalendarIcon }}
+          />
+        ).container.querySelectorAll('[data-slot="filter-chip-value"] svg')
+          .length;
+      expect(icons()).toBe(0);
+      expect(icons(true)).toBe(1);
+    });
+
+    it('reports a typed error through onErrorChange', () => {
+      const onErrorChange = vi.fn();
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          calendarProps={{ onErrorChange }}
+        />
+      );
+      const input = screen.getByPlaceholderText('Select date');
+      fireEvent.focus(input);
+      fireEvent.change(input, { target: { value: 'not a date' } });
+      expect(onErrorChange).toHaveBeenLastCalledWith('Invalid date');
+      fireEvent.change(input, { target: { value: '27 May 2026' } });
+      expect(onErrorChange).toHaveBeenLastCalledWith(undefined);
+    });
+
+    it('keeps a typed error when a string value rerenders the chip', () => {
+      function Parent() {
+        const [error, setError] = useState<string>();
+        return (
+          <>
+            <span data-testid='error'>{error}</span>
+            <FilterChip
+              label='Created'
+              columnType={FilterType.date}
+              value='2026-05-27'
+              calendarProps={{ onErrorChange: setError }}
+            />
+          </>
+        );
+      }
+      render(<Parent />);
+      const input = screen.getByDisplayValue(
+        defaultFormatValue(new Date(2026, 4, 27), 'day')
+      );
+      fireEvent.focus(input);
+      fireEvent.change(input, { target: { value: 'not a date' } });
+      expect(input).toHaveValue('not a date');
+      expect(screen.getByTestId('error')).toHaveTextContent('Invalid date');
+    });
+
+    it('does not select a day when slotProps.input is disabled', () => {
+      const onValueChange = vi.fn();
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2026, 4, 27)}
+          onValueChange={onValueChange}
+          calendarProps={{ slotProps: { input: { disabled: true } } }}
+        />
+      );
+      fireEvent.click(
+        getSlot(document.body, 'calendar-preview-trigger') as HTMLElement
+      );
+      if (isOpen()) clickDay('12');
+      expect(onValueChange).not.toHaveBeenCalled();
     });
   });
 

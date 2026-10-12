@@ -187,6 +187,22 @@ describe('Data Table Utils', () => {
       expect(result.columnFilters).toHaveLength(0);
     });
 
+    it('should filter out a date filter with no value', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'createdAt',
+            operator: 'eq',
+            value: undefined,
+            _type: FilterType.date
+          }
+        ]
+      };
+      const result = queryToTableState(query);
+
+      expect(result.columnFilters).toHaveLength(0);
+    });
+
     it('should keep valid date filters', () => {
       const query: InternalQuery = {
         filters: [
@@ -691,8 +707,24 @@ describe('Data Table Utils', () => {
       expect(result.filters).toHaveLength(0);
     });
 
+    it('should filter out a date filter with no value', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'createdAt',
+            operator: 'eq',
+            value: undefined,
+            _type: FilterType.date
+          }
+        ]
+      };
+
+      const result = transformToDataTableQuery(query);
+      expect(result.filters).toHaveLength(0);
+    });
+
     it('should keep valid date filters', () => {
-      const date = new Date('2023-12-01');
+      const date = new Date(2023, 11, 1);
       const query: InternalQuery = {
         filters: [
           {
@@ -707,7 +739,7 @@ describe('Data Table Utils', () => {
       const result = transformToDataTableQuery(query);
       expect(result.filters).toHaveLength(1);
       expect(result.filters![0].name).toBe('createdAt');
-      expect(result.filters![0].stringValue).toBe(date.toISOString());
+      expect(result.filters![0].stringValue).toBe('2023-12-01');
     });
 
     it('should preserve other query properties', () => {

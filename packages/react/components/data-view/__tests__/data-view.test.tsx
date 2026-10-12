@@ -15,6 +15,7 @@ import { DataView } from '../data-view';
 import type {
   DataViewField,
   DataViewListColumn,
+  DataViewQuery,
   ViewSpec
 } from '../data-view.types';
 import { useDataView as useDataViewForTest } from '../hooks/useDataView';
@@ -1312,6 +1313,88 @@ describe('DataView', () => {
       expect(receivedTable).not.toBeNull();
       // First row after default ascending name sort is "Bob Johnson" (id=3).
       expect(receivedRowOriginal).toMatchObject({ id: 3 });
+    });
+  });
+
+  describe('Restored date filters', () => {
+    type Dated = { id: string; when?: string };
+    const dated: Dated[] = [
+      { id: 'd14', when: '2026-08-14' },
+      { id: 'd15', when: '2026-08-15' },
+      { id: 'd16', when: '2026-08-16' },
+      { id: 'dNone' }
+    ];
+    const datedFields: DataViewField<Dated>[] = [
+      { accessorKey: 'id', label: 'ID', filterable: true },
+      {
+        accessorKey: 'when',
+        label: 'When',
+        filterable: true,
+        filterType: 'date'
+      }
+    ];
+
+    const renderRestored = (
+      filters: NonNullable<DataViewQuery['filters']>,
+      mode: 'client' | 'server' = 'client',
+      onTableQueryChange?: (query: DataViewQuery) => void
+    ) =>
+      render(
+        <DataView
+          data={dated}
+          fields={datedFields}
+          defaultSort={{ name: 'id', order: 'asc' }}
+          mode={mode}
+          query={{ filters }}
+          onTableQueryChange={onTableQueryChange}
+        >
+          <DataView.Custom>
+            {ctx => (
+              <output data-testid='rows'>
+                {ctx.table
+                  .getRowModel()
+                  .rows.map(row => (row.original as Dated).id)
+                  .join(',')}
+              </output>
+            )}
+          </DataView.Custom>
+        </DataView>
+      );
+
+    it('filters rows by a restored date filter', () => {
+      renderRestored([{ name: 'when', operator: 'eq', value: '2026-08-15' }]);
+      expect(screen.getByTestId('rows')).toHaveTextContent('d15');
+    });
+
+    it('emits a restored date filter as a day key', () => {
+      const onTableQueryChange = vi.fn();
+      renderRestored(
+        [{ name: 'when', operator: 'eq', value: new Date(2026, 7, 15) }],
+        'server',
+        onTableQueryChange
+      );
+      const last = onTableQueryChange.mock.calls[
+        onTableQueryChange.mock.calls.length - 1
+      ]?.[0] as DataViewQuery;
+      expect(last.filters?.[0]?.stringValue).toBe('2026-08-15');
+    });
+
+    it('leaves a restored string filter as it was sent', () => {
+      const onTableQueryChange = vi.fn();
+      renderRestored(
+        [{ name: 'id', operator: 'eq', value: 'd15' }],
+        'server',
+        onTableQueryChange
+      );
+      const last = onTableQueryChange.mock.calls[
+        onTableQueryChange.mock.calls.length - 1
+      ]?.[0] as DataViewQuery;
+      expect(last.filters?.[0]).toEqual({
+        name: 'id',
+        operator: 'eq',
+        value: 'd15',
+        stringValue: 'd15'
+      });
     });
   });
 });
