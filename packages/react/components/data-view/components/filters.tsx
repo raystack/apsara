@@ -41,8 +41,14 @@ function AddFilter<TData>({
   className,
   ...positionerProps
 }: AddFilterProps<TData>) {
-  const availableFilters = fieldList?.filter(
+  const unappliedFields = fieldList.filter(
     f => !appliedFiltersSet.has(f.accessorKey)
+  );
+  const availableFilters = unappliedFields.filter(
+    f =>
+      f.filterOptions?.length ||
+      (f.filterType !== FilterType.select &&
+        f.filterType !== FilterType.multiselect)
   );
 
   const trigger = useMemo(() => {
@@ -75,9 +81,10 @@ function AddFilter<TData>({
     );
   }, [children, appliedFiltersSet, availableFilters, className]);
 
-  return availableFilters.length > 0 ? (
+  return unappliedFields.length > 0 ? (
     <Menu>
       <Menu.Trigger
+        disabled={availableFilters.length === 0}
         render={isValidElement(trigger) ? trigger : <button>{trigger}</button>}
       />
       <Menu.Content {...positionerProps}>
