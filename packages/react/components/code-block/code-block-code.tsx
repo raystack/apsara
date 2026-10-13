@@ -1,9 +1,9 @@
 'use client';
 
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { cx } from 'class-variance-authority';
 import { Highlight, Language } from 'prism-react-renderer';
 import { ComponentProps, memo } from 'react';
-import { useIsomorphicLayoutEffect } from '~/hooks';
 import code from './code.module.css';
 import styles from './code-block.module.css';
 import { useCodeBlockContext } from './code-block-root';
@@ -30,7 +30,7 @@ export const CodeBlockCode = ({
   const shouldRender = !isContextValueDefined || contextValue === computedValue;
   const content = children.trim();
 
-  useIsomorphicLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     // if value is not defined, set the value
     if (!isContextValueDefined) setValue(language);
     // if should render, store the code

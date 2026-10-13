@@ -1,8 +1,8 @@
 'use client';
 
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ComponentProps, SyntheticEvent, useRef, useState } from 'react';
-import { useIsomorphicLayoutEffect } from '~/hooks';
 
 import { radiusVariants } from '../../shared/radius';
 import styles from './image.module.css';
@@ -48,7 +48,7 @@ export function Image({
     'static'
   );
 
-  useIsomorphicLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     hasFallenBackRef.current = false;
     const node = imgRef.current;
     // Already-decoded (cached/SSR-painted) images stay visible, with no fade.

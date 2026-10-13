@@ -3,6 +3,7 @@ import {
   FieldControl,
   FieldDescription,
   FieldError,
+  FieldItem,
   FieldLabel
 } from './field-misc';
 import { FieldRoot } from './field-root';
@@ -16,5 +17,6 @@ export const Field = Object.assign(FieldRoot, {
   Control: FieldControl,
   Error: FieldError,
   Description: FieldDescription,
+  Item: FieldItem,
   Validity: FieldPrimitive.Validity
 });
