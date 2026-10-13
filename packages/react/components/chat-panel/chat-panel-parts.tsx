@@ -1,5 +1,6 @@
 'use client';
 
+import type { BaseUIEvent } from '@base-ui/react/types';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, MouseEvent, PointerEvent, ReactNode } from 'react';
@@ -96,7 +97,7 @@ export function ChatPanelMinimizeTrigger({
 }: ChatPanelMinimizeTriggerProps) {
   const { minimize } = useChatPanelContext('MinimizeTrigger');
 
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: BaseUIEvent<MouseEvent<HTMLButtonElement>>) => {
     onClick?.(event);
     if (event.defaultPrevented) return;
     minimize();
@@ -140,7 +141,7 @@ export function ChatPanelExpandTrigger({
   const { mode, toggleFloating } = useChatPanelContext('ExpandTrigger');
   const floating = mode === 'floating';
 
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: BaseUIEvent<MouseEvent<HTMLButtonElement>>) => {
     onClick?.(event);
     if (event.defaultPrevented) return;
     toggleFloating();
