@@ -25,6 +25,31 @@ export interface SelectRootProps {
 
   /** Callback fired when the search value changes */
   onSearch?: (value: string) => void;
+
+  /** Optional labels for each value, as `{ value, label }[]` or a value-to-label record. Items register their own labels, so this is only needed for search by label or for values whose item is not rendered. */
+  items?:
+    | { value: string; label: React.ReactNode }[]
+    | Record<string, React.ReactNode>;
+}
+
+export interface SelectValueItem {
+  value: string;
+  /** The item's label. */
+  children: React.ReactNode;
+  leadingIcon?: React.ReactNode;
+}
+
+export interface SelectValueProps {
+  /** Shown when nothing is selected. */
+  placeholder?: React.ReactNode;
+
+  /** Replaces the label. A function receives the selected item (an array in multiple mode). */
+  children?:
+    | React.ReactNode
+    | ((item: SelectValueItem | SelectValueItem[]) => React.ReactNode);
+
+  /** Additional CSS class names. */
+  className?: string;
 }
 
 export interface SelectTriggerProps {
@@ -129,6 +154,19 @@ export interface SelectLabelProps {
   render?: React.ReactElement;
 }
 
+export interface SelectGroupLabelProps {
+  /** Additional CSS class names */
+  className?: string;
+
+  /**
+   * Allows rendering as a different element.
+   * Accepts a React element or a function that receives props and returns an element.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?: React.ReactElement;
+}
+
 export interface SelectSeparatorProps {
   /** Additional CSS class names */
   className?: string;
@@ -140,4 +178,20 @@ export interface SelectSeparatorProps {
    * @remarks `ReactElement | function`
    */
   render?: React.ReactElement;
+}
+
+export interface SelectEmptyProps {
+  /** Content shown when no item matches the search. */
+  children?: React.ReactNode;
+
+  /** Additional CSS class names */
+  className?: string;
+}
+
+export interface SelectStatusProps {
+  /** Status message, for example a result count. */
+  children?: React.ReactNode;
+
+  /** Additional CSS class names */
+  className?: string;
 }

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { expectSlots, getSlot } from '~/test-utils/data-slots';
@@ -45,7 +45,7 @@ describe('Select data-slot contract', () => {
     ]);
   });
 
-  it('exposes content, list, group, label, separator, item and indicator slots when open', async () => {
+  it('exposes content, list, group, group label, separator, item and indicator slots when open', async () => {
     const user = userEvent.setup();
     render(
       <Select defaultValue='apple'>
@@ -54,7 +54,7 @@ describe('Select data-slot contract', () => {
         </Select.Trigger>
         <Select.Content>
           <Select.Group>
-            <Select.Label>Fruits</Select.Label>
+            <Select.GroupLabel>Fruits</Select.GroupLabel>
             {FRUIT_OPTIONS.map(option => (
               <Select.Item key={option.value} value={option.value}>
                 {option.label}
@@ -73,7 +73,7 @@ describe('Select data-slot contract', () => {
       'select-content',
       'select-list',
       'select-group',
-      'select-label',
+      'select-group-label',
       'select-separator',
       'select-item',
       'select-item-text',
@@ -118,6 +118,44 @@ describe('Select data-slot contract', () => {
     await openSelect(user);
     await user.click(screen.getAllByRole('option')[0]);
     expect(getSlot(container, 'select-value')).not.toBeNull();
+  });
+
+  it('exposes the label slot', () => {
+    const { container } = render(
+      <Select>
+        <Select.Label>Fruit</Select.Label>
+        <Select.Trigger>
+          <Select.Value placeholder='Select a fruit' />
+        </Select.Trigger>
+      </Select>
+    );
+    expect(getSlot(container, 'select-label')).not.toBeNull();
+  });
+
+  it('exposes the empty and status slots in autocomplete mode', async () => {
+    render(
+      <Select autocomplete items={FRUIT_OPTIONS}>
+        <Select.Trigger>
+          <Select.Value placeholder='Select a fruit' />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Status />
+          <Select.Empty>No fruit found</Select.Empty>
+          {FRUIT_OPTIONS.map(option => (
+            <Select.Item key={option.value} value={option.value}>
+              {option.label}
+            </Select.Item>
+          ))}
+        </Select.Content>
+      </Select>
+    );
+    fireEvent.click(screen.getByRole('combobox'));
+    await screen.findByRole('listbox');
+    expectSlots(document.body, [
+      'select-search',
+      'select-status',
+      'select-empty'
+    ]);
   });
 
   it('lets FilterChip/DataView-style overrides win over Select defaults', () => {

@@ -5,3 +5,7 @@ export type ItemType = {
   children: ReactNode;
   value: string;
 };
+
+export type SelectItems =
+  | { value: string; label: ReactNode }[]
+  | Record<string, ReactNode>;

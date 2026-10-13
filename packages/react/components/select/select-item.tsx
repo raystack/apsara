@@ -4,14 +4,19 @@ import {
   Combobox as ComboboxPrimitive,
   Select as SelectPrimitive
 } from '@base-ui/react';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { cx } from 'class-variance-authority';
-import { ReactNode, useLayoutEffect } from 'react';
+import { ReactNode, useContext } from 'react';
 import { CheckIcon } from '~/icons';
 import { Checkbox } from '../checkbox';
 import { getMatch } from '../menu/utils';
 import { Text } from '../text';
 import styles from './select.module.css';
-import { useSelectContext } from './select-root';
+import {
+  SelectRegistrationContext,
+  useFilteredValues,
+  useSelectContext
+} from './select-root';
 
 export interface SelectItemProps extends SelectPrimitive.Item.Props {
   leadingIcon?: ReactNode;
@@ -27,21 +32,37 @@ export function SelectItem({
 }: SelectItemProps) {
   const value = String(providedValue);
   const {
-    registerItem,
-    unregisterItem,
     autocomplete,
     searchValue,
     value: selectValue,
     shouldFilter,
-    hasItems,
-    multiple
+    multiple,
+    registerItem
   } = useSelectContext();
+  const filteredValues = useFilteredValues();
+  const registering = useContext(SelectRegistrationContext);
+
+  useIsoLayoutEffect(
+    () => registerItem({ value, children, leadingIcon }),
+    [registerItem, value, children, leadingIcon]
+  );
+
+  if (registering) return null;
+
+  // With `items`, Base UI filters by label and maps list positions to the
+  // filtered items, so every unmatched item must leave the list.
+  if (filteredValues && !filteredValues.has(value)) return null;
 
   const isSelected = multiple
     ? selectValue?.includes(value)
     : value === selectValue;
   const isMatched = getMatch(value, children, searchValue);
-  const isHidden = shouldFilter && !hasItems && isSelected && !isMatched;
+  const ownFilter = shouldFilter && !filteredValues;
+  const isHidden = ownFilter && isSelected && !isMatched;
+
+  if (ownFilter && !isMatched && !isSelected) {
+    return null;
+  }
 
   const element =
     typeof children === 'string' ? (
@@ -68,17 +89,6 @@ export function SelectItem({
     ) : (
       children
     );
-
-  useLayoutEffect(() => {
-    registerItem({ leadingIcon, children, value });
-    return () => {
-      unregisterItem(value);
-    };
-  }, [value, children, registerItem, unregisterItem, leadingIcon]);
-
-  if (shouldFilter && !hasItems && !isMatched && !isSelected) {
-    return null;
-  }
 
   const ItemPrimitive = autocomplete
     ? ComboboxPrimitive.Item

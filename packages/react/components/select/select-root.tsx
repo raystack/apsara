@@ -10,10 +10,11 @@ import {
   useCallback,
   useContext,
   useMemo,
+  useRef,
   useState
 } from 'react';
 import { useFieldContext } from '../field';
-import { ItemType } from './types';
+import { ItemType, SelectItems } from './types';
 
 interface CommonProps {
   autocomplete?: boolean;
@@ -25,11 +26,12 @@ interface CommonProps {
 
 interface SelectContextValue extends CommonProps {
   value?: string | string[];
-  registerItem: (item: ItemType) => void;
-  unregisterItem: (value: string) => void;
   multiple: boolean;
-  items: Record<string, ItemType>;
-  hasItems?: boolean;
+  hasItems: boolean;
+  getLabel: (value: string) => ReactNode;
+  getItem: (value: string) => ItemType;
+  /** Records an item's label and icon. Returns a function that removes it. */
+  registerItem: (item: ItemType) => () => void;
 }
 
 interface UseSelectContext extends SelectContextValue {
@@ -41,6 +43,17 @@ Root context to manage the Select control
 @remarks Only for internal usage.
 */
 const SelectContext = createContext<SelectContextValue | undefined>(undefined);
+
+/**
+ * True inside the hidden pass that `Select.Content` renders while closed.
+ * Items only register their label there, so the trigger can show it before the first open.
+ */
+export const SelectRegistrationContext = createContext(false);
+
+/** Values that match the search in autocomplete mode with `items`. */
+const FilteredValuesContext = createContext<Set<string> | null>(null);
+
+export const useFilteredValues = () => useContext(FilteredValuesContext);
 
 export const useSelectContext = (): UseSelectContext => {
   const context = useContext(SelectContext);
@@ -58,6 +71,27 @@ export const useSelectContext = (): UseSelectContext => {
   };
 };
 
+function FilteredValuesProvider({ children }: { children: ReactNode }) {
+  const filteredItems = ComboboxPrimitive.useFilteredItems<string>();
+  const filteredValues = useMemo(() => new Set(filteredItems), [filteredItems]);
+  return (
+    <FilteredValuesContext value={filteredValues}>
+      {children}
+    </FilteredValuesContext>
+  );
+}
+
+const toLabelMap = (items?: SelectItems) => {
+  const map = new Map<string, ReactNode>();
+  if (!items) return map;
+  if (Array.isArray(items)) {
+    for (const item of items) map.set(item.value, item.label);
+  } else {
+    for (const [value, label] of Object.entries(items)) map.set(value, label);
+  }
+  return map;
+};
+
 export interface BaseSelectProps extends CommonProps {
   children?: ReactNode;
   open?: boolean;
@@ -66,7 +100,11 @@ export interface BaseSelectProps extends CommonProps {
   disabled?: boolean;
   required?: boolean;
   name?: string;
-  items?: string[];
+  /**
+   * Optional labels for each value, as `{ value, label }[]` or a value-to-label record.
+   * Items register their own labels, so you only need this for search by label or labels of items that are not rendered.
+   */
+  items?: SelectItems;
 }
 
 export interface SingleSelectProps extends BaseSelectProps {
@@ -103,7 +141,7 @@ export const SelectRoot = (props: SelectRootProps) => {
     disabled,
     required,
     name,
-    items: itemsProp,
+    items,
     ...rest
   } = props;
 
@@ -115,16 +153,76 @@ export const SelectRoot = (props: SelectRootProps) => {
   >(defaultValue);
   const [internalSearchValue, setInternalSearchValue] =
     useState(defaultSearchValue);
-  const [registeredItems, setRegisteredItems] = useState<
-    SelectContextValue['items']
-  >({});
 
   const computedValue = providedValue ?? internalValue;
   const searchValue = providedSearchValue ?? internalSearchValue;
+  const hasItems = !!items;
+
+  const labels = useMemo(() => toLabelMap(items), [items]);
+  const itemValues = useMemo(() => Array.from(labels.keys()), [labels]);
+
+  // Each value can be registered twice at once: by the hidden pass and by the open list.
+  const registrationCounts = useRef(new Map<string, number>());
+  const [registered, setRegistered] = useState<Record<string, ItemType>>({});
+
+  const registerItem = useCallback((item: ItemType) => {
+    const counts = registrationCounts.current;
+    counts.set(item.value, (counts.get(item.value) ?? 0) + 1);
+    setRegistered(prev => {
+      const current = prev[item.value];
+      if (
+        current?.children === item.children &&
+        current?.leadingIcon === item.leadingIcon
+      ) {
+        return prev;
+      }
+      return { ...prev, [item.value]: item };
+    });
+    return () => {
+      const remaining = (counts.get(item.value) ?? 1) - 1;
+      if (remaining > 0) {
+        counts.set(item.value, remaining);
+        return;
+      }
+      counts.delete(item.value);
+      setRegistered(prev => {
+        if (!(item.value in prev)) return prev;
+        const { [item.value]: _, ...rest } = prev;
+        return rest;
+      });
+    };
+  }, []);
+
+  const getLabel = useCallback(
+    (value: string): ReactNode =>
+      labels.has(value)
+        ? labels.get(value)
+        : (registered[value]?.children ?? value),
+    [labels, registered]
+  );
+
+  const getItem = useCallback(
+    (value: string): ItemType => ({
+      value,
+      children: getLabel(value),
+      leadingIcon: registered[value]?.leadingIcon
+    }),
+    [getLabel, registered]
+  );
+
+  const itemToStringLabel = useCallback(
+    (value: string) => {
+      const label = getLabel(value);
+      return typeof label === 'string' || typeof label === 'number'
+        ? String(label)
+        : value;
+    },
+    [getLabel]
+  );
 
   const handleValueChange = useCallback(
-    (value: any, _eventDetails?: any) => {
-      setInternalValue(value);
+    (value: string | string[] | null) => {
+      setInternalValue(value ?? undefined);
       if (multiple) {
         (onValueChange as MultipleSelectProps['onValueChange'])?.(
           value as string[]
@@ -139,7 +237,7 @@ export const SelectRoot = (props: SelectRootProps) => {
   );
 
   const handleSearchValueChange = useCallback(
-    (value: string, _eventDetails?: any) => {
+    (value: string) => {
       setInternalSearchValue(value);
       onSearch?.(value);
     },
@@ -147,59 +245,45 @@ export const SelectRoot = (props: SelectRootProps) => {
   );
 
   const handleOpenChange = useCallback(
-    (open: boolean, _eventDetails?: any) => {
+    (open: boolean) => {
       onOpenChange?.(open);
     },
     [onOpenChange]
   );
 
-  const registerItem = useCallback<SelectContextValue['registerItem']>(item => {
-    setRegisteredItems(prev => ({ ...prev, [item.value]: item }));
-  }, []);
-
-  const unregisterItem = useCallback<SelectContextValue['unregisterItem']>(
-    value => {
-      setRegisteredItems(prev => {
-        const { [value]: _, ...rest } = prev;
-        return rest;
-      });
-    },
-    []
-  );
-
   const contextValue = useMemo(
     () => ({
       value: computedValue,
-      registerItem,
-      unregisterItem,
       autocomplete,
       autocompleteMode,
       searchValue,
       multiple,
-      items: registeredItems,
-      hasItems: !!itemsProp
+      hasItems,
+      getLabel,
+      getItem,
+      registerItem
     }),
     [
       computedValue,
-      registerItem,
-      unregisterItem,
       autocomplete,
       autocompleteMode,
       searchValue,
       multiple,
-      registeredItems,
-      itemsProp
+      hasItems,
+      getLabel,
+      getItem,
+      registerItem
     ]
   );
 
   const commonProps = {
-    value: providedValue as any,
-    defaultValue: defaultValue as any,
+    value: providedValue,
+    defaultValue,
     onValueChange: handleValueChange,
     open: providedOpen,
     defaultOpen,
     onOpenChange: handleOpenChange,
-    multiple: multiple as any,
+    multiple,
     disabled,
     modal: true as const,
     ...rest,
@@ -208,27 +292,39 @@ export const SelectRoot = (props: SelectRootProps) => {
   };
 
   if (autocomplete) {
+    const filterByLabel = hasItems && autocompleteMode === 'auto';
     return (
       <SelectContext value={contextValue}>
-        <ComboboxPrimitive.Root
+        <ComboboxPrimitive.Root<string, boolean>
           {...commonProps}
           onInputValueChange={handleSearchValueChange}
-          filter={itemsProp ? undefined : null}
-          items={itemsProp}
+          filter={filterByLabel ? undefined : null}
+          items={hasItems ? itemValues : undefined}
+          itemToStringLabel={itemToStringLabel}
           loopFocus={false}
           // @ts-ignore @base-ui/react@1.3.0 ComboboxRootProps types `autoHighlight` as `boolean | undefined`, but the runtime accepts `always | input-change`. Remove when upstream types are corrected.
           autoHighlight='always'
         >
-          {children}
+          {filterByLabel ? (
+            <FilteredValuesProvider>{children}</FilteredValuesProvider>
+          ) : (
+            children
+          )}
         </ComboboxPrimitive.Root>
       </SelectContext>
     );
   }
 
   return (
-    <SelectContext.Provider value={contextValue}>
-      <SelectPrimitive.Root {...commonProps}>{children}</SelectPrimitive.Root>
-    </SelectContext.Provider>
+    <SelectContext value={contextValue}>
+      <SelectPrimitive.Root<string, boolean>
+        {...commonProps}
+        items={items}
+        itemToStringLabel={itemToStringLabel}
+      >
+        {children}
+      </SelectPrimitive.Root>
+    </SelectContext>
   );
 };
 

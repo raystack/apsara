@@ -1,14 +1,13 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { ReactNode, useLayoutEffect, useRef, useState } from 'react';
 import { Chip } from '../chip';
 import { Text } from '../text';
 import styles from './select.module.css';
-import { ItemType } from './types';
 
 interface SelectMultipleValueProps {
-  data: ItemType[];
+  data: { value: string; label: ReactNode }[];
 }
 
 /*
@@ -44,10 +43,8 @@ export const SelectMultipleValue = ({
     if (!containerRef.current || data.length === 0) return;
 
     const chipWidths: number[] = data.map(item => {
-      const text =
-        typeof item.children === 'string' ? item.children : item.value;
-      const iconWidth = item.leadingIcon ? 16 : 0;
-      return calculateTextWidth(text) + 8 + iconWidth;
+      const text = typeof item.label === 'string' ? item.label : item.value;
+      return calculateTextWidth(text) + 8;
     });
 
     let totalWidth = 0;
@@ -75,12 +72,10 @@ export const SelectMultipleValue = ({
     <div
       ref={containerRef}
       className={cx(styles.valueContent)}
-      data-slot='select-value'
+      data-slot='select-value-content'
     >
       {data.slice(0, visibleCount).map(item => (
-        <Chip key={item.value} leadingIcon={item.leadingIcon}>
-          {typeof item.children === 'string' ? item.children : item.value}
-        </Chip>
+        <Chip key={item.value}>{item.label}</Chip>
       ))}
       {data.length > visibleCount && (
         <Text data-slot='select-value-overflow'>

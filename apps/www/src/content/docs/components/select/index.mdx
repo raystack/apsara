@@ -14,6 +14,8 @@ import {
   autocompleteDemo,
   multipleDemo,
   controlledDemo,
+  labelDemo,
+  valueRenderDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -26,10 +28,15 @@ Import and assemble the component:
 import { Select } from "@raystack/apsara";
 
 <Select>
-  <Select.Trigger />
+  <Select.Label />
+  <Select.Trigger>
+    <Select.Value />
+  </Select.Trigger>
   <Select.Content>
+    <Select.Status />
+    <Select.Empty />
     <Select.Group>
-      <Select.Label />
+      <Select.GroupLabel />
       <Select.Item />
     </Select.Group>
     <Select.Separator />
@@ -45,13 +52,25 @@ Appearance first, meaning size and variant, then how many items can be chosen, a
 
 A trigger and a list of items. `Select.Value` renders the current selection in the trigger. A check mark shows the selected item in the list. In multiple mode, each item has a checkbox instead.
 
+Each `Select.Item` registers its label and icon, so `Select.Value` shows them for the selected value, even before the list first opens. You can also pass `items` to the root, as `{ value, label }[]` or a value-to-label record. Use it for search by label, or for values whose item is not rendered.
+
 <Demo data={basicDemo} />
 
 ### Icon
 
-You can pass `leadingIcon` prop to Select.Item to include items
+Pass `leadingIcon` to `Select.Item` to show an icon before the item text.
 
 <Demo data={iconDemo} />
+
+The trigger shows the selected item's icon too. To render the value yourself, pass a function as the child of `Select.Value`. It receives the selected item as `{ value, children, leadingIcon }`, or an array of items in multiple mode.
+
+<Demo data={valueRenderDemo} />
+
+### Label
+
+`Select.Label` renders a visible label linked to the trigger. Clicking it focuses the trigger.
+
+<Demo data={labelDemo} />
 
 ### Size
 
@@ -83,7 +102,9 @@ When multiple selection is enabled, the value, onValueChange, and defaultValue w
 
 To enable autocomplete, pass the `autocomplete` prop to the Select root element.
 
-By default, only select items are filtered using a simple match. For more advanced control, set `autocompleteMode="manual"` and implement your own custom filtering logic.
+With `items`, Base UI filters by label. Without `items`, the select filters items with a simple text match. For full control, set `autocompleteMode="manual"` and filter the items yourself.
+
+`Select.Empty` shows its content only when no item matches the search. It needs `items` on the root. `Select.Status` is a polite live region for messages such as a result count or a loading state. Both work only in autocomplete mode.
 
 <Demo data={autocompleteDemo} />
 
@@ -131,11 +152,35 @@ A way to group related Select items together.
 
 <auto-type-table path="./props.ts" name="SelectGroupProps" />
 
+### Value
+
+Shows the label of the selected value, or the placeholder.
+
+<auto-type-table path="./props.ts" name="SelectValueProps" />
+
 ### Label
 
-Renders a label in a Select group. This component can only be used inside Select.Group
+A visible label linked to the trigger.
 
 <auto-type-table path="./props.ts" name="SelectLabelProps" />
+
+### GroupLabel
+
+The label of a `Select.Group`. Use it only inside `Select.Group`.
+
+<auto-type-table path="./props.ts" name="SelectGroupLabelProps" />
+
+### Empty
+
+Shows its content when no item matches the search. Autocomplete mode only.
+
+<auto-type-table path="./props.ts" name="SelectEmptyProps" />
+
+### Status
+
+A polite live region for status messages. Autocomplete mode only.
+
+<auto-type-table path="./props.ts" name="SelectStatusProps" />
 
 ### Separator
 
@@ -152,16 +197,18 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `select-trigger` | The trigger button that opens the menu |
 | `select-trigger-content` | Flex wrapper around the trigger's children |
 | `select-trigger-icon` | The chevron dropdown icon in the trigger |
-| `select-value` | The `<span>` (or wrapper) showing the selected value or placeholder |
-| `select-value-content` | Inner wrapper around a single selected value |
-| `select-value-icon` | Leading icon of the selected value (when set) |
+| `select-label` | The label linked to the trigger |
+| `select-value` | The `<span>` showing the selected label or placeholder |
+| `select-value-content` | Wrapper around the chips in multiple mode |
 | `select-value-overflow` | The "+N" overflow count for multiple values (when they don't all fit) |
 | `select-positioner` | The floating positioner for the popup |
 | `select-content` | The popup container |
 | `select-search` | The search input (when autocomplete is enabled) |
 | `select-list` | The scrollable list of items |
 | `select-group` | A group of items |
-| `select-label` | The label of a group |
+| `select-group-label` | The label of a group |
+| `select-empty` | The message shown when no item matches (autocomplete only) |
+| `select-status` | The live region for status messages (autocomplete only) |
 | `select-separator` | A divider between items or groups |
 | `select-item` | An individual option row |
 | `select-item-icon` | Leading icon on an item (when set) |
