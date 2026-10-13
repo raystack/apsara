@@ -5,10 +5,10 @@ export interface FilterChipProps {
   /** Text label for the filter (required) */
   label: string;
 
-  /** Current value of the filter. `multiselect` takes a `string[]`; `date`
+  /** Current value of the filter. `multiselect` takes an array; `date`
    * takes a `Date` (a string or epoch number is parsed for you); `number`
    * shows a value that is not a number as empty. */
-  value?: string | string[] | number | Date;
+  value?: string | number | boolean | Array<string | number | boolean> | Date;
 
   /** Type of input for the filter
    * @default "string"
@@ -21,18 +21,19 @@ export interface FilterChipProps {
   variant?: 'default' | 'text';
 
   /** Array of options for the select and multiselect type inputs */
-  options?: { label: string; value: string }[];
+  options?: { label: string; value: string | number | boolean }[];
 
   /** Optional array of operations for the type of filter operation */
   operations?: { label: string; value: string }[];
 
   /** Callback when the filter value changes; receives the value and the active
-   * operation. For `number`, non-numeric input is rejected and never reported,
-   * and the value arrives as a `number`, except for the intermediate states
-   * `""`, `"-"`, `"."` and `"-."`, which are reported as-is so the field
-   * stays editable. */
+   * operation. For `select` and `multiselect`, the value is the picked
+   * option's `value`, with its type kept. For `number`, non-numeric input is
+   * rejected and never reported, and the value arrives as a `number`, except
+   * for the intermediate states `""`, `"-"`, `"."` and `"-."`, which are
+   * reported as-is so the field stays editable. */
   onValueChange?: (
-    value: string | string[] | number | Date,
+    value: string | number | boolean | Array<string | number | boolean> | Date,
     operation: string
   ) => void;
 

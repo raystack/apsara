@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { defaultFormatValue } from '~/components/calendar-preview/calendar-preview-root';
@@ -125,6 +126,38 @@ describe('FilterChip', () => {
         `.${styles.inputFieldWrapper} input`
       );
       expect(input).toHaveValue('initial value');
+    });
+  });
+
+  describe('Select Filter Type', () => {
+    it('shows and reports option values with their own type', async () => {
+      const onValueChange = vi.fn();
+      render(
+        <FilterChip
+          label='Priority'
+          columnType={FilterType.multiselect}
+          value={[1]}
+          options={[
+            { label: 'One', value: 1 },
+            { label: 'Two', value: 2 }
+          ]}
+          onValueChange={onValueChange}
+        />
+      );
+      const flush = () =>
+        act(async () => {
+          await new Promise(r => setTimeout(r, 0));
+        });
+      fireEvent.click(getSlot(document.body, 'filter-chip-value') as Element);
+      await flush();
+      expect(screen.getByRole('option', { name: 'One' })).toHaveAttribute(
+        'aria-selected',
+        'true'
+      );
+
+      await userEvent.click(screen.getByRole('option', { name: 'Two' }));
+      await flush();
+      expect(onValueChange).toHaveBeenLastCalledWith([1, 2], 'in');
     });
   });
 

@@ -6,10 +6,10 @@ import type {
 } from '@tanstack/table-core';
 import type {
   DataTableFilterOperatorTypes,
+  FilterDataType,
   FilterOperatorTypes,
   FilterSelectOption,
-  FilterTypes,
-  FilterValueType
+  FilterTypes
 } from '~/types/filters';
 import type { FilterChipCalendarProps } from '../filter-chip';
 import type { BaseSelectProps } from '../select/select-root';
@@ -31,7 +31,7 @@ export interface DataTableFilterValues {
 // Internal filter with UI operators and metadata
 export interface InternalFilter extends DataTableFilterValues {
   _type?: FilterTypes;
-  _dataType?: FilterValueType;
+  _dataType?: FilterDataType;
   name: string;
   operator: FilterOperatorTypes;
 }
@@ -76,7 +76,7 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   accessorKey: string;
   header: string;
   filterType?: FilterTypes;
-  dataType?: FilterValueType;
+  dataType?: FilterDataType;
   enableColumnFilter?: boolean;
   enableSorting?: boolean;
   enableHiding?: boolean;
