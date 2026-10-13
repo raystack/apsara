@@ -6,6 +6,7 @@ import {
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { ReactNode, useLayoutEffect } from 'react';
+import { CheckIcon } from '~/icons';
 import { Checkbox } from '../checkbox';
 import { getMatch } from '../menu/utils';
 import { Text } from '../text';
@@ -50,7 +51,19 @@ export function SelectItem({
             {leadingIcon}
           </div>
         )}
-        <Text data-slot='select-item-text'>{children}</Text>
+        {autocomplete ? (
+          <Text className={styles.itemText} data-slot='select-item-text'>
+            {children}
+          </Text>
+        ) : (
+          <SelectPrimitive.ItemText
+            render={<Text />}
+            className={styles.itemText}
+            data-slot='select-item-text'
+          >
+            {children}
+          </SelectPrimitive.ItemText>
+        )}
       </>
     ) : (
       children
@@ -70,6 +83,9 @@ export function SelectItem({
   const ItemPrimitive = autocomplete
     ? ComboboxPrimitive.Item
     : SelectPrimitive.Item;
+  const IndicatorPrimitive = autocomplete
+    ? ComboboxPrimitive.ItemIndicator
+    : SelectPrimitive.ItemIndicator;
 
   return (
     <ItemPrimitive
@@ -83,6 +99,14 @@ export function SelectItem({
         <div {...renderProps}>
           {multiple && <Checkbox checked={state.selected} />}
           {element}
+          {!multiple && (
+            <IndicatorPrimitive
+              className={styles.itemIndicator}
+              data-slot='select-item-indicator'
+            >
+              <CheckIcon aria-hidden='true' />
+            </IndicatorPrimitive>
+          )}
         </div>
       )}
     />
