@@ -5,7 +5,7 @@ import {
   type ToastObject,
   Toast as ToastPrimitive
 } from '@base-ui/react';
-import { type ReactNode, useMemo } from 'react';
+import { createContext, type ReactNode, useContext, useMemo } from 'react';
 
 export interface ToastData {
   /**
@@ -92,6 +92,11 @@ function liftPromiseOptions<Value>({
   };
 }
 
+/** A toast with `positionerProps.anchor` shows next to that element. */
+function isAnchored(options: string | ToastUpdateOptions) {
+  return typeof options !== 'string' && options.positionerProps?.anchor != null;
+}
+
 /**
  * Public toast manager. Mirrors the Base UI manager but exposes `leadingIcon`
  * as a first-class option on `add`/`update`/`promise`. All other Base UI
@@ -107,18 +112,41 @@ export interface ToastManager
   ) => Promise<Value>;
 }
 
+// Base UI renders anchored toasts in their own provider, so each manager
+// keeps a second Base UI manager for them. `Toast.Provider` reads it here.
+const anchoredManagers = new WeakMap<ToastManager, BaseManager>();
+
+export function getAnchoredManager(manager: ToastManager) {
+  return anchoredManagers.get(manager);
+}
+
 export function createToastManager(): ToastManager {
   const base = ToastPrimitive.createToastManager<ToastData>();
-  return {
+  const anchored = ToastPrimitive.createToastManager<ToastData>();
+  const manager: ToastManager = {
     ...base,
-    add: options => base.add(lift(options)),
-    update: (id, options) => base.update(id, liftUpdater(options)),
+    add: options => (isAnchored(options) ? anchored : base).add(lift(options)),
+    close: id => {
+      base.close(id);
+      anchored.close(id);
+    },
+    update: (id, options) => {
+      base.update(id, liftUpdater(options));
+      anchored.update(id, liftUpdater(options));
+    },
     promise: (promise, options) =>
-      base.promise(promise, liftPromiseOptions(options))
+      (isAnchored(options.loading) ? anchored : base).promise(
+        promise,
+        liftPromiseOptions(options)
+      )
   };
+  anchoredManagers.set(manager, anchored);
+  return manager;
 }
 
 export const toastManager = createToastManager();
+
+export const ToastManagerContext = createContext<ToastManager>(toastManager);
 
 type BaseHookReturn = ReturnType<
   typeof ToastPrimitive.useToastManager<ToastData>
@@ -127,7 +155,7 @@ type BaseHookReturn = ReturnType<
 /**
  * Reactive view of the active toast list plus the same `leadingIcon`-aware
  * `add`/`update`/`promise` API as the standalone manager. Must be used inside
- * `<Toast.Provider>`.
+ * `<Toast.Provider>`. The `toasts` list holds stacked toasts only.
  */
 export interface UseToastManagerReturn
   extends Omit<BaseHookReturn, 'add' | 'update' | 'promise'> {
@@ -138,14 +166,27 @@ export interface UseToastManagerReturn
 
 export function useToastManager(): UseToastManagerReturn {
   const base = ToastPrimitive.useToastManager<ToastData>();
-  return useMemo(
-    () => ({
+  const manager = useContext(ToastManagerContext);
+  return useMemo(() => {
+    const anchored = getAnchoredManager(manager);
+    return {
       ...base,
-      add: options => base.add(lift(options)),
-      update: (id, options) => base.update(id, liftUpdater(options)),
+      add: options =>
+        anchored && isAnchored(options)
+          ? anchored.add(lift(options))
+          : base.add(lift(options)),
+      close: id => {
+        base.close(id);
+        anchored?.close(id);
+      },
+      update: (id, options) => {
+        base.update(id, liftUpdater(options));
+        anchored?.update(id, liftUpdater(options));
+      },
       promise: (promise, options) =>
-        base.promise(promise, liftPromiseOptions(options))
-    }),
-    [base]
-  );
+        anchored && isAnchored(options.loading)
+          ? anchored.promise(promise, liftPromiseOptions(options))
+          : base.promise(promise, liftPromiseOptions(options))
+    };
+  }, [base, manager]);
 }

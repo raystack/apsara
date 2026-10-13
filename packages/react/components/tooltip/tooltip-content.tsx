@@ -2,6 +2,7 @@
 
 import { Tooltip as TooltipPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import { ArrowSvg, arrowClassName } from '../../shared/arrow';
 import { type Radius, radiusStyle } from '../../shared/radius';
 import { Text } from '../text';
 import { useThemeInjection } from '../theme/portal';
@@ -69,21 +70,10 @@ export function TooltipContent({
           )}
           {showArrow && (
             <TooltipPrimitive.Arrow
-              className={styles.arrow}
+              className={arrowClassName}
               data-slot='tooltip-arrow'
             >
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width='6'
-                height='7'
-                viewBox='0 0 6 7'
-                fill='none'
-              >
-                <path
-                  d='M2.90809 6.78553L0 0H6L3.09191 6.78553C3.05728 6.86634 2.94272 6.86634 2.90809 6.78553Z'
-                  fill='currentColor'
-                />
-              </svg>
+              <ArrowSvg />
             </TooltipPrimitive.Arrow>
           )}
         </TooltipPrimitive.Popup>
