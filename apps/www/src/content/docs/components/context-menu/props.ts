@@ -127,9 +127,126 @@ export interface ContextMenuSeparatorProps {
   className?: string;
 }
 
+export interface ContextMenuCheckboxItemProps {
+  /** Whether the item is checked (controlled) */
+  checked?: boolean;
+
+  /** Whether the item is checked by default (uncontrolled)
+   * @default false
+   */
+  defaultChecked?: boolean;
+
+  /** Callback fired when the checked state changes */
+  onCheckedChange?: (checked: boolean) => void;
+
+  /** Whether to close the menu when the item is clicked
+   * @default false
+   */
+  closeOnClick?: boolean;
+
+  /** Icon element to display before item text */
+  leadingIcon?: ReactNode;
+
+  /** Icon element to display after item text */
+  trailingIcon?: ReactNode;
+
+  /** Whether the item is disabled */
+  disabled?: boolean;
+
+  /** Value of the item used for autocomplete matching. If not provided, `children` text content is used. */
+  value?: string;
+
+  /** Additional CSS class names */
+  className?: string;
+
+  /** Render a custom element using Base UI's render prop pattern. Replaces the default layout and check mark. */
+  render?: ReactElement;
+}
+
+export interface ContextMenuRadioGroupProps {
+  /** The value of the checked radio item (controlled) */
+  value?: unknown;
+
+  /** The value of the radio item checked by default (uncontrolled) */
+  defaultValue?: unknown;
+
+  /** Callback fired when the checked radio item changes */
+  onValueChange?: (value: unknown) => void;
+
+  /** Whether all radio items in the group are disabled
+   * @default false
+   */
+  disabled?: boolean;
+
+  /** Additional CSS class names */
+  className?: string;
+}
+
+export interface ContextMenuRadioItemProps {
+  /** Value of the radio item. Also used for autocomplete matching when it is a string. */
+  value: unknown;
+
+  /** Whether to close the menu when the item is clicked
+   * @default false
+   */
+  closeOnClick?: boolean;
+
+  /** Icon element to display before item text */
+  leadingIcon?: ReactNode;
+
+  /** Icon element to display after item text */
+  trailingIcon?: ReactNode;
+
+  /** Whether the item is disabled */
+  disabled?: boolean;
+
+  /** Additional CSS class names */
+  className?: string;
+
+  /** Render a custom element using Base UI's render prop pattern. Replaces the default layout and dot. */
+  render?: ReactElement;
+}
+
+export interface ContextMenuLinkItemProps {
+  /** The URL the link points to */
+  href?: string;
+
+  /** Whether to close the menu when the link is clicked
+   * @default false
+   */
+  closeOnClick?: boolean;
+
+  /** Icon element to display before item text */
+  leadingIcon?: ReactNode;
+
+  /** Icon element to display after item text */
+  trailingIcon?: ReactNode;
+
+  /** Value of the item used for autocomplete matching. If not provided, `children` text content is used. */
+  value?: string;
+
+  /** Additional CSS class names */
+  className?: string;
+
+  /** The link element to render, for example a router link. The item keeps its layout and icons.
+   * @default <a />
+   */
+  render?: ReactElement;
+}
+
 export interface ContextMenuEmptyStateProps {
-  /** React nodes to render in empty state */
-  children?: ReactNode;
+  /** Content to show when the menu has no items or nothing matches the search */
+  children: ReactNode;
+
+  /** Additional CSS class names */
+  className?: string;
+}
+
+export interface ContextMenuStatusProps {
+  /** Text to announce. A function receives the number of matching items.
+   * @default count => `${count} results`
+   */
+  children?: ReactNode | ((count: number) => ReactNode);
 
   /** Additional CSS class names */
   className?: string;

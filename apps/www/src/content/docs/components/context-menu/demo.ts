@@ -239,3 +239,50 @@ function ControlledContextMenu() {
   );
 }`
 };
+
+export const selectionDemo = {
+  type: 'code',
+  code: `
+function SelectionContextMenu() {
+  const [showGrid, setShowGrid] = React.useState(true);
+  const [sort, setSort] = React.useState("name");
+
+  return (
+    <ContextMenu>
+      <ContextMenu.Trigger style={{ padding: "2em 4em", border: "1px dashed var(--rs-color-border-base-primary)", borderRadius: "var(--rs-radius-2)" }}>
+        <Text>Right click here</Text>
+      </ContextMenu.Trigger>
+      <ContextMenu.Content>
+        <ContextMenu.CheckboxItem checked={showGrid} onCheckedChange={setShowGrid}>
+          Show grid
+        </ContextMenu.CheckboxItem>
+        <ContextMenu.Separator />
+        <ContextMenu.RadioGroup value={sort} onValueChange={setSort}>
+          <ContextMenu.Label>Sort by</ContextMenu.Label>
+          <ContextMenu.RadioItem value="name">Name</ContextMenu.RadioItem>
+          <ContextMenu.RadioItem value="date">Date</ContextMenu.RadioItem>
+        </ContextMenu.RadioGroup>
+        <ContextMenu.Separator />
+        <ContextMenu.LinkItem href="#docs">Open docs</ContextMenu.LinkItem>
+      </ContextMenu.Content>
+    </ContextMenu>
+  );
+}`
+};
+
+export const emptyDemo = {
+  type: 'code',
+  code: `
+  <ContextMenu autocomplete>
+    <ContextMenu.Trigger style={{ padding: "2em 4em", border: "1px dashed var(--rs-color-border-base-primary)", borderRadius: "var(--rs-radius-2)" }}>
+      <Text>Right click here</Text>
+    </ContextMenu.Trigger>
+    <ContextMenu.Content searchPlaceholder="Search actions...">
+      <ContextMenu.Item>Copy</ContextMenu.Item>
+      <ContextMenu.Item>Rename</ContextMenu.Item>
+      <ContextMenu.Item>Delete</ContextMenu.Item>
+      <ContextMenu.EmptyState>No actions found</ContextMenu.EmptyState>
+      <ContextMenu.Status />
+    </ContextMenu.Content>
+  </ContextMenu>`
+};
