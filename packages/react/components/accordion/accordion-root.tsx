@@ -9,10 +9,15 @@ type AccordionBaseProps<Value> = Omit<
   'multiple' | 'value' | 'defaultValue' | 'onValueChange'
 >;
 
+type NotArray<Value> = Value extends readonly unknown[] ? never : Value;
+
+// `''` sits inside the conditional. A plain `| ''` makes `value='a'` infer `'a'` instead of `string`.
+type SingleValue<Value> = Value extends readonly unknown[] ? never : Value | '';
+
 type AccordionSingleProps<Value> = AccordionBaseProps<Value> & {
   multiple?: false;
-  value?: Value;
-  defaultValue?: Value;
+  value?: SingleValue<Value>;
+  defaultValue?: NotArray<Value>;
   onValueChange?: (value: Value | '') => void;
 };
 

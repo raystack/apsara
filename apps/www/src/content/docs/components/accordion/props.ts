@@ -6,11 +6,11 @@ export interface AccordionRootProps<Value = string> {
   multiple?: boolean;
 
   /**
-   * The controlled value of the accordion. `Value` in single mode, `Value[]` with `multiple`.
+   * The controlled value of the accordion. `Value` or `''` (all closed) in single mode, `Value[]` with `multiple`.
    *
-   * @remarks `Value | Value[]`
+   * @remarks `Value | '' | Value[]`
    */
-  value?: Value | Value[];
+  value?: Value | '' | Value[];
 
   /**
    * The default value of the accordion. `Value` in single mode, `Value[]` with `multiple`.

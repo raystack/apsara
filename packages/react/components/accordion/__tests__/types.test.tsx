@@ -1,4 +1,5 @@
-import { describe, expectTypeOf, it } from 'vitest';
+import type { Dispatch, SetStateAction } from 'react';
+import { describe, expectTypeOf, it, vi } from 'vitest';
 import { Accordion } from '../accordion';
 
 type Section = 'billing' | 'profile';
@@ -37,6 +38,13 @@ describe('Accordion value types', () => {
     />;
   });
 
+  it('accepts an empty string in controlled single mode', () => {
+    const value = '' as Section | '';
+    const setValue: Dispatch<SetStateAction<Section | ''>> = vi.fn();
+    <Accordion<Section> value={value} onValueChange={setValue} />;
+    <Accordion value={value} onValueChange={setValue} />;
+  });
+
   it('accepts non-string values', () => {
     <Accordion
       defaultValue={1}
@@ -51,5 +59,7 @@ describe('Accordion value types', () => {
     <Accordion<Section> multiple defaultValue={['billing', 'other']} />;
     // @ts-expect-error single mode does not take an array
     <Accordion<Section> value={['billing']} />;
+    // @ts-expect-error single mode does not take an array
+    <Accordion value={['a', 'b']} />;
   });
 });
