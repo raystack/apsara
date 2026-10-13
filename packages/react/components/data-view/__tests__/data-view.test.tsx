@@ -1000,6 +1000,48 @@ describe('DataView', () => {
       const lastCall = calls[calls.length - 1]?.[0];
       expect(lastCall?.search).toBe('a');
     });
+
+    it('keeps the option type when a select filter value is picked', async () => {
+      const onTableQueryChange = vi.fn();
+      const user = userEvent.setup();
+      render(
+        <DataView
+          data={mockData}
+          fields={[
+            {
+              accessorKey: 'status',
+              label: 'Status',
+              filterable: true,
+              filterType: 'select',
+              dataType: 'boolean',
+              filterOptions: [
+                { label: 'Yes', value: true },
+                { label: 'No', value: false }
+              ]
+            }
+          ]}
+          defaultSort={defaultSort}
+          mode='server'
+          onTableQueryChange={onTableQueryChange}
+        >
+          <DataView.Filters />
+        </DataView>
+      );
+      await user.click(screen.getByRole('button', { name: /filter/i }));
+      await user.click(await screen.findByRole('menuitem', { name: 'Status' }));
+      fireEvent.click(
+        document.querySelector('[data-slot="filter-chip-value"]') as Element
+      );
+      await act(async () => {
+        await new Promise(r => setTimeout(r, 0));
+      });
+      await user.click(screen.getByRole('option', { name: 'No' }));
+
+      const calls = onTableQueryChange.mock.calls;
+      expect(calls[calls.length - 1]?.[0].filters).toEqual([
+        { name: 'status', operator: 'eq', value: false, boolValue: false }
+      ]);
+    });
   });
 
   describe('Loading state', () => {

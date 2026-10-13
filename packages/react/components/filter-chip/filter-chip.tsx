@@ -24,6 +24,7 @@ import {
   FilterSelectOption,
   FilterType,
   FilterTypes,
+  FilterValueType,
   filterOperators
 } from '~/types/filters';
 import { Flex } from '../flex';
@@ -46,7 +47,7 @@ const chip = cva(styles.chip, {
   }
 });
 
-export type FilterChipValue = string | string[] | number | Date;
+export type FilterChipValue = FilterValueType | FilterValueType[] | Date;
 
 /* The message `DatePicker` reports, so `onErrorChange` reads the same. */
 const INVALID_DATE = 'Invalid date';
@@ -175,7 +176,10 @@ export const FilterChip = ({
 
   const showOnRemove = typeof onRemove === 'function';
   const isMultiSelectColumn = columnType === FilterType.multiselect;
-  const selectedValues = Array.isArray(filterValue) ? filterValue : [];
+  const selectedValues = useMemo(
+    () => (Array.isArray(filterValue) ? filterValue.map(String) : []),
+    [filterValue]
+  );
 
   const handleOperationChange = useCallback(
     (operation: FilterOperation) => {
@@ -191,6 +195,18 @@ export const FilterChip = ({
       onValueChange?.(value, operation?.value ?? '');
     },
     [operation, onValueChange]
+  );
+
+  // Select works on strings, so map each pick back to its option's value.
+  const handleSelectValueChange = useCallback(
+    (picked: string | string[]) => {
+      const toOption = (v: string) =>
+        options.find(o => String(o.value) === v)?.value ?? v;
+      handleFilterValueChange(
+        Array.isArray(picked) ? picked.map(toOption) : toOption(picked)
+      );
+    },
+    [options, handleFilterValueChange]
   );
 
   const handleTextInputChange = useCallback(
@@ -220,7 +236,7 @@ export const FilterChip = ({
             {...(isMultiSelectColumn
               ? { multiple: true, value: selectedValues }
               : { multiple: false, value: filterValue.toString() })}
-            onValueChange={handleFilterValueChange}
+            onValueChange={handleSelectValueChange}
             {...selectProps}
           >
             <Select.Trigger

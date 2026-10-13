@@ -106,6 +106,7 @@ export {
 export {
   DataView,
   DataViewField,
+  DataViewFilterValue,
   DataViewListColumn,
   DataViewListProps,
   DataViewProps,

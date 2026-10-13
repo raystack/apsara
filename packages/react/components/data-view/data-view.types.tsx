@@ -8,6 +8,7 @@ import type {
 } from '@tanstack/table-core';
 import type {
   DataTableFilterOperatorTypes,
+  FilterDataType,
   FilterOperatorTypes,
   FilterSelectOption,
   FilterTypes,
@@ -31,10 +32,8 @@ export interface DataViewSort {
 }
 
 export type DataViewFilterValue =
-  | string
-  | string[]
-  | number
-  | boolean
+  | FilterValueType
+  | FilterValueType[]
   | Date
   | null
   | undefined;
@@ -48,7 +47,7 @@ export interface DataViewFilterValues {
 
 export interface InternalFilter extends DataViewFilterValues {
   _type?: FilterTypes;
-  _dataType?: FilterValueType;
+  _dataType?: FilterDataType;
   name: string;
   operator: FilterOperatorTypes;
 }
@@ -87,7 +86,7 @@ export interface DataViewField<TData = unknown> {
   // filter capability
   filterable?: boolean;
   filterType?: FilterTypes;
-  dataType?: FilterValueType;
+  dataType?: FilterDataType;
   filterOptions?: FilterSelectOption[];
   defaultFilterValue?: DataViewFilterValue;
   filterProps?: {

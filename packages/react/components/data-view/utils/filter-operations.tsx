@@ -5,11 +5,11 @@ import {
   DataTableFilterOperatorTypes,
   DateFilterOperatorType,
   EmptyFilterValue,
+  FilterDataType,
   FilterOperatorTypes,
   FilterType,
   FilterTypes,
   FilterValue,
-  FilterValueType,
   MultiSelectFilterOperatorType,
   NumberFilterOperatorType,
   SelectFilterOperatorType,
@@ -173,11 +173,10 @@ export const getFilterValue = ({
   operator
 }: {
   value: DataViewFilterValue;
-  dataType?: FilterValueType;
+  dataType?: FilterDataType;
   filterType?: FilterTypes;
   operator?: FilterOperatorTypes | DataTableFilterOperatorTypes;
 }): DataViewFilterValues => {
-  // Boolean and number filters pass the value through unchanged.
   if (dataType === 'boolean') return { boolValue: value as boolean, value };
   if (dataType === 'number') return { numberValue: value as number, value };
   return handleStringBasedTypes(filterType, value, operator);
@@ -187,9 +186,9 @@ export const getDataType = ({
   filterType = FilterType.string,
   dataType = 'string'
 }: {
-  dataType?: FilterValueType;
+  dataType?: FilterDataType;
   filterType?: FilterTypes;
-}): FilterValueType => {
+}): FilterDataType => {
   switch (filterType) {
     case FilterType.multiselect:
     case FilterType.select:

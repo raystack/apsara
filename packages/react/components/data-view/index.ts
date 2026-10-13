@@ -13,6 +13,7 @@ export type {
   DataViewContextType,
   DataViewField,
   DataViewFilter,
+  DataViewFilterValue,
   DataViewListClassNames,
   DataViewListColumn,
   DataViewListProps,
