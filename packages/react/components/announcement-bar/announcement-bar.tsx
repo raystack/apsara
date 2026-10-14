@@ -38,7 +38,7 @@ export const AnnouncementBar = ({
   leadingIcon,
   actionLabel,
   actionIcon,
-  onActionClick = () => {},
+  onActionClick,
   dismissible,
   onDismiss,
   ...props

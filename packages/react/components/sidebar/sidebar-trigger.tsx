@@ -1,5 +1,6 @@
 'use client';
 
+import type { BaseUIEvent } from '@base-ui/react/types';
 import { MouseEvent, ReactNode, useCallback } from 'react';
 import { PanelLeftIcon } from '~/icons';
 import { IconButton, IconButtonProps } from '../icon-button/icon-button';
@@ -22,7 +23,7 @@ export function SidebarTrigger({
   const { open, setOpen, collapsible, sidebarId } = useSidebar();
 
   const handleClick = useCallback(
-    (event: MouseEvent<HTMLButtonElement>) => {
+    (event: BaseUIEvent<MouseEvent<HTMLButtonElement>>) => {
       onClick?.(event);
       if (!event.defaultPrevented) {
         setOpen(!open);

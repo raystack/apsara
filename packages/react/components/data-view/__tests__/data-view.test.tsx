@@ -34,7 +34,6 @@ type IOInstance = {
 let ioInstances: IOInstance[] = [];
 
 beforeAll(() => {
-  // biome-ignore lint/suspicious/noExplicitAny: jsdom doesn't ship IntersectionObserver
   global.IntersectionObserver = vi.fn().mockImplementation(function (
     this: IOInstance,
     cb: IntersectionObserverCallback
@@ -63,17 +62,6 @@ beforeAll(() => {
     };
     ioInstances.push(this);
   }) as unknown as typeof IntersectionObserver;
-
-  // jsdom doesn't implement ResizeObserver, and TanStack Virtual uses it for
-  // measureElement.
-  // biome-ignore lint/suspicious/noExplicitAny: jsdom lacks ResizeObserver
-  (global as any).ResizeObserver =
-    (global as any).ResizeObserver ||
-    vi.fn().mockImplementation(() => ({
-      observe: vi.fn(),
-      unobserve: vi.fn(),
-      disconnect: vi.fn()
-    }));
 });
 
 afterEach(() => {
@@ -168,7 +156,7 @@ describe('DataView', () => {
         useDataViewForTest();
         return null;
       };
-      const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const spy = vi.spyOn(console, 'error').mockImplementation(vi.fn());
       expect(() => render(<Probe />)).toThrow(/useDataView/);
       spy.mockRestore();
     });
@@ -371,6 +359,72 @@ describe('DataView', () => {
       expect(
         screen.getByRole('button', { name: /filter/i })
       ).toBeInTheDocument();
+    });
+
+    it('does not offer select or multiselect fields without filterOptions', async () => {
+      const user = userEvent.setup();
+      const fields: DataViewField<TestData>[] = [
+        { accessorKey: 'name', label: 'Name', filterable: true },
+        {
+          accessorKey: 'status',
+          label: 'Status',
+          filterable: true,
+          filterType: 'select',
+          filterOptions: [{ label: 'Active', value: 'string' }]
+        },
+        {
+          accessorKey: 'email',
+          label: 'Email',
+          filterable: true,
+          filterType: 'select',
+          filterOptions: []
+        },
+        {
+          accessorKey: 'id',
+          label: 'Id',
+          filterable: true,
+          filterType: 'multiselect'
+        }
+      ];
+      render(
+        <DataView data={mockData} fields={fields} defaultSort={defaultSort}>
+          <DataView.Filters
+            trigger={({ availableFilters }) => (
+              <button type='button'>
+                {availableFilters.map(f => f.label).join(',')}
+              </button>
+            )}
+          />
+        </DataView>
+      );
+      const trigger = screen.getByRole('button');
+      expect(trigger).toHaveTextContent(/^Name,Status$/);
+      await user.click(trigger);
+      await screen.findByRole('menuitem', { name: 'Status' });
+      expect(screen.getAllByRole('menuitem').map(i => i.textContent)).toEqual([
+        'Name',
+        'Status'
+      ]);
+    });
+
+    it('disables the filter trigger while select options are loading', () => {
+      render(
+        <DataView
+          data={mockData}
+          fields={[
+            {
+              accessorKey: 'name',
+              label: 'Name',
+              filterable: true,
+              filterType: 'select'
+            }
+          ]}
+          defaultSort={defaultSort}
+        >
+          <DataView.Filters />
+        </DataView>
+      );
+      expect(screen.getByRole('button', { name: /filter/i })).toBeDisabled();
     });
 
     it('search input updates the query', async () => {
@@ -945,6 +999,48 @@ describe('DataView', () => {
       const calls = onTableQueryChange.mock.calls;
       const lastCall = calls[calls.length - 1]?.[0];
       expect(lastCall?.search).toBe('a');
+    });
+
+    it('keeps the option type when a select filter value is picked', async () => {
+      const onTableQueryChange = vi.fn();
+      const user = userEvent.setup();
+      render(
+        <DataView
+          data={mockData}
+          fields={[
+            {
+              accessorKey: 'status',
+              label: 'Status',
+              filterable: true,
+              filterType: 'select',
+              dataType: 'boolean',
+              filterOptions: [
+                { label: 'Yes', value: true },
+                { label: 'No', value: false }
+              ]
+            }
+          ]}
+          defaultSort={defaultSort}
+          mode='server'
+          onTableQueryChange={onTableQueryChange}
+        >
+          <DataView.Filters />
+        </DataView>
+      );
+      await user.click(screen.getByRole('button', { name: /filter/i }));
+      await user.click(await screen.findByRole('menuitem', { name: 'Status' }));
+      fireEvent.click(
+        document.querySelector('[data-slot="filter-chip-value"]') as Element
+      );
+      await act(async () => {
+        await new Promise(r => setTimeout(r, 0));
+      });
+      await user.click(screen.getByRole('option', { name: 'No' }));
+
+      const calls = onTableQueryChange.mock.calls;
+      expect(calls[calls.length - 1]?.[0].filters).toEqual([
+        { name: 'status', operator: 'eq', value: false, boolValue: false }
+      ]);
     });
   });
 

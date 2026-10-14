@@ -837,13 +837,15 @@ describe('the portal re-injector', () => {
     };
 
     // Base UI renders no backdrop for a nested dialog; the parent's serves both.
-    const backdrops = [
-      ...document.querySelectorAll('[data-slot="dialog-backdrop"]')
-    ];
+    const backdrops = Array.from(
+      document.querySelectorAll('[data-slot="dialog-backdrop"]')
+    );
     expect(backdrops).toHaveLength(1);
     expect(scopeOf(backdrops[0])).toEqual(['dark', 'mint']);
 
-    const titles = [...document.querySelectorAll('[data-slot="dialog-title"]')];
+    const titles = Array.from(
+      document.querySelectorAll('[data-slot="dialog-title"]')
+    );
     expect(titles.map(t => [t.textContent, ...scopeOf(t)])).toEqual([
       ['Outer', 'dark', 'mint'],
       ['Inner', 'light', 'orange']

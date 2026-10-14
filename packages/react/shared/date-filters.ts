@@ -2,9 +2,9 @@ import type { FilterFn } from '@tanstack/table-core';
 import { format, isExists, isValid, parseISO } from 'date-fns';
 import type {
   DateFilterOperatorType,
+  FilterDataType,
   FilterTypes,
-  FilterValue,
-  FilterValueType
+  FilterValue
 } from '~/types/filters';
 import { FilterType } from '~/types/filters';
 
@@ -93,7 +93,7 @@ export const dateFilterFns: Record<
 type TypedFilter = {
   name: string;
   _type?: FilterTypes;
-  _dataType?: FilterValueType;
+  _dataType?: FilterDataType;
 };
 
 /* A query from the consumer carries no filter types, and a date filter without

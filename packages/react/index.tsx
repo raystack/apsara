@@ -184,6 +184,7 @@ export {
   type DataViewEmptyStateProps,
   DataViewField,
   type DataViewFiltersProps,
+  DataViewFilterValue,
   DataViewListColumn,
   DataViewListProps,
   DataViewProps,
