@@ -5,6 +5,12 @@ export interface SearchProps {
    */
   size?: 'small' | 'large';
 
+  /**
+   * Visual variant of the input.
+   * @default "default"
+   */
+  variant?: 'default' | 'borderless';
+
   /** Placeholder text for the input. */
   placeholder?: string;
 

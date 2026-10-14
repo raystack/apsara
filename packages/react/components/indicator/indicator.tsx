@@ -29,6 +29,7 @@ export interface IndicatorProps
   pulse?: boolean;
   children?: ReactNode;
   'aria-label'?: string;
+  /** @deprecated Use `[data-slot="indicator"]` instead. */
   classNames?: {
     /** @deprecated Use `[data-slot="indicator"]` instead. */
     container?: string;

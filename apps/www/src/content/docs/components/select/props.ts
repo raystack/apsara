@@ -1,4 +1,36 @@
 export interface SelectRootProps {
+  /** The selected value. An array when `multiple` is set. */
+  value?: string | string[];
+
+  /** The value selected on first render when `value` is not set. An array when `multiple` is set. */
+  defaultValue?: string | string[];
+
+  /** Called when the selection changes. Receives an array when `multiple` is set. */
+  onValueChange?: (value: string | string[]) => void;
+
+  /** Whether the list is open. */
+  open?: boolean;
+
+  /** Whether the list is open on first render when `open` is not set.
+   * @default false
+   */
+  defaultOpen?: boolean;
+
+  /** Called when the list opens or closes. */
+  onOpenChange?: (open: boolean) => void;
+
+  /** Whether the select is disabled. */
+  disabled?: boolean;
+
+  /** Whether a value is required. Defaults to the `required` of the surrounding `Field`. */
+  required?: boolean;
+
+  /** Name of the field when the select is submitted with a form. */
+  name?: string;
+
+  /** The select's parts, such as `Select.Trigger` and `Select.Content`. */
+  children?: React.ReactNode;
+
   /** Enables multiple selection.
    * When enabled, value, onValueChange, and defaultValue will be an array of strings.
    * @default false
@@ -25,6 +57,9 @@ export interface SelectRootProps {
 
   /** Callback fired when the search value changes */
   onSearch?: (value: string) => void;
+
+  /** All item values. In autocomplete mode, setting it turns off the filtering of `Select.Item` children. */
+  items?: string[];
 }
 
 export interface SelectTriggerProps {

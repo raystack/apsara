@@ -1,4 +1,4 @@
-import { ReactNode, RefObject } from 'react';
+import { CSSProperties, ReactNode, RefObject } from 'react';
 
 // Documentation-only placeholders so `auto-type-table` can render the public
 // API without surfacing real generics (TData is shown as `T` for readability).
@@ -74,6 +74,9 @@ export interface DataViewProps {
    * Keeps the wire format (`group_by: string[]`) unchanged.
    */
   groupByResolvers?: Record<string, (row: T) => string>;
+
+  /** The DataView's toolbar, renderers and other parts. */
+  children?: ReactNode;
 }
 
 export interface DataViewField {
@@ -120,6 +123,27 @@ export interface DataViewField {
    * takes no section.
    */
   groupOrder?: string[];
+
+  /**
+   * Value type of a `select` or `multiselect` filter.
+   * @defaultValue "string"
+   */
+  dataType?: 'string' | 'number' | 'boolean';
+
+  /**
+   * Value a new filter on this field starts with.
+   * @defaultValue today for `date`, the first option for `select`, otherwise `""`
+   */
+  defaultFilterValue?: unknown;
+
+  /** Props for the filter's control. `select` is passed to the filter's `Select`. */
+  filterProps?: { select?: Record<string, unknown> };
+
+  /**
+   * Count shown next to each group header when `showGroupCount` is on, by raw group value.
+   * @defaultValue the group's row count
+   */
+  groupCountMap?: Record<string, number>;
 }
 
 export interface DataViewListProps {
@@ -181,6 +205,9 @@ export interface DataViewListColumn {
    * @defaultValue "1fr"
    */
   width?: string | number;
+
+  /** Inline styles for the column's cells and its header cell. */
+  styles?: { cell?: CSSProperties; header?: CSSProperties };
 }
 
 /** Date inputs accepted by Timeline props and row fields. */
@@ -419,12 +446,16 @@ export interface DataViewDisplayAccessProps {
 export interface DataViewEmptyStateProps {
   /** Restrict to a specific view's `name`. */
   forView?: string;
+  /** Additional CSS class names. */
+  className?: string;
   children: ReactNode;
 }
 
 export interface DataViewZeroStateProps {
   /** Restrict to a specific view's `name`. */
   forView?: string;
+  /** Additional CSS class names. */
+  className?: string;
   children: ReactNode;
 }
 
