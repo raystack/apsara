@@ -4,7 +4,7 @@ import { Tooltip as TooltipPrimitive } from '@base-ui/react';
 
 export interface TooltipTriggerProps extends TooltipPrimitive.Trigger.Props {}
 
-export function TooltipTrigger(props: TooltipPrimitive.Trigger.Props) {
+export function TooltipTrigger(props: TooltipTriggerProps) {
   return (
     <TooltipPrimitive.Trigger
       delay={200}

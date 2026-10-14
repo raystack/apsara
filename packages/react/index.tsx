@@ -443,7 +443,11 @@ export {
 } from './components/toast';
 export { Toggle, type ToggleProps } from './components/toggle';
 export { Toolbar } from './components/toolbar';
-export { Tooltip, type TooltipContentProps } from './components/tooltip';
+export {
+  Tooltip,
+  type TooltipContentProps,
+  type TooltipTriggerProps
+} from './components/tooltip';
 export {
   Tour,
   type TourActions,
