@@ -92,7 +92,7 @@ export interface TooltipContentProps {
    * Side placement of the tooltip
    * @default "top"
    */
-  side?: 'top' | 'bottom' | 'left' | 'right';
+  side?: 'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end';
 
   /**
    * Alignment of the tooltip

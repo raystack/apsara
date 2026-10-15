@@ -104,7 +104,7 @@ export interface PreviewCardContentProps {
    * May automatically change to avoid collisions.
    * @defaultValue 'bottom'
    */
-  side?: 'top' | 'right' | 'bottom' | 'left';
+  side?: 'top' | 'right' | 'bottom' | 'left' | 'inline-start' | 'inline-end';
 
   /**
    * How to align the popup relative to the specified side.

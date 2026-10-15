@@ -1,7 +1,7 @@
 export interface SidePanelProps {
   /**
    * The side to position the panel.
-   * @default "left"
+   * @default "right"
    */
   side?: 'left' | 'right';
 

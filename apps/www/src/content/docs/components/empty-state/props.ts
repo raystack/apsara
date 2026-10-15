@@ -1,6 +1,6 @@
 export interface EmptyStateProps {
   /** Icon to show in top of empty state */
-  icon?: React.ReactNode;
+  icon: React.ReactNode;
 
   /** Primary heading message */
   heading?: string;
