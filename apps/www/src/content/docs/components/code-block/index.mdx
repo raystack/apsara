@@ -28,6 +28,9 @@ import { CodeBlock } from '@raystack/apsara'
     <CodeBlock.Label />
     <CodeBlock.LanguageSelect>
       <CodeBlock.LanguageSelectTrigger />
+      <CodeBlock.LanguageSelectContent>
+        <CodeBlock.LanguageSelectItem />
+      </CodeBlock.LanguageSelectContent>
     </CodeBlock.LanguageSelect>
     <CodeBlock.CopyButton />
   </CodeBlock.Header>
@@ -120,6 +123,14 @@ Renders a language selection dropdown container. It accepts the props of a singl
 Renders the button that opens language selection.
 
 <auto-type-table path="./props.ts" name="CodeBlockLanguageSelectTriggerProps" />
+
+### LanguageSelectContent
+
+Renders the dropdown that lists the languages. It is [`Select.Content`](/docs/components/select) and takes the same props.
+
+### LanguageSelectItem
+
+Renders one language in the dropdown. Selecting it shows the `CodeBlock.Code` with the same `value`, or the same `language` when that block sets no `value`. It is [`Select.Item`](/docs/components/select) and takes the same props.
 
 ### CopyButton
 

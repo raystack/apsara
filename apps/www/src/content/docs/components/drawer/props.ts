@@ -31,7 +31,10 @@ export interface DrawerContentProps {
   /** The direction from which the drawer appears. */
   side?: 'top' | 'right' | 'bottom' | 'left';
 
-  /** Whether to show the close button. */
+  /**
+   * Whether to show the close button.
+   * @default true
+   */
   showCloseButton?: boolean;
 
   /**
