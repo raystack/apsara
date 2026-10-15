@@ -76,7 +76,7 @@ export interface FieldErrorProps {
    * Match a specific ValidityState property (e.g., "valueMissing", "typeMismatch", "customError")
    * or pass `true` to match any error.
    */
-  match?: string | boolean;
+  match?: boolean | keyof ValidityState;
 
   /** Additional CSS class names. */
   className?: string;

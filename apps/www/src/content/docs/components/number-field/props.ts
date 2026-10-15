@@ -9,7 +9,7 @@ export interface NumberFieldProps {
   defaultValue?: number;
 
   /** Event handler called when the value changes. */
-  onValueChange?: (value: number | null, event: Event) => void;
+  onValueChange?: (value: number | null, eventDetails: unknown) => void;
 
   /** Minimum allowed value. */
   min?: number;

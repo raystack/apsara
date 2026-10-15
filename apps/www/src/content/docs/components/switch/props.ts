@@ -6,7 +6,7 @@ export interface SwitchProps {
   defaultChecked?: boolean;
 
   /** Event handler called when the checked state changes. */
-  onCheckedChange?: (checked: boolean, event: Event) => void;
+  onCheckedChange?: (checked: boolean, eventDetails: unknown) => void;
 
   /** When true, prevents the user from interacting with the switch. */
   disabled?: boolean;

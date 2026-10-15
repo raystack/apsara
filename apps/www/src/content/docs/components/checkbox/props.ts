@@ -75,7 +75,7 @@ export interface CheckboxGroupProps {
   value?: string[];
 
   /** Event handler called when the checked values change. */
-  onValueChange?: (value: string[], event: Event) => void;
+  onValueChange?: (value: string[], eventDetails: unknown) => void;
 
   /**
    * All checkbox values in the group. Required when using a parent checkbox.
