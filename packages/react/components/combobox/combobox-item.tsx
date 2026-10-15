@@ -3,6 +3,7 @@
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { ReactNode } from 'react';
+import { useIsomorphicLayoutEffect } from '~/hooks';
 import { Checkbox } from '../checkbox';
 import { getMatch } from '../menu/utils';
 import { Text } from '../text';
@@ -28,13 +29,19 @@ export const ComboboxItem = ({
       ? children
       : undefined;
 
-  const { multiple, inputValue, hasItems } = useComboboxContext();
+  const { multiple, inputValue, hasItems, registerMatch } =
+    useComboboxContext();
 
   // When items prop is not provided on Root, use custom filtering
-  if (!hasItems && inputValue?.length) {
-    const isMatched = getMatch(value, children, inputValue);
-    if (!isMatched) return null;
-  }
+  const hidden =
+    !hasItems && !!inputValue?.length && !getMatch(value, children, inputValue);
+
+  useIsomorphicLayoutEffect(() => {
+    if (hasItems || hidden) return;
+    return registerMatch();
+  }, [hasItems, hidden, registerMatch]);
+
+  if (hidden) return null;
 
   const element =
     typeof children === 'string' ? (

@@ -13,6 +13,8 @@ import {
   withFieldDemo,
   controlledDemo,
   createItemsDemo,
+  labelDemo,
+  emptyDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -25,8 +27,18 @@ Import and assemble the component:
 import { Combobox } from "@raystack/apsara";
 
 <Combobox>
+  <Combobox.Label />
   <Combobox.Input />
-  <Combobox.Content />
+  <Combobox.Clear />
+  <Combobox.Content>
+    <Combobox.Empty />
+    <Combobox.Status />
+    <Combobox.Group>
+      <Combobox.GroupLabel />
+      <Combobox.Item />
+    </Combobox.Group>
+    <Combobox.Separator />
+  </Combobox.Content>
 </Combobox>
 ```
 
@@ -54,7 +66,7 @@ Wrap the Combobox with [Field](/docs/components/field) to add a label, descripti
 
 ### Groups and separators
 
-Organize items into groups with labels and visual separators. Groups and labels are automatically hidden when the user is searching.
+Organize items into groups with `Combobox.GroupLabel` and separators. Groups, group labels, and separators are hidden while the user is searching.
 
 <Demo data={groupDemo} />
 
@@ -62,7 +74,21 @@ Organize items into groups with labels and visual separators. Groups and labels 
 
 Pass the `multiple` prop to enable multi-select. Selected values appear as chips in the input. Items display checkboxes in multiple mode.
 
+The input shows the first two chips and a "+N" count for the rest. Press Backspace in an empty input to remove the last value. Press Left Arrow at the start of the input to move focus to the chips. On a focused chip, press Backspace or Delete to remove it.
+
 <Demo data={multipleDemo} />
+
+### Label and clear button
+
+`Combobox.Label` renders a visible label linked to the input. `Combobox.Clear` renders a button that clears the value. It shows only when there is a value or input text. Place both anywhere inside `Combobox`.
+
+<Demo data={labelDemo} />
+
+### Empty state
+
+`Combobox.Content` shows "No results" when no item matches the input. To change the text, add `Combobox.Empty` as a direct child of `Combobox.Content`.
+
+<Demo data={emptyDemo} />
 
 ### Controlled
 
@@ -110,17 +136,41 @@ When no `value` prop is provided, the text content of `children` is used as the 
 
 <auto-type-table path="./props.ts" name="ComboboxItemProps" />
 
+### Label Props
+
+A visible label for the input. It renders a `<label>` whose `htmlFor` is the input `id`. Inside a [Field](/docs/components/field), use the Field label instead.
+
+<auto-type-table path="./props.ts" name="ComboboxLabelProps" />
+
+### Clear Props
+
+A button that clears the value and the input text. It renders [IconButton](/docs/components/icon-button) and shows only when there is something to clear.
+
+<auto-type-table path="./props.ts" name="ComboboxClearProps" />
+
+### Empty Props
+
+The text shown when no item matches the input. `Combobox.Content` renders one with "No results" by default. Add `Combobox.Empty` as a direct child of `Combobox.Content` to change the text. Pass `null` as children to show nothing.
+
+<auto-type-table path="./props.ts" name="ComboboxEmptyProps" />
+
+### Status Props
+
+A visually hidden live region. Screen readers announce its text when it changes. `Combobox.Content` renders one by default that announces the number of matching items, for example "3 results". Add `Combobox.Status` as a direct child of `Combobox.Content` to change the text, for example to announce loading.
+
+<auto-type-table path="./props.ts" name="ComboboxStatusProps" />
+
 ### Group Props
 
 A way to group related combobox items together.
 
 <auto-type-table path="./props.ts" name="ComboboxGroupProps" />
 
-### Label Props
+### GroupLabel Props
 
-Renders a label in a combobox group. This component should be wrapped with `Combobox.Group`.
+Renders a label in a combobox group. Wrap it in `Combobox.Group`.
 
-<auto-type-table path="./props.ts" name="ComboboxLabelProps" />
+<auto-type-table path="./props.ts" name="ComboboxGroupLabelProps" />
 
 ### Separator Props
 
@@ -134,12 +184,20 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 
 | Slot | Element |
 |------|---------|
+| `combobox-label` | The label for the input |
 | `combobox-input` | The text input that opens the popup |
+| `combobox-chips` | The container for chips and the input in multiple mode |
+| `combobox-chip` | A selected value in multiple mode |
+| `combobox-chip-remove` | The button that removes a chip |
+| `combobox-chip-overflow` | The "+N" count of chips that are not shown |
+| `combobox-clear` | The button that clears the value |
 | `combobox-positioner` | Wrapper that positions the popup |
 | `combobox-content` | The popup container |
+| `combobox-status` | The hidden live region that announces the number of results |
+| `combobox-empty` | The text shown when no item matches |
 | `combobox-list` | The scrollable list of items |
 | `combobox-group` | A group of related items |
-| `combobox-label` | The label for a group |
+| `combobox-group-label` | The label for a group |
 | `combobox-separator` | The divider between items or groups |
 | `combobox-item` | A selectable option row |
 | `combobox-item-text` | The text label inside an item (when its children is a string) |
@@ -156,7 +214,11 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
   the whole time, so typing to filter never loses the user's place.
 - In multiple mode, each item renders a checkbox that mirrors its selected
   state, and selected values appear in the input as removable chips.
+- The chips use Base UI's `Combobox.Chips`, which has `role="toolbar"`. Arrow
+  keys move between chips, and Backspace or Delete removes the focused chip.
+- `Combobox.Empty` and `Combobox.Status` are polite live regions. Screen
+  readers announce "No results" and the number of matching items.
 - Group labels use Base UI's `Combobox.GroupLabel`, which links the label to
-  its group via `aria-labelledby`, so wrap `Combobox.Label` in `Combobox.Group`.
+  its group via `aria-labelledby`, so wrap `Combobox.GroupLabel` in `Combobox.Group`.
 - Wrap the Combobox with [Field](/docs/components/field) to associate a
   visible label, description, and error message with the input.
