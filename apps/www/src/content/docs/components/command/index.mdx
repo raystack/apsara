@@ -36,6 +36,7 @@ import { Command } from "@raystack/apsara";
         </Command.Group>
         <Command.Separator />
       </Command.Content>
+      <Command.Status />
     </Command>
   </Command.DialogContent>
 </Command.Dialog>
@@ -110,9 +111,15 @@ Scrollable container for groups and items. Renders with `role="listbox"`.
 
 ### Empty
 
-Rendered when no items are visible (all filtered out, or the list is empty). Automatically hidden when the list contains at least one item.
+Shows its children only when no items match the search, or the list has no items. The element stays in the DOM as a live region (`role="status"`), so screen readers announce it when it appears. Built on [Base UI Autocomplete.Empty](https://base-ui.com/react/components/autocomplete).
 
 <auto-type-table path="./props.ts" name="CommandEmptyProps" />
+
+### Status
+
+A visually hidden live region that announces the number of matching items while the input has text. Place it anywhere inside `Command`. Built on [Base UI Autocomplete.Status](https://base-ui.com/react/components/autocomplete).
+
+<auto-type-table path="./props.ts" name="CommandStatusProps" />
 
 ### Item
 
@@ -161,6 +168,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `command-input` | The `<input>` element itself |
 | `command-content` | The `Command.Content` list |
 | `command-empty` | `Command.Empty` |
+| `command-status` | `Command.Status` |
 | `command-group` | `Command.Group` wrapper |
 | `command-label` | `Command.Label` |
 | `command-item` | Each `Command.Item` |
@@ -177,5 +185,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 - Follows the [WAI-ARIA Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
 - Input uses `role="combobox"`, list uses `role="listbox"`, items use `role="option"`.
 - Keyboard: `ArrowDown` / `ArrowUp` move the highlight, `Enter` activates the highlighted item, `Escape` closes the dialog.
+- `Command.Empty` and `Command.Status` are polite live regions. Screen readers announce when nothing matches and how many items match.
 - Disabled items expose `aria-disabled="true"`. The arrow keys still highlight them, and `Enter` does not activate them.
 - When used inside `Command.Dialog`, focus is trapped in the dialog and returned to the trigger on close.
