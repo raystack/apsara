@@ -46,7 +46,7 @@ export interface CalloutProps {
   onDismiss?: () => void;
 
   /** Text content of the callout */
-  children?: React.ReactNode;
+  children: React.ReactNode;
 
   /** Additional CSS class names */
   className?: string;

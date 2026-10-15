@@ -8,7 +8,7 @@ export interface ListRootProps {
 
 export interface ListHeaderProps {
   /** Content to be displayed in the header. */
-  children?: React.ReactNode;
+  children: React.ReactNode;
 
   /**
    * Heading level set as `aria-level` on the underlying heading element.
@@ -22,7 +22,7 @@ export interface ListHeaderProps {
 
 export interface ListItemProps {
   /** Content to be displayed in the item. */
-  children?: React.ReactNode;
+  children: React.ReactNode;
 
   /** Additional CSS class names. */
   className?: string;
@@ -30,7 +30,7 @@ export interface ListItemProps {
 
 export interface ListLabelProps {
   /** Content to be displayed in the label. */
-  children?: React.ReactNode;
+  children: React.ReactNode;
 
   /** Additional CSS class names. */
   className?: string;
@@ -38,7 +38,7 @@ export interface ListLabelProps {
 
 export interface ListValueProps {
   /** Content to be displayed in the value. */
-  children?: React.ReactNode;
+  children: React.ReactNode;
 
   /** Additional CSS class names. */
   className?: string;

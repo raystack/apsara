@@ -18,8 +18,8 @@ export interface IndicatorProps {
   'aria-label'?: string;
 
   /** The content to show the indicator on */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 
-  /** Additional CSS class names */
+  /** Additional CSS class names for the badge */
   className?: string;
 }

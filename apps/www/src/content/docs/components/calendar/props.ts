@@ -138,7 +138,7 @@ export interface CalendarProps {
 
 export interface RangePickerProps {
   /**
-   * Additional CSS class names for the group that holds the start and end inputs.
+   * Additional CSS class names for the group that holds the start and end inputs. Ignored when `children` is set.
    */
   pickerGroupClassName?: string;
 

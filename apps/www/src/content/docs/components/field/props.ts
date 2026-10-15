@@ -47,8 +47,7 @@ export interface FieldProps {
 
 export interface FieldLabelProps {
   /**
-   * Whether the field is required. When false, shows an (optional) indicator next to the label.
-   * @defaultValue true
+   * Whether the field is required. `true` shows `requiredText`, `false` shows `optionalText`, and nothing is shown when it is not set.
    */
   required?: boolean;
 

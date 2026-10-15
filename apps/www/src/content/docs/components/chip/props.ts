@@ -31,7 +31,7 @@ export interface ChipProps {
   /** Callback function when dismiss button is clicked */
   onDismiss?: () => void;
 
-  /** Disables the chip and its dismiss button */
+  /** Disables the chip and blocks pointer clicks on it */
   disabled?: boolean;
 
   /** Content to display inside the chip */

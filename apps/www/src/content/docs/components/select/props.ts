@@ -58,7 +58,7 @@ export interface SelectRootProps {
   /** Callback fired when the search value changes */
   onSearch?: (value: string) => void;
 
-  /** All item values. In autocomplete mode, setting it turns off the filtering of `Select.Item` children. */
+  /** All item values. In autocomplete mode, Base UI filters this list instead of the `Select.Item` children. It has no effect without `autocomplete`. */
   items?: string[];
 }
 
