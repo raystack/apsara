@@ -164,8 +164,11 @@
     visibility var(--rs-duration-fast) var(--rs-ease-out);
 }
 
+/* Base UI captures the pointer on the control, so a drag that starts on the
+   track gives the thumb neither :hover nor :active. The dragged thumb is the
+   one with focus. */
 .slider-thumb-label-display-hover .thumb:hover .thumbLabel,
-.slider-thumb-label-display-hover .thumb:active .thumbLabel,
+.slider-thumb-label-display-hover .thumb[data-dragging]:has(:focus) .thumbLabel,
 .slider-thumb-label-display-hover .thumb:has(:focus-visible) .thumbLabel {
   visibility: visible;
   opacity: 1;
@@ -181,7 +184,9 @@
   }
 
   .slider-thumb-label-display-hover .thumb:hover .thumbLabel,
-  .slider-thumb-label-display-hover .thumb:active .thumbLabel,
+  .slider-thumb-label-display-hover
+    .thumb[data-dragging]:has(:focus)
+    .thumbLabel,
   .slider-thumb-label-display-hover .thumb:has(:focus-visible) .thumbLabel {
     transform: translateX(-50%);
   }
