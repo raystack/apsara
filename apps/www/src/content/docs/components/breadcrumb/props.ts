@@ -7,10 +7,10 @@ export interface BreadcrumbItem {
   /** URL for the item link */
   href?: string;
 
-  /** Optional icon element to display before the content */
+  /** Optional icon element to display before the label */
   leadingIcon?: ReactNode;
 
-  /** Optional icon element to display after the content */
+  /** Optional icon element to display after the label */
   trailingIcon?: ReactNode;
 
   /**

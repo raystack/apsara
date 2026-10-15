@@ -13,11 +13,8 @@ interface CommonProps {
   autocomplete?: boolean;
   autocompleteMode?: 'auto' | 'manual';
   inputValue?: string;
-  /** @internal Set by the menu and context menu roots and submenus for their parts. */
   inputRef?: React.RefObject<HTMLInputElement | null>;
-  /** @internal Set by the menu and context menu roots and submenus for their parts. */
   contentRef?: React.RefObject<HTMLDivElement | null>;
-  /** @internal Set by the menu and context menu roots and submenus for their parts. */
   isInitialRender?: React.RefObject<boolean>;
   open?: boolean;
 }
