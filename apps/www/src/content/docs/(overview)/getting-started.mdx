@@ -189,6 +189,20 @@ function ThemeToggle() {
 }
 ```
 
+## Importing prop types
+
+Components export their props types from the main entry, for example `ButtonProps`, `TabsProps` and `TabsTabProps`:
+
+```tsx
+import { Button, type ButtonProps } from "@raystack/apsara";
+
+function SaveButton({ saving, ...props }: ButtonProps & { saving: boolean }) {
+  return <Button {...props} loading={saving} loaderText="Saving" />;
+}
+```
+
+Some parts, such as `Tabs.List`, take Base UI or HTML props unchanged and have no type of their own. Use `ComponentProps<typeof Tabs.List>` from React for them.
+
 ## Next steps
 
 - [Theme Overview](/docs/theme/overview): tokens, the seven settings, and nested scopes

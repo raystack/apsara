@@ -27,7 +27,7 @@ const badge = cva(styles['badge'], {
   }
 });
 
-type BadgeProps = VariantProps<typeof badge> &
+export type BadgeProps = VariantProps<typeof badge> &
   ComponentProps<'span'> & {
     icon?: ReactNode;
     screenReaderText?: string;

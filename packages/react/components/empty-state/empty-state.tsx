@@ -11,7 +11,7 @@ type classNameKeys =
   | 'heading'
   | 'subHeading';
 
-interface EmptyStateProps extends ComponentProps<typeof Flex> {
+export interface EmptyStateProps extends ComponentProps<typeof Flex> {
   icon: ReactNode;
   heading?: ReactNode;
   subHeading?: ReactNode;

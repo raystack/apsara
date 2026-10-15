@@ -1,1 +1,1 @@
-export { AnnouncementBar } from './announcement-bar';
+export { AnnouncementBar, type AnnouncementBarProps } from './announcement-bar';

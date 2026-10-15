@@ -7,7 +7,11 @@ import { useDataTable } from '../hooks/useDataTable';
 import { DisplaySettings } from './display-settings';
 import { Filters } from './filters';
 
-export function Toolbar<TData, TValue>({ className }: { className?: string }) {
+export interface DataTableToolbarProps {
+  className?: string;
+}
+
+export function Toolbar<TData, TValue>({ className }: DataTableToolbarProps) {
   const { shouldShowFilters = false } = useDataTable();
 
   if (!shouldShowFilters) {

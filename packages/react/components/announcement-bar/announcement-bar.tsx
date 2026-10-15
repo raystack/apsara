@@ -20,7 +20,7 @@ const announcementBar = cva(styles['announcement-bar'], {
   }
 });
 
-type AnnouncementBarProps = VariantProps<typeof announcementBar> & {
+export type AnnouncementBarProps = VariantProps<typeof announcementBar> & {
   leadingIcon?: ReactNode;
   className?: string;
   text: ReactNode;

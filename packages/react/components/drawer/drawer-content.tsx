@@ -32,6 +32,11 @@ export interface DrawerContentProps
   children?: ReactNode;
   /** Corner radius for this drawer only. Overrides the theme's `radius`. */
   radius?: Radius;
+  /**
+   * Accessible label for the close button.
+   * @default 'Close'
+   */
+  closeLabel?: string;
 }
 
 export function DrawerContent({
@@ -45,7 +50,7 @@ export function DrawerContent({
   closeLabel = 'Close',
   radius,
   ...props
-}: DrawerContentProps & { closeLabel?: string }) {
+}: DrawerContentProps) {
   const resolvedAriaLabel =
     ariaLabel ?? (ariaLabelledBy ? undefined : 'Drawer');
   const theme = useThemeInjection();
