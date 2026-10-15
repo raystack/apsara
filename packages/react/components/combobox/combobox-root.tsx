@@ -11,7 +11,6 @@ import {
   useState
 } from 'react';
 import { useFieldContext } from '../field';
-import { getItemLabel } from './combobox-items';
 
 interface ComboboxContextValue<Value = string> {
   multiple: boolean;
@@ -76,6 +75,7 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
   defaultValue,
   items,
   required,
+  itemToStringLabel,
   ...props
 }: ComboboxRootProps<Value, Item>) => {
   const fieldContext = useFieldContext();
@@ -107,11 +107,11 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
     ) => {
       setInternalValue(value);
       if (multiple) {
-        (
-          onValueChange as MultipleComboboxProps<Value, Item>['onValueChange']
-        )?.(value as Value[]);
+        (onValueChange as MultipleComboboxProps<Value>['onValueChange'])?.(
+          value as Value[]
+        );
       } else {
-        (onValueChange as SingleComboboxProps<Value, Item>['onValueChange'])?.(
+        (onValueChange as SingleComboboxProps<Value>['onValueChange'])?.(
           value as Value | null
         );
       }
@@ -127,9 +127,21 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
       inputContainerRef,
       value: computedValue,
       onValueChange: handleValueChange,
-      getLabel: (value: Value) => getItemLabel(items, value) ?? String(value)
+      getLabel: (value: Value) => {
+        if (itemToStringLabel) return itemToStringLabel(value);
+        if (typeof value === 'object' && value !== null && 'label' in value)
+          return String(value.label);
+        return String(value);
+      }
     }),
-    [multiple, inputValue, items, computedValue, handleValueChange]
+    [
+      multiple,
+      inputValue,
+      items,
+      computedValue,
+      handleValueChange,
+      itemToStringLabel
+    ]
   );
 
   return (
@@ -139,6 +151,7 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
         onValueChange={handleValueChange}
         onInputValueChange={handleInputValueChange}
         items={items}
+        itemToStringLabel={itemToStringLabel}
         value={providedValue}
         defaultValue={defaultValue}
         required={resolvedRequired}

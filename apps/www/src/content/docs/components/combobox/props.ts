@@ -57,6 +57,9 @@ export interface ComboboxRootProps {
    * @remarks `unknown[] | ReturnType<typeof Combobox.createItems>`
    */
   items?: unknown[];
+
+  /** Converts a value to the text shown in the input and in multi-select chips. */
+  itemToStringLabel?: (value: string) => string;
 }
 
 export interface ComboboxInputProps {
