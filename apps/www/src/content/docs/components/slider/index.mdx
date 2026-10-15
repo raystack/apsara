@@ -49,7 +49,11 @@ A slider picks a value, or a range. Appearance is two props; the value is yours 
 
 `thumbLabel` shows text above each thumb and sets the thumb's `aria-label`. Pass a string for one thumb, or a `[string, string]` tuple for a range. Without `thumbLabel`, thumbs are named "Slider thumb", or "Thumb 1" and "Thumb 2" in a range.
 
-Set `showThumbLabelOnHover` to show the text only while a thumb is hovered, focused, or dragged. Use it with `Slider.Label`, because the text above a thumb covers the label row.
+`thumbLabelDisplay` sets when the text is shown:
+
+- `always`: the text is always shown. This is the default.
+- `hover`: the text is shown while a thumb is hovered, focused, or dragged. Use it with `Slider.Label`, because the text above a thumb covers the label row.
+- `none`: the text is not shown. `thumbLabel` still names the thumbs for screen readers.
 
 ### Thumb size
 

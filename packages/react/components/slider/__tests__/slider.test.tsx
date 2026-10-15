@@ -142,13 +142,29 @@ describe('Slider', () => {
       expect(inputs[1]).toHaveAttribute('aria-label', 'Thumb 2');
     });
 
-    it('applies the hover class with showThumbLabelOnHover', () => {
+    it('applies the hover class with thumbLabelDisplay="hover"', () => {
       const { container } = render(
-        <Slider thumbLabel='Volume' showThumbLabelOnHover />
+        <Slider thumbLabel='Volume' thumbLabelDisplay='hover' />
       );
       expect(container.querySelector(`.${styles.slider}`)).toHaveClass(
-        styles['slider-show-thumb-label-on-hover']
+        styles['slider-thumb-label-display-hover']
       );
+    });
+
+    it('hides the text but keeps aria-label with thumbLabelDisplay="none"', () => {
+      const { container } = render(
+        <Slider
+          variant='range'
+          thumbLabel={['Min', 'Max']}
+          thumbLabelDisplay='none'
+        />
+      );
+      expect(
+        container.querySelector('[data-slot="slider-thumb-label"]')
+      ).toBeNull();
+      const inputs = container.querySelectorAll('input[type="range"]');
+      expect(inputs[0]).toHaveAttribute('aria-label', 'Min');
+      expect(inputs[1]).toHaveAttribute('aria-label', 'Max');
     });
   });
 

@@ -12,8 +12,10 @@ const slider = cva(styles.slider, {
       single: styles['slider-variant-single'],
       range: styles['slider-variant-range']
     },
-    showThumbLabelOnHover: {
-      true: styles['slider-show-thumb-label-on-hover']
+    thumbLabelDisplay: {
+      always: null,
+      hover: styles['slider-thumb-label-display-hover'],
+      none: null
     }
   },
   defaultVariants: {
@@ -27,10 +29,10 @@ export interface SliderProps
   /** Text shown above each thumb and used as its `aria-label`. */
   thumbLabel?: string | [string, string];
   /**
-   * Shows `thumbLabel` only while the thumb is hovered, focused, or dragged.
-   * @default false
+   * When the text above each thumb is shown.
+   * @default 'always'
    */
-  showThumbLabelOnHover?: boolean;
+  thumbLabelDisplay?: 'always' | 'hover' | 'none';
   thumbSize?: 'small' | 'large';
 }
 
@@ -38,7 +40,7 @@ function SliderRoot({
   className,
   variant = 'single',
   thumbLabel,
-  showThumbLabelOnHover = false,
+  thumbLabelDisplay = 'always',
   thumbSize = 'large',
   children,
   ...props
@@ -59,7 +61,7 @@ function SliderRoot({
 
   return (
     <SliderPrimitive.Root
-      className={slider({ variant, showThumbLabelOnHover, className })}
+      className={slider({ variant, thumbLabelDisplay, className })}
       thumbAlignment='edge'
       data-slot='slider'
       {...props}
@@ -112,7 +114,7 @@ function SliderRoot({
                   />
                 </div>
               )}
-              {getLabel(i) && (
+              {thumbLabelDisplay !== 'none' && getLabel(i) && (
                 <Text
                   className={styles.thumbLabel}
                   size={isThumbSmall ? 'micro' : 'mini'}

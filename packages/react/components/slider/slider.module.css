@@ -154,14 +154,37 @@
   top: calc(-1 * (var(--rs-space-7)));
 }
 
-.slider-show-thumb-label-on-hover .thumbLabel {
+/* Timing and offset match Tooltip. Visibility is transitioned so the label
+   stays visible while it fades out. */
+.slider-thumb-label-display-hover .thumbLabel {
   visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity var(--rs-duration-fast) var(--rs-ease-out),
+    visibility var(--rs-duration-fast) var(--rs-ease-out);
 }
 
-.slider-show-thumb-label-on-hover .thumb:hover .thumbLabel,
-.slider-show-thumb-label-on-hover .thumb:active .thumbLabel,
-.slider-show-thumb-label-on-hover .thumb:has(:focus-visible) .thumbLabel {
+.slider-thumb-label-display-hover .thumb:hover .thumbLabel,
+.slider-thumb-label-display-hover .thumb:active .thumbLabel,
+.slider-thumb-label-display-hover .thumb:has(:focus-visible) .thumbLabel {
   visibility: visible;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .slider-thumb-label-display-hover .thumbLabel {
+    transform: translate(-50%, calc(-1 * var(--rs-space-1)));
+    transition:
+      opacity var(--rs-duration-fast) var(--rs-ease-out),
+      transform var(--rs-duration-fast) var(--rs-ease-out),
+      visibility var(--rs-duration-fast) var(--rs-ease-out);
+  }
+
+  .slider-thumb-label-display-hover .thumb:hover .thumbLabel,
+  .slider-thumb-label-display-hover .thumb:active .thumbLabel,
+  .slider-thumb-label-display-hover .thumb:has(:focus-visible) .thumbLabel {
+    transform: translateX(-50%);
+  }
 }
 
 .slider-variant-single .indicator {

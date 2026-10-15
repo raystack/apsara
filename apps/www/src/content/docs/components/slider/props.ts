@@ -32,10 +32,10 @@ export interface SliderProps {
   thumbLabel?: string | [string, string];
 
   /**
-   * Shows `thumbLabel` only while the thumb is hovered, focused, or dragged.
-   * @default false
+   * When the text above each thumb is shown.
+   * @default "always"
    */
-  showThumbLabelOnHover?: boolean;
+  thumbLabelDisplay?: 'always' | 'hover' | 'none';
 
   /**
    * Size of the slider thumb.
