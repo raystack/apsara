@@ -253,6 +253,15 @@ describe('Combobox', () => {
       );
       expect(screen.getByText('Banana')).toBeInTheDocument();
     });
+
+    it('labels chips with the value of { value } values', () => {
+      render(
+        <Combobox multiple defaultValue={[{ value: 'banana' }]}>
+          <Combobox.Input placeholder={PLACEHOLDER_TEXT} />
+        </Combobox>
+      );
+      expect(screen.getByText('banana')).toBeInTheDocument();
+    });
   });
 
   describe('Keyboard Navigation', () => {

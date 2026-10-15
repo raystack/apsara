@@ -119,6 +119,19 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
     [onValueChange, multiple]
   );
 
+  // Same fallback order that Base UI uses for the input text.
+  const getLabel = useCallback(
+    (value: Value) => {
+      if (itemToStringLabel) return itemToStringLabel(value);
+      if (typeof value !== 'object' || value === null)
+        return String(value ?? '');
+      if ('label' in value && value.label != null) return String(value.label);
+      if ('value' in value) return String(value.value);
+      return JSON.stringify(value);
+    },
+    [itemToStringLabel]
+  );
+
   const contextValue = useMemo(
     () => ({
       multiple,
@@ -127,21 +140,9 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
       inputContainerRef,
       value: computedValue,
       onValueChange: handleValueChange,
-      getLabel: (value: Value) => {
-        if (itemToStringLabel) return itemToStringLabel(value);
-        if (typeof value === 'object' && value !== null && 'label' in value)
-          return String(value.label);
-        return String(value);
-      }
+      getLabel
     }),
-    [
-      multiple,
-      inputValue,
-      items,
-      computedValue,
-      handleValueChange,
-      itemToStringLabel
-    ]
+    [multiple, inputValue, items, computedValue, handleValueChange, getLabel]
   );
 
   return (
