@@ -39,15 +39,17 @@ A slider picks a value, or a range. Appearance is two props; the value is yours 
 
 ### Label
 
-`Slider.Label` renders visible text and links it to the slider for screen readers. Put it inside `Slider`. `Slider.Value` shows the current value on the same row.
+`Slider.Label` renders visible text above the track and names the slider group for screen readers. Put it inside `Slider`. `Slider.Value` shows the current value on the same row.
 
-In a range, both thumbs share the label. Pass `thumbLabel` to give each thumb its own name.
+`Slider.Label` does not name the thumbs. Pass `thumbLabel` to give each thumb its own name.
 
 <Demo data={labelDemo} />
 
 ### Thumb label
 
-`thumbLabel` shows text above each thumb and sets the thumb's `aria-label`. Pass a string for one thumb, or a `[string, string]` tuple for a range. Without `thumbLabel` or `Slider.Label`, thumbs are named "Slider thumb", or "Thumb 1" and "Thumb 2" in a range.
+`thumbLabel` shows text above each thumb and sets the thumb's `aria-label`. Pass a string for one thumb, or a `[string, string]` tuple for a range. Without `thumbLabel`, thumbs are named "Slider thumb", or "Thumb 1" and "Thumb 2" in a range.
+
+Set `showThumbLabelOnHover` to show the text only while a thumb is hovered, focused, or dragged. Use it with `Slider.Label`, because the text above a thumb covers the label row.
 
 ### Thumb size
 

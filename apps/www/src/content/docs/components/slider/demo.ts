@@ -19,7 +19,8 @@ export const playground = {
     min: { type: 'number', defaultValue: 0, min: 0, max: 99 },
     max: { type: 'number', defaultValue: 100, min: 1, max: 100 },
     step: { type: 'number', defaultValue: 1, min: 0, max: 100 },
-    thumbLabel: { type: 'text', initialValue: 'Slider Label' }
+    thumbLabel: { type: 'text', initialValue: 'Slider Label' },
+    showThumbLabelOnHover: { type: 'checkbox', defaultValue: false }
   },
   getCode
 };
@@ -115,6 +116,7 @@ export const labelDemo = {
   variant="range"
   defaultValue={[20, 80]}
   thumbLabel={["Minimum price", "Maximum price"]}
+  showThumbLabelOnHover
   style={{ width: "400px" }}
 >
   <Slider.Label>Price</Slider.Label>

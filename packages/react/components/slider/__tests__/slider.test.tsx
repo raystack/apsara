@@ -141,21 +141,18 @@ describe('Slider', () => {
       expect(inputs[0]).toHaveAttribute('aria-label', 'Thumb 1');
       expect(inputs[1]).toHaveAttribute('aria-label', 'Thumb 2');
     });
+
+    it('applies the hover class with showThumbLabelOnHover', () => {
+      const { container } = render(
+        <Slider thumbLabel='Volume' showThumbLabelOnHover />
+      );
+      expect(container.querySelector(`.${styles.slider}`)).toHaveClass(
+        styles['slider-show-thumb-label-on-hover']
+      );
+    });
   });
 
   describe('Label', () => {
-    it('labels the thumb with Slider.Label', () => {
-      const { container } = render(
-        <Slider defaultValue={50}>
-          <Slider.Label>Volume</Slider.Label>
-        </Slider>
-      );
-      const label = screen.getByText('Volume');
-      const input = container.querySelector('input[type="range"]');
-      expect(input).not.toHaveAttribute('aria-label');
-      expect(input).toHaveAttribute('aria-labelledby', label.id);
-    });
-
     it('labels the root group with Slider.Label', () => {
       render(
         <Slider defaultValue={50}>
@@ -165,16 +162,15 @@ describe('Slider', () => {
       expect(screen.getByRole('group', { name: 'Volume' })).toBeInTheDocument();
     });
 
-    it('labels both thumbs of a range with Slider.Label', () => {
+    it('keeps distinct thumb names in a range with Slider.Label', () => {
       const { container } = render(
         <Slider variant='range' defaultValue={[20, 80]}>
           <Slider.Label>Price</Slider.Label>
         </Slider>
       );
-      const label = screen.getByText('Price');
       const inputs = container.querySelectorAll('input[type="range"]');
-      expect(inputs[0]).toHaveAttribute('aria-labelledby', label.id);
-      expect(inputs[1]).toHaveAttribute('aria-labelledby', label.id);
+      expect(inputs[0]).toHaveAttribute('aria-label', 'Thumb 1');
+      expect(inputs[1]).toHaveAttribute('aria-label', 'Thumb 2');
     });
 
     it('prefers thumbLabel over Slider.Label for thumb names', () => {

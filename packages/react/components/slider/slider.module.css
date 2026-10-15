@@ -1,7 +1,10 @@
 .slider {
   position: relative;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "label value"
+    "control control";
   align-items: center;
   width: 100%;
   min-width: var(--rs-space-15);
@@ -12,6 +15,7 @@
 }
 
 .control {
+  grid-area: control;
   position: relative;
   width: 100%;
   height: var(--rs-space-8);
@@ -112,7 +116,10 @@
   }
 }
 
+/* Inline margins match the track's, so the text lines up with its ends. */
 .label {
+  grid-area: label;
+  margin-inline-start: var(--rs-space-4);
   font-size: var(--rs-font-size-small);
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-small);
@@ -120,7 +127,9 @@
 }
 
 .value {
-  margin-inline-start: auto;
+  grid-area: value;
+  justify-self: end;
+  margin-inline-end: var(--rs-space-4);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   color: var(--rs-color-foreground-base-secondary);
@@ -143,6 +152,16 @@
 
 .thumb[data-size="small"] .thumbLabel {
   top: calc(-1 * (var(--rs-space-7)));
+}
+
+.slider-show-thumb-label-on-hover .thumbLabel {
+  visibility: hidden;
+}
+
+.slider-show-thumb-label-on-hover .thumb:hover .thumbLabel,
+.slider-show-thumb-label-on-hover .thumb:active .thumbLabel,
+.slider-show-thumb-label-on-hover .thumb:has(:focus-visible) .thumbLabel {
+  visibility: visible;
 }
 
 .slider-variant-single .indicator {
