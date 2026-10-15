@@ -11,7 +11,10 @@ export interface SearchProps {
    */
   variant?: 'default' | 'borderless';
 
-  /** Placeholder text for the input. */
+  /**
+   * Placeholder text for the input.
+   * @default "Search"
+   */
   placeholder?: string;
 
   /** Whether the search input is disabled. */

@@ -1,4 +1,5 @@
 import { CSSProperties, ReactNode, RefObject } from 'react';
+import type { SelectRootProps } from '../components/select/props';
 
 // Documentation-only placeholders so `auto-type-table` can render the public
 // API without surfacing real generics (TData is shown as `T` for readability).
@@ -137,7 +138,12 @@ export interface DataViewField {
   defaultFilterValue?: unknown;
 
   /** Props for the filter's control. `select` is passed to the filter's `Select`. */
-  filterProps?: { select?: Record<string, unknown> };
+  filterProps?: {
+    select?: Omit<
+      SelectRootProps,
+      'multiple' | 'value' | 'defaultValue' | 'onValueChange'
+    >;
+  };
 
   /**
    * Count shown next to each group header when `showGroupCount` is on, by raw group value.

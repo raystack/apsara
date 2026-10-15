@@ -22,7 +22,7 @@ export interface SelectRootProps {
   /** Whether the select is disabled. */
   disabled?: boolean;
 
-  /** Whether a value is required. Defaults to the `required` of the surrounding `Field`. */
+  /** Whether a value is required. Defaults to the `required` of the surrounding `Field`, which is `true` unless the `Field` sets `required={false}`. */
   required?: boolean;
 
   /** Name of the field when the select is submitted with a form. */
@@ -128,7 +128,7 @@ export interface SelectItemProps {
   /** The value of the item. */
   value: string;
 
-  /** Icon rendered before the item text. */
+  /** Icon rendered before the item text. Rendered only when `children` is a string. */
   leadingIcon?: React.ReactNode;
 
   /** Additional CSS class names. */
