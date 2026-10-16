@@ -3,10 +3,10 @@ export interface EmptyStateProps {
   icon: React.ReactNode;
 
   /** Primary heading message */
-  heading?: string;
+  heading?: React.ReactNode;
 
   /** Secondary heading message */
-  subHeading?: string;
+  subHeading?: React.ReactNode;
 
   /** Action to show in empty state like button or link */
   primaryAction?: React.ReactNode;

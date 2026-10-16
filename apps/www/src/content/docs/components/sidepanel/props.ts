@@ -8,7 +8,7 @@ export interface SidePanelProps {
   /**
    * Content to render inside the side panel.
    */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 
   /**
    * Additional CSS class names to apply.

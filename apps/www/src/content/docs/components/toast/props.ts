@@ -24,7 +24,8 @@ export interface ToastProviderProps {
   timeout?: number;
 
   /**
-   * Toast manager instance. Defaults to the exported `toastManager`. Pass one from `Toast.createToastManager()` to scope toasts to this provider.
+   * The manager the provider renders toasts from.
+   * @default toastManager
    */
   toastManager?: CreateToastManagerReturn;
 
@@ -157,7 +158,7 @@ export interface ToastObject {
 }
 
 /**
- * The toast manager returned by `createToastManager()` and exported as the
+ * The toast manager returned by `Toast.createToastManager()` and exported as the
  * `toastManager` singleton.
  */
 export interface CreateToastManagerReturn {
@@ -206,7 +207,7 @@ export interface CreateToastManagerReturn {
 
 /**
  * Return value of the `useToastManager()` hook. Same methods as
- * `createToastManager()` plus a reactive `toasts` array driving component
+ * `Toast.createToastManager()` plus a reactive `toasts` array driving component
  * re-renders.
  */
 export interface UseToastManagerReturn extends CreateToastManagerReturn {

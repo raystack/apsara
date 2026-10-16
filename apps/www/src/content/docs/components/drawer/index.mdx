@@ -18,7 +18,8 @@ Import and assemble the component:
 import { Drawer } from "@raystack/apsara";
 
 <Drawer side="right">
-  <Drawer.Content>
+  <Drawer.Trigger />
+  <Drawer.Content side="right">
     <Drawer.Header>
       <Drawer.Title />
       <Drawer.Description />
@@ -35,7 +36,7 @@ Pick the edge it enters from, then decide who owns its open state.
 
 ### Basic
 
-A drawer slides in from the edge named by `side` and traps focus while open.
+A drawer slides in from the edge named by the `side` of `Drawer.Content` and traps focus while open.
 
 <Demo data={basicDemo} />
 
@@ -57,7 +58,7 @@ The same header, body and footer shell as [Dialog](/docs/components/dialog), anc
 
 ### Root
 
-Groups all parts of the drawer. The `side` prop determines both the slide direction and the swipe-to-dismiss direction.
+Groups all parts of the drawer. Its `side` prop sets the swipe-to-dismiss direction. `Drawer.Content` has its own `side`, which places the panel. Set both to the same edge.
 
 <auto-type-table path="./props.ts" name="DrawerProps" />
 

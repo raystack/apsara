@@ -22,7 +22,10 @@ export interface SelectRootProps {
   /** Whether the select is disabled. */
   disabled?: boolean;
 
-  /** Whether a value is required. Defaults to the `required` of the surrounding `Field`, which is `true` unless the `Field` sets `required={false}`. */
+  /**
+   * Whether a value is required.
+   * @default the `required` of the surrounding `Field`, otherwise false
+   */
   required?: boolean;
 
   /** Name of the field when the select is submitted with a form. */
@@ -58,7 +61,7 @@ export interface SelectRootProps {
   /** Callback fired when the search value changes */
   onSearch?: (value: string) => void;
 
-  /** All item values. In autocomplete mode, Base UI filters this list instead of the `Select.Item` children. It has no effect without `autocomplete`. */
+  /** All item values. In autocomplete mode, setting it turns off filtering of the `Select.Item` children. It has no effect without `autocomplete`. */
   items?: string[];
 }
 

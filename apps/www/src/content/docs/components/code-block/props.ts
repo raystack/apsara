@@ -117,7 +117,7 @@ export interface CodeBlockLabelProps {
 
 export interface CodeBlockLanguageSelectProps {
   /**
-   * Available languages for selection
+   * The `CodeBlock.LanguageSelectTrigger` and `CodeBlock.LanguageSelectContent` parts
    */
   children?: ReactNode;
 

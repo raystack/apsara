@@ -102,7 +102,7 @@ export interface TooltipContentProps {
 
   /**
    * Side offset for positioning
-   * @default 4
+   * @default 4, or 10 when `showArrow` is set
    */
   sideOffset?: number;
 

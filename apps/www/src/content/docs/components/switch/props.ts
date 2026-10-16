@@ -11,7 +11,10 @@ export interface SwitchProps {
   /** When true, prevents the user from interacting with the switch. */
   disabled?: boolean;
 
-  /** When true, indicates that the user must check the switch. */
+  /**
+   * When true, indicates that the user must check the switch.
+   * @default the `required` of the surrounding `Field`, otherwise false
+   */
   required?: boolean;
 
   /**

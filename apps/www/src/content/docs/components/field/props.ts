@@ -73,8 +73,7 @@ export interface FieldControlProps {
 
 export interface FieldErrorProps {
   /**
-   * Match a specific ValidityState property (e.g., "valueMissing", "typeMismatch", "customError")
-   * or pass `true` to match any error.
+   * The ValidityState key that shows this error, such as `"valueMissing"`. `true` always shows it. When not set, it shows on any error.
    */
   match?: boolean | keyof ValidityState;
 

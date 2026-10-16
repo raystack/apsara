@@ -3,8 +3,7 @@ export interface NumberFieldProps {
   value?: number | null;
 
   /**
-   * Initial uncontrolled value.
-   * @defaultValue 0
+   * Initial uncontrolled value. The field is empty when neither this nor `value` is set.
    */
   defaultValue?: number;
 
@@ -37,7 +36,7 @@ export interface NumberFieldProps {
 
   /**
    * Whether the field is required.
-   * @defaultValue false
+   * @defaultValue the `required` of the surrounding `Field`, otherwise false
    */
   required?: boolean;
 

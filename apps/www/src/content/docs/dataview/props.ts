@@ -1,4 +1,5 @@
 import { CSSProperties, ReactNode, RefObject } from 'react';
+import type { SelectRootProps } from '../components/select/props';
 
 // Documentation-only placeholders so `auto-type-table` can render the public
 // API without surfacing real generics (TData is shown as `T` for readability).
@@ -86,7 +87,7 @@ export interface DataViewField {
   /** Human-readable label. */
   label: string;
 
-  /** Optional icon (e.g. for grouping menu). */
+  /** Icon for the field. No built-in DataView part renders it. */
   icon?: ReactNode;
 
   /** Allow filtering on this field. */
@@ -134,10 +135,21 @@ export interface DataViewField {
    * Value a new filter on this field starts with.
    * @defaultValue today for `date`, the first option for `select`, otherwise `""`
    */
-  defaultFilterValue?: unknown;
+  defaultFilterValue?:
+    | string
+    | number
+    | boolean
+    | (string | number | boolean)[]
+    | Date
+    | null;
 
-  /** Props for the filter's control. `select` takes the `Select` root props, without the value props, and is passed to the filter's `Select`. */
-  filterProps?: { select?: Record<string, unknown> };
+  /** Props for the filter's control. The filter's `Select` receives `select`. */
+  filterProps?: {
+    select?: Omit<
+      SelectRootProps,
+      'value' | 'defaultValue' | 'onValueChange' | 'multiple'
+    >;
+  };
 
   /**
    * Count shown next to each group header when `showGroupCount` is on, by raw group value.

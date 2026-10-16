@@ -155,24 +155,22 @@ export interface RangePickerProps {
   dateFormat?: string;
 
   /**
-   * Fires on every step of range selection — not only on the completed range.
-   * Both fields are optional during partial selection; gate on `range.to` if
-   * you only want completed ranges.
+   * Fires on every step of range selection. `to` is unset until the range is complete.
    */
-  onSelect?: (range: { from?: Date; to?: Date }) => void;
+  onSelect?: (range: { from: Date | undefined; to?: Date }) => void;
 
   /** Initial (uncontrolled) date range. */
-  defaultValue?: { from?: Date; to?: Date };
+  defaultValue?: { from: Date | undefined; to?: Date };
 
   /** Controlled date range. */
-  value?: { from?: Date; to?: Date };
+  value?: { from: Date | undefined; to?: Date };
 
   /**
    * Props for each picker slot. When both this and the legacy
    * `inputsProps` / `calendarProps` / `popoverProps` are set, `slotProps` wins.
    *
-   * Input event handlers (`onChange`, `onFocus`, `onBlur`, `onKeyUp`) are not
-   * forwarded — use `onSelect` for value changes.
+   * The inputs are read-only. RangePicker replaces their `value` and `onClick`.
+   * Use `onSelect` for value changes.
    */
   slotProps?: {
     startInput?: InputProps;
