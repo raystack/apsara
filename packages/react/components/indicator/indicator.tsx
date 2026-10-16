@@ -38,7 +38,7 @@ export interface IndicatorProps
 export const Indicator = ({
   className,
   classNames,
-  variant,
+  variant = 'accent',
   pulse,
   label,
   children,

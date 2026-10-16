@@ -64,4 +64,14 @@ describe('Indicator', () => {
       expect(dot).toBeInTheDocument();
     });
   });
+
+  describe('Accessibility', () => {
+    it('labels the badge with the default variant', () => {
+      render(<Indicator />);
+      expect(screen.getByRole('status')).toHaveAttribute(
+        'aria-label',
+        'accent indicator'
+      );
+    });
+  });
 });
