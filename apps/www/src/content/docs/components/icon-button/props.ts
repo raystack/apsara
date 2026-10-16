@@ -52,4 +52,7 @@ export interface IconButtonProps {
    * @defaultValue The theme's `radius`
    */
   radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
+
+  /** Accessible name for the button. */
+  'aria-label'?: string;
 }

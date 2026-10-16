@@ -47,6 +47,12 @@ export interface FloatingActionsSeparatorProps {
    */
   size?: 'small' | 'half' | 'full';
 
+  /**
+   * Hides the separator from assistive technology.
+   * @defaultValue false
+   */
+  decorative?: boolean;
+
   /** Additional CSS class names. */
   className?: string;
 

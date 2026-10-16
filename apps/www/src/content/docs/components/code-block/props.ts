@@ -117,14 +117,30 @@ export interface CodeBlockLabelProps {
 
 export interface CodeBlockLanguageSelectProps {
   /**
-   * Available languages for selection
+   * The `CodeBlock.LanguageSelectTrigger` and `CodeBlock.LanguageSelectContent` parts
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
-   * Additional CSS class name
+   * The controlled open state of the dropdown
    */
-  className?: string;
+  open?: boolean;
+
+  /**
+   * The initial open state when uncontrolled
+   * @defaultValue false
+   */
+  defaultOpen?: boolean;
+
+  /**
+   * Callback fired when the open state changes
+   */
+  onOpenChange?: (open: boolean) => void;
+
+  /**
+   * Prevents the user from changing the language
+   */
+  disabled?: boolean;
 }
 
 export interface CodeBlockLanguageSelectTriggerProps {

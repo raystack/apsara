@@ -47,10 +47,20 @@ export interface FieldProps {
 
 export interface FieldLabelProps {
   /**
-   * Whether the field is required. When false, shows an (optional) indicator next to the label.
-   * @defaultValue true
+   * Whether the field is required. `true` shows `requiredText`, `false` shows `optionalText`, and nothing is shown when it is not set.
    */
   required?: boolean;
+
+  /**
+   * Text rendered next to the label when `required={false}`.
+   * @defaultValue "(optional)"
+   */
+  optionalText?: string;
+
+  /**
+   * Text rendered next to the label when `required={true}`. No indicator is rendered when it is omitted.
+   */
+  requiredText?: string;
 
   /** Additional CSS class names. */
   className?: string;
@@ -63,10 +73,9 @@ export interface FieldControlProps {
 
 export interface FieldErrorProps {
   /**
-   * Match a specific ValidityState property (e.g., "valueMissing", "typeMismatch", "customError")
-   * or pass `true` to match any error.
+   * The ValidityState key that shows this error, such as `"valueMissing"`. `true` always shows it. When not set, it shows on any error.
    */
-  match?: string | boolean;
+  match?: boolean | keyof ValidityState;
 
   /** Additional CSS class names. */
   className?: string;

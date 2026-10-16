@@ -9,7 +9,7 @@ export interface PreviewCardRootProps {
   defaultOpen?: boolean;
 
   /** Event handler called when the preview card is opened or closed. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (open: boolean, eventDetails: unknown) => void;
 
   /** Event handler called after any animations complete when the preview card is opened or closed. */
   onOpenChangeComplete?: (open: boolean) => void;
@@ -104,7 +104,7 @@ export interface PreviewCardContentProps {
    * May automatically change to avoid collisions.
    * @defaultValue 'bottom'
    */
-  side?: 'top' | 'right' | 'bottom' | 'left';
+  side?: 'top' | 'right' | 'bottom' | 'left' | 'inline-start' | 'inline-end';
 
   /**
    * How to align the popup relative to the specified side.
@@ -116,7 +116,7 @@ export interface PreviewCardContentProps {
    * Distance between the anchor and the popup in pixels.
    * Also accepts a function to read anchor/positioner dimensions.
    * @remarks `number | OffsetFunction`
-   * @defaultValue 4
+   * @defaultValue 4, or 10 when `showArrow` is set
    */
   sideOffset?: number | ((data: OffsetData) => number);
 
@@ -130,6 +130,7 @@ export interface PreviewCardContentProps {
 
   /**
    * Additional space to maintain from the edge of the collision boundary.
+   * @defaultValue 3
    */
   collisionPadding?: number;
 
@@ -140,12 +141,20 @@ export interface PreviewCardContentProps {
   collisionBoundary?: Element | Element[] | 'clipping-ancestors';
 
   /**
-   * Determines how to handle collisions when positioning the popup.
+   * Determines how to handle collisions when positioning the popup. With `side: 'shift'`, `align` takes only `'shift'` or `'none'`.
+   * @remarks `{ side?: 'flip' | 'shift' | 'none'; align?: 'flip' | 'shift' | 'none'; fallbackAxisSide?: 'start' | 'end' | 'none' }`
    */
-  collisionAvoidance?: {
-    side?: 'escape' | 'flip';
-    align?: 'shift' | 'flip';
-  };
+  collisionAvoidance?:
+    | {
+        side?: 'flip' | 'none';
+        align?: 'flip' | 'shift' | 'none';
+        fallbackAxisSide?: 'start' | 'end' | 'none';
+      }
+    | {
+        side?: 'shift' | 'none';
+        align?: 'shift' | 'none';
+        fallbackAxisSide?: 'start' | 'end' | 'none';
+      };
 
   /**
    * Whether to disable the popup from tracking any layout shift of its positioning anchor.
