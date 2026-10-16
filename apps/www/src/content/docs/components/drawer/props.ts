@@ -61,3 +61,56 @@ export interface DrawerContentProps {
    */
   radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 }
+
+export interface DrawerSwipeAreaProps {
+  /** The swipe direction that opens the drawer. Defaults to the opposite of the root's `swipeDirection`. */
+  swipeDirection?: 'up' | 'down' | 'left' | 'right';
+
+  /**
+   * Turns off swipe-to-open.
+   * @default false
+   */
+  disabled?: boolean;
+
+  /**
+   * Allows rendering as a different element.
+   * Accepts a React element or a function that receives props and returns an element.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?: React.ReactElement;
+
+  /** Additional CSS class name. */
+  className?: string;
+}
+
+export interface DrawerProviderProps {
+  /** The app content. A drawer inside it activates the indent parts while open. */
+  children?: React.ReactNode;
+}
+
+export interface DrawerIndentProps {
+  /**
+   * Allows rendering as a different element.
+   * Accepts a React element or a function that receives props and returns an element.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?: React.ReactElement;
+
+  /** Additional CSS class name. */
+  className?: string;
+}
+
+export interface DrawerIndentBackgroundProps {
+  /**
+   * Allows rendering as a different element.
+   * Accepts a React element or a function that receives props and returns an element.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?: React.ReactElement;
+
+  /** Additional CSS class name. */
+  className?: string;
+}
