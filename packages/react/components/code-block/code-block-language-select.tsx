@@ -8,7 +8,11 @@ import { SingleSelectProps } from '../select/select-root';
 import styles from './code-block.module.css';
 import { useCodeBlockContext } from './code-block-root';
 
-export const CodeBlockLanguageSelect = (props: SingleSelectProps) => {
+export type CodeBlockLanguageSelectProps = SingleSelectProps;
+
+export const CodeBlockLanguageSelect = (
+  props: CodeBlockLanguageSelectProps
+) => {
   const { value, setValue } = useCodeBlockContext();
 
   const handleValueChange = (value: string) => {

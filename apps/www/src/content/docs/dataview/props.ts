@@ -77,7 +77,7 @@ export interface DataViewProps {
 }
 
 export interface DataViewField {
-  /** Key into the row object. */
+  /** Key into the row object, or a dotted path to a nested value. */
   accessorKey: string;
 
   /** Human-readable label. */
@@ -92,8 +92,8 @@ export interface DataViewField {
   /** Filter input type. */
   filterType?: 'string' | 'number' | 'date' | 'select' | 'multiselect';
 
-  /** Options when filterType is select/multiselect. */
-  filterOptions?: Array<{ label: string; value: string }>;
+  /** Options when filterType is select/multiselect. The add-filter menu leaves out the field while this is empty, and the trigger is disabled if no other field is available. */
+  filterOptions?: Array<{ label: string; value: string | number | boolean }>;
 
   /** Allow sorting. */
   sortable?: boolean;

@@ -1,26 +1,24 @@
 import type { FilterFn } from '@tanstack/table-core';
-import dayjs from 'dayjs';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
+import { dateFilterFns, toDayKey } from '~/shared/date-filters';
 import {
   DataTableFilterOperatorTypes,
   DateFilterOperatorType,
   EmptyFilterValue,
+  FilterDataType,
   FilterOperatorTypes,
   FilterType,
   FilterTypes,
   FilterValue,
-  FilterValueType,
   MultiSelectFilterOperatorType,
   NumberFilterOperatorType,
   SelectFilterOperatorType,
   StringFilterOperatorType
 } from '~/types/filters';
-import { DataViewFilterValues } from '../data-view.types';
-
-dayjs.extend(isSameOrAfter);
-dayjs.extend(isSameOrBefore);
+import type {
+  DataViewFilterValue,
+  DataViewFilterValues
+} from '../data-view.types';
 
 export type FilterFunctionsMap = {
   number: Record<NumberFilterOperatorType, FilterFn<unknown>>;
@@ -68,26 +66,7 @@ export const filterOperationsMap: FilterFunctionsMap = {
       return columnValue.endsWith(filterStr);
     }
   },
-  date: {
-    eq: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isSame(dayjs(filterValue.date), 'day'),
-    neq: (row, columnId, filterValue: FilterValue) =>
-      !dayjs(row.getValue(columnId)).isSame(dayjs(filterValue.date), 'day'),
-    lt: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isBefore(dayjs(filterValue.date), 'day'),
-    lte: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isSameOrBefore(
-        dayjs(filterValue.date),
-        'day'
-      ),
-    gt: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isAfter(dayjs(filterValue.date), 'day'),
-    gte: (row, columnId, filterValue: FilterValue) =>
-      dayjs(row.getValue(columnId)).isSameOrAfter(
-        dayjs(filterValue.date),
-        'day'
-      )
-  },
+  date: dateFilterFns,
   select: {
     eq: (row, columnId, filterValue: FilterValue) => {
       if (String(filterValue.value) === EmptyFilterValue)
@@ -124,48 +103,44 @@ export function getFilterFn<T extends keyof FilterFunctionsMap>(
   return filterOperationsMap[type][operator];
 }
 
+const toStringValue = (value: DataViewFilterValue) =>
+  value == null ? undefined : typeof value === 'string' ? value : String(value);
+
 const handleStringBasedTypes = (
   filterType: FilterTypes,
-  value: any,
+  value: DataViewFilterValue,
   operator?: FilterOperatorTypes | DataTableFilterOperatorTypes
 ): DataViewFilterValues => {
   switch (filterType) {
     case FilterType.date: {
-      const dateValue = dayjs(value);
-      let stringValue = '';
-      if (dateValue.isValid()) {
-        try {
-          stringValue = dateValue.toISOString();
-        } catch {
-          stringValue = '';
-        }
-      }
-      return { value, stringValue };
+      const day = toDayKey(value);
+      return { value, stringValue: day ?? '' };
     }
     case FilterType.select:
       return {
-        stringValue: value === EmptyFilterValue ? '' : value,
+        stringValue: value === EmptyFilterValue ? '' : toStringValue(value),
         value
       };
     case FilterType.multiselect:
       return {
         value,
-        stringValue: value
-          .map((v: any) => (v === EmptyFilterValue ? '' : String(v)))
+        stringValue: (Array.isArray(value) ? value : [])
+          .map(v => (v === EmptyFilterValue ? '' : v))
           .join()
       };
     case FilterType.string: {
-      let processedValue = value;
-      if (operator === 'contains') processedValue = `%${value}%`;
-      else if (operator === 'starts_with') processedValue = `${value}%`;
-      else if (operator === 'ends_with') processedValue = `%${value}`;
+      const text = toStringValue(value) ?? '';
+      let processedValue = toStringValue(value);
+      if (operator === 'contains') processedValue = `%${text}%`;
+      else if (operator === 'starts_with') processedValue = `${text}%`;
+      else if (operator === 'ends_with') processedValue = `%${text}`;
       else if (operator === 'ilike') {
-        if (!value.includes('%')) processedValue = `%${value}%`;
+        if (!text.includes('%')) processedValue = `%${text}%`;
       }
       return { stringValue: processedValue, value };
     }
     default:
-      return { stringValue: value, value };
+      return { stringValue: toStringValue(value), value };
   }
 };
 
@@ -174,7 +149,7 @@ export const getFilterOperator = ({
   filterType,
   operator
 }: {
-  value: any;
+  value: DataViewFilterValue;
   filterType?: FilterTypes;
   operator: FilterOperatorTypes;
 }): DataTableFilterOperatorTypes => {
@@ -197,13 +172,13 @@ export const getFilterValue = ({
   filterType = FilterType.string,
   operator
 }: {
-  value: any;
-  dataType?: FilterValueType;
+  value: DataViewFilterValue;
+  dataType?: FilterDataType;
   filterType?: FilterTypes;
   operator?: FilterOperatorTypes | DataTableFilterOperatorTypes;
 }): DataViewFilterValues => {
-  if (dataType === 'boolean') return { boolValue: value, value };
-  if (dataType === 'number') return { numberValue: value, value };
+  if (dataType === 'boolean') return { boolValue: value as boolean, value };
+  if (dataType === 'number') return { numberValue: value as number, value };
   return handleStringBasedTypes(filterType, value, operator);
 };
 
@@ -211,9 +186,9 @@ export const getDataType = ({
   filterType = FilterType.string,
   dataType = 'string'
 }: {
-  dataType?: FilterValueType;
+  dataType?: FilterDataType;
   filterType?: FilterTypes;
-}): FilterValueType => {
+}): FilterDataType => {
   switch (filterType) {
     case FilterType.multiselect:
     case FilterType.select:

@@ -145,5 +145,49 @@ describe('Toolbar', () => {
       await user.keyboard('{ArrowRight}');
       expect(screen.getByRole('button', { name: 'Third' })).toHaveFocus();
     });
+
+    it('moves focus to links and inputs with arrow keys', async () => {
+      const user = userEvent.setup();
+      render(
+        <Toolbar>
+          <Toolbar.Button>Bold</Toolbar.Button>
+          <Toolbar.Link href='#docs'>Docs</Toolbar.Link>
+          <Toolbar.Input aria-label='Search' />
+        </Toolbar>
+      );
+
+      screen.getByRole('button', { name: 'Bold' }).focus();
+      await user.keyboard('{ArrowRight}');
+      expect(screen.getByRole('link', { name: 'Docs' })).toHaveFocus();
+
+      await user.keyboard('{ArrowRight}');
+      expect(screen.getByRole('textbox', { name: 'Search' })).toHaveFocus();
+    });
+  });
+
+  describe('Link', () => {
+    it('renders an anchor with the link class', () => {
+      render(
+        <Toolbar>
+          <Toolbar.Link href='#docs'>Docs</Toolbar.Link>
+        </Toolbar>
+      );
+      const link = screen.getByRole('link', { name: 'Docs' });
+      expect(link).toHaveAttribute('href', '#docs');
+      expect(link).toHaveClass(styles.link);
+    });
+  });
+
+  describe('Input', () => {
+    it('renders an input with the input class', () => {
+      render(
+        <Toolbar>
+          <Toolbar.Input aria-label='Search' />
+        </Toolbar>
+      );
+      expect(screen.getByRole('textbox', { name: 'Search' })).toHaveClass(
+        styles.input
+      );
+    });
   });
 });

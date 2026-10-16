@@ -64,6 +64,9 @@ export interface ToolbarSeparatorProps {
 }
 
 export interface ToolbarLinkProps {
+  /** The URL the link points to. */
+  href?: string;
+
   /**
    * Allows you to replace the component's HTML element with a different tag, or compose it with another component.
    *

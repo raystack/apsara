@@ -80,12 +80,12 @@ describe('OTPField', () => {
 
     it('updates with controlled value', () => {
       const { rerender } = render(
-        <BasicOTPField length={4} value='12' onValueChange={() => {}} />
+        <BasicOTPField length={4} value='12' onValueChange={vi.fn()} />
       );
       expect(screen.getByTestId('slot-0')).toHaveValue('1');
 
       rerender(
-        <BasicOTPField length={4} value='1234' onValueChange={() => {}} />
+        <BasicOTPField length={4} value='1234' onValueChange={vi.fn()} />
       );
       expect(screen.getByTestId('slot-3')).toHaveValue('4');
     });

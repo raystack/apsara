@@ -1,26 +1,21 @@
 import type { FilterFn } from '@tanstack/table-core';
-import dayjs from 'dayjs';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
+import { dateFilterFns, toDayKey } from '~/shared/date-filters';
 import {
   DataTableFilterOperatorTypes,
   DateFilterOperatorType,
   EmptyFilterValue,
+  FilterDataType,
   FilterOperatorTypes,
   FilterType,
   FilterTypes,
   FilterValue,
-  FilterValueType,
   MultiSelectFilterOperatorType,
   NumberFilterOperatorType,
   SelectFilterOperatorType,
   StringFilterOperatorType
 } from '~/types/filters';
 import { DataTableFilterValues } from '../data-table.types';
-
-dayjs.extend(isSameOrAfter);
-dayjs.extend(isSameOrBefore);
 
 export type FilterPrimitive = string | string[] | number | boolean | Date;
 
@@ -82,44 +77,7 @@ export const filterOperationsMap: FilterFunctionsMap = {
       return columnValue.endsWith(filterStr);
     }
   },
-  date: {
-    eq: (row, columnId, filterValue: FilterValue, _addMeta) => {
-      return dayjs(row.getValue(columnId)).isSame(
-        dayjs(filterValue.date),
-        'day'
-      );
-    },
-    neq: (row, columnId, filterValue: FilterValue, _addMeta) => {
-      return !dayjs(row.getValue(columnId)).isSame(
-        dayjs(filterValue.date),
-        'day'
-      );
-    },
-    lt: (row, columnId, filterValue: FilterValue, _addMeta) => {
-      return dayjs(row.getValue(columnId)).isBefore(
-        dayjs(filterValue.date),
-        'day'
-      );
-    },
-    lte: (row, columnId, filterValue: FilterValue, _addMeta) => {
-      return dayjs(row.getValue(columnId)).isSameOrBefore(
-        dayjs(filterValue.date),
-        'day'
-      );
-    },
-    gt: (row, columnId, filterValue: FilterValue, _addMeta) => {
-      return dayjs(row.getValue(columnId)).isAfter(
-        dayjs(filterValue.date),
-        'day'
-      );
-    },
-    gte: (row, columnId, filterValue: FilterValue, _addMeta) => {
-      return dayjs(row.getValue(columnId)).isSameOrAfter(
-        dayjs(filterValue.date),
-        'day'
-      );
-    }
-  },
+  date: dateFilterFns,
   select: {
     eq: (row, columnId, filterValue: FilterValue, _addMeta) => {
       if (String(filterValue.value) === EmptyFilterValue) {
@@ -169,19 +127,8 @@ const handleStringBasedTypes = (
 ): DataTableFilterValues => {
   switch (filterType) {
     case FilterType.date: {
-      const dateValue = dayjs(value as string | Date);
-      let stringValue = '';
-      if (dateValue.isValid()) {
-        try {
-          stringValue = dateValue.toISOString();
-        } catch {
-          stringValue = '';
-        }
-      }
-      return {
-        value,
-        stringValue
-      };
+      const day = toDayKey(value);
+      return { value, stringValue: day ?? '' };
     }
     case FilterType.select:
       return {
@@ -259,7 +206,7 @@ export const getFilterValue = ({
   operator
 }: {
   value: FilterPrimitive;
-  dataType?: FilterValueType;
+  dataType?: FilterDataType;
   filterType?: FilterTypes;
   operator?: FilterOperatorTypes | DataTableFilterOperatorTypes;
 }): DataTableFilterValues => {
@@ -278,9 +225,9 @@ export const getDataType = ({
   filterType = FilterType.string,
   dataType = 'string'
 }: {
-  dataType?: FilterValueType;
+  dataType?: FilterDataType;
   filterType?: FilterTypes;
-}): FilterValueType => {
+}): FilterDataType => {
   switch (filterType) {
     case FilterType.multiselect:
     case FilterType.select:

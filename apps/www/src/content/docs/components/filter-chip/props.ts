@@ -1,11 +1,14 @@
+import { CalendarPreviewInputProps } from '../calendar-preview/props';
+import { PopoverContentProps } from '../popover/props';
+
 export interface FilterChipProps {
   /** Text label for the filter (required) */
   label: string;
 
-  /** Current value of the filter. `multiselect` takes a `string[]`; `date`
+  /** Current value of the filter. `multiselect` takes an array; `date`
    * takes a `Date` (a string or epoch number is parsed for you); `number`
    * shows a value that is not a number as empty. */
-  value?: string | string[] | number | Date;
+  value?: string | number | boolean | Array<string | number | boolean> | Date;
 
   /** Type of input for the filter
    * @default "string"
@@ -18,18 +21,19 @@ export interface FilterChipProps {
   variant?: 'default' | 'text';
 
   /** Array of options for the select and multiselect type inputs */
-  options?: { label: string; value: string }[];
+  options?: { label: string; value: string | number | boolean }[];
 
   /** Optional array of operations for the type of filter operation */
   operations?: { label: string; value: string }[];
 
   /** Callback when the filter value changes; receives the value and the active
-   * operation. For `number`, non-numeric input is rejected and never reported,
-   * and the value arrives as a `number`, except for the intermediate states
-   * `""`, `"-"`, `"."` and `"-."`, which are reported as-is so the field
-   * stays editable. */
+   * operation. For `select` and `multiselect`, the value is the picked
+   * option's `value`, with its type kept. For `number`, non-numeric input is
+   * rejected and never reported, and the value arrives as a `number`, except
+   * for the intermediate states `""`, `"-"`, `"."` and `"-."`, which are
+   * reported as-is so the field stays editable. */
   onValueChange?: (
-    value: string | string[] | number | Date,
+    value: string | number | boolean | Array<string | number | boolean> | Date,
     operation: string
   ) => void;
 
@@ -51,16 +55,30 @@ export interface FilterChipProps {
     defaultSearchValue?: string;
   };
 
-  /** Props forwarded to the underlying DatePicker for `columnType="date"`. Refer to DatePicker for full props list. `dateFormat` defaults to `"DD MMM YYYY"`. */
+  /** Props for the date control at `columnType="date"`. `timeZone` through `today` are CalendarPreview props. */
   calendarProps?: {
-    dateFormat?: string;
-    showCalendarIcon?: boolean;
+    /** Formats the selected date for the input. The chip calls it with a `Date` and the `timeZone`. */
+    formatValue?: (date: Date, timeZone?: string) => string;
+    /** The zone the calendar reads days in. DataView and DataTable filter in the viewer's zone, so a different zone can shift the filter day. */
     timeZone?: string;
+    minDate?: Date;
+    maxDate?: Date;
+    isDateUnavailable?: (date: Date) => boolean;
+    yearRange?: { from: number; to: number };
+    defaultMonth?: Date;
+    today?: Date;
+    /** Props for the date input (`CalendarPreview.Input`) and its popup (`CalendarPreview.Content`). `input.disabled` and `input.readOnly` also apply to the calendar. */
     slotProps?: {
-      input?: Record<string, unknown>;
-      calendar?: Record<string, unknown>;
-      popover?: Record<string, unknown>;
+      input?: Omit<CalendarPreviewInputProps, 'field'>;
+      popover?: Omit<PopoverContentProps, 'children'>;
     };
+    /**
+     * Shows the calendar icon in the date input.
+     * @default false
+     */
+    showCalendarIcon?: boolean;
+    /** Called with a message when the typed date is invalid, and with `undefined` when it is valid again. */
+    onErrorChange?: (error: string | undefined) => void;
   };
 
   /** Additional CSS class names */

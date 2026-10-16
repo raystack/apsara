@@ -43,7 +43,7 @@
  * resize pressure so `text-overflow` ellipsizes with padding intact;
  * `min-width` keeps an empty value clickable, `max-width` caps a runaway one. */
 .chip [data-slot="input"],
-.chip [data-slot="date-picker-input"] {
+.chip [data-slot="calendar-preview-input"] {
   border: none;
   box-shadow: none;
   background: transparent;
@@ -212,13 +212,12 @@ button.selectValue:hover {
   box-shadow: none;
 }
 
-/* match height of the DatePicker when FilterChip variant is text */
 .chip[data-variant="text"] .dateField {
   height: var(--rs-space-7);
   min-height: var(--rs-space-7);
 }
 
-.dateField [data-slot="date-picker-input"] {
+.dateField [data-slot="calendar-preview-input"] {
   text-align: left;
   padding-left: var(--rs-space-3);
   padding-right: var(--rs-space-3);

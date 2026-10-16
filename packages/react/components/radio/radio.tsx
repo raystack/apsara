@@ -31,24 +31,24 @@ const radioVariants = cva(styles.radioitem, {
   }
 });
 
-interface RadioGroupProps
-  extends RadioGroupPrimitive.Props,
+export interface RadioGroupProps<Value = string>
+  extends RadioGroupPrimitive.Props<Value>,
     Omit<VariantProps<typeof radioGroupVariants>, 'orientation'> {
   orientation?: 'vertical' | 'horizontal';
 }
 
-function RadioGroup({
+function RadioGroup<Value = string>({
   className,
   orientation = 'vertical',
   size,
   required,
   ...props
-}: RadioGroupProps) {
+}: RadioGroupProps<Value>) {
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
 
   return (
-    <RadioGroupPrimitive
+    <RadioGroupPrimitive<Value>
       aria-orientation={orientation}
       className={radioGroupVariants({ orientation, size, className })}
       required={resolvedRequired}
@@ -60,7 +60,7 @@ function RadioGroup({
 
 RadioGroup.displayName = 'Radio.Group';
 
-interface RadioItemProps
+export interface RadioItemProps
   extends RadioPrimitive.Root.Props,
     VariantProps<typeof radioVariants> {}
 

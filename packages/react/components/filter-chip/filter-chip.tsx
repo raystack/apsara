@@ -1,18 +1,32 @@
 'use client';
 
-import { cva, VariantProps } from 'class-variance-authority';
-import dayjs from 'dayjs';
-import { ComponentProps, ReactElement, useCallback, useState } from 'react';
+import { TZDate } from '@date-fns/tz';
+import { cva, cx, VariantProps } from 'class-variance-authority';
+import { parseISO } from 'date-fns';
+import {
+  ComponentProps,
+  ReactElement,
+  useCallback,
+  useMemo,
+  useState
+} from 'react';
+import {
+  CalendarPreview,
+  type CalendarPreviewContentProps,
+  type CalendarPreviewInputProps,
+  type CalendarPreviewProps
+} from '~/components/calendar-preview';
 import { XIcon } from '~/icons';
+import { toInstant } from '~/shared/date-filters';
 import {
   FilterOperation,
   FilterOperator,
   FilterSelectOption,
   FilterType,
   FilterTypes,
+  FilterValueType,
   filterOperators
 } from '~/types/filters';
-import { DatePicker, type DatePickerProps } from '../calendar';
 import { Flex } from '../flex';
 import { Input } from '../input';
 import { Select } from '../select';
@@ -33,35 +47,51 @@ const chip = cva(styles.chip, {
   }
 });
 
-export type FilterChipValue = string | string[] | number | Date;
+export type FilterChipValue = FilterValueType | FilterValueType[] | Date;
 
-/**
- * Coerce a `FilterChipValue` to the `Date` the DatePicker expects, since filter
- * state hydrated from a serialized query arrives as a string or epoch number.
- * Unparseable values leave the field unselected.
- */
-const toDateValue = (value: unknown): Date | undefined => {
-  if (value instanceof Date) return value;
-  if (typeof value === 'string' || typeof value === 'number') {
-    const parsed = dayjs(value);
-    return parsed.isValid() ? parsed.toDate() : undefined;
-  }
-  return undefined;
+/* The message `DatePicker` reports, so `onErrorChange` reads the same. */
+const INVALID_DATE = 'Invalid date';
+
+/* A year the calendar cannot show leaves the field empty. */
+const toDateValue = (value: unknown, timeZone?: string): Date | undefined => {
+  const date = toInstant(value);
+  if (!date) return undefined;
+  const year = (timeZone ? new TZDate(date, timeZone) : date).getFullYear();
+  return year >= 1 && year <= 9999 ? date : undefined;
 };
 
 /** Checked on change, not keydown, so paste and IME input are covered. */
 const PARTIAL_NUMBER = /^-?\d*\.?\d*$/;
 
 /**
- * Subset of `DatePickerProps` that consumers may forward to the chip's
- * built-in DatePicker via `calendarProps`. `value`/`onSelect`/`defaultValue`
- * are owned by `FilterChip`; `children` would replace the input trigger and
- * break the chip layout.
+ * The `CalendarPreview` props that consumers may forward to the chip's
+ * calendar via `calendarProps`. `FilterChip` owns the value and the parts.
  */
-export type FilterChipCalendarProps = Omit<
-  DatePickerProps,
-  'value' | 'onSelect' | 'defaultValue' | 'children'
->;
+export type FilterChipCalendarProps = Pick<
+  CalendarPreviewProps,
+  | 'timeZone'
+  | 'minDate'
+  | 'maxDate'
+  | 'isDateUnavailable'
+  | 'yearRange'
+  | 'defaultMonth'
+  | 'today'
+> & {
+  /** Formats the selected date for the input. */
+  formatValue?: (date: Date, timeZone?: string) => string;
+  /** Props for the chip's date input and its popup. */
+  slotProps?: {
+    input?: Omit<CalendarPreviewInputProps, 'field'>;
+    popover?: Omit<CalendarPreviewContentProps, 'children'>;
+  };
+  /**
+   * Shows the calendar icon in the date input.
+   * @default false
+   */
+  showCalendarIcon?: boolean;
+  /** Called with a message when the typed date is invalid, and with `undefined` when it is valid again. */
+  onErrorChange?: (error: string | undefined) => void;
+};
 
 export interface FilterChipProps
   extends ComponentProps<'div'>,
@@ -76,18 +106,14 @@ export interface FilterChipProps
   leadingIcon?: ReactElement;
   operations?: FilterOperator<string>[];
   selectProps?: BaseSelectProps;
-  /**
-   * Props forwarded to the underlying `DatePicker` for `columnType="date"`.
-   * `value`/`onSelect`/`defaultValue` are owned by `FilterChip` and excluded;
-   * `children` is excluded so the chip's input trigger isn't replaced.
-   */
+  /** Props forwarded to the `CalendarPreview` for `columnType="date"`. */
   calendarProps?: FilterChipCalendarProps;
 }
 
 /**
  * A compact, removable filter pill that pairs a label and operator with a
  * value control chosen by `columnType`: a `Select` (`select`/`multiselect`),
- * a `DatePicker` (`date`), or a text `Input` (`string`/`number`). The value
+ * a `CalendarPreview` (`date`), or a text `Input` (`string`/`number`). The value
  * control sizes to its content so the chip hugs the active filter. Emits
  * `onValueChange`/`onOperationChange` and renders a remove button when
  * `onRemove` is provided.
@@ -120,7 +146,7 @@ export const FilterChip = ({
   // `??` not `||`, since a falsy option value like `0` is a real selection.
   // For `number`, the value is shown without an exponent (`1e-7`), and a
   // non-numeric value starts empty, since the regex would reject every edit.
-  const [filterValue, setFilterValue] = useState<any>(() => {
+  const [filterValue, setFilterValue] = useState<FilterChipValue>(() => {
     if (!isNumberColumn) return value ?? '';
     const text =
       typeof value === 'number'
@@ -132,8 +158,28 @@ export const FilterChip = ({
     return PARTIAL_NUMBER.test(text) ? text : '';
   });
 
+  const [dateOpen, setDateOpen] = useState(false);
+  const {
+    formatValue: formatDate,
+    slotProps: dateSlotProps,
+    showCalendarIcon = false,
+    onErrorChange,
+    ...calendarRest
+  } = calendarProps ?? {};
+  const { classNames: inputClassNames, ...inputProps } =
+    dateSlotProps?.input ?? {};
+  /* A new `Date` each render reads as a new value, and the input drops its typed text. */
+  const dateValue = useMemo(
+    () => toDateValue(filterValue, calendarRest.timeZone) ?? null,
+    [filterValue, calendarRest.timeZone]
+  );
+
   const showOnRemove = typeof onRemove === 'function';
   const isMultiSelectColumn = columnType === FilterType.multiselect;
+  const selectedValues = useMemo(
+    () => (Array.isArray(filterValue) ? filterValue.map(String) : []),
+    [filterValue]
+  );
 
   const handleOperationChange = useCallback(
     (operation: FilterOperation) => {
@@ -144,11 +190,23 @@ export const FilterChip = ({
   );
 
   const handleFilterValueChange = useCallback(
-    (value: any) => {
+    (value: FilterChipValue) => {
       setFilterValue(value);
       onValueChange?.(value, operation?.value ?? '');
     },
     [operation, onValueChange]
+  );
+
+  // Select works on strings, so map each pick back to its option's value.
+  const handleSelectValueChange = useCallback(
+    (picked: string | string[]) => {
+      const toOption = (v: string) =>
+        options.find(o => String(o.value) === v)?.value ?? v;
+      handleFilterValueChange(
+        Array.isArray(picked) ? picked.map(toOption) : toOption(picked)
+      );
+    },
+    [options, handleFilterValueChange]
   );
 
   const handleTextInputChange = useCallback(
@@ -175,9 +233,10 @@ export const FilterChip = ({
       case FilterType.select:
         return (
           <Select
-            value={isMultiSelectColumn ? filterValue : filterValue.toString()}
-            onValueChange={handleFilterValueChange}
-            multiple={isMultiSelectColumn}
+            {...(isMultiSelectColumn
+              ? { multiple: true, value: selectedValues }
+              : { multiple: false, value: filterValue.toString() })}
+            onValueChange={handleSelectValueChange}
             {...selectProps}
           >
             <Select.Trigger
@@ -191,8 +250,8 @@ export const FilterChip = ({
               data-slot='filter-chip-value'
             >
               <Select.Value placeholder='Select value'>
-                {isMultiSelectColumn && filterValue.length > 1
-                  ? `${filterValue.length} selected`
+                {isMultiSelectColumn && selectedValues.length > 1
+                  ? `${selectedValues.length} selected`
                   : undefined}
               </Select.Value>
             </Select.Trigger>
@@ -214,19 +273,52 @@ export const FilterChip = ({
             className={styles.dateFieldWrapper}
             data-slot='filter-chip-value'
           >
-            <DatePicker
-              showCalendarIcon={false}
-              {...calendarProps}
-              value={toDateValue(filterValue)}
-              onSelect={date => handleFilterValueChange(date)}
-              slotProps={{
-                ...calendarProps?.slotProps,
-                input: {
-                  classNames: { container: styles.dateField },
-                  ...calendarProps?.slotProps?.input
-                }
+            <CalendarPreview
+              {...calendarRest}
+              formatValue={
+                formatDate &&
+                ((date, _scale, timeZone) =>
+                  formatDate(
+                    date instanceof Date ? date : parseISO(date.date),
+                    timeZone
+                  ))
+              }
+              disabled={inputProps.disabled}
+              readOnly={inputProps.readOnly}
+              value={dateValue}
+              onValueChange={date => {
+                handleFilterValueChange(date ?? '');
+                if (date) setDateOpen(false);
               }}
-            />
+              open={dateOpen}
+              onOpenChange={setDateOpen}
+            >
+              <CalendarPreview.Trigger>
+                <CalendarPreview.Input
+                  trailingIcon={showCalendarIcon ? undefined : null}
+                  {...inputProps}
+                  classNames={{
+                    ...inputClassNames,
+                    container: cx(styles.dateField, inputClassNames?.container)
+                  }}
+                  errorMessages={{
+                    unparseable: INVALID_DATE,
+                    'out-of-bounds': INVALID_DATE,
+                    unavailable: INVALID_DATE,
+                    ...inputProps.errorMessages
+                  }}
+                  onValidityChange={validity => {
+                    inputProps.onValidityChange?.(validity);
+                    onErrorChange?.(
+                      validity.valid ? undefined : validity.message
+                    );
+                  }}
+                />
+              </CalendarPreview.Trigger>
+              <CalendarPreview.Content {...dateSlotProps?.popover}>
+                <CalendarPreview.Days />
+              </CalendarPreview.Content>
+            </CalendarPreview>
           </div>
         );
       default:
@@ -238,7 +330,7 @@ export const FilterChip = ({
             <Input
               variant={variant === 'text' ? 'borderless' : 'default'}
               classNames={{ container: styles.inputField }}
-              value={filterValue}
+              value={filterValue.toString()}
               onChange={e => handleTextInputChange(e.target.value)}
             />
           </div>
@@ -281,7 +373,7 @@ export const FilterChip = ({
         label={label}
         value={operation}
         onChange={handleOperationChange}
-        showAlternateLabel={isMultiSelectColumn && filterValue.length <= 1}
+        showAlternateLabel={isMultiSelectColumn && selectedValues.length <= 1}
       />
       {renderValueInput()}
       {showOnRemove && (

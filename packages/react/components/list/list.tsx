@@ -10,25 +10,25 @@ const value = cva(styles.value);
 const header = cva(styles.header);
 const headerText = cva(styles['header-text']);
 
-interface ListRootProps
+export interface ListRootProps
   extends ComponentProps<'ul'>,
     VariantProps<typeof list> {
   children: ReactNode;
 }
 
-interface ListItemProps extends ComponentProps<'li'> {
+export interface ListItemProps extends ComponentProps<'li'> {
   children: ReactNode;
 }
 
-interface ListLabelProps extends ComponentProps<'span'> {
+export interface ListLabelProps extends ComponentProps<'span'> {
   children: ReactNode;
 }
 
-interface ListValueProps extends ComponentProps<'span'> {
+export interface ListValueProps extends ComponentProps<'span'> {
   children: ReactNode;
 }
 
-interface ListHeaderProps extends ComponentProps<'div'> {
+export interface ListHeaderProps extends ComponentProps<'div'> {
   children: ReactNode;
   /**
    * Heading level set as `aria-level` on the underlying heading.
