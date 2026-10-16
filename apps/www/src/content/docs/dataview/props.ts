@@ -132,7 +132,7 @@ export interface DataViewField {
   dataType?: 'string' | 'number' | 'boolean';
 
   /**
-   * Value a new filter on this field starts with.
+   * Value a new filter on this field starts with. `null` uses the default.
    * @defaultValue today for `date`, the first option for `select`, otherwise `""`
    */
   defaultFilterValue?:
