@@ -36,7 +36,7 @@ function cellsFor(scale: Scale, year: number): Cell[] {
     );
   } else if (scale === 'quarter') {
     cells = [0, 1, 2, 3].map(q => at(`${year}-q${q}`, `Q${q + 1}`, q * 3 + 1));
-  } else if (scale === 'halfYear') {
+  } else if (scale === 'half-year') {
     cells = [0, 1].map(h => at(`${year}-h${h}`, `H${h + 1}`, h * 6 + 1));
   } else {
     cells = [at(`${year}`, String(year), 1)];
@@ -217,7 +217,7 @@ export function CalendarPreviewHalfYears(
   return (
     <PeriodView
       {...props}
-      scale='halfYear'
+      scale='half-year'
       columns={2}
       slot='calendar-preview-half-years'
     />

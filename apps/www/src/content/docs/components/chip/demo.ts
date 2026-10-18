@@ -14,7 +14,7 @@ export const playground = {
   controls: {
     variant: {
       type: 'select',
-      options: ['outline', 'filled'],
+      options: ['outline', 'solid'],
       defaultValue: 'outline'
     },
     size: {
@@ -46,7 +46,7 @@ export const variantsDemo = {
   code: `
   <Flex gap={9}>
     <Chip variant="outline">Outline</Chip>
-    <Chip variant="filled">Filled</Chip>
+    <Chip variant="solid">Solid</Chip>
   </Flex>`
 };
 
@@ -71,11 +71,11 @@ export const colorDemo = {
       <Chip color="warning" variant="outline">Warning</Chip>
     </Flex>
     <Flex gap={9}>
-      <Chip color="neutral" variant="filled">Neutral</Chip>
-      <Chip color="accent" variant="filled">Accent</Chip>
-      <Chip color="danger" variant="filled">Danger</Chip>
-      <Chip color="success" variant="filled">Success</Chip>
-      <Chip color="warning" variant="filled">Warning</Chip>
+      <Chip color="neutral" variant="solid">Neutral</Chip>
+      <Chip color="accent" variant="solid">Accent</Chip>
+      <Chip color="danger" variant="solid">Danger</Chip>
+      <Chip color="success" variant="solid">Success</Chip>
+      <Chip color="warning" variant="solid">Warning</Chip>
     </Flex>
   </Flex>`
 };
@@ -86,7 +86,7 @@ export const dismissableDemo = {
   <Flex gap={9}>
     <Chip isDismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
     <Chip variant="outline" color="accent" isDismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
-    <Chip variant="filled" color="accent" isDismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
+    <Chip variant="solid" color="accent" isDismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
   </Flex>`
 };
 
@@ -98,7 +98,7 @@ export const iconsDemo = {
       code: `
       <div style={{ display: 'flex', gap: '10px' }}>
         <Chip leadingIcon={'O'}>Add Item</Chip>
-        <Chip variant="filled" leadingIcon={'O'} data-state="active">Selected</Chip>
+        <Chip variant="solid" leadingIcon={'O'} data-state="active">Selected</Chip>
       </div>`
     },
     {
@@ -106,7 +106,7 @@ export const iconsDemo = {
       code: `
       <div style={{ display: 'flex', gap: '10px' }}>
         <Chip trailingIcon={'O'}>Next</Chip>
-        <Chip variant="filled" trailingIcon={'O'}>Open</Chip>
+        <Chip variant="solid" trailingIcon={'O'}>Open</Chip>
       </div>`
     },
     {
@@ -114,7 +114,7 @@ export const iconsDemo = {
       code: `
       <div style={{ display: 'flex', gap: '10px' }}>
         <Chip leadingIcon={'O'} trailingIcon={'O'}>Download</Chip>
-        <Chip variant="filled" leadingIcon={'O'} trailingIcon={'O'}>Edit Profile</Chip>
+        <Chip variant="solid" leadingIcon={'O'} trailingIcon={'O'}>Edit Profile</Chip>
       </div>`
     }
   ]

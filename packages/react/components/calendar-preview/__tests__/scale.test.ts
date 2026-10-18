@@ -15,7 +15,7 @@ const TRAILING = true;
 
 describe('SCALES / isScale', () => {
   it('lists the five scales finest first', () => {
-    expect(SCALES).toEqual(['day', 'month', 'quarter', 'halfYear', 'year']);
+    expect(SCALES).toEqual(['day', 'month', 'quarter', 'half-year', 'year']);
   });
 
   it.each(SCALES)('accepts %s', scale => {
@@ -60,7 +60,7 @@ describe('periodOf', () => {
     ['2026-07-01', { start: '2026-07-01', end: '2026-12-31' }],
     ['2026-12-31', { start: '2026-07-01', end: '2026-12-31' }]
   ])('splits the half-year at 30 June for %s', (day, expected) => {
-    expect(periodOf(day, 'halfYear')).toEqual(expected);
+    expect(periodOf(day, 'half-year')).toEqual(expected);
   });
 
   it.each([
@@ -112,7 +112,7 @@ describe('periodOf — leap years and month ends', () => {
   });
 
   it('keeps the half-year and year edges fixed across a leap year', () => {
-    expect(periodOf('2028-02-29', 'halfYear')).toEqual({
+    expect(periodOf('2028-02-29', 'half-year')).toEqual({
       start: '2028-01-01',
       end: '2028-06-30'
     });
@@ -140,14 +140,14 @@ describe('convertScale — every direction', () => {
     day: '2026-08-15',
     month: '2026-08-01',
     quarter: '2026-07-01',
-    halfYear: '2026-07-01',
+    'half-year': '2026-07-01',
     year: '2026-01-01'
   };
   const trailing: Record<Scale, string> = {
     day: '2026-08-15',
     month: '2026-08-31',
     quarter: '2026-09-30',
-    halfYear: '2026-12-31',
+    'half-year': '2026-12-31',
     year: '2026-12-31'
   };
 
@@ -194,9 +194,9 @@ describe('convertScale — every direction', () => {
       date: '2026-12-31',
       scale: 'quarter'
     });
-    expect(convertScale(december, 'halfYear', LEADING)).toEqual({
+    expect(convertScale(december, 'half-year', LEADING)).toEqual({
       date: '2026-07-01',
-      scale: 'halfYear'
+      scale: 'half-year'
     });
   });
 
@@ -268,8 +268,8 @@ describe('isAvailable', () => {
     const trailing = TRAILING;
 
     it('disables H1 2026, which emits 30 June', () => {
-      expect(periodOf('2026-01-01', 'halfYear').end).toBe('2026-06-30');
-      expect(isAvailable('2026-01-01', 'halfYear', { trailing, min })).toBe(
+      expect(periodOf('2026-01-01', 'half-year').end).toBe('2026-06-30');
+      expect(isAvailable('2026-01-01', 'half-year', { trailing, min })).toBe(
         false
       );
     });
@@ -292,7 +292,7 @@ describe('isAvailable', () => {
 
     it('tests the produced date, not the period start', () => {
       for (const [day, scale] of [
-        ['2026-01-01', 'halfYear'],
+        ['2026-01-01', 'half-year'],
         ['2026-07-01', 'month'],
         ['2026-07-01', 'quarter']
       ] as const) {
@@ -304,7 +304,7 @@ describe('isAvailable', () => {
   it('agrees with the period-start rule whenever trailing is false', () => {
     const min = '2026-07-15';
     for (const [day, scale] of [
-      ['2026-01-01', 'halfYear'],
+      ['2026-01-01', 'half-year'],
       ['2026-07-01', 'month'],
       ['2026-07-01', 'quarter'],
       ['2026-08-01', 'month']

@@ -17,6 +17,11 @@ const grid = cva(styles.grid, {
   }
 });
 
+const toCssAlignment = (value?: AlignExtendedType) =>
+  value === 'between' || value === 'around' || value === 'evenly'
+    ? `space-${value}`
+    : value;
+
 export type GridProps = useRender.ComponentProps<'div'> &
   VariantProps<typeof grid> & {
     /**
@@ -53,8 +58,8 @@ export type GridProps = useRender.ComponentProps<'div'> &
      */
     rows?: string | number;
     justifyItems?: AlignType;
-    alignItems?: AlignType;
-    justifyContent?: AlignExtendedType;
+    align?: AlignType;
+    justify?: AlignExtendedType;
     alignContent?: AlignExtendedType;
     inline?: boolean;
   };
@@ -70,8 +75,8 @@ export function Grid({
   columnGap,
   rowGap,
   justifyItems,
-  alignItems,
-  justifyContent,
+  align,
+  justify,
   alignContent,
   inline = false,
   className,
@@ -103,9 +108,9 @@ export function Grid({
     gridTemplateColumns,
     gridTemplateRows,
     justifyItems,
-    alignItems,
-    justifyContent,
-    alignContent,
+    alignItems: align,
+    justifyContent: toCssAlignment(justify),
+    alignContent: toCssAlignment(alignContent),
     ...style
   };
 

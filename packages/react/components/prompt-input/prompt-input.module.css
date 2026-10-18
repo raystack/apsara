@@ -41,8 +41,8 @@
   display: none;
 }
 
-/* The textarea is borderless inside the composer frame; the frame itself
-   carries the focus treatment, so suppress the field's own focus ring. */
+/* The textarea uses the `text` variant inside the composer frame; the frame
+   itself carries the focus treatment, so suppress the field's own focus ring. */
 .root .textarea:focus-visible:not(:disabled) {
   box-shadow: none;
 }

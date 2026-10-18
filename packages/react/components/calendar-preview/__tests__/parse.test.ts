@@ -110,18 +110,18 @@ describe('parseScaleInput — half-year', () => {
   ])('reads %s at both edges', (input, leading, trailing) => {
     expect(parseScaleInput(input, IN_2026)).toEqual({
       date: leading,
-      scale: 'halfYear'
+      scale: 'half-year'
     });
     expect(parseScaleInput(input, { ...IN_2026, trailing: true })).toEqual({
       date: trailing,
-      scale: 'halfYear'
+      scale: 'half-year'
     });
   });
 
   it('is case-insensitive', () => {
     expect(parseScaleInput('h2 2026', IN_2026)).toEqual({
       date: '2026-07-01',
-      scale: 'halfYear'
+      scale: 'half-year'
     });
   });
 });
@@ -146,8 +146,8 @@ describe('parseScaleInput — year inference for a bare period', () => {
   it.each([
     ['Q4', { date: '2026-10-01', scale: 'quarter' }],
     ['Q1', { date: '2026-01-01', scale: 'quarter' }],
-    ['H1', { date: '2026-01-01', scale: 'halfYear' }],
-    ['H2', { date: '2026-07-01', scale: 'halfYear' }],
+    ['H1', { date: '2026-01-01', scale: 'half-year' }],
+    ['H2', { date: '2026-07-01', scale: 'half-year' }],
     ['May', { date: '2026-05-01', scale: 'month' }],
     ['Dec', { date: '2026-12-01', scale: 'month' }]
   ])('resolves %s into the reference year', (input, expected) => {
@@ -242,7 +242,7 @@ describe('parseScaleInput reads what defaultFormatValue displays', () => {
     { date: '2026-08-15', scale: 'day' },
     { date: '2026-08-01', scale: 'month' },
     { date: '2026-07-01', scale: 'quarter' },
-    { date: '2026-07-01', scale: 'halfYear' },
+    { date: '2026-07-01', scale: 'half-year' },
     { date: '2026-01-01', scale: 'year' }
   ] as const)('round-trips $scale', value => {
     expect(parseScaleInput(defaultFormatValue(value, value.scale))).toEqual(

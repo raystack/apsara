@@ -181,14 +181,14 @@ describe('Search', () => {
   });
 
   describe('Variants', () => {
-    it('defaults to default variant', () => {
+    it('defaults to outline variant', () => {
       render(<Search />);
       const input = screen.getByRole('searchbox');
       expect(input).toBeInTheDocument();
     });
 
-    it('renders borderless variant', () => {
-      render(<Search variant='borderless' />);
+    it('renders text variant', () => {
+      render(<Search variant='text' />);
       const input = screen.getByRole('searchbox');
       expect(input).toBeInTheDocument();
     });

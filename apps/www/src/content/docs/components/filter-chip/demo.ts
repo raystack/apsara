@@ -29,8 +29,8 @@ export const playground = {
     },
     variant: {
       type: 'select',
-      options: ['default', 'text'],
-      defaultValue: 'default'
+      options: ['outline', 'text'],
+      defaultValue: 'outline'
     },
     label: {
       type: 'text',
