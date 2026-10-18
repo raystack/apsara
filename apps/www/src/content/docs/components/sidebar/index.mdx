@@ -6,7 +6,7 @@ source: packages/react/components/sidebar
 
 import {
   preview,
-  positionDemo,
+  sideDemo,
   variantDemo,
   collapsibleGroupDemo,
   controlledGroupDemo,
@@ -50,11 +50,11 @@ import { Sidebar } from "@raystack/apsara";
 
 Most of a sidebar's behaviour is about collapsing: what it looks like collapsed, who controls it, and how the user gets it back.
 
-### Position
+### Side
 
-`left` (the default) or `right`. Put it on the right only when the main content is the thing people arrive for and navigation is secondary.
+Set `side` to `left` (the default) or `right`. Put it on the right only when the main content is the thing people arrive for and navigation is secondary.
 
-<Demo data={positionDemo} />
+<Demo data={sideDemo} />
 
 ### Variants
 
@@ -266,7 +266,8 @@ It returns:
 - `open`: `true` when the sidebar is expanded
 - `setOpen(open)`: expand or collapse the sidebar
 - `collapsible`: mirrors the `collapsible` prop: `"icon"`, `"hidden"`, or `"none"` (`"none"` means it cannot be collapsed)
-- `position`: `"left"` or `"right"`
+- `side`: `"left"` or `"right"`
+- `position`: deprecated alias of `side`
 - `hideItemTooltips`: whether the tooltips the Sidebar adds to items are disabled
 
 ```tsx
@@ -313,7 +314,7 @@ The Sidebar implements the following accessibility features:
 
 - Truncation handling
   - Long item and group labels truncate with an ellipsis
-  - Items whose label is clipped show the full text in a tooltip on hover or focus (positioned away from the sidebar's edge based on `position`; disable with `hideItemTooltips`)
+  - Items whose label is clipped show the full text in a tooltip on hover or focus (positioned away from the sidebar's edge based on `side`; disable with `hideItemTooltips`)
 
 - Keyboard navigation support
 

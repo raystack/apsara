@@ -66,13 +66,13 @@ export const preview = {
   style: styleDemo
 };
 
-export const positionDemo = {
+export const sideDemo = {
   type: 'code',
   tabs: [
     {
       name: 'Left',
       code: sidebarLayout(`
-      <Sidebar open={true} position="left">
+      <Sidebar open={true} side="left">
           <Sidebar.Header>
             <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
@@ -97,7 +97,7 @@ export const positionDemo = {
     {
       name: 'Right',
       code: sidebarLayoutRight(`
-      <Sidebar open={true} position="right">
+      <Sidebar open={true} side="right">
           <Sidebar.Header>
             <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">

@@ -80,6 +80,30 @@ describe('Select', () => {
     });
   });
 
+  describe('Positioning', () => {
+    it.each([
+      false,
+      true
+    ])('forwards positioner props to the positioner (autocomplete: %s)', async autocomplete => {
+      render(
+        <Select autocomplete={autocomplete}>
+          <Select.Trigger>
+            <Select.Value placeholder={TRIGGER_TEXT} />
+          </Select.Trigger>
+          <Select.Content positionMethod='fixed'>
+            <Select.Item value='apple'>Apple</Select.Item>
+          </Select.Content>
+        </Select>
+      );
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+
+      expect(
+        document.querySelector('[data-slot="select-positioner"]')
+      ).toHaveStyle({ position: 'fixed' });
+    });
+  });
+
   describe('Single Selection', () => {
     it('displays selected value in trigger', async () => {
       render(<BasicSelect defaultValue='apple' />);

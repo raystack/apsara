@@ -7,6 +7,43 @@ One section per release, newest first, with only the changes that need action
 from you. The full record of every release, features and fixes included, is
 on [GitHub releases](https://github.com/raystack/apsara/releases).
 
+## Unreleased: Sidebar and Drawer use one `side`
+
+`Sidebar` names its edge with `side`, as other components do. `Drawer` takes
+`side` on the root only.
+
+### 1. Rename Sidebar `position` to `side`
+
+| Before | After |
+|---|---|
+| `<Sidebar position="right">` | `<Sidebar side="right">` |
+| `[data-position="right"]` on the sidebar element | `[data-side="right"]` |
+| `useSidebar().position` | `useSidebar().side` |
+
+The `position` prop and `useSidebar().position` still work, and are
+deprecated. The `data-position` attribute is gone, so update CSS that selects
+it.
+
+### 2. Remove `side` from `Drawer.Content`
+
+`Drawer.Content` reads `side` from `Drawer`. Delete `side` from
+`Drawer.Content`, and set it on `Drawer`.
+
+```tsx
+// Before
+<Drawer side="left">
+  <Drawer.Content side="left">...</Drawer.Content>
+</Drawer>
+
+// After
+<Drawer side="left">
+  <Drawer.Content>...</Drawer.Content>
+</Drawer>
+```
+
+If only `Drawer.Content` had `side`, the drawer now slides in from the right,
+the default of `Drawer`.
+
 ## Unreleased: date filters compare whole days
 
 `DataView`, `DataTable` and `FilterChip` read and compare dates as calendar
