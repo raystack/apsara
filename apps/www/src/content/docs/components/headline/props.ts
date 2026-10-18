@@ -21,10 +21,10 @@ export interface HeadlineProps {
     | ((props: React.ComponentPropsWithRef<'h2'>) => React.ReactElement);
 
   /**
-   * Text alignment.
-   * @default "left"
+   * Text alignment. `start` and `end` follow the text direction.
+   * @default "start"
    */
-  align?: 'left' | 'center' | 'right';
+  align?: 'start' | 'center' | 'end';
 
   /**
    * Enable text truncation with ellipsis.

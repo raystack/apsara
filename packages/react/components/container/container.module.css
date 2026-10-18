@@ -28,20 +28,19 @@
   max-width: 1145px;
 }
 
-/* Alignment variants */
-.container-align-left {
-  margin-left: 0;
-  margin-right: auto;
+.align-start {
+  margin-inline-start: 0;
+  margin-inline-end: auto;
 }
 
-.container-align-center {
-  margin-left: auto;
-  margin-right: auto;
+.align-center {
+  margin-inline-start: auto;
+  margin-inline-end: auto;
 }
 
-.container-align-right {
-  margin-left: auto;
-  margin-right: 0;
+.align-end {
+  margin-inline-start: auto;
+  margin-inline-end: 0;
 }
 
 @media (max-width: 480px) {

@@ -28,8 +28,8 @@ export const playground = {
     },
     align: {
       type: 'select',
-      options: ['left', 'center', 'right'],
-      defaultValue: 'left',
+      options: ['start', 'center', 'end'],
+      defaultValue: 'start',
       initialValue: 'center'
     },
     truncate: { type: 'checkbox', defaultValue: false },
@@ -42,9 +42,9 @@ export const alignDemo = {
   type: 'code',
   code: `
   <Flex direction="column" style={{width:"100%"}} gap={9}>
-    <Headline size="t2" align="left">Left Aligned</Headline>
+    <Headline size="t2" align="start">Start Aligned</Headline>
     <Headline size="t2" align="center">Center Aligned</Headline>
-    <Headline size="t2" align="right">Right Aligned</Headline>
+    <Headline size="t2" align="end">End Aligned</Headline>
   </Flex>`
 };
 export const truncateDemo = {

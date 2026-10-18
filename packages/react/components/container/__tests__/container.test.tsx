@@ -62,20 +62,20 @@ describe('Container', () => {
   });
 
   describe('Alignment', () => {
-    const alignments = ['left', 'center', 'right'] as const;
+    const alignments = ['start', 'center', 'end'] as const;
 
     it.each(alignments)('renders %s alignment correctly', align => {
       const { container: root } = render(
         <Container align={align}>Content</Container>
       );
       const container = root.firstChild as HTMLElement;
-      expect(container).toHaveClass(styles[`container-align-${align}`]);
+      expect(container).toHaveClass(styles[`align-${align}`]);
     });
 
     it('defaults to center alignment', () => {
       const { container: root } = render(<Container>Content</Container>);
       const container = root.firstChild as HTMLElement;
-      expect(container).toHaveClass(styles['container-align-center']);
+      expect(container).toHaveClass(styles['align-center']);
     });
   });
 

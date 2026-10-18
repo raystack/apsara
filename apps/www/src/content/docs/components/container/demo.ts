@@ -19,7 +19,7 @@ export const playground = {
     },
     align: {
       type: 'select',
-      options: ['left', 'center', 'right'],
+      options: ['start', 'center', 'end'],
       defaultValue: 'center'
     },
     children: {
@@ -35,9 +35,9 @@ export const alignDemo = {
   type: 'code',
   tabs: [
     {
-      name: 'Left Aligned',
+      name: 'Start Aligned',
       code: `
-      <Container size="small" align="left">
+      <Container size="small" align="start">
         <Text>
           Workspace settings control how members join, what they can access, and how billing works. Changes apply to everyone in your organization as soon as you save them.
         </Text>
@@ -53,9 +53,9 @@ export const alignDemo = {
       </Container>`
     },
     {
-      name: 'Right Aligned',
+      name: 'End Aligned',
       code: `
-      <Container size="small" align="right">
+      <Container size="small" align="end">
         <Text>
           Workspace settings control how members join, what they can access, and how billing works. Changes apply to everyone in your organization as soon as you save them.
         </Text>
