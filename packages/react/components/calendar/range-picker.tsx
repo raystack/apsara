@@ -21,14 +21,14 @@ import { usePickerPopover } from './use-picker-popover';
  */
 type RangePickerCalendarSlot = Omit<PropsBase, 'mode'> & CalendarPropsExtended;
 
-interface RangePickerSlotProps {
+export interface RangePickerSlotProps {
   startInput?: InputProps;
   endInput?: InputProps;
   calendar?: RangePickerCalendarSlot;
   popover?: PopoverContentProps;
 }
 
-interface RangePickerProps {
+export interface RangePickerProps {
   dateFormat?: string;
   /**
    * Props for each picker slot. When both this and the legacy

@@ -1,5 +1,7 @@
 export {
   Reasoning,
+  type ReasoningContentProps,
   type ReasoningProps,
-  type ReasoningStepProps
+  type ReasoningStepProps,
+  type ReasoningTriggerProps
 } from './reasoning';

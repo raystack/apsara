@@ -17,7 +17,7 @@ const grid = cva(styles.grid, {
   }
 });
 
-type GridProps = useRender.ComponentProps<'div'> &
+export type GridProps = useRender.ComponentProps<'div'> &
   VariantProps<typeof grid> & {
     /**
      * Supports CSS Grid template areas syntax.

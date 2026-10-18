@@ -13,7 +13,7 @@ export interface ComboboxInputProps
   > {}
 
 export const ComboboxInput = ({ ref, ...props }: ComboboxInputProps) => {
-  const { multiple, inputContainerRef, value, onValueChange } =
+  const { multiple, inputContainerRef, value, onValueChange, getLabel } =
     useComboboxContext();
   return (
     <ComboboxPrimitive.Input
@@ -24,7 +24,7 @@ export const ComboboxInput = ({ ref, ...props }: ComboboxInputProps) => {
           chips={
             multiple && Array.isArray(value)
               ? value.map(val => ({
-                  label: val,
+                  label: getLabel(val),
                   onRemove: () =>
                     onValueChange?.((value as string[])?.filter(v => v !== val))
                 }))

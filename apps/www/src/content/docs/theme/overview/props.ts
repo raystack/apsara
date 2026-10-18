@@ -108,7 +108,7 @@ export type ThemeProps = {
    */
   dir?: 'ltr' | 'rtl';
 
-  /** `asChild`-style escape hatch: merges the theme onto your own element. */
+  /** Renders the theme on your own element instead of a `div`. */
   render?: React.ReactElement | ((props: object) => React.ReactElement);
 
   /** Extra classes. `rs-theme` is always present alongside them. */

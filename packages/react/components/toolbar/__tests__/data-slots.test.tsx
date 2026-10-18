@@ -11,13 +11,17 @@ describe('Toolbar data-slot contract', () => {
           <Toolbar.Button>Bold</Toolbar.Button>
         </Toolbar.Group>
         <Toolbar.Separator />
+        <Toolbar.Link href='#docs'>Docs</Toolbar.Link>
+        <Toolbar.Input aria-label='Search' />
       </Toolbar>
     );
     expectSlots(container, [
       'toolbar',
       'toolbar-group',
       'toolbar-button',
-      'toolbar-separator'
+      'toolbar-separator',
+      'toolbar-link',
+      'toolbar-input'
     ]);
   });
 });

@@ -22,7 +22,8 @@ const tabsRoot = cva(styles.root, {
   }
 });
 
-type TabsRootProps = TabsPrimitive.Root.Props & VariantProps<typeof tabsRoot>;
+export type TabsRootProps = TabsPrimitive.Root.Props &
+  VariantProps<typeof tabsRoot>;
 
 function TabsRoot({ className, variant, size, ...props }: TabsRootProps) {
   return (
@@ -52,7 +53,7 @@ function TabsList({ className, children, ...props }: TabsPrimitive.List.Props) {
 }
 TabsList.displayName = 'Tabs.List';
 
-interface TabsTabProps extends TabsPrimitive.Tab.Props {
+export interface TabsTabProps extends TabsPrimitive.Tab.Props {
   leadingIcon?: ReactNode;
 }
 

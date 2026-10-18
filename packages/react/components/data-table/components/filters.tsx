@@ -88,18 +88,20 @@ function AddFilter<TData, TValue>({
   ) : null;
 }
 
-export function Filters<TData, TValue>({
-  classNames,
-  className,
-  trigger
-}: {
+export interface DataTableFiltersProps<TData, TValue> {
   classNames?: {
     filterChips?: string;
     addFilter?: string;
   };
   className?: string;
   trigger?: Trigger<TData, TValue>;
-}) {
+}
+
+export function Filters<TData, TValue>({
+  classNames,
+  className,
+  trigger
+}: DataTableFiltersProps<TData, TValue>) {
   const { table, tableQuery } = useDataTable();
   const columns = table?.getAllColumns() as DataTableColumn<TData, TValue>[];
 
