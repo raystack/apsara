@@ -19,14 +19,14 @@ export const playground = {
     color: {
       type: 'select',
       options: [
-        'default',
+        'inherit',
         'neutral',
         'accent',
         'danger',
         'success',
         'attention'
       ],
-      defaultValue: 'default'
+      defaultValue: 'neutral'
     }
   },
   getCode
@@ -48,7 +48,7 @@ export const colorDemo = {
   type: 'code',
   code: `
   <Flex gap={9} align="center">
-    <Spinner size={4} color="default" />
+    <Spinner size={4} color="inherit" />
     <Spinner size={4} color="neutral" />
     <Spinner size={4} color="accent" />
     <Spinner size={4} color="danger" />

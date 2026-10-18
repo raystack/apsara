@@ -13,7 +13,12 @@ const separator = cva(styles.separator, {
     color: {
       primary: styles['separator-primary'],
       secondary: styles['separator-secondary'],
-      tertiary: styles['separator-tertiary']
+      tertiary: styles['separator-tertiary'],
+      emphasis: styles['separator-emphasis'],
+      accent: styles['separator-accent'],
+      attention: styles['separator-attention'],
+      danger: styles['separator-danger'],
+      success: styles['separator-success']
     }
   },
   defaultVariants: {

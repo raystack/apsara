@@ -10,11 +10,11 @@ export const getCode = (props: ComponentPropsType) => {
 export const playground = {
   type: 'playground',
   controls: {
-    variant: {
+    color: {
       type: 'select',
       options: [
         'accent',
-        'warning',
+        'attention',
         'danger',
         'success',
         'neutral',
@@ -42,16 +42,16 @@ export const playground = {
   getCode
 };
 
-export const variantDemo = {
+export const colorDemo = {
   type: 'code',
   code: `
   <Flex gap={5}>
-    <Badge variant="accent">Accent</Badge>
-    <Badge variant="warning">Warning</Badge>
-    <Badge variant="danger">Danger</Badge>
-    <Badge variant="success">Success</Badge>
-    <Badge variant="neutral">Neutral</Badge>
-    <Badge variant="gradient">Gradient</Badge>
+    <Badge color="accent">Accent</Badge>
+    <Badge color="attention">Attention</Badge>
+    <Badge color="danger">Danger</Badge>
+    <Badge color="success">Success</Badge>
+    <Badge color="neutral">Neutral</Badge>
+    <Badge color="gradient">Gradient</Badge>
   </Flex>`
 };
 

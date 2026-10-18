@@ -7,7 +7,7 @@ source: packages/react/components/link
 import {
   playground,
   sizeDemo,
-  variantDemo,
+  colorDemo,
   styleDemo,
   weightDemo,
 } from "./demo.ts";
@@ -28,11 +28,11 @@ import { Link } from "@raystack/apsara";
 
 A styled anchor. The props set how it looks; `render` swaps the element underneath for a router link.
 
-### Variant
+### Color
 
-Link inherits Text's variants, so a link takes the same semantic colors as the copy around it.
+Link takes Text's colors, so a link can match the copy around it. The default is `accent`.
 
-<Demo data={variantDemo} />
+<Demo data={colorDemo} />
 
 ### Size
 
@@ -88,5 +88,5 @@ The Link component follows accessibility best practices:
 - External and download links auto-generate an `aria-label` when `children`
   is a string (e.g. `"Docs (opens in new tab)"`). For non-string children,
   pass `aria-label` yourself so screen readers get a clean label.
-- Maintains color contrast ratios for all variants.
+- Maintains color contrast ratios for all colors.
 - Hover feedback uses an opacity transition.

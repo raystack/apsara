@@ -110,7 +110,7 @@ function GroupHeader<TData>({
       <Flex gap={3} align='center'>
         {data?.label}
         {data.showGroupCount ? (
-          <Badge variant='neutral'>{data?.count}</Badge>
+          <Badge color='neutral'>{data?.count}</Badge>
         ) : null}
       </Flex>
     </Table.SectionHeader>

@@ -17,6 +17,26 @@
   background-color: var(--rs-color-border-base-tertiary);
 }
 
+.separator-emphasis {
+  background-color: var(--rs-color-border-base-emphasis);
+}
+
+.separator-accent {
+  background-color: var(--rs-color-border-accent-primary);
+}
+
+.separator-attention {
+  background-color: var(--rs-color-border-attention-primary);
+}
+
+.separator-danger {
+  background-color: var(--rs-color-border-danger-primary);
+}
+
+.separator-success {
+  background-color: var(--rs-color-border-success-primary);
+}
+
 .separator-small[data-orientation="horizontal"] {
   height: 1px;
   width: var(--rs-space-6);

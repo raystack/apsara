@@ -169,7 +169,7 @@ export const Button = ({
         <>
           <Spinner
             size={1}
-            color='default'
+            color='inherit'
             aria-hidden='true'
             data-slot='button-loader'
           />

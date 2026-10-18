@@ -4,8 +4,8 @@
 
 import figma from 'figma';
 
-const variant = figma.selectedInstance.getEnum('Variant', {
-  Warning: 'warning',
+const color = figma.selectedInstance.getEnum('Variant', {
+  Warning: 'attention',
   Danger: 'danger',
   Success: 'success',
   Neutral: 'neutral',
@@ -32,8 +32,8 @@ export default {
   id: 'Badge',
   imports: ["import { Badge } from '@raystack/apsara'"],
   example: figma.code`<Badge${figma.helpers.react.renderProp(
-    'variant',
-    variant
+    'color',
+    color
   )}${figma.helpers.react.renderProp(
     'size',
     size

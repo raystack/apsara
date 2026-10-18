@@ -7,7 +7,7 @@ source: packages/react/components/badge
 import {
   playground,
   sizesDemo,
-  variantDemo,
+  colorDemo,
   iconDemo,
   screenReaderTextDemo,
 } from "./demo.ts";
@@ -26,13 +26,13 @@ import { Badge } from '@raystack/apsara'
 
 ## Usage
 
-Set how filled the badge looks, how big it is, and whether it carries an icon.
+Set the color of the badge, how big it is, and whether it carries an icon.
 
-### Variant
+### Color
 
-Choose between different variants to convey different meanings or importance levels. Default variant is `accent`.
+`color` sets the intent of the badge. The default is `accent`.
 
-<Demo data={variantDemo} />
+<Demo data={colorDemo} />
 
 ### Size
 

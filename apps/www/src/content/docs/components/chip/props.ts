@@ -12,10 +12,10 @@ export interface ChipProps {
   size?: 'small' | 'large';
 
   /**
-   * Color style. `danger`, `success` and `warning` convey status.
+   * Color style. `danger`, `success` and `attention` convey status.
    * @defaultValue "neutral"
    */
-  color?: 'neutral' | 'accent' | 'danger' | 'success' | 'warning';
+  color?: 'neutral' | 'accent' | 'danger' | 'success' | 'attention';
 
   /** ReactNode to display as an icon before the label */
   leadingIcon?: React.ReactNode;

@@ -49,29 +49,29 @@ describe('Callout', () => {
     });
   });
 
-  describe('Types and Variants', () => {
-    const types = [
-      'grey',
+  describe('Colors and Variants', () => {
+    const colors = [
+      'primary',
+      'neutral',
       'success',
-      'alert',
-      'gradient',
+      'danger',
       'accent',
       'attention',
-      'normal'
+      'gradient'
     ] as const;
 
-    it.each(types)('renders %s type correctly', type => {
-      render(<Callout type={type}>Test message</Callout>);
+    it.each(colors)('renders %s color correctly', color => {
+      render(<Callout color={color}>Test message</Callout>);
 
-      const callout = screen.getByRole(type === 'alert' ? 'alert' : 'status');
-      expect(callout).toHaveClass(styles[`callout-${type}`]);
+      const callout = screen.getByRole(color === 'danger' ? 'alert' : 'status');
+      expect(callout).toHaveClass(styles[`callout-${color}`]);
     });
 
-    it('defaults to grey type', () => {
+    it('defaults to neutral color', () => {
       render(<Callout>Test message</Callout>);
 
       const callout = screen.getByRole('status');
-      expect(callout).toHaveClass(styles['callout-grey']);
+      expect(callout).toHaveClass(styles['callout-neutral']);
     });
 
     it('renders outline variant', () => {
@@ -194,20 +194,20 @@ describe('Callout', () => {
   });
 
   describe('Accessibility', () => {
-    it('uses correct role for alert type', () => {
-      render(<Callout type='alert'>Alert message</Callout>);
+    it('uses alert role for danger color', () => {
+      render(<Callout color='danger'>Alert message</Callout>);
 
       expect(screen.getByRole('alert')).toBeInTheDocument();
     });
 
-    it('uses status role for success type', () => {
-      render(<Callout type='success'>Success message</Callout>);
+    it('uses status role for success color', () => {
+      render(<Callout color='success'>Success message</Callout>);
 
       expect(screen.getByRole('status')).toBeInTheDocument();
     });
 
-    it('uses status role for other types', () => {
-      render(<Callout type='grey'>Default message</Callout>);
+    it('uses status role for other colors', () => {
+      render(<Callout color='neutral'>Default message</Callout>);
 
       expect(screen.getByRole('status')).toBeInTheDocument();
     });

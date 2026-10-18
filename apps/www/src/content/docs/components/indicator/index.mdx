@@ -4,7 +4,7 @@ description: A small dot indicator with small information that can be positioned
 source: packages/react/components/indicator
 ---
 
-import { playground, labelDemo, pulseDemo, variantDemo } from "./demo.ts";
+import { playground, labelDemo, pulseDemo, colorDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -20,13 +20,13 @@ import { Indicator } from "@raystack/apsara";
 
 ## Usage
 
-A dot that sits on top of something else. `variant` carries its meaning, and a label covers the cases where the dot alone is not enough.
+A dot that sits on top of something else. `color` carries its meaning, and a label covers the cases where the dot alone is not enough.
 
-### Variant
+### Color
 
-Five variants that carry meaning: `accent`, `success`, `warning`, `danger`, and `neutral`. Pass `label` to show a count instead of a plain dot.
+Five colors that carry meaning: `accent`, `success`, `attention`, `danger`, and `neutral`. Pass `label` to show a count instead of a plain dot.
 
-<Demo data={variantDemo} />
+<Demo data={colorDemo} />
 
 ### Label
 
@@ -84,7 +84,7 @@ The Indicator component includes several accessibility features:
 Example with custom aria label:
 
 ```tsx
-<Indicator variant="danger" label="3" aria-label="3 unread messages">
+<Indicator color="danger" label="3" aria-label="3 unread messages">
   <div
     style={{
       padding: "0px 12px",

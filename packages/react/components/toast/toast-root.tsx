@@ -18,7 +18,7 @@ const TOAST_ICONS: Record<string, ReactNode> = {
   error: <ErrorIcon />,
   warning: <WarningIcon />,
   info: <InfoIcon />,
-  loading: <Spinner size={2} color='default' />
+  loading: <Spinner size={2} color='inherit' />
 };
 
 type SwipeDirection = 'up' | 'down' | 'left' | 'right';

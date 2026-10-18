@@ -561,7 +561,7 @@ export const timelinePointPreview = {
           startField="date"
           estimatedRowHeight={28}
           renderCard={(row) => (
-            <Badge variant={row.original.channel === "stable" ? "accent" : "neutral"}>
+            <Badge color={row.original.channel === "stable" ? "accent" : "neutral"}>
               {row.original.version}
             </Badge>
           )}

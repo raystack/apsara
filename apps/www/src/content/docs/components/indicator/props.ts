@@ -1,9 +1,9 @@
 export interface IndicatorProps {
   /**
-   * Visual style variant
+   * Intent color of the indicator.
    * @default "accent"
    */
-  variant?: 'accent' | 'warning' | 'danger' | 'success' | 'neutral';
+  color?: 'accent' | 'attention' | 'danger' | 'success' | 'neutral';
 
   /** Optional text label to display (if omitted, shows a dot) */
   label?: string;

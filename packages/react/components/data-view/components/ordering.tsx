@@ -33,7 +33,7 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
       <Text
         size='small'
         weight='medium'
-        variant='secondary'
+        color='secondary'
         className={styles['display-popover-properties-label']}
         data-slot='data-view-ordering-label'
       >

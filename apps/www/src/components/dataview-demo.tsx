@@ -122,23 +122,23 @@ const tableColumns: DataViewListColumn<Person>[] = [
   {
     accessorKey: 'email',
     width: '1fr',
-    cell: ({ row }) => <Text variant='secondary'>{row.original.email}</Text>
+    cell: ({ row }) => <Text color='secondary'>{row.original.email}</Text>
   },
   {
     accessorKey: 'team',
     width: 'auto',
-    cell: ({ row }) => <Badge variant='neutral'>{row.original.team}</Badge>
+    cell: ({ row }) => <Badge color='neutral'>{row.original.team}</Badge>
   },
   {
     accessorKey: 'status',
     width: 'auto',
     cell: ({ row }) => (
       <Badge
-        variant={
+        color={
           row.original.status === 'active'
             ? 'success'
             : row.original.status === 'invited'
-              ? 'warning'
+              ? 'attention'
               : 'neutral'
         }
       >
@@ -157,7 +157,7 @@ const listColumns: DataViewListColumn<Person>[] = [
         <Avatar size={3} fallback={row.original.name.charAt(0)} />
         <Flex direction='column'>
           <Text weight='medium'>{row.original.name}</Text>
-          <Text size='small' variant='secondary'>
+          <Text size='small' color='secondary'>
             {row.original.email}
           </Text>
         </Flex>
@@ -167,18 +167,18 @@ const listColumns: DataViewListColumn<Person>[] = [
   {
     accessorKey: 'team',
     width: 'auto',
-    cell: ({ row }) => <Badge variant='neutral'>{row.original.team}</Badge>
+    cell: ({ row }) => <Badge color='neutral'>{row.original.team}</Badge>
   },
   {
     accessorKey: 'status',
     width: 'auto',
     cell: ({ row }) => (
       <Badge
-        variant={
+        color={
           row.original.status === 'active'
             ? 'success'
             : row.original.status === 'invited'
-              ? 'warning'
+              ? 'attention'
               : 'neutral'
         }
       >
@@ -337,16 +337,16 @@ export function DataViewCustomDemo() {
                     <Text weight='medium'>{p.name}</Text>
                   </DataView.DisplayAccess>
                   <DataView.DisplayAccess accessorKey='email'>
-                    <Text size='small' variant='secondary'>
+                    <Text size='small' color='secondary'>
                       {p.email}
                     </Text>
                   </DataView.DisplayAccess>
                   <Flex gap={2}>
                     <DataView.DisplayAccess accessorKey='team'>
-                      <Badge variant='neutral'>{p.team}</Badge>
+                      <Badge color='neutral'>{p.team}</Badge>
                     </DataView.DisplayAccess>
                     <DataView.DisplayAccess accessorKey='status'>
-                      <Badge variant='success'>{p.status}</Badge>
+                      <Badge color='success'>{p.status}</Badge>
                     </DataView.DisplayAccess>
                   </Flex>
                 </Flex>
@@ -504,7 +504,7 @@ export function DataViewLoadingDemo() {
         >
           {isLoading ? 'Stop loading' : 'Show skeletons'}
         </Button>
-        <Text size='small' variant='secondary'>
+        <Text size='small' color='secondary'>
           Skeleton rows render while `isLoading` is true.
         </Text>
       </Flex>
@@ -871,7 +871,7 @@ function TaskCard({
   if (context.collapsed) {
     return (
       <Flex align='center' justify='center' style={chrome}>
-        <Text size='micro' weight='medium' variant='secondary'>
+        <Text size='micro' weight='medium' color='secondary'>
           {task.title.charAt(0)}
         </Text>
       </Flex>
@@ -896,16 +896,16 @@ function TaskCard({
         {task.title}
       </Text>
       <Flex align='center' gap={2}>
-        <Badge size='micro' variant={TASK_STATUS_BADGE[task.status]}>
+        <Badge size='micro' color={TASK_STATUS_BADGE[task.status]}>
           {task.status}
         </Badge>
         <DataView.DisplayAccess accessorKey='team'>
-          <Badge size='micro' variant='neutral'>
+          <Badge size='micro' color='neutral'>
             {task.team}
           </Badge>
         </DataView.DisplayAccess>
         <DataView.DisplayAccess accessorKey='priority'>
-          <Badge size='micro' variant='neutral'>
+          <Badge size='micro' color='neutral'>
             {task.priority}
           </Badge>
         </DataView.DisplayAccess>
@@ -988,9 +988,7 @@ export function DataViewTimelinePointDemo() {
             estimatedRowHeight={28}
             renderCard={row => (
               <Badge
-                variant={
-                  row.original.channel === 'stable' ? 'accent' : 'neutral'
-                }
+                color={row.original.channel === 'stable' ? 'accent' : 'neutral'}
               >
                 {row.original.version}
               </Badge>
@@ -1047,7 +1045,7 @@ export function DataViewTimelineDemo() {
             endField='end'
             actionsRef={timelineActions}
             markers={[
-              { date: taskDate(12), label: 'Release', variant: 'accent' }
+              { date: taskDate(12), label: 'Release', color: 'accent' }
             ]}
             renderCard={(row, context) => (
               <TaskCard task={row.original} context={context} />

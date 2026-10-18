@@ -52,7 +52,7 @@ render(
           <Select.Item value="apple">Apple</Select.Item>
         </Select.Content>
       </Select>
-      <Text size="micro" variant="secondary">default</Text>
+      <Text size="micro" color="secondary">default</Text>
     </Flex>
 
     <Theme icons={{ components: { ChevronDownIcon: MyChevron } }}>
@@ -65,7 +65,7 @@ render(
             <Select.Item value="apple">Apple</Select.Item>
           </Select.Content>
         </Select>
-        <Text size="micro" variant="secondary">overridden</Text>
+        <Text size="micro" color="secondary">overridden</Text>
       </Flex>
     </Theme>
   </Flex>

@@ -11,9 +11,9 @@ export const getCode = (props: ComponentPropsType) => {
 export const playground = {
   type: 'playground',
   controls: {
-    variant: {
+    color: {
       type: 'select',
-      options: ['accent', 'warning', 'danger', 'success', 'neutral'],
+      options: ['accent', 'attention', 'danger', 'success', 'neutral'],
       defaultValue: 'accent'
     },
     label: { type: 'text', initialValue: '' },
@@ -26,23 +26,23 @@ export const playground = {
   getCode
 };
 
-export const variantDemo = {
+export const colorDemo = {
   type: 'code',
   code: `
   <Flex gap={9} align="center">
-    <Indicator variant="accent">
+    <Indicator color="accent">
       <Button color='neutral'>Notification</Button>
     </Indicator>
-    <Indicator variant="warning">
+    <Indicator color="attention">
       <Button color='neutral'>Notification</Button>
     </Indicator>
-    <Indicator variant="danger">
+    <Indicator color="danger">
       <Button color='neutral'>Notification</Button>
     </Indicator>
-    <Indicator variant="success">
+    <Indicator color="success">
       <Button color='neutral'>Notification</Button>
     </Indicator>
-    <Indicator variant="neutral">
+    <Indicator color="neutral">
       <Button color='neutral'>Notification</Button>
     </Indicator>
   </Flex>`
@@ -51,10 +51,10 @@ export const labelDemo = {
   type: 'code',
   code: `
   <Flex gap={9}>
-    <Indicator variant="accent" label="2 new">
+    <Indicator color="accent" label="2 new">
       <Button color='neutral'>Notification</Button>
     </Indicator>
-    <Indicator variant="accent">
+    <Indicator color="accent">
       <Button color='neutral'>Notification</Button>
     </Indicator>
   </Flex>`
@@ -63,10 +63,10 @@ export const pulseDemo = {
   type: 'code',
   code: `
   <Flex gap={9}>
-    <Indicator variant="success" pulse>
+    <Indicator color="success" pulse>
       <Button color='neutral'>Live</Button>
     </Indicator>
-    <Indicator variant="danger" label="3" pulse>
+    <Indicator color="danger" label="3" pulse>
       <Button color='neutral'>Alerts</Button>
     </Indicator>
   </Flex>`

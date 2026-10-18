@@ -76,8 +76,8 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
-/* Type Variants */
-.callout-grey {
+/* Colors */
+.callout-neutral {
   background: var(--rs-color-background-neutral-primary);
   color: var(--rs-color-foreground-base-secondary);
 }
@@ -87,7 +87,7 @@
   color: var(--rs-color-foreground-success-primary);
 }
 
-.callout-alert {
+.callout-danger {
   background: var(--rs-color-background-danger-primary);
   color: var(--rs-color-foreground-danger-primary);
 }
@@ -116,7 +116,7 @@
   background: transparent;
 }
 
-.callout-outline.callout-grey {
+.callout-outline.callout-neutral {
   background: var(--rs-color-background-neutral-primary);
   border: 0.5px solid var(--rs-color-border-base-tertiary);
 }
@@ -126,7 +126,7 @@
   border: 0.5px solid var(--rs-color-border-success-primary);
 }
 
-.callout-outline.callout-alert {
+.callout-outline.callout-danger {
   background: var(--rs-color-background-danger-primary);
   border: 0.5px solid var(--rs-color-border-danger-primary);
 }
@@ -143,7 +143,7 @@
 }
 
 /* High Contrast Variants */
-.callout-high-contrast.callout-grey {
+.callout-high-contrast.callout-neutral {
   background: var(--rs-color-background-neutral-primary);
   color: var(--rs-color-foreground-base-primary);
 }
@@ -153,7 +153,7 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
-.callout-high-contrast.callout-alert {
+.callout-high-contrast.callout-danger {
   background: var(--rs-color-background-danger-primary);
   color: var(--rs-color-foreground-base-primary);
 }
@@ -175,13 +175,13 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
-.callout-outline.callout-high-contrast.callout-grey {
+.callout-outline.callout-high-contrast.callout-neutral {
   background: var(--rs-color-background-neutral-primary);
   border: 0.5px solid var(--rs-color-border-base-tertiary);
   color: var(--rs-color-foreground-base-primary);
 }
 
-.callout-outline.callout-high-contrast.callout-alert {
+.callout-outline.callout-high-contrast.callout-danger {
   background: var(--rs-color-background-danger-primary);
   border: 0.5px solid var(--rs-color-border-danger-primary);
   color: var(--rs-color-foreground-base-primary);
@@ -216,11 +216,11 @@
 }
 
 /*
- * High contrast gradient should match normal high contrast.
+ * High contrast gradient should match primary high contrast.
  * Figma defines only one gradient variant (no outline/high-contrast states), so
  * in high contrast, both on its own and combined with outline, we intentionally
- * drop the gradient for the solid "normal" high-contrast surface. A gradient
- * callout in high-contrast mode therefore reads identically to a normal one.
+ * drop the gradient for the solid "primary" high-contrast surface. A gradient
+ * callout in high-contrast mode therefore reads identically to a primary one.
  */
 .callout-high-contrast.callout-gradient {
   background: var(--rs-color-background-base-primary);
@@ -233,24 +233,24 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
-/* Normal variants */
-.callout-normal {
+/* Primary */
+.callout-primary {
   background: var(--rs-color-background-base-primary);
   color: var(--rs-color-foreground-base-secondary);
 }
 
-.callout-outline.callout-normal {
+.callout-outline.callout-primary {
   background: var(--rs-color-background-base-primary);
   border: 0.5px solid var(--rs-color-border-base-tertiary);
   color: var(--rs-color-foreground-base-secondary);
 }
 
-.callout-high-contrast.callout-normal {
+.callout-high-contrast.callout-primary {
   background: var(--rs-color-background-base-primary);
   color: var(--rs-color-foreground-base-primary);
 }
 
-.callout-outline.callout-high-contrast.callout-normal {
+.callout-outline.callout-high-contrast.callout-primary {
   background: var(--rs-color-background-base-primary);
   border: 0.5px solid var(--rs-color-border-base-tertiary);
   color: var(--rs-color-foreground-base-primary);

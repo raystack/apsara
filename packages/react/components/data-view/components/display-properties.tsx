@@ -31,7 +31,7 @@ export function DisplayProperties<TData>({
       <Text
         size='small'
         weight='medium'
-        variant='secondary'
+        color='secondary'
         data-slot='data-view-display-properties-label'
       >
         Display Properties

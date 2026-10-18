@@ -236,7 +236,7 @@ export const periodsDemo = {
           </CalendarPreview.Content>
         </CalendarPreview>
 
-        <Text size="small" variant="secondary">→</Text>
+        <Text size="small" color="secondary">→</Text>
 
         <CalendarPreview scales={scales} trailingValue value={end} onValueChange={setEnd}>
           <CalendarPreview.Trigger
@@ -250,7 +250,7 @@ export const periodsDemo = {
         </CalendarPreview>
       </Flex>
 
-      <Text size="micro" variant="secondary">
+      <Text size="micro" color="secondary">
         Emitted: {start.date} → {end.date}
       </Text>
     </Flex>
@@ -509,8 +509,8 @@ export const customisingDemo = {
               <CalendarPreview.Days />
               <CalendarPreview.Footer>
                 <Flex align="center" gap={3}>
-                  <Badge variant="accent">Beta</Badge>
-                  <Text size="small" variant="secondary">Times are UTC</Text>
+                  <Badge color="accent">Beta</Badge>
+                  <Text size="small" color="secondary">Times are UTC</Text>
                 </Flex>
               </CalendarPreview.Footer>
             </CalendarPreview>`
@@ -523,7 +523,7 @@ export const customisingDemo = {
                 <CalendarPreview.Grid
                   dateInfo={date =>
                     date.getDate() % 7 === 0 ? (
-                      <Text size="micro" variant="accent">$</Text>
+                      <Text size="micro" color="accent">$</Text>
                     ) : null
                   }
                 />
