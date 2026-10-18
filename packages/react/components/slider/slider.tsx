@@ -11,6 +11,11 @@ const slider = cva(styles.slider, {
     variant: {
       single: styles['slider-variant-single'],
       range: styles['slider-variant-range']
+    },
+    thumbLabelDisplay: {
+      always: null,
+      hover: styles['slider-thumb-label-display-hover'],
+      none: null
     }
   },
   defaultVariants: {
@@ -21,15 +26,23 @@ const slider = cva(styles.slider, {
 export interface SliderProps
   extends SliderPrimitive.Root.Props,
     VariantProps<typeof slider> {
-  label?: string | [string, string];
+  /** Text shown above each thumb and used as its `aria-label`. */
+  thumbLabel?: string | [string, string];
+  /**
+   * When the text above each thumb is shown.
+   * @default 'always'
+   */
+  thumbLabelDisplay?: 'always' | 'hover' | 'none';
   thumbSize?: 'small' | 'large';
 }
 
 function SliderRoot({
   className,
   variant = 'single',
-  label,
+  thumbLabel,
+  thumbLabelDisplay = 'always',
   thumbSize = 'large',
+  children,
   ...props
 }: SliderProps) {
   const isRange = variant === 'range';
@@ -37,22 +50,23 @@ function SliderRoot({
 
   const getLabel = useCallback(
     (index: number) => {
-      if (!label) return undefined;
-      if (typeof label === 'string') return label;
-      return label[index];
+      if (!thumbLabel) return undefined;
+      if (typeof thumbLabel === 'string') return thumbLabel;
+      return thumbLabel[index];
     },
-    [label]
+    [thumbLabel]
   );
 
   const thumbCount = isRange ? 2 : 1;
 
   return (
     <SliderPrimitive.Root
-      className={slider({ variant, className })}
+      className={slider({ variant, thumbLabelDisplay, className })}
       thumbAlignment='edge'
       data-slot='slider'
       {...props}
     >
+      {children}
       <SliderPrimitive.Control
         className={styles.control}
         data-slot='slider-control'
@@ -100,12 +114,12 @@ function SliderRoot({
                   />
                 </div>
               )}
-              {getLabel(i) && (
+              {thumbLabelDisplay !== 'none' && getLabel(i) && (
                 <Text
-                  className={styles.label}
+                  className={styles.thumbLabel}
                   size={isThumbSmall ? 'micro' : 'mini'}
                   weight='medium'
-                  data-slot='slider-label'
+                  data-slot='slider-thumb-label'
                 >
                   {getLabel(i)}
                 </Text>
@@ -120,12 +134,31 @@ function SliderRoot({
 
 SliderRoot.displayName = 'Slider';
 
-function SliderValue(props: SliderPrimitive.Value.Props) {
-  return <SliderPrimitive.Value data-slot='slider-value' {...props} />;
+function SliderLabel({ className, ...props }: SliderPrimitive.Label.Props) {
+  return (
+    <SliderPrimitive.Label
+      className={cx(styles.label, className)}
+      data-slot='slider-label'
+      {...props}
+    />
+  );
+}
+
+SliderLabel.displayName = 'Slider.Label';
+
+function SliderValue({ className, ...props }: SliderPrimitive.Value.Props) {
+  return (
+    <SliderPrimitive.Value
+      className={cx(styles.value, className)}
+      data-slot='slider-value'
+      {...props}
+    />
+  );
 }
 
 SliderValue.displayName = 'Slider.Value';
 
 export const Slider = Object.assign(SliderRoot, {
+  Label: SliderLabel,
   Value: SliderValue
 });

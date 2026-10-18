@@ -1,9 +1,9 @@
 'use client';
 
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { cx } from 'class-variance-authority';
 import { ReactNode } from 'react';
-import { useIsomorphicLayoutEffect } from '~/hooks';
 import { Checkbox } from '../checkbox';
 import { getMatch } from '../menu/utils';
 import { Text } from '../text';
@@ -36,7 +36,7 @@ export const ComboboxItem = ({
   const hidden =
     !hasItems && !!inputValue?.length && !getMatch(value, children, inputValue);
 
-  useIsomorphicLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     if (hasItems || hidden) return;
     return registerMatch();
   }, [hasItems, hidden, registerMatch]);

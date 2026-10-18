@@ -12,7 +12,6 @@ import {
   useState
 } from 'react';
 import { useFieldContext } from '../field';
-import { getItemLabel } from './combobox-items';
 
 interface ComboboxContextValue<Value = string> {
   multiple: boolean;
@@ -85,6 +84,7 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
   defaultValue,
   items,
   required,
+  itemToStringLabel,
   id: idProp,
   ...props
 }: ComboboxRootProps<Value, Item>) => {
@@ -128,16 +128,29 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
     ) => {
       setInternalValue(value);
       if (multiple) {
-        (
-          onValueChange as MultipleComboboxProps<Value, Item>['onValueChange']
-        )?.(value as Value[]);
+        (onValueChange as MultipleComboboxProps<Value>['onValueChange'])?.(
+          value as Value[]
+        );
       } else {
-        (onValueChange as SingleComboboxProps<Value, Item>['onValueChange'])?.(
+        (onValueChange as SingleComboboxProps<Value>['onValueChange'])?.(
           value as Value | null
         );
       }
     },
     [onValueChange, multiple]
+  );
+
+  // Same fallback order that Base UI uses for the input text.
+  const getLabel = useCallback(
+    (value: Value) => {
+      if (itemToStringLabel) return itemToStringLabel(value);
+      if (typeof value !== 'object' || value === null)
+        return String(value ?? '');
+      if ('label' in value && value.label != null) return String(value.label);
+      if ('value' in value) return String(value.value);
+      return JSON.stringify(value);
+    },
+    [itemToStringLabel]
   );
 
   const contextValue = useMemo(
@@ -149,7 +162,7 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
       inputContainerRef,
       value: computedValue,
       onValueChange: handleValueChange,
-      getLabel: (value: Value) => getItemLabel(items, value) ?? String(value),
+      getLabel,
       registerMatch
     }),
     [
@@ -159,6 +172,7 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
       id,
       computedValue,
       handleValueChange,
+      getLabel,
       registerMatch
     ]
   );
@@ -170,6 +184,7 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
         onValueChange={handleValueChange}
         onInputValueChange={handleInputValueChange}
         items={items}
+        itemToStringLabel={itemToStringLabel}
         value={computedValue}
         id={id}
         required={resolvedRequired}

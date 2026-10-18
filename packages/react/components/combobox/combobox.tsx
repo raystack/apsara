@@ -2,7 +2,6 @@ import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { ComboboxContent } from './combobox-content';
 import { ComboboxInput } from './combobox-input';
 import { ComboboxItem } from './combobox-item';
-import { createItems } from './combobox-items';
 import {
   ComboboxClear,
   ComboboxEmpty,
@@ -27,5 +26,5 @@ export const Combobox = Object.assign(ComboboxRoot, {
   Separator: ComboboxSeparator,
   useFilter: ComboboxPrimitive.useFilter,
   useFilteredItems: ComboboxPrimitive.useFilteredItems,
-  createItems
+  createItems: ComboboxPrimitive.createItems
 });

@@ -23,7 +23,7 @@ const container = cva(styles.container, {
   }
 });
 
-type ContainerProps = VariantProps<typeof container> &
+export type ContainerProps = VariantProps<typeof container> &
   useRender.ComponentProps<'div'>;
 
 export function Container({

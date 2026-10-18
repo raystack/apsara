@@ -8,6 +8,7 @@ import type {
 } from '@tanstack/table-core';
 import type {
   DataTableFilterOperatorTypes,
+  FilterDataType,
   FilterOperatorTypes,
   FilterSelectOption,
   FilterTypes,
@@ -30,8 +31,15 @@ export interface DataViewSort {
   order: SortOrdersValues;
 }
 
+export type DataViewFilterValue =
+  | FilterValueType
+  | FilterValueType[]
+  | Date
+  | null
+  | undefined;
+
 export interface DataViewFilterValues {
-  value: any;
+  value: DataViewFilterValue;
   boolValue?: boolean;
   stringValue?: string;
   numberValue?: number;
@@ -39,7 +47,7 @@ export interface DataViewFilterValues {
 
 export interface InternalFilter extends DataViewFilterValues {
   _type?: FilterTypes;
-  _dataType?: FilterValueType;
+  _dataType?: FilterDataType;
   name: string;
   operator: FilterOperatorTypes;
 }
@@ -68,8 +76,9 @@ export interface DataViewQuery extends Omit<InternalQuery, 'filters'> {
  * visibility behaviour across every renderer. Cell/header rendering belongs on
  * each renderer's own column spec, not here.
  */
-export interface DataViewField<TData = any> {
-  accessorKey: string;
+export interface DataViewField<TData = unknown> {
+  /** A key of `TData`, or a dotted path to a nested value. */
+  accessorKey: Extract<keyof TData, string> | (string & {});
   /** Human-readable label shown in filter chips, Display controls, and the default Table header. */
   label: string;
   icon?: React.ReactNode;
@@ -77,9 +86,9 @@ export interface DataViewField<TData = any> {
   // filter capability
   filterable?: boolean;
   filterType?: FilterTypes;
-  dataType?: FilterValueType;
+  dataType?: FilterDataType;
   filterOptions?: FilterSelectOption[];
-  defaultFilterValue?: unknown;
+  defaultFilterValue?: DataViewFilterValue;
   filterProps?: {
     select?: BaseSelectProps;
   };
@@ -187,6 +196,7 @@ export interface DataViewProps<TData> {
    * to compute the bucket id per row when a key matches one in this map.
    */
   groupByResolvers?: Record<string, GroupByResolver<TData>>;
+  children?: React.ReactNode;
 }
 
 /** @deprecated Every key here has an equivalent `[data-slot]` selector. See the List slot table in the DataView docs. Prefer styling by `data-slot` over threading class names through props. */

@@ -74,6 +74,8 @@ Organize items into groups with `Combobox.GroupLabel` and separators. Groups, gr
 
 Pass the `multiple` prop to enable multi-select. Selected values appear as chips in the input. Items display checkboxes in multiple mode.
 
+Each chip shows its value as text. To show a label instead, pass `itemToStringLabel` to the root. Values in the `{ value, label }` shape show their `label` without it.
+
 The input shows the first two chips and a "+N" count for the rest. Press Backspace in an empty input to remove the last value. Press Left Arrow at the start of the input to move focus to the chips. On a focused chip, press Backspace or Delete to remove it.
 
 <Demo data={multipleDemo} />
@@ -98,9 +100,11 @@ Use `value` and `onValueChange` for controlled behavior.
 
 ### Using IDs as values
 
-When your app stores IDs instead of item objects, wrap the data with `Combobox.createItems`. `getValue` returns the value that `value` and `onValueChange` use. `getLabel` returns the text shown in the input and used for filtering. Pass a function as the child of `Combobox.Content` to render each item that matches the input.
+When your app stores IDs instead of item objects, wrap the data with `Combobox.createItems`. `getValue` returns the value that `value` and `onValueChange` use. `getLabel` returns the text shown in the input and used for filtering. Pass a function as the child of `Combobox.Content` to render each item that matches the input. In TypeScript, set the item type on that function, for example `(user: User) => ...`.
 
 Create the collection at module scope for static data. For data that changes, wrap it in `React.useMemo` keyed by the data.
+
+With `multiple`, also pass `itemToStringLabel`, because chips do not read `getLabel`.
 
 <Demo data={createItemsDemo} />
 

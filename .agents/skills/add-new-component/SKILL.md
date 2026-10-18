@@ -177,11 +177,13 @@ Key rules:
 
 ## Step 2: Create the Index File
 
-Simple re-export:
+Re-export the component and its props types:
 
 ```tsx
 // packages/react/components/<name>/index.tsx
 export { Component } from './<name>';
+export type { ComponentContentProps } from './<name>-content';
+export type { ComponentRootProps as ComponentProps } from './<name>-root';
 ```
 
 ## Step 3: Add CSS Module Styles
@@ -239,10 +241,12 @@ Common `--rs-*` tokens:
 Add to `packages/react/index.tsx` in **alphabetical order**:
 
 ```tsx
-export { Chip } from './components/chip';
-export { CodeBlock } from './components/code-block';
-export { Collapsible } from './components/collapsible';  // <-- new
-export { Combobox } from './components/combobox';
+export { Chip, type ChipProps } from './components/chip';
+export {
+  Component,
+  type ComponentContentProps,
+  type ComponentProps
+} from './components/<name>'; // <-- new
 ```
 
 ## Step 5: Write Tests
@@ -496,7 +500,10 @@ Notes:
 pnpm --filter @raystack/apsara build
 pnpm --filter @raystack/apsara test -- --reporter=verbose components/<name>
 pnpm --filter www build
+grep -n "from './components/<name>'" packages/react/dist/index.d.ts
 ```
+
+The `grep` prints the root export of the component. Check that it lists the props type of every part that declares its own type. Type-only exports are erased at runtime, so the tests and the build still pass when one is missing. Parts that take Base UI or HTML props unchanged have no type to export.
 
 Checklist:
 - [ ] Component builds without errors
@@ -506,4 +513,5 @@ Checklist:
 - [ ] Every rendered element has a `data-slot`, with a `data-slots.test.tsx` covering them
 - [ ] CSS uses `--rs-*` tokens only
 - [ ] Export in `packages/react/index.tsx` in alphabetical order
+- [ ] Props types exported from the component index and `packages/react/index.tsx`, and listed in `dist/index.d.ts`
 - [ ] Interactive `playground` added to `demo.ts`, covering the component's main props

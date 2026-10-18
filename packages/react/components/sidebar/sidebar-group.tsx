@@ -10,7 +10,7 @@ import { SidebarLeadingVisual } from './sidebar-leading-visual';
 import { useSidebarSafe } from './sidebar-root';
 import { SidebarTrailingVisual } from './sidebar-trailing-visual';
 
-export interface SidebarNavigationGroupProps extends ComponentProps<'section'> {
+export interface SidebarGroupProps extends ComponentProps<'section'> {
   label: string;
   /**
    * Renders the group as an accordion whose items can be shown or hidden.
@@ -54,7 +54,7 @@ export function SidebarNavigationGroup({
   classNames,
   children,
   ...props
-}: SidebarNavigationGroupProps) {
+}: SidebarGroupProps) {
   const { isCollapsed } = useSidebarSafe();
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const isOpen = isCollapsed || (providedOpen ?? internalOpen);

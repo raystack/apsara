@@ -58,6 +58,9 @@ export interface ComboboxRootProps {
    */
   items?: unknown[];
 
+  /** Converts a value to the text shown in the input and in multi-select chips. */
+  itemToStringLabel?: (value: string) => string;
+
   /** The `id` of the input. `Combobox.Label` uses it. */
   id?: string;
 }

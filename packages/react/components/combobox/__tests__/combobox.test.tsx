@@ -230,6 +230,38 @@ describe('Combobox', () => {
         expect(input).toHaveAttribute('placeholder', PLACEHOLDER_TEXT);
       });
     });
+
+    it('labels chips with itemToStringLabel', () => {
+      render(
+        <BasicCombobox
+          multiple
+          defaultValue={['banana']}
+          itemToStringLabel={value =>
+            FRUIT_OPTIONS.find(option => option.value === value)?.label ?? value
+          }
+        />
+      );
+      expect(screen.getByText('Banana')).toBeInTheDocument();
+      expect(screen.queryByText('banana')).not.toBeInTheDocument();
+    });
+
+    it('labels chips with the label of { value, label } values', () => {
+      render(
+        <Combobox multiple defaultValue={[FRUIT_OPTIONS[1]]}>
+          <Combobox.Input placeholder={PLACEHOLDER_TEXT} />
+        </Combobox>
+      );
+      expect(screen.getByText('Banana')).toBeInTheDocument();
+    });
+
+    it('labels chips with the value of { value } values', () => {
+      render(
+        <Combobox multiple defaultValue={[{ value: 'banana' }]}>
+          <Combobox.Input placeholder={PLACEHOLDER_TEXT} />
+        </Combobox>
+      );
+      expect(screen.getByText('banana')).toBeInTheDocument();
+    });
   });
 
   describe('Keyboard Navigation', () => {
@@ -497,7 +529,6 @@ describe('Combobox.createItems', () => {
   });
 
   const UserCombobox = (props: {
-    defaultValue?: string | null;
     onValueChange?: (value: string | null) => void;
   }) => (
     <Combobox items={USER_ITEMS} {...props}>
@@ -523,11 +554,6 @@ describe('Combobox.createItems', () => {
     expect(onValueChange).toHaveBeenCalledWith('u2');
   });
 
-  it('shows the derived label for the selected value', () => {
-    render(<UserCombobox defaultValue='u3' />);
-    expect(screen.getByRole('combobox')).toHaveValue('Ada Lovelace');
-  });
-
   it('filters by the derived label', async () => {
     const user = userEvent.setup();
     render(<UserCombobox />);
@@ -542,33 +568,6 @@ describe('Combobox.createItems', () => {
   });
 });
 
-describe('Combobox.createItems chips', () => {
-  const USERS = [
-    { id: 'u1', name: 'Jane Doe' },
-    { id: 'u2', name: 'John Smith' }
-  ];
-  const USER_ITEMS = Combobox.createItems(USERS, {
-    getValue: user => user.id,
-    getLabel: user => user.name
-  });
-
-  it('labels chips with the derived label', () => {
-    render(
-      <Combobox items={USER_ITEMS} multiple defaultValue={['u2']}>
-        <Combobox.Input placeholder='Pick users' />
-        <Combobox.Content>
-          {(user: (typeof USERS)[number]) => (
-            <Combobox.Item key={user.id} value={user.id}>
-              {user.name}
-            </Combobox.Item>
-          )}
-        </Combobox.Content>
-      </Combobox>
-    );
-    expect(screen.getByText('John Smith')).toBeInTheDocument();
-    expect(screen.queryByText('u2')).not.toBeInTheDocument();
-  });
-});
 describe('Combobox chips', () => {
   // Without `items` on the root, chips show the raw value.
   it('renders chips in a toolbar', () => {

@@ -188,19 +188,17 @@ export const createItemsDemo = {
   type: 'code',
   code: `
   function CreateItemsDemo() {
-    const users = [
-      { id: "u1", name: "Jane Doe" },
-      { id: "u2", name: "John Smith" },
-      { id: "u3", name: "Ada Lovelace" }
-    ];
-    const items = React.useMemo(
-      () =>
-        Combobox.createItems(users, {
-          getValue: user => user.id,
-          getLabel: user => user.name
-        }),
-      []
-    );
+    const items = React.useMemo(() => {
+      const users = [
+        { id: "u1", name: "Jane Doe" },
+        { id: "u2", name: "John Smith" },
+        { id: "u3", name: "Ada Lovelace" }
+      ];
+      return Combobox.createItems(users, {
+        getValue: user => user.id,
+        getLabel: user => user.name
+      });
+    }, []);
     const [value, setValue] = React.useState(null);
 
     return (
