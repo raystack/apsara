@@ -1,5 +1,6 @@
 'use client';
 
+import type { TextDirection } from '@base-ui/react';
 import { createContext, useContext } from 'react';
 
 import type {
@@ -25,8 +26,6 @@ export interface ThemeContextValue extends ThemeHandle {
   isRoot: boolean;
 }
 
-export type ThemeDirection = 'ltr' | 'rtl';
-
 export const ThemeContext = createContext<ThemeContextValue | null>(null);
 ThemeContext.displayName = 'ThemeContext';
 
@@ -35,10 +34,14 @@ export const RootThemeContext = createContext<ThemeHandle | null>(null);
 RootThemeContext.displayName = 'RootThemeContext';
 
 /** The nearest `dir` a theme set. Unset when no theme in the chain set one. */
-export const ThemeDirectionContext = createContext<ThemeDirection | undefined>(
+export const ThemeDirectionContext = createContext<TextDirection | undefined>(
   undefined
 );
 ThemeDirectionContext.displayName = 'ThemeDirectionContext';
+
+/** The nearest `nonce` a theme set. Unset when no theme in the chain set one. */
+export const ThemeNonceContext = createContext<string | undefined>(undefined);
+ThemeNonceContext.displayName = 'ThemeNonceContext';
 
 export interface UseThemeReturn extends ThemeHandle {
   /** The same shape bound to the root provider. */

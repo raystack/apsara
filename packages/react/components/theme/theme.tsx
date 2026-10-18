@@ -1,6 +1,10 @@
 'use client';
 
-import { CSPProvider, DirectionProvider } from '@base-ui/react';
+import {
+  CSPProvider,
+  DirectionProvider,
+  type TextDirection
+} from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import {
   type CSSProperties,
@@ -26,9 +30,9 @@ import {
   RootThemeContext,
   ThemeContext,
   type ThemeContextValue,
-  type ThemeDirection,
   ThemeDirectionContext,
   type ThemeHandle,
+  ThemeNonceContext,
   useThemeContextOrNull
 } from './context';
 import { createThemeScript, THEME_ID_ATTRIBUTE } from './script';
@@ -91,7 +95,7 @@ export interface ThemeProps
    * Text direction for this scope and its Base UI components. A nested theme inherits it when unset.
    * @default 'ltr'
    */
-  dir?: ThemeDirection;
+  dir?: TextDirection;
   /**
    * Icon overrides. `components` replaces a drawing by key, `props` applies to
    * every icon built by `createIcon`. Both layer per key across nested themes,
@@ -239,6 +243,8 @@ export function Theme({
 }: ThemeProps) {
   const parent = useThemeContextOrNull();
   const isRootTheme = isRoot ?? parent === null;
+  const inheritedNonce = useContext(ThemeNonceContext);
+  const inlineNonce = nonce ?? inheritedNonce;
 
   const reactId = useId();
   // `useId` emits characters invalid in a selector; the script's fallback is one.
@@ -384,7 +390,7 @@ export function Theme({
   useAppearanceTransition(
     resolved.appearance,
     disableTransitionOnChange,
-    nonce
+    inlineNonce
   );
 
   // What the server rendered from, before storage is consulted.
@@ -425,7 +431,11 @@ export function Theme({
     );
   }
   if (nonce) {
-    content = <CSPProvider nonce={nonce}>{content}</CSPProvider>;
+    content = (
+      <ThemeNonceContext.Provider value={nonce}>
+        <CSPProvider nonce={nonce}>{content}</CSPProvider>
+      </ThemeNonceContext.Provider>
+    );
   }
 
   // Where no script ran, the server's guess survives hydration silently.
@@ -465,7 +475,7 @@ export function Theme({
           // First child, so it patches the parent before any child is parsed.
           <script
             data-slot='theme-script'
-            nonce={nonce}
+            nonce={inlineNonce}
             dangerouslySetInnerHTML={{ __html: script }}
           />
         ) : null}
