@@ -16,9 +16,9 @@ export interface SwitchProps {
 
   /**
    * The size of the switch.
-   * @default "large"
+   * @default "medium"
    */
-  size?: 'large' | 'small';
+  size?: 'medium' | 'small';
 
   /** A unique identifier for the switch. */
   id?: string;

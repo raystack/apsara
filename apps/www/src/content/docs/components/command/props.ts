@@ -69,9 +69,9 @@ export interface CommandInputProps {
 
   /**
    * Size variant of the input field.
-   * @defaultValue "large"
+   * @defaultValue "medium"
    */
-  size?: 'small' | 'large';
+  size?: 'small' | 'medium';
 
   /** Additional CSS class names. */
   className?: string;

@@ -17,8 +17,8 @@ export const playground = {
     suffix: { type: 'text', initialValue: '' },
     size: {
       type: 'select',
-      options: ['small', 'large'],
-      initialValue: 'large'
+      options: ['small', 'medium'],
+      defaultValue: 'medium'
     }
   },
   getCode

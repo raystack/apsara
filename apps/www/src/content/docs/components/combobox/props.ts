@@ -65,9 +65,9 @@ export interface ComboboxRootProps {
 export interface ComboboxInputProps {
   /**
    * Size variant of the input field.
-   * @default "large"
+   * @default "medium"
    */
-  size?: 'small' | 'large';
+  size?: 'small' | 'medium';
 
   /** Whether the input is disabled. */
   disabled?: boolean;

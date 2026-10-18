@@ -12,7 +12,7 @@
 }
 
 /* Sizes */
-.badge-micro {
+.badge-xsmall {
   font-size: var(--rs-font-size-micro);
   line-height: var(--rs-line-height-micro);
   letter-spacing: var(--rs-letter-spacing-micro);
@@ -28,7 +28,7 @@
   height: calc(22px * var(--rs-scaling, 1));
 }
 
-.badge-regular {
+.badge-medium {
   font-size: var(--rs-font-size-regular);
   line-height: var(--rs-line-height-regular);
   letter-spacing: var(--rs-letter-spacing-regular);
@@ -78,7 +78,7 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
-.badge-micro .icon {
+.badge-xsmall .icon {
   /* Todo: var does not exist for 10px */
   width: calc(10px * var(--rs-scaling, 1));
   height: calc(10px * var(--rs-scaling, 1));
@@ -89,7 +89,7 @@
   height: var(--rs-space-4);
 }
 
-.badge-regular .icon {
+.badge-medium .icon {
   /* Todo: var does not exist for 14px */
   width: calc(14px * var(--rs-scaling, 1));
   height: calc(14px * var(--rs-scaling, 1));

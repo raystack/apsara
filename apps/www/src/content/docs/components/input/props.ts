@@ -1,9 +1,9 @@
 export interface InputProps {
   /**
    * Size variant of the input.
-   * @defaultValue "large"
+   * @defaultValue "medium"
    */
-  size?: 'small' | 'large';
+  size?: 'small' | 'medium';
 
   /** Whether the input is disabled. When true, chips are also disabled and their dismiss buttons are hidden. */
   disabled?: boolean;

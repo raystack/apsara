@@ -20,8 +20,8 @@ export const playground = {
     },
     size: {
       type: 'select',
-      options: ['large', 'small'],
-      defaultValue: 'large'
+      options: ['medium', 'small'],
+      defaultValue: 'medium'
     }
   },
   getCode
@@ -43,8 +43,8 @@ export const sizeDemo = {
   type: 'code',
   code: `
   <Flex gap={9} align="center">
-    <Switch size="large" />
-    <Switch size="large" defaultChecked />
+    <Switch size="medium" />
+    <Switch size="medium" defaultChecked />
     <Switch size="small" />
     <Switch size="small" defaultChecked />
   </Flex>`

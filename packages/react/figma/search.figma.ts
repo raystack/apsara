@@ -23,7 +23,7 @@ const value = figma.selectedInstance.getEnum('State', {
 // boolean has no public prop, so it is intentionally not mapped.
 const size = figma.selectedInstance.getEnum('Size', {
   Small: 'small',
-  Large: 'large'
+  Large: 'medium'
 });
 const variant = figma.selectedInstance.getEnum('Outline', {
   False: 'borderless'

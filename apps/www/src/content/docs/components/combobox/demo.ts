@@ -24,8 +24,8 @@ export const playground = {
     label: { type: 'text', initialValue: 'Fruits' },
     size: {
       type: 'select',
-      options: ['small', 'large'],
-      defaultValue: 'large'
+      options: ['small', 'medium'],
+      defaultValue: 'medium'
     },
     multiple: {
       type: 'checkbox',

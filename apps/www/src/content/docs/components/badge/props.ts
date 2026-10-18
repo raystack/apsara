@@ -15,7 +15,7 @@ export interface BadgeProps {
    * Size of the badge
    * @defaultValue "small"
    */
-  size?: 'micro' | 'small' | 'regular';
+  size?: 'xsmall' | 'small' | 'medium';
 
   /** Optional ReactNode to display an icon before the text */
   icon?: React.ReactNode;

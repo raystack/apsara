@@ -1,8 +1,8 @@
 export interface SeparatorProps {
-  /** Defines the length of the separator.
+  /** Runs the line edge to edge (`full`) or insets both ends (`middle`).
    * @default "full"
    */
-  size?: 'small' | 'half' | 'full';
+  variant?: 'full' | 'middle';
 
   /** Sets the color of the separator.
    * @default "primary"

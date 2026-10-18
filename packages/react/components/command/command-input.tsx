@@ -19,7 +19,7 @@ export const CommandInput = ({
   ref,
   leadingIcon,
   autoFocus = true,
-  size = 'large',
+  size = 'medium',
   placeholder = 'Search...',
   ...props
 }: CommandInputProps) => {

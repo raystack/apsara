@@ -29,8 +29,8 @@ export const playground = {
     },
     size: {
       type: 'select',
-      options: ['large', 'small'],
-      defaultValue: 'large'
+      options: ['medium', 'small'],
+      defaultValue: 'medium'
     }
   },
   getCode
@@ -62,8 +62,8 @@ export const sizeExamples = {
   type: 'code',
   tabs: [
     {
-      name: 'Large (default)',
-      code: `<Checkbox size="large" />`
+      name: 'Medium (default)',
+      code: `<Checkbox size="medium" />`
     },
     {
       name: 'Small',

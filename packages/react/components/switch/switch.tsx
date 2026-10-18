@@ -7,12 +7,12 @@ import styles from './switch.module.css';
 const switchVariants = cva(styles.switch, {
   variants: {
     size: {
-      large: styles.large,
+      medium: styles.medium,
       small: styles.small
     }
   },
   defaultVariants: {
-    size: 'large'
+    size: 'medium'
   }
 });
 

@@ -7,7 +7,7 @@ import styles from './tag.module.css';
 
 interface TagProps {
   value: TagType;
-  size?: 'small' | 'regular';
+  size?: 'small' | 'medium';
 }
 
 export default function Tag({ value, size = 'small' }: TagProps) {
@@ -15,7 +15,7 @@ export default function Tag({ value, size = 'small' }: TagProps) {
   return (
     <Badge
       screenReaderText={value}
-      size={size === 'regular' ? 'regular' : 'micro'}
+      size={size === 'medium' ? 'medium' : 'xsmall'}
       variant={value === 'beta' ? 'neutral' : 'gradient'}
       className={cx(styles.tag, styles[size])}
     >

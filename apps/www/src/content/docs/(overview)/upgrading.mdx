@@ -116,6 +116,44 @@ These filters used to match by mistake, and now match differently:
   `'2026/1/1T10:30'`, used to be read. It now matches only `neq`, and the
   timeline does not draw it. Store such dates as ISO 8601 (`2026-01-01T10:30`).
 
+## Unreleased: one size name per control height
+
+Controls share one set of size names. The 32px input and button size is
+`medium` everywhere. The pixel sizes do not change, and each component keeps
+its default size, so only code that passes an old value needs a change.
+TypeScript reports each old value.
+
+| Component | Before | After |
+|---|---|---|
+| `Button` | `size="normal"` (default) | `size="medium"` (default) |
+| `Input`, `TextArea`, `Search`, `Combobox.Input`, `Command.Input` | `size="large"` (default) | `size="medium"` (default) |
+| `Checkbox`, `Radio`, `Radio.Group`, `Switch` | `size="large"` (default) | `size="medium"` (default) |
+| `Badge` | `size="micro"` | `size="xsmall"` |
+| `Badge` | `size="regular"` | `size="medium"` |
+
+`small` keeps its name on every component, and `small` is still the `Badge`
+default.
+
+### Separator `size` becomes `variant`
+
+| Before | After |
+|---|---|
+| `size="full"` (default) | `variant="full"` (default) |
+| `size="half"` | `variant="middle"` |
+| `size="small"` | `variant="middle"`, or set the length with a class |
+
+`middle` insets both ends of the line from the container edges: 16px on a
+horizontal line and 8px on a vertical line. The line is centered. It is longer
+than the old `half` (50%) and `small` (20px) lines.
+
+```tsx
+// Before
+<Separator size="half" />
+
+// After
+<Separator variant="middle" />
+```
+
 ## 2.0: `Theme` is rewritten
 
 `Theme` used to put its tokens on `<html>` from an effect, so it could not
