@@ -1,5 +1,6 @@
 'use client';
 
+import { createChangeDetails } from '~/shared/change-details';
 import { Tabs } from '../../tabs';
 import { useDataView } from '../hooks/useDataView';
 
@@ -19,7 +20,12 @@ export function ViewSwitcher({ size = 'small' }: ViewSwitcherProps) {
   return (
     <Tabs
       value={activeView}
-      onValueChange={v => setActiveView(v)}
+      onValueChange={(v, eventDetails) =>
+        setActiveView(
+          v,
+          createChangeDetails(eventDetails.reason, eventDetails.event)
+        )
+      }
       size={size}
       data-slot='data-view-view-switcher'
     >

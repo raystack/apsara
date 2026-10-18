@@ -18,7 +18,10 @@ interface ComboboxContextValue<Value = string> {
   hasItems: boolean;
   inputContainerRef: RefObject<HTMLDivElement | null>;
   value: Value | Value[] | null | undefined;
-  onValueChange?: (value: Value | Value[] | null) => void;
+  onValueChange?: (
+    value: Value | Value[] | null,
+    eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
+  ) => void;
   getLabel: (value: Value) => string;
 }
 
@@ -43,7 +46,10 @@ export interface BaseComboboxRootProps<Value, Item = Value>
     ComboboxPrimitive.Root.Props<Value, boolean, Item>,
     'onValueChange' | 'onInputValueChange' | 'multiple'
   > {
-  onInputValueChange?: (inputValue: string) => void;
+  onInputValueChange?: (
+    inputValue: string,
+    eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
+  ) => void;
 }
 
 export interface SingleComboboxProps<Value = string, Item = Value>
@@ -51,7 +57,10 @@ export interface SingleComboboxProps<Value = string, Item = Value>
   multiple?: false;
   value?: Value | null;
   defaultValue?: Value | null;
-  onValueChange?: (value: Value | null) => void;
+  onValueChange?: (
+    value: Value | null,
+    eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
+  ) => void;
 }
 
 export interface MultipleComboboxProps<Value = string, Item = Value>
@@ -59,7 +68,10 @@ export interface MultipleComboboxProps<Value = string, Item = Value>
   multiple: true;
   value?: Value[];
   defaultValue?: Value[];
-  onValueChange?: (value: Value[]) => void;
+  onValueChange?: (
+    value: Value[],
+    eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
+  ) => void;
 }
 
 export type ComboboxRootProps<Value = string, Item = Value> =
@@ -106,7 +118,7 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
       eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
     ) => {
       setInputValueUnwrapped(value);
-      onInputValueChange?.(value);
+      onInputValueChange?.(value, eventDetails);
     },
     [onInputValueChange, setInputValueUnwrapped]
   );
@@ -119,11 +131,13 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
       setValueUnwrapped(value);
       if (multiple) {
         (onValueChange as MultipleComboboxProps<Value>['onValueChange'])?.(
-          value as Value[]
+          value as Value[],
+          eventDetails
         );
       } else {
         (onValueChange as SingleComboboxProps<Value>['onValueChange'])?.(
-          value as Value | null
+          value as Value | null,
+          eventDetails
         );
       }
     },

@@ -110,7 +110,10 @@ describe('Select', () => {
       await user.click(options[1]);
       await flushMicrotasks();
 
-      expect(handleValueChange).toHaveBeenCalledWith('banana');
+      expect(handleValueChange).toHaveBeenCalledWith(
+        'banana',
+        expect.objectContaining({ reason: 'item-press' })
+      );
       expect(handleValueChange).toHaveBeenCalledTimes(1);
     });
 
@@ -141,11 +144,17 @@ describe('Select', () => {
 
       await user.click(options[1]);
       await flushMicrotasks();
-      expect(handleValueChange).toHaveBeenCalledWith(['banana']);
+      expect(handleValueChange).toHaveBeenCalledWith(
+        ['banana'],
+        expect.anything()
+      );
 
       await user.click(options[4]);
       await flushMicrotasks();
-      expect(handleValueChange).toHaveBeenCalledWith(['banana', 'pineapple']);
+      expect(handleValueChange).toHaveBeenCalledWith(
+        ['banana', 'pineapple'],
+        expect.anything()
+      );
 
       const optionsAfterSelection = screen.getAllByRole('option');
       expect(optionsAfterSelection[1]).toHaveAttribute('aria-selected', 'true');
@@ -162,11 +171,14 @@ describe('Select', () => {
 
       await user.click(options[1]);
       await flushMicrotasks();
-      expect(handleValueChange).toHaveBeenCalledWith(['banana']);
+      expect(handleValueChange).toHaveBeenCalledWith(
+        ['banana'],
+        expect.anything()
+      );
 
       await user.click(options[1]);
       await flushMicrotasks();
-      expect(handleValueChange).toHaveBeenCalledWith([]);
+      expect(handleValueChange).toHaveBeenCalledWith([], expect.anything());
     });
 
     it('renders a checkbox indicator that reflects selection state', async () => {
@@ -246,7 +258,10 @@ describe('Select', () => {
       await user.keyboard('{Enter}');
       await flushMicrotasks();
 
-      expect(handleValueChange).toHaveBeenCalledWith('banana');
+      expect(handleValueChange).toHaveBeenCalledWith(
+        'banana',
+        expect.anything()
+      );
       expect(handleValueChange).toHaveBeenCalledTimes(1);
     });
 
@@ -264,7 +279,10 @@ describe('Select', () => {
       await user.keyboard('{ArrowDown}{ArrowDown}{Enter}');
       await flushMicrotasks();
 
-      expect(handleValueChange).toHaveBeenCalledWith('blueberry');
+      expect(handleValueChange).toHaveBeenCalledWith(
+        'blueberry',
+        expect.anything()
+      );
     });
   });
 

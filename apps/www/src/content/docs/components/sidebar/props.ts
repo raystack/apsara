@@ -5,7 +5,10 @@ export interface SidebarRootProps {
   open?: boolean;
 
   /** Callback when expanded/collapsed state changes. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    details: { reason: 'trigger-press' | 'none'; event: Event }
+  ) => void;
 
   /** Default expanded/collapsed state.
    * @default true
@@ -80,7 +83,10 @@ export interface SidebarGroupProps {
   defaultOpen?: boolean;
 
   /** Callback when the group's expanded/collapsed state changes. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Optional ReactNode for group icon. */
   leadingIcon?: ReactNode;

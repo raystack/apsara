@@ -31,11 +31,11 @@ export interface TextAreaProps {
 
   /**
    * Convenience callback fired alongside `onChange` with the new string value.
-   * Use this when you only need the value rather than the full event.
+   * `eventDetails.event` is the native input event.
    */
   onValueChange?: (
     value: string,
-    event: React.ChangeEvent<HTMLTextAreaElement>
+    eventDetails: { reason: 'none'; event: Event }
   ) => void;
 
   /** Additional CSS class names. */

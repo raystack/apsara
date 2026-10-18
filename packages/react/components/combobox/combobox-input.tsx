@@ -1,6 +1,8 @@
 'use client';
 
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
+import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
+import { REASONS } from '@base-ui/react/internals/reasons';
 import { type ComponentProps } from 'react';
 import { ChevronDownIcon } from '~/icons';
 import { Input } from '../input';
@@ -26,7 +28,10 @@ export const ComboboxInput = ({ ref, ...props }: ComboboxInputProps) => {
               ? value.map(val => ({
                   label: getLabel(val),
                   onRemove: () =>
-                    onValueChange?.((value as string[])?.filter(v => v !== val))
+                    onValueChange?.(
+                      (value as string[])?.filter(v => v !== val),
+                      createChangeEventDetails(REASONS.chipRemovePress)
+                    )
                 }))
               : undefined
           }

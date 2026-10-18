@@ -1,6 +1,11 @@
 'use client';
 
-import { Menu as MenuPrimitive } from '@base-ui/react';
+import {
+  Autocomplete as AutocompletePrimitive,
+  Menu as MenuPrimitive
+} from '@base-ui/react';
+import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
+import { REASONS } from '@base-ui/react/internals/reasons';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { createContext, useCallback, useContext, useRef } from 'react';
 
@@ -16,7 +21,10 @@ interface CommonProps {
 
 interface MenuContextValue extends CommonProps {
   parent?: CommonProps;
-  onInputValueChange?: (value: string) => void;
+  onInputValueChange?: (
+    value: string,
+    eventDetails: AutocompletePrimitive.Root.ChangeEventDetails
+  ) => void;
 }
 
 interface UseMenuContextReturn extends MenuContextValue {
@@ -80,7 +88,10 @@ export interface AutocompleteMenuRootProps
   extends MenuPrimitive.Root.Props,
     CommonProps {
   autocomplete: true;
-  onInputValueChange?: (value: string) => void;
+  onInputValueChange?: (
+    value: string,
+    eventDetails: AutocompletePrimitive.Root.ChangeEventDetails
+  ) => void;
   defaultInputValue?: string;
 }
 
@@ -114,9 +125,12 @@ export const MenuRoot = ({
   const isInitialRender = useRef(true);
 
   const setValue = useCallback(
-    (value: string) => {
+    (
+      value: string,
+      eventDetails: AutocompletePrimitive.Root.ChangeEventDetails
+    ) => {
       setInputValueUnwrapped(value);
-      onInputValueChange?.(value);
+      onInputValueChange?.(value, eventDetails);
     },
     [onInputValueChange, setInputValueUnwrapped]
   );
@@ -125,7 +139,10 @@ export const MenuRoot = ({
     useCallback(
       (value: boolean, eventDetails: MenuPrimitive.Root.ChangeEventDetails) => {
         if (!value && autocomplete) {
-          setValue('');
+          setValue(
+            '',
+            createChangeEventDetails(REASONS.inputClear, eventDetails.event)
+          );
           isInitialRender.current = true;
         }
         setOpenUnwrapped(value);
@@ -173,7 +190,10 @@ export interface AutocompleteMenuSubMenuProps
   autocomplete: true;
   autocompleteMode?: 'auto' | 'manual';
   inputValue?: string;
-  onInputValueChange?: (value: string) => void;
+  onInputValueChange?: (
+    value: string,
+    eventDetails: AutocompletePrimitive.Root.ChangeEventDetails
+  ) => void;
   defaultInputValue?: string;
 }
 
@@ -210,9 +230,12 @@ export const MenuSubMenu = ({
   const contentRef = useRef<HTMLDivElement>(null);
 
   const setValue = useCallback(
-    (value: string) => {
+    (
+      value: string,
+      eventDetails: AutocompletePrimitive.Root.ChangeEventDetails
+    ) => {
       setInputValueUnwrapped(value);
-      onInputValueChange?.(value);
+      onInputValueChange?.(value, eventDetails);
     },
     [onInputValueChange, setInputValueUnwrapped]
   );
@@ -221,7 +244,10 @@ export const MenuSubMenu = ({
     useCallback(
       (value: boolean, eventDetails: MenuPrimitive.Root.ChangeEventDetails) => {
         if (!value && autocomplete) {
-          setValue('');
+          setValue(
+            '',
+            createChangeEventDetails(REASONS.inputClear, eventDetails.event)
+          );
           isInitialRender.current = true;
         }
         setOpenUnwrapped(value);

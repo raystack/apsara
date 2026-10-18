@@ -14,6 +14,10 @@ import {
   useState,
   useSyncExternalStore
 } from 'react';
+import {
+  type ChangeDetails,
+  createChangeDetails
+} from '~/shared/change-details';
 import { type MentionAttrs, mentionKey } from './mention';
 import type {
   EditorMentionItem,
@@ -151,7 +155,7 @@ export interface UseSuggestionMenuOptions<Item extends SuggestionItem> {
   onSelect: (item: Item, state: SuggestionState) => void;
   /** Closes the menu and leaves the typed text literal. */
   dismiss: () => void;
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (open: boolean, details: SuggestionOpenChangeDetails) => void;
   listboxId: string;
   /** The part name in the dev warning for a rejected `onSearch`. */
   name: string;
@@ -172,6 +176,9 @@ export interface UseSuggestionMenuResult<Item extends SuggestionItem> {
   /** Routed from the ProseMirror plugin while a query is active. */
   handleKeyDown: (event: KeyboardEvent, state: SuggestionState) => boolean;
 }
+
+/** `open` follows the editor state, so the reason is always `'none'`. */
+export type SuggestionOpenChangeDetails = ChangeDetails<'none'>;
 
 export function useSuggestionMenu<Item extends SuggestionItem>({
   getView,
@@ -285,15 +292,15 @@ export function useSuggestionMenu<Item extends SuggestionItem>({
 
   // Held past the config that supplied it: closing clears the active trigger,
   // so reading the callback off the live config would swallow the `false`.
-  const onOpenChangeRef = useRef<((open: boolean) => void) | undefined>(
-    undefined
-  );
+  const onOpenChangeRef = useRef<
+    UseSuggestionMenuOptions<Item>['onOpenChange'] | undefined
+  >(undefined);
   if (onOpenChange) onOpenChangeRef.current = onOpenChange;
   const lastOpenRef = useRef(false);
   useEffect(() => {
     if (lastOpenRef.current === open) return;
     lastOpenRef.current = open;
-    onOpenChangeRef.current?.(open);
+    onOpenChangeRef.current?.(open, createChangeDetails('none'));
   }, [open]);
 
   const close = useCallback(() => {

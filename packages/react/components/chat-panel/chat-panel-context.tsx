@@ -2,17 +2,19 @@
 
 import type { DraggableSyntheticListeners } from '@dnd-kit/core';
 import { createContext, RefObject, useContext } from 'react';
+import type { ChangeDetails } from '~/shared/change-details';
 
 export type ChatPanelMode = 'docked' | 'floating' | 'minimized';
 export type ChatPanelSide = 'left' | 'right';
+export type ChatPanelModeChangeDetails = ChangeDetails<'trigger-press'>;
 
 export interface ChatPanelContextValue {
   mode: ChatPanelMode;
   side: ChatPanelSide;
-  setMode: (mode: ChatPanelMode) => void;
-  minimize: () => void;
-  restore: () => void;
-  toggleFloating: () => void;
+  setMode: (mode: ChatPanelMode, details: ChatPanelModeChangeDetails) => void;
+  minimize: (event: Event) => void;
+  restore: (event: Event) => void;
+  toggleFloating: (event: Event) => void;
   /** dnd-kit activator ref for the drag handle (the header). */
   dragHandleRef: (element: HTMLElement | null) => void;
   /** dnd-kit activator listeners; undefined while dragging is disabled. */

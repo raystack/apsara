@@ -132,7 +132,10 @@ describe('Sidebar', () => {
       const handle = screen.getByRole('button', { name: COLLAPSE_TEXT });
       fireEvent.click(handle);
 
-      expect(onOpenChange).toHaveBeenCalledWith(false);
+      expect(onOpenChange).toHaveBeenCalledWith(
+        false,
+        expect.objectContaining({ reason: 'trigger-press' })
+      );
     });
 
     it('supports keyboard navigation on handle', async () => {
@@ -144,7 +147,7 @@ describe('Sidebar', () => {
       handle.focus();
       await user.keyboard('{Enter}');
 
-      expect(onOpenChange).toHaveBeenCalledWith(false);
+      expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
     });
 
     it('supports space key on handle', async () => {
@@ -156,7 +159,7 @@ describe('Sidebar', () => {
       handle.focus();
       await user.keyboard(' ');
 
-      expect(onOpenChange).toHaveBeenCalledWith(false);
+      expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
     });
 
     it('shows a custom handle tooltip via collapseTooltip', async () => {
@@ -358,7 +361,7 @@ describe('Sidebar', () => {
       const handle = screen.getByRole('button', { name: 'Expand sidebar' });
       fireEvent.click(handle);
 
-      expect(onOpenChange).toHaveBeenCalledWith(true);
+      expect(onOpenChange).toHaveBeenCalledWith(true, expect.anything());
     });
 
     it('flips the visual open state so collapse-hiding styles turn off', async () => {
@@ -887,7 +890,10 @@ describe('Sidebar', () => {
 
       const trigger = screen.getByRole('button', { name: /Main/ });
       fireEvent.click(trigger);
-      expect(onOpenChange).toHaveBeenCalledWith(true);
+      expect(onOpenChange).toHaveBeenCalledWith(
+        true,
+        expect.objectContaining({ reason: 'trigger-press' })
+      );
       expect(screen.queryByText(DASHBOARD_ITEM_TEXT)).not.toBeInTheDocument();
 
       rerender(
@@ -930,11 +936,11 @@ describe('Sidebar', () => {
 
       const trigger = screen.getByRole('button', { name: /Main/ });
       fireEvent.click(trigger);
-      expect(onOpenChange).toHaveBeenLastCalledWith(false);
+      expect(onOpenChange).toHaveBeenLastCalledWith(false, expect.anything());
       expect(screen.queryByText(DASHBOARD_ITEM_TEXT)).not.toBeInTheDocument();
 
       fireEvent.click(trigger);
-      expect(onOpenChange).toHaveBeenLastCalledWith(true);
+      expect(onOpenChange).toHaveBeenLastCalledWith(true, expect.anything());
       expect(screen.getByText(DASHBOARD_ITEM_TEXT)).toBeInTheDocument();
     });
 
@@ -1091,7 +1097,10 @@ describe('Sidebar', () => {
       );
 
       fireEvent.click(screen.getByTestId('sidebar-trigger'));
-      expect(onOpenChange).toHaveBeenCalledWith(false);
+      expect(onOpenChange).toHaveBeenCalledWith(
+        false,
+        expect.objectContaining({ reason: 'trigger-press' })
+      );
     });
 
     it('is disabled when the sidebar is not collapsible', () => {

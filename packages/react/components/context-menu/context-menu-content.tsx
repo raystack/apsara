@@ -144,7 +144,7 @@ export const ContextMenuContent = ({
               inline
               open
               value={inputValue}
-              onValueChange={(value: string) => onInputValueChange?.(value)}
+              onValueChange={onInputValueChange}
               autoHighlight={!!inputValue?.length}
               mode='none'
               loopFocus={false}
