@@ -6,6 +6,7 @@ import {
   RefObject,
   useCallback,
   useContext,
+  useId,
   useMemo,
   useRef,
   useState
@@ -16,10 +17,13 @@ interface ComboboxContextValue<Value = string> {
   multiple: boolean;
   inputValue: string;
   hasItems: boolean;
+  inputId: string;
   inputContainerRef: RefObject<HTMLDivElement | null>;
   value: Value | Value[] | null | undefined;
   onValueChange?: (value: Value | Value[] | null) => void;
   getLabel: (value: Value) => string;
+  /** Counts the items that match the input when `items` is not set. */
+  registerMatch: () => () => void;
 }
 
 const ComboboxContext = createContext<
@@ -37,6 +41,11 @@ export const useComboboxContext = <
   }
   return context as ComboboxContextValue<Value>;
 };
+
+const MatchCountContext = createContext(0);
+
+/** Number of rendered items that match the input when `items` is not set. */
+export const useMatchCount = () => useContext(MatchCountContext);
 
 export interface BaseComboboxRootProps<Value, Item = Value>
   extends Omit<
@@ -76,18 +85,30 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
   items,
   required,
   itemToStringLabel,
+  id: idProp,
   ...props
 }: ComboboxRootProps<Value, Item>) => {
+  const generatedId = useId();
+  const id = idProp ?? generatedId;
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
 
   const [inputValue, setInputValue] = useState('');
   const [internalValue, setInternalValue] = useState<
     Value | Value[] | null | undefined
-  >(defaultValue ?? null);
+  >(defaultValue ?? (multiple ? [] : null));
+  const [matchCount, setMatchCount] = useState(0);
   const inputContainerRef = useRef<HTMLDivElement>(null);
 
-  const computedValue = providedValue ?? internalValue;
+  // Base UI is always controlled, so a value set through the context (for
+  // example by removing a chip that is hidden behind "+N") reaches it.
+  const computedValue =
+    providedValue === undefined ? internalValue : providedValue;
+
+  const registerMatch = useCallback(() => {
+    setMatchCount(count => count + 1);
+    return () => setMatchCount(count => count - 1);
+  }, []);
 
   const handleInputValueChange = useCallback(
     (
@@ -137,12 +158,23 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
       multiple,
       inputValue,
       hasItems: !!items,
+      inputId: id,
       inputContainerRef,
       value: computedValue,
       onValueChange: handleValueChange,
-      getLabel
+      getLabel,
+      registerMatch
     }),
-    [multiple, inputValue, items, computedValue, handleValueChange, getLabel]
+    [
+      multiple,
+      inputValue,
+      items,
+      id,
+      computedValue,
+      handleValueChange,
+      getLabel,
+      registerMatch
+    ]
   );
 
   return (
@@ -153,13 +185,13 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
         onInputValueChange={handleInputValueChange}
         items={items}
         itemToStringLabel={itemToStringLabel}
-        value={providedValue}
-        defaultValue={defaultValue}
+        value={computedValue}
+        id={id}
         required={resolvedRequired}
         modal
         {...props}
       >
-        {children}
+        <MatchCountContext value={matchCount}>{children}</MatchCountContext>
       </ComboboxPrimitive.Root>
     </ComboboxContext>
   );

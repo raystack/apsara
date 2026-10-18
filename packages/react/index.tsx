@@ -130,9 +130,11 @@ export { Collapsible } from './components/collapsible';
 export * from './components/color-picker';
 export {
   Combobox,
+  type ComboboxClearProps,
   type ComboboxContentProps,
   type ComboboxInputProps,
   type ComboboxItemProps,
+  type ComboboxLabelProps,
   type ComboboxProps
 } from './components/combobox';
 export {
