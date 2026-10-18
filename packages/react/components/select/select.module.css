@@ -286,3 +286,21 @@
 .hidden {
   display: none;
 }
+
+.itemText {
+  flex: 1;
+  min-width: 0;
+}
+
+.itemIndicator {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.itemIndicator svg {
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
+}
