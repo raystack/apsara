@@ -1,5 +1,6 @@
 'use client';
 
+import { useControlled } from '@base-ui/utils/useControlled';
 import { TZDate } from '@date-fns/tz';
 import { cva, cx, VariantProps } from 'class-variance-authority';
 import { parseISO } from 'date-fns';
@@ -67,6 +68,10 @@ export type FilterChipChangeDetails = ChangeDetails<
   { operation: string }
 >;
 
+export type FilterChipOperationChangeDetails = ChangeDetails<
+  SelectChangeEventDetails['reason']
+>;
+
 /* The message `DatePicker` reports, so `onErrorChange` reads the same. */
 const INVALID_DATE = 'Invalid date';
 
@@ -80,6 +85,24 @@ const toDateValue = (value: unknown, timeZone?: string): Date | undefined => {
 
 /** Checked on change, not keydown, so paste and IME input are covered. */
 const PARTIAL_NUMBER = /^-?\d*\.?\d*$/;
+
+/* A `number` column reports the text as is while it has no digits (`-`, `.`). */
+const toNumberValue = (text: string): FilterChipValue => {
+  const parsed = Number(text);
+  return text === '' || Number.isNaN(parsed) ? text : parsed;
+};
+
+/* Shows a number without an exponent (`1e-7`). A value that is not a number shows as empty. */
+const toNumberText = (value: FilterChipValue): string => {
+  const text =
+    typeof value === 'number'
+      ? value.toLocaleString('en-US', {
+          useGrouping: false,
+          maximumFractionDigits: 20
+        })
+      : String(value);
+  return PARTIAL_NUMBER.test(text) ? text : '';
+};
 
 /**
  * The `CalendarPreview` props that consumers may forward to the chip's
@@ -112,10 +135,13 @@ export type FilterChipCalendarProps = Pick<
 };
 
 export interface FilterChipProps
-  extends ComponentProps<'div'>,
+  extends Omit<ComponentProps<'div'>, 'defaultValue'>,
     VariantProps<typeof chip> {
   label: string;
   value?: FilterChipValue;
+  defaultValue?: FilterChipValue;
+  operation?: string;
+  defaultOperation?: string;
   onRemove?: () => void;
   columnType?: FilterTypes;
   options?: FilterSelectOption[];
@@ -123,7 +149,10 @@ export interface FilterChipProps
     value: FilterChipValue,
     details: FilterChipChangeDetails
   ) => void;
-  onOperationChange?: (operation: string) => void;
+  onOperationChange?: (
+    operation: string,
+    details: FilterChipOperationChangeDetails
+  ) => void;
   leadingIcon?: ReactElement;
   operations?: FilterOperator<string>[];
   selectProps?: BaseSelectProps;
@@ -142,6 +171,9 @@ export interface FilterChipProps
 export const FilterChip = ({
   label,
   value,
+  defaultValue,
+  operation: operationProp,
+  defaultOperation,
   onRemove,
   className,
   ref,
@@ -160,24 +192,28 @@ export const FilterChip = ({
     ? operations
     : filterOperators[columnType];
 
-  const [operation, setOperation] = useState<FilterOperation | undefined>(
-    computedOperations?.[0]
+  const [operationValue, setOperationValue] = useControlled<string | undefined>(
+    {
+      controlled: operationProp,
+      default: defaultOperation ?? computedOperations?.[0]?.value,
+      name: 'FilterChip',
+      state: 'operation'
+    }
   );
+  const operation = computedOperations?.find(o => o.value === operationValue);
   const isNumberColumn = columnType === FilterType.number;
   // `??` not `||`, since a falsy option value like `0` is a real selection.
-  // For `number`, the value is shown without an exponent (`1e-7`), and a
-  // non-numeric value starts empty, since the regex would reject every edit.
-  const [filterValue, setFilterValue] = useState<FilterChipValue>(() => {
-    if (!isNumberColumn) return value ?? '';
-    const text =
-      typeof value === 'number'
-        ? value.toLocaleString('en-US', {
-            useGrouping: false,
-            maximumFractionDigits: 20
-          })
-        : String(value ?? '');
-    return PARTIAL_NUMBER.test(text) ? text : '';
+  const [filterValue, setFilterValue] = useControlled<FilterChipValue>({
+    controlled: value,
+    default: defaultValue ?? '',
+    name: 'FilterChip',
+    state: 'value'
   });
+  // The typed text keeps `1.` and `-` editable. It shows while it matches the value.
+  const [numberText, setNumberText] = useState(() => toNumberText(filterValue));
+  const shownNumberText = Object.is(toNumberValue(numberText), filterValue)
+    ? numberText
+    : toNumberText(filterValue);
 
   const [dateOpen, setDateOpen] = useState(false);
   const {
@@ -203,31 +239,29 @@ export const FilterChip = ({
   );
 
   const handleOperationChange = useCallback(
-    (operation: FilterOperation) => {
-      setOperation(operation);
-      if (operation?.value) onOperationChange?.(operation.value);
+    (next: FilterOperation, eventDetails: SelectChangeEventDetails) => {
+      setOperationValue(next.value);
+      if (next.value) {
+        onOperationChange?.(
+          next.value,
+          createChangeDetails(eventDetails.reason, eventDetails.event)
+        );
+      }
     },
-    [onOperationChange]
-  );
-
-  const emitValueChange = useCallback(
-    (value: FilterChipValue, reason: FilterChipChangeReason, event?: Event) => {
-      onValueChange?.(
-        value,
-        createChangeDetails(reason, event, {
-          operation: operation?.value ?? ''
-        })
-      );
-    },
-    [operation, onValueChange]
+    [onOperationChange, setOperationValue]
   );
 
   const handleFilterValueChange = useCallback(
     (value: FilterChipValue, reason: FilterChipChangeReason, event?: Event) => {
       setFilterValue(value);
-      emitValueChange(value, reason, event);
+      onValueChange?.(
+        value,
+        createChangeDetails(reason, event, {
+          operation: operationValue ?? ''
+        })
+      );
     },
-    [emitValueChange]
+    [operationValue, onValueChange, setFilterValue]
   );
 
   // Select works on strings, so map each pick back to its option's value.
@@ -250,16 +284,15 @@ export const FilterChip = ({
         handleFilterValueChange(raw, 'none', event);
         return;
       }
-      // Skipping setFilterValue makes React restore the controlled value.
+      // Skipping the state update makes React restore the shown text.
       if (!PARTIAL_NUMBER.test(raw)) return;
       const parsed = Number(raw);
       if (parsed === Infinity || parsed === -Infinity) return;
 
-      setFilterValue(raw);
-      const isIntermediate = raw === '' || Number.isNaN(parsed);
-      emitValueChange(isIntermediate ? raw : parsed, 'none', event);
+      setNumberText(raw);
+      handleFilterValueChange(toNumberValue(raw), 'none', event);
     },
-    [isNumberColumn, handleFilterValueChange, emitValueChange]
+    [isNumberColumn, handleFilterValueChange]
   );
 
   const renderValueInput = () => {
@@ -365,7 +398,7 @@ export const FilterChip = ({
             <Input
               variant={variant === 'text' ? 'borderless' : 'default'}
               classNames={{ container: styles.inputField }}
-              value={filterValue.toString()}
+              value={isNumberColumn ? shownNumberText : filterValue.toString()}
               onChange={e =>
                 handleTextInputChange(e.target.value, e.nativeEvent)
               }

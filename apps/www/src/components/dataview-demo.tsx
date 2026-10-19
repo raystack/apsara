@@ -287,7 +287,7 @@ export function DataViewEmptyZeroDemo() {
           data={filtered ? [] : people}
           fields={fields}
           defaultSort={defaultSort}
-          query={
+          defaultQuery={
             filtered
               ? { filters: [{ name: 'name', operator: 'eq', value: 'Nobody' }] }
               : undefined
@@ -436,7 +436,7 @@ export function DataViewGroupingDemo() {
           data={groupedPeople}
           fields={fields}
           defaultSort={defaultSort}
-          query={{ group_by: ['team'] }}
+          defaultQuery={{ group_by: ['team'] }}
         >
           <DataView.Toolbar>
             <DataView.Filters />
@@ -468,7 +468,7 @@ export function DataViewVirtualizedGroupingDemo() {
           data={data}
           fields={fields}
           defaultSort={defaultSort}
-          query={{ group_by: ['team'] }}
+          defaultQuery={{ group_by: ['team'] }}
         >
           <DataView.Toolbar>
             <DataView.Filters />
@@ -1078,7 +1078,7 @@ export function DataViewTimelineGroupingDemo() {
         data={tasks}
         fields={taskFields}
         defaultSort={{ name: 'start', order: 'asc' }}
-        query={{ group_by: ['team'] }}
+        defaultQuery={{ group_by: ['team'] }}
         getRowId={task => task.id}
       >
         <DataView.Toolbar>

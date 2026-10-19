@@ -11,6 +11,10 @@ import {
   useRef,
   useState
 } from 'react';
+import {
+  type ChangeDetails,
+  createChangeDetails
+} from '~/shared/change-details';
 import { TourContent } from './tour-content';
 import { TourContext, type TourContextValue } from './tour-context';
 import { TourOverlay } from './tour-overlay';
@@ -30,6 +34,11 @@ import { rectsEqual } from './utils';
 const FADE_OUT_MS = 150;
 
 const REVEAL_TIMEOUT_MS = 2000;
+
+export type TourStepIndexChangeDetails = ChangeDetails<
+  'none',
+  { step: TourStep }
+>;
 
 function isElementInView(el: Element): boolean {
   const rect = el.getBoundingClientRect();
@@ -80,8 +89,11 @@ export interface TourRootProps {
   stepIndex?: number;
   /** Initially active step when uncontrolled. @default 0 */
   defaultStepIndex?: number;
-  /** Called when the active step changes. */
-  onStepChange?: (index: number, step: TourStep) => void;
+  /** Called when the active step changes. `details.step` is the new step. */
+  onStepIndexChange?: (
+    index: number,
+    details: TourStepIndexChangeDetails
+  ) => void;
   /** Receives every tour lifecycle event. */
   onEvent?: (event: TourEvent) => void;
   /** A ref populated with the imperative tour controls. */
@@ -123,7 +135,7 @@ export function TourRoot({
   onOpenChange,
   stepIndex: stepIndexProp,
   defaultStepIndex = 0,
-  onStepChange,
+  onStepIndexChange,
   onEvent,
   actionsRef,
   targetTimeout = 5000,
@@ -158,8 +170,8 @@ export function TourRoot({
   openRef.current = open;
   const onOpenChangeRef = useRef(onOpenChange);
   onOpenChangeRef.current = onOpenChange;
-  const onStepChangeRef = useRef(onStepChange);
-  onStepChangeRef.current = onStepChange;
+  const onStepIndexChangeRef = useRef(onStepIndexChange);
+  onStepIndexChangeRef.current = onStepIndexChange;
   const onEventRef = useRef(onEvent);
   onEventRef.current = onEvent;
   const targetNotFoundRef = useRef(targetNotFound);
@@ -185,7 +197,12 @@ export function TourRoot({
   const setIndex = useCallback(
     (nextIndex: number) => {
       setIndexUnwrapped(nextIndex);
-      onStepChangeRef.current?.(nextIndex, stepsRef.current[nextIndex]);
+      onStepIndexChangeRef.current?.(
+        nextIndex,
+        createChangeDetails('none', undefined, {
+          step: stepsRef.current[nextIndex]
+        })
+      );
     },
     [setIndexUnwrapped]
   );

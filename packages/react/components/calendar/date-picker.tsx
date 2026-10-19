@@ -1,13 +1,18 @@
 'use client';
 
+import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { useEffect, useRef, useState } from 'react';
-import { PropsBase } from 'react-day-picker';
+import { type Modifiers, PropsBase } from 'react-day-picker';
 import { CalendarIcon } from '~/icons';
+import {
+  type ChangeDetails,
+  createChangeDetails
+} from '~/shared/change-details';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
 import { Popover } from '../popover';
@@ -26,6 +31,10 @@ dayjs.extend(isSameOrBefore);
  * they're already unreachable.
  */
 type DatePickerCalendarSlot = Omit<PropsBase, 'mode'> & CalendarPropsExtended;
+
+export type DatePickerChangeDetails = ChangeDetails<
+  'item-press' | 'input-change'
+>;
 
 export interface DatePickerSlotProps {
   input?: InputProps;
@@ -46,7 +55,7 @@ export interface DatePickerProps {
   calendarProps?: DatePickerCalendarSlot;
   /** @deprecated Use `slotProps.popover` instead. */
   popoverProps?: PopoverContentProps;
-  onSelect?: (date: Date) => void;
+  onValueChange?: (date: Date, details: DatePickerChangeDetails) => void;
   /**
    * Fires when the typed-input validation state changes: with a message when
    * the typed text stops parsing as a valid in-bounds date, and with
@@ -73,7 +82,7 @@ export function DatePicker({
   popoverProps: legacyPopoverProps,
   value: valueProp,
   defaultValue,
-  onSelect = () => undefined,
+  onValueChange,
   onErrorChange,
   children,
   showCalendarIcon = true,
@@ -89,14 +98,15 @@ export function DatePicker({
    * to `Popover.Trigger` even when the input itself is `disabled`.
    */
   const isDisabled = !!inputProps.disabled;
-  /*
-   * Initial value: controlled prop > defaultValue (uncontrolled init) >
-   * undefined. With both omitted the picker starts unselected so the
-   * "Select date" placeholder is honest.
-   */
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    valueProp ?? defaultValue
-  );
+  const [value, setValueUnwrapped] = useControlled<Date | undefined>({
+    controlled: valueProp,
+    default: defaultValue,
+    name: 'DatePicker',
+    state: 'value'
+  });
+  // A valid typed date. Enter, blur or an outside click commits it.
+  const [typedDate, setTypedDate] = useState<Date | undefined>();
+  const selectedDate = typedDate ?? value;
 
   const errorRef = useRef<string | undefined>(undefined);
 
@@ -104,12 +114,6 @@ export function DatePicker({
     if (next !== errorRef.current) onErrorChange?.(next);
     errorRef.current = next;
   }
-
-  // Sync only when controlled, since uncontrolled mode keeps its own state.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: compare on timestamp, not Date identity
-  useEffect(() => {
-    if (valueProp !== undefined) setSelectedDate(valueProp);
-  }, [valueProp?.getTime()]);
 
   const formattedDate = selectedDate
     ? dayjs(selectedDate).format(dateFormat)
@@ -126,13 +130,6 @@ export function DatePicker({
     calendarProps?.defaultMonth ?? selectedDate ?? new Date()
   );
 
-  // Mirror for reading inside the outside-click callback closure.
-  const selectedDateRef = useRef(selectedDate);
-
-  useEffect(() => {
-    selectedDateRef.current = selectedDate;
-  }, [selectedDate]);
-
   // Sync the input when the committed date changes from a non-typing source.
   useEffect(() => {
     setInputValue(formattedDate);
@@ -148,36 +145,44 @@ export function DatePicker({
    * `calendarProps.defaultMonth` so consumers controlling the initial view
    * see it every time the picker opens, not only on first mount.
    */
+  // biome-ignore lint/correctness/useExhaustiveDependencies: compare on timestamp, not Date identity
   useEffect(() => {
     if (popover.isOpen) {
       setViewMonth(calendarProps?.defaultMonth ?? selectedDate ?? new Date());
     }
-  }, [popover.isOpen, selectedDate, calendarProps?.defaultMonth]);
+  }, [popover.isOpen, selectedDate?.getTime(), calendarProps?.defaultMonth]);
 
-  function closePicker() {
-    popover.disengage();
-    const committedDate = selectedDateRef.current;
-    const hadError = errorRef.current !== undefined;
-    setInputValue(committedDate ? dayjs(committedDate).format(dateFormat) : '');
-    updateError(undefined);
-    /*
-     * Emit the committed Date directly. Going through
-     * `dayjs(formattedString).toDate()` re-parses the formatted string without
-     * a format spec, which falls back to native `Date` parsing and can shift
-     * non-ISO formats (e.g. DD/MM/YYYY → wrong Date).
-     *
-     * Skip when nothing was ever selected, since `onSelect` is typed
-     * `(date: Date) => void` so we don't fire with `undefined`.
-     */
-    if (!hadError && committedDate) onSelect(committedDate);
+  function setValue(date: Date, details: DatePickerChangeDetails) {
+    setValueUnwrapped(date);
+    onValueChange?.(date, details);
   }
 
-  function handleSelect(day: Date | undefined) {
-    setSelectedDate(day);
-    // RDP can hand us `undefined` when `required={false}` and the user
-    // clicks the currently-selected day (deselect). Only forward defined
-    // dates to consumer `onSelect`, which keeps the prop type narrow.
-    if (day) onSelect(day);
+  function closePicker(event?: Event) {
+    popover.disengage();
+    const hadError = errorRef.current !== undefined;
+    const nextDate = hadError ? value : selectedDate;
+    setTypedDate(undefined);
+    setInputValue(nextDate ? dayjs(nextDate).format(dateFormat) : '');
+    updateError(undefined);
+    if (!hadError && typedDate && typedDate.getTime() !== value?.getTime()) {
+      setValue(typedDate, createChangeDetails('input-change', event));
+    }
+  }
+
+  function handleSelect(
+    day: Date | undefined,
+    _triggerDate?: Date,
+    _modifiers?: Modifiers,
+    event?: React.MouseEvent | React.KeyboardEvent
+  ) {
+    setTypedDate(undefined);
+    // RDP passes `undefined` when the user clicks the selected day, because
+    // `required` is false. `onValueChange` reports only a defined date.
+    if (day) {
+      setValue(day, createChangeDetails('item-press', event?.nativeEvent));
+    } else {
+      setValueUnwrapped(undefined);
+    }
     updateError(undefined);
     popover.disengage();
   }
@@ -185,7 +190,7 @@ export function DatePicker({
   function handleKeyUp(event: React.KeyboardEvent) {
     if (event.code === 'Enter' && popover.inputRef.current) {
       popover.inputRef.current.blur();
-      closePicker();
+      closePicker(event.nativeEvent);
     }
   }
 
@@ -217,7 +222,7 @@ export function DatePicker({
     const isValid = isValidDate && isAfter && isBefore;
 
     if (isValid) {
-      setSelectedDate(date.toDate());
+      setTypedDate(date.toDate());
       updateError(undefined);
     } else {
       updateError('Invalid date');

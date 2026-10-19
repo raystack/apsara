@@ -7,6 +7,69 @@ One section per release, newest first, with only the changes that need action
 from you. The full record of every release, features and fixes included, is
 on [GitHub releases](https://github.com/raystack/apsara/releases).
 
+## Unreleased: controlled state uses `x`, `defaultX` and `onXChange`
+
+A prop that holds state is controlled from the first render. The component
+shows the prop and changes only when you pass a new value. Pass `defaultX` to
+set only the first value.
+
+### 1. Rename the props
+
+| Component | Before | After |
+|---|---|---|
+| `Select` | `searchValue`, `defaultSearchValue`, `onSearch(value)` | `inputValue`, `defaultInputValue`, `onInputValueChange(value, eventDetails)` |
+| `DatePicker` | `onSelect(date)` | `onValueChange(date, details)` |
+| `RangePicker` | `onSelect(range)` | `onValueChange(range, details)` |
+| `Tour` | `onStepChange(index, step)` | `onStepIndexChange(index, details)` |
+| `DataView` | `onTableQueryChange(query)` | `onQueryChange(query, details)` |
+
+Tour's step is `details.step`.
+
+```tsx
+// Before
+<Select autocomplete onSearch={setSearch} />
+<DatePicker onSelect={setDate} />
+<Tour steps={steps} onStepChange={(index, step) => track(step.id)} />
+<DataView query={query} onTableQueryChange={setQuery} />
+
+// After
+<Select autocomplete onInputValueChange={setSearch} />
+<DatePicker onValueChange={setDate} />
+<Tour steps={steps} onStepIndexChange={(index, details) => track(details.step.id)} />
+<DataView query={query} onQueryChange={setQuery} />
+```
+
+### 2. Use `defaultQuery` and `defaultValue` for a first value
+
+`DataView` `query` and `FilterChip` `value` used to be read on the first render
+only. They are now controlled. If you pass one only to set the first value,
+rename it.
+
+```tsx
+// Before
+<DataView query={{ group_by: ["team"] }} />
+<FilterChip label="Status" value="active" />
+
+// After
+<DataView defaultQuery={{ group_by: ["team"] }} />
+<FilterChip label="Status" defaultValue="active" />
+```
+
+A later change to `query.search` no longer updates the search on its own. Pass
+`query` with `onQueryChange` to own the query.
+
+### 3. Check these behavior changes
+
+- `DataView` calls `onQueryChange` in client mode too. Server mode still calls
+  it on mount, so the first page can load.
+- `DatePicker` with `value` shows only the `value` you pass. A clicked or typed
+  date shows after you pass it back.
+- `DatePicker` calls `onValueChange` on Enter, blur or an outside click only
+  when the typed date differs from the value. `onSelect` fired on every close.
+- `FilterChip` has `operation` and `defaultOperation`, and `onOperationChange`
+  gets a `details` object second. `DataView` passes each filter's `operator` to
+  its chip, so a `query` with `operator: "neq"` shows "is not".
+
 ## Unreleased: change callbacks get a details object
 
 The change callbacks below pass a second argument after the value. A

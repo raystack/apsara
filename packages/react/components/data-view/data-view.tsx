@@ -10,7 +10,7 @@ import {
   useReactTable,
   VisibilityState
 } from '@tanstack/react-table';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createChangeDetails } from '~/shared/change-details';
 
 import { DataViewClearFilters } from './components/clear-filters';
@@ -29,6 +29,7 @@ import {
   DataViewContextType,
   DataViewField,
   DataViewProps,
+  DataViewQuery,
   DataViewViewChangeDetails,
   defaultGroupOption,
   GroupedData,
@@ -53,13 +54,14 @@ function DataViewRoot<TData>({
   data = [],
   fields,
   query,
+  defaultQuery,
   mode = 'client',
   isLoading = false,
   totalRowCount,
   loadingRowCount = 3,
   defaultSort,
   children,
-  onTableQueryChange,
+  onQueryChange,
   onLoadMore,
   onRowClick,
   onColumnVisibilityChange,
@@ -72,8 +74,8 @@ function DataViewRoot<TData>({
   groupByResolvers
 }: DataViewProps<TData>) {
   const defaultTableQuery = useMemo(
-    () => getDefaultTableQuery(defaultSort, query, fields),
-    [defaultSort, query, fields]
+    () => getDefaultTableQuery(defaultSort, defaultQuery, fields),
+    [defaultSort, defaultQuery, fields]
   );
 
   // Active view (controlled / uncontrolled).
@@ -158,10 +160,33 @@ function DataViewRoot<TData>({
     [onRowSelectionChange]
   );
 
-  const [tableQuery, setTableQuery] =
-    useState<InternalQuery>(defaultTableQuery);
-
-  const oldQueryRef = useRef<InternalQuery | null>(null);
+  const [currentQuery, setCurrentQuery] = useControlled<
+    DataViewQuery | undefined
+  >({
+    controlled: query,
+    default: defaultQuery,
+    name: 'DataView',
+    state: 'query'
+  });
+  const [tableQuery, setTableQuery] = useState<InternalQuery>(() =>
+    getDefaultTableQuery(defaultSort, currentQuery, fields)
+  );
+  // The query `tableQuery` last matched. `tableQuery` also keeps filters that
+  // have no value yet, which the query leaves out, so it follows a new query
+  // only when the query differs from it.
+  const [syncedQuery, setSyncedQuery] = useState(currentQuery);
+  // Server mode reports the first query on mount, so the first page can load.
+  const [reportedQuery, setReportedQuery] = useState<InternalQuery | null>(
+    mode === 'server' ? null : tableQuery
+  );
+  if (currentQuery !== syncedQuery) {
+    setSyncedQuery(currentQuery);
+    const next = getDefaultTableQuery(defaultSort, currentQuery, fields);
+    if (hasQueryChanged(tableQuery, next)) {
+      setTableQuery(next);
+      setReportedQuery(next);
+    }
+  }
 
   const reactTableState = useMemo(
     () => queryToTableState(tableQuery),
@@ -198,16 +223,13 @@ function DataViewRoot<TData>({
   );
 
   useEffect(() => {
-    if (
-      tableQuery &&
-      onTableQueryChange &&
-      hasQueryChanged(oldQueryRef.current, tableQuery) &&
-      mode === 'server'
-    ) {
-      onTableQueryChange(transformToDataViewQuery(tableQuery));
-      oldQueryRef.current = tableQuery;
-    }
-  }, [tableQuery, onTableQueryChange, mode]);
+    if (!hasQueryChanged(reportedQuery, tableQuery)) return;
+    const next = transformToDataViewQuery(tableQuery);
+    setReportedQuery(tableQuery);
+    setSyncedQuery(next);
+    setCurrentQuery(next);
+    onQueryChange?.(next, createChangeDetails('none'));
+  }, [tableQuery, reportedQuery, onQueryChange, setCurrentQuery]);
 
   const resolveRowId = useMemo(() => createRowIdResolver(getRowId), [getRowId]);
 
@@ -247,13 +269,6 @@ function DataViewRoot<TData>({
   const loadMoreData = useCallback(() => {
     if (mode === 'server' && onLoadMore) onLoadMore();
   }, [mode, onLoadMore]);
-
-  const searchQuery = query?.search;
-  useEffect(() => {
-    if (searchQuery) {
-      setTableQuery(prev => ({ ...prev, search: searchQuery }));
-    }
-  }, [searchQuery]);
 
   const rowCount = (() => {
     try {

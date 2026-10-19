@@ -27,11 +27,17 @@ export interface DataViewProps {
    */
   isLoading?: boolean;
 
-  /** Initial query state. */
+  /** The query (controlled). */
   query?: DataViewQuery;
 
-  /** Called whenever the internal query changes — only in server mode. */
-  onTableQueryChange?: (query: DataViewQuery) => void;
+  /** The query on the first render (uncontrolled). */
+  defaultQuery?: DataViewQuery;
+
+  /** Called when the query changes. In server mode it is also called on mount. */
+  onQueryChange?: (
+    query: DataViewQuery,
+    details: { reason: 'none'; event: Event }
+  ) => void;
 
   /** Infinite scroll callback. */
   onLoadMore?: () => Promise<void> | void;

@@ -154,7 +154,10 @@ export interface RangePickerProps {
    * Both fields are optional during partial selection; gate on `range.to` if
    * you only want completed ranges.
    */
-  onSelect?: (range: { from?: Date; to?: Date }) => void;
+  onValueChange?: (
+    range: { from?: Date; to?: Date },
+    details: { reason: 'item-press'; event: Event }
+  ) => void;
 
   /** Initial (uncontrolled) date range. */
   defaultValue?: { from?: Date; to?: Date };
@@ -167,7 +170,7 @@ export interface RangePickerProps {
    * `inputsProps` / `calendarProps` / `popoverProps` are set, `slotProps` wins.
    *
    * Input event handlers (`onChange`, `onFocus`, `onBlur`, `onKeyUp`) are not
-   * forwarded — use `onSelect` for value changes.
+   * forwarded — use `onValueChange` for value changes.
    */
   slotProps?: {
     startInput?: InputProps;
@@ -225,7 +228,7 @@ export interface DatePickerProps {
    * `inputProps` / `calendarProps` / `popoverProps` are set, `slotProps` wins.
    *
    * Input event handlers (`onChange`, `onFocus`, `onBlur`, `onKeyUp`) are not
-   * forwarded — use `onSelect` for value changes.
+   * forwarded — use `onValueChange` for value changes.
    */
   slotProps?: {
     input?: InputProps;
@@ -234,7 +237,7 @@ export interface DatePickerProps {
   };
 
   /**
-   * Controlled date value. Pair with `onSelect`. Omit (along with
+   * Controlled date value. Pair with `onValueChange`. Omit (along with
    * `defaultValue`) to start the picker in an unselected state — the
    * input shows its placeholder until the user selects a date.
    */
@@ -246,8 +249,14 @@ export interface DatePickerProps {
    */
   defaultValue?: Date;
 
-  /** Callback function when date is selected */
-  onSelect?: (date: Date) => void;
+  /**
+   * Called when a day is clicked, and when a typed date is committed with
+   * Enter, blur or an outside click.
+   */
+  onValueChange?: (
+    date: Date,
+    details: { reason: 'item-press' | 'input-change'; event: Event }
+  ) => void;
 
   /**
    * Fires when the typed-input validation state changes: with a message when

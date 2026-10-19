@@ -398,7 +398,7 @@ export default function TimelineStressPage() {
           fields={fields}
           mode='client'
           defaultSort={{ name: 'start', order: 'asc' }}
-          query={grouped ? { group_by: ['team'] } : undefined}
+          defaultQuery={grouped ? { group_by: ['team'] } : undefined}
           getRowId={task => task.id}
         >
           <DataView.Toolbar>

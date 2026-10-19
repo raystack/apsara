@@ -85,7 +85,7 @@ The split is what lets one set of filters, sorts, and toggles drive every render
 
 <Demo data={searchPreview} />
 
-By default search auto-disables in the zero state (no data and no active query) and re-enables the moment the user types. Pass `autoDisableInZeroState={false}` to keep it always enabled, or `disabled` to control it yourself. In server mode, read `query.search` in `onTableQueryChange` and filter on the backend.
+By default search auto-disables in the zero state (no data and no active query) and re-enables the moment the user types. Pass `autoDisableInZeroState={false}` to keep it always enabled, or `disabled` to control it yourself. In server mode, read `query.search` in `onQueryChange` and filter on the backend.
 
 `DataView.Search` accepts every [Search](/docs/components/search) prop. For example, `leadingIcon={null}` hides the search icon.
 
@@ -164,7 +164,7 @@ const listFields = fields.map((f) =>
 
 ### Server mode
 
-In client mode `DataView` derives everything locally: filter predicates, sort, grouping, and search all run over the `data` array you pass. Set `mode="server"` and that work moves to your backend. The local TanStack table goes manual, `onTableQueryChange` fires whenever the query changes, and it's on you to fetch matching rows and pass them back down.
+In client mode `DataView` derives everything locally: filter predicates, sort, grouping, and search all run over the `data` array you pass. Set `mode="server"` and that work moves to your backend. The local TanStack table goes manual, `onQueryChange` fires on mount and whenever the query changes, and it's on you to fetch matching rows and pass them back down.
 
 ```tsx
 <DataView
@@ -173,14 +173,14 @@ In client mode `DataView` derives everything locally: filter predicates, sort, g
   isLoading={loading}
   totalRowCount={page.total}
   query={query}
-  onTableQueryChange={(q) => setQuery(q)}
+  onQueryChange={setQuery}
   onLoadMore={() => fetchNext()}
 >
   …
 </DataView>
 ```
 
-- **`onTableQueryChange`** hands you the full [query object](#query) whenever any part of it changes: a filter chip, a sort, a grouping choice, a keystroke in search. Translate it to your API's parameters and refetch.
+- **`onQueryChange`** hands you the full [query object](#query) whenever any part of it changes: a filter chip, a sort, a grouping choice, a keystroke in search. Translate it to your API's parameters and refetch.
 - **`totalRowCount`** is what the "hidden by filters" footer counts against. Without it the footer can't tell how many rows your filters excluded, since the client only ever sees the current page.
 - **Grouping** still comes from the root's `groupData`, so section order, labels, and counts match across renderers.
 
@@ -217,7 +217,9 @@ Fields, sort and query are the shapes the root takes. The sibling components bel
 
 ### Query
 
-The shape `query` accepts and `onTableQueryChange` hands back. In [server mode](#server-mode) this is the contract your backend implements.
+The shape `query` and `defaultQuery` accept and `onQueryChange` hands back. In [server mode](#server-mode) this is the contract your backend implements.
+
+Pass `defaultQuery` to set only the first query. Pass `query` with `onQueryChange` to own the query, for example to keep it in the URL. A new `query` from outside updates the view without a call to `onQueryChange`.
 
 <auto-type-table path="./props.ts" name="DataViewQuery" />
 
