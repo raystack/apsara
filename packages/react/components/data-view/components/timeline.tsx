@@ -2,7 +2,7 @@
 
 import type { Row } from '@tanstack/react-table';
 import { cx } from 'class-variance-authority';
-import dayjs from 'dayjs';
+import { format } from 'date-fns';
 import {
   CSSProperties,
   memo,
@@ -353,15 +353,15 @@ const MARKER_BADGE_VARIANT: Record<
 
 /** Axis-badge label for the hover cursor, formatted per scale granularity. */
 function cursorLabel(time: number, scale: TimelineScale): string {
-  const date = dayjs(time);
+  const date = new Date(time);
   switch (scale) {
     case 'day':
     case 'week':
-      return date.format('D MMM');
+      return format(date, 'd MMM');
     case 'month':
-      return date.format('MMM YYYY');
+      return format(date, 'MMM yyyy');
     case 'quarter':
-      return `Q${Math.floor(date.month() / 3) + 1} ${date.format('YYYY')}`;
+      return format(date, 'QQQ yyyy');
   }
 }
 
@@ -440,6 +440,8 @@ export function DataViewTimeline<TData>({
   // spans the full width. It only ever widens, so a wider `range` is untouched.
   const [containerWidth, setContainerWidth] = useState(0);
   useLayoutEffect(() => {
+    // The scroll element only exists while the view is active and has data.
+    if (!isActive || !hasData) return;
     const el = scrollRef.current;
     if (!el) return;
     const measure = () => setContainerWidth(el.clientWidth);
@@ -448,8 +450,6 @@ export function DataViewTimeline<TData>({
     const observer = new ResizeObserver(measure);
     observer.observe(el);
     return () => observer.disconnect();
-    // Re-attach when the renderer mounts its DOM (ref is null while the view
-    // is gated or there's no data yet).
   }, [isActive, hasData]);
 
   // Quantized to whole units so sub-unit resizes (e.g. dragging a panel
@@ -724,7 +724,7 @@ export function DataViewTimeline<TData>({
       return entry;
     });
     return { laidOutSections: list, laneCount: offset };
-  }, [positionedSections, lanePacking, sortValueLanes, laneField]);
+  }, [positionedSections, lanePacking, sortValueLanes]);
 
   // An off-screen card never mounts and so never measures, which would resize
   // lanes under the user mid-scroll. Virtualized lanes therefore take
@@ -925,7 +925,7 @@ export function DataViewTimeline<TData>({
         key: '__today',
         time: todayTime,
         x: timeScale.x(todayTime),
-        label: dayjs(todayTime).format('D MMM'),
+        label: format(todayTime, 'd MMM'),
         variant: 'accent'
       });
     }
@@ -936,7 +936,7 @@ export function DataViewTimeline<TData>({
         key: `__marker-${index}`,
         time,
         x: timeScale.x(time),
-        label: marker.label ?? dayjs(time).format('D MMM'),
+        label: marker.label ?? format(time, 'd MMM'),
         variant: marker.variant ?? 'default'
       });
     });
@@ -1009,7 +1009,7 @@ export function DataViewTimeline<TData>({
       timeScale.t0,
       Math.min(timeScale.timeAt(canvasX), timeScale.t1)
     );
-    const snapped = startOfUnit(dayjs(time), scale).valueOf();
+    const snapped = startOfUnit(new Date(time), scale).getTime();
     setCursorTime(prev => (prev === snapped ? prev : snapped));
   }, [showCursorLine, timeScale, scale]);
 

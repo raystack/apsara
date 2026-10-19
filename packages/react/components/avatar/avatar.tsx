@@ -17,6 +17,10 @@ import type { AvatarColor } from './utils';
 // Matches Base UI's AvatarRoot ImageLoadingStatus union.
 type ImageLoadingStatus = 'idle' | 'loading' | 'loaded' | 'error';
 
+// Loads faster than this come from the cache and appear without a fade.
+// Matches the fallback hide delay in avatar.module.css.
+const FADE_IN_THRESHOLD_MS = 100;
+
 const avatar = cva(styles.avatar, {
   variants: {
     // Each size names its own base step. No default: the theme radius applies.
@@ -173,18 +177,19 @@ const AvatarRoot = ({
   color,
   ...props
 }: AvatarProps) => {
-  const sawLoadingRef = useRef(false);
+  const loadStartRef = useRef<number | null>(null);
   const [fadeIn, setFadeIn] = useState(false);
   const handleLoadingStatusChange = (status: ImageLoadingStatus) => {
     onLoadingStatusChange?.(status);
     if (status === 'loading') {
-      sawLoadingRef.current = true;
+      loadStartRef.current = performance.now();
       setFadeIn(false);
     } else if (status === 'loaded') {
-      // A cached image reports 'loaded' with no 'loading' phase (Base UI never
-      // emits it), so it stays instant; only network loads fade in.
-      setFadeIn(sawLoadingRef.current);
-      sawLoadingRef.current = false;
+      const start = loadStartRef.current;
+      setFadeIn(
+        start !== null && performance.now() - start >= FADE_IN_THRESHOLD_MS
+      );
+      loadStartRef.current = null;
     }
   };
 
@@ -198,13 +203,16 @@ const AvatarRoot = ({
       data-slot='avatar'
       {...props}
     >
-      <AvatarPrimitive.Image
-        className={cx(image(), fadeIn && styles['image-fade-in'])}
-        src={src}
-        alt={alt}
-        onLoadingStatusChange={handleLoadingStatusChange}
-        data-slot='avatar-image'
-      />
+      {src && (
+        <AvatarPrimitive.Image
+          className={cx(image(), fadeIn && styles['image-fade-in'])}
+          src={src}
+          alt={alt}
+          onLoadingStatusChange={handleLoadingStatusChange}
+          keepMounted
+          data-slot='avatar-image'
+        />
+      )}
       <AvatarPrimitive.Fallback
         delay={fallbackDelay}
         className={styles.fallback}

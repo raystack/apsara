@@ -1,0 +1,159 @@
+import { describe, expect, it } from 'vitest';
+import { toDayKey, toInstant } from '../date-filters';
+
+describe('toInstant', () => {
+  it.each([
+    ['an ISO day', '2023-12-01', new Date(2023, 11, 1)],
+    ['a year and month', '2023-12', new Date(2023, 11, 1)],
+    ['a bare year', '2023', new Date(2023, 0, 1)],
+    ['basic ISO', '20231201', new Date(2023, 11, 1)],
+    ['a local time', '2023-12-01T10:30:00', new Date(2023, 11, 1, 10, 30)],
+    [
+      'a space before the time',
+      '2023-12-01 10:30',
+      new Date(2023, 11, 1, 10, 30)
+    ],
+    ['a lowercase t', '2023-12-01t10:30:00', new Date(2023, 11, 1, 10, 30)],
+    ['slashes', '2023/12/01', new Date(2023, 11, 1)],
+    ['an unpadded day', '2023-1-5', new Date(2023, 0, 5)],
+    ['an unpadded slashed day', '2023/1/5', new Date(2023, 0, 5)],
+    [
+      'a local time with a longer fraction',
+      '2023/12/01 10:30:00.123456',
+      new Date(2023, 11, 1, 10, 30, 0, 123)
+    ],
+    ['a month-first slashed day', '12/01/2023', new Date(2023, 11, 1)],
+    [
+      'a day-first slashed day, read month-first',
+      '01/12/2023',
+      new Date(2023, 0, 12)
+    ],
+    ['a leap day', '02/29/2024', new Date(2024, 1, 29)],
+    ['a dashed month-first day', '2-28-2026', new Date(2026, 1, 28)],
+    ['a long month name', 'December 1, 2023', new Date(2023, 11, 1)],
+    ['a short month name', '1 Dec 2023', new Date(2023, 11, 1)],
+    ['a four-letter month name', 'Sept 30, 2026', new Date(2026, 8, 30)],
+    ['a weekday prefix', 'Monday, March 2, 2026', new Date(2026, 2, 2)],
+    ['a month and year', 'Dec 2023', new Date(2023, 11, 1)],
+    ['a dotted day', '2023.12.01', new Date(2023, 11, 1)],
+    ['surrounding whitespace', ' 2023-12-01 ', new Date(2023, 11, 1)],
+    ['epoch zero', 0, new Date(0)],
+    [
+      'an object with a numeric valueOf',
+      { valueOf: () => Date.UTC(2026, 7, 15, 12) },
+      new Date(Date.UTC(2026, 7, 15, 12))
+    ],
+    ['a UTC suffix', '2023-02-28T00:00:00Z', new Date(Date.UTC(2023, 1, 28))],
+    [
+      'microseconds',
+      '2023-12-01T10:30:00.123456Z',
+      new Date(Date.UTC(2023, 11, 1, 10, 30, 0, 123))
+    ],
+    [
+      'a Date string',
+      'Fri Dec 01 2023 00:00:00 GMT+0000',
+      new Date(Date.UTC(2023, 11, 1))
+    ],
+    [
+      'an RFC 2822 string',
+      'Fri, 01 Dec 2023 00:00:00 GMT',
+      new Date(Date.UTC(2023, 11, 1))
+    ],
+    [
+      'a GMT offset',
+      'Fri Dec 01 2023 02:00:00 GMT+0530',
+      new Date(Date.UTC(2023, 10, 30, 20, 30))
+    ],
+    [
+      'a US zone name',
+      'Nov 30 2026 23:00 EST',
+      new Date(Date.UTC(2026, 11, 1, 4))
+    ]
+  ])('reads %s', (_label, input, expected) => {
+    expect(toInstant(input)?.getTime()).toBe(expected.getTime());
+  });
+
+  it.each([
+    ['an empty string', ''],
+    ['whitespace', '   '],
+    ['a non-date string', 'not a date'],
+    ['null', null],
+    ['undefined', undefined],
+    ['true', true],
+    ['an invalid Date', new Date(Number.NaN)],
+    ['an object', { date: '2023-12-01' }],
+    ['an object without a numeric valueOf', { valueOf: () => 'x' }],
+    ['an object with no prototype', Object.create(null)],
+    ['an object whose valueOf is NaN', { valueOf: () => Number.NaN }],
+    [
+      'an object whose valueOf throws',
+      {
+        valueOf() {
+          throw new TypeError('valueOf');
+        }
+      }
+    ],
+    ['an epoch as a string', '1701388800000'],
+    ['month 13', '2023-13-01'],
+    ['month 0', '2023-00-10'],
+    ['day 0', '2023-12-00'],
+    ['day 32', '2023-12-32'],
+    ['30 February', '2023-02-30'],
+    ['30 February with a UTC suffix', '2023-02-30T00:00:00Z'],
+    ['30 February with an offset', '2026-02-30T12:00:00+05:30']
+  ])('rejects %s', (_label, input) => {
+    expect(toInstant(input)).toBeNull();
+  });
+
+  /* Outside ISO 8601, `new Date` reads the string and rolls an impossible day
+     over. */
+  it.each([
+    ['02/30/2014', new Date(2014, 2, 2)],
+    ['2026/02/30', new Date(2026, 2, 2)],
+    ['February 30, 2026', new Date(2026, 2, 2)]
+  ])('reads %s as new Date does', (input, expected) => {
+    expect(toInstant(input)?.getTime()).toBe(expected.getTime());
+  });
+
+  it.each([
+    ['America/Los_Angeles', '2026/03/08 02:30', '2026-03-08T10:30:00.000Z'],
+    ['America/Santiago', '2026/09/06', '2026-09-06T04:00:00.000Z']
+  ])('reads a time in a daylight-saving gap in %s', (zone, input, expected) => {
+    const previous = process.env.TZ;
+    process.env.TZ = zone;
+    try {
+      expect(toInstant(input)?.toISOString()).toBe(expected);
+    } finally {
+      if (previous === undefined) delete process.env.TZ;
+      else process.env.TZ = previous;
+    }
+  });
+
+  it.each([
+    ['an ISO week', '2023-W48', new Date(2023, 10, 27)],
+    ['an ordinal day', '2023-335', new Date(2023, 11, 1)],
+    [
+      'a one-digit fraction',
+      '2023-12-01T10:30:00.5',
+      new Date(2023, 11, 1, 10, 30, 0, 500)
+    ],
+    [
+      'a year below 100',
+      '0050-01-01',
+      new Date(new Date(0, 0, 1).setFullYear(50))
+    ]
+  ])('reads %s as ISO 8601', (_label, input, expected) => {
+    expect(toInstant(input)?.getTime()).toBe(expected.getTime());
+  });
+});
+
+describe('toDayKey', () => {
+  it('reads the local calendar day', () => {
+    expect(toDayKey('2023-12-01')).toBe('2023-12-01');
+    expect(toDayKey(new Date(2023, 11, 1, 23, 59))).toBe('2023-12-01');
+  });
+
+  it('rejects a year outside four digits', () => {
+    expect(toDayKey(new Date(10000, 0, 1))).toBeNull();
+  });
+});

@@ -16,7 +16,7 @@ const sidePanelRoot = cva(styles['side-panel'], {
   }
 });
 
-interface SidePanelProps
+export interface SidePanelProps
   extends ComponentProps<'aside'>,
     VariantProps<typeof sidePanelRoot> {}
 
@@ -36,7 +36,7 @@ const SidePanelRoot = ({
 
 SidePanelRoot.displayName = 'SidePanel';
 
-interface SidePanelHeaderProps extends ComponentProps<'div'> {
+export interface SidePanelHeaderProps extends ComponentProps<'div'> {
   title: string;
   icon?: ReactNode;
   actions?: Array<ReactNode>;
@@ -95,7 +95,7 @@ const SidePanelHeader = ({
 
 SidePanelHeader.displayName = 'SidePanel.Header';
 
-interface SidePanelSectionProps extends ComponentProps<'div'> {}
+export interface SidePanelSectionProps extends ComponentProps<'div'> {}
 
 const SidePanelSection = ({ className, ...props }: SidePanelSectionProps) => {
   return (

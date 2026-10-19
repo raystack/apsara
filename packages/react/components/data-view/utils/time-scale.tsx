@@ -1,5 +1,17 @@
-import dayjs, { type Dayjs } from 'dayjs';
-
+import {
+  addDays,
+  addMonths,
+  addQuarters,
+  addWeeks,
+  addYears,
+  format,
+  startOfDay,
+  startOfMonth,
+  startOfQuarter,
+  startOfWeek,
+  startOfYear
+} from 'date-fns';
+import { toInstant } from '~/shared/date-filters';
 import type { TimelineScale } from '../data-view.types';
 
 /**
@@ -25,34 +37,33 @@ export const TIMELINE_DEFAULT_UNIT_WIDTH: Record<TimelineScale, number> = {
 /** Minimum px between rendered tick labels. Denser ticks skip labels. */
 const TICK_LABEL_MIN_SPACE = 28;
 
-/** Coerce a consumer-provided date (Date | epoch ms | parseable string) to ms. */
+/** Coerce a consumer-provided date (Date | epoch ms | parseable string | object with a numeric `valueOf`) to ms. */
 export function toTimestamp(value: unknown): number | null {
-  if (value == null) return null;
-  if (value instanceof Date) {
-    const time = value.getTime();
-    return Number.isNaN(time) ? null : time;
-  }
-  if (typeof value === 'number') {
-    return Number.isFinite(value) ? value : null;
-  }
-  if (typeof value === 'string') {
-    const parsed = dayjs(value);
-    return parsed.isValid() ? parsed.valueOf() : null;
-  }
-  return null;
+  return toInstant(value)?.getTime() ?? null;
 }
 
-/** `startOf` that also understands quarters without a dayjs plugin. */
-export function startOfUnit(date: Dayjs, scale: TimelineScale): Dayjs {
-  if (scale === 'quarter') {
-    return date.startOf('month').subtract(date.month() % 3, 'month');
-  }
-  return date.startOf(scale);
+const START_OF = {
+  day: startOfDay,
+  week: startOfWeek,
+  month: startOfMonth,
+  quarter: startOfQuarter,
+  year: startOfYear
+};
+
+const ADD = {
+  day: addDays,
+  week: addWeeks,
+  month: addMonths,
+  quarter: addQuarters,
+  year: addYears
+};
+
+export function startOfUnit(date: Date, scale: TimelineScale): Date {
+  return START_OF[scale](date);
 }
 
-export function addUnits(date: Dayjs, scale: TimelineScale, n: number): Dayjs {
-  if (scale === 'quarter') return date.add(3 * n, 'month');
-  return date.add(n, scale);
+export function addUnits(date: Date, scale: TimelineScale, n: number): Date {
+  return ADD[scale](date, n);
 }
 
 export interface TimelineTimeScale {
@@ -90,26 +101,26 @@ export function createTimeScale(params: {
   const unitWidth = Math.max(1, params.unitWidth);
   const pxPerMs = unitWidth / TIMELINE_UNIT_MS[scale];
   const t0 = addUnits(
-    startOfUnit(dayjs(Math.min(minTime, maxTime)), scale),
+    startOfUnit(new Date(Math.min(minTime, maxTime)), scale),
     scale,
     -padUnits
-  ).valueOf();
+  ).getTime();
   // +1 so the max instant's unit is fully inside the domain.
   let end = addUnits(
-    startOfUnit(dayjs(Math.max(minTime, maxTime)), scale),
+    startOfUnit(new Date(Math.max(minTime, maxTime)), scale),
     scale,
     padUnits + 1
   );
   // Viewport fill: bulk-add the estimated deficit in one step, then correct
   // for calendar drift (short months, DST days), at most a few iterations.
-  const deficitPx = minWidth - (end.valueOf() - t0) * pxPerMs;
+  const deficitPx = minWidth - (end.getTime() - t0) * pxPerMs;
   if (deficitPx > 0) {
     end = addUnits(end, scale, Math.ceil(deficitPx / unitWidth));
-    while ((end.valueOf() - t0) * pxPerMs < minWidth) {
+    while ((end.getTime() - t0) * pxPerMs < minWidth) {
       end = addUnits(end, scale, 1);
     }
   }
-  const t1 = end.valueOf();
+  const t1 = end.getTime();
   return {
     t0,
     t1,
@@ -137,15 +148,15 @@ export interface TimelineBand {
   label: string;
 }
 
-function tickLabel(date: Dayjs, scale: TimelineScale): string {
+function tickLabel(date: Date, scale: TimelineScale): string {
   switch (scale) {
     case 'day':
     case 'week':
-      return date.format('D');
+      return format(date, 'd');
     case 'month':
-      return date.format('MMM');
+      return format(date, 'MMM');
     case 'quarter':
-      return `Q${Math.floor(date.month() / 3) + 1}`;
+      return format(date, 'QQQ');
   }
 }
 
@@ -181,13 +192,13 @@ export function buildAxis(
   );
 
   const ticks: TimelineTick[] = [];
-  let cursor = startOfUnit(dayjs(timeScale.t0), scale);
-  if (cursor.valueOf() < timeScale.t0) cursor = addUnits(cursor, scale, 1);
+  let cursor = startOfUnit(new Date(timeScale.t0), scale);
+  if (cursor.getTime() < timeScale.t0) cursor = addUnits(cursor, scale, 1);
   let index = 0;
-  while (cursor.valueOf() <= timeScale.t1) {
+  while (cursor.getTime() <= timeScale.t1) {
     ticks.push({
-      time: cursor.valueOf(),
-      x: timeScale.x(cursor.valueOf()),
+      time: cursor.getTime(),
+      x: timeScale.x(cursor.getTime()),
       label: tickLabel(cursor, scale),
       showLabel: index % effectiveLabelEvery === 0,
       index
@@ -198,20 +209,20 @@ export function buildAxis(
 
   const bands: TimelineBand[] = [];
   const bandUnit = scale === 'day' || scale === 'week' ? 'month' : 'year';
-  let band = dayjs(timeScale.t0).startOf(bandUnit);
+  let band = START_OF[bandUnit](new Date(timeScale.t0));
   let isFirst = true;
-  while (band.valueOf() < timeScale.t1) {
-    const next = band.add(1, bandUnit);
-    const from = Math.max(band.valueOf(), timeScale.t0);
-    const to = Math.min(next.valueOf(), timeScale.t1);
+  while (band.getTime() < timeScale.t1) {
+    const next = ADD[bandUnit](band, 1);
+    const from = Math.max(band.getTime(), timeScale.t0);
+    const to = Math.min(next.getTime(), timeScale.t1);
     const label =
       bandUnit === 'month'
-        ? isFirst || band.month() === 0
-          ? band.format('MMM YYYY')
-          : band.format('MMM')
-        : band.format('YYYY');
+        ? isFirst || band.getMonth() === 0
+          ? format(band, 'MMM yyyy')
+          : format(band, 'MMM')
+        : format(band, 'yyyy');
     bands.push({
-      time: band.valueOf(),
+      time: band.getTime(),
       x: timeScale.x(from),
       width: (to - from) * timeScale.pxPerMs,
       label

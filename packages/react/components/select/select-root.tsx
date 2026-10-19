@@ -130,8 +130,8 @@ export const SelectRoot = (props: SelectRootProps) => {
   >({});
 
   const handleValueChange = useCallback(
-    (value: any, _eventDetails?: any) => {
-      setValueUnwrapped(value);
+    (value: string | string[] | null) => {
+      setValueUnwrapped(value ?? undefined);
       if (multiple) {
         (onValueChange as MultipleSelectProps['onValueChange'])?.(
           value as string[]
@@ -146,7 +146,7 @@ export const SelectRoot = (props: SelectRootProps) => {
   );
 
   const handleSearchValueChange = useCallback(
-    (value: string, _eventDetails?: any) => {
+    (value: string) => {
       setSearchValueUnwrapped(value);
       onSearch?.(value);
     },
@@ -154,7 +154,7 @@ export const SelectRoot = (props: SelectRootProps) => {
   );
 
   const handleOpenChange = useCallback(
-    (open: boolean, _eventDetails?: any) => {
+    (open: boolean) => {
       onOpenChange?.(open);
     },
     [onOpenChange]
@@ -200,13 +200,13 @@ export const SelectRoot = (props: SelectRootProps) => {
   );
 
   const commonProps = {
-    value: providedValue as any,
-    defaultValue: defaultValue as any,
+    value: providedValue,
+    defaultValue,
     onValueChange: handleValueChange,
     open: providedOpen,
     defaultOpen,
     onOpenChange: handleOpenChange,
-    multiple: multiple as any,
+    multiple,
     disabled,
     modal: true as const,
     ...rest,

@@ -9,7 +9,7 @@ import { ItemType } from './types';
 
 type ValueType = Omit<ItemType, 'children'>;
 
-type SelectValueProps = ComponentProps<'span'> & {
+export type SelectValueProps = ComponentProps<'span'> & {
   placeholder?: string;
   children?: ((value?: ValueType | ValueType[]) => ReactNode) | ReactNode;
   className?: string;

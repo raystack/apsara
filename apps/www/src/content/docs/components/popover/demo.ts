@@ -139,8 +139,8 @@ function ControlledPopover() {
   return (
     <Flex align="center" gap={5}>
       <Popover open={open} onOpenChange={setOpen}>
-        <Popover.Trigger asChild>
-          <Button variant="outline">Filters</Button>
+        <Popover.Trigger render={<Button variant="outline" />}>
+          Filters
         </Popover.Trigger>
         <Popover.Content>
           <Flex direction="column" gap={4} style={{ padding: 4 }}>
@@ -151,6 +151,33 @@ function ControlledPopover() {
       </Popover>
       <Text size="small" variant="secondary">{open ? 'open' : 'closed'}</Text>
     </Flex>
+  );
+}`
+};
+
+export const viewportDemo = {
+  type: 'code',
+  code: `
+function SharedPopover() {
+  const [handle] = React.useState(() => Popover.createHandle());
+
+  return (
+    <>
+      <Flex gap={3} align="center">
+        <Popover.Trigger handle={handle} payload="Two unread messages." render={<Button variant="outline" />}>Inbox</Popover.Trigger>
+        <Popover.Trigger handle={handle} payload="Nothing scheduled for today." render={<Button variant="outline" />}>Calendar</Popover.Trigger>
+        <Popover.Trigger handle={handle} payload="All tasks are done." render={<Button variant="outline" />}>Tasks</Popover.Trigger>
+      </Flex>
+      <Popover handle={handle}>
+        {({ payload }) => (
+          <Popover.Content>
+            <Popover.Viewport>
+              <Text size="small">{payload}</Text>
+            </Popover.Viewport>
+          </Popover.Content>
+        )}
+      </Popover>
+    </>
   );
 }`
 };

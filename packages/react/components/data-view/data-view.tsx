@@ -68,10 +68,10 @@ function DataViewRoot<TData>({
   view,
   onViewChange,
   groupByResolvers
-}: React.PropsWithChildren<DataViewProps<TData>>) {
+}: DataViewProps<TData>) {
   const defaultTableQuery = useMemo(
-    () => getDefaultTableQuery(defaultSort, query),
-    [defaultSort, query]
+    () => getDefaultTableQuery(defaultSort, query, fields),
+    [defaultSort, query, fields]
   );
 
   // Active view (controlled / uncontrolled).
@@ -333,7 +333,13 @@ function DataViewRoot<TData>({
     ]
   );
 
-  return <DataViewContext value={contextValue}>{children}</DataViewContext>;
+  return (
+    <DataViewContext
+      value={contextValue as unknown as DataViewContextType<unknown>}
+    >
+      {children}
+    </DataViewContext>
+  );
 }
 
 DataViewRoot.displayName = 'DataView';

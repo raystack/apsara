@@ -68,3 +68,20 @@ export function FieldDescription({
     />
   );
 }
+
+export function FieldItem({
+  className,
+  ref,
+  ...props
+}: FieldPrimitive.Item.Props) {
+  return (
+    <FieldPrimitive.Item
+      ref={ref}
+      className={cx(styles.item, className)}
+      data-slot='field-item'
+      {...props}
+    />
+  );
+}
+
+FieldItem.displayName = 'Field.Item';
