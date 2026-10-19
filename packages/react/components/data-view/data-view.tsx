@@ -52,7 +52,7 @@ function DataViewRoot<TData>({
   fields,
   query,
   mode = 'client',
-  isLoading = false,
+  loading = false,
   totalRowCount,
   loadingRowCount = 3,
   defaultSort,
@@ -258,7 +258,7 @@ function DataViewRoot<TData>({
     }
   })();
 
-  const hasData = rowCount > 0 || isLoading;
+  const hasData = rowCount > 0 || loading;
 
   const hasActiveQueryFlag = useMemo(
     () => computeHasActiveQuery(tableQuery, defaultSort),
@@ -279,7 +279,7 @@ function DataViewRoot<TData>({
       rootFields: fields,
       data,
       mode,
-      isLoading,
+      isLoading: loading,
       loadMoreData,
       tableQuery,
       updateTableQuery,
@@ -308,7 +308,7 @@ function DataViewRoot<TData>({
       fields,
       data,
       mode,
-      isLoading,
+      loading,
       loadMoreData,
       tableQuery,
       updateTableQuery,

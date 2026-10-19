@@ -10,7 +10,7 @@ import { playground, sizesDemo, stateDemo } from "./demo.ts";
 
 ## Overview
 
-`CopyButton` is an [IconButton](/docs/components/icon-button) wired to the clipboard: pass the `text` to copy and it handles the click, swaps the copy icon for a check, and announces "Copied" to screen readers. The check icon reverts after `resetTimeout` (default 1000ms); set `resetIcon={false}` to keep it. Drop it next to code snippets, API keys, and IDs. If you need copy behavior with your own UI, use the `useCopyToClipboard` hook from `@raystack/apsara/hooks` instead.
+`CopyButton` is an [IconButton](/docs/components/icon-button) wired to the clipboard: pass the `text` to copy and it handles the click, swaps the copy icon for a check, and announces "Copied" to screen readers. The check icon reverts after `resetTimeout` (default 1000ms). Set `resetTimeout={Infinity}` to keep it. Drop it next to code snippets, API keys, and IDs. If you need copy behavior with your own UI, use the `useCopyToClipboard` hook from `@raystack/apsara/hooks` instead.
 
 ## Anatomy
 

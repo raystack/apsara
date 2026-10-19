@@ -10,10 +10,10 @@ export interface AlertDialogContentProps
   extends AlertDialogPrimitive.Popup.Props {
   overlay?: AlertDialogPrimitive.Backdrop.Props & { blur?: boolean };
   /**
-   * Toggles nested dialog animation (scaling and translation)
-   * `@default` true
+   * Turns off the scale and offset of a dialog that has a nested dialog open.
+   * @default false
    */
-  showNestedAnimation?: boolean;
+  disableNestedAnimation?: boolean;
   /** Corner radius for this dialog only. Overrides the theme's `radius`. */
   radius?: Radius;
 }
@@ -22,7 +22,7 @@ export const AlertDialogContent = ({
   className,
   children,
   overlay,
-  showNestedAnimation = true,
+  disableNestedAnimation = false,
   radius,
   ...props
 }: AlertDialogContentProps) => {
@@ -46,7 +46,7 @@ export const AlertDialogContent = ({
           {...theme}
           className={cx(
             styles.dialogContent,
-            showNestedAnimation && styles.showNestedAnimation,
+            !disableNestedAnimation && styles.nestedAnimation,
             theme?.className,
             radiusStyle({ radius }),
             className

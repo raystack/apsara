@@ -8,14 +8,16 @@ import styles from './copy-button.module.css';
 
 export interface CopyButtonProps extends IconButtonProps {
   text: string;
+  /**
+   * Milliseconds before the check icon changes back. `Infinity` keeps it.
+   * @default 1000
+   */
   resetTimeout?: number;
-  resetIcon?: boolean;
 }
 
 export function CopyButton({
   text,
   resetTimeout = 1000,
-  resetIcon = true,
   ...props
 }: CopyButtonProps) {
   const { copy } = useCopyToClipboard();
@@ -32,13 +34,12 @@ export function CopyButton({
     const res = await copy(text);
     if (!res) return;
     setCopied(true);
-    if (resetIcon) {
-      if (resetTimerRef.current !== null) clearTimeout(resetTimerRef.current);
-      resetTimerRef.current = setTimeout(() => {
-        setCopied(false);
-        resetTimerRef.current = null;
-      }, resetTimeout);
-    }
+    if (!Number.isFinite(resetTimeout)) return;
+    if (resetTimerRef.current !== null) clearTimeout(resetTimerRef.current);
+    resetTimerRef.current = setTimeout(() => {
+      setCopied(false);
+      resetTimerRef.current = null;
+    }, resetTimeout);
   }
 
   return (

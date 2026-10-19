@@ -146,7 +146,7 @@ describe('Skeleton', () => {
     });
 
     it('removes animation when disabled', () => {
-      const { container } = render(<Skeleton enableAnimation={false} />);
+      const { container } = render(<Skeleton disableAnimation />);
       const skeleton = container.querySelector(`.${styles.skeleton}`);
       expect(skeleton).not.toHaveClass(styles.animate);
     });

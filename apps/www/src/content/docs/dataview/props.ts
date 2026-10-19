@@ -22,10 +22,10 @@ export interface DataViewProps {
   mode?: 'client' | 'server';
 
   /**
-   * Loading state.
+   * Shows skeleton rows and holds back `onLoadMore`.
    * @defaultValue false
    */
-  isLoading?: boolean;
+  loading?: boolean;
 
   /** Initial query state. */
   query?: DataViewQuery;
@@ -158,8 +158,8 @@ export interface DataViewListProps {
   /** Render dividers between rows (default true for table). */
   showDividers?: boolean;
 
-  /** Render group section headers when grouping is active. Default true. */
-  showGroupHeaders?: boolean;
+  /** Hide group section headers when grouping is active. Default false. */
+  hideGroupHeaders?: boolean;
 
   /** When true, the active group header sticks under the table header while scrolling. */
   stickyGroupHeader?: boolean;
@@ -241,10 +241,10 @@ export interface DataViewTimelineProps {
   markers?: TimelineMarker[];
 
   /**
-   * Vertical gridlines at axis ticks.
-   * @defaultValue true
+   * Hides the vertical gridlines at axis ticks.
+   * @defaultValue false
    */
-  showGridlines?: boolean;
+  hideGridlines?: boolean;
 
   /** Label every Nth `scale` unit on the axis. Labels never render closer than the collision floor. Default: densest interval that fits. */
   tickInterval?: number;
@@ -256,10 +256,10 @@ export interface DataViewTimelineProps {
   gridlineInterval?: number;
 
   /**
-   * Hover crosshair snapped to the unit under the pointer, with a date badge on the axis.
-   * @defaultValue true
+   * Hides the hover crosshair snapped to the unit under the pointer, with a date badge on the axis.
+   * @defaultValue false
    */
-  showCursorLine?: boolean;
+  hideCursorLine?: boolean;
 
   // The literals are named in the description because the rendered type
   // column can't show them — TS collapses them into TimelineDateInput's
@@ -331,12 +331,12 @@ export interface DataViewTimelineProps {
   virtualized?: boolean;
 
   /**
-   * Render the group header band above each swim-lane section while `group_by`
-   * is active. False hides the bands only — rows stay grouped into sections
-   * (same contract as `DataViewListProps.showGroupHeaders`).
-   * @defaultValue true
+   * Hides the group header band above each swim-lane section while `group_by`
+   * is active. Rows stay grouped into sections
+   * (same contract as `DataViewListProps.hideGroupHeaders`).
+   * @defaultValue false
    */
-  showGroupHeaders?: boolean;
+  hideGroupHeaders?: boolean;
 }
 
 export interface TimelineCardContext {

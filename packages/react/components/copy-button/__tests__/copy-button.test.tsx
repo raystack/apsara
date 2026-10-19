@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CopyButton } from '../copy-button';
 
@@ -59,6 +59,23 @@ describe('CopyButton', () => {
 
       fireEvent.click(screen.getByRole('button'));
       expect(mockCopy).toHaveBeenCalledWith('Second text');
+    });
+
+    it('keeps the check icon when resetTimeout is Infinity', async () => {
+      vi.useFakeTimers();
+      const { container } = render(
+        <CopyButton text='Copy me' resetTimeout={Infinity} />
+      );
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button'));
+      });
+      act(() => {
+        vi.advanceTimersByTime(10000);
+      });
+      expect(
+        container.querySelector('[data-slot="copy-button-icons"]')
+      ).toHaveAttribute('data-copied');
+      vi.useRealTimers();
     });
   });
 });

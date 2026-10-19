@@ -141,7 +141,7 @@ describe('Chip', () => {
     it('stays a span when dismissible, even with onClick', () => {
       const ref = createRef<HTMLSpanElement>();
       render(
-        <Chip ref={ref} isDismissible onClick={vi.fn()} onDismiss={vi.fn()}>
+        <Chip ref={ref} dismissible onClick={vi.fn()} onDismiss={vi.fn()}>
           Test Chip
         </Chip>
       );
@@ -151,8 +151,8 @@ describe('Chip', () => {
   });
 
   describe('Dismissible Behavior', () => {
-    it('renders dismiss button when isDismissible is true', () => {
-      render(<Chip isDismissible>Dismissible Chip</Chip>);
+    it('renders dismiss button when dismissible is true', () => {
+      render(<Chip dismissible>Dismissible Chip</Chip>);
 
       const dismissButton = screen.getByRole('button', {
         name: 'Remove Dismissible Chip'
@@ -163,7 +163,7 @@ describe('Chip', () => {
     });
 
     it('uses the shared XIcon registry icon for the dismiss button', () => {
-      const { container } = render(<Chip isDismissible>Dismissible Chip</Chip>);
+      const { container } = render(<Chip dismissible>Dismissible Chip</Chip>);
 
       const icon = container.querySelector('[data-icon="XIcon"]');
       expect(icon).toBeInTheDocument();
@@ -178,7 +178,7 @@ describe('Chip', () => {
       );
       render(
         <IconProvider components={{ XIcon: CustomX }}>
-          <Chip isDismissible>Dismissible Chip</Chip>
+          <Chip dismissible>Dismissible Chip</Chip>
         </IconProvider>
       );
 
@@ -191,7 +191,7 @@ describe('Chip', () => {
     it('calls onDismiss when dismiss button is clicked', () => {
       const onDismiss = vi.fn();
       render(
-        <Chip isDismissible onDismiss={onDismiss}>
+        <Chip dismissible onDismiss={onDismiss}>
           Dismissible Chip
         </Chip>
       );
@@ -209,7 +209,7 @@ describe('Chip', () => {
       const onDismiss = vi.fn();
 
       render(
-        <Chip isDismissible onClick={onClick} onDismiss={onDismiss}>
+        <Chip dismissible onClick={onClick} onDismiss={onDismiss}>
           Dismissible Chip
         </Chip>
       );

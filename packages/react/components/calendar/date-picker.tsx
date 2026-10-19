@@ -61,7 +61,11 @@ export interface DatePickerProps {
   children?:
     | React.ReactNode
     | ((props: { selectedDate: string }) => React.ReactNode);
-  showCalendarIcon?: boolean;
+  /**
+   * Hides the calendar icon in the input.
+   * @default false
+   */
+  hideCalendarIcon?: boolean;
   timeZone?: string;
 }
 
@@ -76,7 +80,7 @@ export function DatePicker({
   onSelect = () => undefined,
   onErrorChange,
   children,
-  showCalendarIcon = true,
+  hideCalendarIcon = false,
   timeZone
 }: DatePickerProps) {
   // Merge legacy props with slotProps; slotProps wins when both are set.
@@ -229,7 +233,7 @@ export function DatePicker({
       size='small'
       placeholder='Select date'
       className={styles.datePickerInput}
-      trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+      trailingIcon={hideCalendarIcon ? undefined : <CalendarIcon />}
       data-slot='date-picker-input'
       {...inputProps}
       ref={popover.inputRef}

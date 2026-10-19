@@ -22,7 +22,7 @@ const structure = (function () {
   if (!nested || nested.type !== 'INSTANCE') {
     return {
       children: undefined,
-      isDismissible: undefined,
+      dismissible: undefined,
       leadingIcon: undefined,
       trailingIcon: undefined
     };
@@ -44,7 +44,7 @@ const structure = (function () {
       })(),
       false: undefined
     }),
-    isDismissible: nested.getBoolean('Dismiss'),
+    dismissible: nested.getBoolean('Dismiss'),
     // `leadingIcon` is driven by either the "Avatar" or the "Leading icon"
     // BOOLEAN. Avatar takes precedence and renders the connected <Avatar />.
     leadingIcon: nested.getBoolean('Avatar', {
@@ -79,7 +79,7 @@ export default {
   )}${figma.helpers.react.renderProp(
     'trailingIcon',
     structure.trailingIcon
-  )}${figma.helpers.react.renderProp('isDismissible', structure.isDismissible)}>
+  )}${figma.helpers.react.renderProp('dismissible', structure.dismissible)}>
       ${figma.helpers.react.renderChildren(structure.children)}
     </Chip>`,
   metadata: { nestable: true }

@@ -25,9 +25,9 @@ export const playground = {
       options: ['top', 'right', 'bottom', 'left'],
       defaultValue: 'right'
     },
-    showCloseButton: {
+    hideCloseButton: {
       type: 'checkbox',
-      defaultValue: true
+      defaultValue: false
     }
   },
   getCode

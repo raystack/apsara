@@ -26,7 +26,7 @@ export interface ChipProps {
   /**
    * Boolean to show a dismiss button (replaces trailingIcon)
    */
-  isDismissible?: boolean;
+  dismissible?: boolean;
 
   /** Callback function when dismiss button is clicked */
   onDismiss?: () => void;

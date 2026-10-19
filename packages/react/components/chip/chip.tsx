@@ -36,7 +36,7 @@ export type ChipProps = ComponentProps<'span'> &
   VariantProps<typeof chip> & {
     trailingIcon?: ReactNode;
     leadingIcon?: ReactNode;
-    isDismissible?: boolean;
+    dismissible?: boolean;
     onDismiss?: () => void;
     disabled?: boolean;
   };
@@ -48,7 +48,7 @@ export const Chip = ({
   color,
   trailingIcon,
   leadingIcon,
-  isDismissible,
+  dismissible,
   children,
   className,
   onDismiss,
@@ -63,7 +63,7 @@ export const Chip = ({
     onDismiss?.();
   };
 
-  const isInteractive = !!onClick && !isDismissible;
+  const isInteractive = !!onClick && !dismissible;
 
   const sharedProps = {
     'aria-label':
@@ -84,7 +84,7 @@ export const Chip = ({
         </span>
       )}
       {children}
-      {isDismissible ? (
+      {dismissible ? (
         <button
           onClick={handleDismiss}
           className={styles['dismiss-button']}

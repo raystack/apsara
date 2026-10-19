@@ -109,8 +109,8 @@ export default function DemoPlayground({
       <Dialog open={openPlayground} onOpenChange={setOpenPlayground}>
         <Dialog.Content
           className={styles.playgroundDialog}
-          showCloseButton={false}
-          showNestedAnimation={false}
+          hideCloseButton
+          disableNestedAnimation
         >
           <Dialog.Header className={styles.playgroundHeader}>
             <DemoTitle className={styles.playgroundTitle} />

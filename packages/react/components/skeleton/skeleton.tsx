@@ -12,7 +12,7 @@ export interface SkeletonProps {
   borderRadius?: string | number;
   inline?: boolean;
   duration?: number;
-  enableAnimation?: boolean;
+  disableAnimation?: boolean;
   count?: number;
   style?: CSSProperties;
   className?: string;
@@ -38,7 +38,7 @@ const SkeletonBase = (props: SkeletonProps) => {
     inline = false,
     duration = 1.5,
     count = 1,
-    enableAnimation = true,
+    disableAnimation = false,
     style,
     className,
     containerStyle,
@@ -48,7 +48,7 @@ const SkeletonBase = (props: SkeletonProps) => {
   const skeletonClassName = cx(
     styles.skeleton,
     inline && styles.inline,
-    enableAnimation && styles.animate,
+    !disableAnimation && styles.animate,
     className
   );
 
