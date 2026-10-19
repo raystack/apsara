@@ -8,13 +8,16 @@ export interface PopoverRootProps {
   /** Callback when open state changes. */
   onOpenChange?: (open: boolean) => void;
 
-  /** Boolean to enable modal behavior. */
-  modal?: boolean;
+  /**
+   * Locks scroll and blocks outside interaction while open. `'trap-focus'` only traps focus.
+   * @default false
+   */
+  modal?: boolean | 'trap-focus';
 }
 
 export interface PopoverContentProps {
   /** Preferred side of the trigger to render. */
-  side?: 'top' | 'right' | 'bottom' | 'left';
+  side?: 'top' | 'right' | 'bottom' | 'left' | 'inline-start' | 'inline-end';
 
   /** Alignment relative to trigger. */
   align?: 'start' | 'center' | 'end';

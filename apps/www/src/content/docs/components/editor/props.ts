@@ -337,8 +337,11 @@ export interface EditorChangeDetails {
   getText: () => string;
   /** Converts the doc to HTML. */
   getHTML: () => string;
-  /** Converts the doc to Markdown. Only present with the `markdown` prop. */
-  getMarkdown?: () => string;
+}
+
+export interface EditorMarkdownChangeDetails extends EditorChangeDetails {
+  /** Converts the doc to Markdown with the editor's adapter. */
+  getMarkdown: () => string;
 }
 
 export interface MarkdownAdapterOptions {

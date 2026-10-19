@@ -112,7 +112,7 @@ export const rangePickerDemo = {
     {
       name: 'Disabled',
       code: `
-      /* Disabling either input gates the whole picker — the shared popover would otherwise let users rewrite the "disabled" side through the calendar grid. To fix one side, constrain the calendar via \`calendarProps\` instead. */
+      /* Disabling either input gates the whole picker. The shared popover would otherwise let users rewrite the "disabled" side through the calendar grid. To fix one side, constrain the calendar via \`slotProps.calendar\` instead. */
       <RangePicker slotProps={{ startInput: { disabled: true }, endInput: { disabled: true } }} />
       `
     },

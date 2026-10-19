@@ -215,9 +215,11 @@ The footer section is a container that accepts all `div` props. It's commonly us
 
 ### Trigger
 
-A button that toggles the sidebar open/closed. It works whether the Sidebar is controlled or uncontrolled, so you can drop it into a header without wiring up any state yourself. It accepts all `IconButton` props (e.g. `size`) plus the ones below.
+A button that toggles the sidebar open/closed. It works whether the Sidebar is controlled or uncontrolled, so you can drop it into a header without wiring up any state yourself.
 
 *Note: disabled automatically when the Sidebar has `collapsible="none"`. If you use `collapsible="hidden"`, don't place `Sidebar.Trigger` inside `Sidebar.Header`/`Main`/`Footer`, because those sections are hidden along with the rest of the collapsed content, taking the trigger with them. Render it as a direct child of `<Sidebar>` instead, or use [external control](#external-control).*
+
+- Inherits all IconButton props
 
 <auto-type-table path="./props.ts" name="SidebarTriggerProps" />
 

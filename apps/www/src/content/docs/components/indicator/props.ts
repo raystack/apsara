@@ -15,11 +15,11 @@ export interface IndicatorProps {
   pulse?: boolean;
 
   /** Optional custom description for screen readers */
-  ariaLabel?: string;
+  'aria-label'?: string;
 
   /** The content to show the indicator on */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 
-  /** Additional CSS class names */
+  /** Additional CSS class names for the badge */
   className?: string;
 }

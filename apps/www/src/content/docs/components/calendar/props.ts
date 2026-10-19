@@ -138,6 +138,11 @@ export interface CalendarProps {
 
 export interface RangePickerProps {
   /**
+   * Additional CSS class names for the group that holds the start and end inputs. Ignored when `children` is set.
+   */
+  pickerGroupClassName?: string;
+
+  /**
    * Format for displaying the date. Supports various formats:
    * - With slashes: "DD/MM/YYYY", "MM/DD/YYYY", "YYYY/MM/DD"
    * - With dashes: "DD-MM-YYYY", "MM-DD-YYYY", "YYYY-MM-DD"
@@ -154,20 +159,20 @@ export interface RangePickerProps {
    * Both fields are optional during partial selection; gate on `range.to` if
    * you only want completed ranges.
    */
-  onSelect?: (range: { from?: Date; to?: Date }) => void;
+  onSelect?: (range: { from: Date | undefined; to?: Date }) => void;
 
   /** Initial (uncontrolled) date range. */
-  defaultValue?: { from?: Date; to?: Date };
+  defaultValue?: { from: Date | undefined; to?: Date };
 
   /** Controlled date range. */
-  value?: { from?: Date; to?: Date };
+  value?: { from: Date | undefined; to?: Date };
 
   /**
    * Props for each picker slot. When both this and the legacy
    * `inputsProps` / `calendarProps` / `popoverProps` are set, `slotProps` wins.
    *
-   * Input event handlers (`onChange`, `onFocus`, `onBlur`, `onKeyUp`) are not
-   * forwarded — use `onSelect` for value changes.
+   * The inputs are read-only. RangePicker replaces their `value` and `onClick`.
+   * Use `onSelect` for value changes.
    */
   slotProps?: {
     startInput?: InputProps;
@@ -258,9 +263,6 @@ export interface DatePickerProps {
    * it; `Field` also wires `aria-invalid` onto the input.
    */
   onErrorChange?: (error: string | undefined) => void;
-
-  /** @deprecated Use `slotProps.calendar` instead. */
-  calendarProps?: CalendarProps;
 
   /**
    * Render prop or custom trigger. Pass a function to render a custom trigger

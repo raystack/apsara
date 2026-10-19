@@ -1,14 +1,14 @@
 export interface SidePanelProps {
   /**
    * The side to position the panel.
-   * @default "left"
+   * @default "right"
    */
   side?: 'left' | 'right';
 
   /**
    * Content to render inside the side panel.
    */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 
   /**
    * Additional CSS class names to apply.

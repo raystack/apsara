@@ -40,7 +40,9 @@ Skills are in `.agents/skills/`. `.claude/skills` is a symlink to that folder, s
 ## Docs
 
 - When you change props, variants, or behavior, update the docs page.
-- `props.ts` is written by hand, not generated, and `<auto-type-table>` renders it. Check each prop name and value against the component. The two often get out of sync.
+- `props.ts` is written by hand, and `<auto-type-table>` renders it. `pnpm check:docs-props` compares each exported interface with the component type and fails on drift. CI runs it.
+- A docs interface matches the exported type with the same name, then the compound part (`CodeBlockHeaderProps` to `CodeBlock.Header`). Add other matches, docs-only types, inherited components, internal props and props the table keeps required to `CONFIG` in `scripts/check-docs-props.js`, with a reason for each internal or required prop.
+- When a part inherits another Apsara component's props, add an `inherits` entry and write "Inherits all <Component> props" in the part's section of `index.mdx`.
 - `demo.ts` exports demo objects: `{ type: 'code', code }` for examples and `{ type: 'playground', controls, getCode }` for the playground. The code strings render live with the library in scope.
 - Set `defaultValue` on playground controls. The generated code then leaves out props that are at their default.
 

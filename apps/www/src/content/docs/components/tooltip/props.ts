@@ -92,7 +92,7 @@ export interface TooltipContentProps {
    * Side placement of the tooltip
    * @default "top"
    */
-  side?: 'top' | 'bottom' | 'left' | 'right';
+  side?: 'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end';
 
   /**
    * Alignment of the tooltip
@@ -102,7 +102,7 @@ export interface TooltipContentProps {
 
   /**
    * Side offset for positioning
-   * @default 4
+   * @default 4, or 10 when `showArrow` is set
    */
   sideOffset?: number;
 

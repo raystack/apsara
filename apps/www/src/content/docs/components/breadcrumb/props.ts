@@ -1,8 +1,8 @@
 import { ReactElement, ReactNode } from 'react';
 
 export interface BreadcrumbItem {
-  /** Text to display for the item */
-  label: string;
+  /** Content of the item, usually its text */
+  children?: ReactNode;
 
   /** URL for the item link */
   href?: string;
