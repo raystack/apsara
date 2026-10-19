@@ -298,5 +298,36 @@ describe('Select', () => {
       expect(options[0]).toHaveTextContent('Apple');
       expect(options[1]).toHaveTextContent('Pineapple');
     });
+
+    it('filters options by a controlled searchValue', async () => {
+      const onSearch = vi.fn();
+      render(
+        <Select autocomplete searchValue='app' onSearch={onSearch}>
+          <Select.Trigger>
+            <Select.Value placeholder={TRIGGER_TEXT} />
+          </Select.Trigger>
+          <Select.Content>
+            {FRUIT_OPTIONS.map(option => (
+              <Select.Item key={option.value} value={option.value}>
+                {option.label}
+              </Select.Item>
+            ))}
+          </Select.Content>
+        </Select>
+      );
+
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+      fireEvent.change(screen.getByPlaceholderText('Search...'), {
+        target: { value: 'b' }
+      });
+      await flushMicrotasks();
+
+      expect(onSearch).toHaveBeenCalledWith('b');
+      const options = screen.getAllByRole('option');
+      expect(options.length).toBe(2);
+      expect(options[0]).toHaveTextContent('Apple');
+      expect(options[1]).toHaveTextContent('Pineapple');
+    });
   });
 });

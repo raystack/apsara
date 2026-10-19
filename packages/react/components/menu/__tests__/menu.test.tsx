@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Button } from '../../button/button';
 import { Menu } from '../menu';
@@ -131,6 +131,84 @@ describe('Menu', () => {
       fireEvent.click(trigger);
 
       expect(onOpenChange).toHaveBeenCalled();
+    });
+
+    it('stays open until the parent closes a controlled menu', async () => {
+      const onOpenChange = vi.fn();
+      const { rerender } = render(
+        <BasicDropdown open onOpenChange={onOpenChange} />
+      );
+
+      fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
+
+      expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
+      expect(screen.getByText('Profile')).toBeInTheDocument();
+
+      rerender(<BasicDropdown open={false} onOpenChange={onOpenChange} />);
+
+      await waitFor(() => {
+        expect(screen.queryByText('Profile')).not.toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Autocomplete', () => {
+    const FRUITS = (
+      <Menu.Content>
+        <Menu.Item value='apple'>Apple</Menu.Item>
+        <Menu.Item value='banana'>Banana</Menu.Item>
+      </Menu.Content>
+    );
+
+    it('filters items by a controlled inputValue', () => {
+      const onInputValueChange = vi.fn();
+      render(
+        <Menu
+          autocomplete
+          defaultOpen
+          inputValue='ban'
+          onInputValueChange={onInputValueChange}
+        >
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          {FRUITS}
+        </Menu>
+      );
+      const input = screen.getByPlaceholderText('Search...');
+
+      fireEvent.change(input, { target: { value: 'app' } });
+
+      expect(onInputValueChange).toHaveBeenCalledWith('app');
+      expect(input).toHaveValue('ban');
+      expect(screen.queryByText('Apple')).not.toBeInTheDocument();
+      expect(screen.getByText('Banana')).toBeInTheDocument();
+    });
+
+    it('clears an uncontrolled search when the menu closes', async () => {
+      const onInputValueChange = vi.fn();
+      render(
+        <Menu
+          autocomplete
+          defaultOpen
+          defaultInputValue='ban'
+          onInputValueChange={onInputValueChange}
+        >
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          {FRUITS}
+        </Menu>
+      );
+      expect(screen.queryByText('Apple')).not.toBeInTheDocument();
+
+      fireEvent.keyDown(screen.getByPlaceholderText('Search...'), {
+        key: 'Escape'
+      });
+      await waitFor(() => {
+        expect(screen.queryByText('Banana')).not.toBeInTheDocument();
+      });
+      fireEvent.click(screen.getByText(TRIGGER_TEXT));
+
+      expect(onInputValueChange).toHaveBeenCalledWith('');
+      expect(await screen.findByText('Apple')).toBeInTheDocument();
+      expect(screen.getByText('Banana')).toBeInTheDocument();
     });
   });
 });
