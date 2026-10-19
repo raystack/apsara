@@ -36,7 +36,7 @@ export interface NumberFieldProps {
 
   /**
    * Whether the field is required.
-   * @defaultValue the `required` of the surrounding `Field`, otherwise false
+   * @default the `required` of the surrounding `Field`, otherwise false
    */
   required?: boolean;
 

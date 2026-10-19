@@ -71,17 +71,23 @@ Renders the navigation bar container.
 
 The start section is a container that accepts Flex props (`align`, `gap`, `direction`, etc.) and section props. It's commonly used for brand logos, primary navigation links, or page titles.
 
+- Inherits all Flex props
+
 <auto-type-table path="./props.ts" name="NavbarStartProps" />
 
 ### Center
 
 The center section sits in the middle of the navbar in a fixed position, so it stays absolutely centered regardless of the width of Start or End content. The navbar uses a 3-column grid (Start | Center | End) so the center does not shift when left or right content changes. It accepts Flex props and section props.
 
+- Inherits all Flex props
+
 <auto-type-table path="./props.ts" name="NavbarCenterProps" />
 
 ### End
 
 The end section is a container that accepts Flex props and section props. It's commonly used for search inputs, action buttons, user menus, or secondary navigation.
+
+- Inherits all Flex props
 
 <auto-type-table path="./props.ts" name="NavbarEndProps" />
 

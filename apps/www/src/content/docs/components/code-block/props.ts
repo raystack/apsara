@@ -48,7 +48,7 @@ export interface CodeBlockProps {
   /**
    * The code content to display
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Additional CSS class name
@@ -83,7 +83,7 @@ export interface CodeBlockHeaderProps {
   /**
    * The content to display in the header
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Additional CSS class name
@@ -95,7 +95,7 @@ export interface CodeBlockContentProps {
   /**
    * The content to display
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Additional CSS class name
@@ -107,7 +107,7 @@ export interface CodeBlockLabelProps {
   /**
    * The label text to display
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Additional CSS class name
@@ -128,7 +128,7 @@ export interface CodeBlockLanguageSelectProps {
 
   /**
    * The initial open state when uncontrolled
-   * @defaultValue false
+   * @default false
    */
   defaultOpen?: boolean;
 

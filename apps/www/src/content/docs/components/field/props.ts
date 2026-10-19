@@ -53,7 +53,7 @@ export interface FieldLabelProps {
 
   /**
    * Text rendered next to the label when `required={false}`.
-   * @defaultValue "(optional)"
+   * @default "(optional)"
    */
   optionalText?: string;
 

@@ -158,7 +158,7 @@ export type ThemeSwitcherProps = {
   target?: 'nearest' | 'root';
   /**
    * Accessible name for the button.
-   * @defaultValue "Switch to light theme" when the `target` theme is dark, otherwise "Switch to dark theme"
+   * @default "Switch to light theme" when the `target` theme is dark, otherwise "Switch to dark theme"
    */
   'aria-label'?: string;
 };

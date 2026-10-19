@@ -127,13 +127,13 @@ export interface DataViewField {
 
   /**
    * Value type of a `select` or `multiselect` filter.
-   * @defaultValue "string"
+   * @default "string"
    */
   dataType?: 'string' | 'number' | 'boolean';
 
   /**
    * Value a new filter on this field starts with. `null` uses the default.
-   * @defaultValue today for `date`, the first option for `select`, otherwise `""`
+   * @default today for `date`, the first option for `select`, otherwise `""`
    */
   defaultFilterValue?:
     | string
@@ -153,7 +153,7 @@ export interface DataViewField {
 
   /**
    * Count shown next to each group header when `showGroupCount` is on, by raw group value.
-   * @defaultValue the group's row count
+   * @default the group's row count
    */
   groupCountMap?: Record<string, number>;
 }

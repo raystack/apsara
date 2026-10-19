@@ -98,6 +98,8 @@ Groups all parts of the code block and manages state.
 
 Renders the optional header section for labels and controls.
 
+- Inherits all Flex props
+
 <auto-type-table path="./props.ts" name="CodeBlockHeaderProps" />
 
 ### Content
@@ -110,17 +112,23 @@ Renders the main content area containing code blocks.
 
 Renders a text label displayed in the header.
 
+- Inherits all Text props
+
 <auto-type-table path="./props.ts" name="CodeBlockLabelProps" />
 
 ### LanguageSelect
 
-Renders a language selection dropdown container. It accepts the props of a single-selection `Select` root, except `value`, `defaultValue` and `onValueChange`. Set those on the `CodeBlock` root.
+Renders a language selection dropdown container. Set `value`, `defaultValue` and `onValueChange` on the `CodeBlock` root, not here.
+
+- Inherits all Select props
 
 <auto-type-table path="./props.ts" name="CodeBlockLanguageSelectProps" />
 
 ### LanguageSelectTrigger
 
 Renders the button that opens language selection.
+
+- Inherits all Select.Trigger props
 
 <auto-type-table path="./props.ts" name="CodeBlockLanguageSelectTriggerProps" />
 
@@ -136,6 +144,8 @@ Renders one language in the dropdown. Selecting it shows the `CodeBlock.Code` wi
 
 Renders a button for copying code to clipboard.
 
+- Inherits all CopyButton props
+
 <auto-type-table path="./props.ts" name="CodeBlockCopyButtonProps" />
 
 ### Code
@@ -147,6 +157,8 @@ Renders a syntax-highlighted code block.
 ### CollapseTrigger
 
 Renders a button to expand or collapse long code blocks.
+
+- Inherits all Button props
 
 <auto-type-table path="./props.ts" name="CodeBlockCollapseTriggerProps" />
 
@@ -170,6 +182,8 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `code-block-collapse-trigger` | The show/hide button (when `maxLines` is exceeded) |
 | `code-block-language-select-trigger` | The language select trigger button |
 | `code-block-language-select-value` | The selected language value inside the trigger |
+| `select-content` | The `CodeBlock.LanguageSelectContent` popup |
+| `select-item` | Each `CodeBlock.LanguageSelectItem` option |
 
 ## Accessibility
 

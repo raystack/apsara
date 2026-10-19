@@ -49,7 +49,7 @@ export interface FloatingActionsSeparatorProps {
 
   /**
    * Hides the separator from assistive technology.
-   * @defaultValue false
+   * @default false
    */
   decorative?: boolean;
 

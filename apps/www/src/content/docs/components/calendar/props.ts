@@ -155,7 +155,9 @@ export interface RangePickerProps {
   dateFormat?: string;
 
   /**
-   * Fires on every step of range selection. `to` is unset until the range is complete.
+   * Fires on every step of range selection — not only on the completed range.
+   * Both fields are optional during partial selection; gate on `range.to` if
+   * you only want completed ranges.
    */
   onSelect?: (range: { from: Date | undefined; to?: Date }) => void;
 
@@ -261,9 +263,6 @@ export interface DatePickerProps {
    * it; `Field` also wires `aria-invalid` onto the input.
    */
   onErrorChange?: (error: string | undefined) => void;
-
-  /** @deprecated Use `slotProps.calendar` instead. */
-  calendarProps?: CalendarProps;
 
   /**
    * Render prop or custom trigger. Pass a function to render a custom trigger

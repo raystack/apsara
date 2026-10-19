@@ -116,7 +116,7 @@ export interface PreviewCardContentProps {
    * Distance between the anchor and the popup in pixels.
    * Also accepts a function to read anchor/positioner dimensions.
    * @remarks `number | OffsetFunction`
-   * @defaultValue 4, or 10 when `showArrow` is set
+   * @default 4, or 10 when `showArrow` is set
    */
   sideOffset?: number | ((data: OffsetData) => number);
 
@@ -130,7 +130,7 @@ export interface PreviewCardContentProps {
 
   /**
    * Additional space to maintain from the edge of the collision boundary.
-   * @defaultValue 3
+   * @default 3
    */
   collisionPadding?: number;
 
