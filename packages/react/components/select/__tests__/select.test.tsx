@@ -329,5 +329,30 @@ describe('Select', () => {
       expect(options[0]).toHaveTextContent('Apple');
       expect(options[1]).toHaveTextContent('Pineapple');
     });
+
+    it('shows a controlled searchValue in the search input', async () => {
+      render(<BasicSelect autocomplete searchValue='app' />);
+
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+      const searchInput = screen.getByPlaceholderText('Search...');
+      fireEvent.change(searchInput, { target: { value: 'b' } });
+      await flushMicrotasks();
+
+      expect(searchInput).toHaveValue('app');
+    });
+
+    it('shows and filters by defaultSearchValue', async () => {
+      render(<BasicSelect autocomplete defaultSearchValue='app' />);
+
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+
+      expect(screen.getByPlaceholderText('Search...')).toHaveValue('app');
+      const options = screen.getAllByRole('option');
+      expect(options.length).toBe(2);
+      expect(options[0]).toHaveTextContent('Apple');
+      expect(options[1]).toHaveTextContent('Pineapple');
+    });
   });
 });
