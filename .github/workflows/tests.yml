@@ -37,3 +37,30 @@ jobs:
 
       - name: Check build
         run: pnpm build:apsara
+
+  docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.3.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Test docs tooling
+        run: pnpm test:docs
+
+      - name: Check docs props tables
+        run: pnpm check:docs-props
