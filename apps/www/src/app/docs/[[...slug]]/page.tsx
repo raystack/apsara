@@ -3,12 +3,23 @@ import { createRelativeLink } from 'fumadocs-ui/mdx';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { DemoContextProvider } from '@/components/demo/demo-context';
+import Changelog from '@/components/docs/changelog';
 import DocsFooter from '@/components/docs/footer';
 import DocsNavbar from '@/components/docs/navbar';
 import { mdxComponents } from '@/components/mdx';
 import TableOfContents from '@/components/toc/toc';
+import { getChangelog } from '@/lib/changelog';
 import { docs } from '@/lib/source';
 import styles from './page.module.css';
+
+/** Returns the commit scope of a component page. */
+function changelogScope(slugs: string[]) {
+  const [section, name] = slugs;
+  if (section === 'dataview') return 'data-view';
+  if ((section === 'components' || section === 'ai-elements') && name)
+    return name;
+  return undefined;
+}
 
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const params = await props.params;
@@ -18,6 +29,10 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const MDX = page.data.body;
   const content = (page.data._exports?._markdown ?? '') as string;
   const hasPlayground = content.includes('<Demo data={playground}');
+  const scope = changelogScope(page.slugs);
+  const toc = scope
+    ? [...page.data.toc, { title: 'Changelog', url: '#changelog', depth: 2 }]
+    : page.data.toc;
 
   return (
     <DemoContextProvider hasPlayground={hasPlayground} title={page.data.title}>
@@ -59,13 +74,14 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
                       a: createRelativeLink(docs, page)
                     }}
                   />
+                  {scope && <Changelog releases={getChangelog(scope)} />}
                 </Flex>
               </Flex>
               <DocsFooter url={page.url} />
             </Flex>
           </Flex>
           <aside className={styles.toc}>
-            <TableOfContents headings={page.data.toc} />
+            <TableOfContents headings={toc} />
           </aside>
         </Flex>
       </Flex>
