@@ -26,7 +26,7 @@ export interface EditorMentionsProps {
     query: string,
     context: { trigger: string; signal: AbortSignal }
   ) => Promise<EditorMentionItem[]>;
-  /** Fills in the icon, trailing content and label of chips loaded from `value` or `defaultValue`. */
+  /** Fills in the leading icon, trailing icon and label of chips loaded from `value` or `defaultValue`. */
   resolveMentions?: (refs: EditorMentionRef[]) => Promise<EditorMentionItem[]>;
   /**
    * Shown when nothing matches the query.

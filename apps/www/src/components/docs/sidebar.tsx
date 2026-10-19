@@ -33,9 +33,9 @@ function renderNode(node: Node, pathname: string): ReactNode {
         label={node.name as string}
         key={node?.$id}
         leadingIcon={node?.icon}
-        classNames={{
-          items: styles.items,
-          label: styles.label
+        slotProps={{
+          items: { className: styles.items },
+          label: { className: styles.label }
         }}
       >
         <SidebarItem item={node.index} pathname={pathname} />
@@ -60,9 +60,9 @@ function renderNode(node: Node, pathname: string): ReactNode {
         label={node.name as string}
         key={node?.$id}
         leadingIcon={node?.icon}
-        classNames={{
-          items: styles.items,
-          label: styles.label
+        slotProps={{
+          items: { className: styles.items },
+          label: { className: styles.label }
         }}
       >
         {node.children.map(child => renderNode(child, pathname))}
@@ -90,9 +90,9 @@ function SidebarItem({ item, pathname }: { item: Item; pathname: string }) {
       leadingIcon={item?.icon}
       render={<Link href={item.url} />}
       active={isActiveUrl(item.url, pathname, false)}
-      classNames={{
-        root: styles.item,
-        text: styles.itemText
+      slotProps={{
+        root: { className: styles.item },
+        text: { className: styles.itemText }
       }}
     >
       <Flex align='center' gap={3}>

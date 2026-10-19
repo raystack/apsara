@@ -6,7 +6,7 @@ import type { MentionAttrs } from './mention';
 /**
  * One live chip. The node view owns the element and writes the label into it
  * synchronously, so there is never an empty chip frame, while React portals the
- * consumer's `icon` and `trailing` nodes into the two slots, so those render in
+ * consumer's `leadingIcon` and `trailingIcon` nodes into the two slots, so those render in
  * the host tree and see Theme and any other provider context.
  */
 export interface MentionPortal {

@@ -1,4 +1,5 @@
-import { ReactElement, ReactNode } from 'react';
+import type { MenuContentProps } from '@raystack/apsara';
+import { ComponentProps, ReactElement, ReactNode } from 'react';
 
 export interface SidebarRootProps {
   /** Controls the expanded/collapsed state. */
@@ -90,6 +91,17 @@ export interface SidebarGroupProps {
 
   /** ReactNode for the group content. */
   children?: ReactNode;
+
+  /** Props for the inner parts. */
+  slotProps?: {
+    header?: ComponentProps<'div'>;
+    items?: ComponentProps<'div'>;
+    label?: ComponentProps<'span'>;
+    icon?: ComponentProps<'span'>;
+    trigger?: ComponentProps<'button'>;
+    chevron?: ComponentProps<'svg'>;
+    trailingIcon?: ComponentProps<'span'>;
+  };
 }
 
 export interface SidebarItemProps {
@@ -120,6 +132,13 @@ export interface SidebarItemProps {
    * @default "<a />"
    */
   render?: ReactElement;
+
+  /** Props for the inner parts. */
+  slotProps?: {
+    root?: ComponentProps<'a'>;
+    leadingIcon?: ComponentProps<'span'>;
+    text?: ComponentProps<'span'>;
+  };
 }
 
 export interface SidebarTriggerProps {
@@ -139,13 +158,11 @@ export interface SidebarMoreProps {
   /** Sidebar items rendered inside the menu content. */
   children?: ReactNode;
 
-  /** Optional class names for customizing parts of the more trigger/menu. */
-  classNames?: {
-    /**
-     * Class name for menu content container. Not deprecated: `Menu.Content`
-     * portals to `document.body`, so a `[data-slot="menu-content"]` selector
-     * can't be scoped to just this instance's dropdown.
-     */
-    menuContent?: string;
+  /** Props for the inner parts. `menuContent` takes `Menu.Content` props. */
+  slotProps?: {
+    root?: ComponentProps<'button'>;
+    leadingIcon?: ComponentProps<'span'>;
+    text?: ComponentProps<'span'>;
+    menuContent?: MenuContentProps;
   };
 }

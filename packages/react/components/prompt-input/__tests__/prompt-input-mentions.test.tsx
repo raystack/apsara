@@ -697,7 +697,7 @@ describe('PromptInput.Mentions', () => {
           id: 'data-table',
           label: 'DataTable v2',
           type: 'component',
-          icon: <span data-testid='icon'>◆</span>
+          leadingIcon: <span data-testid='icon'>◆</span>
         }
       ]);
       const { container } = render(

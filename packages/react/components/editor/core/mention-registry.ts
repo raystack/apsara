@@ -12,9 +12,9 @@ export interface EditorMentionItem {
    * @defaultValue "mention"
    */
   type?: string;
-  icon?: ReactNode;
+  leadingIcon?: ReactNode;
   /** Trailing metadata: a badge, a shortcut, a timestamp. */
-  trailing?: ReactNode;
+  trailingIcon?: ReactNode;
   /** Section heading. Groups render in first-appearance order. */
   group?: string;
   disabled?: boolean;
@@ -62,7 +62,7 @@ function sameData(a: MentionsData, b: MentionsData): boolean {
  * drives the menu and decorates chips, and the root (which reads `data` back
  * when assembling a message). PromptInput and Editor each own one.
  *
- * `icon`, `trailing` and `data` cannot survive serialization, so they live here
+ * `leadingIcon`, `trailingIcon` and `data` cannot survive serialization, so they live here
  * rather than on the document, keyed by `trigger|type|id` and filled in when an
  * item is picked from the menu or returned by `resolveMentions`.
  *

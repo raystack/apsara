@@ -1,6 +1,6 @@
 'use client';
 
-import { Accordion as AccordionPrimitive } from '@base-ui/react';
+import { Accordion as AccordionPrimitive, mergeProps } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, ReactNode, useCallback, useState } from 'react';
 import { ChevronDownIcon } from '~/icons';
@@ -23,21 +23,31 @@ export interface SidebarGroupProps extends ComponentProps<'section'> {
   onOpenChange?: (open: boolean) => void;
   leadingIcon?: ReactNode;
   trailingIcon?: ReactNode;
-  /** @deprecated Every key here has an equivalent `[data-slot]`. See the Slots table in the Sidebar docs. */
+  /** Props for the inner parts. */
+  slotProps?: {
+    header?: ComponentProps<'div'>;
+    items?: ComponentProps<'div'>;
+    label?: ComponentProps<'span'>;
+    icon?: ComponentProps<'span'>;
+    trigger?: ComponentProps<'button'>;
+    chevron?: ComponentProps<'svg'>;
+    trailingIcon?: ComponentProps<'span'>;
+  };
+  /** @deprecated Use `slotProps` instead. */
   classNames?: {
-    /** @deprecated Use `[data-slot="sidebar-group-header"]` instead. */
+    /** @deprecated Use `slotProps.header` instead. */
     header?: string;
-    /** @deprecated Use `[data-slot="sidebar-group-items"]` instead. */
+    /** @deprecated Use `slotProps.items` instead. */
     items?: string;
-    /** @deprecated Use `[data-slot="sidebar-group-label"]` instead. */
+    /** @deprecated Use `slotProps.label` instead. */
     label?: string;
-    /** @deprecated Use `[data-slot="sidebar-leading-icon"]` instead. */
+    /** @deprecated Use `slotProps.icon` instead. */
     icon?: string;
-    /** @deprecated Use `[data-slot="sidebar-group-trigger"]` instead. */
+    /** @deprecated Use `slotProps.trigger` instead. */
     trigger?: string;
-    /** @deprecated Use `[data-slot="sidebar-group-chevron"]` instead. */
+    /** @deprecated Use `slotProps.chevron` instead. */
     chevron?: string;
-    /** @deprecated Use `[data-slot="sidebar-trailing-icon"]` instead. */
+    /** @deprecated Use `slotProps.trailingIcon` instead. */
     trailingIcon?: string;
   };
 }
@@ -51,6 +61,7 @@ export function SidebarNavigationGroup({
   onOpenChange,
   leadingIcon,
   trailingIcon,
+  slotProps,
   classNames,
   children,
   ...props
@@ -74,11 +85,15 @@ export function SidebarNavigationGroup({
       <SidebarLeadingVisual
         leadingIcon={leadingIcon}
         className={classNames?.icon}
+        slotProps={slotProps?.icon}
         render={<span />}
       />
       <span
-        className={cx(styles['nav-group-label'], classNames?.label)}
         data-slot='sidebar-group-label'
+        {...mergeProps<'span'>(
+          { className: cx(styles['nav-group-label'], classNames?.label) },
+          slotProps?.label
+        )}
       >
         {label}
       </span>
@@ -88,9 +103,12 @@ export function SidebarNavigationGroup({
   const items = (
     <Flex
       direction='column'
-      className={cx(styles['nav-group-items'], classNames?.items)}
       role='list'
       data-slot='sidebar-group-items'
+      {...mergeProps<'div'>(
+        { className: cx(styles['nav-group-items'], classNames?.items) },
+        slotProps?.items
+      )}
     >
       {children}
     </Flex>
@@ -118,26 +136,45 @@ export function SidebarNavigationGroup({
             className={styles['nav-group-accordion-item']}
           >
             <AccordionPrimitive.Header
-              className={cx(styles['nav-group-header'], classNames?.header)}
               data-slot='sidebar-group-header'
+              {...mergeProps<'h3'>(
+                {
+                  className: cx(styles['nav-group-header'], classNames?.header)
+                },
+                slotProps?.header as ComponentProps<'h3'>
+              )}
             >
               <AccordionPrimitive.Trigger
-                className={cx(styles['nav-group-trigger'], classNames?.trigger)}
                 data-slot='sidebar-group-trigger'
+                {...mergeProps<'button'>(
+                  {
+                    className: cx(
+                      styles['nav-group-trigger'],
+                      classNames?.trigger
+                    )
+                  },
+                  slotProps?.trigger
+                )}
               >
                 {labelContent}
                 <ChevronDownIcon
-                  className={cx(
-                    styles['nav-group-chevron'],
-                    classNames?.chevron
-                  )}
                   aria-hidden='true'
                   data-slot='sidebar-group-chevron'
+                  {...mergeProps<'svg'>(
+                    {
+                      className: cx(
+                        styles['nav-group-chevron'],
+                        classNames?.chevron
+                      )
+                    },
+                    slotProps?.chevron
+                  )}
                 />
               </AccordionPrimitive.Trigger>
               <SidebarTrailingVisual
                 trailingIcon={trailingIcon}
                 className={classNames?.trailingIcon}
+                slotProps={slotProps?.trailingIcon}
               />
             </AccordionPrimitive.Header>
             <AccordionPrimitive.Panel
@@ -153,17 +190,23 @@ export function SidebarNavigationGroup({
           <Flex
             align='center'
             gap={3}
-            className={cx(
-              styles['nav-group-header'],
-              trailingIcon && styles['nav-group-header-with-trailing'],
-              classNames?.header
-            )}
             data-slot='sidebar-group-header'
+            {...mergeProps<'div'>(
+              {
+                className: cx(
+                  styles['nav-group-header'],
+                  trailingIcon && styles['nav-group-header-with-trailing'],
+                  classNames?.header
+                )
+              },
+              slotProps?.header
+            )}
           >
             {labelContent}
             <SidebarTrailingVisual
               trailingIcon={trailingIcon}
               className={classNames?.trailingIcon}
+              slotProps={slotProps?.trailingIcon}
             />
           </Flex>
           {items}

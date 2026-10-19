@@ -1,11 +1,12 @@
 'use client';
 
+import { mergeProps } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { isValidElement, ReactNode, useMemo } from 'react';
+import { ComponentProps, isValidElement, ReactNode, useMemo } from 'react';
 import { FilterIcon } from '~/icons';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import { Button } from '../../button';
-import { FilterChip } from '../../filter-chip';
+import { FilterChip, type FilterChipProps } from '../../filter-chip';
 import { Flex } from '../../flex';
 import { IconButton } from '../../icon-button';
 import { Menu } from '../../menu';
@@ -29,8 +30,8 @@ interface AddFilterProps<TData> extends PositionerProps {
   appliedFiltersSet: Set<string>;
   onAddFilter: (field: DataViewField<TData>) => void;
   children?: Trigger<TData>;
-  /** Applied to the default trigger only. A custom `trigger`/`children` owns its own className. */
-  className?: string;
+  /** Applied to the default trigger only. A custom `trigger`/`children` owns its own props. */
+  triggerProps?: Omit<ComponentProps<'button'>, 'color'>;
 }
 
 function AddFilter<TData>({
@@ -38,7 +39,7 @@ function AddFilter<TData>({
   appliedFiltersSet,
   onAddFilter,
   children,
-  className,
+  triggerProps,
   ...positionerProps
 }: AddFilterProps<TData>) {
   const unappliedFields = fieldList.filter(
@@ -59,9 +60,9 @@ function AddFilter<TData>({
       return (
         <IconButton
           size={4}
-          className={className}
           aria-label='Add filter'
           data-slot='data-view-add-filter'
+          {...triggerProps}
         >
           <FilterIcon />
         </IconButton>
@@ -73,13 +74,13 @@ function AddFilter<TData>({
         size='small'
         leadingIcon={<FilterIcon />}
         color='neutral'
-        className={className}
         data-slot='data-view-add-filter'
+        {...triggerProps}
       >
         Filter
       </Button>
     );
-  }, [children, appliedFiltersSet, availableFilters, className]);
+  }, [children, appliedFiltersSet, availableFilters, triggerProps]);
 
   return unappliedFields.length > 0 ? (
     <Menu>
@@ -103,10 +104,16 @@ function AddFilter<TData>({
 }
 
 export interface DataViewFiltersProps<TData> extends PositionerProps {
+  /** Props for the inner parts. `addFilter` applies to the default trigger only. */
+  slotProps?: {
+    filterChips?: Partial<FilterChipProps>;
+    addFilter?: Omit<ComponentProps<'button'>, 'color'>;
+  };
+  /** @deprecated Use `slotProps` instead. */
   classNames?: {
-    /** @deprecated Use `[data-slot="filter-chip"]` instead. */
+    /** @deprecated Use `slotProps.filterChips` instead. */
     filterChips?: string;
-    /** @deprecated Use `[data-slot="data-view-add-filter"]` instead. */
+    /** @deprecated Use `slotProps.addFilter` instead. */
     addFilter?: string;
   };
   className?: string;
@@ -114,6 +121,7 @@ export interface DataViewFiltersProps<TData> extends PositionerProps {
 }
 
 export function Filters<TData>({
+  slotProps,
   classNames,
   className,
   trigger,
@@ -159,27 +167,35 @@ export function Filters<TData>({
       {appliedFilters.map(filter => (
         <FilterChip
           key={filter.name}
-          label={filter.label}
-          value={filter.value ?? undefined}
-          onRemove={() => handleRemoveFilter(filter.name)}
-          onValueChange={value => handleFilterValueChange(filter.name, value)}
-          onOperationChange={operator =>
-            handleFilterOperationChange(
-              filter.name,
-              operator as FilterOperatorTypes
-            )
-          }
-          columnType={filter.filterType}
-          options={filter.options}
-          selectProps={filter.selectProps}
-          className={classNames?.filterChips}
+          {...mergeProps<typeof FilterChip>(
+            {
+              label: filter.label,
+              value: filter.value ?? undefined,
+              onRemove: () => handleRemoveFilter(filter.name),
+              onValueChange: value =>
+                handleFilterValueChange(filter.name, value),
+              onOperationChange: operator =>
+                handleFilterOperationChange(
+                  filter.name,
+                  operator as FilterOperatorTypes
+                ),
+              columnType: filter.filterType,
+              options: filter.options,
+              selectProps: filter.selectProps,
+              className: classNames?.filterChips
+            },
+            slotProps?.filterChips as FilterChipProps
+          )}
         />
       ))}
       <AddFilter
         fieldList={filterableFields}
         appliedFiltersSet={appliedFiltersSet}
         onAddFilter={onAddFilter}
-        className={classNames?.addFilter}
+        triggerProps={mergeProps<'button'>(
+          { className: classNames?.addFilter },
+          slotProps?.addFilter
+        )}
         {...positionerProps}
       >
         {trigger}

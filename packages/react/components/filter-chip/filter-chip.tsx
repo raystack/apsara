@@ -5,7 +5,7 @@ import { cva, cx, VariantProps } from 'class-variance-authority';
 import { parseISO } from 'date-fns';
 import {
   ComponentProps,
-  ReactElement,
+  ReactNode,
   useCallback,
   useMemo,
   useState
@@ -103,7 +103,7 @@ export interface FilterChipProps
   options?: FilterSelectOption[];
   onValueChange?: (value: FilterChipValue, operation: string) => void;
   onOperationChange?: (operation: string) => void;
-  leadingIcon?: ReactElement;
+  leadingIcon?: ReactNode;
   operations?: FilterOperator<string>[];
   selectProps?: BaseSelectProps;
   /** Props forwarded to the `CalendarPreview` for `columnType="date"`. */
@@ -166,8 +166,8 @@ export const FilterChip = ({
     onErrorChange,
     ...calendarRest
   } = calendarProps ?? {};
-  const { classNames: inputClassNames, ...inputProps } =
-    dateSlotProps?.input ?? {};
+  const inputProps = dateSlotProps?.input ?? {};
+  const inputContainerProps = inputProps.slotProps?.container;
   /* A new `Date` each render reads as a new value, and the input drops its typed text. */
   const dateValue = useMemo(
     () => toDateValue(filterValue, calendarRest.timeZone) ?? null,
@@ -297,9 +297,15 @@ export const FilterChip = ({
                 <CalendarPreview.Input
                   trailingIcon={showCalendarIcon ? undefined : null}
                   {...inputProps}
-                  classNames={{
-                    ...inputClassNames,
-                    container: cx(styles.dateField, inputClassNames?.container)
+                  slotProps={{
+                    ...inputProps.slotProps,
+                    container: {
+                      ...inputContainerProps,
+                      className: cx(
+                        styles.dateField,
+                        inputContainerProps?.className
+                      )
+                    }
                   }}
                   errorMessages={{
                     unparseable: INVALID_DATE,
@@ -329,7 +335,7 @@ export const FilterChip = ({
           >
             <Input
               variant={variant === 'text' ? 'borderless' : 'default'}
-              classNames={{ container: styles.inputField }}
+              slotProps={{ container: { className: styles.inputField } }}
               value={filterValue.toString()}
               onChange={e => handleTextInputChange(e.target.value)}
             />

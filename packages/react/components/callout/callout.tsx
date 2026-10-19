@@ -54,7 +54,7 @@ export interface CalloutProps
    */
   onDismiss?: () => void;
   style?: CSSProperties;
-  icon?: ReactNode;
+  leadingIcon?: ReactNode;
 }
 
 export function Callout({
@@ -67,7 +67,7 @@ export function Callout({
   action,
   dismissible,
   onDismiss,
-  icon = <InfoIcon />,
+  leadingIcon = <InfoIcon />,
   ...props
 }: CalloutProps) {
   // Dismissal is controlled when `onDismiss` is given; otherwise fall back to
@@ -116,13 +116,13 @@ export function Callout({
               className={styles.messageContainer}
               data-slot='callout-message-container'
             >
-              {icon && (
+              {leadingIcon && (
                 <div
                   className={styles.icon}
                   aria-hidden='true'
-                  data-slot='callout-icon'
+                  data-slot='callout-leading-icon'
                 >
-                  {icon}
+                  {leadingIcon}
                 </div>
               )}
               <div className={styles.message} data-slot='callout-message'>

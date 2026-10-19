@@ -219,6 +219,10 @@
   height: var(--rs-space-5);
 }
 
+.itemTrailingIcon {
+  margin-left: auto;
+}
+
 .trigger-small .valueContent .itemIcon svg {
   width: var(--rs-space-4);
   height: var(--rs-space-4);

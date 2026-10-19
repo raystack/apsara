@@ -137,6 +137,20 @@ describe('EmptyState', () => {
       expect(heading).toHaveClass('custom-heading');
     });
 
+    it('merges slotProps with classNames', () => {
+      render(
+        <EmptyState
+          icon={<div>Icon</div>}
+          heading='Title'
+          classNames={{ heading: 'old-heading' }}
+          slotProps={{ heading: { className: 'new-heading', id: 'title' } }}
+        />
+      );
+      const heading = screen.getByText('Title');
+      expect(heading).toHaveClass('old-heading', 'new-heading');
+      expect(heading).toHaveAttribute('id', 'title');
+    });
+
     it('applies custom subheading className', () => {
       render(
         <EmptyState

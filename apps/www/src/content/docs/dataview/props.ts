@@ -1,4 +1,5 @@
-import { ReactNode, RefObject } from 'react';
+import { ComponentProps, ReactNode, RefObject } from 'react';
+import type { FilterChipProps } from '../components/filter-chip/props';
 
 // Documentation-only placeholders so `auto-type-table` can render the public
 // API without surfacing real generics (TData is shown as `T` for readability).
@@ -84,7 +85,7 @@ export interface DataViewField {
   label: string;
 
   /** Optional icon (e.g. for grouping menu). */
-  icon?: ReactNode;
+  leadingIcon?: ReactNode;
 
   /** Allow filtering on this field. */
   filterable?: boolean;
@@ -163,6 +164,16 @@ export interface DataViewListProps {
 
   /** When true, the active group header sticks under the table header while scrolling. */
   stickyGroupHeader?: boolean;
+
+  /** Props for the rendered parts. Repeated parts get the same props on every instance. */
+  slotProps?: {
+    root?: ComponentProps<'div'>;
+    header?: ComponentProps<'div'>;
+    headerCell?: ComponentProps<'div'>;
+    row?: ComponentProps<'div'>;
+    cell?: ComponentProps<'div'>;
+    groupHeader?: ComponentProps<'div'>;
+  };
 }
 
 export interface DataViewListColumn {
@@ -181,6 +192,12 @@ export interface DataViewListColumn {
    * @defaultValue "1fr"
    */
   width?: string | number;
+
+  /** Props for this column's body cells and header cell. They win over the List's `slotProps`. */
+  slotProps?: {
+    cell?: ComponentProps<'div'>;
+    header?: ComponentProps<'div'>;
+  };
 }
 
 /** Date inputs accepted by Timeline props and row fields. */
@@ -337,6 +354,20 @@ export interface DataViewTimelineProps {
    * @defaultValue true
    */
   showGroupHeaders?: boolean;
+
+  /** Props for the rendered parts. Repeated parts get the same props on every instance. */
+  slotProps?: {
+    root?: ComponentProps<'div'>;
+    axis?: ComponentProps<'div'>;
+    band?: ComponentProps<'div'>;
+    tick?: ComponentProps<'div'>;
+    marker?: ComponentProps<'div'>;
+    gridline?: ComponentProps<'div'>;
+    cursor?: ComponentProps<'div'>;
+    canvas?: ComponentProps<'div'>;
+    card?: ComponentProps<'div'>;
+    groupHeader?: ComponentProps<'div'>;
+  };
 }
 
 export interface TimelineCardContext {
@@ -443,6 +474,11 @@ export interface DataViewFiltersProps {
       }) => ReactNode);
   /** Class applied to the filters row. */
   className?: string;
+  /** Props for the filter chips and the default add-filter trigger. */
+  slotProps?: {
+    filterChips?: Partial<FilterChipProps>;
+    addFilter?: ComponentProps<'button'>;
+  };
   /**
    * Alignment of the add-filter menu against its trigger.
    * @default "start"

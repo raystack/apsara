@@ -539,6 +539,20 @@ describe('DataView.Timeline', () => {
     expect(onRowClick).toHaveBeenCalledWith(orders[0]);
   });
 
+  it('merges slotProps with classNames on the parts', () => {
+    const { container } = renderTimeline({
+      classNames: { card: 'old-card' },
+      slotProps: {
+        root: { className: 'new-root' },
+        card: { className: 'new-card', title: 'Order' }
+      }
+    });
+    expect(container.firstElementChild).toHaveClass('new-root');
+    const card = screen.getByTestId('card-o1').parentElement;
+    expect(card).toHaveClass('old-card', 'new-card');
+    expect(card).toHaveAttribute('title', 'Order');
+  });
+
   it('gates itself on the active view when `name` is set', () => {
     const views = [
       { value: 'gantt', label: 'Timeline' },

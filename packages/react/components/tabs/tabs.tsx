@@ -68,7 +68,7 @@ function TabsTab({ className, leadingIcon, children, ...props }: TabsTabProps) {
         <span
           className={styles['trigger-icon']}
           aria-hidden
-          data-slot='tabs-tab-icon'
+          data-slot='tabs-tab-leading-icon'
         >
           {leadingIcon}
         </span>

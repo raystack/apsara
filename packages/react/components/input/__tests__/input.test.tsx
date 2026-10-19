@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Input } from '../input';
 import styles from '../input.module.css';
@@ -22,6 +23,26 @@ describe('Input', () => {
       const ref = vi.fn();
       render(<Input ref={ref} />);
       expect(ref).toHaveBeenCalled();
+    });
+
+    it('merges slotProps.container with classNames and containerRef', () => {
+      const containerRef = createRef<HTMLDivElement>();
+      const slotRef = createRef<HTMLDivElement>();
+      render(
+        <Input
+          containerRef={containerRef}
+          classNames={{ container: 'old-container' }}
+          slotProps={{
+            container: { className: 'new-container', ref: slotRef }
+          }}
+        />
+      );
+      const container = screen
+        .getByRole('textbox')
+        .closest('[data-slot="input-container"]');
+      expect(container).toHaveClass('old-container', 'new-container');
+      expect(containerRef.current).toBe(container);
+      expect(slotRef.current).toBe(container);
     });
 
     it('renders with placeholder', () => {

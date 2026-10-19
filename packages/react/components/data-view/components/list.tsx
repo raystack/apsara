@@ -1,5 +1,6 @@
 'use client';
 
+import { mergeProps } from '@base-ui/react';
 import type { Header, Row } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
 import { cx } from 'class-variance-authority';
@@ -50,6 +51,7 @@ export function DataViewList<TData, TValue = unknown>({
   showDividers,
   showGroupHeaders = true,
   stickyGroupHeader = false,
+  slotProps = {},
   classNames = {}
 }: DataViewListProps<TData, TValue>) {
   const {
@@ -228,10 +230,13 @@ export function DataViewList<TData, TValue = unknown>({
     if (!headersVisible) return null;
     return (
       <div
-        ref={headerMeasureRef}
         role={ariaRole === 'table' ? 'rowgroup' : undefined}
-        className={cx(styles.listHeader, classNames.header)}
         data-slot='data-view-list-header'
+        {...mergeProps<'div'>(
+          { className: cx(styles.listHeader, classNames.header) },
+          slotProps.header
+        )}
+        ref={headerMeasureRef}
       >
         <div
           role={ariaRole === 'table' ? 'row' : undefined}
@@ -264,14 +269,20 @@ export function DataViewList<TData, TValue = unknown>({
               <div
                 role={ariaRole === 'table' ? 'columnheader' : undefined}
                 key={accessor}
-                className={cx(
-                  styles.listHeaderCell,
-                  spec?.classNames?.header,
-                  classNames.headerCell
-                )}
-                style={spec?.styles?.header}
                 data-slot='data-view-list-header-cell'
                 data-column={accessor}
+                {...mergeProps<'div'>(
+                  {
+                    className: cx(
+                      styles.listHeaderCell,
+                      spec?.classNames?.header,
+                      classNames.headerCell
+                    ),
+                    style: spec?.styles?.header
+                  },
+                  slotProps.headerCell,
+                  spec?.slotProps?.header
+                )}
               >
                 {content}
               </div>
@@ -308,14 +319,20 @@ export function DataViewList<TData, TValue = unknown>({
         <div
           role={ariaRole === 'table' ? 'cell' : undefined}
           key={cell?.id ?? accessor}
-          className={cx(
-            styles.listCell,
-            spec?.classNames?.cell,
-            classNames.cell
-          )}
-          style={spec?.styles?.cell}
           data-slot='data-view-list-cell'
           data-column={accessor}
+          {...mergeProps<'div'>(
+            {
+              className: cx(
+                styles.listCell,
+                spec?.classNames?.cell,
+                classNames.cell
+              ),
+              style: spec?.styles?.cell
+            },
+            slotProps.cell,
+            spec?.slotProps?.cell
+          )}
         >
           {content}
         </div>
@@ -346,16 +363,23 @@ export function DataViewList<TData, TValue = unknown>({
     return (
       <div
         key={key ?? row.id}
-        ref={measure}
         data-index={dataIndex}
-        className={cx(
-          isVirtual ? styles.listGroupHeaderVirtual : styles.listGroupHeader,
-          isStickyInFlow && styles.listGroupHeaderSticky,
-          classNames.groupHeader
-        )}
-        style={composedStyle}
         aria-hidden={hidden || undefined}
         data-slot='data-view-list-group-header'
+        {...mergeProps<'div'>(
+          {
+            className: cx(
+              isVirtual
+                ? styles.listGroupHeaderVirtual
+                : styles.listGroupHeader,
+              isStickyInFlow && styles.listGroupHeaderSticky,
+              classNames.groupHeader
+            ),
+            style: composedStyle
+          },
+          slotProps.groupHeader
+        )}
+        ref={measure}
       >
         {data?.label}
         {data?.showGroupCount ? (
@@ -389,19 +413,24 @@ export function DataViewList<TData, TValue = unknown>({
         // keydown. Swapping to role="button" would break that association.
         role={ariaRole === 'table' ? 'row' : 'listitem'}
         tabIndex={onRowClick ? 0 : undefined}
-        onKeyDown={onRowClick ? handleRowKeyDown : undefined}
         key={key ?? row.id}
-        ref={measure}
         data-index={dataIndex}
-        className={cx(
-          isVirtual ? styles.listRowVirtual : styles.listRow,
-          dividers && styles.listRowDivider,
-          onRowClick && styles.clickable,
-          classNames.row
-        )}
-        style={composedStyle}
-        onClick={handleRowActivate}
         data-slot='data-view-list-row'
+        {...mergeProps<'div'>(
+          {
+            className: cx(
+              isVirtual ? styles.listRowVirtual : styles.listRow,
+              dividers && styles.listRowDivider,
+              onRowClick && styles.clickable,
+              classNames.row
+            ),
+            style: composedStyle,
+            onClick: handleRowActivate,
+            onKeyDown: onRowClick ? handleRowKeyDown : undefined
+          },
+          slotProps.row
+        )}
+        ref={measure}
       >
         {renderRowCells(row)}
       </div>
@@ -426,14 +455,20 @@ export function DataViewList<TData, TValue = unknown>({
             <div
               role={ariaRole === 'table' ? 'cell' : undefined}
               key={accessor}
-              className={cx(
-                styles.listCell,
-                spec?.classNames?.cell,
-                classNames.cell
-              )}
-              style={spec?.styles?.cell}
               data-slot='data-view-list-cell'
               data-column={accessor}
+              {...mergeProps<'div'>(
+                {
+                  className: cx(
+                    styles.listCell,
+                    spec?.classNames?.cell,
+                    classNames.cell
+                  ),
+                  style: spec?.styles?.cell
+                },
+                slotProps.cell,
+                spec?.slotProps?.cell
+              )}
             >
               <Skeleton containerClassName={styles.skeletonFill} />
             </div>
@@ -453,9 +488,14 @@ export function DataViewList<TData, TValue = unknown>({
       {stickyGroup && stickyGroupHeader ? (
         <div
           aria-hidden='true'
-          className={cx(styles.listGroupAnchor, classNames.groupHeader)}
-          style={{ top: headerHeight }}
           data-slot='data-view-list-group-header'
+          {...mergeProps<'div'>(
+            {
+              className: cx(styles.listGroupAnchor, classNames.groupHeader),
+              style: { top: headerHeight }
+            },
+            slotProps.groupHeader
+          )}
         >
           {stickyGroup.label}
           {stickyGroup.showGroupCount ? (
@@ -511,10 +551,15 @@ export function DataViewList<TData, TValue = unknown>({
 
   return (
     <div
-      ref={scrollRef}
-      className={cx(styles.listRoot, classNames.root)}
-      onScroll={handleScroll}
       data-slot='data-view-list'
+      {...mergeProps<'div'>(
+        {
+          className: cx(styles.listRoot, classNames.root),
+          onScroll: handleScroll
+        },
+        slotProps.root
+      )}
+      ref={scrollRef}
     >
       <div
         role={ariaRole}

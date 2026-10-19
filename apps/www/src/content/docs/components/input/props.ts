@@ -60,4 +60,9 @@ export interface InputProps {
    * @defaultValue The theme's `radius`
    */
   radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
+
+  /** Props for the inner parts. */
+  slotProps?: {
+    container?: React.ComponentProps<'div'>;
+  };
 }

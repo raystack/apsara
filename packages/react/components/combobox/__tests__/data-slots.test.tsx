@@ -71,13 +71,17 @@ describe('Combobox data-slot contract', () => {
     ]);
   });
 
-  it('exposes the leading icon slot on items when provided', async () => {
+  it('exposes the leading and trailing icon slots on items when provided', async () => {
     const user = userEvent.setup();
     render(
       <Combobox>
         <Combobox.Input placeholder='Enter a fruit' />
         <Combobox.Content>
-          <Combobox.Item value='apple' leadingIcon={<span>i</span>}>
+          <Combobox.Item
+            value='apple'
+            leadingIcon={<span>i</span>}
+            trailingIcon={<span>t</span>}
+          >
             Apple
           </Combobox.Item>
         </Combobox.Content>
@@ -87,7 +91,12 @@ describe('Combobox data-slot contract', () => {
     await user.click(input);
 
     await waitFor(() => {
-      expect(getSlot(document.body, 'combobox-item-icon')).not.toBeNull();
+      expect(
+        getSlot(document.body, 'combobox-item-leading-icon')
+      ).not.toBeNull();
+      expect(
+        getSlot(document.body, 'combobox-item-trailing-icon')
+      ).not.toBeNull();
     });
   });
 });

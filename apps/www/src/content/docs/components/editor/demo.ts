@@ -240,7 +240,7 @@ export const slashItemsDemo = {
       label: "Today's date",
       group: 'Insert',
       keywords: ['today', 'time'],
-      icon: <CalendarIcon />,
+      leadingIcon: <CalendarIcon />,
       run: editor => editor.commands.insertText(new Date().toLocaleDateString())
     }
   ];

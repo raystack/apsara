@@ -81,7 +81,7 @@ export interface DataViewField<TData = unknown> {
   accessorKey: Extract<keyof TData, string> | (string & {});
   /** Human-readable label shown in filter chips, Display controls, and the default Table header. */
   label: string;
-  icon?: React.ReactNode;
+  leadingIcon?: React.ReactNode;
 
   // filter capability
   filterable?: boolean;
@@ -129,15 +129,19 @@ export interface DataViewListColumn<TData, TValue = unknown> {
   header?: ColumnDef<TData, TValue>['header'];
   /** CSS grid track width. `1fr`, `auto`, `'200px'`, `'minmax(80px, 1fr)'`, or a number (pixels). Defaults to `1fr`. */
   width?: string | number;
-  /**
-   * @deprecated Every cell and header cell carries `data-column={accessorKey}`
-   * alongside its `data-slot`. Target this column with
-   * `[data-slot="data-view-list-cell"][data-column="..."]` (and the
-   * `-header-cell` variant) instead.
-   */
+  /** Props for this column's body cells and header cell. */
+  slotProps?: {
+    cell?: DataViewSlotProps;
+    header?: DataViewSlotProps;
+  };
+  /** @deprecated Use `slotProps` instead. */
   classNames?: { cell?: string; header?: string };
+  /** @deprecated Use `slotProps` instead. */
   styles?: { cell?: React.CSSProperties; header?: React.CSSProperties };
 }
+
+/** Props for one rendered part of a DataView renderer. */
+export type DataViewSlotProps = React.ComponentPropsWithoutRef<'div'>;
 
 /**
  * Multi-view configuration entry. `value` must match the `name` prop on a
@@ -199,20 +203,25 @@ export interface DataViewProps<TData> {
   children?: React.ReactNode;
 }
 
-/** @deprecated Every key here has an equivalent `[data-slot]` selector. See the List slot table in the DataView docs. Prefer styling by `data-slot` over threading class names through props. */
+/** @deprecated Use `DataViewListSlotProps` instead. */
 export type DataViewListClassNames = {
-  /** @deprecated Use `[data-slot="data-view-list"]` instead. */
+  /** @deprecated Use `slotProps.root` instead. */
   root?: string;
-  /** @deprecated Use `[data-slot="data-view-list-header"]` instead. */
+  /** @deprecated Use `slotProps.header` instead. */
   header?: string;
-  /** @deprecated Use `[data-slot="data-view-list-header-cell"]` instead. */
+  /** @deprecated Use `slotProps.headerCell` instead. */
   headerCell?: string;
-  /** @deprecated Use `[data-slot="data-view-list-row"]` instead. */
+  /** @deprecated Use `slotProps.row` instead. */
   row?: string;
-  /** @deprecated Use `[data-slot="data-view-list-cell"]` instead. */
+  /** @deprecated Use `slotProps.cell` instead. */
   cell?: string;
-  /** @deprecated Use `[data-slot="data-view-list-group-header"]` instead. */
+  /** @deprecated Use `slotProps.groupHeader` instead. */
   groupHeader?: string;
+};
+
+/** Props for the rendered parts of `DataView.List`. Repeated parts get the same props on every instance. */
+export type DataViewListSlotProps = {
+  [K in keyof DataViewListClassNames]?: DataViewSlotProps;
 };
 
 export interface DataViewListProps<TData, TValue = unknown> {
@@ -243,7 +252,9 @@ export interface DataViewListProps<TData, TValue = unknown> {
   showGroupHeaders?: boolean;
   /** When true, group headers stick under the table header while scrolling. Default false. */
   stickyGroupHeader?: boolean;
-  /** @deprecated Style rendered parts by `[data-slot]` instead. See `DataViewListClassNames`. */
+  /** Props for the rendered parts. */
+  slotProps?: DataViewListSlotProps;
+  /** @deprecated Use `slotProps` instead. */
   classNames?: DataViewListClassNames;
 }
 
@@ -311,31 +322,33 @@ export interface TimelineActions {
   getVisibleRange: () => [Date, Date] | null;
 }
 
-/** @deprecated Every key here has an equivalent `[data-slot]` selector. See the Timeline slot table in the DataView docs. Prefer styling by `data-slot` over threading class names through props. */
+/** @deprecated Use `DataViewTimelineSlotProps` instead. */
 export type DataViewTimelineClassNames = {
-  /** @deprecated Use `[data-slot="data-view-timeline"]` instead. */
+  /** @deprecated Use `slotProps.root` instead. */
   root?: string;
-  /** @deprecated Use `[data-slot="data-view-timeline-axis"]` instead. */
+  /** @deprecated Use `slotProps.axis` instead. */
   axis?: string;
-  /** @deprecated Use `[data-slot="data-view-timeline-axis-band"]` instead. */
+  /** @deprecated Use `slotProps.band` instead. */
   band?: string;
-  /** @deprecated Use `[data-slot="data-view-timeline-axis-tick"]` instead. */
+  /** @deprecated Use `slotProps.tick` instead. */
   tick?: string;
-  /** @deprecated Use `[data-slot="data-view-timeline-marker"]` instead. */
+  /** @deprecated Use `slotProps.marker` instead. */
   marker?: string;
-  /** @deprecated Use `[data-slot="data-view-timeline-gridline"]` instead. */
+  /** @deprecated Use `slotProps.gridline` instead. */
   gridline?: string;
-  /** @deprecated Use `[data-slot="data-view-timeline-cursor"]` instead. */
+  /** @deprecated Use `slotProps.cursor` instead. */
   cursor?: string;
-  /** @deprecated Use `[data-slot="data-view-timeline-canvas"]` instead. */
+  /** @deprecated Use `slotProps.canvas` instead. */
   canvas?: string;
-  /** @deprecated Use `[data-slot="data-view-timeline-card"]` instead. */
+  /** @deprecated Use `slotProps.card` instead. */
   card?: string;
-  /**
-   * Group section header band (same name/role as `DataViewListClassNames.groupHeader`).
-   * @deprecated Use `[data-slot="data-view-timeline-group-header"]` instead.
-   */
+  /** @deprecated Use `slotProps.groupHeader` instead. */
   groupHeader?: string;
+};
+
+/** Props for the rendered parts of `DataView.Timeline`. Repeated parts get the same props on every instance. */
+export type DataViewTimelineSlotProps = {
+  [K in keyof DataViewTimelineClassNames]?: DataViewSlotProps;
 };
 
 export interface DataViewTimelineProps<TData> {
@@ -477,7 +490,9 @@ export interface DataViewTimelineProps<TData> {
    * bands only, and rows stay grouped into their sections. Default true.
    */
   showGroupHeaders?: boolean;
-  /** @deprecated Style rendered parts by `[data-slot]` instead. See `DataViewTimelineClassNames`. */
+  /** Props for the rendered parts. */
+  slotProps?: DataViewTimelineSlotProps;
+  /** @deprecated Use `slotProps` instead. */
   classNames?: DataViewTimelineClassNames;
 }
 

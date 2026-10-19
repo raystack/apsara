@@ -128,6 +128,9 @@ export interface ComboboxItemProps {
   /** Leading icon to display before the item text. */
   leadingIcon?: React.ReactNode;
 
+  /** Trailing icon to display after the item text. */
+  trailingIcon?: React.ReactNode;
+
   /** Additional CSS class names. */
   className?: string;
 }

@@ -100,7 +100,7 @@ export const iconDemo = {
     <Combobox.Content>
       <Combobox.Item value="apple" leadingIcon={<Info size={16} />}>Apple</Combobox.Item>
       <Combobox.Item value="banana" leadingIcon={<X size={16} />}>Banana</Combobox.Item>
-      <Combobox.Item value="grape" leadingIcon={<Home size={16} />}>Grape</Combobox.Item>
+      <Combobox.Item value="grape" leadingIcon={<Home size={16} />} trailingIcon={<ExternalLink size={16} />}>Grape</Combobox.Item>
       <Combobox.Item value="orange" leadingIcon={<Laugh size={16} />}>Orange</Combobox.Item>
     </Combobox.Content>
   </Combobox>`

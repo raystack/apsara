@@ -37,7 +37,7 @@ export interface CalloutProps {
    * Custom leading icon
    * @defaultValue InfoIcon
    */
-  icon?: React.ReactNode;
+  leadingIcon?: React.ReactNode;
 
   /**
    * Called when the dismiss button is clicked. When provided, the consumer owns

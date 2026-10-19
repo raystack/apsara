@@ -138,7 +138,7 @@ export const editorCapabilitiesDemo = {
       id: 'page',
       label: 'This page',
       type: 'page',
-      icon: <FileTextIcon />,
+      leadingIcon: <FileTextIcon />,
       data: { path: '/docs/ai-elements/prompt-input' }
     },
     {
@@ -146,7 +146,7 @@ export const editorCapabilitiesDemo = {
       label: 'Button',
       type: 'component',
       group: 'Components',
-      icon: <Component size={16} strokeWidth={1.5} />,
+      leadingIcon: <Component size={16} strokeWidth={1.5} />,
       data: { status: 'stable' }
     },
     {
@@ -154,7 +154,7 @@ export const editorCapabilitiesDemo = {
       label: 'DataTable',
       type: 'component',
       group: 'Components',
-      icon: <Component size={16} strokeWidth={1.5} />,
+      leadingIcon: <Component size={16} strokeWidth={1.5} />,
       data: { status: 'stable' }
     },
     {
@@ -162,7 +162,7 @@ export const editorCapabilitiesDemo = {
       label: 'PromptInput',
       type: 'component',
       group: 'Components',
-      icon: <Component size={16} strokeWidth={1.5} />,
+      leadingIcon: <Component size={16} strokeWidth={1.5} />,
       data: { status: 'beta' }
     },
     {
@@ -170,22 +170,22 @@ export const editorCapabilitiesDemo = {
       label: 'Maya Chen',
       type: 'user',
       group: 'Users',
-      icon: <Avatar size={1} fallback="M" />
+      leadingIcon: <Avatar size={1} fallback="M" />
     },
     {
       id: 'u2',
       label: 'Apsara Assistant',
       type: 'user',
       group: 'Users',
-      icon: <Avatar size={1} fallback="A" />,
-      trailing: <Badge size="micro" variant="neutral">Agent</Badge>
+      leadingIcon: <Avatar size={1} fallback="A" />,
+      trailingIcon: <Badge size="micro" variant="neutral">Agent</Badge>
     },
     {
       id: 'u3',
       label: 'Dana Whitfield',
       type: 'user',
       group: 'Users',
-      icon: <Avatar size={1} fallback="D" />,
+      leadingIcon: <Avatar size={1} fallback="D" />,
       disabled: true
     }
   ];
@@ -240,7 +240,7 @@ export const editorCapabilitiesDemo = {
                 id: 'data-table',
                 label: 'DataTable',
                 type: 'component',
-                icon: <Component size={16} strokeWidth={1.5} />,
+                leadingIcon: <Component size={16} strokeWidth={1.5} />,
                 data: { status: 'stable' }
               })
             }
@@ -309,7 +309,7 @@ export const mentionsDemo = {
       label: 'Apsara Assistant',
       type: 'user',
       group: 'Users',
-      trailing: <Badge size="micro" variant="neutral">Agent</Badge>
+      trailingIcon: <Badge size="micro" variant="neutral">Agent</Badge>
     },
     { id: 'u3', label: 'Dana Whitfield', type: 'user', group: 'Users' }
   ];
@@ -427,7 +427,7 @@ export const insertMentionDemo = {
                 id: 'prompt-input',
                 label: 'PromptInput',
                 type: 'component',
-                icon: <Component size={16} strokeWidth={1.5} />
+                leadingIcon: <Component size={16} strokeWidth={1.5} />
               })
             }
           >

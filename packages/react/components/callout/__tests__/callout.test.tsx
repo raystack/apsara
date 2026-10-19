@@ -14,7 +14,7 @@ describe('Callout', () => {
 
     it('renders with custom icon', () => {
       render(
-        <Callout icon={<span data-testid='custom-icon'>🔔</span>}>
+        <Callout leadingIcon={<span data-testid='custom-icon'>🔔</span>}>
           Message with custom icon
         </Callout>
       );
@@ -25,7 +25,7 @@ describe('Callout', () => {
 
     it('renders without icon when icon is null', () => {
       const { container } = render(
-        <Callout icon={null}>Message without icon</Callout>
+        <Callout leadingIcon={null}>Message without icon</Callout>
       );
 
       expect(

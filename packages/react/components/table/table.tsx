@@ -1,3 +1,4 @@
+import { mergeProps } from '@base-ui/react';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ComponentProps } from 'react';
 import styles from './table.module.css';
@@ -76,32 +77,40 @@ const sectionHeader = cva(styles['sectionHeader']);
 type SectionHeaderClassNames = 'row' | 'cell';
 export interface TableSectionHeaderProps extends ComponentProps<'tr'> {
   colSpan: number;
-  /**
-   * @deprecated Use `[data-slot="table-section-header"]` (row) and
-   * `[data-slot="table-section-header-cell"]` (cell) instead.
-   */
+  /** Props for the inner parts. */
+  slotProps?: {
+    row?: ComponentProps<'tr'>;
+    cell?: ComponentProps<'th'>;
+  };
+  /** @deprecated Use `slotProps` instead. */
   classNames?: Partial<Record<SectionHeaderClassNames, string>>;
 }
 function SectionHeader({
   className,
+  slotProps,
   classNames,
   colSpan,
   children,
-  ref,
   ...rest
 }: TableSectionHeaderProps) {
   return (
     <tr
-      ref={ref}
-      className={sectionHeader({ className: cx(classNames?.row, className) })}
       data-slot='table-section-header'
-      {...rest}
+      {...mergeProps<'tr'>(
+        {
+          className: sectionHeader({
+            className: cx(classNames?.row, className)
+          })
+        },
+        slotProps?.row,
+        rest
+      )}
     >
       <th
         scope='colgroup'
         colSpan={colSpan}
-        className={classNames?.cell}
         data-slot='table-section-header-cell'
+        {...mergeProps<'th'>({ className: classNames?.cell }, slotProps?.cell)}
       >
         {children}
       </th>

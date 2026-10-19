@@ -80,7 +80,7 @@ describe('Select data-slot contract', () => {
     ]);
   });
 
-  it('exposes the leading icon slot on items when provided', async () => {
+  it('exposes the leading and trailing icon slots on items when provided', async () => {
     const user = userEvent.setup();
     render(
       <Select>
@@ -88,14 +88,19 @@ describe('Select data-slot contract', () => {
           <Select.Value placeholder='Select a fruit' />
         </Select.Trigger>
         <Select.Content>
-          <Select.Item value='apple' leadingIcon={<span>i</span>}>
+          <Select.Item
+            value='apple'
+            leadingIcon={<span>i</span>}
+            trailingIcon={<span>t</span>}
+          >
             Apple
           </Select.Item>
         </Select.Content>
       </Select>
     );
     await openSelect(user);
-    expect(getSlot(document.body, 'select-item-icon')).not.toBeNull();
+    expect(getSlot(document.body, 'select-item-leading-icon')).not.toBeNull();
+    expect(getSlot(document.body, 'select-item-trailing-icon')).not.toBeNull();
   });
 
   it('exposes the multiple-value slot once items are selected', async () => {

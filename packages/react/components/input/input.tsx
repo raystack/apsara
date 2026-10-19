@@ -1,6 +1,8 @@
+import { mergeProps } from '@base-ui/react';
 import { Input as InputPrimitive } from '@base-ui/react/input';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
-import { ReactNode, RefObject } from 'react';
+import { ComponentProps, ReactNode, RefObject } from 'react';
 import { radiusVariants } from '../../shared/radius';
 import { Chip } from '../chip';
 import { useFieldContext } from '../field';
@@ -36,7 +38,11 @@ export interface InputProps
   maxChipsVisible?: number;
   variant?: 'default' | 'borderless';
   containerRef?: RefObject<HTMLDivElement | null>;
-  /** @deprecated Use `[data-slot="input-container"]` instead. */
+  /** Props for the inner parts. */
+  slotProps?: {
+    container?: ComponentProps<'div'>;
+  };
+  /** @deprecated Use `slotProps.container` instead. */
   classNames?: { container?: string };
 }
 
@@ -54,23 +60,33 @@ export function Input({
   radius,
   variant = 'default',
   containerRef,
+  slotProps,
   classNames,
   required,
   ...props
 }: InputProps) {
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
+  const mergedContainerRef = useMergedRefs(
+    containerRef,
+    slotProps?.container?.ref
+  );
 
   return (
     <div
-      className={cx(
-        inputWrapper({ size, variant, radius }),
-        chips?.length && styles['has-chips'],
-        classNames?.container
-      )}
       data-disabled={disabled || undefined}
       data-slot='input-container'
-      ref={containerRef}
+      {...mergeProps<'div'>(
+        {
+          className: cx(
+            inputWrapper({ size, variant, radius }),
+            chips?.length && styles['has-chips'],
+            classNames?.container
+          )
+        },
+        slotProps?.container
+      )}
+      ref={mergedContainerRef}
     >
       {leadingIcon && (
         <div

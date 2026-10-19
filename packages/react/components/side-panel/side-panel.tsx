@@ -38,7 +38,7 @@ SidePanelRoot.displayName = 'SidePanel';
 
 export interface SidePanelHeaderProps extends ComponentProps<'div'> {
   title: string;
-  icon?: ReactNode;
+  leadingIcon?: ReactNode;
   actions?: Array<ReactNode>;
   description?: string;
   titleId?: string;
@@ -46,7 +46,7 @@ export interface SidePanelHeaderProps extends ComponentProps<'div'> {
 
 const SidePanelHeader = ({
   title,
-  icon,
+  leadingIcon,
   actions = [],
   description,
   titleId,
@@ -67,7 +67,7 @@ const SidePanelHeader = ({
         data-slot='side-panel-header-content'
       >
         <Flex gap={3} data-slot='side-panel-title-group'>
-          {icon}
+          {leadingIcon}
           <Text
             id={headingId}
             render={<h2 />}

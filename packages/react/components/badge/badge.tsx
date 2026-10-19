@@ -29,7 +29,7 @@ const badge = cva(styles['badge'], {
 
 export type BadgeProps = VariantProps<typeof badge> &
   ComponentProps<'span'> & {
-    icon?: ReactNode;
+    leadingIcon?: ReactNode;
     screenReaderText?: string;
   };
 
@@ -37,7 +37,7 @@ export const Badge = ({
   variant,
   size,
   radius,
-  icon,
+  leadingIcon,
   children,
   className,
   screenReaderText,
@@ -49,9 +49,9 @@ export const Badge = ({
       data-slot='badge'
       {...props}
     >
-      {icon && (
-        <span className={styles['icon']} data-slot='badge-icon'>
-          {icon}
+      {leadingIcon && (
+        <span className={styles['icon']} data-slot='badge-leading-icon'>
+          {leadingIcon}
         </span>
       )}
       {screenReaderText && (

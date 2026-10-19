@@ -29,6 +29,20 @@ describe('Indicator', () => {
       const indicator = container.querySelector(`.${styles.indicator}`);
       expect(indicator).toHaveClass('custom-indicator');
     });
+
+    it('merges slotProps.container with classNames.container', () => {
+      const { container } = render(
+        <Indicator
+          classNames={{ container: 'old-container' }}
+          slotProps={{
+            container: { className: 'new-container', title: 'Inbox' }
+          }}
+        />
+      );
+      const wrapper = container.querySelector(`.${styles.wrapper}`);
+      expect(wrapper).toHaveClass('old-container', 'new-container');
+      expect(wrapper).toHaveAttribute('title', 'Inbox');
+    });
   });
 
   describe('Variants', () => {

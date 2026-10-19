@@ -22,4 +22,9 @@ export interface IndicatorProps {
 
   /** Additional CSS class names */
   className?: string;
+
+  /** Props for the inner parts. */
+  slotProps?: {
+    container?: React.ComponentProps<'div'>;
+  };
 }
