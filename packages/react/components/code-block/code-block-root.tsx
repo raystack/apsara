@@ -1,5 +1,6 @@
 'use client';
 
+import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
 import {
   ComponentProps,
@@ -61,32 +62,33 @@ export const CodeBlockRoot = ({
   onCollapseChange,
   ...props
 }: CodeBlockProps) => {
-  const [internalValue, setInternalValue] = useState<string | undefined>(
-    defaultValue
-  );
+  const [value, setValueUnwrapped] = useControlled<string | undefined>({
+    controlled: providedValue,
+    default: defaultValue,
+    name: 'CodeBlock',
+    state: 'value'
+  });
   const [code, setCode] = useState<string | undefined>();
-  const [internalCollapsed, setInternalCollapsed] = useState<boolean>(
-    defaultCollapsed ?? false
-  );
-
-  const collapsed = providedCollapsed ?? internalCollapsed;
-
-  const value = providedValue ?? internalValue ?? defaultValue;
+  const [collapsed, setCollapsedUnwrapped] = useControlled({
+    controlled: providedCollapsed,
+    default: defaultCollapsed,
+    name: 'CodeBlock',
+    state: 'collapsed'
+  });
 
   const setValue = useCallback(
     (newValue: string) => {
-      setInternalValue(newValue);
+      setValueUnwrapped(newValue);
       onValueChange?.(newValue);
     },
-    [onValueChange]
+    [onValueChange, setValueUnwrapped]
   );
 
   const toggleCollapsed = useCallback(() => {
-    setInternalCollapsed(_internalCollapsed => {
-      onCollapseChange?.(!_internalCollapsed);
-      return !_internalCollapsed;
-    });
-  }, [onCollapseChange]);
+    const next = !collapsed;
+    setCollapsedUnwrapped(next);
+    onCollapseChange?.(next);
+  }, [collapsed, onCollapseChange, setCollapsedUnwrapped]);
 
   return (
     <CodeBlockContext
