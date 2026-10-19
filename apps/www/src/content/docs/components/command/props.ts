@@ -155,8 +155,8 @@ export interface CommandDialogContentProps {
   /** Additional CSS class names applied to the dialog popup. */
   className?: string;
 
-  /** Explicit width for the dialog popup. */
-  width?: string | number;
+  /** Inline styles applied to the dialog popup. */
+  style?: React.CSSProperties;
 
   /**
    * Corner radius for this palette only. Overrides the theme's `radius`.

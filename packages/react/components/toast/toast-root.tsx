@@ -4,6 +4,7 @@ import { Toast as ToastPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import { ErrorIcon, InfoIcon, SuccessIcon, WarningIcon, XIcon } from '~/icons';
+import { type Radius, radiusStyle } from '../../shared/radius';
 import { Button } from '../button';
 import { Flex } from '../flex';
 import { IconButton } from '../icon-button';
@@ -41,12 +42,15 @@ function getSwipeDirection(position: ToastPosition): SwipeDirection[] {
 
 export interface ToastRootProps extends ToastPrimitive.Root.Props {
   position?: ToastPosition;
+  /** Corner radius for this toast only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 export function ToastRoot({
   toast,
   className,
   position = 'bottom-right',
+  radius,
   ...props
 }: ToastRootProps) {
   const swipeDirection = getSwipeDirection(position);
@@ -67,7 +71,7 @@ export function ToastRoot({
   return (
     <ToastPrimitive.Root
       toast={toast}
-      className={cx(styles.root, className)}
+      className={cx(styles.root, radiusStyle({ radius }), className)}
       swipeDirection={swipeDirection}
       data-position={position}
       data-slot='toast'

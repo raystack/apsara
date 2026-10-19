@@ -95,7 +95,7 @@ export const providerDemo = {
       duration={2}
     >
       <Flex gap={4}>
-        <Skeleton width="48px" height="48px" borderRadius="50%" />
+        <Skeleton width="48px" height="48px" radius="full" />
         <Flex direction="column" gap={2} style={{ flex: 1 }}>
           <Skeleton width="200px" />
           <Skeleton width="150px" />

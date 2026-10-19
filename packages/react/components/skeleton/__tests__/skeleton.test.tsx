@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { radiusClasses } from '../../../shared/radius';
 import { Skeleton } from '../skeleton';
 import styles from '../skeleton.module.css';
 
@@ -97,28 +98,10 @@ describe('Skeleton', () => {
   });
 
   describe('Styling', () => {
-    it('sets default border radius', () => {
-      const { container } = render(<Skeleton />);
-      const skeleton = container.querySelector(
-        `.${styles.skeleton}`
-      ) as HTMLElement;
-      expect(skeleton.style.borderRadius).toBe('var(--rs-radius-2)');
-    });
-
-    it('sets custom border radius as string', () => {
-      const { container } = render(<Skeleton borderRadius='10px' />);
-      const skeleton = container.querySelector(
-        `.${styles.skeleton}`
-      ) as HTMLElement;
-      expect(skeleton.style.borderRadius).toBe('10px');
-    });
-
-    it('sets custom border radius as number', () => {
-      const { container } = render(<Skeleton borderRadius={5} />);
-      const skeleton = container.querySelector(
-        `.${styles.skeleton}`
-      ) as HTMLElement;
-      expect(skeleton.style.borderRadius).toBe('5px');
+    it('applies the radius class', () => {
+      const { container } = render(<Skeleton radius='full' />);
+      const skeleton = container.querySelector(`.${styles.skeleton}`);
+      expect(skeleton).toHaveClass(radiusClasses.full);
     });
 
     it('applies custom styles', () => {

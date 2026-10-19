@@ -28,6 +28,16 @@ Two sizes. `large` is the default; `small` fits a toolbar or a table header.
 
 <Demo data={sizeDemo} />
 
+### Width
+
+Search fills the width of its parent. To set a width, put it in a sized element:
+
+```tsx
+<div style={{ width: 240 }}>
+  <Search />
+</div>
+```
+
 ### Leading icon
 
 Pass a node to `leadingIcon` to replace the search icon, or `null` to hide it.

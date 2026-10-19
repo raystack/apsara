@@ -14,6 +14,7 @@ import {
   CalendarPreview,
   type CalendarPreviewContentProps,
   type CalendarPreviewInputProps,
+  type CalendarPreviewInputValidity,
   type CalendarPreviewProps
 } from '~/components/calendar-preview';
 import { XIcon } from '~/icons';
@@ -49,7 +50,7 @@ const chip = cva(styles.chip, {
 
 export type FilterChipValue = FilterValueType | FilterValueType[] | Date;
 
-/* The message `DatePicker` reports, so `onErrorChange` reads the same. */
+/* The message `DatePicker` reports, so `onValidityChange` reads the same. */
 const INVALID_DATE = 'Invalid date';
 
 /* A year the calendar cannot show leaves the field empty. */
@@ -89,8 +90,8 @@ export type FilterChipCalendarProps = Pick<
    * @default false
    */
   showCalendarIcon?: boolean;
-  /** Called with a message when the typed date is invalid, and with `undefined` when it is valid again. */
-  onErrorChange?: (error: string | undefined) => void;
+  /** Called when the typed date becomes invalid or valid again. */
+  onValidityChange?: (validity: CalendarPreviewInputValidity) => void;
 };
 
 export interface FilterChipProps
@@ -163,7 +164,7 @@ export const FilterChip = ({
     formatValue: formatDate,
     slotProps: dateSlotProps,
     showCalendarIcon = false,
-    onErrorChange,
+    onValidityChange,
     ...calendarRest
   } = calendarProps ?? {};
   const { classNames: inputClassNames, ...inputProps } =
@@ -309,9 +310,7 @@ export const FilterChip = ({
                   }}
                   onValidityChange={validity => {
                     inputProps.onValidityChange?.(validity);
-                    onErrorChange?.(
-                      validity.valid ? undefined : validity.message
-                    );
+                    onValidityChange?.(validity);
                   }}
                 />
               </CalendarPreview.Trigger>

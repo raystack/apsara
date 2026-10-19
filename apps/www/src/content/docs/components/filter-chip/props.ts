@@ -77,8 +77,12 @@ export interface FilterChipProps {
      * @default false
      */
     showCalendarIcon?: boolean;
-    /** Called with a message when the typed date is invalid, and with `undefined` when it is valid again. */
-    onErrorChange?: (error: string | undefined) => void;
+    /** Called when the typed date becomes invalid or valid again. Same as `onValidityChange` on `CalendarPreview.Input`. */
+    onValidityChange?: (validity: {
+      valid: boolean;
+      reason?: 'unparseable' | 'out-of-bounds' | 'unavailable' | 'out-of-order';
+      message?: string;
+    }) => void;
   };
 
   /** Additional CSS class names */
