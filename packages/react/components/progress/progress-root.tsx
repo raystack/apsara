@@ -19,8 +19,14 @@ const progress = cva(styles.progress, {
 });
 
 export interface ProgressProps
-  extends ProgressPrimitive.Root.Props,
-    VariantProps<typeof progress> {}
+  extends Omit<ProgressPrimitive.Root.Props, 'value'>,
+    VariantProps<typeof progress> {
+  /**
+   * The current value. `null` shows an indeterminate state.
+   * @default 0
+   */
+  value?: number | null;
+}
 
 export interface ProgressContextValue {
   variant: 'linear' | 'circular';
