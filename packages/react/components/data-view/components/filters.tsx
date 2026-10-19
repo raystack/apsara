@@ -103,6 +103,7 @@ function AddFilter<TData>({
 }
 
 export interface DataViewFiltersProps<TData> extends PositionerProps {
+  /** @deprecated Use the `data-slot` selectors instead. */
   classNames?: {
     /** @deprecated Use `[data-slot="filter-chip"]` instead. */
     filterChips?: string;
