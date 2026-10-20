@@ -19,9 +19,6 @@ const drawerPopup = cva(styles.drawerPopup, {
       left: styles['drawerPopup-left'],
       right: styles['drawerPopup-right']
     }
-  },
-  defaultVariants: {
-    side: 'right'
   }
 });
 
