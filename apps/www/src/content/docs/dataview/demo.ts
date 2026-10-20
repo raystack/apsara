@@ -449,7 +449,7 @@ export const timelinePreview = {
           startField="start"
           endField="end"
           actionsRef={timelineActions}
-          markers={[{ date: releaseDate, label: "Release", variant: "accent" }]}
+          markers={[{ date: releaseDate, label: "Release", color: "accent" }]}
           renderCard={(row, context) =>
             context.collapsed
               ? <CompactStub task={row.original} />

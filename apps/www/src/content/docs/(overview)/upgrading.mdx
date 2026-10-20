@@ -39,6 +39,11 @@ style. Each intent has one name: `attention`, `danger` and `neutral`.
 place of `data-variant`. `Separator` `color` also takes `emphasis`, `accent`,
 `attention`, `danger` and `success`.
 
+`Badge`, `Callout`, `Indicator`, `Link` and `Text` no longer pass the HTML
+`color` attribute to the DOM. If a wrapper spreads HTML attributes into one of
+them, omit `color` from its props type, for example
+`Omit<HTMLAttributes<HTMLElement>, 'color'>`.
+
 ## Unreleased: date filters compare whole days
 
 `DataView`, `DataTable` and `FilterChip` read and compare dates as calendar
