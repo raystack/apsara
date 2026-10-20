@@ -896,16 +896,16 @@ function TaskCard({
         {task.title}
       </Text>
       <Flex align='center' gap={2}>
-        <Badge size='micro' variant={TASK_STATUS_BADGE[task.status]}>
+        <Badge size='xsmall' variant={TASK_STATUS_BADGE[task.status]}>
           {task.status}
         </Badge>
         <DataView.DisplayAccess accessorKey='team'>
-          <Badge size='micro' variant='neutral'>
+          <Badge size='xsmall' variant='neutral'>
             {task.team}
           </Badge>
         </DataView.DisplayAccess>
         <DataView.DisplayAccess accessorKey='priority'>
-          <Badge size='micro' variant='neutral'>
+          <Badge size='xsmall' variant='neutral'>
             {task.priority}
           </Badge>
         </DataView.DisplayAccess>

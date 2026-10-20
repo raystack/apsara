@@ -38,10 +38,10 @@ describe('Input', () => {
   });
 
   describe('Sizes', () => {
-    it('renders large size by default', () => {
+    it('renders medium size by default', () => {
       const { container } = render(<Input />);
       const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
-      expect(wrapper).toHaveClass(styles['size-large']);
+      expect(wrapper).toHaveClass(styles['size-medium']);
     });
 
     it('renders small size when specified', () => {

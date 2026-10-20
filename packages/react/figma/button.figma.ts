@@ -4,7 +4,7 @@
 
 import figma from 'figma';
 
-// Component defaults (variant 'solid', color 'accent', size 'normal') are left
+// Component defaults (variant 'solid', color 'accent', size 'medium') are left
 // unmapped so getEnum returns undefined and renderProp omits the redundant prop.
 const variant = figma.selectedInstance.getEnum('Variant', {
   Outline: 'outline',

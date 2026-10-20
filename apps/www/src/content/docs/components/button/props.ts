@@ -15,9 +15,9 @@ export type ButtonProps = {
 
   /**
    * Size of the button
-   * @defaultValue "normal"
+   * @defaultValue "medium"
    */
-  size?: 'small' | 'normal';
+  size?: 'small' | 'medium';
 
   /**
    * Whether the button is disabled

@@ -42,10 +42,10 @@ export interface FloatingActionsSeparatorProps {
   color?: 'primary' | 'secondary' | 'tertiary';
 
   /**
-   * Size variant inherited from the underlying `Separator`.
+   * Variant inherited from the underlying `Separator`.
    * @defaultValue "full"
    */
-  size?: 'small' | 'half' | 'full';
+  variant?: 'full' | 'middle';
 
   /** Additional CSS class names. */
   className?: string;

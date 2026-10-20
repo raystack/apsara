@@ -76,7 +76,7 @@ describe('Button', () => {
   });
 
   describe('Sizes', () => {
-    const sizes = ['small', 'normal'] as const;
+    const sizes = ['small', 'medium'] as const;
 
     it.each(sizes)('renders %s size correctly', size => {
       render(<Button size={size}>Button</Button>);
@@ -84,10 +84,10 @@ describe('Button', () => {
       expect(button).toHaveClass(styles[`button-${size}`]);
     });
 
-    it('defaults to normal size', () => {
+    it('defaults to medium size', () => {
       render(<Button>Button</Button>);
       const button = screen.getByRole('button');
-      expect(button).toHaveClass(styles['button-normal']);
+      expect(button).toHaveClass(styles['button-medium']);
     });
   });
 

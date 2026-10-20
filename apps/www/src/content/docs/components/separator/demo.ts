@@ -10,9 +10,9 @@ export const getCode = (props: ComponentPropsType) => {
 export const playground = {
   type: 'playground',
   controls: {
-    size: {
+    variant: {
       type: 'select',
-      options: ['small', 'half', 'full'],
+      options: ['full', 'middle'],
       defaultValue: 'full'
     },
     color: {
@@ -28,13 +28,12 @@ export const playground = {
   },
   getCode
 };
-export const sizeDemo = {
+export const variantDemo = {
   type: 'code',
   code: `
   <Flex direction="column" gap={9} align="center" style={{width:"400px"}}>
-    <Separator size="small" />
-    <Separator size="half" />
-    <Separator size="full" />
+    <Separator variant="full" />
+    <Separator variant="middle" />
   </Flex>`
 };
 
@@ -50,8 +49,13 @@ export const colorDemo = {
 export const orientationDemo = {
   type: 'code',
   code: `
-  <Flex gap={11} align="center" justify="center" style={{width:"400px",height:"150px"}}>
-    <Separator size="half" />
-    <Separator orientation="vertical" />
+  <Flex direction="column" gap={5} style={{width:"400px"}}>
+    <Text>Above</Text>
+    <Separator />
+    <Flex gap={5} align="center" style={{height:"24px"}}>
+      <Text>Left</Text>
+      <Separator orientation="vertical" />
+      <Text>Right</Text>
+    </Flex>
   </Flex>`
 };

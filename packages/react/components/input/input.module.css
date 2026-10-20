@@ -147,11 +147,11 @@
 }
 
 /* Size variants */
-.size-large {
+.size-medium {
   min-height: var(--rs-space-9);
 }
 
-.size-large .input-field {
+.size-medium .input-field {
   height: var(--rs-space-9);
 }
 
@@ -170,7 +170,7 @@
   padding-bottom: 0;
 }
 
-.size-large .chip-input-container {
+.size-medium .chip-input-container {
   min-height: var(--rs-space-9);
 }
 
@@ -198,8 +198,8 @@
   height: auto;
 }
 
-.size-large .prefix,
-.size-large .suffix {
+.size-medium .prefix,
+.size-medium .suffix {
   height: 22px;
 }
 

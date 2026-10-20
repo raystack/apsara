@@ -64,7 +64,7 @@
   letter-spacing: var(--rs-letter-spacing-mini);
 }
 
-.button-normal {
+.button-medium {
   padding: var(--rs-space-3) var(--rs-space-4);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
@@ -232,7 +232,7 @@
   padding: var(--rs-space-2) var(--rs-space-6);
 }
 
-.loader-only-button-normal {
+.loader-only-button-medium {
   padding: var(--rs-space-3) var(--rs-space-8);
 }
 

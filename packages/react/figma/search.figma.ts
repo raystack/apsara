@@ -22,8 +22,7 @@ const value = figma.selectedInstance.getEnum('State', {
 // Search renders its own leading magnifying-glass icon, so the Leading Icon
 // boolean has no public prop, so it is intentionally not mapped.
 const size = figma.selectedInstance.getEnum('Size', {
-  Small: 'small',
-  Large: 'large'
+  Small: 'small'
 });
 const variant = figma.selectedInstance.getEnum('Outline', {
   False: 'borderless'

@@ -12,8 +12,8 @@ export const playground = {
   controls: {
     size: {
       type: 'select',
-      options: ['small', 'large'],
-      defaultValue: 'large'
+      options: ['small', 'medium'],
+      defaultValue: 'medium'
     },
     placeholder: { type: 'text', initialValue: 'Search...' },
     disabled: { type: 'checkbox', defaultValue: false },
@@ -26,7 +26,7 @@ export const sizeDemo = {
   type: 'code',
   code: `
   <Flex direction="column" gap={5} align="center">
-    <Search placeholder="Large size search..." />
+    <Search placeholder="Medium size search..." />
     <Search size="small" placeholder="Small size search..." />
   </Flex>`
 };

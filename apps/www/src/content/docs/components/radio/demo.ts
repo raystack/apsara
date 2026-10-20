@@ -31,8 +31,8 @@ export const playground = {
     },
     size: {
       type: 'select',
-      options: ['large', 'small'],
-      defaultValue: 'large'
+      options: ['medium', 'small'],
+      defaultValue: 'medium'
     },
     disabled: {
       type: 'checkbox',
@@ -72,16 +72,16 @@ export const sizeDemo = {
   type: 'code',
   tabs: [
     {
-      name: 'Large (default)',
+      name: 'Medium (default)',
       code: `
-<Radio.Group defaultValue="1" size="large">
+<Radio.Group defaultValue="1" size="medium">
   <Flex gap={3} align="center">
     <Radio value="1" id="sl1" />
-    <label htmlFor="sl1">Large Option One</label>
+    <label htmlFor="sl1">Medium Option One</label>
   </Flex>
   <Flex gap={3} align="center">
     <Radio value="2" id="sl2" />
-    <label htmlFor="sl2">Large Option Two</label>
+    <label htmlFor="sl2">Medium Option Two</label>
   </Flex>
 </Radio.Group>`
     },
@@ -108,8 +108,8 @@ export const sizeDemo = {
     <label htmlFor="so1">Small (from group)</label>
   </Flex>
   <Flex gap={3} align="center">
-    <Radio value="2" size="large" id="so2" />
-    <label htmlFor="so2">Large (overrides group)</label>
+    <Radio value="2" size="medium" id="so2" />
+    <label htmlFor="so2">Medium (overrides group)</label>
   </Flex>
 </Radio.Group>`
     }

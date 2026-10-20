@@ -24,8 +24,8 @@
 }
 
 /* Low specificity via :where(), so an item-level size wins. */
-:where(.group-large) .radioitem,
-.radioitem.large {
+:where(.group-medium) .radioitem,
+.radioitem.medium {
   width: var(--rs-space-5);
   height: var(--rs-space-5);
   min-width: var(--rs-space-5);
@@ -130,7 +130,7 @@
   height: var(--rs-radius-2);
 }
 
-.radioitem.large .indicator::after {
+.radioitem.medium .indicator::after {
   width: var(--rs-radius-3);
   height: var(--rs-radius-3);
 }
