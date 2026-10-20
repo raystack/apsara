@@ -30,11 +30,11 @@
 .variant-middle[data-orientation="horizontal"] {
   height: 1px;
   width: calc(100% - 2 * var(--rs-space-5));
-  margin-inline: auto;
+  margin-inline: var(--rs-space-5);
 }
 
 .variant-middle[data-orientation="vertical"] {
   width: 1px;
   height: calc(100% - 2 * var(--rs-space-3));
-  margin-block: auto;
+  margin-block: var(--rs-space-3);
 }
