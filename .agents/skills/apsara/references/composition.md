@@ -65,7 +65,7 @@ const [open, setOpen] = useState(false);
 </Dialog>
 ```
 
-Change callbacks (`onValueChange`, `onOpenChange`, `onInputValueChange`, and the like) take the new value first and a details object second: Base UI's `eventDetails` on components that wrap Base UI, or `details` with the same `reason` and `event` on components that own their state. Component data is a field of that object, for example `details.mode` on `ColorPicker` and `details.operation` on `FilterChip`.
+Most change callbacks (`onValueChange`, `onOpenChange`, `onInputValueChange`, and the like) take the new value first and a details object second. Components that wrap Base UI pass Base UI's `eventDetails`. Other components pass their own `details`, for example `details.mode` on `ColorPicker` and `details.operation` on `FilterChip`. A few callbacks take only the value, for example CodeBlock `onValueChange` and ColorPicker `onModeChange`. Check the props table for the exact signature.
 
 Several overlay roots (`Dialog`, `Menu`, `Popover`, `Tooltip`) also expose `createHandle` for advanced imperative open/close from outside the subtree — use only when a trigger can't live in the same tree.
 

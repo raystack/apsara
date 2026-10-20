@@ -9,7 +9,7 @@ on [GitHub releases](https://github.com/raystack/apsara/releases).
 
 ## Unreleased: change callbacks get a details object
 
-Every change callback now passes a second argument after the value. A
+The change callbacks below pass a second argument after the value. A
 component that wraps Base UI passes Base UI's `eventDetails`. A component that
 keeps its own state passes a `details` object with the same `reason` and
 `event` fields, plus any field of its own.
