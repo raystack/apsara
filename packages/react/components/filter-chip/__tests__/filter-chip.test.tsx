@@ -571,7 +571,7 @@ describe('FilterChip', () => {
         <FilterChip
           label='Created'
           columnType={FilterType.date}
-          calendarProps={{ onValidityChange }}
+          calendarProps={{ slotProps: { input: { onValidityChange } } }}
         />
       );
       const input = screen.getByPlaceholderText('Select date');
@@ -597,7 +597,11 @@ describe('FilterChip', () => {
               columnType={FilterType.date}
               value='2026-05-27'
               calendarProps={{
-                onValidityChange: validity => setError(validity.message)
+                slotProps: {
+                  input: {
+                    onValidityChange: validity => setError(validity.message)
+                  }
+                }
               }}
             />
           </>

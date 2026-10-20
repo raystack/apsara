@@ -14,7 +14,6 @@ import {
   CalendarPreview,
   type CalendarPreviewContentProps,
   type CalendarPreviewInputProps,
-  type CalendarPreviewInputValidity,
   type CalendarPreviewProps
 } from '~/components/calendar-preview';
 import { XIcon } from '~/icons';
@@ -90,8 +89,6 @@ export type FilterChipCalendarProps = Pick<
    * @default false
    */
   showCalendarIcon?: boolean;
-  /** Called when the typed date becomes invalid or valid again. */
-  onValidityChange?: (validity: CalendarPreviewInputValidity) => void;
 };
 
 export interface FilterChipProps
@@ -164,7 +161,6 @@ export const FilterChip = ({
     formatValue: formatDate,
     slotProps: dateSlotProps,
     showCalendarIcon = false,
-    onValidityChange,
     ...calendarRest
   } = calendarProps ?? {};
   const { classNames: inputClassNames, ...inputProps } =
@@ -307,10 +303,6 @@ export const FilterChip = ({
                     'out-of-bounds': INVALID_DATE,
                     unavailable: INVALID_DATE,
                     ...inputProps.errorMessages
-                  }}
-                  onValidityChange={validity => {
-                    inputProps.onValidityChange?.(validity);
-                    onValidityChange?.(validity);
                   }}
                 />
               </CalendarPreview.Trigger>

@@ -53,9 +53,10 @@ it to the viewer's zone.
 `FilterChip`'s `calendarProps` and `DataTable`'s `filterProps.calendar` take
 CalendarPreview props now. `slotProps.popover` and `showCalendarIcon` work as
 before. `slotProps.input` takes `CalendarPreview.Input` props, which have no
-`value` or `defaultValue`. `onErrorChange` still reports `'Invalid date'`, but
-the error clears only when the typed text is valid or empty, or a date is
-committed. Closing the popup does not clear it.
+`value` or `defaultValue`. The typed-date error is still `'Invalid date'`, but
+it clears only when the typed text is valid or empty, or a date is committed.
+Closing the popup does not clear it. The callback that reports the error has a
+new name. See [One callback for typed dates](#one-callback-for-typed-dates).
 
 | Removed | Replacement |
 |---|---|
@@ -125,11 +126,11 @@ prop needs a change. TypeScript reports each old prop.
 | Component | Before | After |
 |---|---|---|
 | `Command.DialogContent` | `width={640}` | `style={{ width: 640 }}` or a `className` |
-| `Search` | `width={240}` | A sized parent. `Search` fills its parent's width. |
+| `Search`, `DataView.Search` | `width={240}` | A sized parent. `Search` fills its parent's width. |
 | `Skeleton` | `borderRadius` | `radius`: `none`, `small`, `medium`, `large` or `full` |
 | `Breadcrumb.Item` | `current` | `active`, as on `Sidebar.Item` |
 | `DatePicker` | `onErrorChange` | `onValidityChange` |
-| `FilterChip` | `calendarProps.onErrorChange` | `calendarProps.onValidityChange` |
+| `FilterChip` | `calendarProps.onErrorChange` | `calendarProps.slotProps.input.onValidityChange` |
 
 ```tsx
 // Before
@@ -155,8 +156,10 @@ The active `Breadcrumb.Item` has `data-active="true"` in place of
 
 ### One callback for typed dates
 
-`DatePicker`, `FilterChip` and `CalendarPreview.Input` report the validity of
-typed text with `onValidityChange`. It receives `{ valid, reason, message }`.
+`DatePicker` and `CalendarPreview.Input` report the validity of typed text with
+`onValidityChange`. `FilterChip` takes it on `calendarProps.slotProps.input`,
+which is its `CalendarPreview.Input`. The callback receives
+`{ valid, reason, message }`.
 `message` is `undefined` while the text is valid, so read `message` where you
 used the old error string:
 

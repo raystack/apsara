@@ -249,16 +249,7 @@ export interface DatePickerProps {
   /** Callback function when date is selected */
   onSelect?: (date: Date) => void;
 
-  /**
-   * Fires when the typed-input validity changes. An invalid validity has a
-   * `reason` (`unparseable`, or `out-of-bounds` outside `startMonth` and
-   * `endMonth`) and the message `'Invalid date'`. It is `{ valid: true }` when
-   * the text is valid again or the picker commits or closes.
-   * DatePicker renders no error UI of its own, not even `aria-invalid`.
-   * Lift `message` into `Field`'s `error` prop (or your form library) to
-   * display it; `Field` also wires `aria-invalid` onto the input.
-   * @example onValidityChange={({ message }) => setError(message)}
-   */
+  /** Called when the typed date becomes invalid or valid again. */
   onValidityChange?: (validity: {
     valid: boolean;
     reason?: 'unparseable' | 'out-of-bounds' | 'unavailable' | 'out-of-order';

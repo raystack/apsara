@@ -50,15 +50,7 @@ export interface DatePickerProps {
   /** @deprecated Use `slotProps.popover` instead. */
   popoverProps?: PopoverContentProps;
   onSelect?: (date: Date) => void;
-  /**
-   * Fires when the typed-input validity changes: with `valid: false`, a
-   * `reason` and the message `'Invalid date'` when the typed text stops
-   * parsing as a valid in-bounds date, and with `{ valid: true }` when it
-   * becomes valid again (or the picker commits/closes).
-   * DatePicker renders no error UI of its own, not even `aria-invalid`.
-   * Lift `message` into `Field`'s `error` prop (or your form library) to
-   * display it; `Field` also wires `aria-invalid` onto the input.
-   */
+  /** Called when the typed date becomes invalid or valid again. */
   onValidityChange?: (validity: CalendarPreviewInputValidity) => void;
   value?: Date;
   defaultValue?: Date;

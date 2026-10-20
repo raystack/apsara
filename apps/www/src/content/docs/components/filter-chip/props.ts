@@ -67,7 +67,7 @@ export interface FilterChipProps {
     yearRange?: { from: number; to: number };
     defaultMonth?: Date;
     today?: Date;
-    /** Props for the date input (`CalendarPreview.Input`) and its popup (`CalendarPreview.Content`). `input.disabled` and `input.readOnly` also apply to the calendar. */
+    /** Props for the date input (`CalendarPreview.Input`) and its popup (`CalendarPreview.Content`). `input.disabled` and `input.readOnly` also apply to the calendar. `input.onValidityChange` reports typed-date errors. */
     slotProps?: {
       input?: Omit<CalendarPreviewInputProps, 'field'>;
       popover?: Omit<PopoverContentProps, 'children'>;
@@ -77,12 +77,6 @@ export interface FilterChipProps {
      * @default false
      */
     showCalendarIcon?: boolean;
-    /** Called when the typed date becomes invalid or valid again. Same as `onValidityChange` on `CalendarPreview.Input`. */
-    onValidityChange?: (validity: {
-      valid: boolean;
-      reason?: 'unparseable' | 'out-of-bounds' | 'unavailable' | 'out-of-order';
-      message?: string;
-    }) => void;
   };
 
   /** Additional CSS class names */
