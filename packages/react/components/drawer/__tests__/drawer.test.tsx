@@ -22,7 +22,7 @@ const BasicDrawer = ({
 } & Record<string, unknown>) => (
   <Drawer side={side} {...props}>
     <Drawer.Trigger render={<Button />}>{TRIGGER_TEXT}</Drawer.Trigger>
-    <Drawer.Content side={side} showCloseButton={showCloseButton}>
+    <Drawer.Content showCloseButton={showCloseButton}>
       <Drawer.Header>
         <Drawer.Title>{DRAWER_TITLE}</Drawer.Title>
         <Drawer.Description>{DRAWER_DESCRIPTION}</Drawer.Description>

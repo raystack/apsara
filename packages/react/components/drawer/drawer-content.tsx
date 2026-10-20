@@ -1,13 +1,14 @@
 'use client';
 
 import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
-import { cva, cx, type VariantProps } from 'class-variance-authority';
+import { cva, cx } from 'class-variance-authority';
 import { ReactNode } from 'react';
 import { XIcon } from '~/icons';
 import { type Radius, radiusVariants } from '../../shared/radius';
 import { IconButton } from '../icon-button';
 import { useThemeInjection } from '../theme/portal';
 import styles from './drawer.module.css';
+import { useDrawerSide } from './drawer-root';
 
 const drawerPopup = cva(styles.drawerPopup, {
   variants: {
@@ -18,15 +19,11 @@ const drawerPopup = cva(styles.drawerPopup, {
       left: styles['drawerPopup-left'],
       right: styles['drawerPopup-right']
     }
-  },
-  defaultVariants: {
-    side: 'right'
   }
 });
 
 export interface DrawerContentProps
-  extends Omit<DrawerPrimitive.Popup.Props, 'children'>,
-    VariantProps<typeof drawerPopup> {
+  extends Omit<DrawerPrimitive.Popup.Props, 'children'> {
   showCloseButton?: boolean;
   overlayProps?: DrawerPrimitive.Backdrop.Props;
   children?: ReactNode;
@@ -42,7 +39,6 @@ export interface DrawerContentProps
 export function DrawerContent({
   className,
   children,
-  side = 'right',
   showCloseButton = true,
   overlayProps,
   'aria-label': ariaLabel,
@@ -51,6 +47,7 @@ export function DrawerContent({
   radius,
   ...props
 }: DrawerContentProps) {
+  const side = useDrawerSide();
   const resolvedAriaLabel =
     ariaLabel ?? (ariaLabelledBy ? undefined : 'Drawer');
   const theme = useThemeInjection();
