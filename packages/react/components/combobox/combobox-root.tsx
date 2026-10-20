@@ -117,8 +117,9 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
       value: string,
       eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
     ) => {
-      setInputValueUnwrapped(value);
       onInputValueChange?.(value, eventDetails);
+      if (eventDetails.isCanceled) return;
+      setInputValueUnwrapped(value);
     },
     [onInputValueChange, setInputValueUnwrapped]
   );
@@ -128,7 +129,6 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
       value: Value | Value[] | null,
       eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
     ) => {
-      setValueUnwrapped(value);
       if (multiple) {
         (onValueChange as MultipleComboboxProps<Value>['onValueChange'])?.(
           value as Value[],
@@ -140,6 +140,8 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
           eventDetails
         );
       }
+      if (eventDetails.isCanceled) return;
+      setValueUnwrapped(value);
     },
     [onValueChange, multiple, setValueUnwrapped]
   );

@@ -129,8 +129,9 @@ export const MenuRoot = ({
       value: string,
       eventDetails: AutocompletePrimitive.Root.ChangeEventDetails
     ) => {
-      setInputValueUnwrapped(value);
       onInputValueChange?.(value, eventDetails);
+      if (eventDetails.isCanceled) return;
+      setInputValueUnwrapped(value);
     },
     [onInputValueChange, setInputValueUnwrapped]
   );
@@ -234,8 +235,9 @@ export const MenuSubMenu = ({
       value: string,
       eventDetails: AutocompletePrimitive.Root.ChangeEventDetails
     ) => {
-      setInputValueUnwrapped(value);
       onInputValueChange?.(value, eventDetails);
+      if (eventDetails.isCanceled) return;
+      setInputValueUnwrapped(value);
     },
     [onInputValueChange, setInputValueUnwrapped]
   );

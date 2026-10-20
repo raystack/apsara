@@ -117,6 +117,22 @@ describe('Select', () => {
       expect(handleValueChange).toHaveBeenCalledTimes(1);
     });
 
+    it('keeps the value when onValueChange cancels the change', async () => {
+      render(
+        <BasicSelect
+          defaultValue='apple'
+          onValueChange={(_, eventDetails) => eventDetails.cancel()}
+        />
+      );
+      const user = userEvent.setup();
+      await openSelect(user);
+
+      await user.click(screen.getAllByRole('option')[1]);
+      await flushMicrotasks();
+
+      expect(screen.getByRole('combobox')).toHaveTextContent('Apple');
+    });
+
     it('closes content after selection', async () => {
       render(<BasicSelect />);
       const user = userEvent.setup();

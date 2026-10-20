@@ -75,8 +75,9 @@ export function SidebarNavigationGroup({
     ) => {
       if (isCollapsed) return;
       const nextOpen = value.length > 0;
-      setOpenUnwrapped(nextOpen);
       onOpenChange?.(nextOpen, eventDetails);
+      if (eventDetails.isCanceled) return;
+      setOpenUnwrapped(nextOpen);
     },
     [isCollapsed, onOpenChange, setOpenUnwrapped]
   );

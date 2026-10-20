@@ -148,7 +148,6 @@ export const SelectRoot = (props: SelectRootProps) => {
       value: string | string[] | null,
       eventDetails: SelectChangeEventDetails
     ) => {
-      setValueUnwrapped(value ?? undefined);
       if (multiple) {
         (onValueChange as MultipleSelectProps['onValueChange'])?.(
           value as string[],
@@ -160,6 +159,8 @@ export const SelectRoot = (props: SelectRootProps) => {
           eventDetails
         );
       }
+      if (eventDetails.isCanceled) return;
+      setValueUnwrapped(value ?? undefined);
     },
     [multiple, onValueChange, setValueUnwrapped]
   );
@@ -170,13 +171,6 @@ export const SelectRoot = (props: SelectRootProps) => {
       onSearch?.(value);
     },
     [onSearch, setSearchValueUnwrapped]
-  );
-
-  const handleOpenChange = useCallback(
-    (open: boolean, eventDetails: SelectChangeEventDetails) => {
-      onOpenChange?.(open, eventDetails);
-    },
-    [onOpenChange]
   );
 
   const registerItem = useCallback<SelectContextValue['registerItem']>(item => {
@@ -224,7 +218,7 @@ export const SelectRoot = (props: SelectRootProps) => {
     onValueChange: handleValueChange,
     open: providedOpen,
     defaultOpen,
-    onOpenChange: handleOpenChange,
+    onOpenChange,
     multiple,
     disabled,
     modal: true as const,

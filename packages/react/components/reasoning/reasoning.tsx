@@ -81,8 +81,9 @@ function ReasoningRoot({
     next: boolean,
     eventDetails: CollapsiblePrimitive.Root.ChangeEventDetails
   ) => {
-    setOpenUnwrapped(next);
     onOpenChangeRef.current?.(next, eventDetails);
+    if (eventDetails.isCanceled) return;
+    setOpenUnwrapped(next);
   };
 
   // Auto-open while streaming and auto-collapse on completion, but hand the
