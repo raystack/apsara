@@ -7,6 +7,43 @@ One section per release, newest first, with only the changes that need action
 from you. The full record of every release, features and fixes included, is
 on [GitHub releases](https://github.com/raystack/apsara/releases).
 
+## Unreleased: variant and enum values are renamed
+
+Prop values are kebab-case, and a variant uses the same name as on other
+components. `Grid` takes `align` and `justify`, as `Flex` does.
+
+| Component | Before | After |
+|---|---|---|
+| `Input`, `TextArea`, `Search` `variant` | `default`, `borderless` | `outline`, `text` |
+| `FilterChip` `variant` | `default`, `text` | `outline`, `text` |
+| `Chip` `variant` | `outline`, `filled` | `outline`, `solid` |
+| `EmptyState` `variant` | `empty1`, `empty2` | `compact`, `page` |
+| `Grid` props | `alignItems`, `justifyContent` | `align`, `justify` |
+| `Grid` `justify` and `alignContent` values | `space-between`, `space-around`, `space-evenly` | `between`, `around`, `evenly` |
+| `CalendarPreview` scale | `halfYear` | `half-year` |
+
+```tsx
+// Before
+<Search variant="borderless" />
+<Chip variant="filled">Label</Chip>
+<EmptyState variant="empty2" icon={<Bell />} heading="No projects" />
+<Grid alignItems="center" justifyContent="space-between" />
+<CalendarPreview scales={['quarter', 'halfYear']} />
+
+// After
+<Search variant="text" />
+<Chip variant="solid">Label</Chip>
+<EmptyState variant="page" icon={<Bell />} heading="No projects" />
+<Grid align="center" justify="between" />
+<CalendarPreview scales={['quarter', 'half-year']} />
+```
+
+The scale name changes in `scales`, `scale`, `defaultScale`, `onScaleChange`,
+the `scale` field of a value, and the `data-scale` attribute. `scales` drops a
+name it does not know, so `'halfYear'` hides the half-year view without an
+error. Convert stored values that hold `scale: 'halfYear'`, and update CSS that
+selects `[data-scale="halfYear"]`.
+
 ## Unreleased: date filters compare whole days
 
 `DataView`, `DataTable` and `FilterChip` read and compare dates as calendar

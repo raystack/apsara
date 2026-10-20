@@ -38,12 +38,12 @@ import { Operation } from './filter-chip-operation';
 const chip = cva(styles.chip, {
   variants: {
     variant: {
-      default: styles['chip-default'],
+      outline: styles['variant-outline'],
       text: null
     }
   },
   defaultVariants: {
-    variant: 'default'
+    variant: 'outline'
   }
 });
 
@@ -328,7 +328,7 @@ export const FilterChip = ({
             data-slot='filter-chip-value'
           >
             <Input
-              variant={variant === 'text' ? 'borderless' : 'default'}
+              variant={variant === 'text' ? 'text' : 'outline'}
               classNames={{ container: styles.inputField }}
               value={filterValue.toString()}
               onChange={e => handleTextInputChange(e.target.value)}

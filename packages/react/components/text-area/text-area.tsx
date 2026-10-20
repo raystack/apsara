@@ -14,13 +14,13 @@ const textAreaVariants = cva(styles.textarea, {
       large: styles['size-large']
     },
     variant: {
-      default: styles['variant-default'],
-      borderless: styles['variant-borderless']
+      outline: null,
+      text: styles['variant-text']
     }
   },
   defaultVariants: {
     size: 'large',
-    variant: 'default'
+    variant: 'outline'
   }
 });
 

@@ -22,8 +22,8 @@ export const playground = {
   controls: {
     variant: {
       type: 'select',
-      initialValue: 'empty1',
-      options: ['empty1', 'empty2']
+      defaultValue: 'compact',
+      options: ['compact', 'page']
     },
     heading: {
       type: 'text',
@@ -57,7 +57,7 @@ export const variantsDemo = {
   code: `
   <Flex gap={9}>
     <EmptyState
-      variant="empty1"
+      variant="compact"
       icon={<Bell size={16} strokeWidth={1.5} />}
       heading="No notifications yet"
       subHeading="When you have notifications, they will appear here"
@@ -69,7 +69,7 @@ export const variantsDemo = {
       }
     />
     <EmptyState
-      variant="empty2"
+      variant="page"
       icon={<Bell size={16} strokeWidth={1.5} />}
       heading="Organization"
       subHeading="An organization in Aurora is a shared workspace where teams manage projects, AOIs, and image orders. It streamlines collaboration, analysis, and decision-making across industries."

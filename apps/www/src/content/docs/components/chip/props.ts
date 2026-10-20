@@ -3,7 +3,7 @@ export interface ChipProps {
    * Visual style variant
    * @defaultValue "outline"
    */
-  variant?: 'outline' | 'filled';
+  variant?: 'outline' | 'solid';
 
   /**
    * Size of the chip

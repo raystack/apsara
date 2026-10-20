@@ -52,16 +52,16 @@ describe('Input', () => {
   });
 
   describe('Variants', () => {
-    it('renders default variant by default', () => {
+    it('renders outline variant by default', () => {
       const { container } = render(<Input />);
       const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
-      expect(wrapper).toHaveClass(styles['variant-default']);
+      expect(wrapper).not.toHaveClass(styles['variant-text']);
     });
 
-    it('renders borderless variant when specified', () => {
-      const { container } = render(<Input variant='borderless' />);
+    it('renders text variant when specified', () => {
+      const { container } = render(<Input variant='text' />);
       const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
-      expect(wrapper).toHaveClass(styles['variant-borderless']);
+      expect(wrapper).toHaveClass(styles['variant-text']);
     });
   });
 

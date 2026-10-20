@@ -7,7 +7,7 @@ import {
   startOfMonthKey
 } from '../date-adapter';
 
-export type Scale = 'day' | 'month' | 'quarter' | 'halfYear' | 'year';
+export type Scale = 'day' | 'month' | 'quarter' | 'half-year' | 'year';
 
 export interface ScaleValue {
   date: DayKey;
@@ -23,7 +23,7 @@ export const SCALES: readonly Scale[] = [
   'day',
   'month',
   'quarter',
-  'halfYear',
+  'half-year',
   'year'
 ];
 
@@ -55,7 +55,7 @@ const FIXED_EDGES: Record<
   (month: number) => readonly [string, string]
 > = {
   quarter: month => QUARTERS[Math.floor((month - 1) / 3)],
-  halfYear: month => (month <= 6 ? ['01-01', '06-30'] : ['07-01', '12-31']),
+  'half-year': month => (month <= 6 ? ['01-01', '06-30'] : ['07-01', '12-31']),
   year: () => ['01-01', '12-31']
 };
 

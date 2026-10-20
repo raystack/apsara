@@ -9,7 +9,7 @@ const LABELS: Record<Scale, string> = {
   day: 'Day',
   month: 'Month',
   quarter: 'Quarter',
-  halfYear: 'Half-year',
+  'half-year': 'Half-year',
   year: 'Year'
 };
 

@@ -111,21 +111,21 @@ export interface GridProps {
   justifyItems?: 'start' | 'end' | 'center' | 'stretch';
 
   /**
-   * Aligns grid items along the block (column) axis.
+   * Aligns grid items along the block (column) axis. Sets `align-items`.
    */
-  alignItems?: 'start' | 'end' | 'center' | 'stretch';
+  align?: 'start' | 'end' | 'center' | 'stretch';
 
   /**
-   * Aligns the entire grid along the inline (row) axis.
+   * Aligns the entire grid along the inline (row) axis. Sets `justify-content`.
    */
-  justifyContent?:
+  justify?:
     | 'start'
     | 'end'
     | 'center'
     | 'stretch'
-    | 'space-around'
-    | 'space-between'
-    | 'space-evenly';
+    | 'between'
+    | 'around'
+    | 'evenly';
 
   /**
    * Aligns the entire grid along the block (column) axis.
@@ -135,9 +135,9 @@ export interface GridProps {
     | 'end'
     | 'center'
     | 'stretch'
-    | 'space-around'
-    | 'space-between'
-    | 'space-evenly';
+    | 'between'
+    | 'around'
+    | 'evenly';
 
   /**
    * Renders the grid as an inline element instead of a block element.

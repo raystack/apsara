@@ -62,15 +62,15 @@
 }
 
 /* Variant styles */
-.variant-borderless {
+.variant-text {
   border-color: transparent;
 }
 
-.variant-borderless:focus:not(:disabled) {
+.variant-text:focus:not(:disabled) {
   border-color: transparent;
   outline: none;
 }
 
-.variant-borderless:focus-visible:not(:disabled) {
+.variant-text:focus-visible:not(:disabled) {
   box-shadow: var(--rs-focus-ring-shadow);
 }
