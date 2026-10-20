@@ -14,7 +14,7 @@ export function DisplayProperties<TData, TValue>({
 
   return (
     <Flex direction='column' gap={5}>
-      <Text size='small' weight='medium' variant='secondary'>
+      <Text size='small' weight='medium' color='secondary'>
         Display Properties
       </Text>
       <Flex gap={3} wrap='wrap' align='center'>

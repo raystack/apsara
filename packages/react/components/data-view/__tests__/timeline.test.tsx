@@ -494,7 +494,7 @@ describe('DataView.Timeline', () => {
       today: '2025-01-17',
       markers: [
         { date: '2025-01-25' },
-        { date: '2025-01-28', label: 'Launch', variant: 'danger' }
+        { date: '2025-01-28', label: 'Launch', color: 'danger' }
       ]
     });
     expect(screen.getByText('17 Jan')).toBeInTheDocument();

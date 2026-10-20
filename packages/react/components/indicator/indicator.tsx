@@ -5,21 +5,21 @@ import styles from './indicator.module.css';
 
 const indicator = cva(styles.indicator, {
   variants: {
-    variant: {
-      accent: styles['indicator-variant-accent'],
-      warning: styles['indicator-variant-warning'],
-      danger: styles['indicator-variant-danger'],
-      success: styles['indicator-variant-success'],
-      neutral: styles['indicator-variant-neutral']
+    color: {
+      accent: styles['indicator-color-accent'],
+      attention: styles['indicator-color-attention'],
+      danger: styles['indicator-color-danger'],
+      success: styles['indicator-color-success'],
+      neutral: styles['indicator-color-neutral']
     }
   },
   defaultVariants: {
-    variant: 'accent'
+    color: 'accent'
   }
 });
 
 export interface IndicatorProps
-  extends ComponentProps<'div'>,
+  extends Omit<ComponentProps<'div'>, 'color'>,
     VariantProps<typeof indicator> {
   label?: string;
   /**
@@ -38,14 +38,14 @@ export interface IndicatorProps
 export const Indicator = ({
   className,
   classNames,
-  variant,
+  color,
   pulse,
   label,
   children,
   'aria-label': ariaLabel,
   ...props
 }: IndicatorProps) => {
-  const accessibilityLabel = ariaLabel || label || `${variant} indicator`;
+  const accessibilityLabel = ariaLabel || label || `${color} indicator`;
 
   return (
     <div
@@ -55,7 +55,7 @@ export const Indicator = ({
     >
       {children}
       <div
-        className={indicator({ variant, className })}
+        className={indicator({ color, className })}
         role='status'
         aria-label={accessibilityLabel}
         data-slot='indicator-badge'

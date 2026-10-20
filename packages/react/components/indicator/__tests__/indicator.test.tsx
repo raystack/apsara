@@ -31,25 +31,25 @@ describe('Indicator', () => {
     });
   });
 
-  describe('Variants', () => {
-    const variants = [
+  describe('Colors', () => {
+    const colors = [
       'accent',
-      'warning',
+      'attention',
       'danger',
       'success',
       'neutral'
     ] as const;
 
-    it.each(variants)('renders %s variant correctly', variant => {
-      const { container } = render(<Indicator variant={variant} />);
+    it.each(colors)('renders %s color correctly', color => {
+      const { container } = render(<Indicator color={color} />);
       const indicator = container.querySelector(`.${styles.indicator}`);
-      expect(indicator).toHaveClass(styles[`indicator-variant-${variant}`]);
+      expect(indicator).toHaveClass(styles[`indicator-color-${color}`]);
     });
 
-    it('defaults to accent variant', () => {
+    it('defaults to accent color', () => {
       const { container } = render(<Indicator />);
       const indicator = container.querySelector(`.${styles.indicator}`);
-      expect(indicator).toHaveClass(styles['indicator-variant-accent']);
+      expect(indicator).toHaveClass(styles['indicator-color-accent']);
     });
   });
 

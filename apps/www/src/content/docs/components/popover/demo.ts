@@ -149,7 +149,7 @@ function ControlledPopover() {
           </Flex>
         </Popover.Content>
       </Popover>
-      <Text size="small" variant="secondary">{open ? 'open' : 'closed'}</Text>
+      <Text size="small" color="secondary">{open ? 'open' : 'closed'}</Text>
     </Flex>
   );
 }`

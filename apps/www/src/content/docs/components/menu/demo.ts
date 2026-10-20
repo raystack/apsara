@@ -51,7 +51,7 @@ export const getCode = (props: ComponentPropsType) => {
       <Menu.Item disabled>Copy</Menu.Item>
       <Menu.Item
         trailingIcon={
-          <Text size="micro" variant="secondary">
+          <Text size="micro" color="secondary">
             ⌘⇧D
           </Text>
         }>
@@ -197,7 +197,7 @@ export const autocompleteDemo = {
         <Menu.Item
           value="remove"
           trailingIcon={
-            <Text size="micro" variant="secondary">
+            <Text size="micro" color="secondary">
               ⌘⇧D
             </Text>
           }>
@@ -486,7 +486,7 @@ const menuData: MenuItem[] = [
         type: "item",
         label: "Delete...",
         trailingIcon: (
-          <Text size="micro" variant="secondary">
+          <Text size="micro" color="secondary">
             ⌘⇧D
           </Text>
         ),
@@ -515,7 +515,7 @@ function ControlledMenu() {
           <Menu.Item onClick={() => setOpen(false)}>Duplicate</Menu.Item>
         </Menu.Content>
       </Menu>
-      <Text size="small" variant="secondary">{open ? 'open' : 'closed'}</Text>
+      <Text size="small" color="secondary">{open ? 'open' : 'closed'}</Text>
     </Flex>
   );
 }`

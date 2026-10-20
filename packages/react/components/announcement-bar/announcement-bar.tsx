@@ -9,14 +9,14 @@ import styles from './announcement-bar.module.css';
 
 const announcementBar = cva(styles['announcement-bar'], {
   variants: {
-    variant: {
-      gradient: styles['announcement-bar-gradient'],
-      normal: styles['announcement-bar-normal'],
-      error: styles['announcement-bar-error']
+    color: {
+      neutral: styles['announcement-bar-neutral'],
+      danger: styles['announcement-bar-danger'],
+      gradient: styles['announcement-bar-gradient']
     }
   },
   defaultVariants: {
-    variant: 'normal'
+    color: 'neutral'
   }
 });
 
@@ -33,7 +33,7 @@ export type AnnouncementBarProps = VariantProps<typeof announcementBar> & {
 
 export const AnnouncementBar = ({
   className,
-  variant,
+  color,
   text,
   leadingIcon,
   actionLabel,
@@ -48,7 +48,7 @@ export const AnnouncementBar = ({
 
   return (
     <Flex
-      className={announcementBar({ className, variant })}
+      className={announcementBar({ className, color })}
       justify='center'
       align='center'
       gap={3}

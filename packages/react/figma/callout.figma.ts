@@ -4,13 +4,13 @@
 
 import figma from 'figma';
 
-const type = figma.selectedInstance.getEnum('Type', {
+const color = figma.selectedInstance.getEnum('Type', {
   Accent: 'accent',
   Success: 'success',
-  Alert: 'alert',
+  Alert: 'danger',
   Gradient: 'gradient',
   Attentio: 'attention',
-  Normal: 'normal'
+  Normal: 'primary'
 });
 // Figma's "Outline" VARIANT now maps to the code `variant` prop: True →
 // 'outline', False unmapped (renderProp omits undefined → defaults to 'solid').
@@ -51,8 +51,8 @@ export default {
   id: 'Callout',
   imports: ["import { Callout } from '@raystack/apsara'"],
   example: figma.code`<Callout${figma.helpers.react.renderProp(
-    'type',
-    type
+    'color',
+    color
   )}${figma.helpers.react.renderProp(
     'variant',
     variant

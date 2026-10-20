@@ -252,7 +252,7 @@ function ControlledCalendar() {
     <Flex direction="column" align="center" gap={5}>
       <Calendar mode="single" selected={date} onSelect={setDate} />
       <Flex align="center" gap={4}>
-        <Text size="small" variant="secondary">
+        <Text size="small" color="secondary">
           {date ? dayjs(date).format('D MMM YYYY') : 'nothing selected'}
         </Text>
         <Button size="small" variant="outline" onClick={() => setDate(new Date())}>Today</Button>

@@ -63,7 +63,7 @@ export function TourProgress({ format, ...props }: TourProgressProps) {
       data-slot='tour-progress'
       size='mini'
       weight='medium'
-      variant='secondary'
+      color='secondary'
       style={{ fontVariantNumeric: 'tabular-nums' }}
       {...props}
     >

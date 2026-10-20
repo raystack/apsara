@@ -258,7 +258,7 @@ export interface TimelineMarker {
   date: TimelineDateInput;
   /** Badge content. Defaults to the marker date formatted as "17 Jan". */
   label?: React.ReactNode;
-  variant?: 'default' | 'accent' | 'danger';
+  color?: 'neutral' | 'accent' | 'danger';
 }
 
 /**

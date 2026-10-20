@@ -19,14 +19,14 @@ const EXIT_MS = 200;
 const callout = cva(styles.callout, {
   variants: {
     ...radiusVariants,
-    type: {
-      grey: styles['callout-grey'],
+    color: {
+      primary: styles['callout-primary'],
+      neutral: styles['callout-neutral'],
       success: styles['callout-success'],
-      alert: styles['callout-alert'],
-      gradient: styles['callout-gradient'],
+      danger: styles['callout-danger'],
       accent: styles['callout-accent'],
       attention: styles['callout-attention'],
-      normal: styles['callout-normal']
+      gradient: styles['callout-gradient']
     },
     variant: {
       solid: '',
@@ -37,12 +37,13 @@ const callout = cva(styles.callout, {
     }
   },
   defaultVariants: {
+    color: 'neutral',
     variant: 'solid'
   }
 });
 
 export interface CalloutProps
-  extends ComponentProps<'div'>,
+  extends Omit<ComponentProps<'div'>, 'color'>,
     VariantProps<typeof callout> {
   children: ReactNode;
   action?: ReactNode;
@@ -59,7 +60,7 @@ export interface CalloutProps
 
 export function Callout({
   className,
-  type = 'grey',
+  color,
   variant,
   radius,
   highContrast,
@@ -86,7 +87,7 @@ export function Callout({
   };
   if (state === 'closed') return null;
 
-  const role = type === 'alert' ? 'alert' : 'status';
+  const role = color === 'danger' ? 'alert' : 'status';
 
   return (
     <div
@@ -100,14 +101,14 @@ export function Callout({
       >
         <div
           className={callout({
-            type,
+            color,
             variant,
             radius,
             highContrast,
             className
           })}
           role={role}
-          aria-live={type === 'alert' ? 'assertive' : 'polite'}
+          aria-live={color === 'danger' ? 'assertive' : 'polite'}
           data-slot='callout'
           {...props}
         >

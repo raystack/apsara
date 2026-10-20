@@ -30,23 +30,23 @@ describe('Badge', () => {
     });
   });
 
-  describe('Variants', () => {
-    const variants = [
+  describe('Colors', () => {
+    const colors = [
       'accent',
-      'warning',
+      'attention',
       'danger',
       'success',
       'neutral',
       'gradient'
     ] as const;
 
-    it.each(variants)('renders %s variant correctly', variant => {
-      const { container } = render(<Badge variant={variant}>Badge</Badge>);
+    it.each(colors)('renders %s color correctly', color => {
+      const { container } = render(<Badge color={color}>Badge</Badge>);
       const badge = container.querySelector('span');
-      expect(badge).toHaveClass(styles[`badge-${variant}`]);
+      expect(badge).toHaveClass(styles[`badge-${color}`]);
     });
 
-    it('defaults to accent variant', () => {
+    it('defaults to accent color', () => {
       const { container } = render(<Badge>Default</Badge>);
       const badge = container.querySelector('span');
       expect(badge).toHaveClass(styles['badge-accent']);

@@ -22,7 +22,7 @@ const chip = cva(styles.chip, {
       accent: styles['chip-color-accent'],
       danger: styles['chip-color-danger'],
       success: styles['chip-color-success'],
-      warning: styles['chip-color-warning']
+      attention: styles['chip-color-attention']
     }
   },
   defaultVariants: {

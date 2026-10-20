@@ -7,6 +7,43 @@ One section per release, newest first, with only the changes that need action
 from you. The full record of every release, features and fixes included, is
 on [GitHub releases](https://github.com/raystack/apsara/releases).
 
+## Unreleased: `color` holds the intent
+
+`color` holds the meaning of a component, and `variant` holds only its visual
+style. Each intent has one name: `attention`, `danger` and `neutral`.
+
+| Component | Prop | Values |
+|---|---|---|
+| `Badge`, `Indicator` | `variant` becomes `color` | `warning` becomes `attention` |
+| `Chip` | `color` | `warning` becomes `attention` |
+| `Callout` | `type` becomes `color` | `grey` becomes `neutral`, `alert` becomes `danger`, `normal` becomes `primary` |
+| `Text`, `Link` | `variant` becomes `color` | No change |
+| `AnnouncementBar` | `variant` becomes `color` | `normal` becomes `neutral`, `error` becomes `danger` |
+| `DataView.Timeline` `markers` | `variant` becomes `color` | `default` becomes `neutral` |
+| `Spinner` | `color` | `default` becomes `inherit` |
+
+```tsx
+// Before
+<Badge variant="warning">Pending</Badge>
+<Callout type="alert" variant="outline">Payment failed</Callout>
+<Text variant="secondary">Updated 2 hours ago</Text>
+
+// After
+<Badge color="attention">Pending</Badge>
+<Callout color="danger" variant="outline">Payment failed</Callout>
+<Text color="secondary">Updated 2 hours ago</Text>
+```
+
+`Callout` keeps `variant` (`solid` or `outline`). A `danger` callout has the
+`alert` role, as `alert` did. The timeline marker line sets `data-color` in
+place of `data-variant`. `Separator` `color` also takes `emphasis`, `accent`,
+`attention`, `danger` and `success`.
+
+`Badge`, `Callout`, `Indicator`, `Link` and `Text` no longer pass the HTML
+`color` attribute to the DOM. If a wrapper spreads HTML attributes into one of
+them, omit `color` from its props type, for example
+`Omit<HTMLAttributes<HTMLElement>, 'color'>`.
+
 ## Unreleased: date filters compare whole days
 
 `DataView`, `DataTable` and `FilterChip` read and compare dates as calendar
@@ -217,7 +254,7 @@ properties on `:root` from `--rs-*` values, and hand-rolled portals that
 rendered outside the provider, have to move inside it. `<html>` no longer needs
 `suppressHydrationWarning`.
 
-<Callout type="grey">
+<Callout color="neutral">
   `Image` and `Avatar` now use the shared five radius values. `Image` gains
   `large`. `Avatar` has no default radius and follows the theme, so pass
   `radius="full"` to keep circles.
@@ -242,7 +279,7 @@ The range is wide, `>=0.500.0 <2.0.0`, so your app picks the version — both th
 0.x and 1.x lines satisfy it. If a lucide release changes a drawing you care
 about, replace that one icon (step 5) rather than pinning the whole library.
 
-<Callout type="grey">
+<Callout color="neutral">
   `@radix-ui/react-icons` is no longer a dependency of Apsara. If your own code
   imports from it, keep it in your own `dependencies`.
 </Callout>
@@ -253,7 +290,7 @@ That path used to export raw in-house SVG components. It now exports the 31
 icons Apsara's components draw, as replaceable icon components. Twelve of the old
 names are gone.
 
-<Callout type="alert">
+<Callout color="danger">
   These twelve imports fail to resolve. Import the glyph from `lucide-react`
   instead.
 </Callout>

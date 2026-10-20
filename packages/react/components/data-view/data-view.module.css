@@ -560,11 +560,11 @@
   pointer-events: none;
 }
 
-.timelineMarkerLine[data-variant="accent"] {
+.timelineMarkerLine[data-color="accent"] {
   border-left-color: var(--rs-color-border-accent-emphasis);
 }
 
-.timelineMarkerLine[data-variant="danger"] {
+.timelineMarkerLine[data-color="danger"] {
   border-left-color: var(--rs-color-border-danger-emphasis);
 }
 

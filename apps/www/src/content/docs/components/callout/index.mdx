@@ -6,7 +6,7 @@ source: packages/react/components/callout
 
 import {
   playground,
-  typeDemo,
+  colorDemo,
   outlineDemo,
   highContrastDemo,
   dismissibleDemo,
@@ -27,13 +27,13 @@ import { Callout } from '@raystack/apsara'
 
 ## Usage
 
-Start with the type, then decide how much attention the callout should draw and what the reader can do with it.
+Start with the color, then decide how much attention the callout should draw and what the reader can do with it.
 
-### Type
+### Color
 
-Type carries the meaning: `grey` for neutral information, and the semantic types for success, warning, danger, and accent. Pick the type from what the message means, not from the color you want.
+`color` carries the meaning: `neutral` (the default) for general information, `primary` for the base background, and `success`, `attention`, `danger`, and `accent` for status. Pick the color from what the message means. A `danger` callout has the `alert` role.
 
-<Demo data={typeDemo} />
+<Demo data={colorDemo} />
 
 ### Outline
 
@@ -75,7 +75,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 |------|---------|
 | `callout-transition` | The outer transition shell `<div>` that plays the enter and exit animation |
 | `callout-transition-body` | The `<div>` that animates during the enter/exit transition |
-| `callout` | The main callout `<div>` (role `status`, or `alert` for the alert type) |
+| `callout` | The main callout `<div>` (role `status`, or `alert` for the `danger` color) |
 | `callout-container` | Wrapper `<div>` holding the message and actions |
 | `callout-message-container` | Wrapper `<div>` around the icon and message |
 | `callout-icon` | Wrapper around the icon (when an icon is set) |

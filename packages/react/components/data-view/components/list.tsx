@@ -359,7 +359,7 @@ export function DataViewList<TData, TValue = unknown>({
       >
         {data?.label}
         {data?.showGroupCount ? (
-          <Badge variant='neutral'>{data?.count}</Badge>
+          <Badge color='neutral'>{data?.count}</Badge>
         ) : null}
       </div>
     );
@@ -459,7 +459,7 @@ export function DataViewList<TData, TValue = unknown>({
         >
           {stickyGroup.label}
           {stickyGroup.showGroupCount ? (
-            <Badge variant='neutral'>{stickyGroup.count}</Badge>
+            <Badge color='neutral'>{stickyGroup.count}</Badge>
           ) : null}
         </div>
       ) : null}

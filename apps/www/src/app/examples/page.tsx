@@ -25,7 +25,7 @@ export default function ExamplesPage() {
       style={{ minHeight: '60vh', padding: 32 }}
     >
       <Text size='large'>Examples</Text>
-      <Text variant='secondary'>
+      <Text color='secondary'>
         A scratch area for manual QA. Add a route under{' '}
         <code>app/examples/&lt;name&gt;/page.tsx</code> to test a component.
       </Text>

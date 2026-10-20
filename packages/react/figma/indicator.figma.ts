@@ -4,8 +4,8 @@
 
 import figma from 'figma';
 
-const variant = figma.selectedInstance.getEnum('Variant', {
-  Warning: 'warning',
+const color = figma.selectedInstance.getEnum('Variant', {
+  Warning: 'attention',
   Danger: 'danger',
   Success: 'success',
   Neutral: 'neutral'
@@ -22,8 +22,8 @@ export default {
   id: 'Indicator',
   imports: ["import { Indicator } from '@raystack/apsara'"],
   example: figma.code`<Indicator${figma.helpers.react.renderProp(
-    'variant',
-    variant
+    'color',
+    color
   )}${figma.helpers.react.renderProp('label', label)}/>`,
   metadata: { nestable: true }
 };

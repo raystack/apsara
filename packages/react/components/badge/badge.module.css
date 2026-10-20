@@ -35,7 +35,7 @@
   height: var(--rs-space-8);
 }
 
-/* Variants */
+/* Colors */
 .badge-neutral {
   background: var(--rs-color-background-neutral-secondary);
   color: var(--rs-color-foreground-base-primary);
@@ -46,7 +46,7 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
-.badge-warning {
+.badge-attention {
   background: var(--rs-color-background-attention-primary);
   color: var(--rs-color-foreground-base-primary);
 }

@@ -7,7 +7,7 @@ export const preview = {
     <Reasoning.Trigger />
     <Reasoning.Content>
       <Reasoning.Step label="Gathering project context">
-        <Text size="small" variant="secondary">Looked at recent issues in Design System 2.</Text>
+        <Text size="small" color="secondary">Looked at recent issues in Design System 2.</Text>
       </Reasoning.Step>
       <Reasoning.Step label="Creating the task" />
     </Reasoning.Content>
@@ -40,7 +40,7 @@ export const streamingDemo = {
         <Reasoning.Trigger />
         <Reasoning.Content>
           <Reasoning.Step label="Gathering ticket updates">
-            <Text size="small" variant="secondary">
+            <Text size="small" color="secondary">
               I'm pulling the active issues assigned to you…
             </Text>
           </Reasoning.Step>

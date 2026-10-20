@@ -107,7 +107,7 @@ export const panelBackgroundDemo = {
               <Text size="small">The popup paints --rs-color-panel.</Text>
             </Popover.Content>
           </Popover>
-          <Text size="small" variant="secondary">
+          <Text size="small" color="secondary">
             Open the popup: it covers this paragraph. On solid it hides the
             words behind it, on translucent it blurs them and lets them tint
             the surface.
@@ -128,7 +128,7 @@ export const nestingDemo = {
   >
     <Flex direction="column" gap={4}>
       <Flex gap={3} align="center">
-        <Text size="small" variant="secondary" style={{ width: 200 }}>indigo, medium</Text>
+        <Text size="small" color="secondary" style={{ width: 200 }}>indigo, medium</Text>
         <Button>Button</Button>
         <Switch defaultChecked />
       </Flex>
@@ -140,7 +140,7 @@ export const nestingDemo = {
       >
         <Flex direction="column" gap={4}>
           <Flex gap={3} align="center">
-            <Text size="small" variant="secondary" style={{ width: 200 }}>mint, full</Text>
+            <Text size="small" color="secondary" style={{ width: 200 }}>mint, full</Text>
             <Button>Button</Button>
             <Switch defaultChecked />
           </Flex>
@@ -151,7 +151,7 @@ export const nestingDemo = {
             style={{ padding: "var(--rs-space-5)", borderRadius: "var(--rs-radius-4)", border: "1px dashed var(--rs-color-border-base-secondary)" }}
           >
             <Flex gap={3} align="center">
-              <Text size="small" variant="secondary" style={{ width: 200 }}>orange, inherited full</Text>
+              <Text size="small" color="secondary" style={{ width: 200 }}>orange, inherited full</Text>
               <Button>Button</Button>
               <Switch defaultChecked />
             </Flex>
@@ -289,7 +289,7 @@ export const switcherDemo = {
   >
     <Flex gap={3} align="center">
       <ThemeSwitcher />
-      <Text size="small" variant="secondary">Flips this scope</Text>
+      <Text size="small" color="secondary">Flips this scope</Text>
     </Flex>
   </Theme>`
 };

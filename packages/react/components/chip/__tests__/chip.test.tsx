@@ -101,7 +101,7 @@ describe('Chip', () => {
       'accent',
       'danger',
       'success',
-      'warning'
+      'attention'
     ] as const;
 
     it.each(colors)('renders %s color correctly', color => {
