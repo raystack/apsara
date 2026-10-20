@@ -19,7 +19,6 @@ export const CommandInput = ({
   ref,
   leadingIcon,
   autoFocus = true,
-  size = 'medium',
   placeholder = 'Search...',
   ...props
 }: CommandInputProps) => {
@@ -35,7 +34,6 @@ export const CommandInput = ({
             classNames={{ container: styles.commandInputContainer }}
             leadingIcon={leadingIcon}
             variant='borderless'
-            size={size}
             autoFocus={autoFocus}
             placeholder={placeholder}
             {...props}
