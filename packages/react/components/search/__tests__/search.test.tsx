@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import inputStyles from '../../input/input.module.css';
 import { Search } from '../search';
 import styles from '../search.module.css';
 
@@ -182,15 +183,17 @@ describe('Search', () => {
 
   describe('Variants', () => {
     it('defaults to outline variant', () => {
-      render(<Search />);
-      const input = screen.getByRole('searchbox');
-      expect(input).toBeInTheDocument();
+      const { container } = render(<Search />);
+      expect(
+        container.querySelector('[data-slot="input-container"]')
+      ).not.toHaveClass(inputStyles['variant-text']);
     });
 
     it('renders text variant', () => {
-      render(<Search variant='text' />);
-      const input = screen.getByRole('searchbox');
-      expect(input).toBeInTheDocument();
+      const { container } = render(<Search variant='text' />);
+      expect(
+        container.querySelector('[data-slot="input-container"]')
+      ).toHaveClass(inputStyles['variant-text']);
     });
   });
 

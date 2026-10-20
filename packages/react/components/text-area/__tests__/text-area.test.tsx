@@ -152,7 +152,7 @@ describe('TextArea', () => {
     it('renders outline variant by default', () => {
       render(<TextArea />);
       const textarea = screen.getByRole('textbox');
-      expect(textarea).toHaveClass(styles['variant-outline']);
+      expect(textarea).not.toHaveClass(styles['variant-text']);
     });
 
     it('renders text variant when specified', () => {

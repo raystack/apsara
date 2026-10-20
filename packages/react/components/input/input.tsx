@@ -14,7 +14,7 @@ const inputWrapper = cva(styles['input-wrapper'], {
       large: styles['size-large']
     },
     variant: {
-      outline: styles['variant-outline'],
+      outline: null,
       text: styles['variant-text']
     }
   },

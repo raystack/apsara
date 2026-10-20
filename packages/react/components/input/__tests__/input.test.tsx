@@ -55,7 +55,7 @@ describe('Input', () => {
     it('renders outline variant by default', () => {
       const { container } = render(<Input />);
       const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
-      expect(wrapper).toHaveClass(styles['variant-outline']);
+      expect(wrapper).not.toHaveClass(styles['variant-text']);
     });
 
     it('renders text variant when specified', () => {

@@ -14,7 +14,7 @@ const textAreaVariants = cva(styles.textarea, {
       large: styles['size-large']
     },
     variant: {
-      outline: styles['variant-outline'],
+      outline: null,
       text: styles['variant-text']
     }
   },
