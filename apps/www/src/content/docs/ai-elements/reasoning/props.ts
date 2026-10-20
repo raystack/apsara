@@ -23,7 +23,10 @@ export interface ReasoningProps {
   defaultOpen?: boolean;
 
   /** Called when the panel is opened or closed. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: 'trigger-press' | 'none'; event: Event }
+  ) => void;
 
   /** Custom CSS class names. */
   className?: string;

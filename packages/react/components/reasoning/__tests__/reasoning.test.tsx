@@ -1,13 +1,9 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
-import { Reasoning } from '../reasoning';
+import { describe, expect, it, vi } from 'vitest';
+import { Reasoning, type ReasoningProps } from '../reasoning';
 
 describe('Reasoning', () => {
-  const ReasoningExample = (props: {
-    streaming?: boolean;
-    duration?: number;
-    defaultOpen?: boolean;
-  }) => (
+  const ReasoningExample = (props: ReasoningProps) => (
     <Reasoning {...props}>
       <Reasoning.Trigger />
       <Reasoning.Content>
@@ -75,6 +71,24 @@ describe('Reasoning', () => {
     fireEvent.click(trigger);
     expect(trigger).toHaveAttribute('aria-expanded', 'true');
     expect(screen.getByText('step detail')).toBeInTheDocument();
+  });
+
+  it('passes eventDetails to onOpenChange', () => {
+    const onOpenChange = vi.fn();
+    const { rerender } = render(
+      <ReasoningExample streaming onOpenChange={onOpenChange} />
+    );
+    rerender(<ReasoningExample duration={2} onOpenChange={onOpenChange} />);
+    expect(onOpenChange).toHaveBeenLastCalledWith(
+      false,
+      expect.objectContaining({ reason: 'none' })
+    );
+
+    fireEvent.click(screen.getByRole('button'));
+    expect(onOpenChange).toHaveBeenLastCalledWith(
+      true,
+      expect.objectContaining({ reason: 'trigger-press' })
+    );
   });
 
   it('renders step labels', () => {

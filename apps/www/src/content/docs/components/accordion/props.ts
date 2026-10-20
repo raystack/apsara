@@ -22,9 +22,12 @@ export interface AccordionRootProps<Value = string> {
   /**
    * Event handler called when the value changes. In single mode it receives `''` when every item closes.
    *
-   * @remarks `(value: Value | '') => void` in single mode, `(value: Value[]) => void` with `multiple`
+   * @remarks `(value: Value | '', eventDetails) => void` in single mode, `(value: Value[], eventDetails) => void` with `multiple`
    */
-  onValueChange?: (value: Value | '' | Value[]) => void;
+  onValueChange?: (
+    value: Value | '' | Value[],
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /**
    * Whether the accordion is disabled

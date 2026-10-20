@@ -67,7 +67,10 @@ export interface DataViewProps {
   view?: string;
 
   /** Called when the active view changes. */
-  onViewChange?: (view: string) => void;
+  onViewChange?: (
+    view: string,
+    details: { reason: string; event: Event }
+  ) => void;
 
   /**
    * Optional local resolvers for non-accessor `group_by` keys.

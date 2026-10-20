@@ -66,8 +66,10 @@ describe('TextArea', () => {
 
       fireEvent.change(textarea, { target: { value: 'hello' } });
       expect(handleValueChange).toHaveBeenCalledTimes(1);
-      expect(handleValueChange.mock.calls[0][0]).toBe('hello');
-      expect(handleValueChange.mock.calls[0][1]).toBeDefined();
+      expect(handleValueChange).toHaveBeenCalledWith(
+        'hello',
+        expect.objectContaining({ reason: 'none', event: expect.any(Event) })
+      );
     });
 
     it('calls both onChange and onValueChange', () => {

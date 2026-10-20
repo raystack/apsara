@@ -6,7 +6,10 @@ import {
   SuggestionMenu,
   type SuggestionMenuItem
 } from './core/suggestion-menu';
-import { filterItems } from './core/use-suggestion-menu';
+import {
+  filterItems,
+  type SuggestionOpenChangeDetails
+} from './core/use-suggestion-menu';
 import styles from './editor.module.css';
 import { useEditorStore, useStoreSelector } from './editor-context';
 import { EditorShortcutKeys } from './editor-control';
@@ -32,7 +35,7 @@ export interface EditorSlashMenuProps {
    */
   emptyMessage?: ReactNode;
   /** Observes the menu's open state. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (open: boolean, details: SuggestionOpenChangeDetails) => void;
 }
 
 const NO_FLAGS: boolean[] = [];

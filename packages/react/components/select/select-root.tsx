@@ -59,11 +59,19 @@ export const useSelectContext = (): UseSelectContext => {
   };
 };
 
+/** Base UI's `eventDetails`, from Combobox when `autocomplete` is set. */
+export type SelectChangeEventDetails =
+  | SelectPrimitive.Root.ChangeEventDetails
+  | ComboboxPrimitive.Root.ChangeEventDetails;
+
 export interface BaseSelectProps extends CommonProps {
   children?: ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: SelectChangeEventDetails
+  ) => void;
   disabled?: boolean;
   required?: boolean;
   name?: string;
@@ -73,14 +81,20 @@ export interface BaseSelectProps extends CommonProps {
 export interface SingleSelectProps extends BaseSelectProps {
   multiple?: false;
   value?: string;
-  onValueChange?: (value: string) => void;
+  onValueChange?: (
+    value: string,
+    eventDetails: SelectChangeEventDetails
+  ) => void;
   defaultValue?: string;
 }
 
 export interface MultipleSelectProps extends BaseSelectProps {
   multiple: true;
   value?: string[];
-  onValueChange?: (value: string[]) => void;
+  onValueChange?: (
+    value: string[],
+    eventDetails: SelectChangeEventDetails
+  ) => void;
   defaultValue?: string[];
 }
 
@@ -130,17 +144,23 @@ export const SelectRoot = (props: SelectRootProps) => {
   >({});
 
   const handleValueChange = useCallback(
-    (value: string | string[] | null) => {
-      setValueUnwrapped(value ?? undefined);
+    (
+      value: string | string[] | null,
+      eventDetails: SelectChangeEventDetails
+    ) => {
       if (multiple) {
         (onValueChange as MultipleSelectProps['onValueChange'])?.(
-          value as string[]
+          value as string[],
+          eventDetails
         );
       } else {
         (onValueChange as SingleSelectProps['onValueChange'])?.(
-          value as string
+          value as string,
+          eventDetails
         );
       }
+      if (eventDetails.isCanceled) return;
+      setValueUnwrapped(value ?? undefined);
     },
     [multiple, onValueChange, setValueUnwrapped]
   );
@@ -151,13 +171,6 @@ export const SelectRoot = (props: SelectRootProps) => {
       onSearch?.(value);
     },
     [onSearch, setSearchValueUnwrapped]
-  );
-
-  const handleOpenChange = useCallback(
-    (open: boolean) => {
-      onOpenChange?.(open);
-    },
-    [onOpenChange]
   );
 
   const registerItem = useCallback<SelectContextValue['registerItem']>(item => {
@@ -205,7 +218,7 @@ export const SelectRoot = (props: SelectRootProps) => {
     onValueChange: handleValueChange,
     open: providedOpen,
     defaultOpen,
-    onOpenChange: handleOpenChange,
+    onOpenChange,
     multiple,
     disabled,
     modal: true as const,

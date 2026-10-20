@@ -177,7 +177,10 @@ describe('Menu', () => {
 
       fireEvent.change(input, { target: { value: 'app' } });
 
-      expect(onInputValueChange).toHaveBeenCalledWith('app');
+      expect(onInputValueChange).toHaveBeenCalledWith(
+        'app',
+        expect.objectContaining({ reason: 'input-change' })
+      );
       expect(input).toHaveValue('ban');
       expect(screen.queryByText('Apple')).not.toBeInTheDocument();
       expect(screen.getByText('Banana')).toBeInTheDocument();
@@ -206,7 +209,10 @@ describe('Menu', () => {
       });
       fireEvent.click(screen.getByText(TRIGGER_TEXT));
 
-      expect(onInputValueChange).toHaveBeenCalledWith('');
+      expect(onInputValueChange).toHaveBeenCalledWith(
+        '',
+        expect.objectContaining({ reason: 'input-clear' })
+      );
       expect(await screen.findByText('Apple')).toBeInTheDocument();
       expect(screen.getByText('Banana')).toBeInTheDocument();
     });
