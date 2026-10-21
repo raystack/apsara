@@ -148,6 +148,12 @@ Visual divider between groups. The separator is hidden automatically while the u
 
 Renders the portal, viewport, and popup for the command palette. There is no backdrop overlay. Unlike `Dialog.Content`, there is no close button; users dismiss the palette via `Escape` or by clicking outside it.
 
+The popup is 540px wide. To change the width, pass `className` or `style`, as on `Dialog.Content`:
+
+```tsx
+<Command.DialogContent style={{ width: 640 }}>
+```
+
 <auto-type-table path="./props.ts" name="CommandDialogContentProps" />
 
 ### Slots

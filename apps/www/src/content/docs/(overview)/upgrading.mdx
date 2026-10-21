@@ -53,9 +53,10 @@ it to the viewer's zone.
 `FilterChip`'s `calendarProps` and `DataTable`'s `filterProps.calendar` take
 CalendarPreview props now. `slotProps.popover` and `showCalendarIcon` work as
 before. `slotProps.input` takes `CalendarPreview.Input` props, which have no
-`value` or `defaultValue`. `onErrorChange` still reports `'Invalid date'`, but
-the error clears only when the typed text is valid or empty, or a date is
-committed. Closing the popup does not clear it.
+`value` or `defaultValue`. The typed-date error is still `'Invalid date'`, but
+it clears only when the typed text is valid or empty, or a date is committed.
+Closing the popup does not clear it. The callback that reports the error has a
+new name. See [One callback for typed dates](#one-callback-for-typed-dates).
 
 | Removed | Replacement |
 |---|---|
@@ -115,6 +116,64 @@ These filters used to match by mistake, and now match differently:
 - A row holding a `T` time after a slashed, unpadded or partial date, such as
   `'2026/1/1T10:30'`, used to be read. It now matches only `neq`, and the
   timeline does not draw it. Store such dates as ISO 8601 (`2026-01-01T10:30`).
+
+## Unreleased: one-off props
+
+Some props that only one component had are removed or renamed to the names
+other components use. Defaults do not change, so only code that passes an old
+prop needs a change. TypeScript reports each old prop.
+
+| Component | Before | After |
+|---|---|---|
+| `Command.DialogContent` | `width={640}` | `style={{ width: 640 }}` or a `className` |
+| `Search`, `DataView.Search` | `width={240}` | A sized parent. `Search` fills its parent's width. |
+| `Skeleton` | `borderRadius` | `radius`: `none`, `small`, `medium`, `large` or `full` |
+| `Breadcrumb.Item` | `current` | `active`, as on `Sidebar.Item` |
+| `DatePicker` | `onErrorChange` | `onValidityChange` |
+| `FilterChip` | `calendarProps.onErrorChange` | `calendarProps.slotProps.input.onValidityChange` |
+
+```tsx
+// Before
+<Command.DialogContent width={640}>…</Command.DialogContent>
+<Search width={240} />
+<Skeleton borderRadius="50%" />
+<Breadcrumb.Item current>Profile</Breadcrumb.Item>
+
+// After
+<Command.DialogContent style={{ width: 640 }}>…</Command.DialogContent>
+<div style={{ width: 240 }}>
+  <Search />
+</div>
+<Skeleton radius="full" />
+<Breadcrumb.Item active>Profile</Breadcrumb.Item>
+```
+
+`Skeleton` keeps its default corner radius. For a value outside the radius
+scale, set `style={{ borderRadius }}`.
+
+The active `Breadcrumb.Item` has `data-active="true"` in place of
+`data-current="true"`. Update CSS that targets the old attribute.
+
+### One callback for typed dates
+
+`DatePicker` and `CalendarPreview.Input` report the validity of typed text with
+`onValidityChange`. `FilterChip` takes it on `calendarProps.slotProps.input`,
+which is its `CalendarPreview.Input`. The callback receives
+`{ valid, reason, message }`.
+`message` is `undefined` while the text is valid, so read `message` where you
+used the old error string:
+
+```tsx
+// Before
+<DatePicker onErrorChange={setError} />
+
+// After
+<DatePicker onValidityChange={({ message }) => setError(message)} />
+```
+
+`DatePicker` reports the reason `unparseable` or `out-of-bounds`, with the
+message `'Invalid date'`. The callback also fires when the reason changes and
+the text stays invalid.
 
 ## 2.0: `Theme` is rewritten
 

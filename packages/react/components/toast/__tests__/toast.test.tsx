@@ -1,6 +1,7 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { radiusClasses } from '../../../shared/radius';
 import { Toast, toastManager } from '../toast';
 
 const renderWithProvider = (
@@ -18,6 +19,17 @@ describe('Toast', () => {
     it('renders provider with children', () => {
       renderWithProvider();
       expect(screen.getByText('App content')).toBeInTheDocument();
+    });
+
+    it('applies radius to each toast', async () => {
+      renderWithProvider({ radius: 'full' });
+      act(() => {
+        toastManager.add({ title: 'Rounded toast' });
+      });
+      const title = await screen.findByText('Rounded toast');
+      expect(title.closest('[data-slot="toast"]')).toHaveClass(
+        radiusClasses.full
+      );
     });
   });
 

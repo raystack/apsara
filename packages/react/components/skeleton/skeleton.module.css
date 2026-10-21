@@ -4,6 +4,8 @@
   --skeleton-duration: 1.5s;
 
   background-color: var(--skeleton-base-color);
+  --rs-radius-step: 4px;
+  border-radius: var(--rs-radius-2);
   overflow: hidden;
   position: relative;
   display: block;

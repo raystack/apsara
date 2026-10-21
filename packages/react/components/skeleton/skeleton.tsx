@@ -2,6 +2,7 @@
 
 import { cx } from 'class-variance-authority';
 import { CSSProperties, createContext, ReactNode, useContext } from 'react';
+import { type Radius, radiusStyle } from '../../shared/radius';
 import styles from './skeleton.module.css';
 
 export interface SkeletonProps {
@@ -9,7 +10,8 @@ export interface SkeletonProps {
   highlightColor?: string;
   width?: string | number;
   height?: string | number;
-  borderRadius?: string | number;
+  /** Corner radius for this skeleton only. Overrides the theme's `radius`. */
+  radius?: Radius;
   inline?: boolean;
   duration?: number;
   enableAnimation?: boolean;
@@ -34,7 +36,7 @@ const SkeletonBase = (props: SkeletonProps) => {
     highlightColor,
     width,
     height = 'var(--rs-space-4)',
-    borderRadius = 'var(--rs-radius-2)',
+    radius,
     inline = false,
     duration = 1.5,
     count = 1,
@@ -49,6 +51,7 @@ const SkeletonBase = (props: SkeletonProps) => {
     styles.skeleton,
     inline && styles.inline,
     enableAnimation && styles.animate,
+    radiusStyle({ radius }),
     className
   );
 
@@ -76,7 +79,6 @@ const SkeletonBase = (props: SkeletonProps) => {
             {
               width: width ?? defaultWidth,
               height,
-              borderRadius,
               '--skeleton-base-color': baseColor,
               '--skeleton-highlight-color': highlightColor,
               '--skeleton-duration': `${duration}s`,

@@ -40,9 +40,10 @@ export interface GridProps {
 
   /**
    * Sets the gap between grid items.
-   * Each step maps directly to `--rs-space-1` through `--rs-space-17`.
+   * `0` removes the gap. Steps 1 to 17 map to `--rs-space-1` through `--rs-space-17`.
    */
   gap?:
+    | 0
     | 1
     | 2
     | 3
@@ -65,6 +66,7 @@ export interface GridProps {
    * Sets the gap between grid columns. Uses the same scale as `gap`.
    */
   columnGap?:
+    | 0
     | 1
     | 2
     | 3
@@ -87,6 +89,7 @@ export interface GridProps {
    * Sets the gap between grid rows. Uses the same scale as `gap`.
    */
   rowGap?:
+    | 0
     | 1
     | 2
     | 3

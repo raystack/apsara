@@ -1,6 +1,7 @@
 import styles from './gap.module.css';
 
 export const gapVariants = {
+  0: styles['gap-0'],
   1: styles['gap-1'],
   2: styles['gap-2'],
   3: styles['gap-3'],
@@ -21,6 +22,7 @@ export const gapVariants = {
 } as const;
 
 export const columnGapVariants = {
+  0: styles['column-gap-0'],
   1: styles['column-gap-1'],
   2: styles['column-gap-2'],
   3: styles['column-gap-3'],
@@ -41,6 +43,7 @@ export const columnGapVariants = {
 } as const;
 
 export const rowGapVariants = {
+  0: styles['row-gap-0'],
   1: styles['row-gap-1'],
   2: styles['row-gap-2'],
   3: styles['row-gap-3'],

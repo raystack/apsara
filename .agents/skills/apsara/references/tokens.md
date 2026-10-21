@@ -113,7 +113,7 @@ Use for padding, margin, and gap. Values are in `px`.
 | `--rs-space-8` | 28 | | `--rs-space-17` | 120 |
 | `--rs-space-9` | 32 | | | |
 
-> Layout components (`Flex`, `Grid`, `Box`) accept numeric `gap`/`padding` props that map to this scale (e.g. `gap={4}` → `--rs-space-4` = 12px).
+> Layout components (`Flex`, `Grid`, `Box`) accept numeric `gap`/`padding` props that map to this scale (e.g. `gap={4}` → `--rs-space-4` = 12px). `gap={0}` removes the gap.
 
 ---
 

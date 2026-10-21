@@ -249,15 +249,12 @@ export interface DatePickerProps {
   /** Callback function when date is selected */
   onSelect?: (date: Date) => void;
 
-  /**
-   * Fires when the typed-input validation state changes: with a message when
-   * the typed text stops parsing as a valid in-bounds date, and with
-   * `undefined` when it becomes valid again (or the picker commits/closes).
-   * DatePicker renders no error UI of its own — not even `aria-invalid`.
-   * Lift this into `Field`'s `error` prop (or your form library) to display
-   * it; `Field` also wires `aria-invalid` onto the input.
-   */
-  onErrorChange?: (error: string | undefined) => void;
+  /** Called when the typed date becomes invalid or valid again. */
+  onValidityChange?: (validity: {
+    valid: boolean;
+    reason?: 'unparseable' | 'out-of-bounds' | 'unavailable' | 'out-of-order';
+    message?: string;
+  }) => void;
 
   /** @deprecated Use `slotProps.calendar` instead. */
   calendarProps?: CalendarProps;
