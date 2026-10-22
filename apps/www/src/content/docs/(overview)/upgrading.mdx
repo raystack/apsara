@@ -7,6 +7,50 @@ One section per release, newest first, with only the changes that need action
 from you. The full record of every release, features and fixes included, is
 on [GitHub releases](https://github.com/raystack/apsara/releases).
 
+## Unreleased: boolean props use one naming rule
+
+A boolean prop that removes a part which shows by default is `hide<Part>`. A
+prop that turns off a behavior which is on by default is `disable<Behavior>`.
+Each flipped prop defaults to `false`, so a component looks and behaves the
+same when you do not pass it. TypeScript reports each old name.
+
+| Component | Before | After |
+|---|---|---|
+| `Dialog.Content`, `Drawer.Content` | `showCloseButton={false}` | `hideCloseButton` |
+| `Dialog.Content`, `AlertDialog.Content` | `showNestedAnimation={false}` | `disableNestedAnimation` |
+| `Editor` toolbar controls | `tooltip={false}` | `hideTooltip` |
+| `DatePicker`, `RangePicker` | `showCalendarIcon={false}` | `hideCalendarIcon` |
+| `CalendarPreview.Body` | `showIcon` | `showCalendarIcon` |
+| `DataView.List`, `DataView.Timeline` | `showGroupHeaders={false}` | `hideGroupHeaders` |
+| `DataView.Timeline` | `showGridlines={false}` | `hideGridlines` |
+| `DataView.Timeline` | `showCursorLine={false}` | `hideCursorLine` |
+| `Skeleton` | `enableAnimation={false}` | `disableAnimation` |
+| `Chip` | `isDismissible` | `dismissible` |
+| `DataView` | `isLoading` | `loading` |
+| `Calendar` | `loadingData` | `loading` |
+| `CopyButton` | `resetIcon={false}` | `resetTimeout={Infinity}` |
+
+```tsx
+// Before
+<Dialog.Content showCloseButton={false} showNestedAnimation={false} />
+<DataView isLoading={fetching} />
+<Chip isDismissible onDismiss={remove}>Label</Chip>
+
+// After
+<Dialog.Content hideCloseButton disableNestedAnimation />
+<DataView loading={fetching} />
+<Chip dismissible onDismiss={remove}>Label</Chip>
+```
+
+`useDataView().isLoading` keeps its name.
+
+### A loading `Button` is disabled
+
+`Button` with `loading` ignores clicks and sets `aria-disabled="true"`, as
+`IconButton` does. The button stays focusable, and it keeps its loading style.
+If your code let a user click a loading button, for example to cancel, render
+a separate cancel button.
+
 ## Unreleased: date filters compare whole days
 
 `DataView`, `DataTable` and `FilterChip` read and compare dates as calendar

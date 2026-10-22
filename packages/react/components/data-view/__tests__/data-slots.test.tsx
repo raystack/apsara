@@ -112,7 +112,7 @@ describe('DataView data-slot contract', () => {
         data={data}
         fields={fields}
         defaultSort={defaultSort}
-        isLoading
+        loading
         loadingRowCount={1}
       >
         <DataView.List variant='table' columns={columns} />
@@ -128,7 +128,7 @@ describe('DataView data-slot contract', () => {
         data={data}
         fields={fields}
         defaultSort={defaultSort}
-        isLoading
+        loading
         loadingRowCount={2}
       >
         <DataView.List variant='table' columns={columns} />

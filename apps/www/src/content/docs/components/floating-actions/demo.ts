@@ -16,7 +16,7 @@ export const preview = {
       size="large"
       color="accent"
       leadingIcon={<SuccessIcon />}
-      isDismissible
+      dismissible
     >
       2 selected
     </Chip>
@@ -36,7 +36,7 @@ export const inlineDemo = {
       size="large"
       color="accent"
       leadingIcon={<SuccessIcon />}
-      isDismissible
+      dismissible
     >
       2 selected
     </Chip>
@@ -76,7 +76,7 @@ export const variantsDemo = {
       size="large"
       color="accent"
       leadingIcon={<SuccessIcon />}
-      isDismissible
+      dismissible
     >
       2 selected
     </Chip>
@@ -95,7 +95,7 @@ export const variantsDemo = {
       size="large"
       color="accent"
       leadingIcon={<SuccessIcon />}
-      isDismissible
+      dismissible
     >
       2 selected
     </Chip>
@@ -117,7 +117,7 @@ export const bulkActionsDemo = {
       size="large"
       color="accent"
       leadingIcon={<SuccessIcon />}
-      isDismissible
+      dismissible
     >
       5 selected
     </Chip>
@@ -174,7 +174,7 @@ export const scrollingDemo = {
             size="large"
             color="accent"
             leadingIcon={<SuccessIcon />}
-            isDismissible
+            dismissible
           >
             2 selected
           </Chip>
@@ -211,7 +211,7 @@ const placementWrapper = (props: string) =>
       size="large"
       color="accent"
       leadingIcon={<SuccessIcon />}
-      isDismissible
+      dismissible
     >
       2 selected
     </Chip>
@@ -247,7 +247,7 @@ export const groupDemo = {
       size="large"
       color="accent"
       leadingIcon={<SuccessIcon />}
-      isDismissible
+      dismissible
     >
       3 selected
     </Chip>

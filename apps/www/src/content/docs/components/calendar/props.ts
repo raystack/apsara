@@ -77,10 +77,10 @@ export interface CalendarProps {
     | ((date: Date) => boolean);
 
   /**
-   * Boolean to show loading state.
-   * @example loadingData={true}
+   * Shows a skeleton over the days and disables navigation.
+   * @defaultValue false
    */
-  loadingData?: boolean;
+  loading?: boolean;
 
   /**
    * Enable tooltips on dates that have a matching `tooltipMessages` entry.
@@ -193,10 +193,10 @@ export interface RangePickerProps {
     | ((props: { startDate: string; endDate: string }) => React.ReactNode);
 
   /**
-   * Boolean to show/hide calendar icon
-   * @defaultValue true
+   * Hides the calendar icon in the input.
+   * @defaultValue false
    */
-  showCalendarIcon?: boolean;
+  hideCalendarIcon?: boolean;
 
   /** Optional footer content for the calendar popover */
   footer?: React.ReactNode;
@@ -279,10 +279,10 @@ export interface DatePickerProps {
     | ((props: { selectedDate: string }) => React.ReactNode);
 
   /**
-   * Boolean to show/hide calendar icon
-   * @defaultValue true
+   * Hides the calendar icon in the input.
+   * @defaultValue false
    */
-  showCalendarIcon?: boolean;
+  hideCalendarIcon?: boolean;
 
   /**
    * IANA timezone name (e.g., "America/New_York"), "UTC", or UTC offset (e.g., "+02:00").

@@ -13,13 +13,16 @@ import { CalendarPreviewSeparator } from './calendar-preview-separator';
 export interface CalendarPreviewBodyProps
   extends useRender.ComponentProps<'div'> {
   label?: ReactNode;
-  /** @defaultValue false */
-  showIcon?: boolean;
+  /**
+   * Shows the calendar icon in the date input.
+   * @default false
+   */
+  showCalendarIcon?: boolean;
 }
 
 export function CalendarPreviewBody({
   label,
-  showIcon = false,
+  showCalendarIcon = false,
   className,
   children,
   render,
@@ -45,7 +48,9 @@ export function CalendarPreviewBody({
         children: children ?? (
           <>
             <CalendarPreviewLabel>{label}</CalendarPreviewLabel>
-            <CalendarPreviewInput trailingIcon={showIcon ? undefined : null} />
+            <CalendarPreviewInput
+              trailingIcon={showCalendarIcon ? undefined : null}
+            />
             <CalendarPreviewScales />
             {scale !== 'day' && <CalendarPreviewReset />}
             <CalendarPreviewSeparator />

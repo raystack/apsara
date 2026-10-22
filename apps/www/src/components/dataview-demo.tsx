@@ -492,7 +492,7 @@ export function DataViewVirtualizedGroupingDemo() {
 // ---------------------------------------------------------------------------
 
 export function DataViewLoadingDemo() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   return (
     <Flex direction='column' gap={4} style={{ width: '100%' }}>
       <Flex gap={3} align='center'>
@@ -500,20 +500,20 @@ export function DataViewLoadingDemo() {
           size='small'
           variant='outline'
           color='neutral'
-          onClick={() => setIsLoading(v => !v)}
+          onClick={() => setLoading(v => !v)}
         >
-          {isLoading ? 'Stop loading' : 'Show skeletons'}
+          {loading ? 'Stop loading' : 'Show skeletons'}
         </Button>
         <Text size='small' variant='secondary'>
-          Skeleton rows render while `isLoading` is true.
+          Skeleton rows render while `loading` is true.
         </Text>
       </Flex>
       <div style={{ height: 320 }}>
         <DataView
-          data={isLoading ? [] : people}
+          data={loading ? [] : people}
           fields={fields}
           defaultSort={defaultSort}
-          isLoading={isLoading}
+          loading={loading}
           loadingRowCount={4}
         >
           <DataView.Toolbar>
@@ -628,7 +628,7 @@ function SelectionBar() {
         size='large'
         color='neutral'
         leadingIcon={<Frame size={16} strokeWidth={1.5} />}
-        isDismissible
+        dismissible
         onDismiss={() => table.resetRowSelection()}
       >
         {selectedCount} selected

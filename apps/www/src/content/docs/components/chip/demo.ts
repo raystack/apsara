@@ -27,7 +27,7 @@ export const playground = {
       options: ['neutral', 'accent', 'danger', 'success', 'warning'],
       defaultValue: 'neutral'
     },
-    isDismissible: {
+    dismissible: {
       type: 'checkbox',
       defaultValue: false
     },
@@ -84,9 +84,9 @@ export const dismissableDemo = {
   type: 'code',
   code: `
   <Flex gap={9}>
-    <Chip isDismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
-    <Chip variant="outline" color="accent" isDismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
-    <Chip variant="filled" color="accent" isDismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
+    <Chip dismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
+    <Chip variant="outline" color="accent" dismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
+    <Chip variant="filled" color="accent" dismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
   </Flex>`
 };
 

@@ -96,7 +96,7 @@ describe('RangePicker', () => {
               endMonth: new Date(2030, 0, 1),
               tooltipMessages: { '15-06-2025': 'Sample tooltip' },
               dateInfo: { '15-06-2025': 'i' },
-              loadingData: false,
+              loading: false,
               showTooltip: true
             }}
           />

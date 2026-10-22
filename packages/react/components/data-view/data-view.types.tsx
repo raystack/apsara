@@ -164,7 +164,7 @@ export interface DataViewProps<TData> {
   /** Initial query. Transformed to the internal shape on mount. */
   query?: DataViewQuery;
   mode?: DataViewMode;
-  isLoading?: boolean;
+  loading?: boolean;
   totalRowCount?: number;
   loadingRowCount?: number;
   onTableQueryChange?: (query: DataViewQuery) => void;
@@ -239,8 +239,8 @@ export interface DataViewListProps<TData, TValue = unknown> {
   virtualized?: boolean;
   /** Render thin dividers between rows. Defaults to true for `variant="table"`. */
   showDividers?: boolean;
-  /** Show group section headers when grouping is active. Default true. */
-  showGroupHeaders?: boolean;
+  /** Hide group section headers when grouping is active. Default false. */
+  hideGroupHeaders?: boolean;
   /** When true, group headers stick under the table header while scrolling. Default false. */
   stickyGroupHeader?: boolean;
   /** @deprecated Style rendered parts by `[data-slot]` instead. See `DataViewListClassNames`. */
@@ -385,8 +385,8 @@ export interface DataViewTimelineProps<TData> {
   today?: boolean | TimelineDateInput;
   /** Additional full-height marker lines with axis badges. */
   markers?: TimelineMarker[];
-  /** Vertical gridlines at every axis tick. Default true. */
-  showGridlines?: boolean;
+  /** Hide the vertical gridlines at every axis tick. Default false. */
+  hideGridlines?: boolean;
   /**
    * Label every Nth `scale` unit on the axis, counted from the domain start
    * (e.g. `2` on a day scale labels every other day). Labels never render
@@ -401,10 +401,10 @@ export interface DataViewTimelineProps<TData> {
    */
   gridlineInterval?: number;
   /**
-   * Hover crosshair: a darker line snapped to the sub-interval (tick unit)
-   * under the pointer, with a date badge pinned to the axis. Default true.
+   * Hide the hover crosshair: a darker line snapped to the sub-interval (tick
+   * unit) under the pointer, with a date badge pinned to the axis. Default false.
    */
-  showCursorLine?: boolean;
+  hideCursorLine?: boolean;
   /** Initial horizontal scroll target. Default 'today'. */
   defaultScrollTo?: TimelineDateInput | 'today' | 'start' | 'end';
   /**
@@ -472,11 +472,11 @@ export interface DataViewTimelineProps<TData> {
   virtualized?: boolean;
 
   /**
-   * Render the group header band above each section when `group_by` is active.
-   * Same contract as `DataViewListProps.showGroupHeaders`: false hides the
-   * bands only, and rows stay grouped into their sections. Default true.
+   * Hide the group header band above each section when `group_by` is active.
+   * Same contract as `DataViewListProps.hideGroupHeaders`: true hides the
+   * bands only, and rows stay grouped into their sections. Default false.
    */
-  showGroupHeaders?: boolean;
+  hideGroupHeaders?: boolean;
   /** @deprecated Style rendered parts by `[data-slot]` instead. See `DataViewTimelineClassNames`. */
   classNames?: DataViewTimelineClassNames;
 }
