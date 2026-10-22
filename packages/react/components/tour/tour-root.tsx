@@ -196,13 +196,13 @@ export function TourRoot({
 
   const setIndex = useCallback(
     (nextIndex: number) => {
-      setIndexUnwrapped(nextIndex);
       onStepIndexChangeRef.current?.(
         nextIndex,
         createChangeDetails('none', undefined, {
           step: stepsRef.current[nextIndex]
         })
       );
+      setIndexUnwrapped(nextIndex);
     },
     [setIndexUnwrapped]
   );

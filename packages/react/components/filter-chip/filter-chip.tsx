@@ -240,26 +240,26 @@ export const FilterChip = ({
 
   const handleOperationChange = useCallback(
     (next: FilterOperation, eventDetails: SelectChangeEventDetails) => {
-      setOperationValue(next.value);
       if (next.value) {
         onOperationChange?.(
           next.value,
           createChangeDetails(eventDetails.reason, eventDetails.event)
         );
       }
+      setOperationValue(next.value);
     },
     [onOperationChange, setOperationValue]
   );
 
   const handleFilterValueChange = useCallback(
     (value: FilterChipValue, reason: FilterChipChangeReason, event?: Event) => {
-      setFilterValue(value);
       onValueChange?.(
         value,
         createChangeDetails(reason, event, {
           operation: operationValue ?? ''
         })
       );
+      setFilterValue(value);
     },
     [operationValue, onValueChange, setFilterValue]
   );
