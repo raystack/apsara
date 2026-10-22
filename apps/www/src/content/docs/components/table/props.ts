@@ -44,9 +44,4 @@ export interface TableSectionHeaderProps {
   colSpan: number;
   /** Additional CSS class names. */
   className?: string;
-  /** Props for the inner parts. */
-  slotProps?: {
-    row?: React.ComponentProps<'tr'>;
-    cell?: React.ComponentProps<'th'>;
-  };
 }

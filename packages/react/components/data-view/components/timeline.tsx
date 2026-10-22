@@ -1,6 +1,5 @@
 'use client';
 
-import { mergeProps } from '@base-ui/react';
 import type { Row } from '@tanstack/react-table';
 import { cx } from 'class-variance-authority';
 import { format } from 'date-fns';
@@ -20,7 +19,6 @@ import { useScaling } from '~/hooks/useScaling';
 import { Badge } from '../../badge';
 import styles from '../data-view.module.css';
 import {
-  DataViewSlotProps,
   DataViewTimelineProps,
   GroupedData,
   TimelineActions,
@@ -264,15 +262,13 @@ interface TimelineCardViewProps<TData> {
   onMeasure: (rowId: string, height: number) => void;
   onRowClick?: (row: TData) => void;
   className?: string;
-  /** `slotProps.card`, passed as is so the memo holds while it keeps its identity. */
-  cardProps?: DataViewSlotProps;
 }
 
 /**
  * Memoized positioning wrapper for one card, isolating `renderCard` from the
- * root's per-frame re-renders. Every prop but `row`, `renderCard`, `onMeasure`,
- * `onRowClick` and `cardProps` is primitive, so the shallow compare holds while
- * those five keep their identity.
+ * root's per-frame re-renders. Every prop but `row`, `renderCard`, `onMeasure`
+ * and `onRowClick` is primitive, so the shallow compare holds while those four
+ * keep their identity.
  */
 function TimelineCardViewInner<TData>({
   row,
@@ -288,8 +284,7 @@ function TimelineCardViewInner<TData>({
   measure,
   onMeasure,
   onRowClick,
-  className,
-  cardProps
+  className
 }: TimelineCardViewProps<TData>) {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const rowId = row.id;
@@ -321,18 +316,13 @@ function TimelineCardViewInner<TData>({
   };
   return (
     <div
+      ref={elementRef}
       role='listitem'
+      className={className}
+      style={style}
       data-collapsed={collapsed || undefined}
       data-slot='data-view-timeline-card'
-      {...mergeProps<'div'>(
-        {
-          className,
-          style,
-          onClick: onRowClick ? () => onRowClick(row.original) : undefined
-        },
-        cardProps
-      )}
-      ref={elementRef}
+      onClick={onRowClick ? () => onRowClick(row.original) : undefined}
     >
       {renderCard(row, context)}
     </div>
@@ -407,7 +397,6 @@ export function DataViewTimeline<TData>({
   estimatedPointWidth: estimatedPointWidthProp,
   virtualized = false,
   showGroupHeaders = true,
-  slotProps = {},
   classNames = {}
 }: DataViewTimelineProps<TData>) {
   const {
@@ -1587,50 +1576,35 @@ export function DataViewTimeline<TData>({
 
   return (
     <div
+      ref={scrollRef}
       // Focusable so arrow/page keys scroll natively; drag-to-pan is pointer-only.
       role='region'
       aria-label={ariaLabel ?? 'Timeline'}
       tabIndex={0}
+      className={cx(styles.timelineRoot, classNames.root)}
       data-dragging={isDragging || undefined}
       data-slot='data-view-timeline'
-      {...mergeProps<'div'>(
-        {
-          className: cx(styles.timelineRoot, classNames.root),
-          onScroll: handleScroll,
-          onMouseMove: showCursorLine ? handlePointerMove : undefined,
-          onMouseLeave: showCursorLine ? handlePointerLeave : undefined,
-          onPointerDown: handleDragPointerDown,
-          onPointerMove: handleDragPointerMove,
-          onPointerUp: handleDragEnd,
-          onPointerCancel: handleDragEnd,
-          onLostPointerCapture: handleDragEnd,
-          onWheel: stopMomentum
-        },
-        slotProps.root
-      )}
-      ref={scrollRef}
+      onScroll={handleScroll}
+      onMouseMove={showCursorLine ? handlePointerMove : undefined}
+      onMouseLeave={showCursorLine ? handlePointerLeave : undefined}
+      onPointerDown={handleDragPointerDown}
+      onPointerMove={handleDragPointerMove}
+      onPointerUp={handleDragEnd}
+      onPointerCancel={handleDragEnd}
+      onLostPointerCapture={handleDragEnd}
+      onWheel={stopMomentum}
     >
       <div
+        className={cx(styles.timelineAxis, classNames.axis)}
+        style={{ width: timeScale.totalWidth }}
         data-slot='data-view-timeline-axis'
-        {...mergeProps<'div'>(
-          {
-            className: cx(styles.timelineAxis, classNames.axis),
-            style: { width: timeScale.totalWidth }
-          },
-          slotProps.axis
-        )}
       >
         {visibleBands.map(band => (
           <div
             key={band.time}
+            className={cx(styles.timelineAxisBand, classNames.band)}
+            style={{ left: band.x, width: band.width }}
             data-slot='data-view-timeline-axis-band'
-            {...mergeProps<'div'>(
-              {
-                className: cx(styles.timelineAxisBand, classNames.band),
-                style: { left: band.x, width: band.width }
-              },
-              slotProps.band
-            )}
           >
             {/* Sticky-left so the label stays visible while its band spans the viewport. */}
             <span
@@ -1645,14 +1619,9 @@ export function DataViewTimeline<TData>({
           tick.showLabel ? (
             <div
               key={tick.time}
+              className={cx(styles.timelineAxisTick, classNames.tick)}
+              style={{ left: tick.x }}
               data-slot='data-view-timeline-axis-tick'
-              {...mergeProps<'div'>(
-                {
-                  className: cx(styles.timelineAxisTick, classNames.tick),
-                  style: { left: tick.x }
-                },
-                slotProps.tick
-              )}
             >
               {tick.label}
             </div>
@@ -1700,17 +1669,12 @@ export function DataViewTimeline<TData>({
               data-slot='data-view-timeline-group-slot'
             >
               <div
-                data-slot='data-view-timeline-group-header'
-                {...mergeProps<'div'>(
-                  {
-                    className: cx(
-                      styles.timelineGroupHeader,
-                      classNames.groupHeader
-                    ),
-                    style: { height: groupBandHeight }
-                  },
-                  slotProps.groupHeader
+                className={cx(
+                  styles.timelineGroupHeader,
+                  classNames.groupHeader
                 )}
+                style={{ height: groupBandHeight }}
+                data-slot='data-view-timeline-group-header'
               >
                 {/* Sticky-left so the label stays readable while panning. */}
                 <span
@@ -1730,14 +1694,9 @@ export function DataViewTimeline<TData>({
 
       <div
         role='list'
+        className={cx(styles.timelineCanvas, classNames.canvas)}
+        style={{ width: timeScale.totalWidth, height: canvasHeight }}
         data-slot='data-view-timeline-canvas'
-        {...mergeProps<'div'>(
-          {
-            className: cx(styles.timelineCanvas, classNames.canvas),
-            style: { width: timeScale.totalWidth, height: canvasHeight }
-          },
-          slotProps.canvas
-        )}
       >
         {showGridlines
           ? visibleTicks.map(tick =>
@@ -1745,17 +1704,9 @@ export function DataViewTimeline<TData>({
                 <div
                   key={tick.time}
                   aria-hidden='true'
+                  className={cx(styles.timelineGridline, classNames.gridline)}
+                  style={{ left: tick.x, ...lineSpan }}
                   data-slot='data-view-timeline-gridline'
-                  {...mergeProps<'div'>(
-                    {
-                      className: cx(
-                        styles.timelineGridline,
-                        classNames.gridline
-                      ),
-                      style: { left: tick.x, ...lineSpan }
-                    },
-                    slotProps.gridline
-                  )}
                 />
               ) : null
             )
@@ -1764,28 +1715,18 @@ export function DataViewTimeline<TData>({
           <div
             key={marker.key}
             aria-hidden='true'
+            className={cx(styles.timelineMarkerLine, classNames.marker)}
             data-variant={marker.variant}
+            style={{ left: marker.x, ...lineSpan }}
             data-slot='data-view-timeline-marker'
-            {...mergeProps<'div'>(
-              {
-                className: cx(styles.timelineMarkerLine, classNames.marker),
-                style: { left: marker.x, ...lineSpan }
-              },
-              slotProps.marker
-            )}
           />
         ))}
         {cursorTime !== null ? (
           <div
             aria-hidden='true'
+            className={cx(styles.timelineCursorLine, classNames.cursor)}
+            style={{ left: timeScale.x(cursorTime), ...lineSpan }}
             data-slot='data-view-timeline-cursor'
-            {...mergeProps<'div'>(
-              {
-                className: cx(styles.timelineCursorLine, classNames.cursor),
-                style: { left: timeScale.x(cursorTime), ...lineSpan }
-              },
-              slotProps.cursor
-            )}
           />
         ) : null}
         {cardSlice.map(item => {
@@ -1810,7 +1751,6 @@ export function DataViewTimeline<TData>({
               onMeasure={handleCardMeasure}
               onRowClick={onRowClick}
               className={cardClassName}
-              cardProps={slotProps.card}
             />
           );
         })}

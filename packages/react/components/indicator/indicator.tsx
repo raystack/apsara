@@ -1,4 +1,3 @@
-import { mergeProps } from '@base-ui/react';
 import { cva, cx, VariantProps } from 'class-variance-authority';
 import { ComponentProps, ReactNode } from 'react';
 
@@ -30,20 +29,14 @@ export interface IndicatorProps
   pulse?: boolean;
   children?: ReactNode;
   'aria-label'?: string;
-  /** Props for the inner parts. */
-  slotProps?: {
-    container?: ComponentProps<'div'>;
-  };
-  /** @deprecated Use `slotProps` instead. */
   classNames?: {
-    /** @deprecated Use `slotProps.container` instead. */
+    /** @deprecated Use `[data-slot="indicator"]` instead. */
     container?: string;
   };
 }
 
 export const Indicator = ({
   className,
-  slotProps,
   classNames,
   variant,
   pulse,
@@ -56,12 +49,9 @@ export const Indicator = ({
 
   return (
     <div
+      className={cx(styles.wrapper, classNames?.container)}
       data-slot='indicator'
-      {...mergeProps<'div'>(
-        { className: cx(styles.wrapper, classNames?.container) },
-        slotProps?.container,
-        props
-      )}
+      {...props}
     >
       {children}
       <div

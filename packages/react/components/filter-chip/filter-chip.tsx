@@ -166,8 +166,8 @@ export const FilterChip = ({
     onErrorChange,
     ...calendarRest
   } = calendarProps ?? {};
-  const inputProps = dateSlotProps?.input ?? {};
-  const inputContainerProps = inputProps.slotProps?.container;
+  const { classNames: inputClassNames, ...inputProps } =
+    dateSlotProps?.input ?? {};
   /* A new `Date` each render reads as a new value, and the input drops its typed text. */
   const dateValue = useMemo(
     () => toDateValue(filterValue, calendarRest.timeZone) ?? null,
@@ -297,15 +297,9 @@ export const FilterChip = ({
                 <CalendarPreview.Input
                   trailingIcon={showCalendarIcon ? undefined : null}
                   {...inputProps}
-                  slotProps={{
-                    ...inputProps.slotProps,
-                    container: {
-                      ...inputContainerProps,
-                      className: cx(
-                        styles.dateField,
-                        inputContainerProps?.className
-                      )
-                    }
+                  classNames={{
+                    ...inputClassNames,
+                    container: cx(styles.dateField, inputClassNames?.container)
                   }}
                   errorMessages={{
                     unparseable: INVALID_DATE,
@@ -335,7 +329,7 @@ export const FilterChip = ({
           >
             <Input
               variant={variant === 'text' ? 'borderless' : 'default'}
-              slotProps={{ container: { className: styles.inputField } }}
+              classNames={{ container: styles.inputField }}
               value={filterValue.toString()}
               onChange={e => handleTextInputChange(e.target.value)}
             />

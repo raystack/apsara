@@ -670,7 +670,7 @@ export function DataViewSelectionDemo() {
           <DataView.List
             variant='table'
             columns={selectionColumns}
-            slotProps={{ root: { className: 'dv-selection-demo-scroll' } }}
+            classNames={{ root: 'dv-selection-demo-scroll' }}
           />
           <SelectionBar />
         </DataView>

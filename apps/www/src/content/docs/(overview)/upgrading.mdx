@@ -7,12 +7,10 @@ One section per release, newest first, with only the changes that need action
 from you. The full record of every release, features and fixes included, is
 on [GitHub releases](https://github.com/raystack/apsara/releases).
 
-## Unreleased: icon props and `slotProps`
+## Unreleased: icon props are `leadingIcon` and `trailingIcon`
 
 Icon props are `leadingIcon` and `trailingIcon` on every component, and each
-leading icon has a `<part>-leading-icon` slot. Inner parts take props through
-`slotProps.<part>`. `classNames` still works, but it is deprecated and goes
-away in the next major.
+leading icon has a `<part>-leading-icon` slot.
 
 ### 1. Rename the icon props
 
@@ -48,22 +46,6 @@ const items = [{ id: 'ada', label: 'Ada', leadingIcon: <Avatar />, trailingIcon:
 | `select-item-icon` | `select-item-leading-icon` |
 | `select-value-icon` | `select-value-leading-icon` |
 | `tabs-tab-icon` | `tabs-tab-leading-icon` |
-
-### 3. Move `classNames` to `slotProps`
-
-Each component that has `classNames` also has `slotProps`, with the same part
-names: `Indicator`, `Input`, `EmptyState`, `Table.SectionHeader`,
-`Sidebar.Item`, `Sidebar.Group`, `Sidebar.More`, `DataView.List` and its
-columns, `DataView.Timeline` and `DataView.Filters`. A `slotProps` entry takes
-the props of that part. When you pass both, the part gets both class names.
-
-```tsx
-// Before
-<Input classNames={{ container: 'search' }} />
-
-// After
-<Input slotProps={{ container: { className: 'search' } }} />
-```
 
 ## Unreleased: date filters compare whole days
 

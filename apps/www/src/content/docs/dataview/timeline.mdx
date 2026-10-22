@@ -138,7 +138,7 @@ Section order is the field's `groupOrder` where it declares one (`['High', 'Medi
 - **Packing is per section.** A card only ever shares a lane with cards in its own group, and `context.laneIndex` is section-relative. Every section starts at lane 0. `lanePacking="one-per-row"` and `"one-per-sort-value"` apply within each section too.
 - **Bands pin while their section is in view.** The active band sticks directly under the time axis and is pushed off by the next section's band; its label sticks to the left edge so it stays readable while you pan to a distant month. Always on, in pure CSS, with no prop.
 - **Empty sections disappear.** A group whose cards all fall outside an explicit `range`, or that has no valid `startField` values, renders nothing: no band, no empty strip. A band that *does* render shows the full group count, even when some of its cards are culled, matching List.
-- **`showGroupHeaders={false}`** hides the bands but keeps the sections, the same semantics as the prop on `DataView.List`. Style a band with `slotProps.groupHeader`.
+- **`showGroupHeaders={false}`** hides the bands but keeps the sections, the same semantics as the prop on `DataView.List`. Style a band with `classNames.groupHeader`.
 
 Bands are labels only in this release: no chevron, no collapsing.
 

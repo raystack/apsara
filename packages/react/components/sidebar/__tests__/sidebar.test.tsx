@@ -556,22 +556,6 @@ describe('Sidebar', () => {
       expect(screen.getByText(DASHBOARD_ITEM_TEXT)).toBeInTheDocument();
     });
 
-    it('merges slotProps with classNames', () => {
-      render(
-        <BasicSidebar>
-          <Sidebar.Item
-            href='#'
-            classNames={{ text: 'old-text' }}
-            slotProps={{ text: { className: 'new-text' } }}
-          >
-            Reports
-          </Sidebar.Item>
-        </BasicSidebar>
-      );
-
-      expect(screen.getByText('Reports')).toHaveClass('old-text', 'new-text');
-    });
-
     it('shows active state', () => {
       render(
         <BasicSidebar>
@@ -736,24 +720,6 @@ describe('Sidebar', () => {
 
       expect(screen.getByTestId('test-icon')).toBeInTheDocument();
       expect(screen.getByText(MAIN_GROUP_LABEL)).toBeInTheDocument();
-    });
-
-    it('merges slotProps with classNames', () => {
-      render(
-        <Sidebar>
-          <Sidebar.Main>
-            <Sidebar.Group
-              label='Team'
-              classNames={{ label: 'old-label' }}
-              slotProps={{ label: { className: 'new-label' } }}
-            >
-              <Sidebar.Item href='#'>Members</Sidebar.Item>
-            </Sidebar.Group>
-          </Sidebar.Main>
-        </Sidebar>
-      );
-
-      expect(screen.getByText('Team')).toHaveClass('old-label', 'new-label');
     });
 
     it('participates in the main list as a list item', () => {
@@ -1057,30 +1023,6 @@ describe('Sidebar', () => {
         el.hasAttribute('data-highlighted')
       );
       expect(highlighted).toHaveLength(1);
-    });
-
-    it('passes slotProps to the trigger and the menu', () => {
-      render(
-        <BasicSidebar>
-          <Sidebar.More
-            label='More items'
-            classNames={{ menuContent: 'old-menu' }}
-            slotProps={{
-              root: { className: 'new-trigger' },
-              menuContent: { className: 'new-menu' }
-            }}
-          >
-            <Sidebar.Item href='#'>Logs</Sidebar.Item>
-          </Sidebar.More>
-        </BasicSidebar>
-      );
-
-      const trigger = screen.getByText('More items').closest('button');
-      expect(trigger).toHaveClass('new-trigger');
-      if (!trigger) return;
-      fireEvent.click(trigger);
-
-      expect(screen.getByRole('menu')).toHaveClass('old-menu', 'new-menu');
     });
 
     it('sets aria-label for collapsed More trigger', () => {

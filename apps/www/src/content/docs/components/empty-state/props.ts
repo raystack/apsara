@@ -18,13 +18,4 @@ export interface EmptyStateProps {
    * @default "empty1"
    */
   variant?: 'empty1' | 'empty2';
-
-  /** Props for the inner parts. */
-  slotProps?: {
-    container?: React.ComponentProps<'div'>;
-    iconContainer?: React.ComponentProps<'div'>;
-    icon?: React.ComponentProps<'div'>;
-    heading?: React.ComponentProps<'span'>;
-    subHeading?: React.ComponentProps<'span'>;
-  };
 }

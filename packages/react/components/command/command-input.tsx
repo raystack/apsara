@@ -32,9 +32,7 @@ export const CommandInput = ({
           <Input
             data-slot='command-input'
             containerRef={inputContainerRef}
-            slotProps={{
-              container: { className: styles.commandInputContainer }
-            }}
+            classNames={{ container: styles.commandInputContainer }}
             leadingIcon={leadingIcon}
             variant='borderless'
             size={size}

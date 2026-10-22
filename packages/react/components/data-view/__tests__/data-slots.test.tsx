@@ -199,53 +199,6 @@ describe('DataView data-slot contract', () => {
     expect(container.querySelector('.my-add-filter')).not.toBeNull();
   });
 
-  it('merges slotProps with classNames on List and Filters parts', async () => {
-    const user = userEvent.setup();
-    const onRowClick = vi.fn();
-    const onRowSlotClick = vi.fn();
-    const { container } = render(
-      <DataView
-        data={data}
-        fields={fields}
-        defaultSort={defaultSort}
-        onRowClick={onRowClick}
-        query={{
-          filters: [{ name: 'name', operator: 'eq', value: 'John' }]
-        }}
-      >
-        <DataView.Filters
-          classNames={{ filterChips: 'old-chip' }}
-          slotProps={{
-            filterChips: { className: 'new-chip' },
-            addFilter: { className: 'new-add-filter' }
-          }}
-        />
-        <DataView.List
-          variant='table'
-          columns={[
-            { ...columns[0], slotProps: { cell: { className: 'name-cell' } } },
-            columns[1]
-          ]}
-          classNames={{ row: 'old-row' }}
-          slotProps={{ row: { className: 'new-row', onClick: onRowSlotClick } }}
-        />
-      </DataView>
-    );
-    expect(getSlot(container, 'filter-chip')).toHaveClass(
-      'old-chip',
-      'new-chip'
-    );
-    expect(getSlot(container, 'data-view-add-filter')).toHaveClass(
-      'new-add-filter'
-    );
-    const row = getSlot(container, 'data-view-list-row') as HTMLElement;
-    expect(row).toHaveClass('old-row', 'new-row');
-    expect(row.querySelector('[data-column="name"]')).toHaveClass('name-cell');
-    await user.click(row);
-    expect(onRowSlotClick).toHaveBeenCalledTimes(1);
-    expect(onRowClick).toHaveBeenCalledTimes(1);
-  });
-
   it('exposes slots inside the display controls popover', async () => {
     const user = userEvent.setup();
     render(

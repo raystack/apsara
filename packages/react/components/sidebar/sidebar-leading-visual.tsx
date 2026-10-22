@@ -1,6 +1,5 @@
 'use client';
 
-import { mergeProps } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, ReactNode } from 'react';
 import { Avatar } from '../avatar';
@@ -11,33 +10,26 @@ interface SidebarLeadingVisualProps {
   leadingIcon?: ReactNode;
   fallbackText?: string;
   className?: string;
-  /** Props from `slotProps` for the wrapper. */
-  slotProps?: ComponentProps<'span'>;
   render?: ComponentProps<typeof Flex>['render'];
 }
 
 function AvatarContainer({
   children,
   className,
-  slotProps,
   render
 }: {
   children: ReactNode;
   className?: string;
-  slotProps?: ComponentProps<'span'>;
   render?: ComponentProps<typeof Flex>['render'];
 }) {
   return (
     <Flex
       align='center'
       gap={3}
+      className={cx(styles['nav-leading-icon'], className)}
       aria-hidden='true'
       data-slot='sidebar-leading-icon'
       render={render}
-      {...mergeProps<'div'>(
-        { className: cx(styles['nav-leading-icon'], className) },
-        slotProps as ComponentProps<'div'>
-      )}
     >
       {children}
     </Flex>
@@ -48,16 +40,11 @@ export function SidebarLeadingVisual({
   leadingIcon,
   fallbackText,
   className,
-  slotProps,
   render
 }: SidebarLeadingVisualProps) {
   if (leadingIcon) {
     return (
-      <AvatarContainer
-        className={className}
-        slotProps={slotProps}
-        render={render}
-      >
+      <AvatarContainer className={className} render={render}>
         {leadingIcon}
       </AvatarContainer>
     );
@@ -65,11 +52,7 @@ export function SidebarLeadingVisual({
 
   if (fallbackText && fallbackText.length > 0) {
     return (
-      <AvatarContainer
-        className={className}
-        slotProps={slotProps}
-        render={render}
-      >
+      <AvatarContainer className={className} render={render}>
         <Avatar
           size={1}
           variant='soft'

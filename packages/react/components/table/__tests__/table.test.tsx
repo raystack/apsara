@@ -361,30 +361,6 @@ describe('Table', () => {
       expect(th).toHaveAttribute('colspan', '5');
     });
 
-    it('merges slotProps with classNames', () => {
-      render(
-        <Table>
-          <Table.Body>
-            <Table.SectionHeader
-              colSpan={3}
-              classNames={{ cell: 'old-cell' }}
-              slotProps={{
-                row: { className: 'new-row' },
-                cell: { className: 'new-cell', id: 'section' }
-              }}
-            >
-              Section
-            </Table.SectionHeader>
-          </Table.Body>
-        </Table>
-      );
-      const row = screen.getByRole('row');
-      const th = row.querySelector('th');
-      expect(row).toHaveClass('new-row');
-      expect(th).toHaveClass('old-cell', 'new-cell');
-      expect(th).toHaveAttribute('id', 'section');
-    });
-
     it('applies custom classNames', () => {
       render(
         <Table>

@@ -1,4 +1,3 @@
-import { mergeProps } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, ReactNode } from 'react';
 import { Flex } from '../flex';
@@ -18,15 +17,14 @@ export interface EmptyStateProps extends ComponentProps<typeof Flex> {
   subHeading?: ReactNode;
   primaryAction?: ReactNode;
   secondaryAction?: ReactNode;
-  /** Props for the inner parts. */
-  slotProps?: {
-    container?: ComponentProps<'div'>;
-    iconContainer?: ComponentProps<'div'>;
-    icon?: ComponentProps<'div'>;
-    heading?: ComponentProps<'span'>;
-    subHeading?: ComponentProps<'span'>;
-  };
-  /** @deprecated Use `slotProps` instead. */
+  /**
+   * @deprecated Every key has an equivalent `[data-slot]`: `container` ->
+   * `[data-slot="empty-state"]`, `iconContainer` ->
+   * `[data-slot="empty-state-icon-container"]`, `icon` ->
+   * `[data-slot="empty-state-icon"]`, `heading` ->
+   * `[data-slot="empty-state-heading"]`, `subHeading` ->
+   * `[data-slot="empty-state-subheading"]`.
+   */
   classNames?: Partial<Record<classNameKeys, string>>;
   variant?: 'empty1' | 'empty2';
 }
@@ -37,7 +35,6 @@ export function EmptyState({
   subHeading,
   primaryAction,
   secondaryAction,
-  slotProps,
   classNames,
   variant = 'empty1',
   ...props
@@ -55,31 +52,16 @@ export function EmptyState({
           direction='column'
           align='start'
           gap={5}
+          className={cx(styles.emptyStateContent, classNames?.container)}
           data-slot='empty-state-content'
-          {...mergeProps<'div'>(
-            {
-              className: cx(styles.emptyStateContent, classNames?.container)
-            },
-            slotProps?.container
-          )}
         >
           <div
+            className={cx(styles.iconContainer, classNames?.iconContainer)}
             data-slot='empty-state-icon-container'
-            {...mergeProps<'div'>(
-              {
-                className: cx(styles.iconContainer, classNames?.iconContainer)
-              },
-              slotProps?.iconContainer
-            )}
           >
             <div
+              className={cx(styles.icon, styles.iconLarge, classNames?.icon)}
               data-slot='empty-state-icon'
-              {...mergeProps<'div'>(
-                {
-                  className: cx(styles.icon, styles.iconLarge, classNames?.icon)
-                },
-                slotProps?.icon
-              )}
             >
               {icon}
             </div>
@@ -89,11 +71,8 @@ export function EmptyState({
             <Text
               size='large'
               weight='medium'
+              className={cx(styles.headerText, classNames?.heading)}
               data-slot='empty-state-heading'
-              {...mergeProps<'span'>(
-                { className: cx(styles.headerText, classNames?.heading) },
-                slotProps?.heading
-              )}
             >
               {heading}
             </Text>
@@ -103,11 +82,8 @@ export function EmptyState({
             <Text
               size='regular'
               weight='regular'
+              className={cx(styles.subHeaderText, classNames?.subHeading)}
               data-slot='empty-state-subheading'
-              {...mergeProps<'span'>(
-                { className: cx(styles.subHeaderText, classNames?.subHeading) },
-                slotProps?.subHeading
-              )}
             >
               {subHeading}
             </Text>
@@ -127,26 +103,17 @@ export function EmptyState({
       direction='column'
       align='center'
       gap={5}
+      className={cx(styles.emptyState, classNames?.container)}
       data-slot='empty-state'
-      {...mergeProps<'div'>(
-        { className: cx(styles.emptyState, classNames?.container) },
-        slotProps?.container,
-        props
-      )}
+      {...props}
     >
       <div
+        className={cx(styles.iconContainer, classNames?.iconContainer)}
         data-slot='empty-state-icon-container'
-        {...mergeProps<'div'>(
-          { className: cx(styles.iconContainer, classNames?.iconContainer) },
-          slotProps?.iconContainer
-        )}
       >
         <div
+          className={cx(styles.icon, classNames?.icon)}
           data-slot='empty-state-icon'
-          {...mergeProps<'div'>(
-            { className: cx(styles.icon, classNames?.icon) },
-            slotProps?.icon
-          )}
         >
           {icon}
         </div>
@@ -162,11 +129,8 @@ export function EmptyState({
           <Text
             size='large'
             weight='medium'
+            className={cx(styles.headerText, classNames?.heading)}
             data-slot='empty-state-heading'
-            {...mergeProps<'span'>(
-              { className: cx(styles.headerText, classNames?.heading) },
-              slotProps?.heading
-            )}
           >
             {heading}
           </Text>
@@ -176,11 +140,8 @@ export function EmptyState({
           <Text
             size='regular'
             weight='regular'
+            className={cx(styles.subHeaderText, classNames?.subHeading)}
             data-slot='empty-state-subheading'
-            {...mergeProps<'span'>(
-              { className: cx(styles.subHeaderText, classNames?.subHeading) },
-              slotProps?.subHeading
-            )}
           >
             {subHeading}
           </Text>

@@ -1,7 +1,6 @@
 'use client';
 
 import { mergeProps, useRender } from '@base-ui/react';
-import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { cx } from 'class-variance-authority';
 import {
   ComponentProps,
@@ -24,25 +23,18 @@ export interface SidebarItemProps extends ComponentProps<'a'> {
   active?: boolean;
   disabled?: boolean;
   render?: ReactElement;
-  /** Props for the inner parts. */
-  slotProps?: {
-    root?: ComponentProps<'a'>;
-    leadingIcon?: ComponentProps<'span'>;
-    text?: ComponentProps<'span'>;
-  };
-  /** @deprecated Use `slotProps` instead. */
+  /** @deprecated Every key here has an equivalent `[data-slot]`. See the Slots table in the Sidebar docs. */
   classNames?: {
-    /** @deprecated Use `slotProps.root` instead. */
+    /** @deprecated Use `[data-slot="sidebar-item"]` instead. */
     root?: string;
-    /** @deprecated Use `slotProps.leadingIcon` instead. */
+    /** @deprecated Use `[data-slot="sidebar-leading-icon"]` instead. */
     leadingIcon?: string;
-    /** @deprecated Use `slotProps.text` instead. */
+    /** @deprecated Use `[data-slot="sidebar-item-text"]` instead. */
     text?: string;
   };
 }
 
 export function SidebarItem({
-  slotProps,
   classNames,
   leadingIcon,
   children,
@@ -55,7 +47,6 @@ export function SidebarItem({
   const onPopupOpenChange = useContext(SidebarPopupContext);
   const insideSidebarMore = useInsideSidebarMore();
   const textRef = useRef<HTMLSpanElement>(null);
-  const mergedTextRef = useMergedRefs(textRef, slotProps?.text?.ref);
   const [tooltipOpen, setTooltipOpen] = useState(false);
   // Open away from the sidebar's edge, like the More menu and handle tooltip.
   const tooltipSide = position === 'left' ? 'right' : 'left';
@@ -81,25 +72,19 @@ export function SidebarItem({
         leadingIcon={!shouldShowFallback ? leadingIcon : undefined}
         fallbackText={shouldShowFallback ? children : undefined}
         className={classNames?.leadingIcon}
-        slotProps={slotProps?.leadingIcon}
         render={insideSidebarMore ? <span /> : undefined}
       />
       {/* In the sidebar, kept mounted so it can collapse with the sidebar
           (max-width → 0) instead of popping out; CSS hides it when closed. */}
       <span
-        data-slot='sidebar-item-text'
-        {...mergeProps<'span'>(
-          {
-            className: cx(
-              insideSidebarMore
-                ? styles['more-menu-item-text']
-                : styles['nav-text'],
-              classNames?.text
-            )
-          },
-          slotProps?.text
+        ref={textRef}
+        className={cx(
+          insideSidebarMore
+            ? styles['more-menu-item-text']
+            : styles['nav-text'],
+          classNames?.text
         )}
-        ref={mergedTextRef}
+        data-slot='sidebar-item-text'
       >
         {children}
       </span>
@@ -126,7 +111,6 @@ export function SidebarItem({
           : {}),
         children: itemChildren
       } as useRender.ComponentProps<'a'>,
-      slotProps?.root,
       props
     )
   });
