@@ -158,7 +158,10 @@ export interface DataViewListProps {
   /** Render dividers between rows (default true for table). */
   showDividers?: boolean;
 
-  /** Hide group section headers when grouping is active. Default false. */
+  /**
+   * Hides group section headers when grouping is active.
+   * @defaultValue false
+   */
   hideGroupHeaders?: boolean;
 
   /** When true, the active group header sticks under the table header while scrolling. */

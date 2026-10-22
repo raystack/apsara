@@ -37,7 +37,6 @@ interface EditorMenuControlProps extends EditorControlBaseProps {
 /** A toolbar button that opens a menu of block types. */
 export function EditorMenuControl({
   label,
-  hideTooltip = false,
   trigger,
   disabled,
   children,
@@ -61,7 +60,6 @@ export function EditorMenuControl({
     <Menu open={open} onOpenChange={setOpen} modal={false}>
       <EditorControl
         label={label}
-        hideTooltip={hideTooltip}
         disabled={disabled}
         render={<Menu.Trigger disabled={disabled} />}
         {...props}

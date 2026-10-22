@@ -18,7 +18,6 @@ export interface EditorLinkButtonProps extends EditorControlBaseProps {}
  */
 export function EditorLinkButton({
   label = 'Link',
-  hideTooltip = false,
   children,
   onClick,
   ...props
@@ -59,7 +58,6 @@ export function EditorLinkButton({
     'data-slot': 'editor-link-button',
     label,
     shortcut: store.shortcuts.link,
-    hideTooltip,
     pressed: active,
     disabled: !enabled
   };

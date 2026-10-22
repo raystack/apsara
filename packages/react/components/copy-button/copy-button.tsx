@@ -34,8 +34,8 @@ export function CopyButton({
     const res = await copy(text);
     if (!res) return;
     setCopied(true);
-    if (!Number.isFinite(resetTimeout)) return;
     if (resetTimerRef.current !== null) clearTimeout(resetTimerRef.current);
+    if (!Number.isFinite(resetTimeout)) return;
     resetTimerRef.current = setTimeout(() => {
       setCopied(false);
       resetTimerRef.current = null;
