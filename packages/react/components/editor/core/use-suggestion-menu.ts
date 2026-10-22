@@ -424,12 +424,12 @@ export function useSuggestionMenu<Item extends SuggestionItem>({
 }
 
 /**
- * `leadingIcon`, `trailingIcon` and `data` cannot survive serialization, so a chip parsed
- * from `defaultValue` starts label-only and fills in when the consumer's
- * `resolveMentions` resolves, the same progressive enhancement `Select.Value`
- * uses when it falls back to the raw value until an item registers. A rejection
- * or a missing item leaves the chip label-only; it is never an error state and
- * the chip is never removed.
+ * `leadingIcon`, `trailingIcon` and `data` cannot survive serialization, so a
+ * chip parsed from `defaultValue` starts label-only and fills in when the
+ * consumer's `resolveMentions` resolves, the same progressive enhancement
+ * `Select.Value` uses when it falls back to the raw value until an item
+ * registers. A rejection or a missing item leaves the chip label-only; it is
+ * never an error state and the chip is never removed.
  */
 export function useMentionResolution(
   registry: MentionRegistry,
