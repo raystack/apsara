@@ -74,7 +74,10 @@ export function SelectValue({
     <span data-slot='select-value' className={className} {...props}>
       <div className={cx(styles.valueContent)} data-slot='select-value-content'>
         {typeof item?.children === 'string' && item?.leadingIcon && (
-          <div className={styles.itemIcon} data-slot='select-value-icon'>
+          <div
+            className={styles.itemIcon}
+            data-slot='select-value-leading-icon'
+          >
             {item.leadingIcon}
           </div>
         )}

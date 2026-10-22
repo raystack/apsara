@@ -59,7 +59,7 @@ export const AnnouncementBar = ({
         <span
           className={styles['icon']}
           aria-hidden='true'
-          data-slot='announcement-bar-icon'
+          data-slot='announcement-bar-leading-icon'
         >
           {leadingIcon}
         </span>

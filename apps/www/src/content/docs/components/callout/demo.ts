@@ -31,7 +31,7 @@ export const playground = {
       type: 'text',
       initialValue: 'A short message'
     },
-    icon: {
+    leadingIcon: {
       type: 'icon'
     },
     variant: {

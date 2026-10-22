@@ -55,6 +55,10 @@
   height: var(--rs-space-5);
 }
 
+.itemTrailingIcon {
+  margin-left: auto;
+}
+
 .menuitem {
   display: flex;
   align-items: center;

@@ -17,7 +17,7 @@ const size = figma.selectedInstance.getEnum('Size', {
 });
 // "Icon" BOOLEAN toggles the leading icon; resolve the child instance named "Icon"
 // when enabled (guarded, since findInstance returns an ErrorHandle when absent).
-const icon = figma.selectedInstance.getBoolean('Icon', {
+const leadingIcon = figma.selectedInstance.getBoolean('Icon', {
   true: (function () {
     const i = figma.selectedInstance.findInstance('Icon');
     return i && i.type === 'INSTANCE' ? i.executeTemplate().example : undefined;
@@ -38,8 +38,8 @@ export default {
     'size',
     size
   )}${figma.helpers.react.renderProp(
-    'icon',
-    icon
+    'leadingIcon',
+    leadingIcon
   )}>${figma.helpers.react.renderChildren(children)}</Badge>`,
   metadata: { nestable: true }
 };

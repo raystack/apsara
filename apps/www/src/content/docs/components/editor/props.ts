@@ -230,7 +230,7 @@ export interface EditorMentionsProps {
   ) => Promise<EditorMentionItem[]>;
 
   /**
-   * Fills in the icon, trailing content and label of chips loaded from
+   * Fills in the leading icon, trailing icon and label of chips loaded from
    * `value` or `defaultValue`.
    */
   resolveMentions?: (
@@ -261,9 +261,9 @@ export interface EditorMentionItem {
    * @defaultValue "mention"
    */
   type?: string;
-  icon?: React.ReactNode;
+  leadingIcon?: React.ReactNode;
   /** Trailing content on the row and the chip. */
-  trailing?: React.ReactNode;
+  trailingIcon?: React.ReactNode;
   /** Section heading. Sections render in first-appearance order. */
   group?: string;
   disabled?: boolean;
@@ -276,7 +276,7 @@ export interface EditorSlashItem {
   label: string;
   /** Shown under the label. The filter matches it at the start of a word. */
   description?: string;
-  icon?: React.ReactNode;
+  leadingIcon?: React.ReactNode;
   /** Section heading. Sections keep the order they are declared in. */
   group?: string;
   /** Extra words the filter matches. */

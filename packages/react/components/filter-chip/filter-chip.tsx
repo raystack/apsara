@@ -5,7 +5,7 @@ import { cva, cx, VariantProps } from 'class-variance-authority';
 import { parseISO } from 'date-fns';
 import {
   ComponentProps,
-  ReactElement,
+  ReactNode,
   useCallback,
   useMemo,
   useState
@@ -103,7 +103,7 @@ export interface FilterChipProps
   options?: FilterSelectOption[];
   onValueChange?: (value: FilterChipValue, operation: string) => void;
   onOperationChange?: (operation: string) => void;
-  leadingIcon?: ReactElement;
+  leadingIcon?: ReactNode;
   operations?: FilterOperator<string>[];
   selectProps?: BaseSelectProps;
   /** Props forwarded to the `CalendarPreview` for `columnType="date"`. */

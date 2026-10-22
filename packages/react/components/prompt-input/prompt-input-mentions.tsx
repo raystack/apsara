@@ -25,7 +25,7 @@ export interface PromptInputMentionsProps {
     context: { trigger: string; signal: AbortSignal }
   ) => Promise<PromptInputMentionItem[]>;
   /**
-   * Fills in the icon, trailing content, `data` and a fresh label for chips
+   * Fills in the leading icon, trailing icon, `data` and a fresh label for chips
    * parsed out of `value` / `defaultValue`, which cannot carry them. Batched
    * into one call per trigger and cached by `trigger|type|id`.
    */

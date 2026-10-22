@@ -22,7 +22,7 @@ describe('Tabs data-slot contract', () => {
       'tabs-list',
       'tabs-indicator',
       'tabs-tab',
-      'tabs-tab-icon',
+      'tabs-tab-leading-icon',
       'tabs-content'
     ]);
   });
@@ -36,7 +36,7 @@ describe('Tabs data-slot contract', () => {
         <Tabs.Content value='one'>Panel one</Tabs.Content>
       </Tabs>
     );
-    expect(getSlot(container, 'tabs-tab-icon')).toBeNull();
+    expect(getSlot(container, 'tabs-tab-leading-icon')).toBeNull();
   });
 
   it('lets a caller-provided data-slot win over the default (DataView contract)', () => {

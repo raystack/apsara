@@ -42,7 +42,7 @@ A simple combobox with search filtering built in. Type to filter options.
 
 ### With icons
 
-You can pass the `leadingIcon` prop to `Combobox.Item` to display icons before item text.
+Pass `leadingIcon` or `trailingIcon` to `Combobox.Item` to show an icon before or after the item text.
 
 <Demo data={iconDemo} />
 
@@ -147,7 +147,8 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `combobox-separator` | The divider between items or groups |
 | `combobox-item` | A selectable option row |
 | `combobox-item-text` | The text label inside an item (when its children is a string) |
-| `combobox-item-icon` | The leading icon inside an item (when `leadingIcon` is set) |
+| `combobox-item-leading-icon` | The leading icon inside an item (when `leadingIcon` is set) |
+| `combobox-item-trailing-icon` | The trailing icon inside an item (when `trailingIcon` is set) |
 
 ## Accessibility
 

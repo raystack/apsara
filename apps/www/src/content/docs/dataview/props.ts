@@ -84,7 +84,7 @@ export interface DataViewField {
   label: string;
 
   /** Optional icon (e.g. for grouping menu). */
-  icon?: ReactNode;
+  leadingIcon?: ReactNode;
 
   /** Allow filtering on this field. */
   filterable?: boolean;

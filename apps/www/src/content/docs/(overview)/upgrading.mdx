@@ -7,6 +7,47 @@ One section per release, newest first, with only the changes that need action
 from you. The full record of every release, features and fixes included, is
 on [GitHub releases](https://github.com/raystack/apsara/releases).
 
+## Unreleased: icon props are `leadingIcon` and `trailingIcon`
+
+An icon before or after the content is set with `leadingIcon` or
+`trailingIcon`, and each leading icon has a `<part>-leading-icon` slot.
+
+### 1. Rename the icon props
+
+| Component | Before | After |
+| --- | --- | --- |
+| `Badge` | `icon` | `leadingIcon` |
+| `Callout` | `icon` | `leadingIcon` |
+| `SidePanel.Header` | `icon` | `leadingIcon` |
+| `DataView` fields (`DataViewField`) | `icon` | `leadingIcon` |
+| `Editor.SlashMenu` items (`EditorSlashItem`) | `icon` | `leadingIcon` |
+| `Editor.Mentions` and `PromptInput.Mentions` items | `icon`, `trailing` | `leadingIcon`, `trailingIcon` |
+
+```tsx
+// Before
+<Badge icon={<StarIcon />}>New</Badge>
+<Callout icon={null}>Saved</Callout>
+const items = [{ id: 'ada', label: 'Ada', icon: <Avatar />, trailing: <Badge>Agent</Badge> }];
+
+// After
+<Badge leadingIcon={<StarIcon />}>New</Badge>
+<Callout leadingIcon={null}>Saved</Callout>
+const items = [{ id: 'ada', label: 'Ada', leadingIcon: <Avatar />, trailingIcon: <Badge>Agent</Badge> }];
+```
+
+### 2. Update `data-slot` selectors
+
+| Before | After |
+| --- | --- |
+| `announcement-bar-icon` | `announcement-bar-leading-icon` |
+| `badge-icon` | `badge-leading-icon` |
+| `callout-icon` | `callout-leading-icon` |
+| `chat-jump-button-icon` | `chat-jump-button-leading-icon` |
+| `combobox-item-icon` | `combobox-item-leading-icon` |
+| `select-item-icon` | `select-item-leading-icon` |
+| `select-value-icon` | `select-value-leading-icon` |
+| `tabs-tab-icon` | `tabs-tab-leading-icon` |
+
 ## Unreleased: date filters compare whole days
 
 `DataView`, `DataTable` and `FilterChip` read and compare dates as calendar

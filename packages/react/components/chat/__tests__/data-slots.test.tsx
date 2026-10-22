@@ -34,7 +34,7 @@ describe('Chat data-slot contract', () => {
       'chat-separator',
       'chat-item',
       'chat-jump-button',
-      'chat-jump-button-icon',
+      'chat-jump-button-leading-icon',
       'chat-composer',
       'chat-attachment',
       'chat-attachment-media',
@@ -60,6 +60,6 @@ describe('Chat data-slot contract', () => {
         </Chat.Messages>
       </Chat>
     );
-    expect(getSlot(container, 'chat-jump-button-icon')).toBeNull();
+    expect(getSlot(container, 'chat-jump-button-leading-icon')).toBeNull();
   });
 });

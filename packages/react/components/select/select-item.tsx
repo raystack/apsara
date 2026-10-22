@@ -14,6 +14,7 @@ import { useSelectContext } from './select-root';
 
 export interface SelectItemProps extends SelectPrimitive.Item.Props {
   leadingIcon?: ReactNode;
+  trailingIcon?: ReactNode;
 }
 
 export function SelectItem({
@@ -21,6 +22,7 @@ export function SelectItem({
   children,
   value: providedValue,
   leadingIcon,
+  trailingIcon,
   disabled,
   ...props
 }: SelectItemProps) {
@@ -46,11 +48,19 @@ export function SelectItem({
     typeof children === 'string' ? (
       <>
         {leadingIcon && (
-          <div className={styles.itemIcon} data-slot='select-item-icon'>
+          <div className={styles.itemIcon} data-slot='select-item-leading-icon'>
             {leadingIcon}
           </div>
         )}
         <Text data-slot='select-item-text'>{children}</Text>
+        {trailingIcon && (
+          <div
+            className={cx(styles.itemIcon, styles.itemTrailingIcon)}
+            data-slot='select-item-trailing-icon'
+          >
+            {trailingIcon}
+          </div>
+        )}
       </>
     ) : (
       children
