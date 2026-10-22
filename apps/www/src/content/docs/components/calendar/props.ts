@@ -237,11 +237,12 @@ export interface DatePickerProps {
   };
 
   /**
-   * Controlled date value. Pair with `onValueChange`. Omit (along with
-   * `defaultValue`) to start the picker in an unselected state — the
-   * input shows its placeholder until the user selects a date.
+   * Controlled date value. Pair with `onValueChange`. Pass `null` for a
+   * controlled empty date. Omit (along with `defaultValue`) to start the
+   * picker in an unselected state — the input shows its placeholder until
+   * the user selects a date.
    */
-  value?: Date;
+  value?: Date | null;
 
   /**
    * Initial (uncontrolled) date value. Ignored if `value` is set. Omit to

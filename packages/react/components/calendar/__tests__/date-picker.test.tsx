@@ -195,6 +195,17 @@ describe('DatePicker', () => {
       expect(input.value).toBe('15 Jun 2026');
     });
 
+    it('follows a controlled value that starts as null', () => {
+      const { rerender } = render(<DatePicker value={null} />);
+      const input = screen.getByPlaceholderText(
+        'Select date'
+      ) as HTMLInputElement;
+      expect(input.value).toBe('');
+
+      rerender(<DatePicker value={new Date(2026, 5, 15)} />);
+      expect(input.value).toBe('15 Jun 2026');
+    });
+
     it('keeps a controlled value that the parent does not update', () => {
       const onValueChange = vi.fn();
       render(

@@ -65,7 +65,8 @@ export interface DatePickerProps {
    * it; `Field` also wires `aria-invalid` onto the input.
    */
   onErrorChange?: (error: string | undefined) => void;
-  value?: Date;
+  /** The date (controlled). `null` is a controlled empty date. */
+  value?: Date | null;
   defaultValue?: Date;
   children?:
     | React.ReactNode
@@ -98,12 +99,15 @@ export function DatePicker({
    * to `Popover.Trigger` even when the input itself is `disabled`.
    */
   const isDisabled = !!inputProps.disabled;
-  const [value, setValueUnwrapped] = useControlled<Date | undefined>({
+  const [valueState, setValueUnwrapped] = useControlled<
+    Date | null | undefined
+  >({
     controlled: valueProp,
     default: defaultValue,
     name: 'DatePicker',
     state: 'value'
   });
+  const value = valueState ?? undefined;
   // A valid typed date. Enter, blur or an outside click commits it.
   const [typedDate, setTypedDate] = useState<Date | undefined>();
   const selectedDate = typedDate ?? value;
@@ -153,8 +157,8 @@ export function DatePicker({
   }, [popover.isOpen, selectedDate?.getTime(), calendarProps?.defaultMonth]);
 
   function setValue(date: Date, details: DatePickerChangeDetails) {
-    setValueUnwrapped(date);
     onValueChange?.(date, details);
+    setValueUnwrapped(date);
   }
 
   function closePicker(event?: Event) {

@@ -63,7 +63,9 @@ A later change to `query.search` no longer updates the search on its own. Pass
 - `DataView` calls `onQueryChange` in client mode too. Server mode still calls
   it on mount, so the first page can load.
 - `DatePicker` with `value` shows only the `value` you pass. A clicked or typed
-  date shows after you pass it back.
+  date shows after you pass it back. To start a controlled `DatePicker` empty,
+  pass `value={null}`. A `value` that is `undefined` on the first render makes
+  it uncontrolled.
 - `DatePicker` calls `onValueChange` on Enter, blur or an outside click only
   when the typed date differs from the value. `onSelect` fired on every close.
 - `FilterChip` has `operation` and `defaultOperation`, and `onOperationChange`
