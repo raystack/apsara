@@ -29,6 +29,7 @@ import {
   DataViewContextType,
   DataViewField,
   DataViewProps,
+  DataViewQuery,
   DataViewViewChangeDetails,
   defaultGroupOption,
   GroupedData,
@@ -45,6 +46,7 @@ import {
   groupData,
   hasQueryChanged,
   isGroupRowData,
+  isSameQuery,
   queryToTableState,
   transformToDataViewQuery
 } from './utils';
@@ -53,13 +55,14 @@ function DataViewRoot<TData>({
   data = [],
   fields,
   query,
+  defaultQuery,
   mode = 'client',
   isLoading = false,
   totalRowCount,
   loadingRowCount = 3,
   defaultSort,
   children,
-  onTableQueryChange,
+  onQueryChange,
   onLoadMore,
   onRowClick,
   onColumnVisibilityChange,
@@ -72,8 +75,8 @@ function DataViewRoot<TData>({
   groupByResolvers
 }: DataViewProps<TData>) {
   const defaultTableQuery = useMemo(
-    () => getDefaultTableQuery(defaultSort, query, fields),
-    [defaultSort, query, fields]
+    () => getDefaultTableQuery(defaultSort, defaultQuery, fields),
+    [defaultSort, defaultQuery, fields]
   );
 
   // Active view (controlled / uncontrolled).
@@ -158,10 +161,36 @@ function DataViewRoot<TData>({
     [onRowSelectionChange]
   );
 
-  const [tableQuery, setTableQuery] =
-    useState<InternalQuery>(defaultTableQuery);
-
-  const oldQueryRef = useRef<InternalQuery | null>(null);
+  const [currentQuery, setCurrentQuery] = useControlled<
+    DataViewQuery | undefined
+  >({
+    controlled: query,
+    default: defaultQuery,
+    name: 'DataView',
+    state: 'query'
+  });
+  const [tableQuery, setTableQuery] = useState<InternalQuery>(() =>
+    getDefaultTableQuery(defaultSort, currentQuery, fields)
+  );
+  // The query `tableQuery` last matched. `tableQuery` also keeps filters that
+  // have no value yet, which the query leaves out, so it follows a new query
+  // only when the query differs from it.
+  const [syncedQuery, setSyncedQuery] = useState(currentQuery);
+  // Server mode reports the first query on mount, so the first page can load.
+  const [reportedQuery, setReportedQuery] = useState<InternalQuery | null>(
+    mode === 'server' ? null : tableQuery
+  );
+  if (currentQuery !== syncedQuery) {
+    setSyncedQuery(currentQuery);
+    // A copy of the reported query, for example from the URL, keeps `tableQuery`.
+    if (!isSameQuery(currentQuery, transformToDataViewQuery(tableQuery))) {
+      const next = getDefaultTableQuery(defaultSort, currentQuery, fields);
+      if (hasQueryChanged(tableQuery, next)) {
+        setTableQuery(next);
+        setReportedQuery(next);
+      }
+    }
+  }
 
   const reactTableState = useMemo(
     () => queryToTableState(tableQuery),
@@ -197,17 +226,21 @@ function DataViewRoot<TData>({
     [data, group_by, effectiveFields, groupByResolvers]
   );
 
+  // StrictMode runs the mount effect twice with the same `reportedQuery`.
+  const lastReportRef = useRef<InternalQuery | null>(null);
   useEffect(() => {
     if (
-      tableQuery &&
-      onTableQueryChange &&
-      hasQueryChanged(oldQueryRef.current, tableQuery) &&
-      mode === 'server'
-    ) {
-      onTableQueryChange(transformToDataViewQuery(tableQuery));
-      oldQueryRef.current = tableQuery;
-    }
-  }, [tableQuery, onTableQueryChange, mode]);
+      !hasQueryChanged(reportedQuery, tableQuery) ||
+      lastReportRef.current === tableQuery
+    )
+      return;
+    lastReportRef.current = tableQuery;
+    const next = transformToDataViewQuery(tableQuery);
+    onQueryChange?.(next, createChangeDetails('none'));
+    setReportedQuery(tableQuery);
+    setSyncedQuery(next);
+    setCurrentQuery(next);
+  }, [tableQuery, reportedQuery, onQueryChange, setCurrentQuery]);
 
   const resolveRowId = useMemo(() => createRowIdResolver(getRowId), [getRowId]);
 
@@ -247,13 +280,6 @@ function DataViewRoot<TData>({
   const loadMoreData = useCallback(() => {
     if (mode === 'server' && onLoadMore) onLoadMore();
   }, [mode, onLoadMore]);
-
-  const searchQuery = query?.search;
-  useEffect(() => {
-    if (searchQuery) {
-      setTableQuery(prev => ({ ...prev, search: searchQuery }));
-    }
-  }, [searchQuery]);
 
   const rowCount = (() => {
     try {

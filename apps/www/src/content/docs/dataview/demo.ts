@@ -138,7 +138,7 @@ export const groupingPreview = {
     {
       label: 'index.tsx',
       code: `
-      /* Initial \`group_by\` is supplied via \`query\`. The user can pick a
+      /* Initial \`group_by\` is supplied via \`defaultQuery\`. The user can pick a
          different group from DisplayControls — same wire format either way.
          The active group header sticks under the column header as the user
          scrolls past it. */
@@ -146,7 +146,7 @@ export const groupingPreview = {
         data={data}
         fields={fields}
         defaultSort={{ name: "name", order: "asc" }}
-        query={{ group_by: ["team"] }}
+        defaultQuery={{ group_by: ["team"] }}
       >
         <DataView.Toolbar>
           <DataView.Filters />
@@ -180,7 +180,7 @@ export const virtualizedGroupingPreview = {
           data={data} // ~1500 rows
           fields={fields}
           defaultSort={{ name: "name", order: "asc" }}
-          query={{ group_by: ["team"] }}
+          defaultQuery={{ group_by: ["team"] }}
         >
           <DataView.Toolbar>
             <DataView.Filters />
@@ -485,7 +485,7 @@ export const timelineGroupingPreview = {
         data={tasks}
         fields={fields}
         defaultSort={{ name: "start", order: "asc" }}
-        query={{ group_by: ["team"] }}
+        defaultQuery={{ group_by: ["team"] }}
         getRowId={(t) => t.id}>
         <DataView.Toolbar>
           <DataView.Filters />

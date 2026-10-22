@@ -136,9 +136,9 @@ describe('DatePicker', () => {
 
     it('selecting a date via the calendar updates both selected and month', async () => {
       const initial = new Date(2026, 0, 15);
-      const onSelect = vi.fn();
+      const onValueChange = vi.fn();
       const calls = renderWithCalendarSpy(
-        <DatePicker value={initial} onSelect={onSelect} />
+        <DatePicker defaultValue={initial} onValueChange={onValueChange} />
       );
 
       const firstCall = calls[calls.length - 1];
@@ -158,7 +158,10 @@ describe('DatePicker', () => {
        * month follows selection via the open-time sync effect (picker re-opens
        * on next mount; while open, the click also closes the popover).
        */
-      expect(onSelect).toHaveBeenCalledWith(newSelection);
+      expect(onValueChange).toHaveBeenCalledWith(
+        newSelection,
+        expect.objectContaining({ reason: 'item-press' })
+      );
     });
   });
 
@@ -191,6 +194,40 @@ describe('DatePicker', () => {
       rerender(<DatePicker value={new Date(2026, 5, 15)} />);
       expect(input.value).toBe('15 Jun 2026');
     });
+
+    it('follows a controlled value that starts as null', () => {
+      const { rerender } = render(<DatePicker value={null} />);
+      const input = screen.getByPlaceholderText(
+        'Select date'
+      ) as HTMLInputElement;
+      expect(input.value).toBe('');
+
+      rerender(<DatePicker value={new Date(2026, 5, 15)} />);
+      expect(input.value).toBe('15 Jun 2026');
+    });
+
+    it('keeps a controlled value that the parent does not update', () => {
+      const onValueChange = vi.fn();
+      render(
+        <DatePicker
+          dateFormat='DD/MM/YYYY'
+          value={new Date(2026, 0, 1)}
+          onValueChange={onValueChange}
+        />
+      );
+      const input = screen.getByPlaceholderText(
+        'Select date'
+      ) as HTMLInputElement;
+      fireEvent.focus(input);
+      fireEvent.change(input, { target: { value: '15/06/2025' } });
+      fireEvent.keyUp(input, { code: 'Enter' });
+
+      expect(onValueChange).toHaveBeenCalledWith(
+        new Date(2025, 5, 15),
+        expect.objectContaining({ reason: 'input-change' })
+      );
+      expect(input.value).toBe('01/01/2026');
+    });
   });
 
   describe('unselected initial state (CLD-3195 #4)', () => {
@@ -202,16 +239,16 @@ describe('DatePicker', () => {
       expect(input.value).toBe('');
     });
 
-    it('does not fire onSelect on close when nothing was ever selected', () => {
-      const onSelect = vi.fn();
-      render(<DatePicker onSelect={onSelect} />);
+    it('does not fire onValueChange on close when nothing was ever selected', () => {
+      const onValueChange = vi.fn();
+      render(<DatePicker onValueChange={onValueChange} />);
       const input = screen.getByPlaceholderText(
         'Select date'
       ) as HTMLInputElement;
       // Open + close without selecting.
       fireEvent.focus(input);
       fireEvent.keyUp(input, { code: 'Enter' });
-      expect(onSelect).not.toHaveBeenCalled();
+      expect(onValueChange).not.toHaveBeenCalled();
     });
 
     it('passes selected=undefined to Calendar when picker has no value', () => {
@@ -269,15 +306,17 @@ describe('DatePicker', () => {
     });
   });
 
-  describe('onSelect fires once per commit', () => {
+  describe('onValueChange fires once per commit', () => {
     /*
      * Regression for CLD-3195 #25: each commit path (calendar click, Enter,
-     * outside click) should fire onSelect exactly once with a single canonical
+     * outside click) should fire onValueChange exactly once with a single canonical
      * Date.
      */
-    it('Enter after typing a valid date fires onSelect exactly once', () => {
-      const onSelect = vi.fn();
-      render(<DatePicker dateFormat='DD/MM/YYYY' onSelect={onSelect} />);
+    it('Enter after typing a valid date fires onValueChange exactly once', () => {
+      const onValueChange = vi.fn();
+      render(
+        <DatePicker dateFormat='DD/MM/YYYY' onValueChange={onValueChange} />
+      );
 
       const input = screen.getByPlaceholderText(
         'Select date'
@@ -286,8 +325,8 @@ describe('DatePicker', () => {
       fireEvent.change(input, { target: { value: '15/06/2025' } });
       fireEvent.keyUp(input, { code: 'Enter' });
 
-      expect(onSelect).toHaveBeenCalledTimes(1);
-      const calledWith = onSelect.mock.calls[0][0] as Date;
+      expect(onValueChange).toHaveBeenCalledTimes(1);
+      const calledWith = onValueChange.mock.calls[0][0] as Date;
       expect(dayjs(calledWith).format('DD/MM/YYYY')).toBe('15/06/2025');
     });
   });
@@ -374,13 +413,13 @@ describe('DatePicker', () => {
      * visibly snapped. Now uses `dateFormat` with strict parsing.
      */
     it('does not commit partial single-digit input as a date', () => {
-      const onSelect = vi.fn();
+      const onValueChange = vi.fn();
       const initial = new Date(2026, 4, 20); // 20/05/2026
       render(
         <DatePicker
           dateFormat='DD/MM/YYYY'
           value={initial}
-          onSelect={onSelect}
+          onValueChange={onValueChange}
         />
       );
 
@@ -393,8 +432,8 @@ describe('DatePicker', () => {
 
       // Input must NOT have jumped to a 2001 date.
       expect(input.value).not.toMatch(/2001/);
-      // onSelect must not have been called with a 2001 date.
-      for (const call of onSelect.mock.calls) {
+      // onValueChange must not have been called with a 2001 date.
+      for (const call of onValueChange.mock.calls) {
         const arg = call[0] as Date;
         expect(dayjs(arg).year()).not.toBe(2001);
       }
@@ -434,12 +473,12 @@ describe('DatePicker', () => {
      * render and typing felt broken, and only paste of the full string worked.
      */
     it('keeps typed characters visible while typing a full date one char at a time', () => {
-      const onSelect = vi.fn();
+      const onValueChange = vi.fn();
       render(
         <DatePicker
           dateFormat='DD/MM/YYYY'
           value={new Date(2026, 4, 20)}
-          onSelect={onSelect}
+          onValueChange={onValueChange}
         />
       );
 
@@ -466,13 +505,13 @@ describe('DatePicker', () => {
       }
     });
 
-    it('does not fire onSelect while typing, so partial stays uncommitted, valid waits for commit (Enter/blur/outside-click)', () => {
-      const onSelect = vi.fn();
+    it('does not fire onValueChange while typing, so partial stays uncommitted, valid waits for commit (Enter/blur/outside-click)', () => {
+      const onValueChange = vi.fn();
       const onErrorChange = vi.fn();
       render(
         <DatePicker
           dateFormat='DD/MM/YYYY'
-          onSelect={onSelect}
+          onValueChange={onValueChange}
           onErrorChange={onErrorChange}
         />
       );
@@ -483,14 +522,14 @@ describe('DatePicker', () => {
 
       // Partial input is not even parseable, so no commit.
       fireEvent.change(input, { target: { value: '15/06' } });
-      expect(onSelect).not.toHaveBeenCalled();
+      expect(onValueChange).not.toHaveBeenCalled();
 
-      // Full valid input parses internally but still doesn't fire onSelect,
+      // Full valid input parses internally but still doesn't fire onValueChange,
       // commit only happens via Enter / blur / outside-click (see the
       // dedicated single-fire test below for that path).
       fireEvent.change(input, { target: { value: '15/06/2025' } });
       expect(onErrorChange).toHaveBeenLastCalledWith(undefined);
-      expect(onSelect).not.toHaveBeenCalled();
+      expect(onValueChange).not.toHaveBeenCalled();
     });
   });
 

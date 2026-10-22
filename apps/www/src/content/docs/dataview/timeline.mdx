@@ -115,7 +115,7 @@ The active sort does double duty here: it picks the field lanes are built from *
 
 ### Grouping
 
-Set `group_by`, either from `DataView.DisplayControls` → Grouping or on the initial `query`, and the timeline splits into **swim-lane sections** stacked under the single shared time axis: a full-width header band per group, with that group's cards lane-packed beneath it. Horizontal position stays purely time; grouping reorganizes vertically only.
+Set `group_by`, either from `DataView.DisplayControls` → Grouping or in `defaultQuery`, and the timeline splits into **swim-lane sections** stacked under the single shared time axis: a full-width header band per group, with that group's cards lane-packed beneath it. Horizontal position stays purely time; grouping reorganizes vertically only.
 
 <Demo data={timelineGroupingPreview} />
 
@@ -126,7 +126,7 @@ const fields = [
   …
 ];
 
-<DataView data={tasks} fields={fields} query={{ group_by: ["team"] }} …>
+<DataView data={tasks} fields={fields} defaultQuery={{ group_by: ["team"] }} …>
   <DataView.Timeline startField="start" endField="end" renderCard={renderCard} />
 </DataView>
 ```
@@ -153,7 +153,7 @@ Leave the Ordering control visible for both.
 
 Under the default `auto` packing the sort has no visible effect at all, since lanes are assigned by dense chronological first-fit, so there hide the control with `<DataView.DisplayControls hideOrdering />`, or leave `sortable` off the timeline's per-view `fields`.
 
-In [server mode](/docs/dataview#server-mode) the sort is the backend's to apply: rows arrive already ordered and `one-per-sort-value` takes lane order from that row order, first value seen first. A backend that ignores the `sort` in `onTableQueryChange` therefore produces lanes in whatever order it returned rows, with nothing logged to say so. The lane *membership* is still correct, only the ranking is arbitrary.
+In [server mode](/docs/dataview#server-mode) the sort is the backend's to apply: rows arrive already ordered and `one-per-sort-value` takes lane order from that row order, first value seen first. A backend that ignores the `sort` in `onQueryChange` therefore produces lanes in whatever order it returned rows, with nothing logged to say so. The lane *membership* is still correct, only the ranking is arbitrary.
 
 ### Scale and axis
 

@@ -12,7 +12,7 @@ export interface SelectRootProps {
 
   /** Controls the autocomplete behavior mode
    * - "auto": Automatically filters items as user types
-   * - "manual": Requires explicit filtering through onSearch callback
+   * - "manual": Requires explicit filtering through the onInputValueChange callback
    * @default "auto"
    */
   autocompleteMode?: 'auto' | 'manual';
@@ -29,14 +29,17 @@ export interface SelectRootProps {
     eventDetails: { reason: string; event: Event }
   ) => void;
 
-  /** Current search value for autocomplete */
-  searchValue?: string;
+  /** The search text with `autocomplete` (controlled). */
+  inputValue?: string;
 
-  /** Initial search value for autocomplete */
-  defaultSearchValue?: string;
+  /** The search text on the first render (uncontrolled). */
+  defaultInputValue?: string;
 
-  /** Callback fired when the search value changes */
-  onSearch?: (value: string) => void;
+  /** Callback fired when the search text changes. */
+  onInputValueChange?: (
+    inputValue: string,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 }
 
 export interface SelectTriggerProps {

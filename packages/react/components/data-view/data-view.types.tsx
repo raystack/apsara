@@ -23,6 +23,8 @@ export type DataViewMode = 'client' | 'server';
 export type DataViewViewChangeDetails =
   ChangeDetails<TabsPrimitive.Root.ChangeEventReason>;
 
+export type DataViewQueryChangeDetails = ChangeDetails<'none'>;
+
 export const SortOrders = {
   ASC: 'asc',
   DESC: 'desc'
@@ -166,13 +168,19 @@ export interface DataViewProps<TData> {
   data: TData[];
   /** Renderer-agnostic field metadata. Drives filter/sort/group/visibility. */
   fields: DataViewField<TData>[];
-  /** Initial query. Transformed to the internal shape on mount. */
+  /** The query (controlled). */
   query?: DataViewQuery;
+  /** The query on the first render (uncontrolled). */
+  defaultQuery?: DataViewQuery;
   mode?: DataViewMode;
   isLoading?: boolean;
   totalRowCount?: number;
   loadingRowCount?: number;
-  onTableQueryChange?: (query: DataViewQuery) => void;
+  /** Called when the query changes. Server mode also calls it on mount. */
+  onQueryChange?: (
+    query: DataViewQuery,
+    details: DataViewQueryChangeDetails
+  ) => void;
   defaultSort: DataViewSort;
   onLoadMore?: () => Promise<void> | void;
   onRowClick?: (row: TData) => void;

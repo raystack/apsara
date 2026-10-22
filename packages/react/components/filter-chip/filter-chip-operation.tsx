@@ -4,13 +4,17 @@ import { cx } from 'class-variance-authority';
 import { useCallback } from 'react';
 import { FilterOperation, FilterOperator } from '~/types/filters';
 import { Select } from '../select';
+import type { SelectChangeEventDetails } from '../select/select-root';
 import { Text } from '../text';
 import styles from './filter-chip.module.css';
 
 interface OperationProps {
   label: string;
   value?: FilterOperation;
-  onChange: (operation: FilterOperation) => void;
+  onChange: (
+    operation: FilterOperation,
+    eventDetails: SelectChangeEventDetails
+  ) => void;
   operations: FilterOperator<string>[];
   showAlternateLabel?: boolean;
 }
@@ -25,9 +29,9 @@ export const Operation = ({
   const operationValue = value?.value ?? '';
 
   const handleValueChange = useCallback(
-    (newValue: string) => {
+    (newValue: string, eventDetails: SelectChangeEventDetails) => {
       const operation = operations.find(o => o.value === newValue);
-      if (operation) onChange(operation);
+      if (operation) onChange(operation, eventDetails);
     },
     [operations, onChange]
   );

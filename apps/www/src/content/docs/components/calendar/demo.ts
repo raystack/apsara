@@ -136,7 +136,7 @@ export const rangePickerDemo = {
       code: `
       <RangePicker
         dateFormat="DD/MM/YYYY"
-        onSelect={(range) => console.log('Date range:', range)}
+        onValueChange={(range) => console.log('Date range:', range)}
         value={{
           from: new Date(2024, 0, 1),
           to: new Date(2024, 0, 15)

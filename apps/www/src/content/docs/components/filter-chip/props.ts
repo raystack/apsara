@@ -5,10 +5,26 @@ export interface FilterChipProps {
   /** Text label for the filter (required) */
   label: string;
 
-  /** Current value of the filter. `multiselect` takes an array; `date`
+  /** The filter value (controlled). `multiselect` takes an array; `date`
    * takes a `Date` (a string or epoch number is parsed for you); `number`
    * shows a value that is not a number as empty. */
   value?: string | number | boolean | Array<string | number | boolean> | Date;
+
+  /** The filter value on the first render (uncontrolled). Takes the same
+   * types as `value`. */
+  defaultValue?:
+    | string
+    | number
+    | boolean
+    | Array<string | number | boolean>
+    | Date;
+
+  /** The operation value (controlled), for example `"eq"`. */
+  operation?: string;
+
+  /** The operation value on the first render (uncontrolled). Defaults to the
+   * first operation. */
+  defaultOperation?: string;
 
   /** Type of input for the filter
    * @default "string"
@@ -37,8 +53,11 @@ export interface FilterChipProps {
     details: { reason: string; event: Event; operation: string }
   ) => void;
 
-  /** Callback when the filter operation changes */
-  onOperationChange?: (operation: string) => void;
+  /** Callback when the filter operation changes. */
+  onOperationChange?: (
+    operation: string,
+    details: { reason: string; event: Event }
+  ) => void;
 
   /** Icon element to display before the label */
   leadingIcon?: React.ReactNode;
@@ -50,9 +69,12 @@ export interface FilterChipProps {
   selectProps?: {
     autocomplete?: boolean;
     autocompleteMode?: 'auto' | 'manual';
-    onSearch?: (value: string) => void;
-    searchValue?: string;
-    defaultSearchValue?: string;
+    inputValue?: string;
+    defaultInputValue?: string;
+    onInputValueChange?: (
+      inputValue: string,
+      eventDetails: { reason: string; event: Event }
+    ) => void;
   };
 
   /** Props for the date control at `columnType="date"`. `timeZone` through `today` are CalendarPreview props. */

@@ -343,7 +343,7 @@ function renderTimeline(
       fields={root.fields ?? fields}
       mode='client'
       defaultSort={root.sort ?? { name: 'title', order: 'asc' }}
-      query={root.query}
+      defaultQuery={root.query}
       getRowId={(row: Order) => row.id}
     >
       <DataView.Timeline<Order>
@@ -1669,7 +1669,7 @@ describe('DataView.Timeline grouping', () => {
         ]}
         mode='client'
         defaultSort={{ name: 'title', order: 'asc' }}
-        query={{ group_by: ['team'] }}
+        defaultQuery={{ group_by: ['team'] }}
         getRowId={(row: Order) => row.id}
       >
         <ApplyFilterButton

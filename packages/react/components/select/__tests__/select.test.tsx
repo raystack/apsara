@@ -333,10 +333,14 @@ describe('Select', () => {
       expect(options[1]).toHaveTextContent('Pineapple');
     });
 
-    it('filters options by a controlled searchValue', async () => {
-      const onSearch = vi.fn();
+    it('filters options by a controlled inputValue', async () => {
+      const onInputValueChange = vi.fn();
       render(
-        <Select autocomplete searchValue='app' onSearch={onSearch}>
+        <Select
+          autocomplete
+          inputValue='app'
+          onInputValueChange={onInputValueChange}
+        >
           <Select.Trigger>
             <Select.Value placeholder={TRIGGER_TEXT} />
           </Select.Trigger>
@@ -357,15 +361,18 @@ describe('Select', () => {
       });
       await flushMicrotasks();
 
-      expect(onSearch).toHaveBeenCalledWith('b');
+      expect(onInputValueChange).toHaveBeenCalledWith(
+        'b',
+        expect.objectContaining({ reason: 'input-change' })
+      );
       const options = screen.getAllByRole('option');
       expect(options.length).toBe(2);
       expect(options[0]).toHaveTextContent('Apple');
       expect(options[1]).toHaveTextContent('Pineapple');
     });
 
-    it('shows a controlled searchValue in the search input', async () => {
-      render(<BasicSelect autocomplete searchValue='app' />);
+    it('shows a controlled inputValue in the search input', async () => {
+      render(<BasicSelect autocomplete inputValue='app' />);
 
       fireEvent.click(screen.getByLabelText('Select option'));
       await flushMicrotasks();
@@ -376,8 +383,8 @@ describe('Select', () => {
       expect(searchInput).toHaveValue('app');
     });
 
-    it('shows and filters by defaultSearchValue', async () => {
-      render(<BasicSelect autocomplete defaultSearchValue='app' />);
+    it('shows and filters by defaultInputValue', async () => {
+      render(<BasicSelect autocomplete defaultInputValue='app' />);
 
       fireEvent.click(screen.getByLabelText('Select option'));
       await flushMicrotasks();

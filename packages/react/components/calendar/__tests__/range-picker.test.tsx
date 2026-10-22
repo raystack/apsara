@@ -243,11 +243,11 @@ describe('RangePicker', () => {
     });
 
     it('B2: from set, click after commits the range and closes', () => {
-      const onSelect = vi.fn();
+      const onValueChange = vi.fn();
       openPopoverAndCaptureCalendar(
         <RangePicker
           defaultValue={{ from: new Date(2026, 0, 15) }}
-          onSelect={onSelect}
+          onValueChange={onValueChange}
         />
       );
 
@@ -277,10 +277,13 @@ describe('RangePicker', () => {
       expect(callsAfter).toBeGreaterThanOrEqual(callsBefore);
       expect(startInput.getAttribute('data-active')).toBe('false');
 
-      expect(onSelect).toHaveBeenLastCalledWith({
-        from: new Date(2026, 0, 15),
-        to: new Date(2026, 0, 20)
-      });
+      expect(onValueChange).toHaveBeenLastCalledWith(
+        {
+          from: new Date(2026, 0, 15),
+          to: new Date(2026, 0, 20)
+        },
+        expect.objectContaining({ reason: 'item-press' })
+      );
     });
 
     it('B1: from set, click before resets from and leaves popover open', () => {
