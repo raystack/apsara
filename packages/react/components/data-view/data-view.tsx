@@ -10,7 +10,7 @@ import {
   useReactTable,
   VisibilityState
 } from '@tanstack/react-table';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createChangeDetails } from '~/shared/change-details';
 
 import { DataViewClearFilters } from './components/clear-filters';
@@ -46,6 +46,7 @@ import {
   groupData,
   hasQueryChanged,
   isGroupRowData,
+  isSameQuery,
   queryToTableState,
   transformToDataViewQuery
 } from './utils';
@@ -181,10 +182,13 @@ function DataViewRoot<TData>({
   );
   if (currentQuery !== syncedQuery) {
     setSyncedQuery(currentQuery);
-    const next = getDefaultTableQuery(defaultSort, currentQuery, fields);
-    if (hasQueryChanged(tableQuery, next)) {
-      setTableQuery(next);
-      setReportedQuery(next);
+    // A copy of the reported query, for example from the URL, keeps `tableQuery`.
+    if (!isSameQuery(currentQuery, transformToDataViewQuery(tableQuery))) {
+      const next = getDefaultTableQuery(defaultSort, currentQuery, fields);
+      if (hasQueryChanged(tableQuery, next)) {
+        setTableQuery(next);
+        setReportedQuery(next);
+      }
     }
   }
 
@@ -222,13 +226,20 @@ function DataViewRoot<TData>({
     [data, group_by, effectiveFields, groupByResolvers]
   );
 
+  // StrictMode runs the mount effect twice with the same `reportedQuery`.
+  const lastReportRef = useRef<InternalQuery | null>(null);
   useEffect(() => {
-    if (!hasQueryChanged(reportedQuery, tableQuery)) return;
+    if (
+      !hasQueryChanged(reportedQuery, tableQuery) ||
+      lastReportRef.current === tableQuery
+    )
+      return;
+    lastReportRef.current = tableQuery;
     const next = transformToDataViewQuery(tableQuery);
+    onQueryChange?.(next, createChangeDetails('none'));
     setReportedQuery(tableQuery);
     setSyncedQuery(next);
     setCurrentQuery(next);
-    onQueryChange?.(next, createChangeDetails('none'));
   }, [tableQuery, reportedQuery, onQueryChange, setCurrentQuery]);
 
   const resolveRowId = useMemo(() => createRowIdResolver(getRowId), [getRowId]);

@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useState } from 'react';
+import { StrictMode, useState } from 'react';
 import {
   afterEach,
   beforeAll,
@@ -1031,17 +1031,26 @@ describe('DataView', () => {
       expect(onQueryChange).not.toHaveBeenCalled();
     });
 
-    it('keeps a new filter with no value in a controlled query', async () => {
+    it('keeps a new filter with no value when the controlled query is a JSON copy', async () => {
       const user = userEvent.setup();
+      const fields: DataViewField<TestData>[] = [
+        ...mockFields,
+        {
+          accessorKey: 'created',
+          label: 'Created',
+          filterable: true,
+          filterType: 'date'
+        }
+      ];
       function Controlled() {
         const [query, setQuery] = useState<DataViewQuery>({});
         return (
           <DataView
             data={mockData}
-            fields={mockFields}
+            fields={fields}
             defaultSort={defaultSort}
             query={query}
-            onQueryChange={setQuery}
+            onQueryChange={next => setQuery(JSON.parse(JSON.stringify(next)))}
           >
             <DataView.Filters />
           </DataView>
@@ -1050,9 +1059,14 @@ describe('DataView', () => {
       render(<Controlled />);
       await user.click(screen.getByRole('button', { name: /filter/i }));
       await user.click(await screen.findByRole('menuitem', { name: 'Name' }));
+      await user.click(screen.getByRole('button', { name: 'Add filter' }));
+      await user.click(
+        await screen.findByRole('menuitem', { name: 'Created' })
+      );
+
       expect(
-        document.querySelector('[data-slot="filter-chip"]')
-      ).toBeInTheDocument();
+        document.querySelectorAll('[data-slot="filter-chip"]')
+      ).toHaveLength(2);
     });
 
     it('calls onQueryChange in server mode after query change', async () => {
@@ -1077,6 +1091,24 @@ describe('DataView', () => {
       const calls = onQueryChange.mock.calls;
       const lastCall = calls[calls.length - 1]?.[0];
       expect(lastCall?.search).toBe('a');
+    });
+
+    it('calls onQueryChange once on mount in server mode under StrictMode', () => {
+      const onQueryChange = vi.fn();
+      render(
+        <StrictMode>
+          <DataView
+            data={mockData}
+            fields={mockFields}
+            defaultSort={defaultSort}
+            mode='server'
+            onQueryChange={onQueryChange}
+          >
+            <DataView.List variant='table' columns={mockColumns} />
+          </DataView>
+        </StrictMode>
+      );
+      expect(onQueryChange).toHaveBeenCalledTimes(1);
     });
 
     it('keeps the option type when a select filter value is picked', async () => {
