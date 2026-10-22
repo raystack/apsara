@@ -18,6 +18,7 @@ describe('CopyButton', () => {
 
   afterEach(() => {
     vi.clearAllTimers();
+    vi.useRealTimers();
   });
 
   describe('Basic Rendering', () => {
@@ -75,7 +76,6 @@ describe('CopyButton', () => {
       expect(
         container.querySelector('[data-slot="copy-button-icons"]')
       ).toHaveAttribute('data-copied');
-      vi.useRealTimers();
     });
   });
 });
