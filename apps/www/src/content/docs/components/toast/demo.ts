@@ -360,6 +360,22 @@ export const hookDemo = {
   }`
 };
 
+export const upsertDemo = {
+  type: 'code',
+  code: `
+  function SyncToast() {
+    const countRef = React.useRef(0);
+    return (
+      <Button onClick={() => {
+        countRef.current += 1;
+        toastManager.add({ id: "sync", title: \`Synced \${countRef.current} times\` });
+      }}>
+        Sync
+      </Button>
+    )
+  }`
+};
+
 export const updateDemo = {
   type: 'code',
   code: `

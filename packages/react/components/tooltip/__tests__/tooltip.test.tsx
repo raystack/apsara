@@ -164,4 +164,67 @@ describe('Tooltip', () => {
       expect(arrow).toBeInTheDocument();
     });
   });
+
+  describe('Viewport', () => {
+    it('shows the payload of the open detached trigger', () => {
+      const handle = Tooltip.createHandle<string>();
+      render(
+        <>
+          <Tooltip.Trigger handle={handle} id='a' payload='Bold'>
+            B
+          </Tooltip.Trigger>
+          <Tooltip.Trigger handle={handle} id='b' payload='Italic'>
+            I
+          </Tooltip.Trigger>
+          <Tooltip handle={handle} open triggerId='b'>
+            {({ payload }) => (
+              <Tooltip.Content>
+                <Tooltip.Viewport>{payload}</Tooltip.Viewport>
+              </Tooltip.Content>
+            )}
+          </Tooltip>
+        </>
+      );
+      expect(screen.getByText('Italic')).toBeInTheDocument();
+      expect(screen.queryByText('Bold')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('closeOnClick', () => {
+    const ClickTooltip = ({ closeOnClick }: { closeOnClick?: boolean }) => (
+      <Tooltip>
+        <Tooltip.Trigger
+          delay={0}
+          closeOnClick={closeOnClick}
+          render={<button>{TRIGGER_TEXT}</button>}
+        />
+        <Tooltip.Content>{MESSAGE_TEXT}</Tooltip.Content>
+      </Tooltip>
+    );
+
+    it('closes the tooltip on trigger click by default', async () => {
+      const user = userEvent.setup();
+      render(<ClickTooltip />);
+      await user.hover(screen.getByText(TRIGGER_TEXT));
+      await waitFor(() => {
+        expect(screen.getByText(MESSAGE_TEXT)).toBeInTheDocument();
+      });
+      await user.click(screen.getByText(TRIGGER_TEXT));
+      await waitFor(() => {
+        expect(screen.queryByText(MESSAGE_TEXT)).not.toBeInTheDocument();
+      });
+    });
+
+    it('keeps the tooltip open on trigger click when false', async () => {
+      const user = userEvent.setup();
+      render(<ClickTooltip closeOnClick={false} />);
+      await user.hover(screen.getByText(TRIGGER_TEXT));
+      await waitFor(() => {
+        expect(screen.getByText(MESSAGE_TEXT)).toBeInTheDocument();
+      });
+      await user.click(screen.getByText(TRIGGER_TEXT));
+      await new Promise(resolve => setTimeout(resolve, 50));
+      expect(screen.getByText(MESSAGE_TEXT)).toBeInTheDocument();
+    });
+  });
 });

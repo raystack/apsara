@@ -1,6 +1,7 @@
 'use client';
 
 import { Autocomplete as AutocompletePrimitive } from '@base-ui/react/autocomplete';
+import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
 import {
   createContext,
@@ -8,8 +9,7 @@ import {
   useCallback,
   useContext,
   useMemo,
-  useRef,
-  useState
+  useRef
 } from 'react';
 import { ItemCountProvider } from '~/shared/item-count';
 import styles from './command.module.css';
@@ -32,19 +32,19 @@ export const useCommandContext = (): CommandContextValue => {
   return context;
 };
 
-export interface CommandRootProps
-  extends Omit<AutocompletePrimitive.Root.Props<any>, 'items'> {
+export interface CommandRootProps<Item = unknown>
+  extends Omit<AutocompletePrimitive.Root.Props<Item>, 'items'> {
   /**
    * Items to be displayed and filtered by Base UI internally.
    * When provided, the auto-search fallback is disabled and filtering is
    * delegated to Base UI's built-in logic (or the user's custom `filter`).
    */
-  items?: readonly any[];
+  items?: readonly Item[];
   /** Additional CSS class for the panel wrapper. */
   className?: string;
 }
 
-export const CommandRoot = ({
+export const CommandRoot = <Item,>({
   value: providedValue,
   defaultValue,
   onValueChange,
@@ -56,24 +56,24 @@ export const CommandRoot = ({
   className,
   children,
   ...props
-}: CommandRootProps) => {
-  const [internalValue, setInternalValue] = useState<string>(
-    typeof defaultValue === 'string' ? defaultValue : ''
-  );
+}: CommandRootProps<Item>) => {
+  const [computedValue, setValueUnwrapped] = useControlled({
+    controlled: typeof providedValue === 'string' ? providedValue : undefined,
+    default: typeof defaultValue === 'string' ? defaultValue : '',
+    name: 'Command',
+    state: 'value'
+  });
   const inputContainerRef = useRef<HTMLDivElement>(null);
-
-  const computedValue =
-    typeof providedValue === 'string' ? providedValue : internalValue;
 
   const handleValueChange = useCallback(
     (
       value: string,
       eventDetails: AutocompletePrimitive.Root.ChangeEventDetails
     ) => {
-      setInternalValue(value);
+      setValueUnwrapped(value);
       onValueChange?.(value, eventDetails);
     },
-    [onValueChange]
+    [onValueChange, setValueUnwrapped]
   );
 
   const contextValue = useMemo(

@@ -2,7 +2,7 @@ import { mergeProps, useRender } from '@base-ui/react';
 import { CSSProperties } from 'react';
 import { AlignType } from './types';
 
-type GridItemProps = useRender.ComponentProps<'div'> & {
+export type GridItemProps = useRender.ComponentProps<'div'> & {
   area?: string;
   colStart?: number | string;
   colEnd?: number | string;

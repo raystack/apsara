@@ -125,7 +125,7 @@ const getLoaderOnlyClass = (size: 'small' | 'normal' | null) =>
     ? styles['loader-only-button-small']
     : styles['loader-only-button-normal'];
 
-type ButtonProps = VariantProps<typeof button> &
+export type ButtonProps = VariantProps<typeof button> &
   ButtonPrimitive.Props & {
     loading?: boolean;
     loaderText?: ReactNode;

@@ -1,5 +1,6 @@
 'use client';
 
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import {
   createContext,
   type ReactNode,
@@ -7,7 +8,6 @@ import {
   useContext,
   useState
 } from 'react';
-import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicLayoutEffect';
 
 /*
  * Counts the items a list renders. Lists that filter their own children
@@ -39,7 +39,7 @@ export function ItemCountProvider({ children }: { children: ReactNode }) {
 export function useRegisterItem(enabled = true) {
   const register = useContext(RegisterItemContext);
 
-  useIsomorphicLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     if (!enabled || !register) return;
     return register();
   }, [enabled, register]);

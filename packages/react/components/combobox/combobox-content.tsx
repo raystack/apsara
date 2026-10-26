@@ -2,22 +2,27 @@
 
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import type { ReactNode } from 'react';
 import { type Radius, radiusStyle } from '../../shared/radius';
 import { useThemeInjection } from '../theme/portal';
 import styles from './combobox.module.css';
 import { useComboboxContext } from './combobox-root';
 
-export interface ComboboxContentProps
+export interface ComboboxContentProps<Item = unknown>
   extends Omit<
       ComboboxPrimitive.Positioner.Props,
-      'render' | 'className' | 'style'
+      'render' | 'className' | 'style' | 'children'
     >,
-    ComboboxPrimitive.Popup.Props {
+    Omit<ComboboxPrimitive.Popup.Props, 'children'> {
   /** Corner radius for this popup only. Overrides the theme's `radius`. */
   radius?: Radius;
+  /**
+   * The list content. Pass a function to render each item that matches the input when `items` is set on the root.
+   */
+  children?: ReactNode | ((item: Item, index: number) => ReactNode);
 }
 
-export const ComboboxContent = ({
+export const ComboboxContent = <Item,>({
   ref,
   className,
   children,
@@ -28,7 +33,7 @@ export const ComboboxContent = ({
   sideOffset = 4,
   radius,
   ...positionerProps
-}: ComboboxContentProps) => {
+}: ComboboxContentProps<Item>) => {
   const { inputContainerRef } = useComboboxContext();
   const theme = useThemeInjection();
   return (

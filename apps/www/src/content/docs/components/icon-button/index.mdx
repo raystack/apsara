@@ -4,7 +4,13 @@ description: A button component designed specifically for icons with various siz
 source: packages/react/components/icon-button
 ---
 
-import { playground, stateDemo, sizeDemo } from "./demo.ts";
+import {
+  playground,
+  stateDemo,
+  sizeDemo,
+  focusableWhenDisabledDemo,
+  renderDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -20,7 +26,7 @@ import { IconButton } from "@raystack/apsara";
 
 ## Usage
 
-An icon-only button. Two props: how big it is, and whether it can be pressed.
+An icon-only button built on the Base UI [Button](https://base-ui.com/react/components/button).
 
 ### Size
 
@@ -30,9 +36,23 @@ Four steps, 1 through 4. Match the step to the control the button sits beside so
 
 ### State
 
-Hover and focus are handled for you. `disabled` is the only state you set, and it removes the button from the tab order.
+Hover and focus are handled for you. `disabled` stops the button responding and removes it from the tab order.
+
+`loading` shows a spinner in place of the icon and sets `aria-busy`. The button blocks clicks while it loads but stays focusable, so focus is not lost.
 
 <Demo data={stateDemo} />
+
+### Focusable when disabled
+
+`focusableWhenDisabled` keeps a disabled button in the tab order. The button uses `aria-disabled` instead of the native `disabled` attribute.
+
+<Demo data={focusableWhenDisabledDemo} />
+
+### Render as another element
+
+`render` swaps the underlying element and keeps the styles. When `render` is set, `nativeButton` defaults to `false`, so the button role and keyboard handling are added. If `render` returns a real `<button>`, set `nativeButton` to `true`.
+
+<Demo data={renderDemo} />
 
 ## API Reference
 
@@ -48,6 +68,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 |------|---------|
 | `icon-button` | The root `<button>` element |
 | `icon-button-icon` | Wrapper around the icon content |
+| `icon-button-loader` | The loading spinner (when `loading`) |
 
 ### Styling
 
@@ -61,12 +82,11 @@ The IconButton uses CSS variables for consistent styling across themes:
 
 ## Accessibility
 
-The IconButton component inherits all the accessibility features of the native HTML button element:
+IconButton uses the Base UI Button, which renders a native `<button>` by default:
 
-- Keyboard navigation support
-- Proper disabled state handling
-- Can be focused and activated using keyboard
-- Supports all standard button ARIA attributes
+- Enter and Space activate the button.
+- `disabled` sets the native `disabled` attribute. With `focusableWhenDisabled` or `loading`, it sets `aria-disabled` instead.
+- `loading` sets `aria-busy="true"`. The spinner has `aria-hidden="true"`.
 
 For better accessibility, make sure to:
 

@@ -17,7 +17,7 @@ import { DisplayProperties } from './display-properties';
 import { Grouping } from './grouping';
 import { Ordering } from './ordering';
 
-interface DisplaySettingsProps {
+export interface DataTableDisplayControlsProps {
   trigger?: ReactNode;
   classNames?: { content?: string };
 }
@@ -34,7 +34,7 @@ export function DisplaySettings<TData, TValue>({
     </Button>
   ),
   classNames
-}: DisplaySettingsProps) {
+}: DataTableDisplayControlsProps) {
   const {
     table,
     updateTableQuery,

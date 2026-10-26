@@ -184,7 +184,7 @@
 
 .title {
   font-size: var(--rs-font-size-large);
-  font-weight: var(--rs-font-weight-semibold);
+  font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-large);
   letter-spacing: var(--rs-letter-spacing-large);
   color: var(--rs-color-foreground-base-primary);
