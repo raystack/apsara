@@ -24,7 +24,7 @@
   width: 100%;
   overflow-y: auto;
   color: var(--rs-color-foreground-base-primary);
-  font-family: var(--rs-font-family);
+  font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   letter-spacing: var(--rs-letter-spacing-small);
 }
