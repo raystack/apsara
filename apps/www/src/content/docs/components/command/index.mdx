@@ -117,7 +117,7 @@ Rendered when no items are visible (all filtered out, or the list is empty). Aut
 
 ### Status
 
-A visually hidden live region. Screen readers announce its children while the input has text. Place it anywhere inside `Command`. A function child receives the number of matching items. The count needs the `items` prop, so without it a function child renders nothing. Built on [Base UI Autocomplete.Status](https://base-ui.com/react/components/autocomplete).
+A visually hidden live region. Screen readers announce its children while the input has text. Place it anywhere inside `Command`. A function child receives the number of matching items. The count needs the `items` prop. Without it, the function receives `null`. Built on [Base UI Autocomplete.Status](https://base-ui.com/react/components/autocomplete).
 
 <auto-type-table path="./props.ts" name="CommandStatusProps" />
 

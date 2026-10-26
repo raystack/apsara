@@ -33,8 +33,8 @@ const countItems = (items: readonly unknown[]) =>
 
 export interface CommandStatusProps
   extends Omit<AutocompletePrimitive.Status.Props, 'children'> {
-  /** Text to announce while the input has text. A function receives the number of matching items and needs the `items` prop. */
-  children?: ReactNode | ((count: number) => ReactNode);
+  /** Text to announce while the input has text. A function receives the number of matching items, or `null` without the `items` prop. */
+  children?: ReactNode | ((count: number | null) => ReactNode);
 }
 
 export const CommandStatus = ({
@@ -47,8 +47,10 @@ export const CommandStatus = ({
 
   let content: ReactNode = null;
   if (inputValue) {
-    if (typeof children !== 'function') content = children;
-    else if (hasItems) content = children(countItems(filteredItems));
+    content =
+      typeof children === 'function'
+        ? children(hasItems ? countItems(filteredItems) : null)
+        : children;
   }
 
   return (
