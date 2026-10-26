@@ -53,7 +53,8 @@
   padding: var(--rs-space-2);
 }
 
-.comboboxContent:empty {
+/* Groups stay rendered while filtering, so a group with no matches is an empty child. */
+.comboboxContent:not(:has(> :not(:empty))) {
   padding: 0;
 }
 
@@ -69,7 +70,7 @@
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
 }
 
-.comboboxContainer:has(.comboboxContent:empty) .comboboxInput {
+.comboboxContainer:not(:has(.comboboxContent > :not(:empty))) .comboboxInput {
   border-bottom: none;
 }
 

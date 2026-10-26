@@ -295,6 +295,36 @@ describe('Menu', () => {
       );
     });
 
+    it('keeps uncontrolled checkbox and radio state while filtering', async () => {
+      await renderAndOpenDropdown(
+        <Menu autocomplete>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content>
+            <Menu.CheckboxItem defaultChecked>Show grid</Menu.CheckboxItem>
+            <Menu.Group>
+              <Menu.CheckboxItem defaultChecked>Show rulers</Menu.CheckboxItem>
+              <Menu.RadioGroup defaultValue='list'>
+                <Menu.RadioItem value='list'>List view</Menu.RadioItem>
+                <Menu.RadioItem value='board'>Board view</Menu.RadioItem>
+              </Menu.RadioGroup>
+            </Menu.Group>
+          </Menu.Content>
+        </Menu>
+      );
+      const option = (name: string) => screen.getByRole('option', { name });
+      fireEvent.click(option('Show grid'));
+      fireEvent.click(option('Show rulers'));
+      fireEvent.click(option('Board view'));
+
+      search('view');
+      expect(option('Board view')).toHaveAttribute('aria-checked', 'true');
+
+      search('');
+      expect(option('Show grid')).toHaveAttribute('aria-checked', 'false');
+      expect(option('Show rulers')).toHaveAttribute('aria-checked', 'false');
+      expect(option('Board view')).toHaveAttribute('aria-checked', 'true');
+    });
+
     it('renders link items as anchors', async () => {
       await renderAndOpenDropdown(<SearchMenu />);
       const link = screen.getByRole('option', { name: 'Docs' });

@@ -2,7 +2,7 @@
 
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { cx } from 'class-variance-authority';
-import { ComponentProps, Fragment, ReactNode } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import styles from './menu.module.css';
 import { useMenuContext } from './menu-root';
 
@@ -11,12 +11,7 @@ export function MenuGroup({
   children,
   ...props
 }: MenuPrimitive.Group.Props) {
-  const { shouldFilter } = useMenuContext();
-
-  if (shouldFilter) {
-    return <Fragment>{children}</Fragment>;
-  }
-
+  // Stays rendered while filtering. Removing it would remount the items and reset their state.
   return (
     <MenuPrimitive.Group
       data-slot='menu-group'

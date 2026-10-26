@@ -2,7 +2,7 @@
 
 import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { ComponentProps, Fragment } from 'react';
+import { ComponentProps } from 'react';
 import styles from '../menu/menu.module.css';
 import { useMenuContext } from '../menu/menu-root';
 
@@ -12,12 +12,7 @@ export const ContextMenuGroup = ({
   children,
   ...props
 }: ContextMenuGroupProps) => {
-  const { shouldFilter } = useMenuContext();
-
-  if (shouldFilter) {
-    return <Fragment>{children}</Fragment>;
-  }
-
+  // Stays rendered while filtering. Removing it would remount the items and reset their state.
   return (
     <ContextMenuPrimitive.Group
       data-slot='context-menu-group'
