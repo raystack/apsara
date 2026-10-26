@@ -45,9 +45,7 @@ export const Indicator = ({
   'aria-label': ariaLabel,
   ...props
 }: IndicatorProps) => {
-  const resolvedVariant = variant ?? 'accent';
-  const accessibilityLabel =
-    ariaLabel || label || `${resolvedVariant} indicator`;
+  const accessibilityLabel = ariaLabel || label || 'Indicator';
 
   return (
     <div
@@ -57,7 +55,7 @@ export const Indicator = ({
     >
       {children}
       <div
-        className={indicator({ variant: resolvedVariant, className })}
+        className={indicator({ variant, className })}
         role='status'
         aria-label={accessibilityLabel}
         data-slot='indicator-badge'
