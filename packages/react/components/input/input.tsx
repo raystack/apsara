@@ -14,13 +14,13 @@ const inputWrapper = cva(styles['input-wrapper'], {
       large: styles['size-large']
     },
     variant: {
-      default: styles['variant-default'],
-      borderless: styles['variant-borderless']
+      outline: null,
+      text: styles['variant-text']
     }
   },
   defaultVariants: {
     size: 'large',
-    variant: 'default'
+    variant: 'outline'
   }
 });
 
@@ -34,7 +34,7 @@ export interface InputProps
   suffix?: string;
   chips?: Array<{ label: string; onRemove?: () => void }>;
   maxChipsVisible?: number;
-  variant?: 'default' | 'borderless';
+  variant?: 'outline' | 'text';
   containerRef?: RefObject<HTMLDivElement | null>;
   /** @deprecated Use `[data-slot="input-container"]` instead. */
   classNames?: { container?: string };
@@ -52,7 +52,7 @@ export function Input({
   maxChipsVisible = 2,
   size,
   radius,
-  variant = 'default',
+  variant = 'outline',
   containerRef,
   classNames,
   required,

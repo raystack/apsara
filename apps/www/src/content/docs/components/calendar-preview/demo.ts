@@ -173,7 +173,7 @@ export const periodsDemo = {
     {
       name: 'All scales',
       code: `<CalendarPreview
-              scales={['day', 'month', 'quarter', 'halfYear', 'year']}
+              scales={['day', 'month', 'quarter', 'half-year', 'year']}
               defaultMonth={new Date(2026, 7, 1)}
               defaultScale="quarter"
             >
@@ -183,7 +183,7 @@ export const periodsDemo = {
     {
       name: 'In a popover',
       code: `<CalendarPreview
-              scales={['day', 'month', 'quarter', 'halfYear', 'year']}
+              scales={['day', 'month', 'quarter', 'half-year', 'year']}
               defaultMonth={new Date(2026, 7, 1)}
             >
               <CalendarPreview.Trigger placeholder="Add start date" />
@@ -218,7 +218,7 @@ export const periodsDemo = {
     {
       name: 'Trailing value',
       code: `function CalendarPreviewTrailingExample() {
-  const scales = ['day', 'month', 'quarter', 'halfYear', 'year'];
+  const scales = ['day', 'month', 'quarter', 'half-year', 'year'];
   const [start, setStart] = React.useState({ date: '2026-07-01', scale: 'quarter' });
   const [end, setEnd] = React.useState({ date: '2026-09-30', scale: 'quarter' });
 
@@ -294,7 +294,7 @@ export const limitsDemo = {
     {
       name: 'Bounded periods',
       code: `<CalendarPreview
-              scales={['month', 'quarter', 'halfYear']}
+              scales={['month', 'quarter', 'half-year']}
               defaultScale="quarter"
               trailingValue
               minDate={new Date(2026, 6, 15)}

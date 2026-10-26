@@ -14,7 +14,6 @@ export interface SearchProps extends InputProps {
   onClear?: (
     event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
   ) => void;
-  variant?: 'default' | 'borderless';
   /**
    * Clears the input when Escape is pressed and the input has a value.
    * @default true
@@ -47,7 +46,6 @@ export function Search({
   onKeyDown,
   value,
   width = '100%',
-  variant = 'default',
   ref,
   leadingIcon = <SearchIcon />,
   clearOnEscape = true,
@@ -118,7 +116,6 @@ export function Search({
         value={value}
         size={size}
         aria-label={placeholder}
-        variant={variant}
         role='searchbox'
         enterKeyHint='search'
         ref={mergedRef}

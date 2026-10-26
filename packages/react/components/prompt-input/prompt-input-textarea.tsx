@@ -86,7 +86,7 @@ export function PromptInputTextarea({
     <TextArea
       ref={mergedRef}
       rows={1}
-      variant='borderless'
+      variant='text'
       size='small'
       className={cx(styles.textarea, className)}
       value={context.value}

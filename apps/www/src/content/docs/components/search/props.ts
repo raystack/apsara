@@ -12,6 +12,12 @@ export interface SearchProps {
   disabled?: boolean;
 
   /**
+   * Visual variant of the search input.
+   * @default outline
+   */
+  variant?: 'outline' | 'text';
+
+  /**
    * Icon before the input. Pass `null` to hide it.
    * @default <SearchIcon />
    */

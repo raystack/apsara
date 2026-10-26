@@ -38,9 +38,9 @@
   --chip-fg-hover: var(--rs-color-foreground-base-primary);
   --chip-fg-active: var(--rs-color-foreground-base-primary);
   /* A foreground token as the border color. */
-  --chip-filled-border-hover: var(--rs-color-foreground-base-primary);
-  --chip-filled-fg-hover: var(--rs-color-foreground-base-primary);
-  --chip-filled-bg-active: var(--rs-color-background-neutral-primary);
+  --chip-solid-border-hover: var(--rs-color-foreground-base-primary);
+  --chip-solid-fg-hover: var(--rs-color-foreground-base-primary);
+  --chip-solid-bg-active: var(--rs-color-background-neutral-primary);
 }
 
 .chip-color-accent {
@@ -50,10 +50,10 @@
   --chip-fg: var(--rs-color-foreground-accent-primary);
   --chip-fg-hover: var(--rs-color-foreground-accent-primary-hover);
   --chip-fg-active: var(--rs-color-foreground-accent-primary);
-  --chip-filled-border-hover: var(--rs-color-border-accent-emphasis);
-  /* Accent filled hover changes the border only, not the text. */
-  --chip-filled-fg-hover: var(--rs-color-foreground-accent-primary);
-  --chip-filled-bg-active: var(--rs-color-background-accent-primary);
+  --chip-solid-border-hover: var(--rs-color-border-accent-emphasis);
+  /* Accent solid hover changes the border only, not the text. */
+  --chip-solid-fg-hover: var(--rs-color-foreground-accent-primary);
+  --chip-solid-bg-active: var(--rs-color-background-accent-primary);
 }
 
 .chip-color-danger {
@@ -63,9 +63,9 @@
   --chip-fg: var(--rs-color-foreground-danger-primary);
   --chip-fg-hover: var(--rs-color-foreground-danger-primary-hover);
   --chip-fg-active: var(--rs-color-foreground-danger-primary);
-  --chip-filled-border-hover: var(--rs-color-border-danger-emphasis);
-  --chip-filled-fg-hover: var(--rs-color-foreground-danger-primary);
-  --chip-filled-bg-active: var(--rs-color-background-danger-primary);
+  --chip-solid-border-hover: var(--rs-color-border-danger-emphasis);
+  --chip-solid-fg-hover: var(--rs-color-foreground-danger-primary);
+  --chip-solid-bg-active: var(--rs-color-background-danger-primary);
 }
 
 .chip-color-success {
@@ -75,9 +75,9 @@
   --chip-fg: var(--rs-color-foreground-success-primary);
   --chip-fg-hover: var(--rs-color-foreground-success-primary-hover);
   --chip-fg-active: var(--rs-color-foreground-success-primary);
-  --chip-filled-border-hover: var(--rs-color-border-success-emphasis);
-  --chip-filled-fg-hover: var(--rs-color-foreground-success-primary);
-  --chip-filled-bg-active: var(--rs-color-background-success-primary);
+  --chip-solid-border-hover: var(--rs-color-border-success-emphasis);
+  --chip-solid-fg-hover: var(--rs-color-foreground-success-primary);
+  --chip-solid-bg-active: var(--rs-color-background-success-primary);
 }
 
 /* The public value is `warning`, backed by the `attention` tokens, as in Badge. */
@@ -88,9 +88,9 @@
   --chip-fg: var(--rs-color-foreground-attention-primary);
   --chip-fg-hover: var(--rs-color-foreground-attention-primary-hover);
   --chip-fg-active: var(--rs-color-foreground-attention-primary);
-  --chip-filled-border-hover: var(--rs-color-border-attention-emphasis);
-  --chip-filled-fg-hover: var(--rs-color-foreground-attention-primary);
-  --chip-filled-bg-active: var(--rs-color-background-attention-primary);
+  --chip-solid-border-hover: var(--rs-color-border-attention-emphasis);
+  --chip-solid-fg-hover: var(--rs-color-foreground-attention-primary);
+  --chip-solid-bg-active: var(--rs-color-background-attention-primary);
 }
 
 /* Variants */
@@ -111,21 +111,21 @@
   color: var(--chip-fg-active);
 }
 
-.chip-variant-filled {
+.chip-variant-solid {
   background: var(--rs-color-background-base-primary);
   border: 0.5px solid var(--chip-border);
   color: var(--chip-fg);
 }
 
-.chip-variant-filled:hover {
-  border-color: var(--chip-filled-border-hover);
-  color: var(--chip-filled-fg-hover);
+.chip-variant-solid:hover {
+  border-color: var(--chip-solid-border-hover);
+  color: var(--chip-solid-fg-hover);
   background: var(--rs-color-background-base-primary-hover);
 }
 
-.chip-variant-filled:active,
-.chip-variant-filled[data-state="active"] {
-  background: var(--chip-filled-bg-active);
+.chip-variant-solid:active,
+.chip-variant-solid[data-state="active"] {
+  background: var(--chip-solid-bg-active);
   color: var(--chip-fg-active);
 }
 
