@@ -5,7 +5,7 @@ import {
   type ToastObject,
   Toast as ToastPrimitive
 } from '@base-ui/react';
-import { type ReactNode, useMemo } from 'react';
+import { createContext, type ReactNode, useContext, useMemo } from 'react';
 
 export interface ToastData {
   /**
@@ -97,6 +97,9 @@ function isAnchored(options: string | ToastUpdateOptions) {
   return typeof options !== 'string' && options.positionerProps?.anchor != null;
 }
 
+// A symbol key keeps the anchored manager out of the public API.
+export const anchoredManager = Symbol('anchoredManager');
+
 /**
  * Public toast manager. Mirrors the Base UI manager but exposes `leadingIcon`
  * as a first-class option on `add`/`update`/`promise`. All other Base UI
@@ -110,6 +113,8 @@ export interface ToastManager
     promise: Promise<Value>,
     options: ToastPromiseOptions<Value>
   ) => Promise<Value>;
+  /** Base UI renders anchored toasts in a separate provider, with this manager. */
+  [anchoredManager]: BaseManager;
 }
 
 // Base UI turns off swipe when `positionerProps.anchor` is set, even to `null`.
@@ -121,25 +126,25 @@ type Methods = Pick<BaseManager, 'add' | 'close' | 'update' | 'promise'>;
 
 // The toast's store is picked when it is created, and only `add` and `promise`
 // know it. `close` and `update` go to both stores, which ignore unknown ids.
-function wrap(
+function route(
   stacked: Methods,
-  anchored?: Methods
+  anchored: Methods
 ): Pick<ToastManager, 'add' | 'close' | 'update' | 'promise'> {
   return {
     add: options =>
-      anchored && isAnchored(options)
+      isAnchored(options)
         ? anchored.add(lift(options))
         : stacked.add(lift(unanchored(options))),
     close: id => {
       stacked.close(id);
-      anchored?.close(id);
+      anchored.close(id);
     },
     update: (id, options) => {
       stacked.update(id, liftUpdater(options));
-      anchored?.update(id, liftUpdater(options));
+      anchored.update(id, liftUpdater(options));
     },
     promise: (promise, { loading, ...options }) =>
-      anchored && isAnchored(loading)
+      isAnchored(loading)
         ? anchored.promise(promise, liftPromiseOptions({ ...options, loading }))
         : stacked.promise(
             promise,
@@ -152,31 +157,19 @@ function wrap(
   };
 }
 
-// Base UI renders anchored toasts in their own provider, so each manager
-// keeps a second Base UI manager for them. `Toast.Provider` reads it here.
-const anchoredManagers = new WeakMap<ToastManager, BaseManager>();
-
-// `useToastManager` can only reach the stacked store, through Base UI's hook.
-// `Toast.Provider` links that store's `add` to the anchored manager.
-const anchoredByStore = new WeakMap<object, BaseManager>();
-
-export function getAnchoredManager(manager: ToastManager) {
-  return anchoredManagers.get(manager);
-}
-
-export function linkAnchoredManager(add: object, anchored?: BaseManager) {
-  if (anchored) anchoredByStore.set(add, anchored);
-}
-
 export function createToastManager(): ToastManager {
   const stacked = ToastPrimitive.createToastManager<ToastData>();
   const anchored = ToastPrimitive.createToastManager<ToastData>();
-  const manager = { ...stacked, ...wrap(stacked, anchored) };
-  anchoredManagers.set(manager, anchored);
-  return manager;
+  return {
+    ...stacked,
+    ...route(stacked, anchored),
+    [anchoredManager]: anchored
+  };
 }
 
 export const toastManager = createToastManager();
+
+export const ToastManagerContext = createContext<ToastManager>(toastManager);
 
 type BaseHookReturn = ReturnType<
   typeof ToastPrimitive.useToastManager<ToastData>
@@ -195,9 +188,12 @@ export interface UseToastManagerReturn
 }
 
 export function useToastManager(): UseToastManagerReturn {
-  const stacked = ToastPrimitive.useToastManager<ToastData>();
+  const store = ToastPrimitive.useToastManager<ToastData>();
+  const manager = useContext(ToastManagerContext);
+  // Stacked toasts go straight into the store, so a toast added in a mount
+  // effect shows even though the provider has not subscribed yet.
   return useMemo(
-    () => ({ ...stacked, ...wrap(stacked, anchoredByStore.get(stacked.add)) }),
-    [stacked]
+    () => ({ ...store, ...route(store, manager[anchoredManager]) }),
+    [store, manager]
   );
 }

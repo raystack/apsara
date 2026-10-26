@@ -5,10 +5,10 @@ import { cx } from 'class-variance-authority';
 import { useThemeInjection } from '../theme/portal';
 import styles from './toast.module.css';
 import {
+  anchoredManager,
   toastManager as defaultToastManager,
-  getAnchoredManager,
-  linkAnchoredManager,
-  type ToastManager
+  type ToastManager,
+  ToastManagerContext
 } from './toast-manager';
 import { AnchoredToastRoot, ToastRoot } from './toast-root';
 
@@ -35,17 +35,9 @@ export interface ToastProviderProps
   toastManager?: ToastManager;
 }
 
-function StackedToasts({
-  position,
-  anchoredManager
-}: {
-  position: ToastPosition;
-  anchoredManager: ReturnType<typeof getAnchoredManager>;
-}) {
+function StackedToasts({ position }: { position: ToastPosition }) {
   const theme = useThemeInjection();
-  const { toasts, add } = ToastPrimitive.useToastManager();
-  // Runs before `children` render, so their `useToastManager` finds the link.
-  linkAnchoredManager(add, anchoredManager);
+  const { toasts } = ToastPrimitive.useToastManager();
   return (
     <ToastPrimitive.Portal {...theme}>
       <ToastPrimitive.Viewport
@@ -90,15 +82,15 @@ export function ToastProvider({
   children,
   ...props
 }: ToastProviderProps) {
-  const anchoredManager = getAnchoredManager(toastManager);
   return (
-    <>
-      {/* Comes first so it subscribes before effects in `children` run. */}
-      {anchoredManager && (
-        <ToastPrimitive.Provider toastManager={anchoredManager} {...props}>
-          <AnchoredToasts />
-        </ToastPrimitive.Provider>
-      )}
+    <ToastManagerContext.Provider value={toastManager}>
+      {/* Comes first, so it subscribes before effects in `children` run. */}
+      <ToastPrimitive.Provider
+        toastManager={toastManager[anchoredManager]}
+        {...props}
+      >
+        <AnchoredToasts />
+      </ToastPrimitive.Provider>
       <ToastPrimitive.Provider
         // The Provider only reads the subscribe channel, which our manager keeps from
         // Base UI's. The cast is needed because Base UI's `update` is generic over toast data.
@@ -107,10 +99,10 @@ export function ToastProvider({
         }
         {...props}
       >
-        <StackedToasts position={position} anchoredManager={anchoredManager} />
         {children}
+        <StackedToasts position={position} />
       </ToastPrimitive.Provider>
-    </>
+    </ToastManagerContext.Provider>
   );
 }
 
