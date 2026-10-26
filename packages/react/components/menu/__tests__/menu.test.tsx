@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Button } from '../../button/button';
 import { Menu } from '../menu';
@@ -239,33 +240,6 @@ describe('Menu', () => {
     });
   });
 
-  describe('Empty State', () => {
-    it('shows only when the menu has no items', async () => {
-      const { unmount } = render(
-        <Menu>
-          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
-          <Menu.Content>
-            <Menu.Item>Profile</Menu.Item>
-            <Menu.EmptyState>No actions</Menu.EmptyState>
-          </Menu.Content>
-        </Menu>
-      );
-      fireEvent.click(screen.getByText(TRIGGER_TEXT));
-      expect(screen.queryByText(/No actions/)).not.toBeInTheDocument();
-      unmount();
-
-      await renderAndOpenDropdown(
-        <Menu>
-          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
-          <Menu.Content>
-            <Menu.EmptyState>No actions</Menu.EmptyState>
-          </Menu.Content>
-        </Menu>
-      );
-      expect(screen.getByRole('status')).toHaveTextContent('No actions');
-    });
-  });
-
   describe('Autocomplete', () => {
     const SearchMenu = () => (
       <Menu autocomplete>
@@ -280,8 +254,6 @@ describe('Menu', () => {
             <Menu.RadioItem value='board'>Board view</Menu.RadioItem>
           </Menu.RadioGroup>
           <Menu.LinkItem href='/docs'>Docs</Menu.LinkItem>
-          <Menu.EmptyState>No results</Menu.EmptyState>
-          <Menu.Status />
         </Menu.Content>
       </Menu>
     );
@@ -301,35 +273,6 @@ describe('Menu', () => {
 
       search('view');
       expect(screen.getAllByRole('option')).toHaveLength(2);
-    });
-
-    it('shows the empty state only when nothing matches', async () => {
-      await renderAndOpenDropdown(<SearchMenu />);
-      const empty = document.querySelector('[data-slot="menu-empty-state"]');
-      expect(empty).toHaveAttribute('role', 'status');
-      expect(empty).toBeEmptyDOMElement();
-
-      search('zzz');
-      expect(empty).toHaveTextContent('No results');
-
-      search('team');
-      expect(empty).toBeEmptyDOMElement();
-    });
-
-    it('announces the number of matches', async () => {
-      await renderAndOpenDropdown(<SearchMenu />);
-      const status = document.querySelector('[data-slot="menu-status"]');
-      expect(status).toHaveAttribute('role', 'status');
-      expect(status).toBeEmptyDOMElement();
-
-      search('view');
-      expect(status).toHaveTextContent('2 results');
-
-      search('docs');
-      expect(status).toHaveTextContent('1 result');
-
-      search('zzz');
-      expect(status).toHaveTextContent('0 results');
     });
 
     it('toggles checkbox and radio items and keeps the search', async () => {

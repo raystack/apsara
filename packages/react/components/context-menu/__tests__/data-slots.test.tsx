@@ -105,7 +105,6 @@ describe('ContextMenu data-slot contract', () => {
         <ContextMenu.Trigger>{TRIGGER_TEXT}</ContextMenu.Trigger>
         <ContextMenu.Content>
           <ContextMenu.Item value='item'>Item</ContextMenu.Item>
-          <ContextMenu.Status />
         </ContextMenu.Content>
       </ContextMenu>
     );
@@ -113,8 +112,7 @@ describe('ContextMenu data-slot contract', () => {
     expectSlots(document.body, [
       'context-menu-search-input',
       'context-menu-search-list',
-      'context-menu-item',
-      'context-menu-status'
+      'context-menu-item'
     ]);
   });
 });

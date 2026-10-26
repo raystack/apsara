@@ -1,12 +1,8 @@
 'use client';
 
-import {
-  Autocomplete as AutocompletePrimitive,
-  Menu as MenuPrimitive
-} from '@base-ui/react';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, Fragment, ReactNode } from 'react';
-import { useItemCount } from '~/shared/item-count';
 import styles from './menu.module.css';
 import { useMenuContext } from './menu-root';
 
@@ -71,90 +67,19 @@ export function MenuSeparator({ className, ...props }: ComponentProps<'div'>) {
 }
 MenuSeparator.displayName = 'Menu.Separator';
 
-export interface MenuEmptyStateProps extends ComponentProps<'div'> {
-  children: ReactNode;
-}
-
-/** @remarks Only for internal usage. */
-export function EmptyStateBase({
-  slotPrefix,
+export function MenuEmptyState({
   className,
   children,
   ...props
-}: MenuEmptyStateProps & { slotPrefix: string }) {
-  const { autocomplete } = useMenuContext();
-  const count = useItemCount();
-  const content = count ? null : children;
-  const sharedProps = {
-    'data-slot': `${slotPrefix}-empty-state`,
-    className: cx(styles.empty, className)
-  };
-
-  if (autocomplete) {
-    return (
-      <AutocompletePrimitive.Empty {...sharedProps} {...props}>
-        {content}
-      </AutocompletePrimitive.Empty>
-    );
-  }
-
+}: ComponentProps<'div'> & { children: ReactNode }) {
   return (
     <div
-      {...sharedProps}
-      role='status'
-      aria-live='polite'
-      aria-atomic
+      data-slot='menu-empty-state'
+      className={cx(styles.empty, className)}
       {...props}
     >
-      {content}
+      {children}
     </div>
   );
 }
-
-export function MenuEmptyState(props: MenuEmptyStateProps) {
-  return <EmptyStateBase slotPrefix='menu' {...props} />;
-}
 MenuEmptyState.displayName = 'Menu.EmptyState';
-
-export interface MenuStatusProps
-  extends Omit<ComponentProps<'div'>, 'children'> {
-  /** Text to announce. Receives the number of matching items. */
-  children?: ReactNode | ((count: number) => ReactNode);
-}
-
-const defaultStatus = (count: number) =>
-  `${count} ${count === 1 ? 'result' : 'results'}`;
-
-/** @remarks Only for internal usage. */
-export function StatusBase({
-  slotPrefix,
-  className,
-  children = defaultStatus,
-  ...props
-}: MenuStatusProps & { slotPrefix: string }) {
-  const { autocomplete, inputValue } = useMenuContext();
-  const count = useItemCount() ?? 0;
-
-  if (!autocomplete) return null;
-
-  const content = inputValue
-    ? typeof children === 'function'
-      ? children(count)
-      : children
-    : null;
-
-  return (
-    <AutocompletePrimitive.Status
-      data-slot={`${slotPrefix}-status`}
-      className={cx(styles.status, className)}
-      {...props}
-    >
-      {content}
-    </AutocompletePrimitive.Status>
-  );
-}
-
-export function MenuStatus(props: MenuStatusProps) {
-  return <StatusBase slotPrefix='menu' {...props} />;
-}
-MenuStatus.displayName = 'Menu.Status';

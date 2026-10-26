@@ -6,7 +6,6 @@ import {
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { KeyboardEvent, useCallback, useRef } from 'react';
-import { ItemCountProvider } from '~/shared/item-count';
 import { type Radius, radiusStyle } from '../../shared/radius';
 import styles from '../menu/menu.module.css';
 import { useMenuContext } from '../menu/menu-root';
@@ -167,7 +166,9 @@ export const ContextMenuContent = ({
                 placeholder={searchPlaceholder}
                 className={styles.comboboxInput}
                 ref={inputRef}
-                onPointerEnter={focusInput}
+                onPointerEnter={e => {
+                  focusInput();
+                }}
                 onKeyDown={e => {
                   if (e.key === 'ArrowLeft') return;
                   if (e.key === 'Escape') return checkAndCloseSubMenu(e);
@@ -182,11 +183,11 @@ export const ContextMenuContent = ({
                 className={styles.comboboxContent}
                 ref={containerRef}
               >
-                <ItemCountProvider>{children}</ItemCountProvider>
+                {children}
               </AutocompletePrimitive.List>
             </AutocompletePrimitive.Root>
           ) : (
-            <ItemCountProvider>{children}</ItemCountProvider>
+            children
           )}
         </ContextMenuPrimitive.Popup>
       </ContextMenuPrimitive.Positioner>

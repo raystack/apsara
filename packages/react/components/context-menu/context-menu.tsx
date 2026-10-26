@@ -13,8 +13,7 @@ import {
   ContextMenuEmptyState,
   ContextMenuGroup,
   ContextMenuLabel,
-  ContextMenuSeparator,
-  ContextMenuStatus
+  ContextMenuSeparator
 } from './context-menu-misc';
 import { ContextMenuRoot, ContextMenuSubMenu } from './context-menu-root';
 import {
@@ -34,7 +33,6 @@ export const ContextMenu = Object.assign(ContextMenuRoot, {
   Label: ContextMenuLabel,
   Separator: ContextMenuSeparator,
   EmptyState: ContextMenuEmptyState,
-  Status: ContextMenuStatus,
   Submenu: ContextMenuSubMenu,
   SubmenuTrigger: ContextMenuSubTrigger,
   SubmenuContent: ContextMenuSubContent

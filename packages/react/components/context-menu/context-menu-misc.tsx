@@ -4,12 +4,6 @@ import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, Fragment } from 'react';
 import styles from '../menu/menu.module.css';
-import {
-  EmptyStateBase,
-  MenuEmptyStateProps,
-  MenuStatusProps,
-  StatusBase
-} from '../menu/menu-misc';
 import { useMenuContext } from '../menu/menu-root';
 
 export type ContextMenuGroupProps = ContextMenuPrimitive.Group.Props;
@@ -78,14 +72,17 @@ export const ContextMenuSeparator = ({
 };
 ContextMenuSeparator.displayName = 'ContextMenu.Separator';
 
-export type ContextMenuEmptyStateProps = MenuEmptyStateProps;
-export const ContextMenuEmptyState = (props: ContextMenuEmptyStateProps) => (
-  <EmptyStateBase slotPrefix='context-menu' {...props} />
+export const ContextMenuEmptyState = ({
+  className,
+  children,
+  ...props
+}: ComponentProps<'div'>) => (
+  <div
+    data-slot='context-menu-empty-state'
+    className={cx(styles.empty, className)}
+    {...props}
+  >
+    {children}
+  </div>
 );
 ContextMenuEmptyState.displayName = 'ContextMenu.EmptyState';
-
-export type ContextMenuStatusProps = MenuStatusProps;
-export const ContextMenuStatus = (props: ContextMenuStatusProps) => (
-  <StatusBase slotPrefix='context-menu' {...props} />
-);
-ContextMenuStatus.displayName = 'ContextMenu.Status';

@@ -187,7 +187,7 @@ describe('ContextMenu', () => {
   });
 
   describe('Autocomplete', () => {
-    it('filters items and shows the empty state only with no matches', async () => {
+    it('filters checkbox items with the other items', async () => {
       await renderAndOpenContextMenu(
         <ContextMenu autocomplete>
           <ContextMenu.Trigger>{TRIGGER_TEXT}</ContextMenu.Trigger>
@@ -196,29 +196,16 @@ describe('ContextMenu', () => {
               <ContextMenu.Item key={item.id}>{item.label}</ContextMenu.Item>
             ))}
             <ContextMenu.CheckboxItem>Show grid</ContextMenu.CheckboxItem>
-            <ContextMenu.EmptyState>No results</ContextMenu.EmptyState>
-            <ContextMenu.Status />
           </ContextMenu.Content>
         </ContextMenu>
       );
 
       const input = screen.getByRole('combobox');
-      const empty = document.querySelector(
-        '[data-slot="context-menu-empty-state"]'
-      );
-      const status = document.querySelector(
-        '[data-slot="context-menu-status"]'
-      );
-      expect(empty).toBeEmptyDOMElement();
-
       fireEvent.change(input, { target: { value: 'grid' } });
       expect(screen.getAllByRole('option')).toHaveLength(1);
-      expect(status).toHaveTextContent('1 result');
-      expect(empty).toBeEmptyDOMElement();
 
       fireEvent.change(input, { target: { value: 'zzz' } });
       expect(screen.queryAllByRole('option')).toHaveLength(0);
-      expect(empty).toHaveTextContent('No results');
     });
   });
 });

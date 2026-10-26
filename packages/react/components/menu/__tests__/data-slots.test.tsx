@@ -115,7 +115,6 @@ describe('Menu data-slot contract', () => {
         <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
         <Menu.Content>
           <Menu.Item value='item'>Item</Menu.Item>
-          <Menu.Status />
         </Menu.Content>
       </Menu>
     );
@@ -123,8 +122,7 @@ describe('Menu data-slot contract', () => {
     expectSlots(document.body, [
       'menu-search-input',
       'menu-search-list',
-      'menu-item',
-      'menu-status'
+      'menu-item'
     ]);
   });
 });

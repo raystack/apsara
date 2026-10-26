@@ -269,20 +269,3 @@ function SelectionContextMenu() {
   );
 }`
 };
-
-export const emptyDemo = {
-  type: 'code',
-  code: `
-  <ContextMenu autocomplete>
-    <ContextMenu.Trigger style={{ padding: "2em 4em", border: "1px dashed var(--rs-color-border-base-primary)", borderRadius: "var(--rs-radius-2)" }}>
-      <Text>Right click here</Text>
-    </ContextMenu.Trigger>
-    <ContextMenu.Content searchPlaceholder="Search actions...">
-      <ContextMenu.Item>Copy</ContextMenu.Item>
-      <ContextMenu.Item>Rename</ContextMenu.Item>
-      <ContextMenu.Item>Delete</ContextMenu.Item>
-      <ContextMenu.EmptyState>No actions found</ContextMenu.EmptyState>
-      <ContextMenu.Status />
-    </ContextMenu.Content>
-  </ContextMenu>`
-};

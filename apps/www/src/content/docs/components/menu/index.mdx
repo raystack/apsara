@@ -16,7 +16,6 @@ import {
   checkboxDemo,
   radioDemo,
   linkDemo,
-  emptyDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -97,12 +96,6 @@ Pass `autocomplete` to the Menu root. Each menu manages its own autocomplete sta
 - **Submenus** opt in separately: pass `autocomplete` to `Menu.Submenu`.
 
 <Demo data={autocompleteDemo} />
-
-### Empty state and status
-
-`Menu.EmptyState` shows its children only when the menu has no items, for example when nothing matches the search. `Menu.Status` announces the number of matching items to screen readers while the search input has text. It is not visible.
-
-<Demo data={emptyDemo} />
 
 ### Linear inspired Menu
 
@@ -196,15 +189,9 @@ Visual divider between menu items or groups. Hidden when filtering is active.
 
 ### EmptyState
 
-Content to show when the menu has no items. With `autocomplete`, it shows when nothing matches the search. The element stays in the DOM as a live region (`role="status"`), so screen readers announce it when it appears. Built on [Base UI Autocomplete.Empty](https://base-ui.com/react/components/autocomplete) in a searchable menu.
+Placeholder content when there are no menu items to display.
 
 <auto-type-table path="./props.ts" name="MenuEmptyStateProps" />
-
-### Status
-
-A live region that announces the number of matching items while the search input has text. It is visually hidden. It renders only in a searchable menu (`autocomplete`), and renders nothing otherwise. Built on [Base UI Autocomplete.Status](https://base-ui.com/react/components/autocomplete).
-
-<auto-type-table path="./props.ts" name="MenuStatusProps" />
 
 ### Submenu
 
@@ -252,7 +239,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `menu-radio-item-indicator` | Dot inside a radio item |
 | `menu-link-item` | Each `Menu.LinkItem` |
 | `menu-empty-state` | `Menu.EmptyState` |
-| `menu-status` | `Menu.Status` (when `autocomplete`) |
 | `menu-subtrigger` | `Menu.SubmenuTrigger` |
 
 ## Accessibility
@@ -275,5 +261,3 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
   render as `role="option"` and keep `aria-checked`.
 - `Menu.LinkItem` renders an `<a>` with `role="menuitem"`, or `role="option"`
   in a searchable menu.
-- `Menu.EmptyState` and `Menu.Status` are polite live regions, so screen readers
-  announce when nothing matches and how many items match.

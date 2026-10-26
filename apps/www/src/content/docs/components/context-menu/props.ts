@@ -235,18 +235,8 @@ export interface ContextMenuLinkItemProps {
 }
 
 export interface ContextMenuEmptyStateProps {
-  /** Content to show when the menu has no items or nothing matches the search */
-  children: ReactNode;
-
-  /** Additional CSS class names */
-  className?: string;
-}
-
-export interface ContextMenuStatusProps {
-  /** Text to announce. A function receives the number of matching items.
-   * @default count => `${count} results`
-   */
-  children?: ReactNode | ((count: number) => ReactNode);
+  /** React nodes to render in empty state */
+  children?: ReactNode;
 
   /** Additional CSS class names */
   className?: string;

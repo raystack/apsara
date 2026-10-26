@@ -5,14 +5,12 @@ import {
   Menu as MenuPrimitive
 } from '@base-ui/react';
 import { ReactNode } from 'react';
-import { useRegisterItem } from '~/shared/item-count';
 import { Cell, CellBaseProps } from './cell';
 import { useMenuContext } from './menu-root';
 import { getMatch } from './utils';
 
 /**
- * Hides the item when it does not match the search value (in auto mode),
- * and counts it for `Menu.EmptyState` and `Menu.Status` when it shows.
+ * Hides the item when it does not match the search value (in auto mode).
  * @remarks Only for internal usage.
  */
 export function useMenuItemFilter(value: unknown, children: ReactNode) {
@@ -24,7 +22,6 @@ export function useMenuItemFilter(value: unknown, children: ReactNode) {
       children,
       inputValue
     );
-  useRegisterItem(!hidden);
   return { autocomplete, hidden };
 }
 

@@ -13,7 +13,6 @@ import {
   autocompleteDemo,
   controlledDemo,
   selectionDemo,
-  emptyDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -75,12 +74,6 @@ Pass `autocomplete` to the ContextMenu root. Each menu manages its own autocompl
 - **Submenus** opt in separately: pass `autocomplete` to `ContextMenu.Submenu`.
 
 <Demo data={autocompleteDemo} />
-
-### Empty state and status
-
-`ContextMenu.EmptyState` shows its children only when the menu has no items, for example when nothing matches the search. `ContextMenu.Status` announces the number of matching items to screen readers while the search input has text. It is not visible.
-
-<Demo data={emptyDemo} />
 
 ### Controlled
 
@@ -162,15 +155,9 @@ Visual divider between menu items or groups. Hidden when filtering is active.
 
 ### EmptyState
 
-Content to show when the menu has no items. With `autocomplete`, it shows when nothing matches the search. The element stays in the DOM as a live region (`role="status"`), so screen readers announce it when it appears.
+Placeholder content when there are no menu items to display.
 
 <auto-type-table path="./props.ts" name="ContextMenuEmptyStateProps" />
-
-### Status
-
-A live region that announces the number of matching items while the search input has text. It is visually hidden. It renders only in a searchable menu (`autocomplete`), and renders nothing otherwise.
-
-<auto-type-table path="./props.ts" name="ContextMenuStatusProps" />
 
 ### Submenu
 
@@ -216,7 +203,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `context-menu-radio-item-indicator` | Dot inside a radio item |
 | `context-menu-link-item` | Each `ContextMenu.LinkItem` |
 | `context-menu-empty-state` | `ContextMenu.EmptyState` |
-| `context-menu-status` | `ContextMenu.Status` (when `autocomplete`) |
 | `menu-subtrigger` | `ContextMenu.SubmenuTrigger` (shared with `Menu`'s internals) |
 | `menu-cell-leading-icon` | Leading icon inside an item or submenu trigger (when provided; shared with `Menu`'s internals) |
 | `menu-cell-trailing-icon` | Trailing icon inside an item or submenu trigger (when provided; shared with `Menu`'s internals) |
@@ -238,4 +224,3 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 - Checkbox items use `role="menuitemcheckbox"` and radio items use
   `role="menuitemradio"`, both with `aria-checked`. In a searchable menu they
   render as `role="option"` and keep `aria-checked`.
-- `ContextMenu.EmptyState` and `ContextMenu.Status` are polite live regions.

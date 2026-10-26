@@ -7,8 +7,7 @@ import {
   MenuEmptyState,
   MenuGroup,
   MenuLabel,
-  MenuSeparator,
-  MenuStatus
+  MenuSeparator
 } from './menu-misc';
 import { MenuRadioGroup, MenuRadioItem } from './menu-radio';
 import { MenuRoot, MenuSubMenu } from './menu-root';
@@ -26,7 +25,6 @@ export const Menu = Object.assign(MenuRoot, {
   Label: MenuLabel,
   Separator: MenuSeparator,
   EmptyState: MenuEmptyState,
-  Status: MenuStatus,
   Submenu: MenuSubMenu,
   SubmenuTrigger: MenuSubTrigger,
   SubmenuContent: MenuSubContent,

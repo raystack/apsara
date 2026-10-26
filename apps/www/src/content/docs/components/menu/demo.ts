@@ -582,18 +582,3 @@ export const linkDemo = {
     </Menu.Content>
   </Menu>`
 };
-
-export const emptyDemo = {
-  type: 'code',
-  code: `
-  <Menu autocomplete>
-    <Menu.Trigger render={<Button color="neutral" />}>Assign</Menu.Trigger>
-    <Menu.Content searchPlaceholder="Search people...">
-      <Menu.Item>Ada Lovelace</Menu.Item>
-      <Menu.Item>Grace Hopper</Menu.Item>
-      <Menu.Item>Alan Turing</Menu.Item>
-      <Menu.EmptyState>No people found</Menu.EmptyState>
-      <Menu.Status />
-    </Menu.Content>
-  </Menu>`
-};
