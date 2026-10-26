@@ -58,7 +58,7 @@ const checkboxVariants = cva(styles.checkbox, {
   }
 });
 
-interface CheckboxGroupProps extends CheckboxGroupPrimitive.Props {
+export interface CheckboxGroupProps extends CheckboxGroupPrimitive.Props {
   /** Layout direction of the checkbox group.
    * @defaultValue 'vertical'
    */
@@ -85,7 +85,7 @@ function CheckboxGroup({
 
 CheckboxGroup.displayName = 'Checkbox.Group';
 
-interface CheckboxItemProps
+export interface CheckboxItemProps
   extends CheckboxPrimitive.Root.Props,
     VariantProps<typeof checkboxVariants> {}
 

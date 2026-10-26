@@ -6,10 +6,10 @@ import type {
 } from '@tanstack/table-core';
 import type {
   DataTableFilterOperatorTypes,
+  FilterDataType,
   FilterOperatorTypes,
   FilterSelectOption,
-  FilterTypes,
-  FilterValueType
+  FilterTypes
 } from '~/types/filters';
 import type { FilterChipCalendarProps } from '../filter-chip';
 import type { BaseSelectProps } from '../select/select-root';
@@ -31,7 +31,7 @@ export interface DataTableFilterValues {
 // Internal filter with UI operators and metadata
 export interface InternalFilter extends DataTableFilterValues {
   _type?: FilterTypes;
-  _dataType?: FilterValueType;
+  _dataType?: FilterDataType;
   name: string;
   operator: FilterOperatorTypes;
 }
@@ -76,7 +76,7 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   accessorKey: string;
   header: string;
   filterType?: FilterTypes;
-  dataType?: FilterValueType;
+  dataType?: FilterDataType;
   enableColumnFilter?: boolean;
   enableSorting?: boolean;
   enableHiding?: boolean;
@@ -120,6 +120,7 @@ export interface DataTableProps<TData, TValue> {
   stickyGroupHeader?: boolean;
   /** Return a stable unique id for each row (used as React key). Use for sortable/filterable tables. */
   getRowId?: (row: TData, index: number) => string;
+  children?: React.ReactNode;
 }
 
 export type DataTableContentClassNames = {
@@ -138,7 +139,7 @@ export type DataTableContentBaseProps = {
 
 export type DataTableContentProps = DataTableContentBaseProps;
 
-export type VirtualizedContentProps = DataTableContentBaseProps & {
+export type DataTableVirtualizedContentProps = DataTableContentBaseProps & {
   /** Height of each row in pixels. */
   rowHeight?: number;
   /** Height of group header rows in pixels. Defaults to 40 (matches the non-virtualized section header height). */

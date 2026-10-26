@@ -61,6 +61,8 @@ Radio buttons can be used in forms with proper validation and submission handlin
 
 Pass `value` with `onValueChange` on `Radio.Group` to own the selection. Do this when the choice drives something else on the page or is submitted with a form.
 
+`value`, `defaultValue`, and `onValueChange` share one type. It is `string` by default. `Radio.Group` infers it from `value` or `defaultValue`, or you can set it, as in `<Radio.Group<Plan>>`.
+
 <Demo data={controlledDemo} />
 
 ## API Reference

@@ -49,6 +49,17 @@ export interface ComboboxRootProps {
    * @default false
    */
   modal?: boolean;
+
+  /**
+   * The items to filter. Accepts an array of items or a collection from `Combobox.createItems`.
+   * When set, the root filters the items and `Combobox.Content` can render them with a function child.
+   *
+   * @remarks `unknown[] | ReturnType<typeof Combobox.createItems>`
+   */
+  items?: unknown[];
+
+  /** Converts a value to the text shown in the input and in multi-select chips. */
+  itemToStringLabel?: (value: string) => string;
 }
 
 export interface ComboboxInputProps {
@@ -96,6 +107,13 @@ export interface ComboboxContentProps {
    * @defaultValue The theme's `radius`
    */
   radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
+
+  /**
+   * The list content. Pass a function to render each item that matches the input when `items` is set on the root.
+   */
+  children?:
+    | React.ReactNode
+    | ((item: unknown, index: number) => React.ReactNode);
 }
 
 export interface ComboboxItemProps {

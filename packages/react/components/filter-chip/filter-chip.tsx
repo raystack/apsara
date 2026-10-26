@@ -24,6 +24,7 @@ import {
   FilterSelectOption,
   FilterType,
   FilterTypes,
+  FilterValueType,
   filterOperators
 } from '~/types/filters';
 import { Flex } from '../flex';
@@ -46,7 +47,7 @@ const chip = cva(styles.chip, {
   }
 });
 
-export type FilterChipValue = string | string[] | number | Date;
+export type FilterChipValue = FilterValueType | FilterValueType[] | Date;
 
 /* The message `DatePicker` reports, so `onErrorChange` reads the same. */
 const INVALID_DATE = 'Invalid date';
@@ -145,7 +146,7 @@ export const FilterChip = ({
   // `??` not `||`, since a falsy option value like `0` is a real selection.
   // For `number`, the value is shown without an exponent (`1e-7`), and a
   // non-numeric value starts empty, since the regex would reject every edit.
-  const [filterValue, setFilterValue] = useState<any>(() => {
+  const [filterValue, setFilterValue] = useState<FilterChipValue>(() => {
     if (!isNumberColumn) return value ?? '';
     const text =
       typeof value === 'number'
@@ -175,6 +176,10 @@ export const FilterChip = ({
 
   const showOnRemove = typeof onRemove === 'function';
   const isMultiSelectColumn = columnType === FilterType.multiselect;
+  const selectedValues = useMemo(
+    () => (Array.isArray(filterValue) ? filterValue.map(String) : []),
+    [filterValue]
+  );
 
   const handleOperationChange = useCallback(
     (operation: FilterOperation) => {
@@ -185,11 +190,23 @@ export const FilterChip = ({
   );
 
   const handleFilterValueChange = useCallback(
-    (value: any) => {
+    (value: FilterChipValue) => {
       setFilterValue(value);
       onValueChange?.(value, operation?.value ?? '');
     },
     [operation, onValueChange]
+  );
+
+  // Select works on strings, so map each pick back to its option's value.
+  const handleSelectValueChange = useCallback(
+    (picked: string | string[]) => {
+      const toOption = (v: string) =>
+        options.find(o => String(o.value) === v)?.value ?? v;
+      handleFilterValueChange(
+        Array.isArray(picked) ? picked.map(toOption) : toOption(picked)
+      );
+    },
+    [options, handleFilterValueChange]
   );
 
   const handleTextInputChange = useCallback(
@@ -216,9 +233,10 @@ export const FilterChip = ({
       case FilterType.select:
         return (
           <Select
-            value={isMultiSelectColumn ? filterValue : filterValue.toString()}
-            onValueChange={handleFilterValueChange}
-            multiple={isMultiSelectColumn}
+            {...(isMultiSelectColumn
+              ? { multiple: true, value: selectedValues }
+              : { multiple: false, value: filterValue.toString() })}
+            onValueChange={handleSelectValueChange}
             {...selectProps}
           >
             <Select.Trigger
@@ -232,8 +250,8 @@ export const FilterChip = ({
               data-slot='filter-chip-value'
             >
               <Select.Value placeholder='Select value'>
-                {isMultiSelectColumn && filterValue.length > 1
-                  ? `${filterValue.length} selected`
+                {isMultiSelectColumn && selectedValues.length > 1
+                  ? `${selectedValues.length} selected`
                   : undefined}
               </Select.Value>
             </Select.Trigger>
@@ -312,7 +330,7 @@ export const FilterChip = ({
             <Input
               variant={variant === 'text' ? 'borderless' : 'default'}
               classNames={{ container: styles.inputField }}
-              value={filterValue}
+              value={filterValue.toString()}
               onChange={e => handleTextInputChange(e.target.value)}
             />
           </div>
@@ -355,7 +373,7 @@ export const FilterChip = ({
         label={label}
         value={operation}
         onChange={handleOperationChange}
-        showAlternateLabel={isMultiSelectColumn && filterValue.length <= 1}
+        showAlternateLabel={isMultiSelectColumn && selectedValues.length <= 1}
       />
       {renderValueInput()}
       {showOnRemove && (

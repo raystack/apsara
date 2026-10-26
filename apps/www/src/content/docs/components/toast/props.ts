@@ -78,7 +78,7 @@ export interface ToastManagerAddOptions {
   leadingIcon?: React.ReactNode;
 
   /**
-   * Optional custom ID for the toast. Auto-generated if not provided.
+   * Optional custom ID for the toast. Auto-generated if not provided. If a toast with this ID is open, it is updated in place.
    */
   id?: string;
 }

@@ -1,15 +1,16 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { PropsWithChildren } from 'react';
+import { ReactNode } from 'react';
 import { Flex } from '../../flex';
 import styles from '../data-view.module.css';
 import { useDataView } from '../hooks/useDataView';
 import { DisplayControls } from './display-controls';
 import { Filters } from './filters';
 
-interface ToolbarProps {
+export interface DataViewToolbarProps {
   className?: string;
+  children?: ReactNode;
 }
 
 /**
@@ -19,10 +20,7 @@ interface ToolbarProps {
  * custom actions); omitting children renders the default
  * `<Filters> + <DisplayControls>` pair.
  */
-export function Toolbar<TData>({
-  className,
-  children
-}: PropsWithChildren<ToolbarProps>) {
+export function Toolbar<TData>({ className, children }: DataViewToolbarProps) {
   const { shouldShowFilters } = useDataView<TData>();
   if (!shouldShowFilters) return null;
 

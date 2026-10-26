@@ -63,11 +63,15 @@ export function MenuSeparator({ className, ...props }: ComponentProps<'div'>) {
 }
 MenuSeparator.displayName = 'Menu.Separator';
 
+export interface MenuEmptyStateProps extends ComponentProps<'div'> {
+  children: ReactNode;
+}
+
 export function MenuEmptyState({
   className,
   children,
   ...props
-}: ComponentProps<'div'> & { children: ReactNode }) {
+}: MenuEmptyStateProps) {
   const { autocomplete } = useMenuContext();
   const Component = autocomplete ? AutocompletePrimitive.Empty : 'div';
 
