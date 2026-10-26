@@ -100,6 +100,10 @@
   text-wrap: pretty;
 }
 
+.empty:empty {
+  padding: 0;
+}
+
 .menuBarTrigger[data-pressed] {
   background-color: var(--rs-color-background-base-primary-hover);
 }

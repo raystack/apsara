@@ -1,5 +1,6 @@
 'use client';
 
+import { Autocomplete as AutocompletePrimitive } from '@base-ui/react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, ReactNode } from 'react';
@@ -67,14 +68,17 @@ export function MenuEmptyState({
   children,
   ...props
 }: ComponentProps<'div'> & { children: ReactNode }) {
+  const { autocomplete } = useMenuContext();
+  const Component = autocomplete ? AutocompletePrimitive.Empty : 'div';
+
   return (
-    <div
+    <Component
       data-slot='menu-empty-state'
       className={cx(styles.empty, className)}
       {...props}
     >
       {children}
-    </div>
+    </Component>
   );
 }
 MenuEmptyState.displayName = 'Menu.EmptyState';
