@@ -41,10 +41,10 @@ export interface EditorControlBaseProps
   /** Accessible name and tooltip text. */
   label?: string;
   /**
-   * Shows the label and shortcut in a tooltip.
-   * @default true
+   * Hides the tooltip that shows the label and shortcut.
+   * @default false
    */
-  tooltip?: boolean;
+  hideTooltip?: boolean;
 }
 
 interface EditorControlProps extends EditorControlBaseProps {
@@ -60,7 +60,7 @@ interface EditorControlProps extends EditorControlBaseProps {
 export function EditorControl({
   label,
   shortcut,
-  tooltip = true,
+  hideTooltip = false,
   pressed,
   render,
   className,
@@ -84,7 +84,7 @@ export function EditorControl({
   // The tooltip stays mounted when it is off, so the trigger element, and
   // any menu anchored to it, is never remounted.
   return (
-    <Tooltip disabled={!tooltip}>
+    <Tooltip disabled={hideTooltip}>
       <Tooltip.Trigger
         render={render ? cloneElement(render, { render: button }) : button}
       >

@@ -22,10 +22,7 @@ export const playground = {
       type: 'number',
       initialValue: 3
     },
-    enableAnimation: {
-      type: 'checkbox',
-      initialValue: true
-    },
+    disableAnimation: { type: 'checkbox', defaultValue: false },
     duration: {
       type: 'number',
       initialValue: 1.5
@@ -72,7 +69,7 @@ export const animationDemo = {
   code: `
   <Flex direction="column" gap={5}>
     <Skeleton width={200} height={20} duration={2.5} />
-    <Skeleton width={200} height={20} enableAnimation={false} />
+    <Skeleton width={200} height={20} disableAnimation />
   </Flex>`
 };
 

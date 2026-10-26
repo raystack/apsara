@@ -95,7 +95,7 @@ export function Input({
           <Chip
             key={index}
             variant='outline'
-            isDismissible={!disabled && !!chip.onRemove}
+            dismissible={!disabled && !!chip.onRemove}
             onDismiss={disabled ? undefined : chip.onRemove}
             className={styles.chip}
             disabled={disabled}

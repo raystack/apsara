@@ -15,7 +15,7 @@ describe('Chip data-slot contract', () => {
 
   it('exposes dismiss slots when dismissible', () => {
     const { container } = render(
-      <Chip isDismissible onDismiss={vi.fn()}>
+      <Chip dismissible onDismiss={vi.fn()}>
         Label
       </Chip>
     );

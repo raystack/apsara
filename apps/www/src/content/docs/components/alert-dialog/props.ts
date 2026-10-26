@@ -8,10 +8,10 @@ export interface AlertDialogProps {
 
 export interface AlertDialogContentProps {
   /**
-   * Toggle nested dialog animation (scaling and translation)
-   * @default true
+   * Turns off the scale and offset of a dialog that has a nested dialog open.
+   * @default false
    */
-  showNestedAnimation?: boolean;
+  disableNestedAnimation?: boolean;
 
   /** Overlay configuration including blur, className, and style */
   overlay?: {

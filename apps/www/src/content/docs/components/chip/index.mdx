@@ -58,7 +58,7 @@ Chips can include leading and trailing icons to provide additional context or ac
 
 ### Dismissible
 
-Chips can be made dismissible by adding the isDismissible prop and an onDismiss handler.
+Chips can be made dismissible by adding the `dismissible` prop and an `onDismiss` handler.
 
 <Demo data={dismissableDemo} />
 
@@ -79,8 +79,8 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `chip` | The root element (`<button>` when interactive, `<span>` otherwise) |
 | `chip-leading-icon` | Wrapper around `leadingIcon` (when set) |
 | `chip-trailing-icon` | Wrapper around `trailingIcon` (when set and not dismissible) |
-| `chip-dismiss` | The dismiss button (when `isDismissible`) |
-| `chip-dismiss-icon` | The dismiss icon (when `isDismissible`) |
+| `chip-dismiss` | The dismiss button (when `dismissible`) |
+| `chip-dismiss-icon` | The dismiss icon (when `dismissible`) |
 
 ## Accessibility
 
