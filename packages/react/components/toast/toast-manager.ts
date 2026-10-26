@@ -5,7 +5,7 @@ import {
   type ToastObject,
   Toast as ToastPrimitive
 } from '@base-ui/react';
-import { createContext, type ReactNode, useContext, useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 
 export interface ToastData {
   /**
@@ -112,41 +112,71 @@ export interface ToastManager
   ) => Promise<Value>;
 }
 
+// Base UI turns off swipe when `positionerProps.anchor` is set, even to `null`.
+function unanchored<O extends ToastUpdateOptions>(options: O) {
+  return { ...options, positionerProps: undefined };
+}
+
+type Methods = Pick<BaseManager, 'add' | 'close' | 'update' | 'promise'>;
+
+// The toast's store is picked when it is created, and only `add` and `promise`
+// know it. `close` and `update` go to both stores, which ignore unknown ids.
+function wrap(
+  stacked: Methods,
+  anchored?: Methods
+): Pick<ToastManager, 'add' | 'close' | 'update' | 'promise'> {
+  return {
+    add: options =>
+      anchored && isAnchored(options)
+        ? anchored.add(lift(options))
+        : stacked.add(lift(unanchored(options))),
+    close: id => {
+      stacked.close(id);
+      anchored?.close(id);
+    },
+    update: (id, options) => {
+      stacked.update(id, liftUpdater(options));
+      anchored?.update(id, liftUpdater(options));
+    },
+    promise: (promise, { loading, ...options }) =>
+      anchored && isAnchored(loading)
+        ? anchored.promise(promise, liftPromiseOptions({ ...options, loading }))
+        : stacked.promise(
+            promise,
+            liftPromiseOptions({
+              ...options,
+              loading:
+                typeof loading === 'string' ? loading : unanchored(loading)
+            })
+          )
+  };
+}
+
 // Base UI renders anchored toasts in their own provider, so each manager
 // keeps a second Base UI manager for them. `Toast.Provider` reads it here.
 const anchoredManagers = new WeakMap<ToastManager, BaseManager>();
+
+// `useToastManager` can only reach the stacked store, through Base UI's hook.
+// `Toast.Provider` links that store's `add` to the anchored manager.
+const anchoredByStore = new WeakMap<object, BaseManager>();
 
 export function getAnchoredManager(manager: ToastManager) {
   return anchoredManagers.get(manager);
 }
 
+export function linkAnchoredManager(add: object, anchored?: BaseManager) {
+  if (anchored) anchoredByStore.set(add, anchored);
+}
+
 export function createToastManager(): ToastManager {
-  const base = ToastPrimitive.createToastManager<ToastData>();
+  const stacked = ToastPrimitive.createToastManager<ToastData>();
   const anchored = ToastPrimitive.createToastManager<ToastData>();
-  const manager: ToastManager = {
-    ...base,
-    add: options => (isAnchored(options) ? anchored : base).add(lift(options)),
-    close: id => {
-      base.close(id);
-      anchored.close(id);
-    },
-    update: (id, options) => {
-      base.update(id, liftUpdater(options));
-      anchored.update(id, liftUpdater(options));
-    },
-    promise: (promise, options) =>
-      (isAnchored(options.loading) ? anchored : base).promise(
-        promise,
-        liftPromiseOptions(options)
-      )
-  };
+  const manager = { ...stacked, ...wrap(stacked, anchored) };
   anchoredManagers.set(manager, anchored);
   return manager;
 }
 
 export const toastManager = createToastManager();
-
-export const ToastManagerContext = createContext<ToastManager>(toastManager);
 
 type BaseHookReturn = ReturnType<
   typeof ToastPrimitive.useToastManager<ToastData>
@@ -165,28 +195,9 @@ export interface UseToastManagerReturn
 }
 
 export function useToastManager(): UseToastManagerReturn {
-  const base = ToastPrimitive.useToastManager<ToastData>();
-  const manager = useContext(ToastManagerContext);
-  return useMemo(() => {
-    const anchored = getAnchoredManager(manager);
-    return {
-      ...base,
-      add: options =>
-        anchored && isAnchored(options)
-          ? anchored.add(lift(options))
-          : base.add(lift(options)),
-      close: id => {
-        base.close(id);
-        anchored?.close(id);
-      },
-      update: (id, options) => {
-        base.update(id, liftUpdater(options));
-        anchored?.update(id, liftUpdater(options));
-      },
-      promise: (promise, options) =>
-        anchored && isAnchored(options.loading)
-          ? anchored.promise(promise, liftPromiseOptions(options))
-          : base.promise(promise, liftPromiseOptions(options))
-    };
-  }, [base, manager]);
+  const stacked = ToastPrimitive.useToastManager<ToastData>();
+  return useMemo(
+    () => ({ ...stacked, ...wrap(stacked, anchoredByStore.get(stacked.add)) }),
+    [stacked]
+  );
 }

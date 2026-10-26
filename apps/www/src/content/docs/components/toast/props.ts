@@ -86,7 +86,8 @@ export interface ToastManagerAddOptions {
   positionerProps?: ToastPositionerOptions;
 
   /**
-   * Optional custom ID for the toast. Auto-generated if not provided.
+   * Optional custom ID for the toast. Auto-generated if not provided. Must be
+   * unique across stacked and anchored toasts.
    */
   id?: string;
 }
@@ -95,7 +96,7 @@ export interface ToastManagerAddOptions {
  * Placement of an anchored toast, passed as `positionerProps`.
  */
 export interface ToastPositionerOptions {
-  /** The element to show the toast next to. */
+  /** The element to show the toast next to. With `null`, the toast joins the stack. */
   anchor?: Element | null;
 
   /**
@@ -137,6 +138,13 @@ export interface ToastManagerUpdateOptions {
   onRemove?: () => void;
   actionProps?: React.ComponentPropsWithoutRef<'button'>;
   leadingIcon?: React.ReactNode;
+  /**
+   * Placement of an anchored toast. It does not move a toast into or out of
+   * the stack.
+   *
+   * @remarks `{ anchor?: Element | null; side?: 'top' | 'right' | 'bottom' | 'left'; align?: 'start' | 'center' | 'end'; sideOffset?: number; alignOffset?: number }`
+   */
+  positionerProps?: ToastPositionerOptions;
 }
 
 /**
@@ -147,7 +155,8 @@ export interface ToastManagerUpdateOptions {
  */
 export interface ToastManagerPromiseOptions<Value = unknown> {
   /**
-   * Toast shown while the promise is pending. Auto-dismiss is disabled.
+   * Toast shown while the promise is pending. Auto-dismiss is disabled. Its
+   * `positionerProps.anchor` decides whether the toast is anchored.
    *
    * @remarks `string | ToastManagerUpdateOptions`
    */

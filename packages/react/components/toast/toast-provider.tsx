@@ -7,8 +7,8 @@ import styles from './toast.module.css';
 import {
   toastManager as defaultToastManager,
   getAnchoredManager,
-  type ToastManager,
-  ToastManagerContext
+  linkAnchoredManager,
+  type ToastManager
 } from './toast-manager';
 import { AnchoredToastRoot, ToastRoot } from './toast-root';
 
@@ -35,18 +35,53 @@ export interface ToastProviderProps
   toastManager?: ToastManager;
 }
 
-function ToastList({ position }: { position: ToastPosition }) {
-  const { toasts } = ToastPrimitive.useToastManager();
-  return toasts.map(toast => (
-    <ToastRoot key={toast.id} toast={toast} position={position} />
-  ));
+function StackedToasts({
+  position,
+  anchoredManager
+}: {
+  position: ToastPosition;
+  anchoredManager: ReturnType<typeof getAnchoredManager>;
+}) {
+  const theme = useThemeInjection();
+  const { toasts, add } = ToastPrimitive.useToastManager();
+  // Runs before `children` render, so their `useToastManager` finds the link.
+  linkAnchoredManager(add, anchoredManager);
+  return (
+    <ToastPrimitive.Portal {...theme}>
+      <ToastPrimitive.Viewport
+        {...theme}
+        className={cx(
+          styles.viewport,
+          styles[`viewport-${position}`],
+          theme?.className
+        )}
+        data-slot='toast-viewport'
+      >
+        {toasts.map(toast => (
+          <ToastRoot key={toast.id} toast={toast} position={position} />
+        ))}
+      </ToastPrimitive.Viewport>
+    </ToastPrimitive.Portal>
+  );
 }
 
-function AnchoredToastList() {
+function AnchoredToasts() {
+  const theme = useThemeInjection();
   const { toasts } = ToastPrimitive.useToastManager();
-  return toasts.map(toast => (
-    <AnchoredToastRoot key={toast.id} toast={toast} />
-  ));
+  return (
+    <ToastPrimitive.Portal {...theme}>
+      <ToastPrimitive.Viewport
+        {...theme}
+        aria-label='Anchored notifications'
+        className={cx(styles.anchoredViewport, theme?.className)}
+        data-slot='toast-anchored-viewport'
+      >
+        {toasts.map(toast => (
+          <AnchoredToastRoot key={toast.id} toast={toast} />
+        ))}
+      </ToastPrimitive.Viewport>
+    </ToastPrimitive.Portal>
+  );
 }
 
 export function ToastProvider({
@@ -55,10 +90,15 @@ export function ToastProvider({
   children,
   ...props
 }: ToastProviderProps) {
-  const theme = useThemeInjection();
   const anchoredManager = getAnchoredManager(toastManager);
   return (
-    <ToastManagerContext.Provider value={toastManager}>
+    <>
+      {/* Comes first so it subscribes before effects in `children` run. */}
+      {anchoredManager && (
+        <ToastPrimitive.Provider toastManager={anchoredManager} {...props}>
+          <AnchoredToasts />
+        </ToastPrimitive.Provider>
+      )}
       <ToastPrimitive.Provider
         // The Provider only reads the subscribe channel, which our manager keeps from
         // Base UI's. The cast is needed because Base UI's `update` is generic over toast data.
@@ -67,35 +107,10 @@ export function ToastProvider({
         }
         {...props}
       >
+        <StackedToasts position={position} anchoredManager={anchoredManager} />
         {children}
-        <ToastPrimitive.Portal {...theme}>
-          <ToastPrimitive.Viewport
-            {...theme}
-            className={cx(
-              styles.viewport,
-              styles[`viewport-${position}`],
-              theme?.className
-            )}
-            data-slot='toast-viewport'
-          >
-            <ToastList position={position} />
-          </ToastPrimitive.Viewport>
-        </ToastPrimitive.Portal>
       </ToastPrimitive.Provider>
-      {anchoredManager && (
-        <ToastPrimitive.Provider toastManager={anchoredManager} {...props}>
-          <ToastPrimitive.Portal {...theme}>
-            <ToastPrimitive.Viewport
-              {...theme}
-              className={cx(styles.anchoredViewport, theme?.className)}
-              data-slot='toast-anchored-viewport'
-            >
-              <AnchoredToastList />
-            </ToastPrimitive.Viewport>
-          </ToastPrimitive.Portal>
-        </ToastPrimitive.Provider>
-      )}
-    </ToastManagerContext.Provider>
+    </>
   );
 }
 

@@ -28,7 +28,7 @@ export const playground = {
       options: ['top', 'right', 'bottom', 'left'],
       defaultValue: 'bottom'
     },
-    sideOffset: { type: 'number', min: 0, defaultValue: 2 },
+    sideOffset: { type: 'number', min: 0, defaultValue: 4 },
     collisionPadding: { type: 'number', min: 0, defaultValue: 0 },
     showArrow: { type: 'checkbox', initialValue: false, defaultValue: false },
     children: { type: 'text', initialValue: 'This is the popover content.' }

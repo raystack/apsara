@@ -79,6 +79,7 @@ export const anchoredDemo = {
   <Button
     onClick={event =>
       toastManager.add({
+        id: "copied",
         title: "Copied",
         type: "success",
         timeout: 1500,

@@ -1,5 +1,6 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useEffect, useRef } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Toast, toastManager, useToastManager } from '../toast';
 
@@ -18,6 +19,13 @@ describe('Toast', () => {
     it('renders provider with children', () => {
       renderWithProvider();
       expect(screen.getByText('App content')).toBeInTheDocument();
+    });
+
+    it('renders one Notifications region', () => {
+      renderWithProvider();
+      expect(
+        screen.getAllByRole('region', { name: 'Notifications' })
+      ).toHaveLength(1);
     });
   });
 
@@ -387,6 +395,53 @@ describe('Toast', () => {
       expect(stacked?.closest('[data-slot="toast-viewport"]')).not.toBeNull();
     });
 
+    it('stacks a toast whose anchor is null', async () => {
+      const { manager } = renderWithAnchor();
+      act(() => {
+        manager.add({ title: 'Saved', positionerProps: { anchor: null } });
+      });
+      const toastEl = (await screen.findByText('Saved')).closest(
+        '[data-slot="toast"]'
+      );
+      expect(
+        toastEl?.closest('[data-slot="toast-viewport"]')
+      ).toBeInTheDocument();
+      expect(
+        toastEl?.closest('[data-slot="toast-positioner"]')
+      ).not.toBeInTheDocument();
+    });
+
+    it('updates an anchored toast', async () => {
+      const { manager, anchor } = renderWithAnchor();
+      let id: string;
+      act(() => {
+        id = manager.add({ title: 'Copying', positionerProps: { anchor } });
+      });
+      await screen.findByText('Copying');
+      act(() => {
+        manager.update(id!, { title: 'Copied' });
+      });
+      const toastEl = await screen.findByText('Copied');
+      expect(
+        toastEl.closest('[data-slot="toast-positioner"]')
+      ).toBeInTheDocument();
+    });
+
+    it('keeps a promise toast anchored when it resolves', async () => {
+      const { manager, anchor } = renderWithAnchor();
+      act(() => {
+        manager.promise(Promise.resolve(), {
+          loading: { title: 'Copying', positionerProps: { anchor } },
+          success: { title: 'Copied' },
+          error: { title: 'Failed' }
+        });
+      });
+      const toastEl = await screen.findByText('Copied');
+      expect(
+        toastEl.closest('[data-slot="toast-positioner"]')
+      ).toBeInTheDocument();
+    });
+
     it('closes an anchored toast by id', async () => {
       const { manager, anchor } = renderWithAnchor();
       const onClose = vi.fn();
@@ -430,6 +485,30 @@ describe('Toast', () => {
         </Toast.Provider>
       );
       await userEvent.click(screen.getByText('Copy'));
+      const toastEl = await screen.findByText('Copied');
+      expect(
+        toastEl.closest('[data-slot="toast-positioner"]')
+      ).toBeInTheDocument();
+    });
+
+    it('routes anchored toasts from useToastManager in a mount effect', async () => {
+      function CopyOnMount() {
+        const ref = useRef<HTMLButtonElement>(null);
+        const { add } = useToastManager();
+        useEffect(() => {
+          add({ title: 'Copied', positionerProps: { anchor: ref.current } });
+        }, [add]);
+        return (
+          <button ref={ref} type='button'>
+            Copy
+          </button>
+        );
+      }
+      render(
+        <Toast.Provider toastManager={Toast.createToastManager()}>
+          <CopyOnMount />
+        </Toast.Provider>
+      );
       const toastEl = await screen.findByText('Copied');
       expect(
         toastEl.closest('[data-slot="toast-positioner"]')

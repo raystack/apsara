@@ -304,7 +304,11 @@
 }
 
 .positioner {
-  z-index: var(--rs-z-index-toast);
+  z-index: calc(var(--rs-z-index-toast) - var(--toast-index));
+}
+
+.positioner[data-anchor-hidden] {
+  visibility: hidden;
 }
 
 .anchored {
@@ -329,7 +333,8 @@
 }
 
 .anchored[data-starting-style],
-.anchored[data-ending-style] {
+.anchored[data-ending-style],
+.anchored[data-limited] {
   opacity: 0;
 }
 
