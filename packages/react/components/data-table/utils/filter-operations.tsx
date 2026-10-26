@@ -5,11 +5,11 @@ import {
   DataTableFilterOperatorTypes,
   DateFilterOperatorType,
   EmptyFilterValue,
+  FilterDataType,
   FilterOperatorTypes,
   FilterType,
   FilterTypes,
   FilterValue,
-  FilterValueType,
   MultiSelectFilterOperatorType,
   NumberFilterOperatorType,
   SelectFilterOperatorType,
@@ -206,7 +206,7 @@ export const getFilterValue = ({
   operator
 }: {
   value: FilterPrimitive;
-  dataType?: FilterValueType;
+  dataType?: FilterDataType;
   filterType?: FilterTypes;
   operator?: FilterOperatorTypes | DataTableFilterOperatorTypes;
 }): DataTableFilterValues => {
@@ -225,9 +225,9 @@ export const getDataType = ({
   filterType = FilterType.string,
   dataType = 'string'
 }: {
-  dataType?: FilterValueType;
+  dataType?: FilterDataType;
   filterType?: FilterTypes;
-}): FilterValueType => {
+}): FilterDataType => {
   switch (filterType) {
     case FilterType.multiselect:
     case FilterType.select:

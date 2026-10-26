@@ -230,6 +230,38 @@ describe('Combobox', () => {
         expect(input).toHaveAttribute('placeholder', PLACEHOLDER_TEXT);
       });
     });
+
+    it('labels chips with itemToStringLabel', () => {
+      render(
+        <BasicCombobox
+          multiple
+          defaultValue={['banana']}
+          itemToStringLabel={value =>
+            FRUIT_OPTIONS.find(option => option.value === value)?.label ?? value
+          }
+        />
+      );
+      expect(screen.getByText('Banana')).toBeInTheDocument();
+      expect(screen.queryByText('banana')).not.toBeInTheDocument();
+    });
+
+    it('labels chips with the label of { value, label } values', () => {
+      render(
+        <Combobox multiple defaultValue={[FRUIT_OPTIONS[1]]}>
+          <Combobox.Input placeholder={PLACEHOLDER_TEXT} />
+        </Combobox>
+      );
+      expect(screen.getByText('Banana')).toBeInTheDocument();
+    });
+
+    it('labels chips with the value of { value } values', () => {
+      render(
+        <Combobox multiple defaultValue={[{ value: 'banana' }]}>
+          <Combobox.Input placeholder={PLACEHOLDER_TEXT} />
+        </Combobox>
+      );
+      expect(screen.getByText('banana')).toBeInTheDocument();
+    });
   });
 
   describe('Keyboard Navigation', () => {
@@ -417,6 +449,33 @@ describe('Combobox', () => {
       const input = screen.getByRole('combobox');
       expect(input).toHaveValue('test');
     });
+
+    it('filters items by a controlled inputValue', () => {
+      const handleInputChange = vi.fn();
+      render(
+        <BasicCombobox
+          defaultOpen
+          inputValue='ban'
+          onInputValueChange={handleInputChange}
+        />
+      );
+      const input = screen.getByRole('combobox');
+
+      fireEvent.change(input, { target: { value: 'app' } });
+
+      expect(handleInputChange).toHaveBeenCalledWith('app');
+      expect(input).toHaveValue('ban');
+      expect(screen.getByText('Banana')).toBeInTheDocument();
+      expect(screen.queryByText('Apple')).not.toBeInTheDocument();
+    });
+
+    it('filters items by defaultInputValue', () => {
+      render(<BasicCombobox defaultOpen defaultInputValue='ban' />);
+
+      expect(screen.getByRole('combobox')).toHaveValue('ban');
+      expect(screen.getByText('Banana')).toBeInTheDocument();
+      expect(screen.queryByText('Apple')).not.toBeInTheDocument();
+    });
   });
 
   describe('Accessibility', () => {
@@ -481,6 +540,57 @@ describe('Combobox', () => {
       await clickOption(appleOption);
 
       expect(handleValueChange).toHaveBeenCalledWith('Apple');
+    });
+  });
+});
+
+describe('Combobox.createItems', () => {
+  const USERS = [
+    { id: 'u1', name: 'Jane Doe' },
+    { id: 'u2', name: 'John Smith' },
+    { id: 'u3', name: 'Ada Lovelace' }
+  ];
+  const USER_ITEMS = Combobox.createItems(USERS, {
+    getValue: user => user.id,
+    getLabel: user => user.name
+  });
+
+  const UserCombobox = (props: {
+    onValueChange?: (value: string | null) => void;
+  }) => (
+    <Combobox items={USER_ITEMS} {...props}>
+      <Combobox.Input placeholder='Pick a user' />
+      <Combobox.Content>
+        {(user: (typeof USERS)[number]) => (
+          <Combobox.Item key={user.id} value={user.id}>
+            {user.name}
+          </Combobox.Item>
+        )}
+      </Combobox.Content>
+    </Combobox>
+  );
+
+  it('calls onValueChange with the derived value', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(<UserCombobox onValueChange={onValueChange} />);
+
+    await user.click(screen.getByRole('combobox'));
+    await clickOption(await screen.findByText('John Smith'));
+
+    expect(onValueChange).toHaveBeenCalledWith('u2');
+  });
+
+  it('filters by the derived label', async () => {
+    const user = userEvent.setup();
+    render(<UserCombobox />);
+
+    await user.type(screen.getByRole('combobox'), 'jo');
+
+    await waitFor(() => {
+      expect(screen.getByText('John Smith')).toBeInTheDocument();
+      expect(screen.queryByText('Jane Doe')).not.toBeInTheDocument();
+      expect(screen.queryByText('Ada Lovelace')).not.toBeInTheDocument();
     });
   });
 });

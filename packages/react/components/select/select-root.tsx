@@ -4,6 +4,7 @@ import {
   Combobox as ComboboxPrimitive,
   Select as SelectPrimitive
 } from '@base-ui/react';
+import { useControlled } from '@base-ui/utils/useControlled';
 import {
   createContext,
   ReactNode,
@@ -110,21 +111,27 @@ export const SelectRoot = (props: SelectRootProps) => {
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
 
-  const [internalValue, setInternalValue] = useState<
+  const [computedValue, setValueUnwrapped] = useControlled<
     string | string[] | undefined
-  >(defaultValue);
-  const [internalSearchValue, setInternalSearchValue] =
-    useState(defaultSearchValue);
+  >({
+    controlled: providedValue,
+    default: defaultValue,
+    name: 'Select',
+    state: 'value'
+  });
+  const [searchValue, setSearchValueUnwrapped] = useControlled({
+    controlled: providedSearchValue,
+    default: defaultSearchValue,
+    name: 'Select',
+    state: 'searchValue'
+  });
   const [registeredItems, setRegisteredItems] = useState<
     SelectContextValue['items']
   >({});
 
-  const computedValue = providedValue ?? internalValue;
-  const searchValue = providedSearchValue ?? internalSearchValue;
-
   const handleValueChange = useCallback(
-    (value: any, _eventDetails?: any) => {
-      setInternalValue(value);
+    (value: string | string[] | null) => {
+      setValueUnwrapped(value ?? undefined);
       if (multiple) {
         (onValueChange as MultipleSelectProps['onValueChange'])?.(
           value as string[]
@@ -135,19 +142,19 @@ export const SelectRoot = (props: SelectRootProps) => {
         );
       }
     },
-    [multiple, onValueChange]
+    [multiple, onValueChange, setValueUnwrapped]
   );
 
   const handleSearchValueChange = useCallback(
-    (value: string, _eventDetails?: any) => {
-      setInternalSearchValue(value);
+    (value: string) => {
+      setSearchValueUnwrapped(value);
       onSearch?.(value);
     },
-    [onSearch]
+    [onSearch, setSearchValueUnwrapped]
   );
 
   const handleOpenChange = useCallback(
-    (open: boolean, _eventDetails?: any) => {
+    (open: boolean) => {
       onOpenChange?.(open);
     },
     [onOpenChange]
@@ -193,13 +200,13 @@ export const SelectRoot = (props: SelectRootProps) => {
   );
 
   const commonProps = {
-    value: providedValue as any,
-    defaultValue: defaultValue as any,
+    value: providedValue,
+    defaultValue,
     onValueChange: handleValueChange,
     open: providedOpen,
     defaultOpen,
     onOpenChange: handleOpenChange,
-    multiple: multiple as any,
+    multiple,
     disabled,
     modal: true as const,
     ...rest,
@@ -212,6 +219,8 @@ export const SelectRoot = (props: SelectRootProps) => {
       <SelectContext value={contextValue}>
         <ComboboxPrimitive.Root
           {...commonProps}
+          inputValue={providedSearchValue}
+          defaultInputValue={defaultSearchValue}
           onInputValueChange={handleSearchValueChange}
           filter={itemsProp ? undefined : null}
           items={itemsProp}

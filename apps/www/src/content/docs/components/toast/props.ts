@@ -86,8 +86,7 @@ export interface ToastManagerAddOptions {
   positionerProps?: ToastPositionerOptions;
 
   /**
-   * Optional custom ID for the toast. Auto-generated if not provided. Must be
-   * unique across stacked and anchored toasts.
+   * Optional custom ID for the toast. Auto-generated if not provided. If a toast with this ID is open, it is updated in place. Must be unique across stacked and anchored toasts.
    */
   id?: string;
 }

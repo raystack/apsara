@@ -34,4 +34,16 @@ describe('Popover data-slot contract', () => {
     );
     expect(getSlot(document.body, 'popover-arrow')).toBeNull();
   });
+
+  it('exposes the viewport slot', () => {
+    render(
+      <Popover open>
+        <Popover.Trigger>Open</Popover.Trigger>
+        <Popover.Content>
+          <Popover.Viewport>Content</Popover.Viewport>
+        </Popover.Content>
+      </Popover>
+    );
+    expectSlots(document.body, ['popover-viewport']);
+  });
 });

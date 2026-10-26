@@ -136,6 +136,25 @@ describe('Toast', () => {
         expect(screen.getByTestId('fn-icon')).toBeInTheDocument();
       });
     });
+
+    it('updates in place when add() gets an existing id', async () => {
+      act(() => {
+        toastManager.add({ id: 'upload', title: 'Uploading' });
+      });
+      expect(await screen.findByText('Uploading')).toBeInTheDocument();
+
+      let id: string;
+      act(() => {
+        id = toastManager.add({ id: 'upload', title: 'Uploaded' });
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Uploaded')).toBeInTheDocument();
+      });
+      expect(id!).toBe('upload');
+      expect(screen.queryByText('Uploading')).not.toBeInTheDocument();
+      expect(screen.getAllByText('Uploaded')).toHaveLength(1);
+    });
   });
 
   describe('toastManager.promise()', () => {

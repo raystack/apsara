@@ -1,8 +1,9 @@
 'use client';
 
 import { Accordion as AccordionPrimitive } from '@base-ui/react';
+import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
-import { ComponentProps, ReactNode, useCallback, useState } from 'react';
+import { ComponentProps, ReactNode, useCallback } from 'react';
 import { ChevronDownIcon } from '~/icons';
 import { Flex } from '../flex';
 import styles from './sidebar.module.css';
@@ -10,7 +11,7 @@ import { SidebarLeadingVisual } from './sidebar-leading-visual';
 import { useSidebarSafe } from './sidebar-root';
 import { SidebarTrailingVisual } from './sidebar-trailing-visual';
 
-export interface SidebarNavigationGroupProps extends ComponentProps<'section'> {
+export interface SidebarGroupProps extends ComponentProps<'section'> {
   label: string;
   /**
    * Renders the group as an accordion whose items can be shown or hidden.
@@ -54,19 +55,24 @@ export function SidebarNavigationGroup({
   classNames,
   children,
   ...props
-}: SidebarNavigationGroupProps) {
+}: SidebarGroupProps) {
   const { isCollapsed } = useSidebarSafe();
-  const [internalOpen, setInternalOpen] = useState(defaultOpen);
-  const isOpen = isCollapsed || (providedOpen ?? internalOpen);
+  const [open, setOpenUnwrapped] = useControlled({
+    controlled: providedOpen,
+    default: defaultOpen,
+    name: 'Sidebar.Group',
+    state: 'open'
+  });
+  const isOpen = isCollapsed || open;
 
   const handleOpenChange = useCallback(
     (value: unknown[]) => {
       if (isCollapsed) return;
       const nextOpen = value.length > 0;
-      setInternalOpen(nextOpen);
+      setOpenUnwrapped(nextOpen);
       onOpenChange?.(nextOpen);
     },
-    [isCollapsed, onOpenChange]
+    [isCollapsed, onOpenChange, setOpenUnwrapped]
   );
 
   const labelContent = (

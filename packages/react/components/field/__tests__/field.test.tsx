@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { Checkbox } from '../../checkbox';
 import styles from '../field.module.css';
 import { Field } from '../index';
 
@@ -159,6 +160,39 @@ describe('Field', () => {
       );
       expect(screen.getByText('Label')).toHaveClass('custom-label');
       expect(screen.getByText('Desc')).toHaveClass('custom-desc');
+    });
+  });
+
+  describe('Item', () => {
+    it('gives each checkbox its own label and description', () => {
+      render(
+        <Field>
+          <Checkbox.Group>
+            {['email', 'sms'].map(value => (
+              <Field.Item key={value}>
+                <Field.Label>
+                  <Checkbox value={value} />
+                  {value}
+                </Field.Label>
+                <Field.Description>{`${value} help`}</Field.Description>
+              </Field.Item>
+            ))}
+          </Checkbox.Group>
+        </Field>
+      );
+      const email = screen.getByRole('checkbox', { name: 'email' });
+      const sms = screen.getByRole('checkbox', { name: 'sms' });
+      expect(email).toHaveAccessibleDescription('email help');
+      expect(sms).toHaveAccessibleDescription('sms help');
+    });
+
+    it('applies item class', () => {
+      render(
+        <Field>
+          <Field.Item data-testid='item' />
+        </Field>
+      );
+      expect(screen.getByTestId('item')).toHaveClass(styles.item);
     });
   });
 

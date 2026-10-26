@@ -8,7 +8,10 @@ export const FilterType = {
 
 export const EmptyFilterValue = '--empty--';
 
-export type FilterValueType = 'string' | 'number' | 'boolean';
+export type FilterValueType = string | number | boolean;
+
+/** Picks the query field (`stringValue`, `numberValue`, `boolValue`) that carries a filter's value. */
+export type FilterDataType = 'string' | 'number' | 'boolean';
 
 export interface FilterValue {
   value?: FilterValueType;
