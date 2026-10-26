@@ -113,8 +113,8 @@
   color: var(--rs-color-foreground-base-secondary);
 }
 
-.empty:empty {
-  padding: 0;
+.list:has([role="option"]) .empty {
+  display: none;
 }
 
 .status {

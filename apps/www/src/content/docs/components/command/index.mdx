@@ -111,13 +111,13 @@ Scrollable container for groups and items. Renders with `role="listbox"`.
 
 ### Empty
 
-Shows its children only when no items match the search, or the list has no items. The element stays in the DOM as a live region (`role="status"`), so screen readers announce it when it appears. Built on [Base UI Autocomplete.Empty](https://base-ui.com/react/components/autocomplete).
+Rendered when no items are visible (all filtered out, or the list is empty). Automatically hidden when the list contains at least one item. Built on [Base UI Autocomplete.Empty](https://base-ui.com/react/components/autocomplete).
 
 <auto-type-table path="./props.ts" name="CommandEmptyProps" />
 
 ### Status
 
-A visually hidden live region that announces the number of matching items while the input has text. Place it anywhere inside `Command`. Built on [Base UI Autocomplete.Status](https://base-ui.com/react/components/autocomplete).
+A visually hidden live region. Screen readers announce its children while the input has text. Place it anywhere inside `Command`. A function child receives the number of matching items. The count needs the `items` prop, so without it a function child renders nothing. Built on [Base UI Autocomplete.Status](https://base-ui.com/react/components/autocomplete).
 
 <auto-type-table path="./props.ts" name="CommandStatusProps" />
 
@@ -185,6 +185,6 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 - Follows the [WAI-ARIA Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
 - Input uses `role="combobox"`, list uses `role="listbox"`, items use `role="option"`.
 - Keyboard: `ArrowDown` / `ArrowUp` move the highlight, `Enter` activates the highlighted item, `Escape` closes the dialog.
-- `Command.Empty` and `Command.Status` are polite live regions. Screen readers announce when nothing matches and how many items match.
+- `Command.Status` is a polite live region. Use it to announce the number of matching items.
 - Disabled items expose `aria-disabled="true"`. The arrow keys still highlight them, and `Enter` does not activate them.
 - When used inside `Command.Dialog`, focus is trapped in the dialog and returned to the trigger on close.

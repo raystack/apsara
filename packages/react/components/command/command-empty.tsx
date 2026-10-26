@@ -3,73 +3,52 @@
 import { Autocomplete as AutocompletePrimitive } from '@base-ui/react/autocomplete';
 import { cx } from 'class-variance-authority';
 import { type ReactNode } from 'react';
-import { useItemCount } from '~/shared/item-count';
 import styles from './command.module.css';
 import { useCommandContext } from './command-root';
 
-/** The number of items that match the search. */
-const useMatchCount = () => {
-  const { hasItems } = useCommandContext();
-  const filteredItems = AutocompletePrimitive.useFilteredItems<unknown>();
-  const renderedCount = useItemCount() ?? 0;
+export type CommandEmptyProps = AutocompletePrimitive.Empty.Props;
 
-  if (!hasItems) return renderedCount;
-  return filteredItems.reduce<number>(
-    (count, item) => count + (isGroup(item) ? item.items.length : 1),
-    0
+export const CommandEmpty = ({ className, ...props }: CommandEmptyProps) => {
+  return (
+    <AutocompletePrimitive.Empty
+      data-slot='command-empty'
+      className={cx(styles.empty, className)}
+      {...props}
+    />
   );
 };
+
+CommandEmpty.displayName = 'Command.Empty';
 
 const isGroup = (item: unknown): item is { items: readonly unknown[] } =>
   typeof item === 'object' &&
   item !== null &&
   Array.isArray((item as { items?: unknown }).items);
 
-export type CommandEmptyProps = AutocompletePrimitive.Empty.Props;
-
-export const CommandEmpty = ({
-  className,
-  children,
-  ...props
-}: CommandEmptyProps) => {
-  const count = useMatchCount();
-
-  return (
-    <AutocompletePrimitive.Empty
-      data-slot='command-empty'
-      className={cx(styles.empty, className)}
-      {...props}
-    >
-      {count ? null : children}
-    </AutocompletePrimitive.Empty>
+const countItems = (items: readonly unknown[]) =>
+  items.reduce<number>(
+    (count, item) => count + (isGroup(item) ? item.items.length : 1),
+    0
   );
-};
-
-CommandEmpty.displayName = 'Command.Empty';
 
 export interface CommandStatusProps
   extends Omit<AutocompletePrimitive.Status.Props, 'children'> {
-  /**
-   * Text to announce. A function receives the number of matching items.
-   * @default count => `${count} results`
-   */
+  /** Text to announce while the input has text. A function receives the number of matching items and needs the `items` prop. */
   children?: ReactNode | ((count: number) => ReactNode);
 }
 
-const defaultStatus = (count: number) =>
-  `${count} ${count === 1 ? 'result' : 'results'}`;
-
 export const CommandStatus = ({
   className,
-  children = defaultStatus,
+  children,
   ...props
 }: CommandStatusProps) => {
-  const { inputValue } = useCommandContext();
-  const count = useMatchCount();
+  const { inputValue, hasItems } = useCommandContext();
+  const filteredItems = AutocompletePrimitive.useFilteredItems<unknown>();
 
   let content: ReactNode = null;
   if (inputValue) {
-    content = typeof children === 'function' ? children(count) : children;
+    if (typeof children !== 'function') content = children;
+    else if (hasItems) content = children(countItems(filteredItems));
   }
 
   return (
