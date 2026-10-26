@@ -93,7 +93,13 @@ export * from './components/color-picker';
 export { Combobox } from './components/combobox';
 export { Command } from './components/command';
 export { Container } from './components/container';
-export { ContextMenu } from './components/context-menu';
+export {
+  ContextMenu,
+  type ContextMenuCheckboxItemProps,
+  type ContextMenuLinkItemProps,
+  type ContextMenuRadioGroupProps,
+  type ContextMenuRadioItemProps
+} from './components/context-menu';
 export { CopyButton } from './components/copy-button';
 export {
   DataTable,
@@ -183,7 +189,13 @@ export { Kbd } from './components/kbd';
 export { Label } from './components/label';
 export { Link } from './components/link';
 export { List } from './components/list';
-export { Menu } from './components/menu';
+export {
+  Menu,
+  type MenuCheckboxItemProps,
+  type MenuLinkItemProps,
+  type MenuRadioGroupProps,
+  type MenuRadioItemProps
+} from './components/menu';
 export { Menubar } from './components/menubar';
 export { Message } from './components/message';
 export { Meter } from './components/meter';
