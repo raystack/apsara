@@ -91,7 +91,7 @@ export interface CommandEmptyProps {
 }
 
 export interface CommandStatusProps {
-  /** Text to announce while the input has text. A function receives the number of matching items, or `null` without the `items` prop. */
+  /** Text to announce. A function receives the number of matching items, or `null` without the `items` prop. */
   children?: React.ReactNode | ((count: number | null) => React.ReactNode);
 
   /** Additional CSS class names. */

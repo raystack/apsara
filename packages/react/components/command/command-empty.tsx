@@ -33,7 +33,7 @@ const countItems = (items: readonly unknown[]) =>
 
 export interface CommandStatusProps
   extends Omit<AutocompletePrimitive.Status.Props, 'children'> {
-  /** Text to announce while the input has text. A function receives the number of matching items, or `null` without the `items` prop. */
+  /** Text to announce. A function receives the number of matching items, or `null` without the `items` prop. */
   children?: ReactNode | ((count: number | null) => ReactNode);
 }
 
@@ -42,16 +42,13 @@ export const CommandStatus = ({
   children,
   ...props
 }: CommandStatusProps) => {
-  const { inputValue, hasItems } = useCommandContext();
+  const { hasItems } = useCommandContext();
   const filteredItems = AutocompletePrimitive.useFilteredItems<unknown>();
 
-  let content: ReactNode = null;
-  if (inputValue) {
-    content =
-      typeof children === 'function'
-        ? children(hasItems ? countItems(filteredItems) : null)
-        : children;
-  }
+  const content =
+    typeof children === 'function'
+      ? children(hasItems ? countItems(filteredItems) : null)
+      : children;
 
   return (
     <AutocompletePrimitive.Status

@@ -134,7 +134,7 @@ describe('Command', () => {
   });
 
   describe('Status', () => {
-    it('announces the match count with the items prop while the input has text', async () => {
+    it('announces the match count with the items prop', async () => {
       const user = userEvent.setup();
       const items = ['Calendar', 'Calculator', 'Profile'];
       const { container } = render(
@@ -151,14 +151,13 @@ describe('Command', () => {
         </Command>
       );
       const status = container.querySelector('[data-slot="command-status"]');
-      expect(status).toBeEmptyDOMElement();
+      expect(status).toHaveTextContent('3 results');
 
       await user.type(screen.getByRole('combobox'), 'cal');
       await waitFor(() => expect(status).toHaveTextContent(/^2 results$/));
     });
 
-    it('passes null to a function child without the items prop', async () => {
-      const user = userEvent.setup();
+    it('passes null to a function child without the items prop', () => {
       const { container } = render(
         <Command>
           <Command.Input />
@@ -174,10 +173,9 @@ describe('Command', () => {
           </Command.Status>
         </Command>
       );
-      const status = container.querySelector('[data-slot="command-status"]');
-
-      await user.type(screen.getByRole('combobox'), 'cal');
-      await waitFor(() => expect(status).toHaveTextContent(/^No count$/));
+      expect(
+        container.querySelector('[data-slot="command-status"]')
+      ).toHaveTextContent('No count');
     });
   });
 
