@@ -2,7 +2,7 @@
 
 import { Popover as PopoverPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { ArrowSvg, arrowClassName } from '../../shared/arrow';
+import { Arrow } from '../../shared/arrow';
 import { type Radius, radiusStyle } from '../../shared/radius';
 import { useThemeInjection } from '../theme/portal';
 import styles from './popover.module.css';
@@ -64,11 +64,9 @@ function PopoverContent({
           {children}
           {showArrow && (
             <PopoverPrimitive.Arrow
-              className={arrowClassName}
               data-slot='popover-arrow'
-            >
-              <ArrowSvg />
-            </PopoverPrimitive.Arrow>
+              render={<Arrow />}
+            />
           )}
         </PopoverPrimitive.Popup>
       </PopoverPrimitive.Positioner>

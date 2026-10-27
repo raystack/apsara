@@ -2,7 +2,7 @@
 
 import { Tooltip as TooltipPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { ArrowSvg, arrowClassName } from '../../shared/arrow';
+import { Arrow } from '../../shared/arrow';
 import { type Radius, radiusStyle } from '../../shared/radius';
 import { Text } from '../text';
 import { useThemeInjection } from '../theme/portal';
@@ -70,11 +70,9 @@ export function TooltipContent({
           )}
           {showArrow && (
             <TooltipPrimitive.Arrow
-              className={arrowClassName}
               data-slot='tooltip-arrow'
-            >
-              <ArrowSvg />
-            </TooltipPrimitive.Arrow>
+              render={<Arrow />}
+            />
           )}
         </TooltipPrimitive.Popup>
       </TooltipPrimitive.Positioner>

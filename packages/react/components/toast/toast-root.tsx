@@ -4,7 +4,7 @@ import { Toast as ToastPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import { ErrorIcon, InfoIcon, SuccessIcon, WarningIcon, XIcon } from '~/icons';
-import { ArrowSvg, arrowClassName } from '../../shared/arrow';
+import { Arrow } from '../../shared/arrow';
 import { Button } from '../button';
 import { Flex } from '../flex';
 import { IconButton } from '../icon-button';
@@ -186,12 +186,7 @@ export function AnchoredToastRoot({ toast }: AnchoredToastRootProps) {
           </ToastPrimitive.Title>
         )}
         {toast.showArrow && (
-          <ToastPrimitive.Arrow
-            className={arrowClassName}
-            data-slot='toast-arrow'
-          >
-            <ArrowSvg />
-          </ToastPrimitive.Arrow>
+          <ToastPrimitive.Arrow data-slot='toast-arrow' render={<Arrow />} />
         )}
       </ToastPrimitive.Root>
     </ToastPrimitive.Positioner>
