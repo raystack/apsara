@@ -1,6 +1,6 @@
 import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
 import { DrawerContent } from './drawer-content';
-import { DrawerIndent, DrawerIndentBackground } from './drawer-indent';
+import { DrawerIndent } from './drawer-indent';
 import {
   DrawerBody,
   DrawerDescription,
@@ -12,10 +12,7 @@ import { DrawerRoot } from './drawer-root';
 import { DrawerSwipeArea } from './drawer-swipe-area';
 
 export type { DrawerContentProps } from './drawer-content';
-export type {
-  DrawerIndentBackgroundProps,
-  DrawerIndentProps
-} from './drawer-indent';
+export type { DrawerIndentProps } from './drawer-indent';
 export type { DrawerRootProps } from './drawer-root';
 export type { DrawerSwipeAreaProps } from './drawer-swipe-area';
 
@@ -31,6 +28,5 @@ export const Drawer = Object.assign(DrawerRoot, {
   SwipeArea: DrawerSwipeArea,
   Provider: DrawerPrimitive.Provider,
   Indent: DrawerIndent,
-  IndentBackground: DrawerIndentBackground,
   createHandle: DrawerPrimitive.createHandle
 });

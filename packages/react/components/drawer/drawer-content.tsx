@@ -37,6 +37,13 @@ export interface DrawerContentProps
    * @default 'Close'
    */
   closeLabel?: string;
+  /**
+   * Keeps a focused input above the on-screen keyboard on phones.
+   * @default false
+   */
+  enableVirtualKeyboard?: boolean;
+  /** Element to render the drawer into. Defaults to `document.body`. */
+  container?: DrawerPrimitive.Portal.Props['container'];
 }
 
 export function DrawerContent({
@@ -49,55 +56,62 @@ export function DrawerContent({
   'aria-labelledby': ariaLabelledBy,
   closeLabel = 'Close',
   radius,
+  enableVirtualKeyboard = false,
+  container,
   ...props
 }: DrawerContentProps) {
   const resolvedAriaLabel =
     ariaLabel ?? (ariaLabelledBy ? undefined : 'Drawer');
   const theme = useThemeInjection();
-  return (
-    <DrawerPrimitive.VirtualKeyboardProvider>
-      <DrawerPrimitive.Portal {...theme}>
-        <DrawerPrimitive.Backdrop
-          data-slot='drawer-backdrop'
-          {...overlayProps}
-          className={cx(styles.backdrop, overlayProps?.className)}
-        />
-        <DrawerPrimitive.Viewport
-          className={styles.viewport}
-          data-slot='drawer-viewport'
+  const portal = (
+    <DrawerPrimitive.Portal {...theme} container={container}>
+      <DrawerPrimitive.Backdrop
+        data-slot='drawer-backdrop'
+        {...overlayProps}
+        className={cx(styles.backdrop, overlayProps?.className)}
+      />
+      <DrawerPrimitive.Viewport
+        className={styles.viewport}
+        data-slot='drawer-viewport'
+      >
+        <DrawerPrimitive.Popup
+          {...theme}
+          className={drawerPopup({
+            side,
+            radius,
+            className: cx(theme?.className, className)
+          })}
+          aria-label={resolvedAriaLabel}
+          aria-labelledby={ariaLabelledBy}
+          data-slot='drawer-content'
+          {...props}
         >
-          <DrawerPrimitive.Popup
-            {...theme}
-            className={drawerPopup({
-              side,
-              radius,
-              className: cx(theme?.className, className)
-            })}
-            aria-label={resolvedAriaLabel}
-            aria-labelledby={ariaLabelledBy}
-            data-slot='drawer-content'
-            {...props}
+          <DrawerPrimitive.Content
+            className={styles.content}
+            data-slot='drawer-content-body'
           >
-            <DrawerPrimitive.Content
-              className={styles.content}
-              data-slot='drawer-content-body'
-            >
-              {children}
-              {showCloseButton && (
-                <DrawerPrimitive.Close
-                  className={styles.close}
-                  aria-label={closeLabel}
-                  render={<IconButton size={3} />}
-                  data-slot='drawer-close'
-                >
-                  <XIcon aria-hidden='true' />
-                </DrawerPrimitive.Close>
-              )}
-            </DrawerPrimitive.Content>
-          </DrawerPrimitive.Popup>
-        </DrawerPrimitive.Viewport>
-      </DrawerPrimitive.Portal>
+            {children}
+            {showCloseButton && (
+              <DrawerPrimitive.Close
+                className={styles.close}
+                aria-label={closeLabel}
+                render={<IconButton size={3} />}
+                data-slot='drawer-close'
+              >
+                <XIcon aria-hidden='true' />
+              </DrawerPrimitive.Close>
+            )}
+          </DrawerPrimitive.Content>
+        </DrawerPrimitive.Popup>
+      </DrawerPrimitive.Viewport>
+    </DrawerPrimitive.Portal>
+  );
+  return enableVirtualKeyboard ? (
+    <DrawerPrimitive.VirtualKeyboardProvider>
+      {portal}
     </DrawerPrimitive.VirtualKeyboardProvider>
+  ) : (
+    portal
   );
 }
 DrawerContent.displayName = 'Drawer.Content';

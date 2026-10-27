@@ -125,10 +125,14 @@
   );
 }
 
-/* Bottom side drawer */
+/* Bottom side drawer. With `enableVirtualKeyboard`, Base UI sets
+   `--drawer-keyboard-inset` while the keyboard is open. The drawer is shorter
+   than most phone keyboards, so it moves up instead of only scrolling. */
 .drawerPopup-bottom {
   width: 100%;
   height: 300px;
+  max-height: calc(100% - var(--drawer-keyboard-inset, 0px));
+  margin-bottom: var(--drawer-keyboard-inset, 0px);
   border-radius: var(--rs-radius-2) var(--rs-radius-2) 0 0;
   transform: translateY(var(--drawer-swipe-movement-y));
 }
@@ -262,8 +266,11 @@
   opacity: 1;
 }
 
+/* Fills the screen so the background shows only around the scaled indent,
+   not below short pages. */
 .indent {
   position: relative;
+  min-height: 100dvh;
   background-color: var(--rs-color-background-base-primary);
 }
 

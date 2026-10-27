@@ -42,7 +42,6 @@ describe('Drawer data-slot contract', () => {
   it('exposes slots for the swipe area and indent parts', () => {
     render(
       <Drawer.Provider>
-        <Drawer.IndentBackground />
         <Drawer.Indent>
           <Drawer>
             <Drawer.SwipeArea />

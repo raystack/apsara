@@ -60,6 +60,22 @@ export interface DrawerContentProps {
    * @defaultValue The theme's `radius`
    */
   radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
+
+  /**
+   * Keeps a focused input above the on-screen keyboard on phones.
+   * @default false
+   */
+  enableVirtualKeyboard?: boolean;
+
+  /**
+   * Element to render the drawer into.
+   * @defaultValue `document.body`
+   */
+  container?:
+    | HTMLElement
+    | ShadowRoot
+    | React.RefObject<HTMLElement | ShadowRoot | null>
+    | null;
 }
 
 export interface DrawerSwipeAreaProps {
@@ -85,24 +101,14 @@ export interface DrawerSwipeAreaProps {
 }
 
 export interface DrawerProviderProps {
-  /** The app content. A drawer inside it activates the indent parts while open. */
+  /** The app content. An open drawer inside it activates `Drawer.Indent`. */
   children?: React.ReactNode;
 }
 
 export interface DrawerIndentProps {
-  /**
-   * Allows rendering as a different element.
-   * Accepts a React element or a function that receives props and returns an element.
-   *
-   * @remarks `ReactElement | function`
-   */
-  render?: React.ReactElement;
+  /** Your app content. */
+  children?: React.ReactNode;
 
-  /** Additional CSS class name. */
-  className?: string;
-}
-
-export interface DrawerIndentBackgroundProps {
   /**
    * Allows rendering as a different element.
    * Accepts a React element or a function that receives props and returns an element.

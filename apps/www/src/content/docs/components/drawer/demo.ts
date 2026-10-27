@@ -124,17 +124,31 @@ function ControlledDrawer() {
 export const swipeAreaDemo = {
   type: 'code',
   code: `
-  <Drawer side="right">
-    <Drawer.Trigger render={<Button />}>Open Drawer</Drawer.Trigger>
-    <Drawer.SwipeArea />
-    <Drawer.Content>
-      <Drawer.Header>
-        <Drawer.Title>Library</Drawer.Title>
-        <Drawer.Description>You can also swipe in from the right edge of the screen.</Drawer.Description>
-      </Drawer.Header>
-      <Drawer.Body>Content here</Drawer.Body>
-    </Drawer.Content>
-  </Drawer>`
+function SwipeAreaDemo() {
+  const [container, setContainer] = React.useState(null);
+
+  return (
+    <div
+      ref={setContainer}
+      style={{ position: 'relative', width: '100%', overflow: 'hidden', contain: 'layout', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-4)' }}
+    >
+      <Drawer side="right" modal={false}>
+        <Drawer.SwipeArea
+          style={{ backgroundColor: 'var(--rs-color-background-accent-primary)', borderLeft: '2px dashed var(--rs-color-border-accent-emphasis)' }}
+        />
+        <Flex align="center" justify="center" style={{ minHeight: 320 }}>
+          <Text variant="secondary">Swipe from the right edge to open the drawer.</Text>
+        </Flex>
+        <Drawer.Content container={container}>
+          <Drawer.Header>
+            <Drawer.Title>Library</Drawer.Title>
+            <Drawer.Description>Swipe from the edge whenever you want to jump back into your playlists.</Drawer.Description>
+          </Drawer.Header>
+        </Drawer.Content>
+      </Drawer>
+    </div>
+  );
+}`
 };
 
 export const keyboardDemo = {
@@ -142,7 +156,7 @@ export const keyboardDemo = {
   code: `
   <Drawer side="bottom">
     <Drawer.Trigger render={<Button />}>Edit profile</Drawer.Trigger>
-    <Drawer.Content side="bottom">
+    <Drawer.Content side="bottom" enableVirtualKeyboard>
       <Drawer.Header>
         <Drawer.Title>Edit profile</Drawer.Title>
       </Drawer.Header>
@@ -159,18 +173,30 @@ export const keyboardDemo = {
 export const indentDemo = {
   type: 'code',
   code: `
-  <Drawer.Provider>
-    <Drawer.IndentBackground />
-    <Drawer.Indent>
-      <Drawer side="bottom">
-        <Drawer.Trigger render={<Button />}>Open Drawer</Drawer.Trigger>
-        <Drawer.Content side="bottom">
-          <Drawer.Header>
-            <Drawer.Title>Notifications</Drawer.Title>
-            <Drawer.Description>The content behind this drawer scales down.</Drawer.Description>
-          </Drawer.Header>
-        </Drawer.Content>
-      </Drawer>
-    </Drawer.Indent>
-  </Drawer.Provider>`
+function IndentDemo() {
+  const [container, setContainer] = React.useState(null);
+
+  return (
+    <Drawer.Provider>
+      <div
+        ref={setContainer}
+        style={{ position: 'relative', width: '100%', overflow: 'hidden', contain: 'layout', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-4)' }}
+      >
+        <Drawer.Indent style={{ minHeight: 400 }}>
+          <Flex align="center" justify="center" style={{ minHeight: 400 }}>
+            <Drawer side="bottom" modal={false}>
+              <Drawer.Trigger render={<Button />}>Open drawer</Drawer.Trigger>
+              <Drawer.Content side="bottom" container={container}>
+                <Drawer.Header>
+                  <Drawer.Title>Notifications</Drawer.Title>
+                  <Drawer.Description>You are all caught up. Good job!</Drawer.Description>
+                </Drawer.Header>
+              </Drawer.Content>
+            </Drawer>
+          </Flex>
+        </Drawer.Indent>
+      </div>
+    </Drawer.Provider>
+  );
+}`
 };
