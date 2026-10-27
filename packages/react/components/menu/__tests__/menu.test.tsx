@@ -408,5 +408,21 @@ describe('Menu', () => {
       expect(link.tagName).toBe('A');
       expect(link).toHaveAttribute('href', '/docs');
     });
+
+    it('renders the empty state without live region attributes', async () => {
+      await renderAndOpenDropdown(
+        <Menu autocomplete>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content>
+            <Menu.Item>Profile</Menu.Item>
+            <Menu.EmptyState>No results</Menu.EmptyState>
+          </Menu.Content>
+        </Menu>
+      );
+      const empty = document.querySelector('[data-slot="menu-empty-state"]');
+      expect(empty).not.toHaveAttribute('role');
+      expect(empty).not.toHaveAttribute('aria-live');
+      expect(empty).not.toHaveAttribute('aria-atomic');
+    });
   });
 });

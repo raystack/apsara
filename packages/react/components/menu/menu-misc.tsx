@@ -78,6 +78,10 @@ export function MenuEmptyState({
   return (
     <Component
       data-slot='menu-empty-state'
+      // The search list is a listbox, which only allows options and groups inside.
+      role={undefined}
+      aria-live={undefined}
+      aria-atomic={undefined}
       className={cx(styles.empty, className)}
       {...props}
     >

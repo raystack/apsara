@@ -81,6 +81,10 @@ export const ContextMenuEmptyState = ({
   return (
     <Component
       data-slot='context-menu-empty-state'
+      // The search list is a listbox, which only allows options and groups inside.
+      role={undefined}
+      aria-live={undefined}
+      aria-atomic={undefined}
       className={cx(styles.empty, className)}
       {...props}
     >
