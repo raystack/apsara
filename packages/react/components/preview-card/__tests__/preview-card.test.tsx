@@ -131,7 +131,7 @@ describe('PreviewCard', () => {
         expect(screen.getByText(CARD_CONTENT)).toBeInTheDocument();
       });
 
-      const arrow = document.querySelector(`.${styles.arrow}`);
+      const arrow = document.querySelector('[data-slot="preview-card-arrow"]');
       expect(arrow).not.toBeInTheDocument();
     });
 
@@ -143,7 +143,9 @@ describe('PreviewCard', () => {
       );
 
       await waitFor(() => {
-        const arrow = document.querySelector(`.${styles.arrow}`);
+        const arrow = document.querySelector(
+          '[data-slot="preview-card-arrow"]'
+        );
         expect(arrow).toBeInTheDocument();
       });
     });
