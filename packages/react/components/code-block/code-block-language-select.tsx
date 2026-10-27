@@ -8,13 +8,21 @@ import { SingleSelectProps } from '../select/select-root';
 import styles from './code-block.module.css';
 import { useCodeBlockContext } from './code-block-root';
 
-export const CodeBlockLanguageSelect = (props: SingleSelectProps) => {
+export type CodeBlockLanguageSelectProps = SingleSelectProps;
+
+export const CodeBlockLanguageSelect = (
+  props: CodeBlockLanguageSelectProps
+) => {
   const { value, setValue } = useCodeBlockContext();
 
   const handleValueChange = (value: string) => {
     setValue(value as Language);
   };
-  return <Select onValueChange={handleValueChange} value={value} {...props} />;
+  // The value is unset until a CodeBlock.Code sets it. Pass '' so the Select
+  // is controlled from its first render.
+  return (
+    <Select onValueChange={handleValueChange} value={value ?? ''} {...props} />
+  );
 };
 
 CodeBlockLanguageSelect.displayName = 'CodeBlock.LanguageSelect';

@@ -61,9 +61,24 @@ function PopoverContent({
 }
 PopoverContent.displayName = 'Popover.Content';
 
+function PopoverViewport({
+  className,
+  ...props
+}: PopoverPrimitive.Viewport.Props) {
+  return (
+    <PopoverPrimitive.Viewport
+      className={cx(styles.viewport, className)}
+      data-slot='popover-viewport'
+      {...props}
+    />
+  );
+}
+PopoverViewport.displayName = 'Popover.Viewport';
+
 export const Popover = Object.assign(PopoverPrimitive.Root, {
   Trigger: PopoverPrimitive.Trigger,
   Close: PopoverPrimitive.Close,
   Content: PopoverContent,
+  Viewport: PopoverViewport,
   createHandle: PopoverPrimitive.createHandle
 });

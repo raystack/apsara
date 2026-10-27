@@ -575,9 +575,9 @@ describe('Filter Operations', () => {
       const result = getFilterOperator({
         value: EmptyFilterValue,
         filterType: FilterType.string,
-        operator: 'like'
+        operator: 'eq'
       });
-      expect(result).toBe('like');
+      expect(result).toBe('eq');
     });
 
     it('should handle undefined filterType', () => {

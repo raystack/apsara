@@ -2,7 +2,7 @@
 
 import type { HeaderGroup, Row } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
-import { useVirtualizer } from '@tanstack/react-virtual';
+import { useVirtualizer, type Virtualizer } from '@tanstack/react-virtual';
 import { cx } from 'class-variance-authority';
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import tableStyles from '~/components/table/table.module.css';
@@ -14,9 +14,9 @@ import { Skeleton } from '../../skeleton';
 import styles from '../data-table.module.css';
 import {
   DataTableColumnDef,
+  DataTableVirtualizedContentProps,
   defaultGroupOption,
-  GroupedData,
-  VirtualizedContentProps
+  GroupedData
 } from '../data-table.types';
 import { useDataTable } from '../hooks/useDataTable';
 import { useStickyGroupAnchor } from '../hooks/useStickyGroupAnchor';
@@ -89,7 +89,7 @@ function VirtualRows<TData>({
   hiddenGroupIndex
 }: {
   rows: Row<TData>[];
-  virtualizer: ReturnType<typeof useVirtualizer>;
+  virtualizer: Virtualizer<HTMLDivElement, Element>;
   onRowClick?: (row: TData) => void;
   classNames?: { row?: string };
   hiddenGroupIndex?: number | null;
@@ -220,7 +220,7 @@ export function VirtualizedContent({
   emptyState,
   zeroState,
   classNames = {}
-}: VirtualizedContentProps) {
+}: DataTableVirtualizedContentProps) {
   const {
     onRowClick,
     table,
@@ -308,13 +308,20 @@ export function VirtualizedContent({
 
   const totalHeight = virtualizer.getTotalSize();
 
-  useLayoutEffect(() => {
-    if (headerRef.current) {
-      setHeaderHeight(headerRef.current.getBoundingClientRect().height);
-    }
-  }, [headerGroups]);
-
   const hasData = rows?.length > 0 || isLoading;
+
+  useLayoutEffect(() => {
+    // The header only renders when there is data.
+    if (!hasData) return;
+    const header = headerRef.current;
+    if (!header) return;
+    setHeaderHeight(header.getBoundingClientRect().height);
+    const observer = new ResizeObserver(() => {
+      setHeaderHeight(header.getBoundingClientRect().height);
+    });
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, [hasData]);
 
   const hasChanges = hasActiveQuery(tableQuery || {}, defaultSort);
 

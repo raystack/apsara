@@ -53,4 +53,16 @@ describe('Field data-slot contract', () => {
       'field-error'
     ]);
   });
+
+  it('exposes the item slot', () => {
+    const { container } = render(
+      <Field>
+        <Field.Item>
+          <Field.Label>Option</Field.Label>
+          <Field.Description>Help text</Field.Description>
+        </Field.Item>
+      </Field>
+    );
+    expectSlots(container, ['field-item']);
+  });
 });

@@ -22,7 +22,7 @@ const separator = cva(styles.separator, {
   }
 });
 
-type SeparatorProps = SeparatorPrimitive.Props &
+export type SeparatorProps = SeparatorPrimitive.Props &
   VariantProps<typeof separator> & {
     /**
      * When true, the separator is purely decorative and hidden from

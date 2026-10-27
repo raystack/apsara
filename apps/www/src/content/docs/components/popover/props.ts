@@ -65,3 +65,8 @@ export interface PopoverTriggerProps {
   /** Additional CSS class name. */
   className?: string;
 }
+
+export interface PopoverViewportProps {
+  /** Additional CSS class name. */
+  className?: string;
+}

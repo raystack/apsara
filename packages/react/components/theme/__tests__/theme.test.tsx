@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { XIcon } from '~/icons';
 import { radiusStyle } from '../../../shared/radius';
 import { Dialog } from '../../dialog';
+import { Tabs } from '../../tabs';
 import { useTheme } from '../context';
 import { useThemeInjection } from '../portal';
 import type { ThemeSettings } from '../settings';
@@ -837,13 +838,15 @@ describe('the portal re-injector', () => {
     };
 
     // Base UI renders no backdrop for a nested dialog; the parent's serves both.
-    const backdrops = [
-      ...document.querySelectorAll('[data-slot="dialog-backdrop"]')
-    ];
+    const backdrops = Array.from(
+      document.querySelectorAll('[data-slot="dialog-backdrop"]')
+    );
     expect(backdrops).toHaveLength(1);
     expect(scopeOf(backdrops[0])).toEqual(['dark', 'mint']);
 
-    const titles = [...document.querySelectorAll('[data-slot="dialog-title"]')];
+    const titles = Array.from(
+      document.querySelectorAll('[data-slot="dialog-title"]')
+    );
     expect(titles.map(t => [t.textContent, ...scopeOf(t)])).toEqual([
       ['Outer', 'dark', 'mint'],
       ['Inner', 'light', 'orange']
@@ -1180,5 +1183,95 @@ describe('icons', () => {
 
     expect(screen.getByTestId('inner')).toBeInTheDocument();
     expect(screen.queryByTestId('stub')).not.toBeInTheDocument();
+  });
+});
+
+describe('dir', () => {
+  function DirTabs() {
+    return (
+      <Tabs defaultValue='one'>
+        <Tabs.List>
+          <Tabs.Tab value='one'>One</Tabs.Tab>
+          <Tabs.Tab value='two'>Two</Tabs.Tab>
+          <Tabs.Tab value='three'>Three</Tabs.Tab>
+        </Tabs.List>
+      </Tabs>
+    );
+  }
+
+  async function nextTabAfter(key: string) {
+    const user = userEvent.setup();
+    const first = screen.getByRole('tab', { name: 'One' });
+    act(() => first.focus());
+    await user.keyboard(key);
+    return document.activeElement?.textContent;
+  }
+
+  it('sets no dir attribute when unset', () => {
+    const { container } = render(<Theme>x</Theme>);
+    expect(themeElement(container)).not.toHaveAttribute('dir');
+  });
+
+  it('sets dir on the theme element', () => {
+    const { container } = render(<Theme dir='rtl'>x</Theme>);
+    expect(themeElement(container)).toHaveAttribute('dir', 'rtl');
+  });
+
+  // Focus wraps, so with three tabs the wrong direction lands on 'Three'.
+  it('moves to the next tab with ArrowRight by default', async () => {
+    render(
+      <Theme>
+        <DirTabs />
+      </Theme>
+    );
+    expect(await nextTabAfter('{ArrowRight}')).toBe('Two');
+  });
+
+  it('flips arrow keys in Base UI components when rtl', async () => {
+    render(
+      <Theme dir='rtl'>
+        <DirTabs />
+      </Theme>
+    );
+    expect(await nextTabAfter('{ArrowLeft}')).toBe('Two');
+  });
+
+  it('inherits the parent direction in a nested theme without dir', async () => {
+    const { container } = render(
+      <Theme dir='rtl'>
+        <Theme defaultValue={{ accentColor: 'mint' }}>
+          <DirTabs />
+        </Theme>
+      </Theme>
+    );
+    expect(themeElement(container, 1)).not.toHaveAttribute('dir');
+    expect(await nextTabAfter('{ArrowLeft}')).toBe('Two');
+  });
+
+  it('lets a nested theme switch back to ltr', async () => {
+    const { container } = render(
+      <Theme dir='rtl'>
+        <Theme dir='ltr'>
+          <DirTabs />
+        </Theme>
+      </Theme>
+    );
+    expect(themeElement(container, 1)).toHaveAttribute('dir', 'ltr');
+    expect(await nextTabAfter('{ArrowRight}')).toBe('Two');
+  });
+
+  it('re-emits dir onto portalled elements', () => {
+    function Portalled() {
+      const theme = useThemeInjection();
+      return <div {...theme} data-testid='portalled' />;
+    }
+    render(
+      <Theme dir='rtl'>
+        <Theme defaultValue={{ accentColor: 'mint' }}>
+          <Portalled />
+        </Theme>
+      </Theme>
+    );
+    expect(screen.getByTestId('portalled')).toHaveAttribute('dir', 'rtl');
   });
 });

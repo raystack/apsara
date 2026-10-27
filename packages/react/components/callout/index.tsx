@@ -1,1 +1,1 @@
-export { Callout } from './callout';
+export { Callout, type CalloutProps } from './callout';

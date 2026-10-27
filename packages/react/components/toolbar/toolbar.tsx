@@ -51,8 +51,31 @@ const ToolbarSeparator = ({
 );
 ToolbarSeparator.displayName = 'Toolbar.Separator';
 
+const ToolbarLink = ({ className, ...props }: ToolbarPrimitive.Link.Props) => (
+  <ToolbarPrimitive.Link
+    data-slot='toolbar-link'
+    className={cx(styles.link, className)}
+    {...props}
+  />
+);
+ToolbarLink.displayName = 'Toolbar.Link';
+
+const ToolbarInput = ({
+  className,
+  ...props
+}: ToolbarPrimitive.Input.Props) => (
+  <ToolbarPrimitive.Input
+    data-slot='toolbar-input'
+    className={cx(styles.input, className)}
+    {...props}
+  />
+);
+ToolbarInput.displayName = 'Toolbar.Input';
+
 export const Toolbar = Object.assign(ToolbarRoot, {
   Button: ToolbarButton,
+  Link: ToolbarLink,
+  Input: ToolbarInput,
   Group: ToolbarGroup,
   Separator: ToolbarSeparator
 });

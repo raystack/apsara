@@ -67,11 +67,15 @@ export function MenuSeparator({ className, ...props }: ComponentProps<'div'>) {
 }
 MenuSeparator.displayName = 'Menu.Separator';
 
+export interface MenuEmptyStateProps extends ComponentProps<'div'> {
+  children: ReactNode;
+}
+
 export function MenuEmptyState({
   className,
   children,
   ...props
-}: ComponentProps<'div'> & { children: ReactNode }) {
+}: MenuEmptyStateProps) {
   return (
     <div
       data-slot='menu-empty-state'
