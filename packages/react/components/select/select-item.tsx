@@ -93,8 +93,6 @@ export function SelectItem({
       {...props}
       render={(renderProps, state) => (
         <div {...renderProps}>
-          {/* A tabbable checkbox takes the popup's initial focus without
-              preventScroll, which scrolls the page before the popup is placed. */}
           {multiple && <Checkbox checked={state.selected} tabIndex={-1} />}
           {element}
         </div>
