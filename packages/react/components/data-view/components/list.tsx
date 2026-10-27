@@ -11,9 +11,9 @@ import {
   useMemo,
   useRef
 } from 'react';
-import { useScaling } from '~/hooks/useScaling';
 import { Badge } from '../../badge';
 import { Skeleton } from '../../skeleton';
+import { useScaling } from '../../theme/use-scaling';
 import styles from '../data-view.module.css';
 import {
   DataViewListColumn,
@@ -133,7 +133,7 @@ export function DataViewList<TData, TValue = unknown>({
 
   // Rows are sized by tokens, so the estimates the virtualizer and the sticky
   // group anchor run on follow the theme zoom. An explicit prop is left alone.
-  const scaling = useScaling(scrollRef);
+  const scaling = useScaling();
   const groupHeaderHeight = GROUP_HEADER_HEIGHT * scaling;
   const effectiveRowHeight =
     estimatedRowHeight ??

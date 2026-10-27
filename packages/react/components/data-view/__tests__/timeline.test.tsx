@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { Theme } from '../../theme';
 
 // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
 import { DataView } from '../data-view';
@@ -2206,5 +2207,204 @@ describe('DataView.Timeline sort-value lanes', () => {
       'card-v04',
       'card-v05'
     ]);
+  });
+});
+
+describe('DataView.Timeline theme scaling', () => {
+  const scaledOrders: Order[] = [
+    ...orders,
+    // 3 days: exactly minCardWidth at scaling 1.
+    { id: 'o4', title: 'Delta', start: '2025-01-20', end: '2025-01-23' },
+    // A quarter day: below the min render width.
+    {
+      id: 'o5',
+      title: 'Echo',
+      start: '2025-01-26T00:00:00',
+      end: '2025-01-26T06:00:00'
+    }
+  ];
+
+  function renderScaled(
+    scaling: '1' | '1.1',
+    props: Partial<DataViewTimelineProps<Order>> = {},
+    data: Order[] = scaledOrders
+  ) {
+    return render(
+      <Theme defaultValue={{ scaling }}>
+        <DataView<Order>
+          data={data}
+          fields={fields}
+          mode='client'
+          defaultSort={{ name: 'title', order: 'asc' }}
+          getRowId={(row: Order) => row.id}
+        >
+          <DataView.Timeline<Order>
+            startField='start'
+            endField='end'
+            range={['2025-01-01', '2025-01-31']}
+            today={false}
+            defaultScrollTo='start'
+            renderCard={(row, context) => (
+              <div
+                data-testid={`card-${row.original.id}`}
+                data-collapsed={String(context.collapsed)}
+                data-lane={context.laneIndex}
+              />
+            )}
+            {...props}
+          />
+        </DataView>
+      </Theme>
+    );
+  }
+
+  const lefts = (container: HTMLElement, slot: string) =>
+    Array.from(
+      container.querySelectorAll<HTMLElement>(`[data-slot="${slot}"]`)
+    ).map(el => Number.parseFloat(el.style.left));
+
+  const labels = (container: HTMLElement) =>
+    Array.from(
+      container.querySelectorAll('[data-slot="data-view-timeline-axis-tick"]')
+    ).map(el => el.textContent);
+
+  const cardState = () =>
+    scaledOrders.map(({ id }) => {
+      const card = screen.getByTestId(`card-${id}`);
+      return [card.dataset.collapsed, card.dataset.lane];
+    });
+
+  const renderWidth = (id: string) =>
+    Number.parseFloat(
+      screen.getByTestId(`card-${id}`).parentElement!.style.width
+    );
+
+  it('scales the default axis and keeps cards on the same grid', () => {
+    const base = renderScaled('1');
+    const baseTicks = lefts(base.container, 'data-view-timeline-axis-tick');
+    const baseGrid = lefts(base.container, 'data-view-timeline-gridline');
+    const baseLabels = labels(base.container);
+    const baseCards = cardState();
+    expect(renderWidth('o5')).toBe(24);
+    base.unmount();
+
+    const scaled = renderScaled('1.1');
+    const ticks = lefts(scaled.container, 'data-view-timeline-axis-tick');
+    const grid = lefts(scaled.container, 'data-view-timeline-gridline');
+    expect(baseGrid.length).toBeGreaterThan(0);
+    expect(ticks).toHaveLength(baseTicks.length);
+    expect(grid).toHaveLength(baseGrid.length);
+    ticks.forEach((x, i) => expect(x).toBeCloseTo(baseTicks[i] * 1.1));
+    grid.forEach((x, i) => expect(x).toBeCloseTo(baseGrid[i] * 1.1));
+    expect(labels(scaled.container)).toEqual(baseLabels);
+    expect(cardState()).toEqual(baseCards);
+    expect(screen.getByTestId('card-o4').dataset.collapsed).toBe('false');
+    expect(renderWidth('o5')).toBeCloseTo(24 * 1.1);
+  });
+
+  it('uses an explicit unitWidth as passed and scales the label floor', () => {
+    const base = renderScaled('1', { unitWidth: 14 });
+    expect(
+      lefts(base.container, 'data-view-timeline-gridline').slice(0, 3)
+    ).toEqual([0, 14, 28]);
+    // 28px floor over 14px units → every 2nd label.
+    expect(lefts(base.container, 'data-view-timeline-axis-tick')[1]).toBe(28);
+    base.unmount();
+
+    const scaled = renderScaled('1.1', { unitWidth: 14 });
+    expect(
+      lefts(scaled.container, 'data-view-timeline-gridline').slice(0, 3)
+    ).toEqual([0, 14, 28]);
+    // 30.8px floor over 14px units → every 3rd label.
+    expect(lefts(scaled.container, 'data-view-timeline-axis-tick')[1]).toBe(42);
+  });
+
+  it('scales the gap between cards sharing a lane', () => {
+    // At scaling 1, b starts 7.5px after a ends, under the 8px card gap.
+    const nearlyTouching: Order[] = [
+      {
+        id: 'a',
+        title: 'A',
+        start: '2025-01-05T00:00:00',
+        end: '2025-01-10T00:00:00'
+      },
+      {
+        id: 'b',
+        title: 'B',
+        start: '2025-01-10T09:00:00',
+        end: '2025-01-15T00:00:00'
+      }
+    ];
+    const lanes = () =>
+      ['a', 'b'].map(id => screen.getByTestId(`card-${id}`).dataset.lane);
+    const base = renderScaled('1', {}, nearlyTouching);
+    expect(lanes()).toEqual(['0', '1']);
+    base.unmount();
+    renderScaled('1.1', {}, nearlyTouching);
+    expect(lanes()).toEqual(['0', '1']);
+  });
+
+  it('scales the edge inset of an edge-aligned scrollTo', () => {
+    const actionsRef = { current: null as TimelineActions | null };
+    const { container } = renderScaled('1.1', { actionsRef });
+    const root = container.querySelector<HTMLElement>(
+      '[data-slot="data-view-timeline"]'
+    )!;
+    actionsRef.current!.scrollTo('2025-01-20', {
+      align: 'start',
+      behavior: 'auto'
+    });
+    // Jan 20 = 19 days × 22px, minus the 24px inset × 1.1.
+    expect(root.scrollLeft).toBeCloseTo(19 * 22 - 24 * 1.1);
+  });
+
+  it('picks up scaling when a renderer mounts after a view switch', () => {
+    const views = [
+      { value: 'list', label: 'List' },
+      { value: 'timeline', label: 'Timeline' }
+    ];
+    const renderViews = (view: string) => (
+      <Theme defaultValue={{ scaling: '1.1' }}>
+        <DataView<Order>
+          data={orders}
+          fields={fields}
+          mode='client'
+          defaultSort={{ name: 'title', order: 'asc' }}
+          getRowId={(row: Order) => row.id}
+          views={views}
+          view={view}
+          isLoading
+          loadingRowCount={1}
+        >
+          <DataView.List<Order>
+            name='list'
+            variant='list'
+            columns={[{ accessorKey: 'title' }]}
+          />
+          <DataView.Timeline<Order>
+            name='timeline'
+            startField='start'
+            endField='end'
+            range={['2025-01-01', '2025-01-31']}
+            today={false}
+            defaultScrollTo='start'
+            renderCard={row => <div data-testid={`card-${row.original.id}`} />}
+          />
+        </DataView>
+      </Theme>
+    );
+
+    const { container, rerender } = render(renderViews('timeline'));
+    rerender(renderViews('list'));
+    const loaderRow = container.querySelector<HTMLElement>(
+      '[data-slot="data-view-list-loader-row"]'
+    );
+    expect(Number.parseFloat(loaderRow!.style.minHeight)).toBeCloseTo(56 * 1.1);
+
+    rerender(renderViews('timeline'));
+    // Jan 5 at 22px per day, and lane 0 sits one scaled lane gap down.
+    const wrapper = screen.getByTestId('card-o1').parentElement!;
+    expect(Number.parseFloat(wrapper.style.left)).toBeCloseTo(4 * 22);
+    expect(Number.parseFloat(wrapper.style.top)).toBeCloseTo(16 * 1.1);
   });
 });
