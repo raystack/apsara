@@ -210,7 +210,9 @@ export { Dialog, type DialogContentProps } from './components/dialog';
 export {
   Drawer,
   type DrawerContentProps,
-  type DrawerProps
+  type DrawerIndentProps,
+  type DrawerProps,
+  type DrawerSwipeAreaProps
 } from './components/drawer';
 export {
   defaultShortcuts,
