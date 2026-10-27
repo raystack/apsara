@@ -151,11 +151,15 @@ export {
 export { Container, type ContainerProps } from './components/container';
 export {
   ContextMenu,
+  type ContextMenuCheckboxItemProps,
   type ContextMenuContentProps,
   type ContextMenuGroupProps,
   type ContextMenuItemProps,
   type ContextMenuLabelProps,
+  type ContextMenuLinkItemProps,
   type ContextMenuProps,
+  type ContextMenuRadioGroupProps,
+  type ContextMenuRadioItemProps,
   type ContextMenuSubMenuProps,
   type ContextMenuSubTriggerProps,
   type ContextMenuTriggerProps
@@ -288,10 +292,14 @@ export {
 } from './components/list';
 export {
   Menu,
+  type MenuCheckboxItemProps,
   type MenuContentProps,
   type MenuEmptyStateProps,
   type MenuItemProps,
+  type MenuLinkItemProps,
   type MenuProps,
+  type MenuRadioGroupProps,
+  type MenuRadioItemProps,
   type MenuSubMenuProps,
   type MenuSubTriggerProps,
   type MenuTriggerProps
