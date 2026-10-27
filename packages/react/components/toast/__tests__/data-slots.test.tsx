@@ -42,16 +42,22 @@ describe('Toast data-slot contract', () => {
     ]);
   });
 
-  it('exposes positioner and arrow slots for an anchored toast', async () => {
+  it('exposes slots for an anchored toast with showArrow', async () => {
     const manager = renderProvider();
     const anchor = screen.getByText('App content');
     act(() => {
-      manager.add({ title: 'Copied', positionerProps: { anchor } });
+      manager.add({
+        title: 'Copied',
+        showArrow: true,
+        positionerProps: { anchor }
+      });
     });
     await screen.findByText('Copied');
     expectSlots(document.body, [
       'toast-anchored-viewport',
       'toast-positioner',
+      'toast',
+      'toast-title',
       'toast-arrow'
     ]);
   });

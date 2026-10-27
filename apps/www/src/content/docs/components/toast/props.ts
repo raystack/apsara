@@ -78,12 +78,18 @@ export interface ToastManagerAddOptions {
   leadingIcon?: React.ReactNode;
 
   /**
-   * Shows the toast next to `anchor` with an arrow, instead of in the stack.
+   * Shows the toast next to `anchor`, like a tooltip, instead of in the stack.
    * Also takes `side`, `align`, `sideOffset`, and `alignOffset`.
    *
    * @remarks `{ anchor?: Element | null; side?: 'top' | 'right' | 'bottom' | 'left'; align?: 'start' | 'center' | 'end'; sideOffset?: number; alignOffset?: number }`
    */
   positionerProps?: ToastPositionerOptions;
+
+  /**
+   * Shows an arrow that points at the anchor. Only anchored toasts use it.
+   * @default false
+   */
+  showArrow?: boolean;
 
   /**
    * Optional custom ID for the toast. Auto-generated if not provided. If a toast with this ID is open, it is updated in place. Must be unique across stacked and anchored toasts.
@@ -112,7 +118,7 @@ export interface ToastPositionerOptions {
 
   /**
    * Distance in pixels from the anchor.
-   * @default 10
+   * @default 4, or 10 with `showArrow`
    */
   sideOffset?: number;
 
@@ -138,12 +144,13 @@ export interface ToastManagerUpdateOptions {
   actionProps?: React.ComponentPropsWithoutRef<'button'>;
   leadingIcon?: React.ReactNode;
   /**
-   * Placement of an anchored toast. It does not move a toast into or out of
-   * the stack.
+   * Placement of an anchored toast, merged with its current placement. It
+   * does not move a toast into or out of the stack.
    *
    * @remarks `{ anchor?: Element | null; side?: 'top' | 'right' | 'bottom' | 'left'; align?: 'start' | 'center' | 'end'; sideOffset?: number; alignOffset?: number }`
    */
   positionerProps?: ToastPositionerOptions;
+  showArrow?: boolean;
 }
 
 /**

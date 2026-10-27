@@ -72,11 +72,13 @@ Control where toasts appear on screen with the `position` prop on `Toast.Provide
 
 ### Anchored toast
 
-Pass `positionerProps.anchor` to show the toast next to an element, with an arrow that points at it. Use it for short feedback near the control that caused it, such as "Copied".
+Pass `positionerProps.anchor` to show the toast next to an element. Use it for short feedback near the control that caused it, such as "Copied".
 
-`Toast.Provider` renders anchored toasts in their own layer. They do not join the stack, and `limit` applies to each group on its own. The same `toastManager` and `useToastManager()` add, update, and close both kinds. Pass `side`, `align`, or `sideOffset` in `positionerProps` to place the toast. It shows on the `top` side by default, 10px from the anchor.
+An anchored toast looks like a tooltip. It shows only the title, or the description when there is no title. It has no icon, action, or close button, so it closes when its `timeout` ends or when you call `close`. Pass `showArrow: true` to add an arrow that points at the anchor.
 
-The manager picks the layer when it creates the toast: from the `add` options, or from `loading` for `promise`. A later `update` does not move a toast between the stack and an anchor. A toast with `anchor: null` joins the stack. A custom `id` must be unique across both layers.
+`Toast.Provider` renders anchored toasts in their own layer. They do not join the stack, and `limit` applies to each group on its own. The same `toastManager` and `useToastManager()` add, update, and close both kinds. Pass `side`, `align`, or `sideOffset` in `positionerProps` to place the toast. It shows on the `top` side by default, 4px from the anchor, or 10px with the arrow.
+
+The manager picks the layer when it creates the toast: from the `add` options, or from `loading` for `promise`. A later `update` does not move a toast between the stack and an anchor, and the `positionerProps` it passes are merged with the current ones. A toast with `anchor: null` joins the stack. A custom `id` must be unique across both layers.
 
 The demo passes an `id`, so repeated clicks update one toast instead of adding more.
 
@@ -192,7 +194,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `toast-description` | The description (when both title and description are set) |
 | `toast-anchored-viewport` | The region that holds anchored toasts |
 | `toast-positioner` | Positioner that places an anchored toast next to its anchor |
-| `toast-arrow` | The arrow of an anchored toast |
+| `toast-arrow` | The arrow of an anchored toast (when `showArrow`) |
 
 ## Accessibility
 

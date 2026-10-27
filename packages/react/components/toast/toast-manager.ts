@@ -23,8 +23,16 @@ type BaseManager = ReturnType<
   typeof ToastPrimitive.createToastManager<ToastData>
 >;
 
+interface ToastOptions extends ToastData {
+  /**
+   * Shows an arrow that points at the anchor. Only anchored toasts use it.
+   * @default false
+   */
+  showArrow?: boolean;
+}
+
 /** Public option shape: hides Base UI's internal storage slot and exposes `leadingIcon` directly. */
-type WithModifiedOptions<T> = Omit<T, 'data'> & ToastData;
+type WithModifiedOptions<T> = Omit<T, 'data'> & ToastOptions;
 
 export type ToastAddOptions = WithModifiedOptions<
   Parameters<BaseManager['add']>[0]
@@ -57,44 +65,40 @@ function lift<O extends { leadingIcon?: ReactNode }>(options: O) {
   return { ...rest, data: { leadingIcon } };
 }
 
-function liftUpdater(updater: ToastUpdater) {
-  if (typeof updater === 'function') {
-    return (prevToast: ToastObject<ToastData>) => lift(updater(prevToast));
-  }
-  return lift(updater);
-}
+/** Sets the placement options of a toast for the store it is in. */
+type Place = (options: ToastUpdateOptions) => ToastUpdateOptions;
 
-function liftDescriptor(option: string | ToastUpdateOptions) {
-  return typeof option === 'string' ? option : lift(option);
+function liftDescriptor(option: string | ToastUpdateOptions, place: Place) {
+  return typeof option === 'string' ? option : lift(place(option));
 }
 
 function liftCallable<Arg>(
   option:
     | string
     | ToastUpdateOptions
-    | ((arg: Arg) => string | ToastUpdateOptions)
+    | ((arg: Arg) => string | ToastUpdateOptions),
+  place: Place
 ) {
   if (typeof option === 'function') {
-    return (arg: Arg) => liftDescriptor(option(arg));
+    return (arg: Arg) => liftDescriptor(option(arg), place);
   }
-  return liftDescriptor(option);
+  return liftDescriptor(option, place);
 }
 
-function liftPromiseOptions<Value>({
-  loading,
-  success,
-  error
-}: ToastPromiseOptions<Value>) {
+function liftPromiseOptions<Value>(
+  { loading, success, error }: ToastPromiseOptions<Value>,
+  place: Place
+) {
   return {
-    loading: liftDescriptor(loading),
-    success: liftCallable(success),
-    error: liftCallable(error)
+    loading: liftDescriptor(loading, place),
+    success: liftCallable(success, place),
+    error: liftCallable(error, place)
   };
 }
 
 /** A toast with `positionerProps.anchor` shows next to that element. */
-function isAnchored(options: string | ToastUpdateOptions) {
-  return typeof options !== 'string' && options.positionerProps?.anchor != null;
+function isAnchored(options: ToastUpdateOptions) {
+  return options.positionerProps?.anchor != null;
 }
 
 // A symbol key keeps the anchored manager out of the public API.
@@ -122,6 +126,14 @@ function unanchored<O extends ToastUpdateOptions>(options: O) {
   return { ...options, positionerProps: undefined };
 }
 
+// Base UI replaces `positionerProps` on update, which would drop `anchor`.
+function keepPlacement(prev: ToastUpdateOptions['positionerProps']): Place {
+  return options =>
+    options.positionerProps
+      ? { ...options, positionerProps: { ...prev, ...options.positionerProps } }
+      : options;
+}
+
 type Methods = Pick<BaseManager, 'add' | 'close' | 'update' | 'promise'>;
 
 // The toast's store is picked when it is created, and only `add` and `promise`
@@ -139,21 +151,23 @@ function route(
       stacked.close(id);
       anchored.close(id);
     },
-    update: (id, options) => {
-      stacked.update(id, liftUpdater(options));
-      anchored.update(id, liftUpdater(options));
+    update: (id, updater) => {
+      const resolve = (prev: ToastObject<ToastData>) =>
+        typeof updater === 'function' ? updater(prev) : updater;
+      stacked.update(id, prev => lift(unanchored(resolve(prev))));
+      anchored.update(id, prev =>
+        lift(keepPlacement(prev.positionerProps)(resolve(prev)))
+      );
     },
-    promise: (promise, { loading, ...options }) =>
-      isAnchored(loading)
-        ? anchored.promise(promise, liftPromiseOptions({ ...options, loading }))
-        : stacked.promise(
+    promise: (promise, options) => {
+      const { loading } = options;
+      return typeof loading !== 'string' && isAnchored(loading)
+        ? anchored.promise(
             promise,
-            liftPromiseOptions({
-              ...options,
-              loading:
-                typeof loading === 'string' ? loading : unanchored(loading)
-            })
+            liftPromiseOptions(options, keepPlacement(loading.positionerProps))
           )
+        : stacked.promise(promise, liftPromiseOptions(options, unanchored));
+    }
   };
 }
 
@@ -188,12 +202,15 @@ export interface UseToastManagerReturn
 }
 
 export function useToastManager(): UseToastManagerReturn {
-  const store = ToastPrimitive.useToastManager<ToastData>();
+  const { toasts, add, close, update, promise } =
+    ToastPrimitive.useToastManager<ToastData>();
   const manager = useContext(ToastManagerContext);
   // Stacked toasts go straight into the store, so a toast added in a mount
-  // effect shows even though the provider has not subscribed yet.
-  return useMemo(
-    () => ({ ...store, ...route(store, manager[anchoredManager]) }),
-    [store, manager]
+  // effect shows even though the provider has not subscribed yet. The store
+  // methods never change, so the routed methods stay the same as toasts change.
+  const methods = useMemo(
+    () => route({ add, close, update, promise }, manager[anchoredManager]),
+    [add, close, update, promise, manager]
   );
+  return useMemo(() => ({ toasts, ...methods }), [toasts, methods]);
 }

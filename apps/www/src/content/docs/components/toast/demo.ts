@@ -75,13 +75,15 @@ export const basicDemo = {
 
 export const anchoredDemo = {
   type: 'code',
-  code: `
+  tabs: [
+    {
+      name: 'Default',
+      code: `
   <Button
     onClick={event =>
       toastManager.add({
         id: "copied",
         title: "Copied",
-        type: "success",
         timeout: 1500,
         positionerProps: { anchor: event.currentTarget }
       })
@@ -89,6 +91,25 @@ export const anchoredDemo = {
   >
     Copy link
   </Button>`
+    },
+    {
+      name: 'With arrow',
+      code: `
+  <Button
+    onClick={event =>
+      toastManager.add({
+        id: "copied",
+        title: "Copied",
+        timeout: 1500,
+        showArrow: true,
+        positionerProps: { anchor: event.currentTarget }
+      })
+    }
+  >
+    Copy link
+  </Button>`
+    }
+  ]
 };
 
 export const typesDemo = {

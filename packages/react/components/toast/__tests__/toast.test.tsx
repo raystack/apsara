@@ -2,6 +2,7 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useEffect, useRef } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import tooltipStyles from '../../tooltip/tooltip.module.css';
 import { Toast, toastManager, useToastManager } from '../toast';
 
 const renderWithProvider = (
@@ -370,11 +371,13 @@ describe('Toast', () => {
       return { manager, anchor: screen.getByText('Copy') };
     };
 
-    it('renders a toast with an anchor in a positioner with an arrow', async () => {
+    it('renders an anchored toast like a tooltip, with only its title', async () => {
       const { manager, anchor } = renderWithAnchor();
       act(() => {
         manager.add({
           title: 'Copied',
+          description: 'The link is on your clipboard',
+          type: 'success',
           positionerProps: { anchor, side: 'bottom' }
         });
       });
@@ -384,11 +387,31 @@ describe('Toast', () => {
       const positioner = toastEl?.closest('[data-slot="toast-positioner"]');
       expect(positioner).toHaveAttribute('data-side', 'bottom');
       expect(
-        toastEl?.querySelector('[data-slot="toast-arrow"]')
-      ).toBeInTheDocument();
-      expect(
         toastEl?.closest('[data-slot="toast-anchored-viewport"]')
       ).toBeInTheDocument();
+      expect(toastEl).toHaveClass(tooltipStyles.content);
+      expect(toastEl?.textContent).toBe('Copied');
+      expect(
+        toastEl?.querySelector('[data-slot="toast-arrow"]')
+      ).not.toBeInTheDocument();
+    });
+
+    it('keeps the anchor when an update changes the placement', async () => {
+      const { manager, anchor } = renderWithAnchor();
+      let id: string;
+      act(() => {
+        id = manager.add({ title: 'Copied', positionerProps: { anchor } });
+      });
+      await screen.findByText('Copied');
+      let placement: unknown;
+      act(() => {
+        manager.update(id!, { positionerProps: { side: 'bottom' } });
+        manager.update(id!, prev => {
+          placement = prev.positionerProps;
+          return {};
+        });
+      });
+      expect(placement).toEqual({ anchor, side: 'bottom' });
     });
 
     it('keeps toasts without an anchor in the stacked viewport', async () => {
@@ -532,6 +555,27 @@ describe('Toast', () => {
       expect(
         toastEl.closest('[data-slot="toast-positioner"]')
       ).toBeInTheDocument();
+    });
+  });
+
+  describe('useToastManager()', () => {
+    it('keeps add the same when the toast list changes', async () => {
+      let runs = 0;
+      function WelcomeOnMount() {
+        const { add } = useToastManager();
+        useEffect(() => {
+          runs += 1;
+          add({ title: 'Welcome' });
+        }, [add]);
+        return null;
+      }
+      render(
+        <Toast.Provider toastManager={Toast.createToastManager()}>
+          <WelcomeOnMount />
+        </Toast.Provider>
+      );
+      expect(await screen.findByText('Welcome')).toBeInTheDocument();
+      expect(runs).toBe(1);
     });
   });
 
