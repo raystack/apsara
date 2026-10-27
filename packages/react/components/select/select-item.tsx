@@ -6,7 +6,6 @@ import {
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { ReactNode, useLayoutEffect } from 'react';
-import { CheckIcon } from '~/icons';
 import { Checkbox } from '../checkbox';
 import { getMatch } from '../menu/utils';
 import { Text } from '../text';
@@ -83,9 +82,6 @@ export function SelectItem({
   const ItemPrimitive = autocomplete
     ? ComboboxPrimitive.Item
     : SelectPrimitive.Item;
-  const IndicatorPrimitive = autocomplete
-    ? ComboboxPrimitive.ItemIndicator
-    : SelectPrimitive.ItemIndicator;
 
   return (
     <ItemPrimitive
@@ -97,16 +93,10 @@ export function SelectItem({
       {...props}
       render={(renderProps, state) => (
         <div {...renderProps}>
-          {multiple && <Checkbox checked={state.selected} />}
+          {/* A tabbable checkbox takes the popup's initial focus without
+              preventScroll, which scrolls the page before the popup is placed. */}
+          {multiple && <Checkbox checked={state.selected} tabIndex={-1} />}
           {element}
-          {!multiple && (
-            <IndicatorPrimitive
-              className={styles.itemIndicator}
-              data-slot='select-item-indicator'
-            >
-              <CheckIcon aria-hidden='true' />
-            </IndicatorPrimitive>
-          )}
         </div>
       )}
     />
