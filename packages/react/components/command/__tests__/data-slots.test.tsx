@@ -32,6 +32,7 @@ const BasicCommand = () => (
       <Command.Separator />
       <Command.Item disabled>Disabled item</Command.Item>
     </Command.Content>
+    <Command.Status />
   </Command>
 );
 
@@ -50,7 +51,8 @@ describe('Command data-slot contract', () => {
       'command-item-leading-icon',
       'command-item-label',
       'command-item-trailing-icon',
-      'command-separator'
+      'command-separator',
+      'command-status'
     ]);
   });
 

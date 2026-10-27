@@ -133,6 +133,52 @@ describe('Command', () => {
     });
   });
 
+  describe('Status', () => {
+    it('announces the match count with the items prop', async () => {
+      const user = userEvent.setup();
+      const items = ['Calendar', 'Calculator', 'Profile'];
+      const { container } = render(
+        <Command items={items}>
+          <Command.Input />
+          <Command.Content>
+            {(item: string) => (
+              <Command.Item key={item} value={item}>
+                {item}
+              </Command.Item>
+            )}
+          </Command.Content>
+          <Command.Status>{count => `${count} results`}</Command.Status>
+        </Command>
+      );
+      const status = container.querySelector('[data-slot="command-status"]');
+      expect(status).toHaveTextContent('3 results');
+
+      await user.type(screen.getByRole('combobox'), 'cal');
+      await waitFor(() => expect(status).toHaveTextContent(/^2 results$/));
+    });
+
+    it('passes null to a function child without the items prop', () => {
+      const { container } = render(
+        <Command>
+          <Command.Input />
+          <Command.Content>
+            {ITEMS.map(item => (
+              <Command.Item key={item.value} value={item.value}>
+                {item.label}
+              </Command.Item>
+            ))}
+          </Command.Content>
+          <Command.Status>
+            {count => (count === null ? 'No count' : `${count} results`)}
+          </Command.Status>
+        </Command>
+      );
+      expect(
+        container.querySelector('[data-slot="command-status"]')
+      ).toHaveTextContent('No count');
+    });
+  });
+
   describe('Auto-search disabled when items prop is passed', () => {
     it('does not apply custom filtering to CommandItem when items is provided', async () => {
       const user = userEvent.setup();

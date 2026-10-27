@@ -145,7 +145,8 @@ export {
   type CommandItemProps,
   type CommandLabelProps,
   type CommandProps,
-  type CommandSeparatorProps
+  type CommandSeparatorProps,
+  type CommandStatusProps
 } from './components/command';
 export { Container, type ContainerProps } from './components/container';
 export {
