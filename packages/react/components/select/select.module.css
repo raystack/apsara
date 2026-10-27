@@ -22,6 +22,11 @@
   overflow: auto;
 }
 
+/* With alignItemWithTrigger, Base UI sizes the positioner and the popup must fill it. */
+.content[data-side="none"] {
+  max-height: none;
+}
+
 .content[data-starting-style],
 .content[data-ending-style] {
   opacity: 0;
@@ -285,4 +290,9 @@
 
 .hidden {
   display: none;
+}
+
+.itemText {
+  flex: 1;
+  min-width: 0;
 }

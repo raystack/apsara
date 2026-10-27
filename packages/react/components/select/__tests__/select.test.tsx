@@ -188,6 +188,18 @@ describe('Select', () => {
       ).toHaveAttribute('aria-checked', 'true');
     });
 
+    it('keeps the item checkbox out of the tab order', async () => {
+      const user = userEvent.setup();
+      render(<BasicSelect multiple />);
+      await openSelect(user);
+
+      const option = screen.getAllByRole('option')[0];
+      expect(within(option).getByRole('checkbox')).toHaveAttribute(
+        'tabindex',
+        '-1'
+      );
+    });
+
     it('fires onValueChange exactly once per click on an option', async () => {
       const handleValueChange = vi.fn();
       render(<BasicSelect multiple onValueChange={handleValueChange} />);
