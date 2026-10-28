@@ -13,6 +13,9 @@ import {
   autocompleteDemo,
   linearDemo,
   controlledDemo,
+  checkboxDemo,
+  radioDemo,
+  linkDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -59,6 +62,30 @@ Organize related menu items into sections with descriptive headers.
 Use `Menu.Submenu`, `Menu.SubmenuTrigger`, and `Menu.SubmenuContent` to create nested menus with multiple levels.
 
 <Demo data={submenuDemo} />
+
+### Checkbox items
+
+Use `Menu.CheckboxItem` for a setting that turns on or off. Clicking it toggles the check mark and keeps the menu open. Pass `checked` and `onCheckedChange` to control it.
+
+<Demo data={checkboxDemo} />
+
+### Radio items
+
+Wrap `Menu.RadioItem` parts in a `Menu.RadioGroup`. Only one item in the group is checked at a time. Clicking an item keeps the menu open.
+
+<Demo data={radioDemo} />
+
+### Link items
+
+Use `Menu.LinkItem` to navigate. It renders an `<a>` element. The menu stays open on click by default. Pass `closeOnClick` to close it, for example with client-side routing.
+
+To use a router link, pass it to `render`. The item keeps its layout and icons.
+
+```tsx
+<Menu.LinkItem render={<NextLink href="/projects" />}>Projects</Menu.LinkItem>
+```
+
+<Demo data={linkDemo} />
 
 ### Autocomplete
 
@@ -114,13 +141,37 @@ The container that holds the menu items. When autocomplete is enabled, renders a
 
 Individual clickable options within the menu. Built on top of [Base UI Menu.Item](https://base-ui.com/react/components/menu).
 
-Renders as a `role='option' `when used in an autocomplete menu. By default, the item's `children` text content is used for matching, which can be overridden by passing a `value` prop.
+Renders as a `role='option'` when used in an autocomplete menu. By default, the item's `children` text content is used for matching, which can be overridden by passing a `value` prop.
 
 <auto-type-table path="./props.ts" name="MenuItemProps" />
 
+### CheckboxItem
+
+A menu item that toggles a setting on or off. Renders a check mark before the label when checked. Built on [Base UI Menu.CheckboxItem](https://base-ui.com/react/components/menu).
+
+<auto-type-table path="./props.ts" name="MenuCheckboxItemProps" />
+
+### RadioGroup
+
+Groups related radio items and holds the selected value.
+
+<auto-type-table path="./props.ts" name="MenuRadioGroupProps" />
+
+### RadioItem
+
+A menu item that works like a radio button in a `Menu.RadioGroup`. Renders a dot before the label when checked. The `value` prop is also used for search matching when it is a string.
+
+<auto-type-table path="./props.ts" name="MenuRadioItemProps" />
+
+### LinkItem
+
+A menu item that renders an `<a>` element. Built on [Base UI Menu.LinkItem](https://base-ui.com/react/components/menu).
+
+<auto-type-table path="./props.ts" name="MenuLinkItemProps" />
+
 ### Group
 
-A way to group related menu items together. When filtering is active, the group wrapper is removed and items are rendered flat.
+A way to group related menu items together. When filtering is active, the group label is hidden.
 
 <auto-type-table path="./props.ts" name="MenuGroupProps" />
 
@@ -181,6 +232,12 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `menu-group` | `Menu.Group` wrapper |
 | `menu-label` | `Menu.Label` |
 | `menu-separator` | `Menu.Separator` |
+| `menu-checkbox-item` | Each `Menu.CheckboxItem` |
+| `menu-checkbox-item-indicator` | Check mark inside a checkbox item |
+| `menu-radio-group` | `Menu.RadioGroup` wrapper |
+| `menu-radio-item` | Each `Menu.RadioItem` |
+| `menu-radio-item-indicator` | Dot inside a radio item |
+| `menu-link-item` | Each `Menu.LinkItem` |
 | `menu-empty-state` | `Menu.EmptyState` |
 | `menu-subtrigger` | `Menu.SubmenuTrigger` |
 
@@ -199,3 +256,8 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
   submenu, and Escape first closes an open submenu.
 - `Menu.Label` must be wrapped in `Menu.Group` so the group is labelled via
   `aria-labelledby`.
+- `Menu.CheckboxItem` uses `role="menuitemcheckbox"` and `Menu.RadioItem` uses
+  `role="menuitemradio"`, both with `aria-checked`. In a searchable menu they
+  render as `role="option"` and keep `aria-checked`.
+- `Menu.LinkItem` renders an `<a>` with `role="menuitem"`, or `role="option"`
+  in a searchable menu.

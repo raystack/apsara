@@ -1,7 +1,8 @@
+import { Button as ButtonPrimitive } from '@base-ui/react';
 import { cva, VariantProps } from 'class-variance-authority';
-import { ComponentProps } from 'react';
 import { radiusVariants } from '../../shared/radius';
 import { Flex } from '../flex';
+import { Spinner } from '../spinner';
 import styles from './icon-button.module.css';
 
 const iconButton = cva(styles.iconButton, {
@@ -20,9 +21,14 @@ const iconButton = cva(styles.iconButton, {
 });
 
 export interface IconButtonProps
-  extends ComponentProps<'button'>,
+  extends ButtonPrimitive.Props,
     VariantProps<typeof iconButton> {
   size?: 1 | 2 | 3 | 4;
+  /**
+   * Shows a spinner in place of the icon and blocks clicks.
+   * @default false
+   */
+  loading?: boolean;
   /**
    * Accessible name for the icon-only button. Strongly recommended so
    * screen readers can announce its purpose.
@@ -35,18 +41,19 @@ export function IconButton({
   size,
   radius,
   disabled,
+  loading,
   children,
-  'aria-label': ariaLabel,
-  style,
+  render,
   ...props
 }: IconButtonProps) {
   return (
-    <button
+    <ButtonPrimitive
       className={iconButton({ size, radius, className })}
-      disabled={disabled}
-      type='button'
-      aria-label={ariaLabel}
-      style={style}
+      disabled={disabled || loading}
+      render={render}
+      nativeButton={!render}
+      focusableWhenDisabled={loading}
+      aria-busy={loading || undefined}
       data-slot='icon-button'
       {...props}
     >
@@ -56,9 +63,18 @@ export function IconButton({
         justify='center'
         data-slot='icon-button-icon'
       >
-        {children}
+        {loading ? (
+          <Spinner
+            size={1}
+            color='default'
+            aria-hidden='true'
+            data-slot='icon-button-loader'
+          />
+        ) : (
+          children
+        )}
       </Flex>
-    </button>
+    </ButtonPrimitive>
   );
 }
 

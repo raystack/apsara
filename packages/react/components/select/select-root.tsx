@@ -4,6 +4,7 @@ import {
   Combobox as ComboboxPrimitive,
   Select as SelectPrimitive
 } from '@base-ui/react';
+import { useControlled } from '@base-ui/utils/useControlled';
 import {
   createContext,
   ReactNode,
@@ -148,14 +149,20 @@ export const SelectRoot = (props: SelectRootProps) => {
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
 
-  const [internalValue, setInternalValue] = useState<
+  const [computedValue, setValueUnwrapped] = useControlled<
     string | string[] | undefined
-  >(defaultValue);
-  const [internalSearchValue, setInternalSearchValue] =
-    useState(defaultSearchValue);
-
-  const computedValue = providedValue ?? internalValue;
-  const searchValue = providedSearchValue ?? internalSearchValue;
+  >({
+    controlled: providedValue,
+    default: defaultValue,
+    name: 'Select',
+    state: 'value'
+  });
+  const [searchValue, setSearchValueUnwrapped] = useControlled({
+    controlled: providedSearchValue,
+    default: defaultSearchValue,
+    name: 'Select',
+    state: 'searchValue'
+  });
   const hasItems = !!items;
 
   const labels = useMemo(() => toLabelMap(items), [items]);
@@ -222,7 +229,7 @@ export const SelectRoot = (props: SelectRootProps) => {
 
   const handleValueChange = useCallback(
     (value: string | string[] | null) => {
-      setInternalValue(value ?? undefined);
+      setValueUnwrapped(value ?? undefined);
       if (multiple) {
         (onValueChange as MultipleSelectProps['onValueChange'])?.(
           value as string[]
@@ -233,15 +240,15 @@ export const SelectRoot = (props: SelectRootProps) => {
         );
       }
     },
-    [multiple, onValueChange]
+    [multiple, onValueChange, setValueUnwrapped]
   );
 
   const handleSearchValueChange = useCallback(
     (value: string) => {
-      setInternalSearchValue(value);
+      setSearchValueUnwrapped(value);
       onSearch?.(value);
     },
-    [onSearch]
+    [onSearch, setSearchValueUnwrapped]
   );
 
   const handleOpenChange = useCallback(
@@ -297,6 +304,8 @@ export const SelectRoot = (props: SelectRootProps) => {
       <SelectContext value={contextValue}>
         <ComboboxPrimitive.Root<string, boolean>
           {...commonProps}
+          inputValue={providedSearchValue}
+          defaultInputValue={defaultSearchValue}
           onInputValueChange={handleSearchValueChange}
           filter={filterByLabel ? undefined : null}
           items={hasItems ? itemValues : undefined}

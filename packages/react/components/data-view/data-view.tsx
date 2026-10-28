@@ -1,5 +1,6 @@
 'use client';
 
+import { useControlled } from '@base-ui/utils/useControlled';
 import {
   getCoreRowModel,
   getExpandedRowModel,
@@ -67,24 +68,27 @@ function DataViewRoot<TData>({
   view,
   onViewChange,
   groupByResolvers
-}: React.PropsWithChildren<DataViewProps<TData>>) {
+}: DataViewProps<TData>) {
   const defaultTableQuery = useMemo(
     () => getDefaultTableQuery(defaultSort, query, fields),
     [defaultSort, query, fields]
   );
 
   // Active view (controlled / uncontrolled).
-  const isViewControlled = view !== undefined;
-  const [internalActiveView, setInternalActiveView] = useState<
+  const [activeView, setActiveViewUnwrapped] = useControlled<
     string | undefined
-  >(defaultView ?? views?.[0]?.value);
-  const activeView = isViewControlled ? view : internalActiveView;
+  >({
+    controlled: view,
+    default: defaultView ?? views?.[0]?.value,
+    name: 'DataView',
+    state: 'view'
+  });
   const setActiveView = useCallback(
     (next: string) => {
-      if (!isViewControlled) setInternalActiveView(next);
+      setActiveViewUnwrapped(next);
       onViewChange?.(next);
     },
-    [isViewControlled, onViewChange]
+    [onViewChange, setActiveViewUnwrapped]
   );
 
   // Per-view field overrides registered by mounted renderers.
@@ -329,7 +333,13 @@ function DataViewRoot<TData>({
     ]
   );
 
-  return <DataViewContext value={contextValue}>{children}</DataViewContext>;
+  return (
+    <DataViewContext
+      value={contextValue as unknown as DataViewContextType<unknown>}
+    >
+      {children}
+    </DataViewContext>
+  );
 }
 
 DataViewRoot.displayName = 'DataView';

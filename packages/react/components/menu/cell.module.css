@@ -39,3 +39,29 @@
   color: var(--rs-color-foreground-base-secondary);
   margin-left: auto;
 }
+
+.indicator {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.indicator[data-unchecked] > * {
+  visibility: hidden;
+}
+
+.radioDot {
+  width: var(--rs-space-3);
+  height: var(--rs-space-3);
+  border-radius: var(--rs-radius-full);
+  background-color: currentColor;
+}
+
+a.cell {
+  color: inherit;
+  text-decoration: none;
+}

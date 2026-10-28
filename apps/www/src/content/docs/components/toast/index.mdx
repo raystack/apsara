@@ -4,7 +4,7 @@ description: Displays temporary notification messages using Base UI Toast primit
 source: packages/react/components/toast
 ---
 
-import { playground, basicDemo, typesDemo, descriptionDemo, leadingIconDemo, actionDemo, promiseDemo, positionDemo, updateDemo, hookDemo } from "./demo.ts";
+import { playground, basicDemo, typesDemo, descriptionDemo, leadingIconDemo, actionDemo, promiseDemo, positionDemo, anchoredDemo, updateDemo, upsertDemo, hookDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -70,11 +70,31 @@ Control where toasts appear on screen with the `position` prop on `Toast.Provide
 
 <Demo data={positionDemo} />
 
+### Anchored toast
+
+Pass `positionerProps.anchor` to show the toast next to an element. Use it for short feedback near the control that caused it, such as "Copied".
+
+An anchored toast looks like a tooltip. It shows only the title, or the description when there is no title. It has no icon, action, or close button, so it closes when its `timeout` ends or when you call `close`. Pass `showArrow: true` to add an arrow that points at the anchor.
+
+`Toast.Provider` renders anchored toasts in their own layer. They do not join the stack, and `limit` applies to each group on its own. The same `toastManager` and `useToastManager()` add, update, and close both kinds. Pass `side`, `align`, or `sideOffset` in `positionerProps` to place the toast. It shows on the `top` side by default, 4px from the anchor, or 10px with the arrow.
+
+The manager picks the layer when it creates the toast: from the `add` options, or from `loading` for `promise`. A later `update` does not move a toast between the stack and an anchor, and the `positionerProps` it passes are merged with the current ones. A toast with `anchor: null` joins the stack. A custom `id` must be unique across both layers.
+
+The demo passes an `id`, so repeated clicks update one toast instead of adding more.
+
+<Demo data={anchoredDemo} />
+
 ### Close and update
 
 Create a toast, then update or close it programmatically using the returned ID.
 
 <Demo data={updateDemo} />
+
+### Add or update by ID
+
+Pass your own `id` to `toastManager.add`. If a toast with that ID is open, `add` updates it in place and does not stack a second toast. Use it for events that can fire many times, such as a sync status.
+
+<Demo data={upsertDemo} />
 
 ### Dispatching from a component
 
@@ -94,7 +114,7 @@ Renders the toast viewport and manages the toast lifecycle. Place once at the ro
 
 ### toastManager.add(options)
 
-Creates a new toast and returns its unique ID. The `toastManager` can be imported and used anywhere, including outside React components (e.g., API interceptors, utility functions).
+Creates a new toast and returns its unique ID. If `id` matches an open toast, it updates that toast instead. The `toastManager` can be imported and used anywhere, including outside React components (e.g., API interceptors, utility functions).
 
 <auto-type-table path="./props.ts" name="ToastManagerAddOptions" />
 
@@ -136,7 +156,7 @@ The `promise(promise, options)` method drives a toast through the resolve/reject
 
 ### useToastManager()
 
-Hook for dispatching toasts from inside a component tree wrapped by `<Toast.Provider>`. Returns the same methods as `createToastManager()`, including built-in `leadingIcon` support, plus a reactive `toasts` array reflecting the toasts on screen.
+Hook for dispatching toasts from inside a component tree wrapped by `<Toast.Provider>`. Returns the same methods as `createToastManager()`, including built-in `leadingIcon` support, plus a reactive `toasts` array reflecting the stacked toasts on screen. The array does not include anchored toasts.
 
 ```tsx
 import { useToastManager } from '@raystack/apsara'
@@ -160,7 +180,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 
 | Slot | Element |
 |------|---------|
-| `toast-viewport` | The region that holds all toasts |
+| `toast-viewport` | The region that holds stacked toasts |
 | `toast` | A single toast root |
 | `toast-content` | Content wrapper inside a toast |
 | `toast-body` | Layout row holding the icon and text column |
@@ -172,10 +192,14 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `toast-action` | The action button (when `actionProps`) |
 | `toast-close` | The close button |
 | `toast-description` | The description (when both title and description are set) |
+| `toast-anchored-viewport` | The region that holds anchored toasts |
+| `toast-positioner` | Positioner that places an anchored toast next to its anchor |
+| `toast-arrow` | The arrow of an anchored toast (when `showArrow`) |
 
 ## Accessibility
 
 - Uses `aria-live` regions for screen reader announcements
+- Stacked toasts are in a region named "Notifications", and anchored toasts are in a region named "Anchored notifications"
 - `priority: 'high'` uses `role="alert"` (assertive) for urgent notifications
 - `priority: 'low'` (default) uses `role="status"` (polite) for non-urgent notifications
 - Close button has `aria-label="Close toast"`

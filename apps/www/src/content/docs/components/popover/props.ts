@@ -19,8 +19,17 @@ export interface PopoverContentProps {
   /** Alignment relative to trigger. */
   align?: 'start' | 'center' | 'end';
 
-  /** Distance in pixels from the trigger. */
+  /**
+   * Distance in pixels from the trigger.
+   * @default 4, or 10 with `showArrow`
+   */
   sideOffset?: number;
+
+  /**
+   * Shows an arrow that points at the trigger.
+   * @default false
+   */
+  showArrow?: boolean;
 
   /** Offset in pixels from alignment edge. */
   alignOffset?: number;
@@ -62,6 +71,11 @@ export interface PopoverContentProps {
 }
 
 export interface PopoverTriggerProps {
+  /** Additional CSS class name. */
+  className?: string;
+}
+
+export interface PopoverViewportProps {
   /** Additional CSS class name. */
   className?: string;
 }

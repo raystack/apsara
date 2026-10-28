@@ -73,6 +73,45 @@ export const basicDemo = {
   </Button>`
 };
 
+export const anchoredDemo = {
+  type: 'code',
+  tabs: [
+    {
+      name: 'Default',
+      code: `
+  <Button
+    onClick={event =>
+      toastManager.add({
+        id: "copied",
+        title: "Copied",
+        timeout: 1500,
+        positionerProps: { anchor: event.currentTarget }
+      })
+    }
+  >
+    Copy link
+  </Button>`
+    },
+    {
+      name: 'With arrow',
+      code: `
+  <Button
+    onClick={event =>
+      toastManager.add({
+        id: "copied",
+        title: "Copied",
+        timeout: 1500,
+        showArrow: true,
+        positionerProps: { anchor: event.currentTarget }
+      })
+    }
+  >
+    Copy link
+  </Button>`
+    }
+  ]
+};
+
 export const typesDemo = {
   type: 'code',
   tabs: [
@@ -356,6 +395,22 @@ export const hookDemo = {
       <Toast.Provider>
         <Inner />
       </Toast.Provider>
+    )
+  }`
+};
+
+export const upsertDemo = {
+  type: 'code',
+  code: `
+  function SyncToast() {
+    const countRef = React.useRef(0);
+    return (
+      <Button onClick={() => {
+        countRef.current += 1;
+        toastManager.add({ id: "sync", title: \`Synced \${countRef.current} times\` });
+      }}>
+        Sync
+      </Button>
     )
   }`
 };

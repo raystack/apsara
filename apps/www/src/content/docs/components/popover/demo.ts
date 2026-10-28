@@ -28,8 +28,9 @@ export const playground = {
       options: ['top', 'right', 'bottom', 'left'],
       defaultValue: 'bottom'
     },
-    sideOffset: { type: 'number', min: 0, defaultValue: 2 },
+    sideOffset: { type: 'number', min: 0, defaultValue: 4 },
     collisionPadding: { type: 'number', min: 0, defaultValue: 0 },
+    showArrow: { type: 'checkbox', initialValue: false, defaultValue: false },
     children: { type: 'text', initialValue: 'This is the popover content.' }
   },
   getCode
@@ -130,6 +131,17 @@ export const alignDemo = {
   ]
 };
 
+export const arrowDemo = {
+  type: 'code',
+  code: `
+  <Popover>
+    <Popover.Trigger render={<Button />}>Popover with arrow</Popover.Trigger>
+    <Popover.Content showArrow>
+      <Text size="small">The arrow points at the trigger.</Text>
+    </Popover.Content>
+  </Popover>`
+};
+
 export const controlledDemo = {
   type: 'code',
   code: `
@@ -139,8 +151,8 @@ function ControlledPopover() {
   return (
     <Flex align="center" gap={5}>
       <Popover open={open} onOpenChange={setOpen}>
-        <Popover.Trigger asChild>
-          <Button variant="outline">Filters</Button>
+        <Popover.Trigger render={<Button variant="outline" />}>
+          Filters
         </Popover.Trigger>
         <Popover.Content>
           <Flex direction="column" gap={4} style={{ padding: 4 }}>
@@ -151,6 +163,33 @@ function ControlledPopover() {
       </Popover>
       <Text size="small" variant="secondary">{open ? 'open' : 'closed'}</Text>
     </Flex>
+  );
+}`
+};
+
+export const viewportDemo = {
+  type: 'code',
+  code: `
+function SharedPopover() {
+  const [handle] = React.useState(() => Popover.createHandle());
+
+  return (
+    <>
+      <Flex gap={3} align="center">
+        <Popover.Trigger handle={handle} payload="Two unread messages." render={<Button variant="outline" />}>Inbox</Popover.Trigger>
+        <Popover.Trigger handle={handle} payload="Nothing scheduled for today." render={<Button variant="outline" />}>Calendar</Popover.Trigger>
+        <Popover.Trigger handle={handle} payload="All tasks are done." render={<Button variant="outline" />}>Tasks</Popover.Trigger>
+      </Flex>
+      <Popover handle={handle}>
+        {({ payload }) => (
+          <Popover.Content>
+            <Popover.Viewport>
+              <Text size="small">{payload}</Text>
+            </Popover.Viewport>
+          </Popover.Content>
+        )}
+      </Popover>
+    </>
   );
 }`
 };

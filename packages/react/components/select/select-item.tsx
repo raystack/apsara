@@ -7,7 +7,6 @@ import {
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { cx } from 'class-variance-authority';
 import { ReactNode, useContext } from 'react';
-import { CheckIcon } from '~/icons';
 import { Checkbox } from '../checkbox';
 import { getMatch } from '../menu/utils';
 import { Text } from '../text';
@@ -93,9 +92,6 @@ export function SelectItem({
   const ItemPrimitive = autocomplete
     ? ComboboxPrimitive.Item
     : SelectPrimitive.Item;
-  const IndicatorPrimitive = autocomplete
-    ? ComboboxPrimitive.ItemIndicator
-    : SelectPrimitive.ItemIndicator;
 
   return (
     <ItemPrimitive
@@ -107,16 +103,8 @@ export function SelectItem({
       {...props}
       render={(renderProps, state) => (
         <div {...renderProps}>
-          {multiple && <Checkbox checked={state.selected} />}
+          {multiple && <Checkbox checked={state.selected} tabIndex={-1} />}
           {element}
-          {!multiple && (
-            <IndicatorPrimitive
-              className={styles.itemIndicator}
-              data-slot='select-item-indicator'
-            >
-              <CheckIcon aria-hidden='true' />
-            </IndicatorPrimitive>
-          )}
         </div>
       )}
     />

@@ -22,7 +22,7 @@ export interface SkeletonProps {
 
 const SkeletonContext = createContext<SkeletonProps | null>(null);
 
-interface SkeletonProviderProps extends SkeletonProps {
+export interface SkeletonProviderProps extends SkeletonProps {
   children: ReactNode;
 }
 

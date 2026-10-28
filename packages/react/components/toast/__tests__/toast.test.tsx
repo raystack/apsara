@@ -1,7 +1,9 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useEffect, useRef } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { Toast, toastManager } from '../toast';
+import tooltipStyles from '../../tooltip/tooltip.module.css';
+import { Toast, toastManager, useToastManager } from '../toast';
 
 const renderWithProvider = (
   props?: Partial<React.ComponentProps<typeof Toast.Provider>>
@@ -18,6 +20,13 @@ describe('Toast', () => {
     it('renders provider with children', () => {
       renderWithProvider();
       expect(screen.getByText('App content')).toBeInTheDocument();
+    });
+
+    it('renders one Notifications region', () => {
+      renderWithProvider();
+      expect(
+        screen.getAllByRole('region', { name: 'Notifications' })
+      ).toHaveLength(1);
     });
   });
 
@@ -127,6 +136,25 @@ describe('Toast', () => {
         expect(screen.getByText('Count 1 + 1')).toBeInTheDocument();
         expect(screen.getByTestId('fn-icon')).toBeInTheDocument();
       });
+    });
+
+    it('updates in place when add() gets an existing id', async () => {
+      act(() => {
+        toastManager.add({ id: 'upload', title: 'Uploading' });
+      });
+      expect(await screen.findByText('Uploading')).toBeInTheDocument();
+
+      let id: string;
+      act(() => {
+        id = toastManager.add({ id: 'upload', title: 'Uploaded' });
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Uploaded')).toBeInTheDocument();
+      });
+      expect(id!).toBe('upload');
+      expect(screen.queryByText('Uploading')).not.toBeInTheDocument();
+      expect(screen.getAllByText('Uploaded')).toHaveLength(1);
     });
   });
 
@@ -329,6 +357,225 @@ describe('Toast', () => {
       expect(await screen.findByText('First toast')).toBeInTheDocument();
       expect(await screen.findByText('Second toast')).toBeInTheDocument();
       expect(await screen.findByText('Third toast')).toBeInTheDocument();
+    });
+  });
+
+  describe('Anchored toasts', () => {
+    const renderWithAnchor = () => {
+      const manager = Toast.createToastManager();
+      render(
+        <Toast.Provider toastManager={manager}>
+          <button type='button'>Copy</button>
+        </Toast.Provider>
+      );
+      return { manager, anchor: screen.getByText('Copy') };
+    };
+
+    it('renders an anchored toast like a tooltip, with only its title', async () => {
+      const { manager, anchor } = renderWithAnchor();
+      act(() => {
+        manager.add({
+          title: 'Copied',
+          description: 'The link is on your clipboard',
+          type: 'success',
+          positionerProps: { anchor, side: 'bottom' }
+        });
+      });
+      const toastEl = (await screen.findByText('Copied')).closest(
+        '[data-slot="toast"]'
+      );
+      const positioner = toastEl?.closest('[data-slot="toast-positioner"]');
+      expect(positioner).toHaveAttribute('data-side', 'bottom');
+      expect(
+        toastEl?.closest('[data-slot="toast-anchored-viewport"]')
+      ).toBeInTheDocument();
+      expect(toastEl).toHaveClass(tooltipStyles.content);
+      expect(toastEl?.textContent).toBe('Copied');
+      expect(
+        toastEl?.querySelector('[data-slot="toast-arrow"]')
+      ).not.toBeInTheDocument();
+    });
+
+    it('keeps the anchor when an update changes the placement', async () => {
+      const { manager, anchor } = renderWithAnchor();
+      let id: string;
+      act(() => {
+        id = manager.add({ title: 'Copied', positionerProps: { anchor } });
+      });
+      await screen.findByText('Copied');
+      let placement: unknown;
+      act(() => {
+        manager.update(id!, { positionerProps: { side: 'bottom' } });
+        manager.update(id!, prev => {
+          placement = prev.positionerProps;
+          return {};
+        });
+      });
+      expect(placement).toEqual({ anchor, side: 'bottom' });
+    });
+
+    it('keeps toasts without an anchor in the stacked viewport', async () => {
+      const { manager, anchor } = renderWithAnchor();
+      act(() => {
+        manager.add({ title: 'Anchored', positionerProps: { anchor } });
+        manager.add({ title: 'Stacked' });
+      });
+      const stacked = (await screen.findByText('Stacked')).closest(
+        '[data-slot="toast"]'
+      );
+      expect(stacked).toHaveAttribute('data-position', 'bottom-right');
+      // The anchored toast does not count toward the stack.
+      expect(
+        (stacked as HTMLElement).style.getPropertyValue('--toast-index')
+      ).toBe('0');
+      expect(
+        stacked?.closest('[data-slot="toast-positioner"]')
+      ).not.toBeInTheDocument();
+      expect(
+        stacked?.querySelector('[data-slot="toast-arrow"]')
+      ).not.toBeInTheDocument();
+      expect(stacked?.closest('[data-slot="toast-viewport"]')).not.toBeNull();
+    });
+
+    it('stacks a toast whose anchor is null', async () => {
+      const { manager } = renderWithAnchor();
+      act(() => {
+        manager.add({ title: 'Saved', positionerProps: { anchor: null } });
+      });
+      const toastEl = (await screen.findByText('Saved')).closest(
+        '[data-slot="toast"]'
+      );
+      expect(
+        toastEl?.closest('[data-slot="toast-viewport"]')
+      ).toBeInTheDocument();
+      expect(
+        toastEl?.closest('[data-slot="toast-positioner"]')
+      ).not.toBeInTheDocument();
+    });
+
+    it('updates an anchored toast', async () => {
+      const { manager, anchor } = renderWithAnchor();
+      let id: string;
+      act(() => {
+        id = manager.add({ title: 'Copying', positionerProps: { anchor } });
+      });
+      await screen.findByText('Copying');
+      act(() => {
+        manager.update(id!, { title: 'Copied' });
+      });
+      const toastEl = await screen.findByText('Copied');
+      expect(
+        toastEl.closest('[data-slot="toast-positioner"]')
+      ).toBeInTheDocument();
+    });
+
+    it('keeps a promise toast anchored when it resolves', async () => {
+      const { manager, anchor } = renderWithAnchor();
+      act(() => {
+        manager.promise(Promise.resolve(), {
+          loading: { title: 'Copying', positionerProps: { anchor } },
+          success: { title: 'Copied' },
+          error: { title: 'Failed' }
+        });
+      });
+      const toastEl = await screen.findByText('Copied');
+      expect(
+        toastEl.closest('[data-slot="toast-positioner"]')
+      ).toBeInTheDocument();
+    });
+
+    it('closes an anchored toast by id', async () => {
+      const { manager, anchor } = renderWithAnchor();
+      const onClose = vi.fn();
+      let id: string;
+      act(() => {
+        id = manager.add({
+          title: 'Copied',
+          positionerProps: { anchor },
+          onClose
+        });
+      });
+      await screen.findByText('Copied');
+      act(() => {
+        manager.close(id!);
+      });
+      await waitFor(() => {
+        expect(onClose).toHaveBeenCalled();
+      });
+    });
+
+    it('routes anchored toasts from useToastManager', async () => {
+      function CopyButton() {
+        const { add } = useToastManager();
+        return (
+          <button
+            type='button'
+            onClick={event =>
+              add({
+                title: 'Copied',
+                positionerProps: { anchor: event.currentTarget }
+              })
+            }
+          >
+            Copy
+          </button>
+        );
+      }
+      render(
+        <Toast.Provider toastManager={Toast.createToastManager()}>
+          <CopyButton />
+        </Toast.Provider>
+      );
+      await userEvent.click(screen.getByText('Copy'));
+      const toastEl = await screen.findByText('Copied');
+      expect(
+        toastEl.closest('[data-slot="toast-positioner"]')
+      ).toBeInTheDocument();
+    });
+
+    it('routes anchored toasts from useToastManager in a mount effect', async () => {
+      function CopyOnMount() {
+        const ref = useRef<HTMLButtonElement>(null);
+        const { add } = useToastManager();
+        useEffect(() => {
+          add({ title: 'Copied', positionerProps: { anchor: ref.current } });
+        }, [add]);
+        return (
+          <button ref={ref} type='button'>
+            Copy
+          </button>
+        );
+      }
+      render(
+        <Toast.Provider toastManager={Toast.createToastManager()}>
+          <CopyOnMount />
+        </Toast.Provider>
+      );
+      const toastEl = await screen.findByText('Copied');
+      expect(
+        toastEl.closest('[data-slot="toast-positioner"]')
+      ).toBeInTheDocument();
+    });
+  });
+
+  describe('useToastManager()', () => {
+    it('keeps add the same when the toast list changes', async () => {
+      let runs = 0;
+      function WelcomeOnMount() {
+        const { add } = useToastManager();
+        useEffect(() => {
+          runs += 1;
+          add({ title: 'Welcome' });
+        }, [add]);
+        return null;
+      }
+      render(
+        <Toast.Provider toastManager={Toast.createToastManager()}>
+          <WelcomeOnMount />
+        </Toast.Provider>
+      );
+      expect(await screen.findByText('Welcome')).toBeInTheDocument();
+      expect(runs).toBe(1);
     });
   });
 

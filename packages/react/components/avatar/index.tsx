@@ -1,4 +1,9 @@
-export { Avatar, AvatarGroup } from './avatar';
+export {
+  Avatar,
+  AvatarGroup,
+  type AvatarGroupProps,
+  type AvatarProps
+} from './avatar';
 export {
   AVATAR_COLORS,
   type AvatarColor,

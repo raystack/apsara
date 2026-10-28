@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { ContextMenu } from '../context-menu';
@@ -142,6 +142,94 @@ describe('ContextMenu', () => {
       fireEvent.contextMenu(trigger);
 
       expect(onOpenChange).toHaveBeenCalled();
+    });
+
+    it('stays open until the parent closes a controlled menu', async () => {
+      const onOpenChange = vi.fn();
+      const renderMenu = (open: boolean) => (
+        <ContextMenu open={open} onOpenChange={onOpenChange}>
+          <ContextMenu.Trigger>{TRIGGER_TEXT}</ContextMenu.Trigger>
+          <ContextMenu.Content>
+            <ContextMenu.Item>Profile</ContextMenu.Item>
+          </ContextMenu.Content>
+        </ContextMenu>
+      );
+      const { rerender } = render(renderMenu(true));
+
+      fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
+
+      expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
+      expect(screen.getByText('Profile')).toBeInTheDocument();
+
+      rerender(renderMenu(false));
+
+      await waitFor(() => {
+        expect(screen.queryByText('Profile')).not.toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Selection and Link Items', () => {
+    it('toggles checkbox items and keeps one radio item checked', async () => {
+      await renderAndOpenContextMenu(
+        <ContextMenu>
+          <ContextMenu.Trigger>{TRIGGER_TEXT}</ContextMenu.Trigger>
+          <ContextMenu.Content>
+            <ContextMenu.CheckboxItem>Show grid</ContextMenu.CheckboxItem>
+            <ContextMenu.RadioGroup defaultValue='list'>
+              <ContextMenu.RadioItem value='list'>List</ContextMenu.RadioItem>
+              <ContextMenu.RadioItem value='board'>Board</ContextMenu.RadioItem>
+            </ContextMenu.RadioGroup>
+          </ContextMenu.Content>
+        </ContextMenu>
+      );
+
+      const checkbox = screen.getByRole('menuitemcheckbox');
+      fireEvent.click(checkbox);
+      expect(checkbox).toHaveAttribute('aria-checked', 'true');
+
+      const [list, board] = screen.getAllByRole('menuitemradio');
+      fireEvent.click(board);
+      expect(list).toHaveAttribute('aria-checked', 'false');
+      expect(board).toHaveAttribute('aria-checked', 'true');
+    });
+
+    it('renders link items as anchors with role menuitem', async () => {
+      await renderAndOpenContextMenu(
+        <ContextMenu>
+          <ContextMenu.Trigger>{TRIGGER_TEXT}</ContextMenu.Trigger>
+          <ContextMenu.Content>
+            <ContextMenu.LinkItem href='/docs'>Docs</ContextMenu.LinkItem>
+          </ContextMenu.Content>
+        </ContextMenu>
+      );
+
+      const link = screen.getByRole('menuitem', { name: 'Docs' });
+      expect(link.tagName).toBe('A');
+      expect(link).toHaveAttribute('href', '/docs');
+    });
+  });
+
+  describe('Autocomplete', () => {
+    it('filters checkbox items with the other items', async () => {
+      await renderAndOpenContextMenu(
+        <ContextMenu autocomplete>
+          <ContextMenu.Trigger>{TRIGGER_TEXT}</ContextMenu.Trigger>
+          <ContextMenu.Content>
+            {MENU_ITEMS.map(item => (
+              <ContextMenu.Item key={item.id}>{item.label}</ContextMenu.Item>
+            ))}
+            <ContextMenu.CheckboxItem>Show grid</ContextMenu.CheckboxItem>
+          </ContextMenu.Content>
+        </ContextMenu>
+      );
+
+      const input = screen.getByRole('combobox');
+      fireEvent.change(input, { target: { value: 'grid' } });
+      expect(screen.getAllByRole('option')).toHaveLength(1);
+
+      fireEvent.change(input, { target: { value: 'zzz' } });
+      expect(screen.queryAllByRole('option')).toHaveLength(0);
     });
   });
 });

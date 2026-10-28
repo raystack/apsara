@@ -507,8 +507,8 @@ function ControlledMenu() {
   return (
     <Flex align="center" gap={5}>
       <Menu open={open} onOpenChange={setOpen}>
-        <Menu.Trigger asChild>
-          <Button variant="outline">Actions</Button>
+        <Menu.Trigger render={<Button variant="outline" />}>
+          Actions
         </Menu.Trigger>
         <Menu.Content>
           <Menu.Item onClick={() => setOpen(false)}>Rename</Menu.Item>
@@ -519,4 +519,66 @@ function ControlledMenu() {
     </Flex>
   );
 }`
+};
+
+export const checkboxDemo = {
+  type: 'code',
+  code: `
+function CheckboxMenu() {
+  const [showGrid, setShowGrid] = React.useState(true);
+
+  return (
+    <Menu>
+      <Menu.Trigger render={<Button color="neutral" />}>View</Menu.Trigger>
+      <Menu.Content>
+        <Menu.CheckboxItem checked={showGrid} onCheckedChange={setShowGrid}>
+          Show grid
+        </Menu.CheckboxItem>
+        <Menu.CheckboxItem defaultChecked>Show rulers</Menu.CheckboxItem>
+        <Menu.CheckboxItem disabled>Show guides</Menu.CheckboxItem>
+      </Menu.Content>
+    </Menu>
+  );
+}`
+};
+
+export const radioDemo = {
+  type: 'code',
+  code: `
+function RadioMenu() {
+  const [layout, setLayout] = React.useState("list");
+
+  return (
+    <Menu>
+      <Menu.Trigger render={<Button color="neutral" />}>Layout</Menu.Trigger>
+      <Menu.Content>
+        <Menu.RadioGroup value={layout} onValueChange={setLayout}>
+          <Menu.Label>Layout</Menu.Label>
+          <Menu.RadioItem value="list">List</Menu.RadioItem>
+          <Menu.RadioItem value="board">Board</Menu.RadioItem>
+          <Menu.RadioItem value="timeline">Timeline</Menu.RadioItem>
+        </Menu.RadioGroup>
+      </Menu.Content>
+    </Menu>
+  );
+}`
+};
+
+export const linkDemo = {
+  type: 'code',
+  code: `
+  <Menu>
+    <Menu.Trigger render={<Button color="neutral" />}>Go to</Menu.Trigger>
+    <Menu.Content>
+      <Menu.LinkItem href="#projects">Projects</Menu.LinkItem>
+      <Menu.LinkItem href="#settings">Settings</Menu.LinkItem>
+      <Menu.LinkItem
+        href="https://github.com/raystack/apsara"
+        target="_blank"
+        rel="noreferrer"
+        closeOnClick>
+        GitHub
+      </Menu.LinkItem>
+    </Menu.Content>
+  </Menu>`
 };

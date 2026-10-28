@@ -2,7 +2,7 @@ import { Popover as PopoverPrimitive } from '@base-ui/react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { type ReactElement } from 'react';
+import { type ReactElement, type ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Button } from '~/components/button';
 import { Popover } from '../popover';
@@ -14,7 +14,9 @@ const POPOVER_CONTENT = 'This is popover content';
 const BasicPopover = ({
   children = <Popover.Content>{POPOVER_CONTENT}</Popover.Content>,
   ...props
-}: PopoverPrimitive.Root.Props) => (
+}: Omit<PopoverPrimitive.Root.Props, 'children'> & {
+  children?: ReactNode;
+}) => (
   <Popover {...props}>
     <Popover.Trigger>
       <Button>{TRIGGER_TEXT}</Button>

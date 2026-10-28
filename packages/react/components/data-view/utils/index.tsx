@@ -9,6 +9,7 @@ import { toDayKey, withDateFilterTypes } from '~/shared/date-filters';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import {
   DataViewField,
+  DataViewFilterValue,
   DataViewQuery,
   DataViewSort,
   defaultGroupOption,
@@ -164,7 +165,7 @@ export function createRowIdResolver<TData>(
 
 const generateFilterMap = (
   filters: InternalFilter[] = []
-): Map<string, any> => {
+): Map<string, DataViewFilterValue> => {
   return new Map(
     filters
       ?.filter(data => data._type === FilterType.select || data.value !== '')

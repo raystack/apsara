@@ -479,7 +479,7 @@ describe('Breadcrumb', () => {
 
   describe('BreadcrumbEllipsis', () => {
     it('renders default ellipsis icon', () => {
-      const { container } = render(
+      render(
         <Breadcrumb>
           <Breadcrumb.Ellipsis data-testid='breadcrumb-ellipsis' />
         </Breadcrumb>

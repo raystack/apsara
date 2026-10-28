@@ -2,6 +2,7 @@
 
 import { Popover as PopoverPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import { Arrow } from '../../shared/arrow';
 import { type Radius, radiusStyle } from '../../shared/radius';
 import { useThemeInjection } from '../theme/portal';
 import styles from './popover.module.css';
@@ -12,6 +13,11 @@ export interface PopoverContentProps
       'render' | 'className' | 'style' | 'ref'
     >,
     PopoverPrimitive.Popup.Props {
+  /**
+   * Shows an arrow that points at the trigger.
+   * @default false
+   */
+  showArrow?: boolean;
   /** Corner radius for this popup only. Overrides the theme's `radius`. */
   radius?: Radius;
 }
@@ -25,7 +31,8 @@ function PopoverContent({
   render,
   children,
   radius,
-  sideOffset = 4,
+  showArrow = false,
+  sideOffset = showArrow ? 10 : 4,
   ...positionerProps
 }: PopoverContentProps) {
   const theme = useThemeInjection();
@@ -43,6 +50,7 @@ function PopoverContent({
           {...theme}
           className={cx(
             styles.popover,
+            showArrow && styles['show-arrow'],
             theme?.className,
             radiusStyle({ radius }),
             className
@@ -54,6 +62,12 @@ function PopoverContent({
           data-slot='popover-content'
         >
           {children}
+          {showArrow && (
+            <PopoverPrimitive.Arrow
+              data-slot='popover-arrow'
+              render={<Arrow />}
+            />
+          )}
         </PopoverPrimitive.Popup>
       </PopoverPrimitive.Positioner>
     </PopoverPrimitive.Portal>
@@ -61,9 +75,24 @@ function PopoverContent({
 }
 PopoverContent.displayName = 'Popover.Content';
 
+function PopoverViewport({
+  className,
+  ...props
+}: PopoverPrimitive.Viewport.Props) {
+  return (
+    <PopoverPrimitive.Viewport
+      className={cx(styles.viewport, className)}
+      data-slot='popover-viewport'
+      {...props}
+    />
+  );
+}
+PopoverViewport.displayName = 'Popover.Viewport';
+
 export const Popover = Object.assign(PopoverPrimitive.Root, {
   Trigger: PopoverPrimitive.Trigger,
   Close: PopoverPrimitive.Close,
   Content: PopoverContent,
+  Viewport: PopoverViewport,
   createHandle: PopoverPrimitive.createHandle
 });

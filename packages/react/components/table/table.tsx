@@ -3,10 +3,8 @@ import { ComponentProps } from 'react';
 import styles from './table.module.css';
 
 const table = cva(styles['table']);
-function TableRoot({
-  className,
-  ...props
-}: ComponentProps<'table'> & VariantProps<typeof table>) {
+export type TableProps = ComponentProps<'table'> & VariantProps<typeof table>;
+function TableRoot({ className, ...props }: TableProps) {
   return (
     <table data-slot='table' {...props} className={table({ className })} />
   );
@@ -14,10 +12,9 @@ function TableRoot({
 TableRoot.displayName = 'Table';
 
 const header = cva(styles['header']);
-function TableHeader({
-  className,
-  ...props
-}: ComponentProps<'thead'> & VariantProps<typeof header>) {
+export type TableHeaderProps = ComponentProps<'thead'> &
+  VariantProps<typeof header>;
+function TableHeader({ className, ...props }: TableHeaderProps) {
   return (
     <thead
       data-slot='table-header'
@@ -40,11 +37,8 @@ const row = cva(styles['row'], {
     }
   }
 });
-function TableRow({
-  className,
-  interactive,
-  ...props
-}: ComponentProps<'tr'> & VariantProps<typeof row>) {
+export type TableRowProps = ComponentProps<'tr'> & VariantProps<typeof row>;
+function TableRow({ className, interactive, ...props }: TableRowProps) {
   return (
     <tr
       data-slot='table-row'
@@ -56,11 +50,8 @@ function TableRow({
 TableRow.displayName = 'Table.Row';
 
 const head = cva(styles['head']);
-function TableHead({
-  className,
-  scope = 'col',
-  ...props
-}: ComponentProps<'th'> & VariantProps<typeof head>) {
+export type TableHeadProps = ComponentProps<'th'> & VariantProps<typeof head>;
+function TableHead({ className, scope = 'col', ...props }: TableHeadProps) {
   return (
     <th
       scope={scope}
@@ -73,10 +64,8 @@ function TableHead({
 TableHead.displayName = 'Table.Head';
 
 const cell = cva(styles['cell']);
-function TableCell({
-  className,
-  ...props
-}: ComponentProps<'td'> & VariantProps<typeof cell>) {
+export type TableCellProps = ComponentProps<'td'> & VariantProps<typeof cell>;
+function TableCell({ className, ...props }: TableCellProps) {
   return (
     <td data-slot='table-cell' {...props} className={cell({ className })} />
   );
@@ -85,6 +74,14 @@ TableCell.displayName = 'Table.Cell';
 
 const sectionHeader = cva(styles['sectionHeader']);
 type SectionHeaderClassNames = 'row' | 'cell';
+export interface TableSectionHeaderProps extends ComponentProps<'tr'> {
+  colSpan: number;
+  /**
+   * @deprecated Use `[data-slot="table-section-header"]` (row) and
+   * `[data-slot="table-section-header-cell"]` (cell) instead.
+   */
+  classNames?: Partial<Record<SectionHeaderClassNames, string>>;
+}
 function SectionHeader({
   className,
   classNames,
@@ -92,14 +89,7 @@ function SectionHeader({
   children,
   ref,
   ...rest
-}: ComponentProps<'tr'> & {
-  colSpan: number;
-  /**
-   * @deprecated Use `[data-slot="table-section-header"]` (row) and
-   * `[data-slot="table-section-header-cell"]` (cell) instead.
-   */
-  classNames?: Partial<Record<SectionHeaderClassNames, string>>;
-}) {
+}: TableSectionHeaderProps) {
   return (
     <tr
       ref={ref}

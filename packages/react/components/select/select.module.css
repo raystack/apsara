@@ -22,6 +22,11 @@
   overflow: auto;
 }
 
+/* With alignItemWithTrigger, Base UI sizes the positioner and the popup must fill it. */
+.content[data-side="none"] {
+  max-height: none;
+}
+
 .content[data-starting-style],
 .content[data-ending-style] {
   opacity: 0;
@@ -334,17 +339,4 @@
 .itemText {
   flex: 1;
   min-width: 0;
-}
-
-.itemIndicator {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  margin-left: auto;
-  color: var(--rs-color-foreground-base-primary);
-}
-
-.itemIndicator svg {
-  width: var(--rs-space-5);
-  height: var(--rs-space-5);
 }

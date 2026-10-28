@@ -23,37 +23,6 @@
   transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
 }
 
-.arrow svg {
-  color: var(--rs-color-panel);
-}
-.arrow {
-  z-index: var(--rs-z-index-portal);
-  filter: drop-shadow(0 1px 0 var(--rs-color-border-base-primary))
-    drop-shadow(0 1px 1px var(--rs-color-border-base-primary));
-}
-
-/* Arrow positioning based on side */
-.arrow[data-side="top"] {
-  bottom: -7px;
-}
-
-.arrow[data-side="bottom"] {
-  transform: translateY(-100%) rotate(180deg);
-  top: 0;
-}
-
-.arrow[data-side="left"],
-.arrow[data-side="inline-start"] {
-  right: 0;
-  transform: translateY(-50%) translateX(100%) rotate(-90deg);
-}
-
-.arrow[data-side="right"],
-.arrow[data-side="inline-end"] {
-  left: 0;
-  transform: translateY(-50%) translateX(-100%) rotate(90deg);
-}
-
 .content[data-starting-style],
 .content[data-ending-style] {
   opacity: 0;
@@ -117,5 +86,54 @@
   .content[data-side="bottom"][data-align="end"][data-starting-style],
   .content[data-side="bottom"][data-align="end"][data-ending-style] {
     transform: translate(var(--rs-space-1), var(--rs-space-1));
+  }
+}
+
+/* Freezes the positioner at the measured popup size while the viewport swaps
+   content, so the popup does not flip sides mid-transition. */
+.positioner:has(.viewport) {
+  width: var(--positioner-width);
+  height: var(--positioner-height);
+}
+
+.viewport {
+  position: relative;
+  overflow: clip;
+}
+
+.viewport > [data-previous],
+.viewport > [data-current] {
+  transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
+}
+
+.viewport > [data-current][data-starting-style],
+.viewport > [data-previous][data-ending-style] {
+  opacity: 0;
+}
+
+.viewport[data-instant] > * {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .viewport > [data-previous],
+  .viewport > [data-current] {
+    transition:
+      opacity var(--rs-duration-fast) var(--rs-ease-out),
+      translate var(--rs-duration-normal) var(--rs-ease-out);
+  }
+
+  .viewport[data-activation-direction~="right"]
+    > [data-current][data-starting-style],
+  .viewport[data-activation-direction~="left"]
+    > [data-previous][data-ending-style] {
+    translate: var(--rs-space-3) 0;
+  }
+
+  .viewport[data-activation-direction~="left"]
+    > [data-current][data-starting-style],
+  .viewport[data-activation-direction~="right"]
+    > [data-previous][data-ending-style] {
+    translate: calc(-1 * var(--rs-space-3)) 0;
   }
 }

@@ -32,6 +32,18 @@ export interface DrawerContentProps
   children?: ReactNode;
   /** Corner radius for this drawer only. Overrides the theme's `radius`. */
   radius?: Radius;
+  /**
+   * Accessible label for the close button.
+   * @default 'Close'
+   */
+  closeLabel?: string;
+  /**
+   * Keeps a focused input above the on-screen keyboard on phones.
+   * @default false
+   */
+  enableVirtualKeyboard?: boolean;
+  /** Element to render the drawer into. Defaults to `document.body`. */
+  container?: DrawerPrimitive.Portal.Props['container'];
 }
 
 export function DrawerContent({
@@ -44,13 +56,15 @@ export function DrawerContent({
   'aria-labelledby': ariaLabelledBy,
   closeLabel = 'Close',
   radius,
+  enableVirtualKeyboard = false,
+  container,
   ...props
-}: DrawerContentProps & { closeLabel?: string }) {
+}: DrawerContentProps) {
   const resolvedAriaLabel =
     ariaLabel ?? (ariaLabelledBy ? undefined : 'Drawer');
   const theme = useThemeInjection();
-  return (
-    <DrawerPrimitive.Portal {...theme}>
+  const portal = (
+    <DrawerPrimitive.Portal {...theme} container={container}>
       <DrawerPrimitive.Backdrop
         data-slot='drawer-backdrop'
         {...overlayProps}
@@ -91,6 +105,13 @@ export function DrawerContent({
         </DrawerPrimitive.Popup>
       </DrawerPrimitive.Viewport>
     </DrawerPrimitive.Portal>
+  );
+  return enableVirtualKeyboard ? (
+    <DrawerPrimitive.VirtualKeyboardProvider>
+      {portal}
+    </DrawerPrimitive.VirtualKeyboardProvider>
+  ) : (
+    portal
   );
 }
 DrawerContent.displayName = 'Drawer.Content';

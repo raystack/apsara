@@ -4,8 +4,8 @@ description: Displays rich content in a portal, triggered by a button.
 source: packages/react/components/popover
 ---
 
-import { playground, alignDemo, positionDemo,
-  controlledDemo,
+import { playground, alignDemo, positionDemo, arrowDemo,
+  controlledDemo, viewportDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -39,11 +39,23 @@ Customize how the popover aligns with its trigger.
 
 <Demo data={alignDemo} />
 
+### Arrow
+
+Set `showArrow` to draw an arrow that points at the trigger. It is off by default. With the arrow on, `sideOffset` defaults to 10 to make room for it.
+
+<Demo data={arrowDemo} />
+
 ### Controlled
 
 Pass `open` with `onOpenChange` to own the state. Do this when something other than the trigger has to close the popover, such as applying a filter.
 
 <Demo data={controlledDemo} />
+
+### Shared popover
+
+Create a handle with `Popover.createHandle()` and pass it to several triggers and one `Popover`. Each trigger sends its own `payload`. While the popover is open, clicking another trigger moves it there. Wrap the content in `Popover.Viewport` to fade and slide the old content out and the new content in.
+
+<Demo data={viewportDemo} />
 
 ## API Reference
 
@@ -67,6 +79,12 @@ Renders the element that opens the popover.
 
 <auto-type-table path="./props.ts" name="PopoverTriggerProps" />
 
+### Viewport
+
+Wraps the content inside `Popover.Content` and animates the swap when a shared popover moves to another trigger. Optional.
+
+<auto-type-table path="./props.ts" name="PopoverViewportProps" />
+
 ### Slots
 
 Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
@@ -75,6 +93,8 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 |------|---------|
 | `popover-positioner` | Positioner that places the popup |
 | `popover-content` | The popover popup |
+| `popover-arrow` | The arrow (when `showArrow`) |
+| `popover-viewport` | The `Popover.Viewport` element |
 
 ## Accessibility
 
