@@ -6,8 +6,7 @@ import {
   SelectGroup,
   SelectGroupLabel,
   SelectLabel,
-  SelectSeparator,
-  SelectStatus
+  SelectSeparator
 } from './select-misc';
 import { SelectRoot } from './select-root';
 import { SelectTrigger } from './select-trigger';
@@ -25,6 +24,5 @@ export const Select = Object.assign(SelectRoot, {
   Separator: SelectSeparator,
   Label: SelectLabel,
   GroupLabel: SelectGroupLabel,
-  Empty: SelectEmpty,
-  Status: SelectStatus
+  Empty: SelectEmpty
 });

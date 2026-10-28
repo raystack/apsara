@@ -142,6 +142,14 @@ export interface SelectGroupLabelProps {
   render?: React.ReactElement;
 }
 
+export interface SelectEmptyProps {
+  /** Content shown when the list has no items, or when no item matches the search. */
+  children?: React.ReactNode;
+
+  /** Additional CSS class names */
+  className?: string;
+}
+
 export interface SelectSeparatorProps {
   /** Additional CSS class names */
   className?: string;
@@ -153,20 +161,4 @@ export interface SelectSeparatorProps {
    * @remarks `ReactElement | function`
    */
   render?: React.ReactElement;
-}
-
-export interface SelectEmptyProps {
-  /** Content shown when no item matches the search. */
-  children?: React.ReactNode;
-
-  /** Additional CSS class names */
-  className?: string;
-}
-
-export interface SelectStatusProps {
-  /** Status message, for example a result count. */
-  children?: React.ReactNode;
-
-  /** Additional CSS class names */
-  className?: string;
 }

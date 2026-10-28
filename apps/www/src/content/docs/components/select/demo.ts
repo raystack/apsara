@@ -184,15 +184,19 @@ export const autocompleteDemo = {
       code: `
       <Select autocomplete>
   <Select.Trigger>
-    <Select.Value placeholder="Select a fruit" />
+    <Select.Value placeholder="Select..." />
   </Select.Trigger>
   <Select.Content>
-    <Select.Empty>No fruit found</Select.Empty>
-    <Select.Item value="apple">Apple</Select.Item>
-    <Select.Item value="banana">Banana</Select.Item>
-    <Select.Item value="blueberry">Blueberry</Select.Item>
-    <Select.Item value="grapes">Grapes</Select.Item>
-    <Select.Item value="pineapple">Pineapple</Select.Item>
+    <Select.Empty>No results</Select.Empty>
+    <Select.Group>
+      <Select.Item value="1">Option 1</Select.Item>
+      <Select.Item value="2">Option 2</Select.Item>
+    </Select.Group>
+    <Select.Separator />
+    <Select.Group>
+      <Select.Item value="3">Option 3</Select.Item>
+      <Select.Item value="4">Option 4</Select.Item>
+    </Select.Group>
   </Select.Content>
 </Select>`
     },

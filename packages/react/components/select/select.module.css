@@ -95,13 +95,6 @@
   letter-spacing: var(--rs-letter-spacing-small);
 }
 
-.status:not(:empty) {
-  padding: var(--rs-space-3) var(--rs-space-4) 0;
-  color: var(--rs-color-foreground-base-secondary);
-  font-size: var(--rs-font-size-mini);
-  line-height: var(--rs-line-height-mini);
-}
-
 .separator {
   height: 1px;
   margin: var(--rs-space-2) calc(var(--rs-space-3) * -1);

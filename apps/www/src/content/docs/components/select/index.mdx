@@ -32,7 +32,6 @@ import { Select } from "@raystack/apsara";
     <Select.Value />
   </Select.Trigger>
   <Select.Content>
-    <Select.Status />
     <Select.Empty />
     <Select.Group>
       <Select.GroupLabel />
@@ -97,8 +96,6 @@ To enable autocomplete, pass the `autocomplete` prop to the Select root element.
 
 By default, only select items are filtered using a simple match. For more advanced control, set `autocompleteMode="manual"` and implement your own custom filtering logic.
 
-`Select.Empty` shows its content only when no item matches the search. `Select.Status` is a polite live region for messages such as a result count or a loading state. Both work only in autocomplete mode.
-
 <Demo data={autocompleteDemo} />
 
 ### Controlled
@@ -159,15 +156,9 @@ The label of a `Select.Group`. Use it only inside `Select.Group`.
 
 ### Empty
 
-Shows its content when no item matches the search. Autocomplete mode only.
+Shows its content when the list has no items, or when no item matches the search in autocomplete mode. Place it inside `Select.Content`.
 
 <auto-type-table path="./props.ts" name="SelectEmptyProps" />
-
-### Status
-
-A polite live region for status messages. Autocomplete mode only.
-
-<auto-type-table path="./props.ts" name="SelectStatusProps" />
 
 ### Separator
 
@@ -195,8 +186,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `select-list` | The scrollable list of items |
 | `select-group` | A group of items |
 | `select-group-label` | The label of a group |
-| `select-empty` | The message shown when no item matches (autocomplete only) |
-| `select-status` | The live region for status messages (autocomplete only) |
+| `select-empty` | The message shown when the list has no matching item |
 | `select-separator` | A divider between items or groups |
 | `select-item` | An individual option row |
 | `select-item-icon` | Leading icon on an item (when set) |

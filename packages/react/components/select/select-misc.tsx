@@ -5,7 +5,7 @@ import {
   Select as SelectPrimitive
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { Fragment } from 'react';
+import { ComponentProps, Fragment } from 'react';
 import { getMatch } from '../menu/utils';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';
@@ -62,6 +62,38 @@ export function SelectGroupLabel({
 }
 SelectGroupLabel.displayName = 'Select.GroupLabel';
 
+export interface SelectEmptyProps extends ComponentProps<'div'> {}
+
+export function SelectEmpty({
+  className,
+  children,
+  ...props
+}: SelectEmptyProps) {
+  const { autocomplete, autocompleteMode, items, searchValue } =
+    useSelectContext();
+
+  const hasMatch = Object.values(items).some(
+    item =>
+      autocompleteMode === 'manual' ||
+      getMatch(item.value, item.children, searchValue)
+  );
+
+  // Base UI's Empty counts only root `items`, so the match check happens here.
+  // Its live region must stay mounted to announce, so only the children toggle.
+  const EmptyPrimitive = autocomplete ? ComboboxPrimitive.Empty : 'div';
+
+  return (
+    <EmptyPrimitive
+      className={cx(styles.empty, className)}
+      data-slot='select-empty'
+      {...props}
+    >
+      {hasMatch ? null : children}
+    </EmptyPrimitive>
+  );
+}
+SelectEmpty.displayName = 'Select.Empty';
+
 export interface SelectLabelProps extends SelectPrimitive.Label.Props {}
 
 export function SelectLabel({ className, ...props }: SelectLabelProps) {
@@ -80,54 +112,6 @@ export function SelectLabel({ className, ...props }: SelectLabelProps) {
   );
 }
 SelectLabel.displayName = 'Select.Label';
-
-export interface SelectEmptyProps extends ComboboxPrimitive.Empty.Props {}
-
-export function SelectEmpty({
-  className,
-  children,
-  ...props
-}: SelectEmptyProps) {
-  const { autocomplete, autocompleteMode, items, searchValue } =
-    useSelectContext();
-
-  if (!autocomplete) return null;
-
-  const hasMatch = Object.values(items).some(
-    item =>
-      autocompleteMode === 'manual' ||
-      getMatch(item.value, item.children, searchValue)
-  );
-
-  // Base UI's Empty counts only root `items`, so the match check happens here.
-  return (
-    <ComboboxPrimitive.Empty
-      className={cx(styles.empty, className)}
-      data-slot='select-empty'
-      {...props}
-    >
-      {hasMatch ? null : children}
-    </ComboboxPrimitive.Empty>
-  );
-}
-SelectEmpty.displayName = 'Select.Empty';
-
-export interface SelectStatusProps extends ComboboxPrimitive.Status.Props {}
-
-export function SelectStatus({ className, ...props }: SelectStatusProps) {
-  const { autocomplete } = useSelectContext();
-
-  if (!autocomplete) return null;
-
-  return (
-    <ComboboxPrimitive.Status
-      className={cx(styles.status, className)}
-      data-slot='select-status'
-      {...props}
-    />
-  );
-}
-SelectStatus.displayName = 'Select.Status';
 
 export interface SelectSeparatorProps extends SelectPrimitive.Separator.Props {}
 

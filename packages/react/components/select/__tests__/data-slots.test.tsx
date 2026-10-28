@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { expectSlots, getSlot } from '~/test-utils/data-slots';
@@ -131,30 +131,18 @@ describe('Select data-slot contract', () => {
     expect(getSlot(container, 'select-label')).not.toBeNull();
   });
 
-  it('exposes the empty and status slots in autocomplete mode', async () => {
-    render(
-      <Select autocomplete>
+  it('exposes the empty slot', () => {
+    const { container } = render(
+      <Select>
         <Select.Trigger>
           <Select.Value placeholder='Select a fruit' />
         </Select.Trigger>
         <Select.Content>
-          <Select.Status />
           <Select.Empty>No fruit found</Select.Empty>
-          {FRUIT_OPTIONS.map(option => (
-            <Select.Item key={option.value} value={option.value}>
-              {option.label}
-            </Select.Item>
-          ))}
         </Select.Content>
       </Select>
     );
-    fireEvent.click(screen.getByRole('combobox'));
-    await screen.findByRole('listbox');
-    expectSlots(document.body, [
-      'select-search',
-      'select-status',
-      'select-empty'
-    ]);
+    expect(getSlot(container, 'select-empty')).not.toBeNull();
   });
 
   it('lets FilterChip/DataView-style overrides win over Select defaults', () => {

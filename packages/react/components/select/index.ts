@@ -6,8 +6,7 @@ export type {
   SelectGroupLabelProps,
   SelectGroupProps,
   SelectLabelProps,
-  SelectSeparatorProps,
-  SelectStatusProps
+  SelectSeparatorProps
 } from './select-misc';
 export type { SelectRootProps as SelectProps } from './select-root';
 export type { SelectTriggerProps } from './select-trigger';

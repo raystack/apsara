@@ -103,6 +103,47 @@ describe('Select', () => {
     });
   });
 
+  describe('Empty', () => {
+    const EmptySelect = ({
+      withItem,
+      ...props
+    }: SelectRootProps & { withItem: boolean }) => (
+      <Select {...props}>
+        <Select.Trigger>
+          <Select.Value placeholder={TRIGGER_TEXT} />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Empty>No fruit found</Select.Empty>
+          {withItem && <Select.Item value='apple'>Apple</Select.Item>}
+        </Select.Content>
+      </Select>
+    );
+
+    it('shows its content only when the list has no items', async () => {
+      const { rerender } = render(<EmptySelect withItem />);
+      await flushMicrotasks();
+      expect(screen.queryByText('No fruit found')).not.toBeInTheDocument();
+
+      rerender(<EmptySelect withItem={false} />);
+      await flushMicrotasks();
+      expect(screen.getByText('No fruit found')).toBeInTheDocument();
+    });
+
+    it('shows its content only when no item matches the search', async () => {
+      const user = userEvent.setup();
+      render(<EmptySelect autocomplete withItem />);
+
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+      expect(screen.queryByText('No fruit found')).not.toBeInTheDocument();
+
+      await user.type(screen.getByPlaceholderText('Search...'), 'zzz');
+      await flushMicrotasks();
+      expect(screen.getByText('No fruit found')).toBeInTheDocument();
+      expect(screen.queryAllByRole('option')).toHaveLength(0);
+    });
+  });
+
   describe('Single Selection', () => {
     it('displays selected value in trigger', async () => {
       render(<BasicSelect defaultValue='apple' />);
@@ -314,58 +355,6 @@ describe('Select', () => {
       expect(screen.getByRole('listbox')).toBeInTheDocument();
       const searchInput = screen.getByPlaceholderText('Search...');
       expect(searchInput).toBeInTheDocument();
-    });
-
-    it('shows Select.Empty only when no item matches', async () => {
-      const user = userEvent.setup();
-      render(
-        <Select autocomplete>
-          <Select.Trigger>
-            <Select.Value placeholder={TRIGGER_TEXT} />
-          </Select.Trigger>
-          <Select.Content>
-            <Select.Empty>No fruit found</Select.Empty>
-            {FRUIT_OPTIONS.map(option => (
-              <Select.Item key={option.value} value={option.value}>
-                {option.label}
-              </Select.Item>
-            ))}
-          </Select.Content>
-        </Select>
-      );
-
-      fireEvent.click(screen.getByLabelText('Select option'));
-      await flushMicrotasks();
-      expect(screen.queryByText('No fruit found')).not.toBeInTheDocument();
-
-      await user.type(screen.getByPlaceholderText('Search...'), 'zzz');
-      await flushMicrotasks();
-      expect(screen.getByText('No fruit found')).toBeInTheDocument();
-      expect(screen.queryAllByRole('option')).toHaveLength(0);
-    });
-
-    it('renders Select.Status as a live region', async () => {
-      render(
-        <Select autocomplete>
-          <Select.Trigger>
-            <Select.Value placeholder={TRIGGER_TEXT} />
-          </Select.Trigger>
-          <Select.Content>
-            <Select.Status>5 fruits</Select.Status>
-            <Select.Item value='apple'>Apple</Select.Item>
-          </Select.Content>
-        </Select>
-      );
-
-      fireEvent.click(screen.getByLabelText('Select option'));
-      await flushMicrotasks();
-
-      const status = document.querySelector<HTMLElement>(
-        '[data-slot="select-status"]'
-      );
-      expect(status).toHaveTextContent('5 fruits');
-      expect(status).toHaveAttribute('aria-live', 'polite');
-      expect(screen.getByRole('listbox')).not.toContainElement(status);
     });
 
     it('filters options based on search', async () => {

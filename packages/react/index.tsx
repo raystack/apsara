@@ -382,7 +382,6 @@ export {
   type SelectLabelProps,
   type SelectProps,
   type SelectSeparatorProps,
-  type SelectStatusProps,
   type SelectTriggerProps,
   type SelectValueProps
 } from './components/select';
