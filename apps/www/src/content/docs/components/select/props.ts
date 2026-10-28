@@ -55,6 +55,28 @@ export interface SelectTriggerProps {
   'aria-label'?: string;
 }
 
+export interface SelectValueProps {
+  /** Text shown when no item is selected. */
+  placeholder?: string;
+
+  /**
+   * Content shown in place of the selected item's label.
+   * A function receives the selected item, or an array of items when `multiple` is set.
+   *
+   * @remarks `ReactNode | function`
+   */
+  children?:
+    | React.ReactNode
+    | ((
+        value?:
+          | { value: string; leadingIcon?: React.ReactNode }
+          | { value: string; leadingIcon?: React.ReactNode }[]
+      ) => React.ReactNode);
+
+  /** Additional CSS class names */
+  className?: string;
+}
+
 export interface SelectContentProps {
   /** Placeholder text for the autocomplete search input
    * @default "Search..."
