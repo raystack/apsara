@@ -133,7 +133,7 @@ describe('Select data-slot contract', () => {
 
   it('exposes the empty and status slots in autocomplete mode', async () => {
     render(
-      <Select autocomplete items={FRUIT_OPTIONS}>
+      <Select autocomplete>
         <Select.Trigger>
           <Select.Value placeholder='Select a fruit' />
         </Select.Trigger>

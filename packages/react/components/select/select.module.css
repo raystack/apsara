@@ -224,14 +224,6 @@
   white-space: nowrap;
 }
 
-.value {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .valueContent {
   flex: 1;
   display: flex;
@@ -244,15 +236,7 @@
   text-overflow: ellipsis;
 }
 
-.trigger-small .value {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.valueContent {
+.trigger-small .valueContent {
   gap: var(--rs-space-2);
 }
 

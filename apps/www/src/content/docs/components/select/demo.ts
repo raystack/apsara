@@ -157,9 +157,7 @@ export const separatorDemo = {
 export const multipleDemo = {
   type: 'code',
   code: `
-  <Select
-    multiple
-  >
+  <Select multiple>
   <Select.Trigger>
     <Select.Value placeholder="Select..." />
   </Select.Trigger>
@@ -184,7 +182,7 @@ export const autocompleteDemo = {
     {
       name: 'Default Autocomplete',
       code: `
-      <Select autocomplete items={{ apple: "Apple", banana: "Banana", blueberry: "Blueberry", grapes: "Grapes", pineapple: "Pineapple" }}>
+      <Select autocomplete>
   <Select.Trigger>
     <Select.Value placeholder="Select a fruit" />
   </Select.Trigger>
@@ -235,10 +233,7 @@ function ControlledSelect() {
 
   return (
     <Flex direction="column" gap={5}>
-      <Select
-        value={fruit}
-        onValueChange={setFruit}
-      >
+      <Select value={fruit} onValueChange={setFruit}>
         <Select.Trigger width={200}>
           <Select.Value />
         </Select.Trigger>
@@ -271,25 +266,4 @@ export const labelDemo = {
     </Select.Content>
   </Select>
 </Flex>`
-};
-
-export const valueRenderDemo = {
-  type: 'code',
-  code: `
-<Select defaultValue="apple">
-  <Select.Trigger>
-    <Select.Value placeholder="Select a fruit">
-      {item => (
-        <Flex align="center" gap={2}>
-          {item.leadingIcon}
-          <Text weight="medium">{item.children}</Text>
-        </Flex>
-      )}
-    </Select.Value>
-  </Select.Trigger>
-  <Select.Content>
-    <Select.Item value="apple" leadingIcon={<Info size={16} />}>Apple</Select.Item>
-    <Select.Item value="banana" leadingIcon={<Home size={16} />}>Banana</Select.Item>
-  </Select.Content>
-</Select>`
 };
