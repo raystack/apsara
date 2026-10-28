@@ -1,13 +1,8 @@
 'use client';
 
 import { Menu as MenuPrimitive } from '@base-ui/react';
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useRef,
-  useState
-} from 'react';
+import { useControlled } from '@base-ui/utils/useControlled';
+import { createContext, useCallback, useContext, useRef } from 'react';
 
 interface CommonProps {
   autocomplete?: boolean;
@@ -102,23 +97,28 @@ export const MenuRoot = ({
   defaultOpen = false,
   ...props
 }: MenuRootProps) => {
-  const [internalInputValue, setInternalInputValue] =
-    useState(defaultInputValue);
-
-  const [internalOpen, setInternalOpen] = useState(defaultOpen);
-  const open = providedOpen ?? internalOpen;
+  const [inputValue, setInputValueUnwrapped] = useControlled({
+    controlled: providedInputValue,
+    default: defaultInputValue,
+    name: 'Menu',
+    state: 'inputValue'
+  });
+  const [open, setOpenUnwrapped] = useControlled({
+    controlled: providedOpen,
+    default: defaultOpen,
+    name: 'Menu',
+    state: 'open'
+  });
   const inputRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const isInitialRender = useRef(true);
 
-  const inputValue = providedInputValue ?? internalInputValue;
-
   const setValue = useCallback(
     (value: string) => {
-      setInternalInputValue(value);
+      setInputValueUnwrapped(value);
       onInputValueChange?.(value);
     },
-    [onInputValueChange]
+    [onInputValueChange, setInputValueUnwrapped]
   );
 
   const handleOpenChange: MenuPrimitive.Root.Props['onOpenChange'] =
@@ -128,10 +128,10 @@ export const MenuRoot = ({
           setValue('');
           isInitialRender.current = true;
         }
-        setInternalOpen(value);
+        setOpenUnwrapped(value);
         onOpenChange?.(value, eventDetails);
       },
-      [onOpenChange, setValue, autocomplete]
+      [onOpenChange, setValue, autocomplete, setOpenUnwrapped]
     );
 
   return (
@@ -192,22 +192,29 @@ export const MenuSubMenu = ({
   defaultOpen = false,
   ...props
 }: MenuSubMenuProps) => {
-  const [internalInputValue, setInternalInputValue] =
-    useState(defaultInputValue);
-  const [internalOpen, setInternalOpen] = useState(defaultOpen);
-  const open = providedOpen ?? internalOpen;
+  const [inputValue, setInputValueUnwrapped] = useControlled({
+    controlled: providedInputValue,
+    default: defaultInputValue,
+    name: 'Menu.Submenu',
+    state: 'inputValue'
+  });
+  const [open, setOpenUnwrapped] = useControlled({
+    controlled: providedOpen,
+    default: defaultOpen,
+    name: 'Menu.Submenu',
+    state: 'open'
+  });
   const parentContext = useMenuContext();
   const inputRef = useRef<HTMLInputElement>(null);
   const isInitialRender = useRef(true);
   const contentRef = useRef<HTMLDivElement>(null);
-  const inputValue = providedInputValue ?? internalInputValue;
 
   const setValue = useCallback(
     (value: string) => {
-      setInternalInputValue(value);
+      setInputValueUnwrapped(value);
       onInputValueChange?.(value);
     },
-    [onInputValueChange]
+    [onInputValueChange, setInputValueUnwrapped]
   );
 
   const handleOpenChange: MenuPrimitive.Root.Props['onOpenChange'] =
@@ -217,10 +224,10 @@ export const MenuSubMenu = ({
           setValue('');
           isInitialRender.current = true;
         }
-        setInternalOpen(value);
+        setOpenUnwrapped(value);
         onOpenChange?.(value, eventDetails);
       },
-      [onOpenChange, setValue, autocomplete]
+      [onOpenChange, setValue, autocomplete, setOpenUnwrapped]
     );
 
   return (

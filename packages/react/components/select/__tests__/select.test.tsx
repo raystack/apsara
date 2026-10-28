@@ -188,6 +188,18 @@ describe('Select', () => {
       ).toHaveAttribute('aria-checked', 'true');
     });
 
+    it('keeps the item checkbox out of the tab order', async () => {
+      const user = userEvent.setup();
+      render(<BasicSelect multiple />);
+      await openSelect(user);
+
+      const option = screen.getAllByRole('option')[0];
+      expect(within(option).getByRole('checkbox')).toHaveAttribute(
+        'tabindex',
+        '-1'
+      );
+    });
+
     it('fires onValueChange exactly once per click on an option', async () => {
       const handleValueChange = vi.fn();
       render(<BasicSelect multiple onValueChange={handleValueChange} />);
@@ -293,6 +305,62 @@ describe('Select', () => {
       await user.type(searchInput, 'app');
       await flushMicrotasks();
 
+      const options = screen.getAllByRole('option');
+      expect(options.length).toBe(2);
+      expect(options[0]).toHaveTextContent('Apple');
+      expect(options[1]).toHaveTextContent('Pineapple');
+    });
+
+    it('filters options by a controlled searchValue', async () => {
+      const onSearch = vi.fn();
+      render(
+        <Select autocomplete searchValue='app' onSearch={onSearch}>
+          <Select.Trigger>
+            <Select.Value placeholder={TRIGGER_TEXT} />
+          </Select.Trigger>
+          <Select.Content>
+            {FRUIT_OPTIONS.map(option => (
+              <Select.Item key={option.value} value={option.value}>
+                {option.label}
+              </Select.Item>
+            ))}
+          </Select.Content>
+        </Select>
+      );
+
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+      fireEvent.change(screen.getByPlaceholderText('Search...'), {
+        target: { value: 'b' }
+      });
+      await flushMicrotasks();
+
+      expect(onSearch).toHaveBeenCalledWith('b');
+      const options = screen.getAllByRole('option');
+      expect(options.length).toBe(2);
+      expect(options[0]).toHaveTextContent('Apple');
+      expect(options[1]).toHaveTextContent('Pineapple');
+    });
+
+    it('shows a controlled searchValue in the search input', async () => {
+      render(<BasicSelect autocomplete searchValue='app' />);
+
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+      const searchInput = screen.getByPlaceholderText('Search...');
+      fireEvent.change(searchInput, { target: { value: 'b' } });
+      await flushMicrotasks();
+
+      expect(searchInput).toHaveValue('app');
+    });
+
+    it('shows and filters by defaultSearchValue', async () => {
+      render(<BasicSelect autocomplete defaultSearchValue='app' />);
+
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+
+      expect(screen.getByPlaceholderText('Search...')).toHaveValue('app');
       const options = screen.getAllByRole('option');
       expect(options.length).toBe(2);
       expect(options[0]).toHaveTextContent('Apple');

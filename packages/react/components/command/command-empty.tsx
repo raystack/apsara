@@ -1,19 +1,16 @@
 'use client';
 
+import { Autocomplete as AutocompletePrimitive } from '@base-ui/react/autocomplete';
 import { cx } from 'class-variance-authority';
-import { type ComponentProps } from 'react';
+import { type ReactNode } from 'react';
 import styles from './command.module.css';
+import { useCommandContext } from './command-root';
 
-export interface CommandEmptyProps extends ComponentProps<'div'> {}
+export type CommandEmptyProps = AutocompletePrimitive.Empty.Props;
 
-export const CommandEmpty = ({
-  ref,
-  className,
-  ...props
-}: CommandEmptyProps) => {
+export const CommandEmpty = ({ className, ...props }: CommandEmptyProps) => {
   return (
-    <div
-      ref={ref}
+    <AutocompletePrimitive.Empty
       data-slot='command-empty'
       className={cx(styles.empty, className)}
       {...props}
@@ -22,3 +19,46 @@ export const CommandEmpty = ({
 };
 
 CommandEmpty.displayName = 'Command.Empty';
+
+const isGroup = (item: unknown): item is { items: readonly unknown[] } =>
+  typeof item === 'object' &&
+  item !== null &&
+  Array.isArray((item as { items?: unknown }).items);
+
+const countItems = (items: readonly unknown[]) =>
+  items.reduce<number>(
+    (count, item) => count + (isGroup(item) ? item.items.length : 1),
+    0
+  );
+
+export interface CommandStatusProps
+  extends Omit<AutocompletePrimitive.Status.Props, 'children'> {
+  /** Text to announce. A function receives the number of matching items, or `null` without the `items` prop. */
+  children?: ReactNode | ((count: number | null) => ReactNode);
+}
+
+export const CommandStatus = ({
+  className,
+  children,
+  ...props
+}: CommandStatusProps) => {
+  const { hasItems } = useCommandContext();
+  const filteredItems = AutocompletePrimitive.useFilteredItems<unknown>();
+
+  const content =
+    typeof children === 'function'
+      ? children(hasItems ? countItems(filteredItems) : null)
+      : children;
+
+  return (
+    <AutocompletePrimitive.Status
+      data-slot='command-status'
+      className={cx(styles.status, className)}
+      {...props}
+    >
+      {content}
+    </AutocompletePrimitive.Status>
+  );
+};
+
+CommandStatus.displayName = 'Command.Status';

@@ -79,6 +79,12 @@ export interface SelectContentProps {
    */
   sideOffset?: number;
 
+  /**
+   * Overlaps the trigger so the selected item's text lines up with the trigger's value. Has no effect in autocomplete mode.
+   * @default false
+   */
+  alignItemWithTrigger?: boolean;
+
   /** Additional CSS class names. */
   className?: string;
 
