@@ -713,6 +713,31 @@ describe('Combobox.Clear', () => {
       PLACEHOLDER_TEXT
     );
   });
+
+  it('renders inside the input box with showClearButton', async () => {
+    const user = userEvent.setup();
+    const handleValueChange = vi.fn();
+    const { container } = render(
+      <Combobox
+        multiple
+        defaultValue={['apple', 'banana']}
+        onValueChange={handleValueChange}
+      >
+        <Combobox.Input placeholder={PLACEHOLDER_TEXT} showClearButton />
+        <Combobox.Content>
+          <Combobox.Item value='apple'>Apple</Combobox.Item>
+        </Combobox.Content>
+      </Combobox>
+    );
+    const clear = screen.getByRole('button', { name: 'Clear' });
+    expect(
+      container.querySelector('[data-slot="input-trailing-icon"]')
+    ).toContainElement(clear);
+
+    await user.click(clear);
+
+    expect(handleValueChange).toHaveBeenLastCalledWith([]);
+  });
 });
 
 describe('Combobox.Empty', () => {

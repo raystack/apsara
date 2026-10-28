@@ -4,8 +4,10 @@ import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { type ComponentProps } from 'react';
 import { ChevronDownIcon } from '~/icons';
 import { Chip } from '../chip';
+import { Flex } from '../flex';
 import { Input } from '../input';
 import styles from './combobox.module.css';
+import { ComboboxClear } from './combobox-misc';
 import { useComboboxContext } from './combobox-root';
 
 const MAX_CHIPS_VISIBLE = 2;
@@ -14,16 +16,24 @@ export interface ComboboxInputProps
   extends Omit<
     ComponentProps<typeof Input>,
     'trailingIcon' | 'suffix' | 'chips' | 'maxChipsVisible'
-  > {}
+  > {
+  /**
+   * Shows a clear button before the chevron.
+   * @default false
+   */
+  showClearButton?: boolean;
+}
 
 export const ComboboxInput = ({
   ref,
   disabled,
+  showClearButton = false,
   ...props
 }: ComboboxInputProps) => {
   const { multiple, inputContainerRef, value, onValueChange, getLabel } =
     useComboboxContext();
   const values = multiple && Array.isArray(value) ? value : [];
+  const chevron = <ChevronDownIcon />;
 
   const input = (
     <ComboboxPrimitive.Input
@@ -49,7 +59,16 @@ export const ComboboxInput = ({
       render={
         <Input
           containerRef={inputContainerRef}
-          trailingIcon={<ChevronDownIcon />}
+          trailingIcon={
+            showClearButton ? (
+              <Flex align='center' gap={2} className={styles.trailing}>
+                <ComboboxClear />
+                {chevron}
+              </Flex>
+            ) : (
+              chevron
+            )
+          }
           chips={values.map((val, index) => (
             <Chip
               key={index}

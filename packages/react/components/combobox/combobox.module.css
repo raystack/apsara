@@ -135,3 +135,13 @@
   width: 100%;
   min-width: 0;
 }
+
+/* Input sizes its trailing icon slot for one icon. */
+[data-slot="input-trailing-icon"]:has(> .trailing) {
+  width: auto;
+}
+
+.trailing > svg {
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
+}

@@ -75,6 +75,12 @@ export interface ComboboxInputProps {
   /** Whether the input is disabled. */
   disabled?: boolean;
 
+  /**
+   * Shows a clear button before the chevron.
+   * @default false
+   */
+  showClearButton?: boolean;
+
   /** Icon element to display at the start of input. */
   leadingIcon?: React.ReactNode;
 

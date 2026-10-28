@@ -98,10 +98,7 @@ export const labelDemo = {
   <Combobox multiple>
     <Flex direction="column" gap={2}>
       <Combobox.Label>Fruits</Combobox.Label>
-      <Flex align="center" gap={2}>
-        <Combobox.Input placeholder="Select fruits" width={300} />
-        <Combobox.Clear />
-      </Flex>
+      <Combobox.Input placeholder="Select fruits" width={300} showClearButton />
     </Flex>
     <Combobox.Content>
       <Combobox.Item>Apple</Combobox.Item>

@@ -82,7 +82,7 @@ The input shows the first two chips and a "+N" count for the rest. Press Backspa
 
 ### Label and clear button
 
-`Combobox.Label` renders a visible label linked to the input. `Combobox.Clear` renders a button that clears the value. It shows only when there is a value or input text. Place both anywhere inside `Combobox`.
+`Combobox.Label` renders a visible label linked to the input. Set `showClearButton` on `Combobox.Input` to show a clear button before the chevron. The button shows only when a value is selected. To place it somewhere else, render `Combobox.Clear` anywhere inside `Combobox`.
 
 <Demo data={labelDemo} />
 
@@ -148,7 +148,7 @@ A visible label for the input. It renders a `<label>` whose `htmlFor` is the inp
 
 ### Clear Props
 
-A button that clears the value and the input text. It renders [IconButton](/docs/components/icon-button) and shows only when there is something to clear.
+A button that clears the value and the input text. It renders [IconButton](/docs/components/icon-button) and shows only when a value is selected. `Combobox.Input` renders one before the chevron when `showClearButton` is set.
 
 <auto-type-table path="./props.ts" name="ComboboxClearProps" />
 
