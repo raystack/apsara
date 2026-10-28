@@ -6,6 +6,7 @@ import {
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, Fragment } from 'react';
+import { Label, type LabelProps } from '../label';
 import { getMatch } from '../menu/utils';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';
@@ -94,9 +95,14 @@ export function SelectEmpty({
 }
 SelectEmpty.displayName = 'Select.Empty';
 
-export interface SelectLabelProps extends SelectPrimitive.Label.Props {}
+export type SelectLabelProps = SelectPrimitive.Label.Props & LabelProps;
 
-export function SelectLabel({ className, ...props }: SelectLabelProps) {
+export function SelectLabel({
+  required,
+  optionalText,
+  requiredText,
+  ...props
+}: SelectLabelProps) {
   const { autocomplete } = useSelectContext();
 
   const LabelPrimitive = autocomplete
@@ -105,7 +111,13 @@ export function SelectLabel({ className, ...props }: SelectLabelProps) {
 
   return (
     <LabelPrimitive
-      className={cx(styles.label, className)}
+      render={
+        <Label
+          required={required}
+          optionalText={optionalText}
+          requiredText={requiredText}
+        />
+      }
       data-slot='select-label'
       {...props}
     />

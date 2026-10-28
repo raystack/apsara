@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import labelStyles from '../../label/label.module.css';
 import { Select } from '../select';
 import { SelectRootProps } from '../select-root';
 
@@ -100,6 +101,22 @@ describe('Select', () => {
         'aria-labelledby',
         expect.stringContaining(label.id)
       );
+    });
+
+    it('renders the Label component with its props', () => {
+      const { container } = render(
+        <Select>
+          <Select.Label required={false}>Fruit</Select.Label>
+          <Select.Trigger>
+            <Select.Value placeholder={TRIGGER_TEXT} />
+          </Select.Trigger>
+        </Select>
+      );
+
+      const label = container.querySelector('[data-slot="select-label"]');
+      expect(label?.tagName).toBe('LABEL');
+      expect(label).toHaveClass(labelStyles.label);
+      expect(label).toHaveTextContent('(optional)');
     });
   });
 

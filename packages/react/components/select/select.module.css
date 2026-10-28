@@ -74,19 +74,6 @@
   font-size: var(--rs-font-size-mini);
 }
 
-.label {
-  color: var(--rs-color-foreground-base-secondary);
-  font-weight: var(--rs-font-weight-medium);
-  font-size: var(--rs-font-size-mini);
-  line-height: var(--rs-line-height-mini);
-  letter-spacing: var(--rs-letter-spacing-mini);
-  cursor: default;
-}
-
-.label[data-disabled] {
-  color: var(--rs-color-foreground-base-tertiary);
-}
-
 .empty:not(:empty) {
   padding: var(--rs-space-4);
   color: var(--rs-color-foreground-base-secondary);

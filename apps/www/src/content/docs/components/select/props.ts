@@ -117,6 +117,21 @@ export interface SelectGroupProps {
 }
 
 export interface SelectLabelProps {
+  /**
+   * Whether the select is required. When `false`, an optional
+   * indicator (see `optionalText`) is rendered next to the label.
+   */
+  required?: boolean;
+
+  /**
+   * Text rendered next to the label when `required={false}`.
+   * @defaultValue "(optional)"
+   */
+  optionalText?: string;
+
+  /** Text rendered next to the label when `required={true}`. No indicator is rendered if this is omitted. */
+  requiredText?: string;
+
   /** Additional CSS class names */
   className?: string;
 
