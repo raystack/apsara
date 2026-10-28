@@ -7,6 +7,51 @@ One section per release, newest first, with only the changes that need action
 from you. The full record of every release, features and fixes included, is
 on [GitHub releases](https://github.com/raystack/apsara/releases).
 
+## Unreleased: change callbacks get a details object
+
+The change callbacks below pass a second argument after the value. A
+component that wraps Base UI passes Base UI's `eventDetails`. A component that
+keeps its own state passes a `details` object with the same `reason` and
+`event` fields, plus any field of its own.
+
+### 1. Update the three callbacks whose second argument changes
+
+| `onValueChange` | Before | After |
+|---|---|---|
+| `TextArea` | `(value, event)` | `(value, eventDetails)` |
+| `ColorPicker` | `(value, mode)` | `(value, details)` |
+| `FilterChip` | `(value, operation)` | `(value, details)` |
+
+TextArea's `event` was the React `ChangeEvent`. `eventDetails.event` is the
+native event. ColorPicker's mode is `details.mode`, and FilterChip's operation
+is `details.operation`.
+
+```tsx
+// Before
+<ColorPicker onValueChange={(value, mode) => save(value, mode)} />
+<FilterChip onValueChange={(value, operation) => apply(value, operation)} />
+<TextArea onValueChange={(value, event) => track(event.nativeEvent)} />
+
+// After
+<ColorPicker onValueChange={(value, details) => save(value, details.mode)} />
+<FilterChip onValueChange={(value, details) => apply(value, details.operation)} />
+<TextArea onValueChange={(value, eventDetails) => track(eventDetails.event)} />
+```
+
+### 2. Check functions that take a second parameter
+
+These callbacks gain the second argument. Code that reads only the value keeps
+working. If you pass a function that takes a second parameter, check that it
+expects the details object.
+
+- Base UI `eventDetails`: Accordion `onValueChange`, Select `onValueChange`
+  and `onOpenChange`, Combobox `onValueChange` and `onInputValueChange`, Menu
+  and ContextMenu `onInputValueChange`, Sidebar.Group and Reasoning
+  `onOpenChange`.
+- `details`: Sidebar `onOpenChange`, CodeBlock `onCollapseChange`, ChatPanel
+  `onModeChange`, DataView `onViewChange`, and `onOpenChange` on
+  Editor.SlashMenu, Editor.Mentions and PromptInput.Mentions.
+
 ## Unreleased: date filters compare whole days
 
 `DataView`, `DataTable` and `FilterChip` read and compare dates as calendar

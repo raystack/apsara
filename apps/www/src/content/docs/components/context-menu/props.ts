@@ -20,7 +20,10 @@ export interface ContextMenuRootProps {
   defaultInputValue?: string;
 
   /** Callback fired when the search input value changes */
-  onInputValueChange?: (value: string) => void;
+  onInputValueChange?: (
+    value: string,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Control the open state of the menu */
   open?: boolean;
@@ -262,7 +265,10 @@ export interface ContextMenuSubMenuProps {
   defaultInputValue?: string;
 
   /** Callback fired when the search input value changes */
-  onInputValueChange?: (value: string) => void;
+  onInputValueChange?: (
+    value: string,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Control the open state of the submenu */
   open?: boolean;

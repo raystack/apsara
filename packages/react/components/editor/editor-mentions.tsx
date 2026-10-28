@@ -8,7 +8,10 @@ import type {
 } from './core/mention-registry';
 import { docMentions } from './core/serializers';
 import { SuggestionMenu } from './core/suggestion-menu';
-import { useMentionResolution } from './core/use-suggestion-menu';
+import {
+  type SuggestionOpenChangeDetails,
+  useMentionResolution
+} from './core/use-suggestion-menu';
 import { useEditorStore, useStoreSelector } from './editor-context';
 import type { EditorStore } from './editor-store';
 import { useEditorSuggestion } from './use-editor-suggestion';
@@ -39,7 +42,7 @@ export interface EditorMentionsProps {
    */
   loadingRowCount?: number;
   /** Observes the menu's open state. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (open: boolean, details: SuggestionOpenChangeDetails) => void;
 }
 
 const NO_MENTIONS: MentionAttrs[] = [];

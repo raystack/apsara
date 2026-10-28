@@ -98,7 +98,10 @@ describe('Combobox', () => {
       const bananaOption = await screen.findByText('Banana');
       await clickOption(bananaOption);
 
-      expect(handleValueChange).toHaveBeenCalledWith('banana');
+      expect(handleValueChange).toHaveBeenCalledWith(
+        'banana',
+        expect.objectContaining({ reason: 'item-press' })
+      );
     });
 
     it('closes content after selection in single mode', async () => {
@@ -145,11 +148,17 @@ describe('Combobox', () => {
 
       const bananaOption = await screen.findByText('Banana');
       await clickOption(bananaOption);
-      expect(handleValueChange).toHaveBeenCalledWith(['banana']);
+      expect(handleValueChange).toHaveBeenCalledWith(
+        ['banana'],
+        expect.anything()
+      );
 
       const pineappleOption = await screen.findByText('Pineapple');
       await clickOption(pineappleOption);
-      expect(handleValueChange).toHaveBeenCalledWith(['banana', 'pineapple']);
+      expect(handleValueChange).toHaveBeenCalledWith(
+        ['banana', 'pineapple'],
+        expect.anything()
+      );
     });
 
     it('allows deselecting items in multiple mode', async () => {
@@ -162,10 +171,13 @@ describe('Combobox', () => {
 
       const bananaOption = await screen.findByText('Banana');
       await clickOption(bananaOption);
-      expect(handleValueChange).toHaveBeenCalledWith(['banana']);
+      expect(handleValueChange).toHaveBeenCalledWith(
+        ['banana'],
+        expect.anything()
+      );
 
       await clickOption(bananaOption);
-      expect(handleValueChange).toHaveBeenCalledWith([]);
+      expect(handleValueChange).toHaveBeenCalledWith([], expect.anything());
     });
 
     it('keeps dropdown open after selection in multiple mode', async () => {
@@ -338,7 +350,7 @@ describe('Combobox', () => {
       const input = screen.getByRole('combobox');
       await user.type(input, 'a');
 
-      expect(handleInputChange).toHaveBeenCalledWith('a');
+      expect(handleInputChange).toHaveBeenCalledWith('a', expect.anything());
     });
   });
 
@@ -463,7 +475,7 @@ describe('Combobox', () => {
 
       fireEvent.change(input, { target: { value: 'app' } });
 
-      expect(handleInputChange).toHaveBeenCalledWith('app');
+      expect(handleInputChange).toHaveBeenCalledWith('app', expect.anything());
       expect(input).toHaveValue('ban');
       expect(screen.getByText('Banana')).toBeInTheDocument();
       expect(screen.queryByText('Apple')).not.toBeInTheDocument();
@@ -539,7 +551,10 @@ describe('Combobox', () => {
       const appleOption = await screen.findByText('Apple');
       await clickOption(appleOption);
 
-      expect(handleValueChange).toHaveBeenCalledWith('Apple');
+      expect(handleValueChange).toHaveBeenCalledWith(
+        'Apple',
+        expect.anything()
+      );
     });
   });
 });
@@ -578,7 +593,7 @@ describe('Combobox.createItems', () => {
     await user.click(screen.getByRole('combobox'));
     await clickOption(await screen.findByText('John Smith'));
 
-    expect(onValueChange).toHaveBeenCalledWith('u2');
+    expect(onValueChange).toHaveBeenCalledWith('u2', expect.anything());
   });
 
   it('filters by the derived label', async () => {

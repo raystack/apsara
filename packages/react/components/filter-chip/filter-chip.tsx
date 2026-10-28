@@ -12,11 +12,16 @@ import {
 } from 'react';
 import {
   CalendarPreview,
+  type CalendarPreviewChangeReason,
   type CalendarPreviewContentProps,
   type CalendarPreviewInputProps,
   type CalendarPreviewProps
 } from '~/components/calendar-preview';
 import { XIcon } from '~/icons';
+import {
+  type ChangeDetails,
+  createChangeDetails
+} from '~/shared/change-details';
 import { toInstant } from '~/shared/date-filters';
 import {
   FilterOperation,
@@ -30,7 +35,10 @@ import {
 import { Flex } from '../flex';
 import { Input } from '../input';
 import { Select } from '../select';
-import { BaseSelectProps } from '../select/select-root';
+import {
+  BaseSelectProps,
+  type SelectChangeEventDetails
+} from '../select/select-root';
 import { Text } from '../text';
 import styles from './filter-chip.module.css';
 import { Operation } from './filter-chip-operation';
@@ -48,6 +56,16 @@ const chip = cva(styles.chip, {
 });
 
 export type FilterChipValue = FilterValueType | FilterValueType[] | Date;
+
+export type FilterChipChangeReason =
+  | SelectChangeEventDetails['reason']
+  | CalendarPreviewChangeReason
+  | 'none';
+
+export type FilterChipChangeDetails = ChangeDetails<
+  FilterChipChangeReason,
+  { operation: string }
+>;
 
 /* The message `DatePicker` reports, so `onErrorChange` reads the same. */
 const INVALID_DATE = 'Invalid date';
@@ -101,7 +119,10 @@ export interface FilterChipProps
   onRemove?: () => void;
   columnType?: FilterTypes;
   options?: FilterSelectOption[];
-  onValueChange?: (value: FilterChipValue, operation: string) => void;
+  onValueChange?: (
+    value: FilterChipValue,
+    details: FilterChipChangeDetails
+  ) => void;
   onOperationChange?: (operation: string) => void;
   leadingIcon?: ReactElement;
   operations?: FilterOperator<string>[];
@@ -189,30 +210,44 @@ export const FilterChip = ({
     [onOperationChange]
   );
 
-  const handleFilterValueChange = useCallback(
-    (value: FilterChipValue) => {
-      setFilterValue(value);
-      onValueChange?.(value, operation?.value ?? '');
+  const emitValueChange = useCallback(
+    (value: FilterChipValue, reason: FilterChipChangeReason, event?: Event) => {
+      onValueChange?.(
+        value,
+        createChangeDetails(reason, event, {
+          operation: operation?.value ?? ''
+        })
+      );
     },
     [operation, onValueChange]
   );
 
+  const handleFilterValueChange = useCallback(
+    (value: FilterChipValue, reason: FilterChipChangeReason, event?: Event) => {
+      setFilterValue(value);
+      emitValueChange(value, reason, event);
+    },
+    [emitValueChange]
+  );
+
   // Select works on strings, so map each pick back to its option's value.
   const handleSelectValueChange = useCallback(
-    (picked: string | string[]) => {
+    (picked: string | string[], eventDetails: SelectChangeEventDetails) => {
       const toOption = (v: string) =>
         options.find(o => String(o.value) === v)?.value ?? v;
       handleFilterValueChange(
-        Array.isArray(picked) ? picked.map(toOption) : toOption(picked)
+        Array.isArray(picked) ? picked.map(toOption) : toOption(picked),
+        eventDetails.reason,
+        eventDetails.event
       );
     },
     [options, handleFilterValueChange]
   );
 
   const handleTextInputChange = useCallback(
-    (raw: string) => {
+    (raw: string, event: Event) => {
       if (!isNumberColumn) {
-        handleFilterValueChange(raw);
+        handleFilterValueChange(raw, 'none', event);
         return;
       }
       // Skipping setFilterValue makes React restore the controlled value.
@@ -222,9 +257,9 @@ export const FilterChip = ({
 
       setFilterValue(raw);
       const isIntermediate = raw === '' || Number.isNaN(parsed);
-      onValueChange?.(isIntermediate ? raw : parsed, operation?.value ?? '');
+      emitValueChange(isIntermediate ? raw : parsed, 'none', event);
     },
-    [isNumberColumn, handleFilterValueChange, onValueChange, operation]
+    [isNumberColumn, handleFilterValueChange, emitValueChange]
   );
 
   const renderValueInput = () => {
@@ -286,8 +321,8 @@ export const FilterChip = ({
               disabled={inputProps.disabled}
               readOnly={inputProps.readOnly}
               value={dateValue}
-              onValueChange={date => {
-                handleFilterValueChange(date ?? '');
+              onValueChange={(date, details) => {
+                handleFilterValueChange(date ?? '', details.reason);
                 if (date) setDateOpen(false);
               }}
               open={dateOpen}
@@ -331,7 +366,9 @@ export const FilterChip = ({
               variant={variant === 'text' ? 'borderless' : 'default'}
               classNames={{ container: styles.inputField }}
               value={filterValue.toString()}
-              onChange={e => handleTextInputChange(e.target.value)}
+              onChange={e =>
+                handleTextInputChange(e.target.value, e.nativeEvent)
+              }
             />
           </div>
         );

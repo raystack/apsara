@@ -199,7 +199,10 @@ export interface PromptInputMentionsProps {
   ) => Promise<PromptInputMentionItem[]>;
 
   /** Called when the menu opens or closes. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    details: { reason: 'none'; event: Event }
+  ) => void;
 
   /** Shown when nothing matches. @defaultValue "No results" */
   emptyMessage?: React.ReactNode;

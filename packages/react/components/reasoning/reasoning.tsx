@@ -1,5 +1,8 @@
 'use client';
 
+import type { Collapsible as CollapsiblePrimitive } from '@base-ui/react';
+import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
+import { REASONS } from '@base-ui/react/internals/reasons';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
 import {
@@ -47,7 +50,10 @@ export interface ReasoningProps
    */
   duration?: number;
   /** Called when the panel is opened or closed. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: CollapsiblePrimitive.Root.ChangeEventDetails
+  ) => void;
 }
 
 function ReasoningRoot({
@@ -71,9 +77,13 @@ function ReasoningRoot({
   const onOpenChangeRef = useRef(onOpenChange);
   onOpenChangeRef.current = onOpenChange;
 
-  const setOpen = (next: boolean) => {
+  const setOpen = (
+    next: boolean,
+    eventDetails: CollapsiblePrimitive.Root.ChangeEventDetails
+  ) => {
+    onOpenChangeRef.current?.(next, eventDetails);
+    if (eventDetails.isCanceled) return;
     setOpenUnwrapped(next);
-    onOpenChangeRef.current?.(next);
   };
 
   // Auto-open while streaming and auto-collapse on completion, but hand the
@@ -85,7 +95,7 @@ function ReasoningRoot({
     if (prevStreamingRef.current === streaming) return;
     prevStreamingRef.current = streaming;
     if (userToggledRef.current) return;
-    setOpenRef.current(streaming);
+    setOpenRef.current(streaming, createChangeEventDetails(REASONS.none));
   }, [streaming]);
 
   const contextValue = useMemo<ReasoningContextValue>(
@@ -98,9 +108,9 @@ function ReasoningRoot({
       <Collapsible
         className={cx(styles.reasoning, className)}
         open={open}
-        onOpenChange={next => {
+        onOpenChange={(next, eventDetails) => {
           userToggledRef.current = true;
-          setOpen(next);
+          setOpen(next, eventDetails);
         }}
         data-slot='reasoning'
         {...props}

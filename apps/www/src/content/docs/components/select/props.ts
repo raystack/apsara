@@ -17,6 +17,18 @@ export interface SelectRootProps {
    */
   autocompleteMode?: 'auto' | 'manual';
 
+  /** Callback fired when the value changes. The value is a `string[]` with `multiple`. */
+  onValueChange?: (
+    value: string | string[],
+    eventDetails: { reason: string; event: Event }
+  ) => void;
+
+  /** Callback fired when the popup opens or closes. */
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
+
   /** Current search value for autocomplete */
   searchValue?: string;
 

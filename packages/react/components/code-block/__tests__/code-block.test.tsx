@@ -237,7 +237,10 @@ describe('CodeBlock', () => {
       await user.click(screen.getByText('Hide Code'));
 
       expect(onCollapseChange).toHaveBeenCalledTimes(1);
-      expect(onCollapseChange).toHaveBeenCalledWith(true);
+      expect(onCollapseChange).toHaveBeenCalledWith(
+        true,
+        expect.objectContaining({ reason: 'trigger-press' })
+      );
       expect(screen.getByText('Hide Code')).toBeInTheDocument();
     });
 
@@ -257,7 +260,7 @@ describe('CodeBlock', () => {
       await user.click(screen.getByText('Show Code'));
 
       expect(onCollapseChange).toHaveBeenCalledTimes(1);
-      expect(onCollapseChange).toHaveBeenCalledWith(false);
+      expect(onCollapseChange).toHaveBeenCalledWith(false, expect.anything());
       expect(screen.getByText('Hide Code')).toBeInTheDocument();
     });
 

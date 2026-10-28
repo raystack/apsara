@@ -14,14 +14,20 @@ import {
   useRef,
   useState
 } from 'react';
+import {
+  type ChangeDetails,
+  createChangeDetails
+} from '~/shared/change-details';
 import { Tooltip } from '../tooltip';
 import styles from './sidebar.module.css';
+
+export type SidebarOpenChangeDetails = ChangeDetails<'trigger-press' | 'none'>;
 
 export interface SidebarContextValue {
   isCollapsed: boolean;
   isPeeking: boolean;
   open: boolean;
-  setOpen: (open: boolean) => void;
+  setOpen: (open: boolean, details?: SidebarOpenChangeDetails) => void;
   /** Mirrors the `collapsible` prop; `'none'` means it cannot be collapsed. */
   collapsible: 'icon' | 'hidden' | 'none';
   position: 'left' | 'right';
@@ -103,7 +109,7 @@ export interface SidebarRootProps extends ComponentProps<'aside'> {
   collapseTooltip?: ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (open: boolean, details: SidebarOpenChangeDetails) => void;
 }
 
 const DEFAULT_PEEK_DELAY = 100;
@@ -141,9 +147,12 @@ export function SidebarRoot({
   const pointerInsideRef = useRef(false);
 
   const handleOpenChange = useCallback(
-    (value: boolean) => {
+    (
+      value: boolean,
+      details: SidebarOpenChangeDetails = createChangeDetails('none')
+    ) => {
       setOpenUnwrapped(value);
-      onOpenChange?.(value);
+      onOpenChange?.(value, details);
     },
     [onOpenChange, setOpenUnwrapped]
   );
@@ -245,7 +254,12 @@ export function SidebarRoot({
                     type='button'
                     className={styles['resize-handle']}
                     data-slot='sidebar-toggle'
-                    onClick={() => handleOpenChange(!open)}
+                    onClick={event =>
+                      handleOpenChange(
+                        !open,
+                        createChangeDetails('trigger-press', event.nativeEvent)
+                      )
+                    }
                     aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
                     aria-expanded={open}
                     aria-controls={sidebarId}
