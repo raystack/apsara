@@ -142,3 +142,4 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 - Use with [Field](/docs/components/field) for automatic label association and error linking
 - Required state is communicated via `aria-required`
 - Supports all native `<input>` attributes
+- The leading icon is hidden from screen readers. The trailing icon is not, so a button in it stays reachable. Set `aria-hidden` on decorative content in `trailingIcon` that is not an icon, for example a text glyph.

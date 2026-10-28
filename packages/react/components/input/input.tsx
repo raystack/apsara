@@ -147,7 +147,6 @@ export function Input({
       {trailingIcon && (
         <div
           className={styles['trailing-icon']}
-          aria-hidden='true'
           data-slot='input-trailing-icon'
         >
           {trailingIcon}

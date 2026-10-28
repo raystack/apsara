@@ -86,6 +86,13 @@ describe('Input', () => {
       );
       expect(iconContainer).toBeInTheDocument();
     });
+
+    it('keeps a button in the trailing icon accessible', () => {
+      render(<Input trailingIcon={<button type='button'>Reveal</button>} />);
+      expect(
+        screen.getByRole('button', { name: 'Reveal' })
+      ).toBeInTheDocument();
+    });
   });
 
   describe('Prefix and Suffix', () => {
