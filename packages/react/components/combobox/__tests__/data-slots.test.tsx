@@ -115,7 +115,7 @@ describe('Combobox data-slot contract', () => {
       'combobox-chips',
       'combobox-chip',
       'combobox-chip-remove',
-      'combobox-chip-overflow'
+      'input-chip-overflow'
     ]);
   });
 });

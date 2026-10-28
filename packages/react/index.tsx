@@ -117,7 +117,11 @@ export {
   type CheckboxGroupProps,
   type CheckboxProps
 } from './components/checkbox';
-export { Chip, type ChipProps } from './components/chip';
+export {
+  Chip,
+  type ChipProps,
+  type ChipRemoveProps
+} from './components/chip';
 export {
   CodeBlock,
   type CodeBlockCodeProps,

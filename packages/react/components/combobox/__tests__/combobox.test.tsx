@@ -647,6 +647,24 @@ describe('Combobox chips', () => {
     expect(screen.getByText('+1')).toBeInTheDocument();
   });
 
+  it('keeps the values on Backspace when read-only and chips overflow', async () => {
+    const user = userEvent.setup();
+    const handleValueChange = vi.fn();
+    render(
+      <BasicCombobox
+        multiple
+        readOnly
+        defaultValue={['apple', 'banana', 'grapes', 'pineapple']}
+        onValueChange={handleValueChange}
+      />
+    );
+    await user.click(screen.getByRole('combobox'));
+    await user.keyboard('{Backspace}');
+
+    expect(handleValueChange).not.toHaveBeenCalled();
+    expect(screen.getByText('+2')).toBeInTheDocument();
+  });
+
   it('removes a chip with its remove button', async () => {
     const user = userEvent.setup();
     const handleValueChange = vi.fn();

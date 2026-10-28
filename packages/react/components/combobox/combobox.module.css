@@ -131,10 +131,7 @@
   background: var(--rs-color-border-base-primary);
 }
 
-.chip:focus {
-  outline: none;
-}
-
-.chip:focus-visible {
-  outline: var(--rs-focus-ring);
+.chips {
+  width: 100%;
+  min-width: 0;
 }

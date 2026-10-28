@@ -144,7 +144,7 @@
   opacity: 0.5;
 }
 
-.dismiss-button {
+.remove {
   background: none;
   border: none;
   padding: 0;
@@ -161,27 +161,27 @@
   font-family: inherit;
 }
 
-.chip-interactive:focus,
-.dismiss-button:focus {
+.chip:focus,
+.remove:focus {
   outline: none;
 }
 
-.chip-interactive:focus-visible {
+.chip:focus-visible {
   outline: var(--rs-focus-ring);
 }
 
-.dismiss-button:focus-visible {
+.remove:focus-visible {
   outline: var(--rs-focus-ring);
   border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-1));
 }
 
-.dismiss-button:active,
+.remove:active,
 .chip-interactive:active {
   transform: scale(var(--rs-scale-pressed-strong));
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .dismiss-button {
+  .remove {
     transition: transform var(--rs-duration-press) var(--rs-ease-out);
   }
 }

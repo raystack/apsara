@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { Chip } from '../../chip';
 import { Input } from '../input';
 import styles from '../input.module.css';
 
@@ -106,19 +107,43 @@ describe('Input', () => {
   });
 
   describe('Chips', () => {
-    it('renders chips', () => {
-      const chips = [{ label: 'Tag1' }, { label: 'Tag2' }];
-      render(<Input chips={chips} />);
+    it('renders chips from props', () => {
+      const chips = [{ children: 'Tag1' }, { children: 'Tag2' }];
+      const { container } = render(<Input chips={chips} />);
       expect(screen.getByText('Tag1')).toBeInTheDocument();
       expect(screen.getByText('Tag2')).toBeInTheDocument();
+      expect(container.querySelectorAll(`.${styles.chip}`)).toHaveLength(2);
+    });
+
+    it('passes chip props to each chip', () => {
+      const chips = [
+        { children: 'Tag1', render: <div data-testid='custom' /> }
+      ];
+      render(<Input chips={chips} />);
+      const chip = screen.getByTestId('custom');
+      expect(chip).toHaveAttribute('data-slot', 'input-chip');
+      expect(chip).toHaveTextContent('Tag1');
+    });
+
+    it('renders chip elements as given', () => {
+      const handleRemove = vi.fn();
+      const chips = [
+        <Chip key='tag1'>
+          Tag1
+          <Chip.Remove onClick={handleRemove} />
+        </Chip>
+      ];
+      render(<Input chips={chips} />);
+      fireEvent.click(screen.getByRole('button', { name: 'Remove Tag1' }));
+      expect(handleRemove).toHaveBeenCalledTimes(1);
     });
 
     it('limits visible chips to maxChipsVisible', () => {
       const chips = [
-        { label: 'Tag1' },
-        { label: 'Tag2' },
-        { label: 'Tag3' },
-        { label: 'Tag4' }
+        { children: 'Tag1' },
+        { children: 'Tag2' },
+        { children: 'Tag3' },
+        { children: 'Tag4' }
       ];
       render(<Input chips={chips} maxChipsVisible={2} />);
       expect(screen.getByText('Tag1')).toBeInTheDocument();
@@ -128,49 +153,24 @@ describe('Input', () => {
       expect(screen.getByText('+2')).toBeInTheDocument();
     });
 
-    it('renders dismissible chips with onRemove', () => {
-      const handleRemove = vi.fn();
-      const chips = [{ label: 'Tag1', onRemove: handleRemove }];
-      const { container } = render(<Input chips={chips} />);
-      const chip = container.querySelector(`.${styles.chip}`);
-      expect(chip).toBeInTheDocument();
-    });
-
     it('shows overflow count correctly', () => {
       const chips = Array.from({ length: 5 }, (_, i) => ({
-        label: `Tag${i + 1}`
+        children: `Tag${i + 1}`
       }));
       render(<Input chips={chips} maxChipsVisible={3} />);
       expect(screen.getByText('+2')).toBeInTheDocument();
     });
 
-    it('does not render dismiss button on chips when disabled', () => {
-      const handleRemove = vi.fn();
-      const chips = [{ label: 'Tag1', onRemove: handleRemove }];
-      render(<Input chips={chips} disabled />);
-      const dismissButton = screen.queryByRole('button', {
-        name: 'Remove Tag1'
-      });
-      expect(dismissButton).not.toBeInTheDocument();
-    });
-
-    it('chips are non-interactive when disabled', () => {
-      const handleRemove = vi.fn();
-      const chips = [{ label: 'Tag1', onRemove: handleRemove }];
+    it('disables chips from props when disabled', () => {
+      const chips = [
+        { children: ['Tag1', <Chip.Remove key='remove' onClick={vi.fn()} />] }
+      ];
       const { container } = render(<Input chips={chips} disabled />);
       const chip = container.querySelector(`.${styles.chip}`);
       expect(chip).toHaveAttribute('data-disabled');
-    });
-
-    it('chips remain interactive when not disabled', () => {
-      const handleRemove = vi.fn();
-      const chips = [{ label: 'Tag1', onRemove: handleRemove }];
-      render(<Input chips={chips} />);
-      const dismissButton = screen.getByRole('button', {
-        name: 'Remove Tag1'
-      });
-      fireEvent.click(dismissButton);
-      expect(handleRemove).toHaveBeenCalledTimes(1);
+      expect(
+        screen.getByRole('button', { name: 'Remove Tag1' })
+      ).toBeDisabled();
     });
   });
 

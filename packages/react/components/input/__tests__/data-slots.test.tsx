@@ -11,7 +11,11 @@ describe('Input data-slot contract', () => {
         trailingIcon={<span>t</span>}
         prefix='https://'
         suffix='.com'
-        chips={[{ label: 'One' }, { label: 'Two' }, { label: 'Three' }]}
+        chips={[
+          { children: 'One' },
+          { children: 'Two' },
+          { children: 'Three' }
+        ]}
         maxChipsVisible={2}
       />
     );
@@ -42,7 +46,11 @@ describe('Input data-slot contract', () => {
   it('renders one chip slot per visible chip', () => {
     const { container } = render(
       <Input
-        chips={[{ label: 'One' }, { label: 'Two' }, { label: 'Three' }]}
+        chips={[
+          { children: 'One' },
+          { children: 'Two' },
+          { children: 'Three' }
+        ]}
         maxChipsVisible={2}
       />
     );

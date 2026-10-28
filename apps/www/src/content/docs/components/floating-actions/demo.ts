@@ -16,9 +16,9 @@ export const preview = {
       size="large"
       color="accent"
       leadingIcon={<SuccessIcon />}
-      isDismissible
     >
       2 selected
+      <Chip.Remove />
     </Chip>
     <FloatingActions.Separator />
     <Button variant="outline" color="neutral" size="small">Move to</Button>
@@ -36,9 +36,9 @@ export const inlineDemo = {
       size="large"
       color="accent"
       leadingIcon={<SuccessIcon />}
-      isDismissible
     >
       2 selected
+      <Chip.Remove />
     </Chip>
     <FloatingActions.Separator />
     <Button variant="outline" color="neutral" size="small">Move to</Button>
@@ -76,9 +76,9 @@ export const variantsDemo = {
       size="large"
       color="accent"
       leadingIcon={<SuccessIcon />}
-      isDismissible
     >
       2 selected
+      <Chip.Remove />
     </Chip>
     <FloatingActions.Separator />
     <Button variant="outline" color="neutral" size="small">Move to</Button>
@@ -95,9 +95,9 @@ export const variantsDemo = {
       size="large"
       color="accent"
       leadingIcon={<SuccessIcon />}
-      isDismissible
     >
       2 selected
+      <Chip.Remove />
     </Chip>
     <FloatingActions.Separator />
     <Button variant="outline" color="neutral" size="small">Move to</Button>
@@ -117,9 +117,9 @@ export const bulkActionsDemo = {
       size="large"
       color="accent"
       leadingIcon={<SuccessIcon />}
-      isDismissible
     >
       5 selected
+      <Chip.Remove />
     </Chip>
     <FloatingActions.Separator />
     <Button variant="outline" color="neutral" size="small">Archive</Button>
@@ -174,9 +174,9 @@ export const scrollingDemo = {
             size="large"
             color="accent"
             leadingIcon={<SuccessIcon />}
-            isDismissible
           >
             2 selected
+            <Chip.Remove />
           </Chip>
           <FloatingActions.Separator />
           <Button variant="outline" color="neutral" size="small">Move to</Button>
@@ -211,9 +211,9 @@ const placementWrapper = (props: string) =>
       size="large"
       color="accent"
       leadingIcon={<SuccessIcon />}
-      isDismissible
     >
       2 selected
+      <Chip.Remove />
     </Chip>
     <FloatingActions.Separator />
     <Button variant="outline" color="neutral" size="small">Move to</Button>
@@ -247,9 +247,9 @@ export const groupDemo = {
       size="large"
       color="accent"
       leadingIcon={<SuccessIcon />}
-      isDismissible
     >
       3 selected
+      <Chip.Remove />
     </Chip>
     <FloatingActions.Separator />
     <FloatingActions.Group>
