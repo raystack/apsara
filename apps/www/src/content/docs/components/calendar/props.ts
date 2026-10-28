@@ -155,9 +155,9 @@ export interface RangePickerProps {
   dateFormat?: string;
 
   /**
-   * Fires on every step of range selection — not only on the completed range.
-   * Both fields are optional during partial selection; gate on `range.to` if
-   * you only want completed ranges.
+   * Fires on each day picked in the calendar. `from` is always set, and `to`
+   * is set only when the range is complete. Check `range.to` to handle only
+   * completed ranges.
    */
   onSelect?: (range: { from: Date | undefined; to?: Date }) => void;
 
