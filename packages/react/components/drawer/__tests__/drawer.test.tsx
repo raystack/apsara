@@ -1,9 +1,16 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { type ReactElement } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Button } from '~/components/button';
+import { getSlot } from '~/test-utils/data-slots';
 import { Drawer } from '../drawer';
 import styles from '../drawer.module.css';
 
@@ -68,6 +75,23 @@ describe('Drawer', () => {
         const drawer = screen.getByRole('dialog');
         expect(drawer.closest('body')).toBe(document.body);
       });
+    });
+
+    it('renders into the given container', async () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+      render(
+        <Drawer open>
+          <Drawer.Content container={container}>
+            {DRAWER_CONTENT}
+          </Drawer.Content>
+        </Drawer>
+      );
+
+      await waitFor(() => {
+        expect(container).toContainElement(screen.getByRole('dialog'));
+      });
+      container.remove();
     });
   });
 
@@ -247,6 +271,124 @@ describe('Drawer', () => {
         expect(dialog).toBeInTheDocument();
         expect(dialog).toHaveAttribute('aria-label', 'Drawer');
       });
+    });
+  });
+
+  describe('Swipe Area', () => {
+    const renderSwipeArea = (side?: 'top' | 'right' | 'bottom' | 'left') =>
+      render(
+        <Drawer side={side}>
+          <Drawer.SwipeArea data-testid='swipe-area' />
+          <Drawer.Content side={side}>{DRAWER_CONTENT}</Drawer.Content>
+        </Drawer>
+      ).getByTestId('swipe-area');
+
+    it('applies the swipe area class', () => {
+      expect(renderSwipeArea()).toHaveClass(styles.swipeArea);
+    });
+
+    it.each([
+      ['right', 'left'],
+      ['left', 'right'],
+      ['top', 'down'],
+      ['bottom', 'up']
+    ] as const)('opens a %s drawer with a %s swipe', (side, direction) => {
+      expect(renderSwipeArea(side)).toHaveAttribute(
+        'data-swipe-direction',
+        direction
+      );
+    });
+
+    it('follows a swipeDirection set on the root', () => {
+      const swipeArea = render(
+        <Drawer side='right' swipeDirection='down'>
+          <Drawer.SwipeArea data-testid='swipe-area' />
+        </Drawer>
+      ).getByTestId('swipe-area');
+      expect(swipeArea).toHaveAttribute('data-swipe-direction', 'up');
+    });
+
+    it('accepts its own swipeDirection', () => {
+      const swipeArea = render(
+        <Drawer side='right'>
+          <Drawer.SwipeArea data-testid='swipe-area' swipeDirection='up' />
+        </Drawer>
+      ).getByTestId('swipe-area');
+      expect(swipeArea).toHaveAttribute('data-swipe-direction', 'up');
+    });
+
+    it('marks the swipe area as disabled', () => {
+      const swipeArea = render(
+        <Drawer>
+          <Drawer.SwipeArea data-testid='swipe-area' disabled />
+        </Drawer>
+      ).getByTestId('swipe-area');
+      expect(swipeArea).toHaveAttribute('data-disabled');
+    });
+  });
+
+  describe('Indent', () => {
+    const IndentedDrawer = ({ open }: { open: boolean }) => (
+      <Drawer.Provider>
+        <Drawer.Indent data-testid='indent'>
+          <Drawer open={open} side='bottom'>
+            <Drawer.Content side='bottom'>{DRAWER_CONTENT}</Drawer.Content>
+          </Drawer>
+        </Drawer.Indent>
+      </Drawer.Provider>
+    );
+    const getBackground = () =>
+      getSlot(document.body, 'drawer-indent-background');
+
+    it('renders the background outside the indent', () => {
+      render(<IndentedDrawer open={false} />);
+      const indent = screen.getByTestId('indent');
+      expect(indent).toHaveClass(styles.indent);
+      expect(getBackground()).toHaveClass(styles.indentBackground);
+      expect(indent).not.toContainElement(getBackground());
+    });
+
+    it('is inactive while every drawer is closed', () => {
+      render(<IndentedDrawer open={false} />);
+      expect(screen.getByTestId('indent')).not.toHaveAttribute('data-active');
+      expect(getBackground()).not.toHaveAttribute('data-active');
+    });
+
+    it('becomes active when a drawer opens', async () => {
+      render(<IndentedDrawer open />);
+      await waitFor(() => {
+        expect(screen.getByTestId('indent')).toHaveAttribute('data-active');
+        expect(getBackground()).toHaveAttribute('data-active');
+      });
+    });
+  });
+
+  describe('Virtual Keyboard', () => {
+    const KeyboardDrawer = (props: { enableVirtualKeyboard?: boolean }) => (
+      <Drawer open side='bottom'>
+        <Drawer.Content side='bottom' {...props}>
+          <input aria-label='Name' />
+        </Drawer.Content>
+      </Drawer>
+    );
+    const getInset = () =>
+      getSlot(document.body, 'drawer-viewport')?.style.getPropertyValue(
+        '--drawer-keyboard-inset'
+      );
+
+    it('tracks the keyboard inset when enableVirtualKeyboard is set', async () => {
+      render(<KeyboardDrawer enableVirtualKeyboard />);
+      const input = await screen.findByLabelText('Name');
+      act(() => input.focus());
+      await waitFor(() => expect(getInset()).toBe('0px'));
+    });
+
+    it('does not track the keyboard inset by default', async () => {
+      render(<KeyboardDrawer />);
+      const input = await screen.findByLabelText('Name');
+      act(() => input.focus());
+      await act(() => new Promise(resolve => requestAnimationFrame(resolve)));
+      expect(getInset()).toBe('');
     });
   });
 });

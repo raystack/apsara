@@ -84,9 +84,55 @@ export interface ToastManagerAddOptions {
   leadingIcon?: React.ReactNode;
 
   /**
-   * Optional custom ID for the toast. Auto-generated if not provided. If a toast with this ID is open, it is updated in place.
+   * Shows the toast next to `anchor`, like a tooltip, instead of in the stack.
+   * Also takes `side`, `align`, `sideOffset`, and `alignOffset`.
+   *
+   * @remarks `{ anchor?: Element | null; side?: 'top' | 'right' | 'bottom' | 'left'; align?: 'start' | 'center' | 'end'; sideOffset?: number; alignOffset?: number }`
+   */
+  positionerProps?: ToastPositionerOptions;
+
+  /**
+   * Shows an arrow that points at the anchor. Only anchored toasts use it.
+   * @default false
+   */
+  showArrow?: boolean;
+
+  /**
+   * Optional custom ID for the toast. Auto-generated if not provided. If a toast with this ID is open, it is updated in place. Must be unique across stacked and anchored toasts.
    */
   id?: string;
+}
+
+/**
+ * Placement of an anchored toast, passed as `positionerProps`.
+ */
+export interface ToastPositionerOptions {
+  /** The element to show the toast next to. With `null`, the toast joins the stack. */
+  anchor?: Element | null;
+
+  /**
+   * Side of the anchor to show the toast on.
+   * @default "top"
+   */
+  side?: 'top' | 'right' | 'bottom' | 'left';
+
+  /**
+   * Alignment against the anchor.
+   * @default "center"
+   */
+  align?: 'start' | 'center' | 'end';
+
+  /**
+   * Distance in pixels from the anchor.
+   * @default 4, or 10 with `showArrow`
+   */
+  sideOffset?: number;
+
+  /**
+   * Offset in pixels along the alignment edge.
+   * @default 0
+   */
+  alignOffset?: number;
 }
 
 /**
@@ -103,6 +149,14 @@ export interface ToastManagerUpdateOptions {
   onRemove?: () => void;
   actionProps?: React.ComponentPropsWithoutRef<'button'>;
   leadingIcon?: React.ReactNode;
+  /**
+   * Placement of an anchored toast, merged with its current placement. It
+   * does not move a toast into or out of the stack.
+   *
+   * @remarks `{ anchor?: Element | null; side?: 'top' | 'right' | 'bottom' | 'left'; align?: 'start' | 'center' | 'end'; sideOffset?: number; alignOffset?: number }`
+   */
+  positionerProps?: ToastPositionerOptions;
+  showArrow?: boolean;
 }
 
 /**
@@ -113,7 +167,8 @@ export interface ToastManagerUpdateOptions {
  */
 export interface ToastManagerPromiseOptions<Value = unknown> {
   /**
-   * Toast shown while the promise is pending. Auto-dismiss is disabled.
+   * Toast shown while the promise is pending. Auto-dismiss is disabled. Its
+   * `positionerProps.anchor` decides whether the toast is anchored.
    *
    * @remarks `string | ToastManagerUpdateOptions`
    */

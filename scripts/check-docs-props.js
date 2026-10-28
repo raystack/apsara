@@ -37,6 +37,8 @@ const CONFIG = {
   },
   docsOnly: {
     ToastObject: 'Base UI type of each item in `toasts`.',
+    ToastPositionerOptions:
+      'Base UI `positionerProps` of an anchored toast. Apsara does not export it.',
     ThemeIconProps: 'The `icons` prop of `Theme`, documented on the Icons page.'
   },
   inherits: {
@@ -151,6 +153,8 @@ function collectProps(checker, types) {
       checker.getApparentType(member)
     )) {
       const name = symbol.getName();
+      // Symbol keys are internal and cannot be written in a props table.
+      if (name.startsWith('__@')) continue;
       const optional = (symbol.flags & ts.SymbolFlags.Optional) !== 0;
       const entry = props.get(name) ?? {
         symbols: [],
