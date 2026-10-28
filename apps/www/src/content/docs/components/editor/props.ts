@@ -14,7 +14,7 @@ export interface EditorProps {
   /**
    * Fires once per doc change. It does not fire for changes made through
    * `value`, or for labels from `resolveMentions`. The value is always editor
-   * JSON.
+   * JSON. With the `markdown` prop, `details` is `EditorMarkdownChangeDetails`.
    */
   onValueChange?: (value: EditorJSON, details: EditorChangeDetails) => void;
 

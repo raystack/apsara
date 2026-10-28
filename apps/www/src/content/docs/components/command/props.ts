@@ -58,7 +58,7 @@ export interface CommandInputProps {
   /** Placeholder text for the input. */
   placeholder?: string;
 
-  /** Icon rendered at the start of the input. Defaults to a magnifying glass. */
+  /** Icon rendered at the start of the input. */
   leadingIcon?: React.ReactNode;
 
   /**

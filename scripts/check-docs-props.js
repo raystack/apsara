@@ -108,8 +108,9 @@ function findFiles(dir, name) {
 const INHERITS_TEXT = component =>
   new RegExp(`Inherits all \`?${component.replace('.', '\\.')}\`? props`);
 
+// TypeScript reports file names with `/` on every platform.
 function isExternal(file) {
-  return file.includes(`${path.sep}node_modules${path.sep}`);
+  return file.includes('/node_modules/');
 }
 
 function isDeprecated(symbol) {
