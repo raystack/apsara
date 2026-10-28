@@ -68,10 +68,18 @@
   pointer-events: none;
 }
 
-.label {
+.groupLabel {
   padding: var(--rs-space-2) var(--rs-space-3);
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-mini);
+}
+
+.empty:not(:empty) {
+  padding: var(--rs-space-4);
+  color: var(--rs-color-foreground-base-secondary);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
 }
 
 .separator {

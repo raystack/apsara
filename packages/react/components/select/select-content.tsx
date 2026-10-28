@@ -75,6 +75,7 @@ export function SelectContent({
     );
   }
 
+  // TODO @rohanchkrabrty: Add select.portal when it supports keepMounted
   return (
     <SelectPrimitive.Positioner
       sideOffset={sideOffset}
