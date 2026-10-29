@@ -37,9 +37,17 @@ export function remarkTypeTableToMd() {
         if (!value || typeof value === 'string' || !value.value) return;
 
         const doc = JSON.parse(value.value) as GeneratedDoc;
+        // `typeTableToMarkdown` prints `simplifiedType`, which is the short
+        // label such as `function`. The LLM text gets the full type.
+        const entries = doc.entries.map(entry => ({
+          ...entry,
+          simplifiedType: entry.type
+            .replace(/\s+/g, ' ')
+            .replace(/ \| undefined$/, '')
+        }));
         parent.children.splice(index, 1, {
           type: 'html',
-          value: typeTableToMarkdown(doc)
+          value: typeTableToMarkdown({ ...doc, entries })
         });
       }
     );
