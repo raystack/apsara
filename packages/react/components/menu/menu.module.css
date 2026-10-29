@@ -53,8 +53,8 @@
   padding: var(--rs-space-2);
 }
 
-/* Groups stay rendered while filtering, so a group with no matches is an empty child. */
-.comboboxContent:not(:has(> :not(:empty))) {
+/* A group with no matches stays rendered with `hidden`. */
+.comboboxContent:not(:has(> :not(:empty, [hidden]))) {
   padding: 0;
 }
 
@@ -70,7 +70,8 @@
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
 }
 
-.comboboxContainer:not(:has(.comboboxContent > :not(:empty))) .comboboxInput {
+.comboboxContainer:not(:has(.comboboxContent > :not(:empty, [hidden]), .empty))
+  .comboboxInput {
   border-bottom: none;
 }
 
