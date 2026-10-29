@@ -109,7 +109,6 @@ Do not worry if you miss a step. CI and the maintainers will help.
 
 - PR Title: checks that the title follows the [commit convention](#commit-convention). It runs again when you edit the title.
 - Tests: runs the Vitest suite and builds the library on Node 22 and 24. To reproduce it, run `pnpm test:apsara` and `pnpm build:apsara`.
-- Docs: tests the docs tooling and checks that the props tables match the component types. To reproduce it, run `pnpm test:docs` and `pnpm check:docs-props`.
 - Canary Release: publishes a preview build to [pkg.pr.new](https://pkg.pr.new) and comments the install command on the PR. See [Canary releases](#canary-releases).
 - Vercel: deploys a preview of the docs site with your changes.
 
