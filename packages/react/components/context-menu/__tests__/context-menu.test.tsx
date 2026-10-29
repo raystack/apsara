@@ -224,12 +224,13 @@ describe('ContextMenu', () => {
         </ContextMenu>
       );
 
-      const input = screen.getByRole('combobox');
+      const input = screen.getByRole('searchbox');
       fireEvent.change(input, { target: { value: 'grid' } });
-      expect(screen.getAllByRole('option')).toHaveLength(1);
+      expect(screen.queryAllByRole('menuitem')).toHaveLength(0);
+      expect(screen.getAllByRole('menuitemcheckbox')).toHaveLength(1);
 
       fireEvent.change(input, { target: { value: 'zzz' } });
-      expect(screen.queryAllByRole('option')).toHaveLength(0);
+      expect(screen.queryAllByRole('menuitemcheckbox')).toHaveLength(0);
     });
   });
 });
