@@ -118,9 +118,9 @@ Renders a text label displayed in the header.
 
 ### LanguageSelect
 
-Renders a language selection dropdown container. Set `value`, `defaultValue` and `onValueChange` on the `CodeBlock` root, not here.
+Renders a language selection dropdown container. Set `value`, `defaultValue` and `onValueChange` on the `CodeBlock` root.
 
-- Inherits all Select props
+- Inherits all Select props for a single selection
 
 <auto-type-table path="./props.ts" name="CodeBlockLanguageSelectProps" />
 
@@ -144,7 +144,7 @@ Renders one language in the dropdown. Selecting it shows the `CodeBlock.Code` wi
 
 Renders a button for copying code to clipboard.
 
-- Inherits all CopyButton props
+- Inherits all CopyButton props except `text`
 
 <auto-type-table path="./props.ts" name="CodeBlockCopyButtonProps" />
 

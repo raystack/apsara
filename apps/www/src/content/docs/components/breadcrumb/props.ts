@@ -63,7 +63,7 @@ export interface BreadcrumbProps {
 export interface BreadcrumbSeparatorProps {
   /**
    * Custom separator between items
-   * @defaultValue "/"
+   * @defaultValue <ChevronRightIcon />
    */
   children?: ReactNode;
   /** Custom CSS class names */

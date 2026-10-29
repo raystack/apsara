@@ -55,7 +55,10 @@ export interface CommandRootProps {
 }
 
 export interface CommandInputProps {
-  /** Placeholder text for the input. */
+  /**
+   * Placeholder text for the input.
+   * @defaultValue "Search..."
+   */
   placeholder?: string;
 
   /** Icon rendered at the start of the input. */
