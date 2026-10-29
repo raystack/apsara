@@ -14,7 +14,10 @@ export const radiusClasses = {
   full: styles['radius-full']
 } satisfies Record<Radius, string>;
 
-export const radiusVariants = { radius: radiusClasses };
+export const radiusVariants = {
+  /** Corner radius for this component only. Defaults to the theme's `radius`. */
+  radius: radiusClasses
+};
 
 /**
  * The `radius` override alone, for surfaces with no cva of their own; `''` when
