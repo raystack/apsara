@@ -16,7 +16,10 @@ Import and assemble the component:
 import { FloatingActions, Chip, Button } from "@raystack/apsara";
 
 <FloatingActions aria-label="Selection actions">
-  <Chip isDismissible>2 selected</Chip>
+  <Chip>
+    2 selected
+    <Chip.Remove />
+  </Chip>
   <FloatingActions.Separator />
   <Button>Move to</Button>
   <Button>Actions</Button>

@@ -9,7 +9,7 @@ import {
   variantsDemo,
   sizesDemo,
   colorDemo,
-  dismissableDemo,
+  removeDemo,
   iconsDemo,
 } from "./demo.ts";
 
@@ -22,12 +22,14 @@ Import and assemble the component:
 ```tsx
 import { Chip } from "@raystack/apsara";
 
-<Chip />
+<Chip>
+  <Chip.Remove />
+</Chip>
 ```
 
 ## Usage
 
-Appearance first, meaning variant, size and color, then the two things a chip can carry: icons and a dismiss action.
+Appearance first, meaning variant, size and color, then the two things a chip can carry: icons and a remove button.
 
 ### Variant
 
@@ -56,11 +58,13 @@ Chips can include leading and trailing icons to provide additional context or ac
 
 <Demo data={iconsDemo} />
 
-### Dismissible
+### Remove button
 
-Chips can be made dismissible by adding the isDismissible prop and an onDismiss handler.
+Add `Chip.Remove` as the last child to show a remove button. Handle the removal in its `onClick`. The button is named "Remove" plus the chip text, and it is disabled when the chip is disabled.
 
-<Demo data={dismissableDemo} />
+<Demo data={removeDemo} />
+
+To render the button as another element, pass `render`. For example, `Combobox` renders it as Base UI's `Combobox.ChipRemove`.
 
 ## API Reference
 
@@ -68,7 +72,13 @@ Renders a compact element for tags, labels, or attributes.
 
 <auto-type-table path="./props.ts" name="ChipProps" />
 
-The chip renders a `<button>` when `onClick` is set and it is not dismissible, and a `<span>` otherwise, so `ref` points to whichever element is rendered.
+The chip renders a `<button>` when `onClick` is set and it has no `Chip.Remove` child, and a `<span>` otherwise, so `ref` points to whichever element is rendered.
+
+### Remove Props
+
+A button that removes the chip. Place it as a direct child of `Chip`.
+
+<auto-type-table path="./props.ts" name="ChipRemoveProps" />
 
 ### Slots
 
@@ -78,9 +88,9 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 |------|---------|
 | `chip` | The root element (`<button>` when interactive, `<span>` otherwise) |
 | `chip-leading-icon` | Wrapper around `leadingIcon` (when set) |
-| `chip-trailing-icon` | Wrapper around `trailingIcon` (when set and not dismissible) |
-| `chip-dismiss` | The dismiss button (when `isDismissible`) |
-| `chip-dismiss-icon` | The dismiss icon (when `isDismissible`) |
+| `chip-trailing-icon` | Wrapper around `trailingIcon` (when set) |
+| `chip-remove` | The `Chip.Remove` button |
+| `chip-remove-icon` | The icon inside `Chip.Remove` |
 
 ## Accessibility
 

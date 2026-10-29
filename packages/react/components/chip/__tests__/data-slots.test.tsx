@@ -13,14 +13,14 @@ describe('Chip data-slot contract', () => {
     expectSlots(container, ['chip', 'chip-leading-icon', 'chip-trailing-icon']);
   });
 
-  it('exposes dismiss slots when dismissible', () => {
+  it('exposes remove slots with Chip.Remove', () => {
     const { container } = render(
-      <Chip isDismissible onDismiss={vi.fn()}>
+      <Chip>
         Label
+        <Chip.Remove />
       </Chip>
     );
-    expectSlots(container, ['chip', 'chip-dismiss', 'chip-dismiss-icon']);
-    expect(getSlot(container, 'chip-trailing-icon')).toBeNull();
+    expectSlots(container, ['chip', 'chip-remove', 'chip-remove-icon']);
   });
 
   it('keeps the root slot when rendered as an interactive button', () => {
@@ -32,7 +32,7 @@ describe('Chip data-slot contract', () => {
     const { container } = render(<Chip>Label</Chip>);
     expect(getSlot(container, 'chip-leading-icon')).toBeNull();
     expect(getSlot(container, 'chip-trailing-icon')).toBeNull();
-    expect(getSlot(container, 'chip-dismiss')).toBeNull();
+    expect(getSlot(container, 'chip-remove')).toBeNull();
   });
 
   it('lets callers override the root slot via props', () => {
