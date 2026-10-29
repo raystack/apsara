@@ -26,7 +26,6 @@ const relative = (s: string): string =>
 
 const tsconfig: GeneratorOptions = {
   tsconfigPath: relative('../tsconfig.json'),
-  basePath: relative('../'),
   cache: false
 };
 
