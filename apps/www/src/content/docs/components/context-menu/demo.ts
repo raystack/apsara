@@ -145,6 +145,7 @@ export const autocompleteDemo = {
         <Text>Right click here</Text>
       </ContextMenu.Trigger>
       <ContextMenu.Content searchPlaceholder="Search">
+        <ContextMenu.EmptyState>No results found</ContextMenu.EmptyState>
         <ContextMenu.Group>
           <ContextMenu.Label>Heading</ContextMenu.Label>
           <ContextMenu.Item>Assign member...</ContextMenu.Item>
