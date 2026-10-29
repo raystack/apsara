@@ -93,6 +93,28 @@ export interface SelectTriggerProps {
   'aria-label'?: string;
 }
 
+export interface SelectValueProps {
+  /** Text shown when no item is selected. */
+  placeholder?: string;
+
+  /**
+   * Content shown in place of the selected item's label.
+   * A function receives the selected item, or an array of items when `multiple` is set.
+   *
+   * @remarks `ReactNode | function`
+   */
+  children?:
+    | React.ReactNode
+    | ((
+        value?:
+          | { value: string; leadingIcon?: React.ReactNode }
+          | { value: string; leadingIcon?: React.ReactNode }[]
+      ) => React.ReactNode);
+
+  /** Additional CSS class names */
+  className?: string;
+}
+
 export interface SelectContentProps {
   /** Placeholder text for the autocomplete search input
    * @default "Search..."
@@ -158,6 +180,21 @@ export interface SelectGroupProps {
 }
 
 export interface SelectLabelProps {
+  /**
+   * Whether the select is required. When `false`, an optional
+   * indicator (see `optionalText`) is rendered next to the label.
+   */
+  required?: boolean;
+
+  /**
+   * Text rendered next to the label when `required={false}`.
+   * @defaultValue "(optional)"
+   */
+  optionalText?: string;
+
+  /** Text rendered next to the label when `required={true}`. No indicator is rendered if this is omitted. */
+  requiredText?: string;
+
   /** Additional CSS class names */
   className?: string;
 
@@ -168,6 +205,27 @@ export interface SelectLabelProps {
    * @remarks `ReactElement | function`
    */
   render?: React.ReactElement;
+}
+
+export interface SelectGroupLabelProps {
+  /** Additional CSS class names */
+  className?: string;
+
+  /**
+   * Allows rendering as a different element.
+   * Accepts a React element or a function that receives props and returns an element.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?: React.ReactElement;
+}
+
+export interface SelectEmptyProps {
+  /** Content shown when the list has no items, or when no item matches the search. */
+  children?: React.ReactNode;
+
+  /** Additional CSS class names */
+  className?: string;
 }
 
 export interface SelectSeparatorProps {

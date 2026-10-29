@@ -14,6 +14,7 @@ import {
   autocompleteDemo,
   multipleDemo,
   controlledDemo,
+  labelDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -26,10 +27,14 @@ Import and assemble the component:
 import { Select } from "@raystack/apsara";
 
 <Select>
-  <Select.Trigger />
+  <Select.Label />
+  <Select.Trigger>
+    <Select.Value />
+  </Select.Trigger>
   <Select.Content>
+    <Select.Empty />
     <Select.Group>
-      <Select.Label />
+      <Select.GroupLabel />
       <Select.Item />
     </Select.Group>
     <Select.Separator />
@@ -49,9 +54,15 @@ A trigger and a list of items. `Select.Value` renders the current selection in t
 
 ### Icon
 
-You can pass `leadingIcon` prop to Select.Item to include items
+Pass `leadingIcon` to `Select.Item` to show an icon before the item text.
 
 <Demo data={iconDemo} />
+
+### Label
+
+`Select.Label` renders a visible label linked to the trigger. Clicking it focuses the trigger.
+
+<Demo data={labelDemo} />
 
 ### Size
 
@@ -111,6 +122,12 @@ The button that triggers the Select.
 
 <auto-type-table path="./props.ts" name="SelectTriggerProps" />
 
+### Value
+
+Shows the selected item's label and icon in the trigger, or the placeholder when no item is selected.
+
+<auto-type-table path="./props.ts" name="SelectValueProps" />
+
 ### Content
 
 The container that holds the Select items.
@@ -133,9 +150,21 @@ A way to group related Select items together.
 
 ### Label
 
-Renders a label in a Select group. This component can only be used inside Select.Group
+A visible label linked to the trigger.
 
 <auto-type-table path="./props.ts" name="SelectLabelProps" />
+
+### GroupLabel
+
+The label of a `Select.Group`. Use it only inside `Select.Group`.
+
+<auto-type-table path="./props.ts" name="SelectGroupLabelProps" />
+
+### Empty
+
+Shows its content when the list has no items, or when no item matches the search in autocomplete mode. Place it inside `Select.Content`.
+
+<auto-type-table path="./props.ts" name="SelectEmptyProps" />
 
 ### Separator
 
@@ -152,6 +181,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `select-trigger` | The trigger button that opens the menu |
 | `select-trigger-content` | Flex wrapper around the trigger's children |
 | `select-trigger-icon` | The chevron dropdown icon in the trigger |
+| `select-label` | The label linked to the trigger |
 | `select-value` | The `<span>` (or wrapper) showing the selected value or placeholder |
 | `select-value-content` | Inner wrapper around a single selected value |
 | `select-value-icon` | Leading icon of the selected value (when set) |
@@ -161,7 +191,8 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `select-search` | The search input (when autocomplete is enabled) |
 | `select-list` | The scrollable list of items |
 | `select-group` | A group of items |
-| `select-label` | The label of a group |
+| `select-group-label` | The label of a group |
+| `select-empty` | The message shown when the list has no matching item |
 | `select-separator` | A divider between items or groups |
 | `select-item` | An individual option row |
 | `select-item-icon` | Leading icon on an item (when set) |

@@ -375,6 +375,8 @@ export { Search, type SearchProps } from './components/search';
 export {
   Select,
   type SelectContentProps,
+  type SelectEmptyProps,
+  type SelectGroupLabelProps,
   type SelectGroupProps,
   type SelectItemProps,
   type SelectLabelProps,
