@@ -135,9 +135,10 @@
   background: var(--rs-color-border-base-primary);
 }
 
+/* Base UI treats a press anywhere in Chips as a press on the input, so Chips
+   takes no box and the input container sets the area. */
 .chips {
-  width: 100%;
-  min-width: 0;
+  display: contents;
 }
 
 /* Input sizes its trailing icon slot for one icon. */
