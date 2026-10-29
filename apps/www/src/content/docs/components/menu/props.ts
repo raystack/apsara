@@ -55,7 +55,7 @@ export interface MenuTriggerProps {
 }
 
 export interface MenuContentProps {
-  /** Placeholder text for the autocomplete search input
+  /** Placeholder text and accessible name for the autocomplete search input
    * @default "Search..."
    */
   searchPlaceholder?: string;
@@ -104,7 +104,7 @@ export interface MenuItemProps {
   /** Whether the item is disabled */
   disabled?: boolean;
 
-  /** Value of the item used for autocomplete matching. If not provided, `children` text content is used. */
+  /** Text used to match the search, in place of the `children` text. Only used in a searchable menu. */
   value?: string;
 
   /** Additional CSS class names */
@@ -140,7 +140,7 @@ export interface MenuCheckboxItemProps {
   /** Whether the item is disabled */
   disabled?: boolean;
 
-  /** Value of the item used for autocomplete matching. If not provided, `children` text content is used. */
+  /** Text used to match the search, in place of the `children` text. Only used in a searchable menu. */
   value?: string;
 
   /** Additional CSS class names */
@@ -170,7 +170,7 @@ export interface MenuRadioGroupProps {
 }
 
 export interface MenuRadioItemProps {
-  /** Value of the radio item. Also used for autocomplete matching when it is a string. */
+  /** Value of the radio item. */
   value: unknown;
 
   /** Whether to close the menu when the item is clicked
@@ -209,7 +209,7 @@ export interface MenuLinkItemProps {
   /** Icon element to display after item text */
   trailingIcon?: ReactNode;
 
-  /** Value of the item used for autocomplete matching. If not provided, `children` text content is used. */
+  /** Text used to match the search, in place of the `children` text. Only used in a searchable menu. */
   value?: string;
 
   /** Additional CSS class names */
@@ -285,12 +285,12 @@ export interface MenuSubTriggerProps {
   /** Icon element to display after trigger text. Defaults to a chevron right icon. */
   trailingIcon?: ReactNode;
 
-  /** Value used for autocomplete matching when inside a searchable parent menu */
+  /** Text used to match the search of a searchable parent menu, in place of the `children` text. */
   value?: string;
 }
 
 export interface MenuSubContentProps {
-  /** Placeholder text for the autocomplete search input
+  /** Placeholder text and accessible name for the autocomplete search input
    * @default "Search..."
    */
   searchPlaceholder?: string;

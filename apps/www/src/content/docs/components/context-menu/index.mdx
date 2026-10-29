@@ -70,7 +70,7 @@ Use `ContextMenu.Submenu`, `ContextMenu.SubmenuTrigger`, and `ContextMenu.Submen
 
 Pass `autocomplete` to the ContextMenu root. Each menu manages its own autocomplete state.
 
-- **`autocompleteMode="auto"`** is the default. Items filter as the user types, matched against each item's `value` prop or its children text.
+- **`autocompleteMode="auto"`** is the default. Items filter as the user types. Each item matches by its `value` prop, or by its children text when it has no `value`. Matching ignores case and accents.
 - **Submenus** opt in separately: pass `autocomplete` to `ContextMenu.Submenu`.
 
 <Demo data={autocompleteDemo} />
@@ -107,7 +107,7 @@ The container that holds the menu items. When autocomplete is enabled, renders a
 
 Individual clickable options within the menu. Built on top of [Base UI ContextMenu.Item](https://base-ui.com/react/components/context-menu).
 
-Renders as a `role='option'` when used in an autocomplete menu. By default, the item's `children` text content is used for matching, which can be overridden by passing a `value` prop.
+In a searchable menu, the item's `children` text is used for matching. Pass a `value` prop to match a different text.
 
 <auto-type-table path="./props.ts" name="ContextMenuItemProps" />
 
@@ -125,7 +125,7 @@ Groups related radio items and holds the selected value.
 
 ### RadioItem
 
-A menu item that works like a radio button in a `ContextMenu.RadioGroup`. Renders a dot before the label when checked. The `value` prop is also used for search matching when it is a string.
+A menu item that works like a radio button in a `ContextMenu.RadioGroup`. Renders a dot before the label when checked.
 
 <auto-type-table path="./props.ts" name="ContextMenuRadioItemProps" />
 
@@ -137,13 +137,13 @@ A menu item that renders an `<a>` element. Pass a router link to `render` to use
 
 ### Group
 
-A way to group related menu items together. When filtering is active, the group label is hidden.
+A way to group related menu items together. When filtering is active, a group with no matching items is hidden.
 
 <auto-type-table path="./props.ts" name="ContextMenuGroupProps" />
 
 ### Label
 
-Renders a label in a menu group. This component should be wrapped with ContextMenu.Group so the `aria-labelledby` is correctly set on the group element. Hidden when filtering is active.
+Renders a label in a menu group. This component should be wrapped with ContextMenu.Group so the `aria-labelledby` is correctly set on the group element.
 
 <auto-type-table path="./props.ts" name="ContextMenuLabelProps" />
 
@@ -155,7 +155,7 @@ Visual divider between menu items or groups. Hidden when filtering is active.
 
 ### EmptyState
 
-Placeholder content when there are no menu items to display.
+Placeholder content when there are no menu items to display. In a searchable menu, it shows only when no item matches the search, and screen readers announce it.
 
 <auto-type-table path="./props.ts" name="ContextMenuEmptyStateProps" />
 
@@ -171,7 +171,7 @@ Supports its own `autocomplete` prop to enable search functionality within the s
 
 The trigger item for a submenu. Renders with a trailing chevron icon by default. Accepts `leadingIcon` and `trailingIcon` props.
 
-When inside a searchable parent menu, the `value` prop can be used for autocomplete matching.
+When inside a searchable parent menu, the trigger matches by its `value` prop, or by its children text when it has no `value`. The root search does not search inside submenus.
 
 <auto-type-table path="./props.ts" name="ContextMenuSubTriggerProps" />
 
@@ -217,10 +217,12 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 - Arrow keys move through items, Enter activates the highlighted item, and
   ArrowRight/ArrowLeft open and close submenus.
 - With `autocomplete`, the popup becomes a `role="dialog"` containing a search
-  input, items render as `role="option"`, and focus stays in the input while
-  arrow keys move the highlight, and Escape first closes an open submenu.
+  input (`role="searchbox"`, labelled by `searchPlaceholder`) and a
+  `role="menu"` list. Items keep their menu roles. Focus stays in the input
+  while arrow keys move the highlight, and Escape first closes an open submenu.
 - `ContextMenu.Label` must be wrapped in `ContextMenu.Group` so the group is
   labelled via `aria-labelledby`.
 - Checkbox items use `role="menuitemcheckbox"` and radio items use
-  `role="menuitemradio"`, both with `aria-checked`. In a searchable menu they
-  render as `role="option"` and keep `aria-checked`.
+  `role="menuitemradio"`, both with `aria-checked`.
+- In a searchable menu, `ContextMenu.EmptyState` is a `role="status"` live
+  region.
