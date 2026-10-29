@@ -37,6 +37,7 @@ describe('Combobox data-slot contract', () => {
     render(
       <Combobox>
         <Combobox.Input placeholder='Enter a fruit' />
+        <Combobox.Status />
         <Combobox.Content>
           <Combobox.Group>
             <Combobox.GroupLabel>Fruits</Combobox.GroupLabel>

@@ -9,8 +9,7 @@ import {
   useContext,
   useId,
   useMemo,
-  useRef,
-  useState
+  useRef
 } from 'react';
 import { useFieldContext } from '../field';
 
@@ -21,10 +20,7 @@ interface ComboboxContextValue<Value = string> {
   inputId: string;
   inputContainerRef: RefObject<HTMLDivElement | null>;
   value: Value | Value[] | null | undefined;
-  onValueChange?: (value: Value | Value[] | null) => void;
   getLabel: (value: Value) => string;
-  /** Counts the items that match the input when `items` is not set. */
-  registerMatch: () => () => void;
 }
 
 const ComboboxContext = createContext<
@@ -42,11 +38,6 @@ export const useComboboxContext = <
   }
   return context as ComboboxContextValue<Value>;
 };
-
-const MatchCountContext = createContext(0);
-
-/** Number of rendered items that match the input when `items` is not set. */
-export const useMatchCount = () => useContext(MatchCountContext);
 
 export interface BaseComboboxRootProps<Value, Item = Value>
   extends Omit<
@@ -103,23 +94,15 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
     name: 'Combobox',
     state: 'inputValue'
   });
-  // Base UI is always controlled, so a value set through the context (for
-  // example by removing a chip that is hidden behind "+N") reaches it.
   const [computedValue, setValueUnwrapped] = useControlled<
     Value | Value[] | null
   >({
     controlled: providedValue,
-    default: defaultValue ?? (multiple ? [] : null),
+    default: defaultValue ?? null,
     name: 'Combobox',
     state: 'value'
   });
-  const [matchCount, setMatchCount] = useState(0);
   const inputContainerRef = useRef<HTMLDivElement>(null);
-
-  const registerMatch = useCallback(() => {
-    setMatchCount(count => count + 1);
-    return () => setMatchCount(count => count - 1);
-  }, []);
 
   const handleInputValueChange = useCallback(
     (
@@ -172,20 +155,9 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
       inputId: id,
       inputContainerRef,
       value: computedValue,
-      onValueChange: handleValueChange,
-      getLabel,
-      registerMatch
+      getLabel
     }),
-    [
-      multiple,
-      inputValue,
-      items,
-      id,
-      computedValue,
-      handleValueChange,
-      getLabel,
-      registerMatch
-    ]
+    [multiple, inputValue, items, id, computedValue, getLabel]
   );
 
   return (
@@ -198,13 +170,14 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
         defaultInputValue={defaultInputValue}
         items={items}
         itemToStringLabel={itemToStringLabel}
-        value={computedValue}
+        value={providedValue}
+        defaultValue={defaultValue}
         id={id}
         required={resolvedRequired}
         modal
         {...props}
       >
-        <MatchCountContext value={matchCount}>{children}</MatchCountContext>
+        {children}
       </ComboboxPrimitive.Root>
     </ComboboxContext>
   );

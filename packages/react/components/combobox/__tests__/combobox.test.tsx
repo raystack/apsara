@@ -624,47 +624,6 @@ describe('Combobox chips', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('removes the last value on Backspace when chips overflow', async () => {
-    const user = userEvent.setup();
-    const handleValueChange = vi.fn();
-    render(
-      <BasicCombobox
-        multiple
-        defaultValue={['apple', 'banana', 'grapes', 'pineapple']}
-        onValueChange={handleValueChange}
-      />
-    );
-    expect(screen.getByText('+2')).toBeInTheDocument();
-
-    await user.click(screen.getByRole('combobox'));
-    await user.keyboard('{Backspace}');
-
-    expect(handleValueChange).toHaveBeenLastCalledWith([
-      'apple',
-      'banana',
-      'grapes'
-    ]);
-    expect(screen.getByText('+1')).toBeInTheDocument();
-  });
-
-  it('keeps the values on Backspace when read-only and chips overflow', async () => {
-    const user = userEvent.setup();
-    const handleValueChange = vi.fn();
-    render(
-      <BasicCombobox
-        multiple
-        readOnly
-        defaultValue={['apple', 'banana', 'grapes', 'pineapple']}
-        onValueChange={handleValueChange}
-      />
-    );
-    await user.click(screen.getByRole('combobox'));
-    await user.keyboard('{Backspace}');
-
-    expect(handleValueChange).not.toHaveBeenCalled();
-    expect(screen.getByText('+2')).toBeInTheDocument();
-  });
-
   it('removes a chip with its remove button', async () => {
     const user = userEvent.setup();
     const handleValueChange = vi.fn();
@@ -738,20 +697,40 @@ describe('Combobox.Clear', () => {
 
     expect(handleValueChange).toHaveBeenLastCalledWith([]);
   });
+
+  it('is disabled when Combobox.Input is disabled', () => {
+    render(
+      <Combobox multiple defaultValue={['apple']}>
+        <Combobox.Input
+          placeholder={PLACEHOLDER_TEXT}
+          disabled
+          showClearButton
+        />
+        <Combobox.Content>
+          <Combobox.Item value='apple'>Apple</Combobox.Item>
+        </Combobox.Content>
+      </Combobox>
+    );
+    expect(screen.getByRole('button', { name: 'Clear' })).toBeDisabled();
+  });
+});
+
+describe('Combobox disabled', () => {
+  it('disables the input when the root is disabled', () => {
+    render(<BasicCombobox disabled />);
+    expect(screen.getByRole('combobox')).toBeDisabled();
+  });
 });
 
 describe('Combobox.Empty', () => {
-  it('shows "No results" only when nothing matches', async () => {
+  it('renders "No results" outside the listbox by default', async () => {
     const user = userEvent.setup();
     render(<BasicCombobox />);
-    const input = screen.getByRole('combobox');
+    await user.type(screen.getByRole('combobox'), 'zzz');
 
-    await user.type(input, 'app');
-    await screen.findByText('Apple');
-    expect(screen.queryByText('No results')).not.toBeInTheDocument();
-
-    await user.type(input, 'zzz');
-    expect(await screen.findByText('No results')).toBeInTheDocument();
+    const empty = await screen.findByText(/^No results/);
+    expect(empty).toHaveAttribute('data-slot', 'combobox-empty');
+    expect(screen.getByRole('listbox')).not.toContainElement(empty);
   });
 
   it('works with items on the root', async () => {
@@ -798,13 +777,25 @@ describe('Combobox.Empty', () => {
 });
 
 describe('Combobox.Status', () => {
-  it('announces the number of matching items', async () => {
+  it('passes the number of matching items to its children', async () => {
     const user = userEvent.setup();
-    render(<BasicCombobox />);
+    render(
+      <Combobox items={FRUIT_OPTIONS.map(option => option.label)}>
+        <Combobox.Input placeholder={PLACEHOLDER_TEXT} />
+        <Combobox.Status>{count => `${count} results`}</Combobox.Status>
+        <Combobox.Content>
+          {(item: string) => (
+            <Combobox.Item key={item} value={item}>
+              {item}
+            </Combobox.Item>
+          )}
+        </Combobox.Content>
+      </Combobox>
+    );
     await user.type(screen.getByRole('combobox'), 'b');
 
     await waitFor(() => {
-      expect(screen.getByText('2 results')).toHaveAttribute('role', 'status');
+      expect(screen.getByText(/^2 results/)).toHaveAttribute('role', 'status');
     });
   });
 });

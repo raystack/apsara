@@ -6,7 +6,7 @@ import { Children, isValidElement, type ReactNode } from 'react';
 import { type Radius, radiusStyle } from '../../shared/radius';
 import { useThemeInjection } from '../theme/portal';
 import styles from './combobox.module.css';
-import { ComboboxEmpty, ComboboxStatus } from './combobox-misc';
+import { ComboboxEmpty } from './combobox-misc';
 import { useComboboxContext } from './combobox-root';
 
 export interface ComboboxContentProps<Item = unknown>
@@ -38,17 +38,14 @@ export const ComboboxContent = <Item,>({
   const { inputContainerRef } = useComboboxContext();
   const theme = useThemeInjection();
 
-  // Empty and Status are live regions. They sit outside the listbox, so they
-  // are taken out of the children and rendered before the list.
-  let empty: ReactNode = <ComboboxEmpty />;
-  let status: ReactNode = <ComboboxStatus />;
+  // Empty is a live region, and a listbox only allows options and groups, so
+  // it is taken out of the children and rendered before the list.
+  let empty: ReactNode = <ComboboxEmpty>No results</ComboboxEmpty>;
   let listChildren = children;
   if (typeof children !== 'function') {
     listChildren = Children.toArray(children).filter(child => {
-      if (!isValidElement(child)) return true;
-      if (child.type === ComboboxEmpty) empty = child;
-      else if (child.type === ComboboxStatus) status = child;
-      else return true;
+      if (!isValidElement(child) || child.type !== ComboboxEmpty) return true;
+      empty = child;
       return false;
     });
   }
@@ -76,7 +73,6 @@ export const ComboboxContent = <Item,>({
           finalFocus={finalFocus}
           data-slot='combobox-content'
         >
-          {status}
           {empty}
           <ComboboxPrimitive.List
             className={styles.list}

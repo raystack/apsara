@@ -30,9 +30,9 @@ import { Combobox } from "@raystack/apsara";
   <Combobox.Label />
   <Combobox.Input />
   <Combobox.Clear />
+  <Combobox.Status />
   <Combobox.Content>
     <Combobox.Empty />
-    <Combobox.Status />
     <Combobox.Group>
       <Combobox.GroupLabel />
       <Combobox.Item />
@@ -76,7 +76,7 @@ Pass the `multiple` prop to enable multi-select. Selected values appear as chips
 
 Each chip shows its value as text. To show a label instead, pass `itemToStringLabel` to the root. Values in the `{ value, label }` shape show their `label` without it.
 
-The input shows the first two chips and a "+N" count for the rest. Press Backspace in an empty input to remove the last value. Press Left Arrow at the start of the input to move focus to the chips. On a focused chip, press Backspace or Delete to remove it.
+The input shows the first two chips and a "+N" count for the rest. Press Backspace in an empty input to remove the last chip shown. Press Left Arrow at the start of the input to move focus to the chips. On a focused chip, press Backspace or Delete to remove it.
 
 <Demo data={multipleDemo} />
 
@@ -154,13 +154,13 @@ A button that clears the value and the input text. It renders [IconButton](/docs
 
 ### Empty Props
 
-The text shown when no item matches the input. `Combobox.Content` renders one with "No results" by default. Add `Combobox.Empty` as a direct child of `Combobox.Content` to change the text. Pass `null` as children to show nothing.
+The text shown when no item matches the input. `Combobox.Content` renders one with "No results" by default. Add `Combobox.Empty` as a direct child of `Combobox.Content` to change the text. Add it with no children to show nothing.
 
 <auto-type-table path="./props.ts" name="ComboboxEmptyProps" />
 
 ### Status Props
 
-A visually hidden live region. Screen readers announce its text when it changes. `Combobox.Content` renders one by default that announces the number of matching items, for example "3 results". Add `Combobox.Status` as a direct child of `Combobox.Content` to change the text, for example to announce loading.
+A visually hidden live region. Screen readers announce its text when it changes, for example to announce loading. Place it anywhere inside `Combobox`. Pass a function as children to get the number of matching items. The number is `null` when `items` is not set on the root.
 
 <auto-type-table path="./props.ts" name="ComboboxStatusProps" />
 
@@ -197,7 +197,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `combobox-clear` | The button that clears the value |
 | `combobox-positioner` | Wrapper that positions the popup |
 | `combobox-content` | The popup container |
-| `combobox-status` | The hidden live region that announces the number of results |
+| `combobox-status` | The hidden live region (when `Combobox.Status` is rendered) |
 | `combobox-empty` | The text shown when no item matches |
 | `combobox-list` | The scrollable list of items |
 | `combobox-group` | A group of related items |
@@ -221,7 +221,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 - The chips use Base UI's `Combobox.Chips`, which has `role="toolbar"`. Arrow
   keys move between chips, and Backspace or Delete removes the focused chip.
 - `Combobox.Empty` and `Combobox.Status` are polite live regions. Screen
-  readers announce "No results" and the number of matching items.
+  readers announce "No results" and the text of `Combobox.Status`.
 - Group labels use Base UI's `Combobox.GroupLabel`, which links the label to
   its group via `aria-labelledby`, so wrap `Combobox.GroupLabel` in `Combobox.Group`.
 - Wrap the Combobox with [Field](/docs/components/field) to associate a

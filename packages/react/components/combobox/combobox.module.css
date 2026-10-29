@@ -97,6 +97,10 @@
   padding: 0;
 }
 
+.content:has([role="option"]) .empty {
+  display: none;
+}
+
 .visually-hidden {
   position: absolute;
   /* Todo: var does not exist for 1px */

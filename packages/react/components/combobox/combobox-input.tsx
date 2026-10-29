@@ -10,8 +10,6 @@ import styles from './combobox.module.css';
 import { ComboboxClear } from './combobox-misc';
 import { useComboboxContext } from './combobox-root';
 
-const MAX_CHIPS_VISIBLE = 2;
-
 export interface ComboboxInputProps
   extends Omit<
     ComponentProps<typeof Input>,
@@ -30,61 +28,44 @@ export const ComboboxInput = ({
   showClearButton = false,
   ...props
 }: ComboboxInputProps) => {
-  const { multiple, inputContainerRef, value, onValueChange, getLabel } =
-    useComboboxContext();
-  const values = multiple && Array.isArray(value) ? value : [];
+  const { multiple, inputContainerRef, value, getLabel } = useComboboxContext();
   const chevron = <ChevronDownIcon />;
 
   const input = (
     <ComboboxPrimitive.Input
       ref={ref}
-      onKeyDown={event => {
-        // Base UI removes the last rendered chip on Backspace. When chips are
-        // hidden behind "+N", that is not the last value.
-        if (
-          event.key !== 'Backspace' ||
-          values.length <= MAX_CHIPS_VISIBLE ||
-          event.currentTarget.value !== '' ||
-          event.currentTarget.readOnly ||
-          event.ctrlKey ||
-          event.metaKey ||
-          event.altKey ||
-          event.shiftKey ||
-          event.baseUIHandlerPrevented
-        )
-          return;
-        event.preventBaseUIHandler();
-        onValueChange?.(values.slice(0, -1));
-      }}
+      disabled={disabled}
       render={
         <Input
           containerRef={inputContainerRef}
           trailingIcon={
             showClearButton ? (
               <Flex align='center' gap={2} className={styles.trailing}>
-                <ComboboxClear />
+                <ComboboxClear disabled={disabled} />
                 {chevron}
               </Flex>
             ) : (
               chevron
             )
           }
-          chips={values.map((val, index) => (
-            <Chip
-              key={index}
-              render={<ComboboxPrimitive.Chip />}
-              disabled={disabled}
-              data-slot='combobox-chip'
-            >
-              {getLabel(val)}
-              <Chip.Remove
-                render={<ComboboxPrimitive.ChipRemove />}
-                data-slot='combobox-chip-remove'
-              />
-            </Chip>
-          ))}
-          maxChipsVisible={MAX_CHIPS_VISIBLE}
-          disabled={disabled}
+          chips={
+            multiple && Array.isArray(value)
+              ? value.map((val, index) => (
+                  <Chip
+                    key={index}
+                    render={<ComboboxPrimitive.Chip />}
+                    disabled={disabled}
+                    data-slot='combobox-chip'
+                  >
+                    {getLabel(val)}
+                    <Chip.Remove
+                      render={<ComboboxPrimitive.ChipRemove />}
+                      data-slot='combobox-chip-remove'
+                    />
+                  </Chip>
+                ))
+              : undefined
+          }
           data-slot='combobox-input'
           {...props}
         />

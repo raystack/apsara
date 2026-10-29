@@ -2,12 +2,13 @@
 
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import type { ReactNode } from 'react';
 import { ClearIcon } from '~/icons';
 import { IconButton } from '../icon-button';
 import type { IconButtonProps } from '../icon-button/icon-button';
 import { Label, type LabelProps } from '../label';
 import styles from './combobox.module.css';
-import { useComboboxContext, useMatchCount } from './combobox-root';
+import { useComboboxContext } from './combobox-root';
 
 export type ComboboxLabelProps = Omit<LabelProps, 'htmlFor'>;
 
@@ -97,52 +98,45 @@ ComboboxClear.displayName = 'Combobox.Clear';
 
 export const ComboboxEmpty = ({
   className,
-  children = 'No results',
   ...props
-}: ComboboxPrimitive.Empty.Props) => {
-  const { hasItems } = useComboboxContext();
-  const matchCount = useMatchCount();
-  // Base UI only knows the filtered list when `items` is set on the root.
-  const showChildren = hasItems || matchCount === 0;
-
-  return (
-    <ComboboxPrimitive.Empty
-      className={cx(styles.empty, className)}
-      data-slot='combobox-empty'
-      {...props}
-    >
-      {showChildren ? children : null}
-    </ComboboxPrimitive.Empty>
-  );
-};
+}: ComboboxPrimitive.Empty.Props) => (
+  <ComboboxPrimitive.Empty
+    className={cx(styles.empty, className)}
+    data-slot='combobox-empty'
+    {...props}
+  />
+);
 ComboboxEmpty.displayName = 'Combobox.Empty';
 
-function countLeaves(items: readonly unknown[]) {
-  let count = 0;
-  for (const item of items) {
-    const group =
-      typeof item === 'object' && item !== null && 'items' in item
-        ? item.items
-        : undefined;
-    count += Array.isArray(group) ? group.length : 1;
-  }
-  return count;
+const isGroup = (item: unknown): item is { items: readonly unknown[] } =>
+  typeof item === 'object' &&
+  item !== null &&
+  Array.isArray((item as { items?: unknown }).items);
+
+const countItems = (items: readonly unknown[]) =>
+  items.reduce<number>(
+    (count, item) => count + (isGroup(item) ? item.items.length : 1),
+    0
+  );
+
+export interface ComboboxStatusProps
+  extends Omit<ComboboxPrimitive.Status.Props, 'children'> {
+  /** Text to announce. A function receives the number of matching items, or `null` without the `items` prop. */
+  children?: ReactNode | ((count: number | null) => ReactNode);
 }
 
 export const ComboboxStatus = ({
   className,
   children,
   ...props
-}: ComboboxPrimitive.Status.Props) => {
-  const { inputValue, hasItems } = useComboboxContext();
-  const filteredItems = ComboboxPrimitive.useFilteredItems();
-  const matchCount = useMatchCount();
-  const count = hasItems ? countLeaves(filteredItems) : matchCount;
-  // Combobox.Empty announces the zero case.
-  const message =
-    inputValue && count > 0
-      ? `${count} ${count === 1 ? 'result' : 'results'}`
-      : null;
+}: ComboboxStatusProps) => {
+  const { hasItems } = useComboboxContext();
+  const filteredItems = ComboboxPrimitive.useFilteredItems<unknown>();
+
+  const content =
+    typeof children === 'function'
+      ? children(hasItems ? countItems(filteredItems) : null)
+      : children;
 
   return (
     <ComboboxPrimitive.Status
@@ -150,7 +144,7 @@ export const ComboboxStatus = ({
       data-slot='combobox-status'
       {...props}
     >
-      {children ?? message}
+      {content}
     </ComboboxPrimitive.Status>
   );
 };

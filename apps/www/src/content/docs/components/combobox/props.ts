@@ -184,10 +184,7 @@ export interface ComboboxClearProps {
 }
 
 export interface ComboboxEmptyProps {
-  /**
-   * The text shown when no item matches.
-   * @default "No results"
-   */
+  /** The text shown when no item matches. */
   children?: React.ReactNode;
 
   /** Additional CSS class names. */
@@ -195,11 +192,8 @@ export interface ComboboxEmptyProps {
 }
 
 export interface ComboboxStatusProps {
-  /**
-   * The text to announce.
-   * @defaultValue The number of matching items, for example "3 results"
-   */
-  children?: React.ReactNode;
+  /** Text to announce. A function receives the number of matching items, or `null` without the `items` prop. */
+  children?: React.ReactNode | ((count: number | null) => React.ReactNode);
 
   /** Additional CSS class names. */
   className?: string;

@@ -1,7 +1,6 @@
 'use client';
 
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
-import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { cx } from 'class-variance-authority';
 import { ReactNode } from 'react';
 import { Checkbox } from '../checkbox';
@@ -29,19 +28,13 @@ export const ComboboxItem = ({
       ? children
       : undefined;
 
-  const { multiple, inputValue, hasItems, registerMatch } =
-    useComboboxContext();
+  const { multiple, inputValue, hasItems } = useComboboxContext();
 
   // When items prop is not provided on Root, use custom filtering
-  const hidden =
-    !hasItems && !!inputValue?.length && !getMatch(value, children, inputValue);
-
-  useIsoLayoutEffect(() => {
-    if (hasItems || hidden) return;
-    return registerMatch();
-  }, [hasItems, hidden, registerMatch]);
-
-  if (hidden) return null;
+  if (!hasItems && inputValue?.length) {
+    const isMatched = getMatch(value, children, inputValue);
+    if (!isMatched) return null;
+  }
 
   const element =
     typeof children === 'string' ? (

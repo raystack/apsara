@@ -139,7 +139,8 @@ export {
   type ComboboxInputProps,
   type ComboboxItemProps,
   type ComboboxLabelProps,
-  type ComboboxProps
+  type ComboboxProps,
+  type ComboboxStatusProps
 } from './components/combobox';
 export {
   Command,
