@@ -1,4 +1,3 @@
-import * as path from 'node:path';
 import {
   rehypeToc,
   remarkGfm,
@@ -13,23 +12,9 @@ import {
   frontmatterSchema,
   metaSchema
 } from 'fumadocs-mdx/config';
-import {
-  createGenerator,
-  GeneratorOptions,
-  remarkAutoTypeTable
-} from 'fumadocs-typescript';
-import { fileURLToPath } from 'url';
+import { remarkAutoTypeTable } from 'fumadocs-typescript';
+import { generator, transform } from '@/lib/type-table';
 import { SourceSchema, TagSchema } from '@/lib/types';
-
-const relative = (s: string): string =>
-  path.resolve(fileURLToPath(new URL(s, import.meta.url)));
-
-const tsconfig: GeneratorOptions = {
-  tsconfigPath: relative('../tsconfig.json'),
-  cache: false
-};
-
-const generator = createGenerator(tsconfig);
 
 export const docs = defineDocs({
   dir: 'src/content/docs',
@@ -58,7 +43,7 @@ export default defineConfig({
         remarkNpm,
         remarkStructure,
         // remarkInstall,
-        [remarkAutoTypeTable, { generator }]
+        [remarkAutoTypeTable, { generator, options: { transform } }]
       ];
     },
     rehypePlugins: () => [rehypeToc]
