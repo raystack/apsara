@@ -1,15 +1,12 @@
 'use client';
 
-import {
-  Autocomplete as AutocompletePrimitive,
-  ContextMenu as ContextMenuPrimitive
-} from '@base-ui/react';
+import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react';
 import { Cell, CellBaseProps } from '../menu/cell';
 import {
   CheckboxItemBase,
   MenuCheckboxItemProps
 } from '../menu/menu-checkbox-item';
-import { stopItemFocus, useMenuItemFilter } from '../menu/menu-item';
+import { stopItemFocus } from '../menu/menu-item';
 import { LinkItemBase, MenuLinkItemProps } from '../menu/menu-link-item';
 import {
   MenuRadioGroupProps,
@@ -17,6 +14,7 @@ import {
   RadioGroupBase,
   RadioItemBase
 } from '../menu/menu-radio';
+import { useMenuContext } from '../menu/menu-root';
 
 export interface ContextMenuItemProps
   extends ContextMenuPrimitive.Item.Props,
@@ -32,33 +30,19 @@ export const ContextMenuItem = ({
   render,
   ...props
 }: ContextMenuItemProps) => {
-  const { autocomplete, hidden } = useMenuItemFilter(value, children);
-
-  if (hidden) return null;
+  const { autocomplete } = useMenuContext();
 
   const cell = render ?? (
     <Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />
   );
 
-  if (autocomplete) {
-    return (
-      <AutocompletePrimitive.Item
-        data-slot='context-menu-item'
-        value={value}
-        render={<ContextMenuPrimitive.Item render={cell} />}
-        {...props}
-      >
-        {children}
-      </AutocompletePrimitive.Item>
-    );
-  }
-
   return (
     <ContextMenuPrimitive.Item
       data-slot='context-menu-item'
       render={cell}
+      label={autocomplete ? value : undefined}
       {...props}
-      onFocus={stopItemFocus}
+      onFocus={autocomplete ? props.onFocus : stopItemFocus}
     >
       {children}
     </ContextMenuPrimitive.Item>

@@ -1,6 +1,5 @@
 'use client';
 
-import { Autocomplete as AutocompletePrimitive } from '@base-ui/react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { cx } from 'class-variance-authority';
 import { ChevronRightIcon } from '~/icons';
@@ -9,7 +8,6 @@ import { useMenubarContext } from '../menubar/menubar';
 import { Cell, CellBaseProps } from './cell';
 import styles from './menu.module.css';
 import { useMenuContext } from './menu-root';
-import { getMatch } from './utils';
 
 export interface MenuTriggerProps extends MenuPrimitive.Trigger.Props {
   stopPropagation?: boolean;
@@ -61,38 +59,13 @@ export function MenuSubTrigger({
   leadingIcon,
   ...props
 }: MenuSubTriggerProps) {
-  const { parent, inputRef } = useMenuContext();
+  const { parent } = useMenuContext();
 
-  if (parent?.shouldFilter && !getMatch(value, children, parent?.inputValue)) {
-    return null;
-  }
-
-  const cell = <Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />;
   return (
     <MenuPrimitive.SubmenuTrigger
-      render={
-        parent?.autocomplete ? (
-          <AutocompletePrimitive.Item
-            value={value}
-            render={cell}
-            onPointerEnter={e => {
-              if (document?.activeElement !== parent?.inputRef?.current)
-                parent?.inputRef?.current?.focus();
-              props?.onPointerEnter?.(e);
-            }}
-            onKeyDown={e => {
-              requestAnimationFrame(() => {
-                inputRef?.current?.focus();
-              });
-              props?.onKeyDown?.(e);
-            }}
-          />
-        ) : (
-          cell
-        )
-      }
+      render={<Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />}
+      label={parent?.autocomplete ? value : undefined}
       {...props}
-      role={parent?.autocomplete ? 'option' : 'menuitem'}
       data-slot='menu-subtrigger'
     >
       {children}
