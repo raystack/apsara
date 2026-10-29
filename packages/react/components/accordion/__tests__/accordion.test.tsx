@@ -185,8 +185,7 @@ describe('Accordion', () => {
       render(<BasicAccordion hasDisabledItem />);
 
       const trigger = screen.getByRole('button', { name: ITEM_2_TEXT });
-      // Base UI uses aria-disabled instead of disabled attribute
-      expect(trigger).toHaveAttribute('aria-disabled', 'true');
+      expect(trigger).toBeDisabled();
     });
   });
 
