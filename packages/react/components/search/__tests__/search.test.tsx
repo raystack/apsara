@@ -97,7 +97,9 @@ describe('Search', () => {
 
     it('shows clear button when showClearButton and value exist', () => {
       render(<Search showClearButton value='test' />);
-      expect(screen.getByLabelText('Clear search')).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'Clear search' })
+      ).toBeInTheDocument();
     });
 
     it('renders clear button regardless of value (CSS hides it when empty)', () => {

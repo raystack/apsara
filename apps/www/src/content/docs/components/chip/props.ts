@@ -23,14 +23,6 @@ export interface ChipProps {
   /** ReactNode to display as an icon after the label */
   trailingIcon?: React.ReactNode;
 
-  /**
-   * Boolean to show a dismiss button (replaces trailingIcon)
-   */
-  isDismissible?: boolean;
-
-  /** Callback function when dismiss button is clicked */
-  onDismiss?: () => void;
-
   /** Disables the chip and blocks pointer clicks on it */
   disabled?: boolean;
 
@@ -57,4 +49,30 @@ export interface ChipProps {
 
   /** Ref to the rendered element. */
   ref?: React.Ref<HTMLSpanElement>;
+
+  /** Renders the chip as another element, or with a function that receives the chip props. */
+  render?: React.ReactElement | ((props: object) => React.ReactElement);
+}
+
+export interface ChipRemoveProps {
+  /** Called when the button is pressed. */
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+
+  /**
+   * Accessible name of the button.
+   * @defaultValue "Remove" plus the chip text
+   */
+  'aria-label'?: string;
+
+  /**
+   * The icon inside the button.
+   * @defaultValue <XIcon />
+   */
+  children?: React.ReactNode;
+
+  /** Renders the button as another element, or with a function that receives the button props. */
+  render?: React.ReactElement | ((props: object) => React.ReactElement);
+
+  /** Additional CSS class names */
+  className?: string;
 }
