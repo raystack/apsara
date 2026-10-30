@@ -117,7 +117,11 @@ export {
   type CheckboxGroupProps,
   type CheckboxProps
 } from './components/checkbox';
-export { Chip, type ChipProps } from './components/chip';
+export {
+  Chip,
+  type ChipProps,
+  type ChipRemoveProps
+} from './components/chip';
 export {
   CodeBlock,
   type CodeBlockCodeProps,
@@ -130,10 +134,13 @@ export { Collapsible } from './components/collapsible';
 export * from './components/color-picker';
 export {
   Combobox,
+  type ComboboxClearProps,
   type ComboboxContentProps,
   type ComboboxInputProps,
   type ComboboxItemProps,
-  type ComboboxProps
+  type ComboboxLabelProps,
+  type ComboboxProps,
+  type ComboboxStatusProps
 } from './components/combobox';
 export {
   Command,

@@ -7,6 +7,51 @@ One section per release, newest first, with only the changes that need action
 from you. The full record of every release, features and fixes included, is
 on [GitHub releases](https://github.com/raystack/apsara/releases).
 
+## Unreleased: `Chip.Remove` replaces the dismiss props
+
+### 1. Move `isDismissible` and `onDismiss` to `Chip.Remove`
+
+`Chip` has no `isDismissible` or `onDismiss`. Add `Chip.Remove` as the last
+child, and move the handler to its `onClick`.
+
+```tsx
+// Before
+<Chip isDismissible onDismiss={handleRemove}>Tag</Chip>
+
+// After
+<Chip>
+  Tag
+  <Chip.Remove onClick={handleRemove} />
+</Chip>
+```
+
+The remove button slots are `chip-remove` and `chip-remove-icon`. They were
+`chip-dismiss` and `chip-dismiss-icon`. A `trailingIcon` no longer hides when
+the chip has a remove button.
+
+### 2. Pass chip props or elements to `Input` `chips`
+
+Each item in `Input` `chips` is `Chip` props or a `Chip` element. `label` is
+now `children`. For a removable chip, pass an element with `Chip.Remove`.
+
+```tsx
+// Before
+<Input chips={[{ label: 'Tag', onRemove: handleRemove }]} />
+
+// After
+<Input
+  chips={[
+    <Chip key="tag">
+      Tag
+      <Chip.Remove onClick={handleRemove} />
+    </Chip>
+  ]}
+/>
+```
+
+A disabled input disables the chips that you pass as props. Chip elements
+render as given, so pass `disabled` to them.
+
 ## Unreleased: date filters compare whole days
 
 `DataView`, `DataTable` and `FilterChip` read and compare dates as calendar

@@ -14,7 +14,7 @@ const color = figma.selectedInstance.getEnum('Style', {
   Accent: 'accent'
 });
 // State (Default/Hover/Active) is visual-only, with no code counterpart, so it is intentionally unmapped.
-// children, dismiss and the leading/trailing icons live on the nested
+// children, the remove button and the leading/trailing icons live on the nested
 // ".chip_structure" instance (guarded, since findInstance returns an ErrorHandle
 // when absent).
 const structure = (function () {
@@ -22,7 +22,7 @@ const structure = (function () {
   if (!nested || nested.type !== 'INSTANCE') {
     return {
       children: undefined,
-      isDismissible: undefined,
+      remove: '',
       leadingIcon: undefined,
       trailingIcon: undefined
     };
@@ -44,7 +44,11 @@ const structure = (function () {
       })(),
       false: undefined
     }),
-    isDismissible: nested.getBoolean('Dismiss'),
+    remove: nested.getBoolean('Dismiss', {
+      true: `
+      <Chip.Remove />`,
+      false: ''
+    }),
     // `leadingIcon` is driven by either the "Avatar" or the "Leading icon"
     // BOOLEAN. Avatar takes precedence and renders the connected <Avatar />.
     leadingIcon: nested.getBoolean('Avatar', {
@@ -76,11 +80,8 @@ export default {
   )}${figma.helpers.react.renderProp(
     'leadingIcon',
     structure.leadingIcon
-  )}${figma.helpers.react.renderProp(
-    'trailingIcon',
-    structure.trailingIcon
-  )}${figma.helpers.react.renderProp('isDismissible', structure.isDismissible)}>
-      ${figma.helpers.react.renderChildren(structure.children)}
+  )}${figma.helpers.react.renderProp('trailingIcon', structure.trailingIcon)}>
+      ${figma.helpers.react.renderChildren(structure.children)}${structure.remove}
     </Chip>`,
   metadata: { nestable: true }
 };
