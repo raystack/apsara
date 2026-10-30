@@ -8,22 +8,29 @@ import styles from './button.module.css';
 const button = cva(styles['button'], {
   variants: {
     ...radiusVariants,
+    /** Visual style of the button. */
     variant: {
       solid: styles['button-solid'],
       outline: styles['button-outline'],
       ghost: styles['button-ghost'],
       text: styles['button-text']
     },
+    /** Size of the button. */
     size: {
       small: styles['button-small'],
       normal: styles['button-normal']
     },
+    /**
+     * Whether the button is disabled.
+     * @default false
+     */
     disabled: {
       true: styles['button-disabled']
     },
     loading: {
       true: styles['button-loading']
     },
+    /** Color of the button. */
     color: {
       accent: styles['button-color-accent'],
       danger: styles['button-color-danger'],
@@ -127,11 +134,20 @@ const getLoaderOnlyClass = (size: 'small' | 'normal' | null) =>
 
 export type ButtonProps = VariantProps<typeof button> &
   ButtonPrimitive.Props & {
+    /** Shows a loading spinner inside the button. */
     loading?: boolean;
+    /** Text shown next to the loading spinner. */
     loaderText?: ReactNode;
+    /** Icon shown before the button text. */
     leadingIcon?: ReactNode;
+    /** Icon shown after the button text. */
     trailingIcon?: ReactNode;
+    /** Inline styles for the button. */
     style?: React.CSSProperties;
+    /** Whether the button renders a native `<button>`. Defaults to `false` when `render` is set, otherwise `true`. */
+    nativeButton?: boolean;
+    /** Whether the button stays focusable while disabled. Defaults to `true` while `loading`, otherwise `false`. */
+    focusableWhenDisabled?: boolean;
   };
 
 export const Button = ({
