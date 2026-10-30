@@ -55,10 +55,13 @@ export interface CommandRootProps {
 }
 
 export interface CommandInputProps {
-  /** Placeholder text for the input. */
+  /**
+   * Placeholder text for the input.
+   * @defaultValue "Search..."
+   */
   placeholder?: string;
 
-  /** Icon rendered at the start of the input. Defaults to a magnifying glass. */
+  /** Icon rendered at the start of the input. */
   leadingIcon?: React.ReactNode;
 
   /**
@@ -80,6 +83,9 @@ export interface CommandInputProps {
 export interface CommandContentProps {
   /** Additional CSS class names. */
   className?: string;
+
+  /** Ref to the list element. */
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 export interface CommandEmptyProps {
@@ -156,10 +162,10 @@ export interface CommandDialogProps {
   onOpenChange?: (open: boolean) => void;
 
   /**
-   * Whether the dialog is modal.
-   * @defaultValue true
+   * Whether the dialog is modal. `'trap-focus'` traps focus without locking scroll or outside interaction.
+   * @default true
    */
-  modal?: boolean;
+  modal?: boolean | 'trap-focus';
 }
 
 export interface CommandDialogContentProps {

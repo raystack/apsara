@@ -118,14 +118,14 @@ Creates a new toast and returns its unique ID. If `id` matches an open toast, it
 
 <auto-type-table path="./props.ts" name="ToastManagerAddOptions" />
 
-### createToastManager()
+### Toast.createToastManager()
 
 Factory that returns a fresh toast manager. The exported singleton `toastManager` is one such instance created at module load. Pass a custom manager to `<Toast.Provider toastManager={...}>` to scope toasts to that provider.
 
 ```tsx
-import { Toast, createToastManager } from '@raystack/apsara'
+import { Toast } from '@raystack/apsara'
 
-const manager = createToastManager()
+const manager = Toast.createToastManager()
 
 <Toast.Provider toastManager={manager}>
   <App />
@@ -156,7 +156,7 @@ The `promise(promise, options)` method drives a toast through the resolve/reject
 
 ### useToastManager()
 
-Hook for dispatching toasts from inside a component tree wrapped by `<Toast.Provider>`. Returns the same methods as `createToastManager()`, including built-in `leadingIcon` support, plus a reactive `toasts` array reflecting the stacked toasts on screen. The array does not include anchored toasts.
+Hook for dispatching toasts from inside a component tree wrapped by `<Toast.Provider>`. Returns the same methods as `Toast.createToastManager()`, including built-in `leadingIcon` support, plus a reactive `toasts` array reflecting the stacked toasts on screen. The array does not include anchored toasts.
 
 ```tsx
 import { useToastManager } from '@raystack/apsara'

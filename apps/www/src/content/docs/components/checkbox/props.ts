@@ -12,7 +12,7 @@ export interface CheckboxProps {
   /**
    * Event handler called when the state changes
    */
-  onCheckedChange?: (checked: boolean) => void;
+  onCheckedChange?: (checked: boolean, eventDetails: unknown) => void;
 
   /**
    * When true, the checkbox is in an indeterminate state
@@ -34,7 +34,7 @@ export interface CheckboxProps {
 
   /**
    * When true, the user must tick the checkbox before submitting a form.
-   * @defaultValue false
+   * @default the `required` of the surrounding `Field`, otherwise false
    */
   required?: boolean;
 
@@ -75,7 +75,7 @@ export interface CheckboxGroupProps {
   value?: string[];
 
   /** Event handler called when the checked values change. */
-  onValueChange?: (value: string[], event: Event) => void;
+  onValueChange?: (value: string[], eventDetails: unknown) => void;
 
   /**
    * All checkbox values in the group. Required when using a parent checkbox.

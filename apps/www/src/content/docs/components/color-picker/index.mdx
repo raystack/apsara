@@ -71,6 +71,8 @@ The pad and sliders compose inside a root. `formatColor` turns a value into a st
 
 The `ColorPicker` is composed of several subcomponents, each responsible for a specific aspect of color selection. The root component acts as a data provider for its children.
 
+- Inherits all Flex props
+
 <auto-type-table path="./props.ts" name="ColorPickerProps" />
 
 ### Area
@@ -88,6 +90,8 @@ Provides a slider for selecting the alpha value of the color.
 ### Mode
 
 Lets users switch between different color models (HEX, RGB, HSL, OKLCH) via a dropdown menu.
+
+- Inherits all Select.Trigger props
 
 <auto-type-table path="./props.ts" name="ColorPickerModeProps" />
 

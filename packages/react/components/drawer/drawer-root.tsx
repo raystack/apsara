@@ -15,7 +15,10 @@ const sideToSwipeDirection: Record<
 };
 
 export interface DrawerRootProps extends DrawerPrimitive.Root.Props {
-  /** The direction from which the drawer appears and can be swiped to dismiss. */
+  /**
+   * The edge the user swipes the drawer toward to dismiss it.
+   * @default 'right'
+   */
   side?: Side;
 }
 
