@@ -1,12 +1,10 @@
 'use client';
 
-import {
-  Autocomplete as AutocompletePrimitive,
-  Menu as MenuPrimitive
-} from '@base-ui/react';
+import { Menu as MenuPrimitive } from '@base-ui/react';
 import { ReactElement } from 'react';
 import { Cell, CellBaseProps } from './cell';
-import { stopItemFocus, useMenuItemFilter } from './menu-item';
+import { stopItemFocus } from './menu-item';
+import { useMenuContext } from './menu-root';
 
 export interface MenuLinkItemProps
   extends Omit<MenuPrimitive.LinkItem.Props, 'render'>,
@@ -27,9 +25,7 @@ export function LinkItemBase({
   render = <a />,
   ...props
 }: MenuLinkItemProps & { slotPrefix: string }) {
-  const { autocomplete, hidden } = useMenuItemFilter(value, children);
-
-  if (hidden) return null;
+  const { autocomplete } = useMenuContext();
 
   const cell = (
     <Cell
@@ -39,24 +35,13 @@ export function LinkItemBase({
     />
   );
 
-  if (autocomplete) {
-    return (
-      <AutocompletePrimitive.Item
-        data-slot={`${slotPrefix}-link-item`}
-        value={value}
-        render={<MenuPrimitive.LinkItem render={cell} {...props} />}
-      >
-        {children}
-      </AutocompletePrimitive.Item>
-    );
-  }
-
   return (
     <MenuPrimitive.LinkItem
       data-slot={`${slotPrefix}-link-item`}
       render={cell}
+      label={autocomplete ? value : undefined}
       {...props}
-      onFocus={stopItemFocus}
+      onFocus={autocomplete ? props.onFocus : stopItemFocus}
     >
       {children}
     </MenuPrimitive.LinkItem>

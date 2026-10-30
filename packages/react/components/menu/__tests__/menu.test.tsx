@@ -336,40 +336,46 @@ describe('Menu', () => {
     );
 
     const search = (value: string) => {
-      fireEvent.change(screen.getByRole('combobox'), { target: { value } });
+      fireEvent.change(screen.getByPlaceholderText('Search...'), {
+        target: { value }
+      });
     };
+    const items = () =>
+      Array.from(
+        document.querySelectorAll('[data-slot="menu-search-list"] [role]')
+      ).filter(el => !['group', 'separator', 'status'].includes(el.role!));
 
     it('filters items as the user types', async () => {
       await renderAndOpenDropdown(<SearchMenu />);
-      expect(screen.getAllByRole('option')).toHaveLength(9);
+      expect(items()).toHaveLength(9);
 
       search('set');
-      const options = screen.getAllByRole('option');
-      expect(options).toHaveLength(1);
-      expect(options[0]).toHaveTextContent('Settings');
+      expect(items()).toHaveLength(1);
+      expect(items()[0]).toHaveTextContent('Settings');
 
       search('view');
-      expect(screen.getAllByRole('option')).toHaveLength(2);
+      expect(items()).toHaveLength(2);
     });
 
     it('toggles checkbox and radio items and keeps the search', async () => {
       await renderAndOpenDropdown(<SearchMenu />);
 
       search('grid');
-      const checkbox = screen.getByRole('option', { name: 'Show grid' });
+      const checkbox = screen.getByRole('menuitemcheckbox', {
+        name: 'Show grid'
+      });
       expect(checkbox).toHaveAttribute('aria-checked', 'false');
       fireEvent.click(checkbox);
       expect(checkbox).toHaveAttribute('aria-checked', 'true');
-      expect(screen.getByRole('combobox')).toHaveValue('grid');
+      expect(screen.getByRole('searchbox')).toHaveValue('grid');
 
       search('view');
-      const board = screen.getByRole('option', { name: 'Board view' });
+      const board = screen.getByRole('menuitemradio', { name: 'Board view' });
       fireEvent.click(board);
       expect(board).toHaveAttribute('aria-checked', 'true');
-      expect(screen.getByRole('option', { name: 'List view' })).toHaveAttribute(
-        'aria-checked',
-        'false'
-      );
+      expect(
+        screen.getByRole('menuitemradio', { name: 'List view' })
+      ).toHaveAttribute('aria-checked', 'false');
     });
 
     it('keeps uncontrolled checkbox and radio state while filtering', async () => {
@@ -388,28 +394,120 @@ describe('Menu', () => {
           </Menu.Content>
         </Menu>
       );
-      const option = (name: string) => screen.getByRole('option', { name });
-      fireEvent.click(option('Show grid'));
-      fireEvent.click(option('Show rulers'));
-      fireEvent.click(option('Board view'));
+      const checkbox = (name: string) =>
+        screen.getByRole('menuitemcheckbox', { name });
+      const radio = (name: string) =>
+        screen.getByRole('menuitemradio', { name });
+      fireEvent.click(checkbox('Show grid'));
+      fireEvent.click(checkbox('Show rulers'));
+      fireEvent.click(radio('Board view'));
 
       search('view');
-      expect(option('Board view')).toHaveAttribute('aria-checked', 'true');
+      expect(radio('Board view')).toHaveAttribute('aria-checked', 'true');
 
       search('');
-      expect(option('Show grid')).toHaveAttribute('aria-checked', 'false');
-      expect(option('Show rulers')).toHaveAttribute('aria-checked', 'false');
-      expect(option('Board view')).toHaveAttribute('aria-checked', 'true');
+      expect(checkbox('Show grid')).toHaveAttribute('aria-checked', 'false');
+      expect(checkbox('Show rulers')).toHaveAttribute('aria-checked', 'false');
+      expect(radio('Board view')).toHaveAttribute('aria-checked', 'true');
     });
 
     it('renders link items as anchors', async () => {
       await renderAndOpenDropdown(<SearchMenu />);
-      const link = screen.getByRole('option', { name: 'Docs' });
+      const link = screen.getByRole('menuitem', { name: 'Docs' });
       expect(link.tagName).toBe('A');
       expect(link).toHaveAttribute('href', '/docs');
     });
 
-    it('renders the empty state without live region attributes', async () => {
+    it('labels the search input with the placeholder', async () => {
+      await renderAndOpenDropdown(<SearchMenu />);
+      expect(screen.getByRole('searchbox')).toHaveAttribute(
+        'aria-label',
+        'Search...'
+      );
+    });
+
+    it('sets aria-haspopup="dialog" on the trigger', () => {
+      render(<SearchMenu />);
+      expect(screen.getByText(TRIGGER_TEXT)).toHaveAttribute(
+        'aria-haspopup',
+        'dialog'
+      );
+    });
+
+    it('ignores accents when matching', async () => {
+      await renderAndOpenDropdown(
+        <Menu autocomplete>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content>
+            <Menu.Item>Café</Menu.Item>
+            <Menu.Item>Tea</Menu.Item>
+          </Menu.Content>
+        </Menu>
+      );
+      search('cafe');
+      expect(items()).toHaveLength(1);
+      expect(items()[0]).toHaveTextContent('Café');
+    });
+
+    it('matches the item value in place of its text', async () => {
+      await renderAndOpenDropdown(
+        <Menu autocomplete>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content>
+            <Menu.Item value='archive'>Store away</Menu.Item>
+          </Menu.Content>
+        </Menu>
+      );
+      search('store');
+      expect(items()).toHaveLength(0);
+
+      search('arch');
+      expect(items()).toHaveLength(1);
+    });
+
+    it('keeps the label of a matching group and hides other groups', async () => {
+      await renderAndOpenDropdown(
+        <Menu autocomplete>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content>
+            <Menu.Group>
+              <Menu.Label>Fruits</Menu.Label>
+              <Menu.Item>Apple</Menu.Item>
+            </Menu.Group>
+            <Menu.Group>
+              <Menu.Label>Vegetables</Menu.Label>
+              <Menu.Item>Carrot</Menu.Item>
+            </Menu.Group>
+          </Menu.Content>
+        </Menu>
+      );
+      search('apple');
+      expect(
+        screen.getByText('Fruits').closest('[data-slot="menu-group"]')
+      ).not.toHaveAttribute('hidden');
+      expect(screen.queryByText('Carrot')).not.toBeInTheDocument();
+      expect(
+        screen.getByText('Vegetables').closest('[data-slot="menu-group"]')
+      ).toHaveAttribute('hidden');
+    });
+
+    it('hides separators while the search is not empty', async () => {
+      await renderAndOpenDropdown(
+        <Menu autocomplete>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content>
+            <Menu.Item>Apple</Menu.Item>
+            <Menu.Separator />
+            <Menu.Item>Banana</Menu.Item>
+          </Menu.Content>
+        </Menu>
+      );
+      expect(screen.getByRole('separator')).toBeInTheDocument();
+      search('a');
+      expect(screen.queryByRole('separator')).not.toBeInTheDocument();
+    });
+
+    it('shows the empty state only when no item matches', async () => {
       await renderAndOpenDropdown(
         <Menu autocomplete>
           <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
@@ -419,10 +517,113 @@ describe('Menu', () => {
           </Menu.Content>
         </Menu>
       );
-      const empty = document.querySelector('[data-slot="menu-empty-state"]');
-      expect(empty).not.toHaveAttribute('role');
-      expect(empty).not.toHaveAttribute('aria-live');
-      expect(empty).not.toHaveAttribute('aria-atomic');
+      const empty = () =>
+        document.querySelector('[data-slot="menu-empty-state"]');
+      expect(empty()).toBeNull();
+
+      search('zzz');
+      expect(empty()).toHaveTextContent('No results');
+      expect(empty()).toHaveAttribute('role', 'status');
+      expect(empty()).toHaveAttribute('aria-live', 'polite');
+    });
+
+    it('keeps every item in manual mode', async () => {
+      await renderAndOpenDropdown(
+        <Menu autocomplete autocompleteMode='manual'>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content>
+            <Menu.Item>Apple</Menu.Item>
+            <Menu.Item>Banana</Menu.Item>
+          </Menu.Content>
+        </Menu>
+      );
+      search('zzz');
+      expect(items()).toHaveLength(2);
+    });
+
+    describe('Submenus', () => {
+      const NestedMenu = ({
+        searchableSubmenu
+      }: {
+        searchableSubmenu?: boolean;
+      }) => (
+        <Menu autocomplete>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content>
+            <Menu.Item>Edit</Menu.Item>
+            <Menu.Submenu autocomplete={searchableSubmenu || undefined}>
+              <Menu.SubmenuTrigger>Share</Menu.SubmenuTrigger>
+              <Menu.SubmenuContent searchPlaceholder='Search share'>
+                <Menu.Item>Copy link</Menu.Item>
+                <Menu.Item>Email</Menu.Item>
+              </Menu.SubmenuContent>
+            </Menu.Submenu>
+          </Menu.Content>
+        </Menu>
+      );
+
+      it('filters submenu triggers by their text and not their items', async () => {
+        await renderAndOpenDropdown(<NestedMenu />);
+        search('shar');
+        expect(screen.getByText('Share')).toBeInTheDocument();
+        expect(screen.queryByText('Edit')).not.toBeInTheDocument();
+
+        search('copy');
+        expect(screen.queryByText('Share')).not.toBeInTheDocument();
+      });
+
+      it('filters a searchable submenu by its own input', async () => {
+        await renderAndOpenDropdown(<NestedMenu searchableSubmenu />);
+        const root = screen.getByPlaceholderText('Search...');
+        await waitFor(() => expect(root).toHaveFocus());
+        search('shar');
+        fireEvent.keyDown(root, { key: 'ArrowDown' });
+        fireEvent.keyDown(root, { key: 'ArrowRight' });
+
+        const sub = await screen.findByPlaceholderText('Search share');
+        await waitFor(() => expect(sub).toHaveFocus());
+        fireEvent.change(sub, { target: { value: 'mail' } });
+        expect(screen.queryByText('Copy link')).not.toBeInTheDocument();
+        expect(screen.getByText('Email')).toBeInTheDocument();
+      });
+
+      it('moves focus into a plain submenu and back to the root input', async () => {
+        await renderAndOpenDropdown(<NestedMenu />);
+        const root = screen.getByPlaceholderText('Search...');
+        await waitFor(() => expect(root).toHaveFocus());
+        search('shar');
+        fireEvent.keyDown(root, { key: 'ArrowDown' });
+        fireEvent.keyDown(root, { key: 'ArrowRight' });
+
+        const copy = await screen.findByText('Copy link');
+        await waitFor(() => expect(copy).toHaveFocus());
+
+        fireEvent.keyDown(copy, { key: 'Escape' });
+        await waitFor(() =>
+          expect(screen.queryByText('Copy link')).not.toBeInTheDocument()
+        );
+        await waitFor(() => expect(root).toHaveFocus());
+      });
+
+      it('keeps an empty state inside a fragment beside the list', async () => {
+        await renderAndOpenDropdown(
+          <Menu autocomplete>
+            <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+            <Menu.Content>
+              <>
+                <Menu.Item>Profile</Menu.Item>
+                <Menu.EmptyState>No results</Menu.EmptyState>
+              </>
+            </Menu.Content>
+          </Menu>
+        );
+        search('zzz');
+        const empty = document.querySelector('[data-slot="menu-empty-state"]');
+        expect(empty).toHaveTextContent('No results');
+        expect(
+          empty?.closest('[data-slot="menu-search-list"]')
+        ).not.toBeInTheDocument();
+      });
     });
   });
 });

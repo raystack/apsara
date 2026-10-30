@@ -1,8 +1,8 @@
 'use client';
 
 import {
-  Autocomplete as AutocompletePrimitive,
-  ContextMenu as ContextMenuPrimitive
+  ContextMenu as ContextMenuPrimitive,
+  Menu as MenuPrimitive
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { ComponentProps } from 'react';
@@ -15,7 +15,6 @@ export const ContextMenuGroup = ({
   children,
   ...props
 }: ContextMenuGroupProps) => {
-  // Stays rendered while filtering. Removing it would remount the items and reset their state.
   return (
     <ContextMenuPrimitive.Group
       data-slot='context-menu-group'
@@ -33,12 +32,6 @@ export const ContextMenuLabel = ({
   className,
   ...props
 }: ContextMenuLabelProps) => {
-  const { shouldFilter } = useMenuContext();
-
-  if (shouldFilter) {
-    return null;
-  }
-
   return (
     <ContextMenuPrimitive.GroupLabel
       data-slot='context-menu-label'
@@ -76,15 +69,11 @@ export const ContextMenuEmptyState = ({
   ...props
 }: ComponentProps<'div'>) => {
   const { autocomplete } = useMenuContext();
-  const Component = autocomplete ? AutocompletePrimitive.Empty : 'div';
+  const Component = autocomplete ? MenuPrimitive.Empty : 'div';
 
   return (
     <Component
       data-slot='context-menu-empty-state'
-      // The search list is a listbox, which only allows options and groups inside.
-      role={undefined}
-      aria-live={undefined}
-      aria-atomic={undefined}
       className={cx(styles.empty, className)}
       {...props}
     >

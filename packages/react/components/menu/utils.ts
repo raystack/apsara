@@ -28,32 +28,33 @@ export const getChildrenValue = (children?: ReactNode) => {
   return value.trim();
 };
 
-export const KEYCODES: Record<string, [string, number]> = {
-  ARROW_RIGHT: ['ArrowRight', 39],
-  ESCAPE: ['Escape', 27]
-};
+/**
+ * Separates the elements of the given component type from the other children.
+ * Looks inside fragments, which keep their other children.
+ */
+export const splitChildren = (
+  children: ReactNode,
+  type: unknown
+): [matched: ReactNode[], rest: ReactNode[]] => {
+  const matched: ReactNode[] = [];
+  const rest: ReactNode[] = [];
 
-export const dispatchKeyboardEvent = (
-  element: Element | EventTarget,
-  key: (typeof KEYCODES)[keyof typeof KEYCODES],
-  bubbles: boolean = true
-) => {
-  const [keyName, keyCode] = key;
-  return element.dispatchEvent(
-    new KeyboardEvent('keydown', {
-      key: keyName,
-      code: keyName,
-      keyCode: keyCode,
-      which: keyCode,
-      bubbles
-    })
-  );
-};
+  React.Children.toArray(children).forEach(child => {
+    if (!React.isValidElement<{ children?: ReactNode }>(child)) {
+      rest.push(child);
+    } else if (child.type === type) {
+      matched.push(child);
+    } else if (child.type === React.Fragment) {
+      const [innerMatched, innerRest] = splitChildren(
+        child.props.children,
+        type
+      );
+      matched.push(...innerMatched);
+      rest.push(React.cloneElement(child, undefined, ...innerRest));
+    } else {
+      rest.push(child);
+    }
+  });
 
-export const isElementSubMenuTrigger = (element: Element) => {
-  return element.getAttribute('data-slot') === 'menu-subtrigger';
-};
-
-export const isElementSubMenuOpen = (element: Element) => {
-  return element.hasAttribute('data-popup-open');
+  return [matched, rest];
 };
