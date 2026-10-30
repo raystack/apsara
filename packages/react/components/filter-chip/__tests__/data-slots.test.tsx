@@ -36,7 +36,7 @@ describe('FilterChip data-slot contract', () => {
         <FilterChip
           label='Field'
           columnType={columnType}
-          options={[{ label: 'A', value: 'string' }]}
+          options={[{ label: 'A', value: 'a' }]}
         />
       );
       expect(

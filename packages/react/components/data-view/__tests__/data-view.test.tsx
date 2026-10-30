@@ -370,7 +370,7 @@ describe('DataView', () => {
           label: 'Status',
           filterable: true,
           filterType: 'select',
-          filterOptions: [{ label: 'Active', value: 'string' }]
+          filterOptions: [{ label: 'Active', value: 'active' }]
         },
         {
           accessorKey: 'email',
