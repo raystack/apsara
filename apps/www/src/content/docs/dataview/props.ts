@@ -148,7 +148,7 @@ export interface DataViewListProps {
   /**
    * Initial row-height estimate (px). Rows are auto-measured after they paint,
    * so this is only used until the first measurement. Default 40 for table,
-   * 56 for list.
+   * 56 for list. The default is multiplied by the theme's `scaling`. An explicit value is used as passed.
    */
   estimatedRowHeight?: number;
 
@@ -222,7 +222,10 @@ export interface DataViewTimelineProps {
    */
   scale?: 'day' | 'week' | 'month' | 'quarter';
 
-  /** Pixel width of one `scale` unit — density/zoom override. Defaults per scale (day 20, week 56, month 96, quarter 140). */
+  /**
+   * Pixel width of one `scale` unit, as a density or zoom override. Defaults per scale
+   * (day 20, week 56, month 96, quarter 140). The default is multiplied by the theme's `scaling`. An explicit value is used as passed.
+   */
   unitWidth?: number;
 
   /**
@@ -303,26 +306,26 @@ export interface DataViewTimelineProps {
   /**
    * Estimated card height in px, same contract as `DataView.List`: cards render at their
    * natural content height and auto-measure after paint; the estimate seeds lane layout
-   * until real heights arrive. Each lane sizes to its tallest card.
+   * until real heights arrive. Each lane sizes to its tallest card. The default is multiplied by the theme's `scaling`. An explicit value is used as passed.
    * @defaultValue 66
    */
   estimatedRowHeight?: number;
 
   /**
-   * Vertical gap between lanes in px.
+   * Vertical gap between lanes in px. The default is multiplied by the theme's `scaling`. An explicit value is used as passed.
    * @defaultValue 16
    */
   laneGap?: number;
 
   /**
-   * Spans narrower than this (px) flip `context.collapsed` for `renderCard`.
+   * Spans narrower than this (px) flip `context.collapsed` for `renderCard`. The default is multiplied by the theme's `scaling`. An explicit value is used as passed.
    * @defaultValue 60
    */
   minCardWidth?: number;
 
   /**
    * Assumed width (px) of point-marker cards (rows without `endField`) for lane packing.
-   * Set to roughly the widest point card to prevent horizontal overlap within a lane.
+   * Set to roughly the widest point card to prevent horizontal overlap within a lane. The default is multiplied by the theme's `scaling`. An explicit value is used as passed.
    * @defaultValue 120
    */
   estimatedPointWidth?: number;

@@ -232,7 +232,8 @@ export interface DataViewListProps<TData, TValue = unknown> {
   /**
    * Initial row-height estimate (px). Rows are auto-measured after they paint,
    * so this is only used until the first measurement. Default 40 for
-   * `variant="table"`, 56 for `variant="list"`.
+   * `variant="table"`, 56 for `variant="list"`, multiplied by the theme's
+   * `scaling`. An explicit value is used as passed.
    */
   estimatedRowHeight?: number;
   /** When true, only viewport-visible rows render. Parent must have a fixed height. */
@@ -373,7 +374,11 @@ export interface DataViewTimelineProps<TData> {
 
   /** Tick granularity of the time axis. Default 'day'. */
   scale?: TimelineScale;
-  /** Pixel width of one `scale` unit, as a density or zoom override. */
+  /**
+   * Pixel width of one `scale` unit, as a density or zoom override. The default
+   * (day 20, week 56, month 96, quarter 140) is multiplied by the theme's
+   * `scaling`. An explicit value is used as passed.
+   */
   unitWidth?: number;
   /**
    * Explicit time domain. Defaults to the data extent (plus today when shown)
@@ -437,7 +442,8 @@ export interface DataViewTimelineProps<TData> {
    */
   lanePacking?: 'auto' | 'one-per-row' | 'one-per-sort-value';
   /**
-   * Lane height in px. Default 66.
+   * Lane height in px. Default 66, multiplied by the theme's `scaling`. An
+   * explicit value is used as passed.
    *
    * Unvirtualized this is an estimate, same contract as `DataView.List`: cards
    * render at their natural content height and are measured after paint, the
@@ -450,15 +456,23 @@ export interface DataViewTimelineProps<TData> {
    * lane rather than growing it. Set it to your card's height.
    */
   estimatedRowHeight?: number;
-  /** Vertical gap between lanes in px. Default 16. */
+  /**
+   * Vertical gap between lanes in px. Default 16, multiplied by the theme's
+   * `scaling`. An explicit value is used as passed.
+   */
   laneGap?: number;
-  /** Spans narrower than this (px) flip `context.collapsed` for `renderCard`. Default 60. */
+  /**
+   * Spans narrower than this (px) flip `context.collapsed` for `renderCard`.
+   * Default 60, multiplied by the theme's `scaling`. An explicit value is used
+   * as passed.
+   */
   minCardWidth?: number;
   /**
    * Assumed width (px) of point-marker cards (rows without `endField`) for
    * lane packing. Point cards size to their content, so the packer can't know
    * their width, so set this to roughly the widest point card to prevent
-   * horizontal overlap within a lane. Default 120.
+   * horizontal overlap within a lane. Default 120, multiplied by the theme's
+   * `scaling`. An explicit value is used as passed.
    */
   estimatedPointWidth?: number;
 

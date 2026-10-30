@@ -361,7 +361,7 @@
    sticks to the top on vertical scroll and moves with the canvas on
    horizontal scroll because both share the same explicit content width. */
 .timelineRoot {
-  --timeline-axis-height: 52px;
+  --timeline-axis-height: calc(52px * var(--rs-scaling, 1));
   position: relative;
   display: flex;
   flex-direction: column;
