@@ -60,6 +60,9 @@ export interface ComboboxRootProps {
 
   /** Converts a value to the text shown in the input and in multi-select chips. */
   itemToStringLabel?: (value: string) => string;
+
+  /** The `id` of the input. `Combobox.Label` uses it. */
+  id?: string;
 }
 
 export interface ComboboxInputProps {
@@ -71,6 +74,12 @@ export interface ComboboxInputProps {
 
   /** Whether the input is disabled. */
   disabled?: boolean;
+
+  /**
+   * Shows a clear button before the chevron.
+   * @default false
+   */
+  showClearButton?: boolean;
 
   /** Icon element to display at the start of input. */
   leadingIcon?: React.ReactNode;
@@ -138,6 +147,59 @@ export interface ComboboxGroupProps {
 }
 
 export interface ComboboxLabelProps {
+  /** Shows `optionalText` after the label when `false`. */
+  required?: boolean;
+
+  /**
+   * Text shown after the label when `required` is `false`.
+   * @default "(optional)"
+   */
+  optionalText?: string;
+
+  /** Additional CSS class names. */
+  className?: string;
+}
+
+export interface ComboboxClearProps {
+  /**
+   * Size of the button.
+   * @default 2
+   */
+  size?: 1 | 2 | 3 | 4;
+
+  /**
+   * Accessible name of the button.
+   * @default "Clear"
+   */
+  'aria-label'?: string;
+
+  /**
+   * The icon inside the button.
+   * @default <ClearIcon />
+   */
+  children?: React.ReactNode;
+
+  /** Additional CSS class names. */
+  className?: string;
+}
+
+export interface ComboboxEmptyProps {
+  /** The text shown when no item matches. */
+  children?: React.ReactNode;
+
+  /** Additional CSS class names. */
+  className?: string;
+}
+
+export interface ComboboxStatusProps {
+  /** Text to announce. A function receives the number of matching items, or `null` without the `items` prop. */
+  children?: React.ReactNode | ((count: number | null) => React.ReactNode);
+
+  /** Additional CSS class names. */
+  className?: string;
+}
+
+export interface ComboboxGroupLabelProps {
   /** Additional CSS class names. */
   className?: string;
 }

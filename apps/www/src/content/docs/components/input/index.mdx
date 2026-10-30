@@ -70,25 +70,24 @@ A leading icon names the field at a glance; a trailing icon usually holds an act
 
 ### With chips
 
-Input that can display and manage chips/tags.
+`chips` shows chips before the text. Each item is either [Chip](/docs/components/chip) props, which the input renders as a `Chip`, or a `Chip` element, which renders as given.
 
 <Demo data={sizeChipDemo} />
 
 ### Interactive chips
 
-Accepts an array of chips, each with a `label` and an optional `onRemove` callback. 
+To make a chip removable, pass a `Chip` element with a `Chip.Remove` child and handle the removal in its `onClick`.
 
 `maxChipsVisible` caps how many are rendered before collapsing the rest into an overflow counter.
 
 ```tsx
-chips?: Array<{ label: string; onRemove?: () => void }>;                                                                                       
-maxChipsVisible?: number;  // defaults to 2   
+chips?: Array<ReactElement | ChipProps>;
+maxChipsVisible?: number; // defaults to 2
 ```
 
-This is purely a presentation layer and does not manage chip state. The wrapper component owns the array and decides when items are added or removed.
+The input does not manage chip state. The parent component owns the array and decides when items are added or removed.
 
-The example below 
-  appends a chip on `Enter`, removes one when its dismiss button is clicked.
+The example below appends a chip on `Enter` and removes one when its remove button is clicked.
 
 <Demo data={interactiveChipDemo} />
 
@@ -112,7 +111,7 @@ Use `onValueChange` for a callback that receives only the new string value, or `
 
 ### Disabled with chips
 
-When disabled, chips become non-interactive and their dismiss buttons are hidden.
+When disabled, chips passed as props are disabled too, and so is their `Chip.Remove`. Chip elements render as given, so pass `disabled` to them yourself.
 
 <Demo data={disabledChipsDemo} />
 
@@ -143,3 +142,4 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 - Use with [Field](/docs/components/field) for automatic label association and error linking
 - Required state is communicated via `aria-required`
 - Supports all native `<input>` attributes
+- The leading icon is hidden from screen readers. The trailing icon is not, so a button in it stays reachable. Set `aria-hidden` on decorative content in `trailingIcon` that is not an icon, for example a text glyph.

@@ -138,11 +138,12 @@ describe('Chip', () => {
       expect(ref.current?.tagName).toBe('BUTTON');
     });
 
-    it('stays a span when dismissible, even with onClick', () => {
+    it('stays a span with Chip.Remove, even with onClick', () => {
       const ref = createRef<HTMLSpanElement>();
       render(
-        <Chip ref={ref} isDismissible onClick={vi.fn()} onDismiss={vi.fn()}>
+        <Chip ref={ref} onClick={vi.fn()}>
           Test Chip
+          <Chip.Remove />
         </Chip>
       );
 
@@ -150,35 +151,62 @@ describe('Chip', () => {
     });
   });
 
-  describe('Dismissible Behavior', () => {
-    it('renders dismiss button when isDismissible is true', () => {
-      render(<Chip isDismissible>Dismissible Chip</Chip>);
+  describe('Render', () => {
+    it('renders as the render element with the chip props', () => {
+      render(<Chip render={<div data-testid='custom' />}>Test Chip</Chip>);
 
-      const dismissButton = screen.getByRole('button', {
-        name: 'Remove Dismissible Chip'
+      const chip = screen.getByTestId('custom');
+      expect(chip.tagName).toBe('DIV');
+      expect(chip).toHaveClass(styles.chip);
+      expect(chip).toHaveAttribute('data-slot', 'chip');
+      expect(chip).toHaveTextContent('Test Chip');
+    });
+  });
+
+  describe('Chip.Remove', () => {
+    it('renders a remove button named after the chip', () => {
+      render(
+        <Chip>
+          Removable Chip
+          <Chip.Remove />
+        </Chip>
+      );
+
+      const removeButton = screen.getByRole('button', {
+        name: 'Remove Removable Chip'
       });
-      expect(dismissButton).toBeInTheDocument();
-      expect(dismissButton).toHaveClass(styles['dismiss-button']);
-      expect(dismissButton).toHaveAttribute('type', 'button');
+      expect(removeButton).toHaveClass(styles.remove);
+      expect(removeButton).toHaveAttribute('type', 'button');
+      expect(screen.getByRole('status')).toHaveAttribute(
+        'aria-label',
+        'Removable Chip'
+      );
     });
 
-    it('uses the shared XIcon registry icon for the dismiss button', () => {
-      const { container } = render(<Chip isDismissible>Dismissible Chip</Chip>);
+    it('uses the shared XIcon registry icon', () => {
+      const { container } = render(
+        <Chip>
+          Removable Chip
+          <Chip.Remove />
+        </Chip>
+      );
 
       const icon = container.querySelector('[data-icon="XIcon"]');
-      expect(icon).toBeInTheDocument();
-      expect(icon).toHaveAttribute('data-slot', 'chip-dismiss-icon');
+      expect(icon).toHaveAttribute('data-slot', 'chip-remove-icon');
       expect(icon).toHaveAttribute('width', '12');
       expect(icon).toHaveAttribute('height', '12');
     });
 
-    it('passes the dismiss icon size to an XIcon override', () => {
+    it('passes the icon size to an XIcon override', () => {
       const CustomX = (props: IconProps) => (
         <svg data-testid='custom-x' {...props} />
       );
       render(
         <IconProvider components={{ XIcon: CustomX }}>
-          <Chip isDismissible>Dismissible Chip</Chip>
+          <Chip>
+            Removable Chip
+            <Chip.Remove />
+          </Chip>
         </IconProvider>
       );
 
@@ -188,39 +216,48 @@ describe('Chip', () => {
       expect(icon).toHaveAttribute('height', '12');
     });
 
-    it('calls onDismiss when dismiss button is clicked', () => {
-      const onDismiss = vi.fn();
+    it('calls onClick without triggering the chip onClick', () => {
+      const onClick = vi.fn();
+      const onRemove = vi.fn();
       render(
-        <Chip isDismissible onDismiss={onDismiss}>
-          Dismissible Chip
+        <Chip onClick={onClick}>
+          Removable Chip
+          <Chip.Remove onClick={onRemove} />
         </Chip>
       );
 
-      const dismissButton = screen.getByRole('button', {
-        name: 'Remove Dismissible Chip'
-      });
-      fireEvent.click(dismissButton);
+      fireEvent.click(
+        screen.getByRole('button', { name: 'Remove Removable Chip' })
+      );
 
-      expect(onDismiss).toHaveBeenCalledTimes(1);
+      expect(onRemove).toHaveBeenCalledTimes(1);
+      expect(onClick).not.toHaveBeenCalled();
     });
 
-    it('stops propagation when dismiss button is clicked', () => {
-      const onClick = vi.fn();
-      const onDismiss = vi.fn();
-
+    it('is disabled when the chip is disabled', () => {
       render(
-        <Chip isDismissible onClick={onClick} onDismiss={onDismiss}>
-          Dismissible Chip
+        <Chip disabled>
+          Removable Chip
+          <Chip.Remove />
         </Chip>
       );
 
-      const dismissButton = screen.getByRole('button', {
-        name: 'Remove Dismissible Chip'
-      });
-      fireEvent.click(dismissButton);
+      expect(
+        screen.getByRole('button', { name: 'Remove Removable Chip' })
+      ).toBeDisabled();
+    });
 
-      expect(onDismiss).toHaveBeenCalledTimes(1);
-      expect(onClick).not.toHaveBeenCalled();
+    it('renders as the render element', () => {
+      render(
+        <Chip>
+          Removable Chip
+          <Chip.Remove render={<span data-testid='custom-remove' />} />
+        </Chip>
+      );
+
+      const remove = screen.getByTestId('custom-remove');
+      expect(remove.tagName).toBe('SPAN');
+      expect(remove).toHaveAttribute('aria-label', 'Remove Removable Chip');
     });
   });
 
