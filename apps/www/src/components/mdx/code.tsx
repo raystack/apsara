@@ -9,7 +9,11 @@ import { usePreContext } from './pre-context';
 export const Code = ({ children, className }: HTMLAttributes<HTMLElement>) => {
   const { hasPreParent } = usePreContext();
 
-  const code = String(children).trim();
+  // Already highlighted, for example a type in a props table.
+  if (typeof children !== 'string')
+    return <code className={className}>{children}</code>;
+
+  const code = children.trim();
   if (!hasPreParent)
     return <code className={styles['code-inline']}>{code}</code>;
 

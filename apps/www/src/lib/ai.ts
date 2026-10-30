@@ -7,11 +7,12 @@ import remarkGfm from 'remark-gfm';
 import remarkMdx from 'remark-mdx';
 import { docs } from '@/lib/source';
 import { remarkTypeTableToMd } from './remark';
+import { generator, transform } from './type-table';
 
 const processor = remark()
   .use(remarkMdx)
   .use(remarkGfm)
-  .use(remarkAutoTypeTable)
+  .use(remarkAutoTypeTable, { generator, options: { transform } })
   .use(remarkTypeTableToMd);
 
 const REGEX = {

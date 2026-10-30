@@ -1,6 +1,6 @@
 'use client';
 
-import { Accordion, CodeBlock, Flex, Text } from '@raystack/apsara';
+import { Accordion, Flex, Text } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
 import Link from 'fumadocs-core/link';
 import { type ReactNode } from 'react';
@@ -92,17 +92,13 @@ function Item({
           {name}
           {required ? <span className={styles.required}>*</span> : ''}
         </code>
-        <span className={styles.fieldValue}>
+        <span className={cx(styles.code, styles.fieldValue)}>
           {typeDescriptionLink ? (
             <Link href={typeDescriptionLink} className={styles.typeLink}>
               {type}
             </Link>
           ) : (
-            <CodeBlock hideLineNumbers>
-              <CodeBlock.Code language='tsx' className={styles.fieldCode}>
-                {String(type)}
-              </CodeBlock.Code>
-            </CodeBlock>
+            type
           )}
         </span>
       </Accordion.Trigger>
@@ -128,31 +124,18 @@ function Item({
             <Text size='small' className={styles.fieldLabel}>
               Type
             </Text>
-            <CodeBlock hideLineNumbers>
-              <CodeBlock.Code
-                language='tsx'
-                className={cx(styles.fieldCode, styles.fieldValue)}
-              >
-                {String(type) +
-                  (!required && !String(type).includes('undefined')
-                    ? ' | undefined'
-                    : '')}
-              </CodeBlock.Code>
-            </CodeBlock>
+            <span className={cx(styles.code, styles.fieldValue)}>
+              {typeDescription ?? type}
+            </span>
           </Flex>
           {defaultValue && (
             <Flex gap={5}>
               <Text size='small' className={styles.fieldLabel}>
                 Default
               </Text>
-              <CodeBlock hideLineNumbers>
-                <CodeBlock.Code
-                  language='tsx'
-                  className={cx(styles.fieldCode, styles.fieldValue)}
-                >
-                  {String(defaultValue)}
-                </CodeBlock.Code>
-              </CodeBlock>
+              <span className={cx(styles.code, styles.fieldValue)}>
+                {defaultValue}
+              </span>
             </Flex>
           )}
           {parameters.length > 0 && (
