@@ -35,8 +35,7 @@ export interface NumberFieldProps {
   readOnly?: boolean;
 
   /**
-   * Whether the field is required.
-   * @default the `required` of the surrounding `Field`, otherwise false
+   * Whether the field is required. Defaults to the `required` of the surrounding `Field`, otherwise `false`.
    */
   required?: boolean;
 
