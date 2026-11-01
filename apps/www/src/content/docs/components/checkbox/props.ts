@@ -33,8 +33,7 @@ export interface CheckboxProps {
   readOnly?: boolean;
 
   /**
-   * When true, the user must tick the checkbox before submitting a form.
-   * @default the `required` of the surrounding `Field`, otherwise false
+   * When true, the user must tick the checkbox before submitting a form. Defaults to the `required` of the surrounding `Field`, otherwise `false`.
    */
   required?: boolean;
 

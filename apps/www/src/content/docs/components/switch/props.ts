@@ -12,8 +12,7 @@ export interface SwitchProps {
   disabled?: boolean;
 
   /**
-   * When true, indicates that the user must check the switch.
-   * @default the `required` of the surrounding `Field`, otherwise false
+   * When true, indicates that the user must check the switch. Defaults to the `required` of the surrounding `Field`, otherwise `false`.
    */
   required?: boolean;
 

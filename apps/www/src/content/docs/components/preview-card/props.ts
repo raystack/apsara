@@ -115,8 +115,8 @@ export interface PreviewCardContentProps {
   /**
    * Distance between the anchor and the popup in pixels.
    * Also accepts a function to read anchor/positioner dimensions.
+   * Defaults to 10 when `showArrow` is set, otherwise 4.
    * @remarks `number | OffsetFunction`
-   * @default 4, or 10 when `showArrow` is set
    */
   sideOffset?: number | ((data: OffsetData) => number);
 
@@ -142,7 +142,6 @@ export interface PreviewCardContentProps {
 
   /**
    * Determines how to handle collisions when positioning the popup. With `side: 'shift'`, `align` takes only `'shift'` or `'none'`.
-   * @remarks `{ side?: 'flip' | 'shift' | 'none'; align?: 'flip' | 'shift' | 'none'; fallbackAxisSide?: 'start' | 'end' | 'none' }`
    */
   collisionAvoidance?:
     | {
