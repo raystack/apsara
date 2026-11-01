@@ -1,5 +1,8 @@
 export interface DrawerProps {
-  /** The direction from which the drawer appears and can be swiped to dismiss. */
+  /**
+   * The edge the user swipes the drawer toward to dismiss it.
+   * @default "right"
+   */
   side?: 'top' | 'right' | 'bottom' | 'left';
 
   /** Boolean to control the default open state. */
@@ -28,10 +31,16 @@ export interface DrawerProps {
 }
 
 export interface DrawerContentProps {
-  /** The direction from which the drawer appears. */
+  /**
+   * The edge the panel sits on and slides in from.
+   * @default "right"
+   */
   side?: 'top' | 'right' | 'bottom' | 'left';
 
-  /** Whether to show the close button. */
+  /**
+   * Whether to show the close button.
+   * @default true
+   */
   showCloseButton?: boolean;
 
   /**

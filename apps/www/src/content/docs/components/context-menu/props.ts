@@ -68,7 +68,7 @@ export interface ContextMenuContentProps {
    * The side of the anchor element to place the popup.
    * @default "bottom"
    */
-  side?: 'top' | 'bottom' | 'left' | 'right';
+  side?: 'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end';
 
   /**
    * The alignment of the popup relative to the anchor element.
@@ -301,9 +301,9 @@ export interface ContextMenuSubContentProps {
 
   /**
    * The side of the anchor element to place the popup.
-   * @default "bottom"
+   * @default "inline-end"
    */
-  side?: 'top' | 'bottom' | 'left' | 'right';
+  side?: 'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end';
 
   /**
    * The alignment of the popup relative to the anchor element.

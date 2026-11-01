@@ -46,10 +46,13 @@ export interface CalloutProps {
   onDismiss?: () => void;
 
   /** Text content of the callout */
-  children?: React.ReactNode;
+  children: React.ReactNode;
 
   /** Additional CSS class names */
   className?: string;
+
+  /** Inline styles for the callout */
+  style?: React.CSSProperties;
 
   /**
    * Corner radius for this callout only. Overrides the theme's `radius`.

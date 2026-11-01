@@ -33,12 +33,6 @@ export interface AccordionRootProps<Value = string> {
   disabled?: boolean;
 
   /**
-   * The orientation of the accordion
-   * @defaultValue "vertical"
-   */
-  orientation?: 'horizontal' | 'vertical';
-
-  /**
    * Whether to keep the element in the DOM while the panel is closed
    * @defaultValue false
    */
@@ -56,9 +50,9 @@ export interface AccordionRootProps<Value = string> {
 
 export interface AccordionItemProps {
   /**
-   * A unique value for the item
+   * A unique value for the item. Base UI generates one when it is not set.
    */
-  value: string;
+  value?: string;
 
   /**
    * Whether the item is disabled

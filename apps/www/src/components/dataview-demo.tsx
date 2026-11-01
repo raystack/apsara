@@ -628,10 +628,9 @@ function SelectionBar() {
         size='large'
         color='neutral'
         leadingIcon={<Frame size={16} strokeWidth={1.5} />}
-        isDismissible
-        onDismiss={() => table.resetRowSelection()}
       >
         {selectedCount} selected
+        <Chip.Remove onClick={() => table.resetRowSelection()} />
       </Chip>
       <FloatingActions.Separator />
       <Button variant='outline' color='neutral' size='small'>
