@@ -101,8 +101,7 @@ export interface TooltipContentProps {
   align?: 'start' | 'center' | 'end';
 
   /**
-   * Side offset for positioning
-   * @default 4, or 10 when `showArrow` is set
+   * Side offset for positioning. Defaults to 10 when `showArrow` is set, otherwise 4.
    */
   sideOffset?: number;
 

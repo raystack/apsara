@@ -23,8 +23,7 @@ export interface SelectRootProps {
   disabled?: boolean;
 
   /**
-   * Whether a value is required.
-   * @default the `required` of the surrounding `Field`, otherwise false
+   * Whether a value is required. Defaults to the `required` of the surrounding `Field`, otherwise `false`.
    */
   required?: boolean;
 
