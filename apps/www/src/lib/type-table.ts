@@ -51,9 +51,16 @@ export const generator: typeof base = {
 const isExternal = (node: SourceNode) =>
   node.getSourceFile().fileName.includes('/node_modules/');
 
-/** A prop is shown when Apsara or Base UI declares it. */
+// Calendar's props extend those of react-day-picker's DayPicker.
+const SHOWN_PACKAGES = [
+  '/node_modules/@base-ui/',
+  '/node_modules/react-day-picker/'
+];
+
+/** A prop is shown when Apsara, Base UI or react-day-picker declares it. */
 const isShown = (file: string) =>
-  !file.includes('/node_modules/') || file.includes('/node_modules/@base-ui/');
+  !file.includes('/node_modules/') ||
+  SHOWN_PACKAGES.some(dir => file.includes(dir));
 
 const shortTypes: Record<string, string> = {
   className: 'string | function',
@@ -135,9 +142,11 @@ export const transform: Transform = function (entry, _type, prop) {
       .filter(Boolean)
       .join(' ');
 
-  // An Apsara declaration of the prop wins over one from Base UI.
+  // An Apsara declaration of the prop wins over one from Base UI or React,
+  // even a cva variant with no written type.
+  const apsara = declarations.filter(node => !isExternal(node));
   let written = writtenType(
-    declarations.find(node => node.type && !isExternal(node)) ?? declarations[0]
+    apsara.length > 0 ? apsara.find(node => node.type) : declarations[0]
   );
   // A cva variant has no written type, and cva adds `null` to it. Its values
   // keep the order of the variant's keys.
