@@ -148,6 +148,35 @@ Apsara renders `Calendar`, `DatePicker` or `RangePicker` now.
 - **A date filter can be cleared.** Clicking the selected day or emptying
   the input clears it, and `onValueChange` receives `''`.
 
+### Menu and ContextMenu: search uses Base UI menu filtering
+
+Menu, ContextMenu and Menubar search use Base UI's `Menu.FilterProvider`,
+`Menu.Input`, `Menu.List` and `Menu.Empty`. Base UI marks this API as
+preview. Props, slots and exported types are unchanged.
+
+#### Behavior changes
+
+- In search mode the trigger has `aria-haspopup="dialog"`, the popup is a
+  `dialog`, the input is a `searchbox` labelled by `searchPlaceholder`,
+  and the list is a `menu`. Items keep their menu roles (`menuitem`,
+  `menuitemcheckbox`, `menuitemradio`) instead of `option`. App tests
+  that query `role="option"` or expect `aria-haspopup="menu"` need
+  updating.
+- An item matches by its rendered text, including text in `leadingIcon`
+  and `trailingIcon`, and by its `value` when set. A radio item's `value`
+  does not match. Matching ignores case, accents and punctuation.
+- Typing highlights the first match.
+- Group labels stay visible while their group has matches.
+- In search mode, `EmptyState` shows only when no item matches, as a
+  `role="status"` live region. It renders next to the list, not inside
+  it, when it is a direct child of `Content`.
+- ArrowLeft in a submenu's search input moves the text cursor instead of
+  closing the submenu.
+- Escape in the root input closes the whole menu, even when a submenu is
+  open on hover.
+- `eventDetails.cancel()` in `onOpenChange` keeps an uncontrolled Menu or
+  ContextMenu open.
+
 ## 0.49.0
 
 ### Calendar / DatePicker / RangePicker improvements (PR #819)

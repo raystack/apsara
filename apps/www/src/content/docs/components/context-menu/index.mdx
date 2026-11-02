@@ -70,7 +70,7 @@ Use `ContextMenu.Submenu`, `ContextMenu.SubmenuTrigger`, and `ContextMenu.Submen
 
 Pass `autocomplete` to the ContextMenu root. Each menu manages its own autocomplete state.
 
-- **`autocompleteMode="auto"`** is the default. Items filter as the user types. Each item matches by its `value` prop, or by its children text when it has no `value`. Matching ignores case and accents.
+- **`autocompleteMode="auto"`** is the default. Items filter as the user types. Each item matches by its text and, when set, its `value` prop. A `ContextMenu.RadioItem` matches by its text only, because its `value` is the selected value. Matching ignores case and accents.
 - **Submenus** opt in separately: pass `autocomplete` to `ContextMenu.Submenu`.
 
 <Demo data={autocompleteDemo} />
@@ -107,7 +107,7 @@ The container that holds the menu items. When autocomplete is enabled, renders a
 
 Individual clickable options within the menu. Built on top of [Base UI ContextMenu.Item](https://base-ui.com/react/components/context-menu).
 
-In a searchable menu, the item's `children` text is used for matching. Pass a `value` prop to match a different text.
+In a searchable menu, the item's text is used for matching, including text in `leadingIcon` and `trailingIcon`. Pass a `value` prop to also match other text, such as a keyword.
 
 <auto-type-table path="./props.ts" name="ContextMenuItemProps" />
 
@@ -155,7 +155,7 @@ Visual divider between menu items or groups. Hidden when filtering is active.
 
 ### EmptyState
 
-Placeholder content when there are no menu items to display. In a searchable menu, it shows only when no item matches the search, and screen readers announce it.
+Placeholder content when there are no menu items to display. In a searchable menu, it shows only when no item matches the search, and screen readers announce it. Render it as a direct child of `ContextMenu.Content`.
 
 <auto-type-table path="./props.ts" name="ContextMenuEmptyStateProps" />
 
@@ -171,7 +171,7 @@ Supports its own `autocomplete` prop to enable search functionality within the s
 
 The trigger item for a submenu. Renders with a trailing chevron icon by default. Accepts `leadingIcon` and `trailingIcon` props.
 
-When inside a searchable parent menu, the trigger matches by its `value` prop, or by its children text when it has no `value`. The root search does not search inside submenus.
+When inside a searchable parent menu, the trigger matches by its text and, when set, its `value` prop. The root search does not search inside submenus.
 
 <auto-type-table path="./props.ts" name="ContextMenuSubTriggerProps" />
 
@@ -219,7 +219,8 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 - With `autocomplete`, the popup becomes a `role="dialog"` containing a search
   input (`role="searchbox"`, labelled by `searchPlaceholder`) and a
   `role="menu"` list. Items keep their menu roles. Focus stays in the input
-  while arrow keys move the highlight, and Escape first closes an open submenu.
+  while arrow keys move the highlight. Escape in a submenu closes it and
+  returns focus to the parent input.
 - `ContextMenu.Label` must be wrapped in `ContextMenu.Group` so the group is
   labelled via `aria-labelledby`.
 - Checkbox items use `role="menuitemcheckbox"` and radio items use
