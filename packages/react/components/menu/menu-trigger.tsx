@@ -8,6 +8,7 @@ import { useMenubarContext } from '../menubar/menubar';
 import { Cell, CellBaseProps } from './cell';
 import styles from './menu.module.css';
 import { useMenuContext } from './menu-root';
+import { getItemLabel } from './utils';
 
 export interface MenuTriggerProps extends MenuPrimitive.Trigger.Props {
   stopPropagation?: boolean;
@@ -64,7 +65,7 @@ export function MenuSubTrigger({
   return (
     <MenuPrimitive.SubmenuTrigger
       render={<Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />}
-      label={parent?.autocomplete ? value : undefined}
+      label={parent?.autocomplete ? getItemLabel(value, children) : undefined}
       {...props}
       data-slot='menu-subtrigger'
     >

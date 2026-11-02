@@ -7,11 +7,12 @@ import { Cell, CellBaseProps } from './cell';
 import cellStyles from './cell.module.css';
 import { stopItemFocus } from './menu-item';
 import { useMenuContext } from './menu-root';
+import { getItemLabel } from './utils';
 
 export interface MenuCheckboxItemProps
   extends MenuPrimitive.CheckboxItem.Props,
     CellBaseProps {
-  /** Text used to match the search value. Defaults to the children text. */
+  /** Extra text to match in a searchable menu, along with the children text. */
   value?: string;
 }
 
@@ -70,7 +71,7 @@ export function CheckboxItemBase({
     <MenuPrimitive.CheckboxItem
       data-slot={`${slotPrefix}-checkbox-item`}
       render={cell}
-      label={autocomplete ? value : undefined}
+      label={autocomplete ? getItemLabel(value, children) : undefined}
       {...itemProps}
       onFocus={autocomplete ? props.onFocus : stopItemFocus}
     >

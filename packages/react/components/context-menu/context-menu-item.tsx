@@ -15,6 +15,7 @@ import {
   RadioItemBase
 } from '../menu/menu-radio';
 import { useMenuContext } from '../menu/menu-root';
+import { getItemLabel } from '../menu/utils';
 
 export interface ContextMenuItemProps
   extends ContextMenuPrimitive.Item.Props,
@@ -40,7 +41,7 @@ export const ContextMenuItem = ({
     <ContextMenuPrimitive.Item
       data-slot='context-menu-item'
       render={cell}
-      label={autocomplete ? value : undefined}
+      label={autocomplete ? getItemLabel(value, children) : undefined}
       {...props}
       onFocus={autocomplete ? props.onFocus : stopItemFocus}
     >

@@ -29,6 +29,13 @@ export const getChildrenValue = (children?: ReactNode) => {
 };
 
 /**
+ * Text that a searchable item matches on: its `value` and its children text.
+ * Returns `undefined` without a `value`, so Base UI reads the rendered text.
+ */
+export const getItemLabel = (value?: string, children?: ReactNode) =>
+  value ? `${value} ${getChildrenValue(children)}`.trim() : undefined;
+
+/**
  * Separates the elements of the given component type from the other children.
  * Looks inside fragments, which keep their other children.
  */
@@ -50,7 +57,7 @@ export const splitChildren = (
         type
       );
       matched.push(...innerMatched);
-      rest.push(React.cloneElement(child, undefined, ...innerRest));
+      rest.push(React.cloneElement(child, undefined, innerRest));
     } else {
       rest.push(child);
     }

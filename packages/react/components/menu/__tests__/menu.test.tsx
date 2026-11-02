@@ -449,7 +449,7 @@ describe('Menu', () => {
       expect(items()[0]).toHaveTextContent('Café');
     });
 
-    it('matches the item value in place of its text', async () => {
+    it('matches both the item value and its text', async () => {
       await renderAndOpenDropdown(
         <Menu autocomplete>
           <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
@@ -459,10 +459,13 @@ describe('Menu', () => {
         </Menu>
       );
       search('store');
-      expect(items()).toHaveLength(0);
+      expect(items()).toHaveLength(1);
 
       search('arch');
       expect(items()).toHaveLength(1);
+
+      search('zzz');
+      expect(items()).toHaveLength(0);
     });
 
     it('keeps the label of a matching group and hides other groups', async () => {
@@ -505,6 +508,21 @@ describe('Menu', () => {
       expect(screen.getByRole('separator')).toBeInTheDocument();
       search('a');
       expect(screen.queryByRole('separator')).not.toBeInTheDocument();
+    });
+
+    it('keeps separators for a search of only spaces', async () => {
+      await renderAndOpenDropdown(
+        <Menu autocomplete>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content>
+            <Menu.Item>Apple</Menu.Item>
+            <Menu.Separator />
+            <Menu.Item>Banana</Menu.Item>
+          </Menu.Content>
+        </Menu>
+      );
+      search('  ');
+      expect(screen.getByRole('separator')).toBeInTheDocument();
     });
 
     it('shows the empty state only when no item matches', async () => {
@@ -618,10 +636,13 @@ describe('Menu', () => {
           </Menu>
         );
         search('zzz');
-        const empty = document.querySelector('[data-slot="menu-empty-state"]');
-        expect(empty).toHaveTextContent('No results');
+        const empties = document.querySelectorAll(
+          '[data-slot="menu-empty-state"]'
+        );
+        expect(empties).toHaveLength(1);
+        expect(empties[0]).toHaveTextContent('No results');
         expect(
-          empty?.closest('[data-slot="menu-search-list"]')
+          empties[0].closest('[data-slot="menu-search-list"]')
         ).not.toBeInTheDocument();
       });
     });

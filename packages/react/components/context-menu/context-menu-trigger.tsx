@@ -4,6 +4,7 @@ import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react';
 import { ChevronRightIcon } from '~/icons';
 import { Cell, CellBaseProps } from '../menu/cell';
 import { useMenuContext } from '../menu/menu-root';
+import { getItemLabel } from '../menu/utils';
 
 export interface ContextMenuTriggerProps
   extends ContextMenuPrimitive.Trigger.Props {}
@@ -38,7 +39,7 @@ export const ContextMenuSubTrigger = ({
   return (
     <ContextMenuPrimitive.SubmenuTrigger
       render={<Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />}
-      label={parent?.autocomplete ? value : undefined}
+      label={parent?.autocomplete ? getItemLabel(value, children) : undefined}
       {...props}
       data-slot='menu-subtrigger'
     >

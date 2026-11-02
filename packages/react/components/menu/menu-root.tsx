@@ -40,7 +40,7 @@ export const useMenuContext = (): UseMenuContextReturn => {
   const shouldFilter = !!(
     context.autocomplete &&
     context.autocompleteMode === 'auto' &&
-    context.inputValue?.length
+    context.inputValue?.trim().length
   );
 
   return { ...context, shouldFilter };
