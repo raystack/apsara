@@ -80,6 +80,7 @@ export const autocompleteDemo = {
     <Menu autocomplete>
       <Menu.Trigger>Actions</Menu.Trigger>
       <Menu.Content searchPlaceholder="Search actions...">
+        <Menu.EmptyState>No results found</Menu.EmptyState>
         <Menu.Group>
           <Menu.Label>General</Menu.Label>
           <Menu.Item>Assign member...</Menu.Item>

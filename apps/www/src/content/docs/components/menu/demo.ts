@@ -162,6 +162,7 @@ export const autocompleteDemo = {
         Default Autocomplete
       </Menu.Trigger>
       <Menu.Content searchPlaceholder="Search">
+        <Menu.EmptyState>No results found</Menu.EmptyState>
         <Menu.Group>
           <Menu.Label>Heading</Menu.Label>
           <Menu.Item>Assign member...</Menu.Item>

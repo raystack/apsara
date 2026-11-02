@@ -1,12 +1,10 @@
 'use client';
 
-import {
-  Autocomplete as AutocompletePrimitive,
-  Menu as MenuPrimitive
-} from '@base-ui/react';
+import { Menu as MenuPrimitive } from '@base-ui/react';
 import { Cell, CellBaseProps } from './cell';
 import cellStyles from './cell.module.css';
-import { stopItemFocus, useMenuItemFilter } from './menu-item';
+import { stopItemFocus } from './menu-item';
+import { useMenuContext } from './menu-root';
 
 export type MenuRadioGroupProps = MenuPrimitive.RadioGroup.Props;
 
@@ -42,9 +40,7 @@ export function RadioItemBase({
   render,
   ...props
 }: MenuRadioItemProps & { slotPrefix: string }) {
-  const { autocomplete, hidden } = useMenuItemFilter(value, children);
-
-  if (hidden) return null;
+  const { autocomplete } = useMenuContext();
 
   const cell = render ?? (
     <Cell
@@ -62,28 +58,13 @@ export function RadioItemBase({
     />
   );
 
-  if (autocomplete) {
-    return (
-      <AutocompletePrimitive.Item
-        data-slot={`${slotPrefix}-radio-item`}
-        value={value}
-        disabled={props.disabled}
-        render={
-          <MenuPrimitive.RadioItem render={cell} value={value} {...props} />
-        }
-      >
-        {children}
-      </AutocompletePrimitive.Item>
-    );
-  }
-
   return (
     <MenuPrimitive.RadioItem
       data-slot={`${slotPrefix}-radio-item`}
       render={cell}
       value={value}
       {...props}
-      onFocus={stopItemFocus}
+      onFocus={autocomplete ? props.onFocus : stopItemFocus}
     >
       {children}
     </MenuPrimitive.RadioItem>
