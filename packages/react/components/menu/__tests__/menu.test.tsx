@@ -605,6 +605,18 @@ describe('Menu', () => {
         expect(screen.getByText('Email')).toBeInTheDocument();
       });
 
+      it('opens a searchable submenu with Enter and focuses its input', async () => {
+        await renderAndOpenDropdown(<NestedMenu searchableSubmenu />);
+        const root = screen.getByPlaceholderText('Search...');
+        await waitFor(() => expect(root).toHaveFocus());
+        search('shar');
+        fireEvent.keyDown(root, { key: 'ArrowDown' });
+        fireEvent.keyDown(root, { key: 'Enter' });
+
+        const sub = await screen.findByPlaceholderText('Search share');
+        await waitFor(() => expect(sub).toHaveFocus());
+      });
+
       it('moves focus into a plain submenu and back to the root input', async () => {
         await renderAndOpenDropdown(<NestedMenu />);
         const root = screen.getByPlaceholderText('Search...');
@@ -628,8 +640,8 @@ describe('Menu', () => {
           <Menu autocomplete>
             <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
             <Menu.Content>
+              <Menu.Item>Profile</Menu.Item>
               <>
-                <Menu.Item>Profile</Menu.Item>
                 <Menu.EmptyState>No results</Menu.EmptyState>
               </>
             </Menu.Content>
