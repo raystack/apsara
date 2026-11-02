@@ -102,7 +102,7 @@ export interface ContextMenuItemProps {
   /** Whether the item is disabled */
   disabled?: boolean;
 
-  /** Text used to match the search, in place of the `children` text. Only used in a searchable menu. */
+  /** Extra text to match in a searchable menu, along with the `children` text. */
   value?: string;
 
   /** Additional CSS class names */
@@ -153,7 +153,7 @@ export interface ContextMenuCheckboxItemProps {
   /** Whether the item is disabled */
   disabled?: boolean;
 
-  /** Text used to match the search, in place of the `children` text. Only used in a searchable menu. */
+  /** Extra text to match in a searchable menu, along with the `children` text. */
   value?: string;
 
   /** Additional CSS class names */
@@ -222,7 +222,7 @@ export interface ContextMenuLinkItemProps {
   /** Icon element to display after item text */
   trailingIcon?: ReactNode;
 
-  /** Text used to match the search, in place of the `children` text. Only used in a searchable menu. */
+  /** Extra text to match in a searchable menu, along with the `children` text. */
   value?: string;
 
   /** Additional CSS class names */
@@ -283,7 +283,7 @@ export interface ContextMenuSubTriggerProps {
   /** Icon element to display after trigger text. Defaults to a chevron right icon. */
   trailingIcon?: ReactNode;
 
-  /** Text used to match the search of a searchable parent menu, in place of the `children` text. */
+  /** Extra text to match in a searchable parent menu, along with the `children` text. */
   value?: string;
 }
 

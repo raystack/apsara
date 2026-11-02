@@ -7,6 +7,30 @@ One section per release, newest first, with only the changes that need action
 from you. The full record of every release, features and fixes included, is
 on [GitHub releases](https://github.com/raystack/apsara/releases).
 
+## Unreleased: menu search uses Base UI filtering
+
+Search in `Menu`, `ContextMenu` and `Menubar` uses Base UI's menu filtering.
+Props, slots and exported types do not change.
+
+### 1. Update tests that query roles
+
+In a searchable menu, items keep their menu roles: `menuitem`,
+`menuitemcheckbox` and `menuitemradio`. They used to be `option`. The trigger
+has `aria-haspopup="dialog"`, the popup is a `dialog`, and the input is a
+`searchbox`. Update queries such as `getAllByRole('option')` to
+`getAllByRole('menuitem')`.
+
+### 2. Check items that have a `value`
+
+An item with a `value` matches its `value` and its `children` text, not the
+text in its icons. A `RadioItem` matches by its text, not its `value`.
+
+### 3. Render `EmptyState` as a direct child of `Content`
+
+In a searchable menu, `EmptyState` shows only when no item matches. Render it
+as a direct child of `Content`, or inside a fragment there, so it sits next to
+the list instead of inside it.
+
 ## Unreleased: date filters compare whole days
 
 `DataView`, `DataTable` and `FilterChip` read and compare dates as calendar
