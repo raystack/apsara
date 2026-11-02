@@ -7,6 +7,7 @@ import {
   RefObject,
   useCallback,
   useContext,
+  useId,
   useMemo,
   useRef
 } from 'react';
@@ -16,9 +17,9 @@ interface ComboboxContextValue<Value = string> {
   multiple: boolean;
   inputValue: string;
   hasItems: boolean;
+  inputId: string;
   inputContainerRef: RefObject<HTMLDivElement | null>;
   value: Value | Value[] | null | undefined;
-  onValueChange?: (value: Value | Value[] | null) => void;
   getLabel: (value: Value) => string;
 }
 
@@ -78,8 +79,11 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
   items,
   required,
   itemToStringLabel,
+  id: idProp,
   ...props
 }: ComboboxRootProps<Value, Item>) => {
+  const generatedId = useId();
+  const id = idProp ?? generatedId;
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
 
@@ -148,12 +152,12 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
       multiple,
       inputValue,
       hasItems: !!items,
+      inputId: id,
       inputContainerRef,
       value: computedValue,
-      onValueChange: handleValueChange,
       getLabel
     }),
-    [multiple, inputValue, items, computedValue, handleValueChange, getLabel]
+    [multiple, inputValue, items, id, computedValue, getLabel]
   );
 
   return (
@@ -168,6 +172,7 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
         itemToStringLabel={itemToStringLabel}
         value={providedValue}
         defaultValue={defaultValue}
+        id={id}
         required={resolvedRequired}
         modal
         {...props}
