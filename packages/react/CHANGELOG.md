@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+### Base UI 1.9.0
+
+Apsara uses `@base-ui/react` 1.9.0 and `@base-ui/utils` 0.5.0. The
+changes below are the ones an app can see.
+
+#### Changes
+
+- A disabled `Accordion` or `Collapsible` trigger has the native
+  `disabled` attribute. It is dimmed and left out of the Tab order.
+- A multiple `Combobox` or `Select` accepts a readonly array for `value`
+  and `defaultValue`. `onValueChange` still receives a mutable array.
+- In `Menu`, `ContextMenu` and `Menubar`, activating the trigger of an
+  open submenu closes it, and a submenu closes when focus leaves it
+  through its focus guard.
+- The `ScrollArea` viewport has no `role="presentation"`.
+- `Checkbox`, `Radio` and `Switch` take their accessible name from
+  `aria-label` when they also have an associated label.
+- A `Dialog`, `AlertDialog` or `Drawer` opened from code through a
+  handle is not linked to a trigger that did not open it.
+
 ### Icons — lucide replaces @radix-ui/react-icons (BREAKING)
 
 Apsara names every icon with a stable key that does not name a library —
