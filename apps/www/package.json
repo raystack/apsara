@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prebuild": "cd ../.. && npm run build:apsara",
+    "prebuild": "cd ../.. && (git rev-parse -q --verify refs/tags/v1.0.0 >/dev/null || git fetch -q --tags $(test \"$(git rev-parse --is-shallow-repository)\" = true && echo --unshallow) https://github.com/raystack/apsara.git || true) && npm run build:apsara",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
