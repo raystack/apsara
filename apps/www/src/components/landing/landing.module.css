@@ -1,0 +1,1011 @@
+/*
+  Landing page — a blueprint. Everything here is drawn with the same hairline
+  in three weights: solid for the structure (the two rules that bound the
+  column, the band rules that cross it, the chrome of the drawing), dashed for
+  the divisions inside a structure (specimen cells, table rows, the lab's
+  split), dotted for lists. Where a band rule meets a column rule a small
+  crosshair marks the intersection, the way a print registration mark would.
+
+  Every color is an Apsara token so the page follows the theme lab further
+  down: switch the accent, the gray, the radius style or the mode and the
+  whole sheet re-inks itself.
+*/
+
+.page {
+  --lp-col: 1120px;
+  --lp-gutter: var(--rs-space-9);
+  --lp-rule-color: var(--rs-color-border-base-primary);
+  --lp-rule: 1px solid var(--lp-rule-color);
+  --lp-rule-dashed: 1px dashed var(--lp-rule-color);
+  --lp-rule-dotted: 1px dotted var(--lp-rule-color);
+  --lp-mark-color: var(--rs-color-foreground-base-tertiary);
+  --lp-grid: color-mix(in srgb, var(--lp-rule-color) 70%, transparent);
+  --lp-ink: var(--rs-color-foreground-base-primary);
+  --lp-ink-2: var(--rs-color-foreground-base-secondary);
+  --lp-ink-3: var(--rs-color-foreground-base-tertiary);
+  --lp-paper: var(--rs-color-background-base-primary);
+  --lp-paper-2: var(--rs-color-background-base-secondary);
+  --lp-mono: var(--rs-font-mono);
+  --lp-label-size: 11px;
+  --lp-label-tracking: 0.12em;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--lp-paper);
+  color: var(--lp-ink);
+}
+
+/* ---------------------------------------------------------------- frame */
+
+.band {
+  position: relative;
+  border-top: var(--lp-rule);
+}
+
+.col {
+  position: relative;
+  width: 100%;
+  max-width: var(--lp-col);
+  margin-inline: auto;
+  border-inline: var(--lp-rule);
+  box-sizing: border-box;
+}
+
+/* Registration marks where the band rule meets the column rules. */
+.col::before,
+.col::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  width: 9px;
+  height: 9px;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--lp-mark-color), var(--lp-mark-color)) center / 1px
+    100% no-repeat,
+    linear-gradient(var(--lp-mark-color), var(--lp-mark-color)) center / 100%
+    1px no-repeat;
+}
+.col::before {
+  left: -5px;
+}
+.col::after {
+  right: -5px;
+}
+
+.pad {
+  padding: var(--rs-space-13) var(--lp-gutter);
+}
+
+/* --------------------------------------------------------------- labels */
+
+.label {
+  font-family: var(--lp-mono);
+  font-size: var(--lp-label-size);
+  line-height: 16px;
+  letter-spacing: var(--lp-label-tracking);
+  text-transform: uppercase;
+  font-weight: var(--rs-font-weight-medium);
+  color: var(--lp-ink-3);
+}
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rs-space-4);
+}
+
+/* A dimension line — a rule with a mono reading in the middle and a tick at
+   each end. Decorative; every use is aria-hidden. */
+.dim {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  font-family: var(--lp-mono);
+  font-size: var(--lp-label-size);
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  color: var(--lp-ink-3);
+  user-select: none;
+}
+.dim::before,
+.dim::after {
+  content: "";
+  flex: 1;
+  height: 0;
+  border-top: var(--lp-rule-dashed);
+}
+.dimTick {
+  width: 1px;
+  height: 9px;
+  background: var(--lp-mark-color);
+}
+
+/* --------------------------------------------------------------- header */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--rs-z-index-portal);
+  border-top: 0;
+  border-bottom: var(--lp-rule);
+  background: color-mix(in srgb, var(--lp-paper) 88%, transparent);
+  backdrop-filter: blur(8px);
+}
+.header .col::before,
+.header .col::after {
+  top: auto;
+  bottom: -5px;
+}
+.headerInner {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: var(--rs-space-6);
+}
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+}
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+  height: 32px;
+  padding-inline: var(--rs-space-4);
+  border-radius: var(--rs-radius-2);
+  font-size: var(--rs-font-size-regular);
+  line-height: var(--rs-line-height-regular);
+  color: var(--lp-ink-2);
+  text-decoration: none;
+}
+.navLink:hover {
+  color: var(--lp-ink);
+  background: var(--rs-color-background-base-primary-hover);
+}
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+}
+.versionTag {
+  font-family: var(--lp-mono);
+  font-size: var(--rs-font-size-small);
+  color: var(--lp-ink-3);
+  padding-inline: var(--rs-space-3);
+  border-left: var(--lp-rule);
+}
+.logoLink {
+  display: inline-flex;
+  color: inherit;
+  text-decoration: none;
+}
+.logoLink p {
+  margin: 0;
+  font-weight: var(--rs-font-weight-medium);
+}
+
+/* ----------------------------------------------------------------- hero */
+
+.heroBand {
+  border-top: 0;
+  background-image: radial-gradient(var(--lp-grid) 1px, transparent 1.2px);
+  background-size: 24px 24px;
+  background-position: 12px 12px;
+}
+.heroBand .col::before,
+.heroBand .col::after {
+  display: none;
+}
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: var(--rs-space-13) var(--rs-space-9);
+  padding: var(--rs-space-16) var(--lp-gutter) var(--rs-space-13);
+  align-items: end;
+}
+.heroCopy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-7);
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+}
+.eyebrowDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--rs-radius-full);
+  background: var(--rs-color-background-accent-emphasis);
+}
+.heroTitle {
+  margin: 0;
+  font-size: clamp(36px, 3.9vw, 52px);
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  font-weight: var(--rs-font-weight-medium);
+}
+.heroTitle em {
+  font-style: normal;
+  color: var(--lp-ink-2);
+}
+.heroTitle u {
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-decoration-color: var(--rs-color-border-accent-emphasis);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.14em;
+  white-space: nowrap;
+}
+.heroLede {
+  margin: 0;
+  max-width: 44ch;
+  font-size: 18px;
+  line-height: 28px;
+  letter-spacing: -0.012em;
+  color: var(--lp-ink-2);
+  text-wrap: pretty;
+}
+.heroActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--rs-space-5);
+}
+.heroButtons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--rs-space-3);
+}
+
+/* The install command: one line on its own, drawn with a dashed edge like a
+   cut-here mark — prompt, the command, a copy button at the end. */
+.install {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  height: 40px;
+  padding-inline: var(--rs-space-4) var(--rs-space-2);
+  border: var(--lp-rule-dashed);
+  border-radius: var(--rs-radius-2);
+  background: var(--lp-paper);
+  font-family: var(--lp-mono);
+  font-size: 13px;
+  color: var(--lp-ink);
+  white-space: nowrap;
+}
+.install .prompt {
+  color: var(--lp-ink-3);
+  user-select: none;
+}
+.install code {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Hero right column: the facts, as a spec table. */
+.spec {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  border: var(--lp-rule);
+  border-radius: var(--rs-radius-2);
+  background: var(--lp-paper);
+  overflow: hidden;
+  align-self: end;
+}
+.specRow {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+}
+.specRow + .specRow {
+  border-top: var(--lp-rule-dashed);
+}
+.specKey,
+.specVal {
+  padding: var(--rs-space-4) var(--rs-space-5);
+  font-size: var(--rs-font-size-regular);
+  line-height: var(--rs-line-height-regular);
+}
+.specKey {
+  font-family: var(--lp-mono);
+  font-size: var(--lp-label-size);
+  letter-spacing: var(--lp-label-tracking);
+  text-transform: uppercase;
+  color: var(--lp-ink-3);
+  border-right: var(--lp-rule);
+  background: var(--lp-paper-2);
+  display: flex;
+  align-items: center;
+}
+.specVal {
+  color: var(--lp-ink);
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  flex-wrap: wrap;
+}
+
+/* ---------------------------------------------------------------- frame */
+
+/* The composed application in the hero. Drawn on graph paper, with a
+   dimension line above and to the side so it reads as a drawing, not a
+   screenshot. */
+.drawing {
+  display: grid;
+  grid-template-columns: 1fr 24px;
+  grid-template-rows: 24px 1fr;
+  gap: var(--rs-space-2);
+  padding: var(--rs-space-9) var(--lp-gutter) var(--rs-space-13);
+}
+.drawingTop {
+  grid-column: 1;
+  grid-row: 1;
+}
+.drawingSide {
+  grid-column: 2;
+  grid-row: 2;
+  writing-mode: vertical-rl;
+}
+.drawingSide::before,
+.drawingSide::after {
+  width: 0;
+  height: auto;
+  border-top: 0;
+  border-left: var(--lp-rule-dashed);
+  align-self: stretch;
+}
+.drawingSide .dimTick {
+  width: 9px;
+  height: 1px;
+}
+.drawingCorner {
+  grid-column: 2;
+  grid-row: 1;
+}
+.paper {
+  grid-column: 1;
+  grid-row: 2;
+  padding: var(--rs-space-9);
+  border: var(--lp-rule-dashed);
+  background-color: var(--lp-paper-2);
+  background-image:
+    linear-gradient(var(--lp-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--lp-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: -1px -1px;
+}
+
+.window {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  grid-template-rows: 44px 1fr;
+  min-height: 460px;
+  border: var(--lp-rule);
+  border-radius: var(--rs-radius-3);
+  background: var(--lp-paper);
+  box-shadow: var(--rs-shadow-soft);
+  overflow: hidden;
+}
+.windowBar {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-4);
+  padding-inline: var(--rs-space-5);
+  border-bottom: var(--lp-rule);
+}
+.windowDots {
+  display: flex;
+  gap: 6px;
+}
+.windowDots span {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--rs-radius-full);
+  border: 1px solid var(--lp-mark-color);
+}
+.windowUrl {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.windowUrl span {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding-inline: var(--rs-space-4);
+  border: var(--lp-rule);
+  border-radius: var(--rs-radius-2);
+  font-family: var(--lp-mono);
+  font-size: var(--rs-font-size-small);
+  color: var(--lp-ink-3);
+}
+.windowSide {
+  border-right: var(--lp-rule);
+  padding: var(--rs-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-2);
+  background: var(--lp-paper-2);
+}
+.sideItem {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  height: 32px;
+  padding-inline: var(--rs-space-3);
+  border-radius: var(--rs-radius-2);
+  font-size: var(--rs-font-size-regular);
+  color: var(--lp-ink-2);
+}
+.sideItem svg {
+  color: var(--lp-ink-3);
+}
+.sideItemActive {
+  color: var(--lp-ink);
+  background: var(--lp-paper);
+  border: var(--lp-rule);
+  font-weight: var(--rs-font-weight-medium);
+}
+.sideGroup {
+  margin-top: var(--rs-space-4);
+  padding: 0 var(--rs-space-3) var(--rs-space-2);
+}
+.sideFoot {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  padding: var(--rs-space-3);
+  border-top: var(--lp-rule);
+}
+.windowMain {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.windowHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rs-space-4);
+  padding: var(--rs-space-5) var(--rs-space-6);
+  border-bottom: var(--lp-rule);
+}
+.windowToolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  padding: var(--rs-space-4) var(--rs-space-6);
+  border-bottom: var(--lp-rule);
+}
+.windowToolbar > :first-child {
+  flex: 1;
+  max-width: 280px;
+}
+.windowBody {
+  flex: 1;
+  padding: var(--rs-space-6);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--rs-space-6);
+}
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--lp-rule-color);
+  border: var(--lp-rule);
+  border-radius: var(--rs-radius-2);
+  overflow: hidden;
+}
+.kpi {
+  background: var(--lp-paper);
+  padding: var(--rs-space-4) var(--rs-space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-2);
+}
+.kpiValue {
+  font-size: var(--rs-font-size-t1);
+  line-height: var(--rs-line-height-t1);
+  letter-spacing: -0.02em;
+  font-weight: var(--rs-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+.kpiRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tableWrap {
+  border: var(--lp-rule);
+  border-radius: var(--rs-radius-2);
+  overflow: hidden;
+}
+.tableWrap table {
+  width: 100%;
+}
+.cellName {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+}
+.cellProgress {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  min-width: 140px;
+}
+.cellProgress > :first-child {
+  flex: 1;
+}
+.mono {
+  font-family: var(--lp-mono);
+  font-size: var(--rs-font-size-small);
+  color: var(--lp-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------- stats */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.stat {
+  padding: var(--rs-space-7) var(--lp-gutter);
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-3);
+}
+.stat + .stat {
+  border-left: var(--lp-rule-dashed);
+}
+.statValue {
+  font-size: var(--rs-font-size-t3);
+  line-height: var(--rs-line-height-t3);
+  letter-spacing: -0.025em;
+  font-weight: var(--rs-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+.statValue small {
+  font-size: var(--rs-font-size-large);
+  color: var(--lp-ink-3);
+  margin-left: var(--rs-space-1);
+  font-weight: var(--rs-font-weight-regular);
+}
+
+/* -------------------------------------------------------------- section */
+
+.sectionHead {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: var(--rs-space-9);
+  align-items: end;
+  padding: var(--rs-space-13) var(--lp-gutter) var(--rs-space-9);
+}
+.sectionHead > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-4);
+}
+.sectionTitle {
+  margin: 0;
+  font-size: clamp(28px, 3vw, 36px);
+  line-height: 1.12;
+  letter-spacing: -0.028em;
+  font-weight: var(--rs-font-weight-medium);
+  text-wrap: balance;
+}
+.sectionLede {
+  margin: 0;
+  font-size: var(--rs-font-size-large);
+  line-height: var(--rs-line-height-large);
+  color: var(--lp-ink-2);
+  text-wrap: pretty;
+}
+
+/* ------------------------------------------------------------ specimens */
+
+/* Cells divide with dashed rules; the solid rule above is the band's. */
+.specimens {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: var(--lp-rule);
+}
+.specimen {
+  display: flex;
+  flex-direction: column;
+  min-height: 232px;
+  background: var(--lp-paper);
+  padding: var(--rs-space-5);
+  border-right: var(--lp-rule-dashed);
+  border-bottom: var(--lp-rule-dashed);
+}
+.specimen:nth-child(3n) {
+  border-right: 0;
+}
+.specimenWide {
+  grid-column: span 2;
+}
+.specimenHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rs-space-3);
+}
+.specimenHead a {
+  color: var(--lp-ink-3);
+  display: inline-flex;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.specimen:hover .specimenHead a,
+.specimenHead a:focus-visible {
+  opacity: 1;
+}
+.specimenIndex {
+  color: var(--lp-ink-3);
+  margin-right: var(--rs-space-3);
+}
+.specimenName {
+  color: var(--lp-ink-2);
+}
+.specimenBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--rs-space-4);
+  padding: var(--rs-space-6) 0 var(--rs-space-3);
+  min-width: 0;
+}
+.specimenBody[data-align="stretch"] {
+  align-items: stretch;
+}
+/* Some components set a fixed width and size their box from the content, so
+   a stretched child could poke past the cell. Pin them to the cell instead. */
+.specimenBody[data-align="stretch"] > *,
+.specimenBody[data-fit] > * > * {
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.row.rowLoose {
+  gap: var(--rs-space-6);
+}
+.stack.stackLoose {
+  gap: var(--rs-space-7);
+}
+.row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--rs-space-3);
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-3);
+  width: 100%;
+  max-width: 300px;
+}
+.fieldRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rs-space-4);
+}
+
+.specimensFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rs-space-4);
+  padding: var(--rs-space-5) var(--lp-gutter);
+}
+
+/* ------------------------------------------------------------ theme lab */
+
+.lab {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  border-top: var(--lp-rule);
+}
+.labControls {
+  padding: var(--rs-space-9) var(--lp-gutter);
+  border-right: var(--lp-rule-dashed);
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-8);
+}
+.labGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-4);
+}
+.labGroupHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.labValue {
+  font-family: var(--lp-mono);
+  font-size: var(--rs-font-size-small);
+  color: var(--lp-ink-2);
+}
+.segment {
+  display: inline-flex;
+  border: var(--lp-rule);
+  border-radius: var(--rs-radius-2);
+  overflow: hidden;
+  background: var(--lp-paper-2);
+}
+.segmentBtn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  height: 32px;
+  padding-inline: var(--rs-space-4);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  font: inherit;
+  font-size: var(--rs-font-size-regular);
+  color: var(--lp-ink-2);
+  cursor: pointer;
+}
+.segmentBtn + .segmentBtn {
+  border-left: var(--lp-rule);
+}
+.segmentBtn:hover {
+  color: var(--lp-ink);
+}
+.segmentBtn[aria-pressed="true"] {
+  background: var(--lp-paper);
+  color: var(--lp-ink);
+  font-weight: var(--rs-font-weight-medium);
+}
+.segmentBtn:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: -2px;
+}
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--rs-radius-full);
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+}
+/* Swatches are the one place the page names a hue directly: they have to
+   show the accent you are *not* on, which no token can do. */
+.swatch[data-accent="indigo"] {
+  background: #5b5bd6;
+}
+.swatch[data-accent="orange"] {
+  background: #f76b15;
+}
+.swatch[data-accent="mint"] {
+  background: #27b08b;
+}
+.labPreview {
+  padding: var(--rs-space-9) var(--lp-gutter);
+  background-color: var(--lp-paper-2);
+  background-image:
+    linear-gradient(var(--lp-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--lp-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card {
+  width: 100%;
+  max-width: 440px;
+  border: var(--lp-rule);
+  border-radius: var(--rs-radius-4);
+  background: var(--lp-paper);
+  display: flex;
+  flex-direction: column;
+}
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rs-space-4);
+  padding: var(--rs-space-5) var(--rs-space-6);
+  border-bottom: var(--lp-rule);
+}
+.cardBody {
+  padding: var(--rs-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-5);
+}
+.cardFoot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--rs-space-3);
+  padding: var(--rs-space-4) var(--rs-space-6);
+  border-top: var(--lp-rule-dashed);
+  background: var(--lp-paper-2);
+}
+
+/* ---------------------------------------------------------------- code */
+
+/* No rule of its own on top: the band already draws it. */
+.code {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+}
+.codeCopy {
+  padding: var(--rs-space-9) var(--lp-gutter);
+  border-right: var(--lp-rule-dashed);
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-6);
+}
+.codeSteps {
+  display: flex;
+  flex-direction: column;
+  border-top: var(--lp-rule-dotted);
+}
+.codeStep {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: var(--rs-space-4);
+  padding: var(--rs-space-4) 0;
+  border-bottom: var(--lp-rule-dotted);
+  font-size: var(--rs-font-size-regular);
+  line-height: var(--rs-line-height-regular);
+  color: var(--lp-ink-2);
+}
+.codeStep strong {
+  color: var(--lp-ink);
+  font-weight: var(--rs-font-weight-medium);
+}
+.codeBlock {
+  padding: var(--rs-space-9) var(--lp-gutter);
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-3);
+  min-width: 0;
+}
+.codeBlock pre {
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rs-space-6);
+  padding: var(--rs-space-7) var(--lp-gutter);
+  flex-wrap: wrap;
+}
+.footerLinks {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-6);
+}
+.footerLinks a {
+  color: var(--lp-ink-2);
+  text-decoration: none;
+  font-size: var(--rs-font-size-regular);
+}
+.footerLinks a:hover {
+  color: var(--lp-ink);
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1000px) {
+  .page {
+    --lp-gutter: var(--rs-space-7);
+  }
+  .hero,
+  .sectionHead,
+  .lab,
+  .code {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hero {
+    padding-top: var(--rs-space-13);
+  }
+  .spec {
+    align-self: start;
+  }
+  .labControls,
+  .codeCopy {
+    border-right: 0;
+    border-bottom: var(--lp-rule-dashed);
+  }
+  .specimens {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .specimen:nth-child(3n) {
+    border-right: var(--lp-rule-dashed);
+  }
+  .specimen:nth-child(2n) {
+    border-right: 0;
+  }
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .stat:nth-child(3) {
+    border-left: 0;
+  }
+  .stat:nth-child(n + 3) {
+    border-top: var(--lp-rule-dashed);
+  }
+  .window {
+    grid-template-columns: 1fr;
+  }
+  .windowSide {
+    display: none;
+  }
+  .drawing {
+    grid-template-columns: 1fr;
+    grid-template-rows: 24px 1fr;
+  }
+  .drawingSide,
+  .drawingCorner {
+    display: none;
+  }
+  .paper {
+    padding: var(--rs-space-5);
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    --lp-gutter: var(--rs-space-5);
+  }
+  .headerInner {
+    padding-inline: var(--rs-space-4);
+  }
+  .nav {
+    display: none;
+  }
+  .specimens {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .specimen,
+  .specimen:nth-child(3n) {
+    border-right: 0;
+  }
+  .specimenWide {
+    grid-column: auto;
+  }
+  .stats {
+    grid-template-columns: 1fr;
+  }
+  .stat + .stat {
+    border-left: 0;
+    border-top: var(--lp-rule-dashed);
+  }
+  .kpis {
+    grid-template-columns: 1fr;
+  }
+  .windowToolbar > :first-child {
+    max-width: none;
+  }
+  .heroTitle {
+    font-size: 36px;
+  }
+}
