@@ -16,23 +16,6 @@
   line-height: var(--editor-line-height);
 }
 
-/* The PromptInput composer. The small font's own 16px line box is shorter
-   than a chip's icon and trailing slots, so the composer pairs the small font
-   with the regular line height and sizes the chip to match, so the line box is
-   the same height whatever a line holds. */
-.composer {
-  width: 100%;
-  overflow-y: auto;
-  color: var(--rs-color-foreground-base-primary);
-  font-family: var(--rs-font-body);
-  font-size: var(--rs-font-size-small);
-  letter-spacing: var(--rs-letter-spacing-small);
-}
-
-.composer > p {
-  margin: 0;
-}
-
 /* prosemirror-view ships a stylesheet the editor deliberately does not load,
    it brings its own type, layout and selection treatment. Two of those rules
    are load-bearing rather than cosmetic, so they are mirrored here. */

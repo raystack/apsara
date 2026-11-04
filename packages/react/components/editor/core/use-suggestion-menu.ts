@@ -435,8 +435,7 @@ export function useMentionResolution(
   registry: MentionRegistry,
   mentions: MentionAttrs[],
   refreshLabels: (labels: Map<string, string>) => void,
-  getResolver: (trigger: string) => MentionsData['resolveMentions'] = trigger =>
-    registry.get(trigger)?.resolveMentions
+  getResolver: (trigger: string) => MentionsData['resolveMentions']
 ): void {
   const requestedRef = useRef(new Set<string>());
   const refreshRef = useRef(refreshLabels);
