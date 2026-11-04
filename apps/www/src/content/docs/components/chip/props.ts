@@ -23,6 +23,9 @@ export interface ChipProps {
   /** ReactNode to display as an icon after the label */
   trailingIcon?: React.ReactNode;
 
+  /** Disables the chip and blocks pointer clicks on it */
+  disabled?: boolean;
+
   /** Content to display inside the chip */
   children?: React.ReactNode;
 

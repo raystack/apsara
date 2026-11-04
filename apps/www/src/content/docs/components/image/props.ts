@@ -1,9 +1,12 @@
 export interface ImageProps {
   /** The URL of the image to display */
-  src: string;
+  src?: string;
 
-  /** Alternative text description (required) */
-  alt: string;
+  /**
+   * Alternative text. Pass `""` for a decorative image.
+   * @default ""
+   */
+  alt?: string;
 
   /**
    * Object-fit property

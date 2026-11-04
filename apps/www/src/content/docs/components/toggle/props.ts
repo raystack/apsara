@@ -12,7 +12,7 @@ export interface ToggleProps {
   pressed?: boolean;
 
   /** Event handler called when the pressed state changes. */
-  onPressedChange?: (pressed: boolean, event: Event) => void;
+  onPressedChange?: (pressed: boolean, eventDetails: unknown) => void;
 
   /**
    * The size of the toggle.
@@ -50,7 +50,7 @@ export interface ToggleGroupProps {
   value?: string[];
 
   /** Event handler called when the pressed values change. */
-  onValueChange?: (value: string[], event: Event) => void;
+  onValueChange?: (value: string[], eventDetails: unknown) => void;
 
   /**
    * When true, multiple toggles can be pressed at the same time.

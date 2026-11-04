@@ -3,13 +3,12 @@ export interface NumberFieldProps {
   value?: number | null;
 
   /**
-   * Initial uncontrolled value.
-   * @defaultValue 0
+   * Initial uncontrolled value. The field is empty when neither this nor `value` is set.
    */
   defaultValue?: number;
 
   /** Event handler called when the value changes. */
-  onValueChange?: (value: number | null, event: Event) => void;
+  onValueChange?: (value: number | null, eventDetails: unknown) => void;
 
   /** Minimum allowed value. */
   min?: number;
@@ -36,8 +35,7 @@ export interface NumberFieldProps {
   readOnly?: boolean;
 
   /**
-   * Whether the field is required.
-   * @defaultValue false
+   * Whether the field is required. Defaults to the `required` of the surrounding `Field`, otherwise `false`.
    */
   required?: boolean;
 
