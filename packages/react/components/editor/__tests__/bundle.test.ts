@@ -94,3 +94,24 @@ describe('Markdown bundle cost', () => {
     expect(withAdapter).toMatch(/from ['"]marked['"]/);
   }, 180_000);
 });
+
+/* PromptInput runs on the core store, so it must not ship the rich editor. */
+
+describe('PromptInput bundle cost', () => {
+  it('leaves out the rich editor features', async () => {
+    const promptInput = await bundle(
+      `import { PromptInput } from ${JSON.stringify(PACKAGE_INDEX)};\n` +
+        'export const input = PromptInput;\n'
+    );
+    expect(promptInput).toContain('PromptInput.Editor');
+    for (const name of [
+      'prosemirror-schema-list',
+      'prosemirror-inputrules',
+      'prosemirror-dropcursor',
+      'prosemirror-gapcursor'
+    ]) {
+      expect(promptInput).not.toMatch(new RegExp(`from ['"]${name}['"]`));
+    }
+    expect(promptInput).not.toContain('class RichEditorStore');
+  }, 180_000);
+});

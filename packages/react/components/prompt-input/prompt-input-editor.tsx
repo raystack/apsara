@@ -2,32 +2,35 @@
 
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { cx } from 'class-variance-authority';
+import { type Node as PMNode, Slice } from 'prosemirror-model';
+import { Selection } from 'prosemirror-state';
 import {
   type ComponentProps,
-  Fragment,
   useCallback,
   useEffect,
-  useId,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState
 } from 'react';
-import { createPortal } from 'react-dom';
-import {
-  deriveDocDetails,
-  docFromMarkup
-} from '../editor/core/composer/markup';
-import { useComposerEditor } from '../editor/core/composer/use-composer-editor';
-import editorStyles from '../editor/core/editor-core.module.css';
-import { SuggestionMenu } from '../editor/core/suggestion-menu';
-import type { SuggestionState } from '../editor/core/suggestion-plugin';
-import { useMentionResolution } from '../editor/core/use-suggestion-menu';
+import { EXTERNAL } from '../editor/core/base';
+import { isEditorEmpty } from '../editor/core/serializers';
+import { resolveShortcuts } from '../editor/core/shortcuts';
+import { useMentionRegistryVersion } from '../editor/core/use-suggestion-menu';
+import { EditorHost } from '../editor/editor-content';
+import { MentionsMenu } from '../editor/editor-mentions';
+import { EditorStore, type EditorStoreProps } from '../editor/editor-store';
 import styles from './prompt-input.module.css';
 import {
   type PromptInputInputApi,
   usePromptInputContext
 } from './prompt-input-context';
-import { useMentionMenu } from './use-mention-menu';
+import {
+  deriveDocDetails,
+  docFromMarkup,
+  promptInputSchema
+} from './prompt-input-markup';
+import { promptInputPlugins } from './prompt-input-plugins';
 
 export interface PromptInputEditorProps
   extends Omit<
@@ -54,9 +57,28 @@ export interface PromptInputEditorProps
 }
 
 /**
- * The ProseMirror sibling to `PromptInput.Textarea`: the same outward contract,
- * Enter submits, Shift+Enter breaks, placeholder, auto-grow, `disabled`, frame
- * focus, on a contentEditable that can host inline mention chips.
+ * Replaces the doc when `markup` differs from what it serializes to, so a
+ * controlled `value` does not move the caret on every keystroke. The change is
+ * not reported and is not an undo step.
+ */
+function setMarkup(store: EditorStore, markup: string) {
+  const { doc } = store.state;
+  if (deriveDocDetails(doc).markup === markup) return;
+  const tr = store.state.tr.replace(
+    0,
+    doc.content.size,
+    new Slice(docFromMarkup(markup).content, 0, 0)
+  );
+  tr.setSelection(Selection.atEnd(tr.doc))
+    .setMeta(EXTERNAL, true)
+    .setMeta('addToHistory', false);
+  store.dispatch(tr);
+}
+
+/**
+ * The `Editor` engine as a sibling to `PromptInput.Textarea`: Enter submits,
+ * Shift+Enter breaks, with a placeholder, auto-grow, `disabled` and frame
+ * focus, on a contentEditable that can hold mention chips.
  */
 export function PromptInputEditor({
   className,
@@ -68,99 +90,91 @@ export function PromptInputEditor({
   ...props
 }: PromptInputEditorProps) {
   const context = usePromptInputContext('Editor');
-  const listboxId = useId();
+  const registry = context.mentions;
   const resolvedDisabled = disabled ?? context.disabled;
-
-  const [suggestion, setSuggestion] = useState<SuggestionState | null>(null);
   const [frameWidth, setFrameWidth] = useState<number | undefined>(undefined);
 
-  const setValueRef = useRef(context.setValue);
-  setValueRef.current = context.setValue;
-  const requestSubmitRef = useRef(context.requestSubmit);
-  requestSubmitRef.current = context.requestSubmit;
-  const registry = context.mentions;
+  const contextRef = useRef(context);
+  contextRef.current = context;
+  const maxLengthRef = useRef(maxLength);
+  maxLengthRef.current = maxLength;
 
-  // Broken out of the option object so the menu, which needs `actions`, can
-  // still supply the key handler the editor plugin calls.
-  const keyDownRef = useRef<
-    ((event: KeyboardEvent, state: SuggestionState) => boolean) | null
-  >(null);
-
-  const { hostRef, initialHtml, viewRef, mentionPortals, actions } =
-    useComposerEditor({
-      initialMarkup: context.value,
-      placeholder,
-      disabled: resolvedDisabled,
-      spellCheck,
-      maxLength,
-      getTriggers: () => registry.triggers(),
-      onChange: details =>
-        setValueRef.current(details.markup, {
-          text: details.text,
-          mentions: details.mentions
-        }),
-      onSubmit: () => requestSubmitRef.current(),
-      onSuggestionChange: setSuggestion,
-      onSuggestionKeyDown: (event, state) =>
-        keyDownRef.current?.(event, state) ?? false
-    });
-
-  const menu = useMentionMenu({
-    viewRef,
-    actions,
-    registry,
-    suggestion,
+  const storeProps: EditorStoreProps = {
+    placeholder,
     disabled: resolvedDisabled,
-    listboxId
-  });
-  keyDownRef.current = menu.handleKeyDown;
+    readOnly: false,
+    onChange: report
+  };
 
-  useMentionResolution(
-    registry,
-    context.details.mentions,
-    actions.refreshMentionLabels
+  const [store] = useState(
+    () =>
+      new EditorStore({
+        schema: promptInputSchema,
+        doc: docFromMarkup(context.value),
+        // A restored draft opens with the caret after it.
+        selectAtEnd: true,
+        shortcuts: resolveShortcuts(),
+        props: storeProps,
+        mentions: registry,
+        extend: () => ({
+          first: promptInputPlugins({
+            onSubmit: () => contextRef.current.requestSubmit(),
+            getMaxLength: () => maxLengthRef.current
+          }),
+          // Whitespace alone keeps the placeholder, as it keeps `data-empty`.
+          showsPlaceholder: isEditorEmpty
+        })
+      })
   );
+
+  function report(doc: PMNode) {
+    const { markup, text, mentions } = deriveDocDetails(doc);
+    contextRef.current.setValue(markup, { text, mentions });
+  }
+
+  useLayoutEffect(() => {
+    store.updateProps(storeProps);
+  });
+
+  // The Editor applies labels from `resolveMentions` without reporting them.
+  // PromptInput reports them, so `onValueChange` carries the fresh label.
+  function refreshLabels(labels: Map<string, string>) {
+    const before = store.state.doc;
+    store.refreshMentionLabels(labels);
+    if (store.state.doc !== before) report(store.state.doc);
+  }
 
   const api = useMemo<PromptInputInputApi>(
     () => ({
-      focus: () => actions.focus(),
-      setMarkup: markup => actions.setMarkup(markup),
+      focus: () => store.focus(),
+      setMarkup: markup => setMarkup(store, markup),
       deriveExternal: markup => {
-        const derived = deriveDocDetails(docFromMarkup(markup));
-        return { text: derived.text, mentions: derived.mentions };
+        const { text, mentions } = deriveDocDetails(docFromMarkup(markup));
+        return { text, mentions };
       },
-      getMessage: () => {
-        const details = actions.getDetails();
-        return {
-          markup: details.markup,
-          text: details.text,
-          mentions: details.mentions
-        };
-      },
+      getMessage: () => deriveDocDetails(store.state.doc),
       insertMention: (item, options) => {
+        const view = store.view;
+        if (!view) return;
         const trigger = options?.trigger ?? registry.triggers()[0] ?? '@';
         const type = item.type ?? 'mention';
         registry.remember(trigger, { ...item, type });
-        actions.insertMention({
-          id: item.id,
-          label: item.label,
-          type,
-          trigger
-        });
+        // Not focused: the chip goes at the end of the draft.
+        const end = Selection.atEnd(store.state.doc).from;
+        store.insertMentionAt(
+          { id: item.id, label: item.label, type, trigger },
+          view.hasFocus() ? undefined : { from: end, to: end }
+        );
       }
     }),
-    [actions, registry]
+    [store, registry]
   );
 
   const registerInput = context.registerInput;
   const register = useCallback(
-    (node: HTMLDivElement | null) => {
-      hostRef(node);
-      registerInput(node, api, 'editor');
-    },
-    [api, hostRef, registerInput]
+    (node: HTMLDivElement | null) => registerInput(node, api, 'editor'),
+    [api, registerInput]
   );
-
   const mergedRef = useMergedRefs(register, ref);
 
   // A caret is a zero-width anchor, so the menu cannot size itself from
@@ -183,70 +197,32 @@ export function PromptInputEditor({
     return () => observer.disconnect();
   }, [frameRef]);
 
-  const hasMentions = registry.triggers().length > 0;
+  // `PromptInput.Mentions` only registers data, so the menus render here,
+  // next to the doc their query lives in.
+  useMentionRegistryVersion(registry);
 
   return (
     <>
-      <div
+      <EditorHost
         {...props}
         ref={mergedRef}
-        className={cx(
-          styles.editor,
-          editorStyles.editor,
-          editorStyles.composer,
-          className
-        )}
-        role='textbox'
-        aria-multiline='true'
-        aria-disabled={resolvedDisabled || undefined}
-        aria-autocomplete={hasMentions ? 'list' : undefined}
-        aria-expanded={hasMentions ? menu.open : undefined}
-        aria-controls={hasMentions && menu.open ? listboxId : undefined}
-        aria-activedescendant={menu.activeOptionId}
+        store={store}
+        className={cx(styles.editor, className)}
+        spellCheck={spellCheck}
         data-disabled={resolvedDisabled || undefined}
         data-empty={context.empty || undefined}
-        spellCheck={spellCheck}
-        // ProseMirror takes this subtree over on mount. Until then it holds the
-        // derived plain text of the value, so a restored draft is readable on
-        // the first paint instead of popping in.
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={initialHtml}
       />
-
-      {mentionPortals.map(portal => {
-        const item = registry.lookup(
-          portal.attrs.trigger,
-          portal.attrs.type,
-          portal.attrs.id
-        );
-        return (
-          <Fragment key={portal.id}>
-            {item?.icon ? createPortal(item.icon, portal.iconTarget) : null}
-            {item?.trailing
-              ? createPortal(item.trailing, portal.trailingTarget)
-              : null}
-          </Fragment>
-        );
-      })}
-
-      {hasMentions ? (
-        <SuggestionMenu
-          open={menu.open}
-          anchor={menu.anchor}
-          id={listboxId}
-          groups={menu.groups}
-          highlightedIndex={menu.highlightedIndex}
-          onHighlightChange={menu.setHighlightedIndex}
-          onSelect={menu.select}
-          onOpenChange={next => {
-            if (!next) menu.close();
-          }}
-          loading={menu.loading}
-          loadingRowCount={menu.loadingRowCount}
-          emptyMessage={menu.emptyMessage}
+      {registry.triggers().map(trigger => (
+        <MentionsMenu
+          key={trigger}
+          {...registry.get(trigger)}
+          store={store}
+          trigger={trigger}
+          name='PromptInput.Mentions'
           width={frameWidth}
+          refreshLabels={refreshLabels}
         />
-      ) : null}
+      ))}
     </>
   );
 }

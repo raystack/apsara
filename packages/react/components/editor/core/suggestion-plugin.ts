@@ -5,7 +5,7 @@ import {
   TextSelection,
   type Transaction
 } from 'prosemirror-state';
-import { Decoration, DecorationSet, type EditorView } from 'prosemirror-view';
+import { Decoration, DecorationSet } from 'prosemirror-view';
 import styles from './editor-core.module.css';
 import type { MentionAttrs } from './mention';
 
@@ -283,13 +283,6 @@ export function suggestionPlugin(options: SuggestionPluginOptions): Plugin {
   });
 }
 
-/** Closes the menu and leaves the typed text literal. */
-export function dismissSuggestion(view: EditorView): void {
-  view.dispatch(
-    view.state.tr.setMeta(suggestionPluginKey, { type: 'dismiss' })
-  );
-}
-
 function isWhitespaceAt(state: EditorState, position: number): boolean {
   if (position >= state.doc.content.size) return false;
   return /\s/.test(
@@ -299,18 +292,9 @@ function isWhitespaceAt(state: EditorState, position: number): boolean {
 
 /**
  * Replaces `range` with a chip followed by a single space, caret after it.
- * With no range the chip lands at the caret.
+ * With no range the chip lands at the caret. Null when the schema has no
+ * mentions.
  */
-export function insertMention(
-  view: EditorView,
-  attrs: MentionAttrs,
-  range?: { from: number; to: number }
-): void {
-  const tr = mentionTransaction(view.state, attrs, range);
-  if (tr) view.dispatch(tr);
-}
-
-/** The transaction behind `insertMention`, or null when the schema has no mentions. */
 export function mentionTransaction(
   state: EditorState,
   attrs: MentionAttrs,

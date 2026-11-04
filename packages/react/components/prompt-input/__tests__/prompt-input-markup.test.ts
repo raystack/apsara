@@ -1,20 +1,26 @@
 import { describe, expect, it } from 'vitest';
 import {
-  deriveDocDetails,
-  docFromMarkup,
-  docFromText,
-  isDocEmpty,
-  serializeMarkup,
-  serializeText
-} from '../../editor/core/composer/markup';
-import {
   isTriggerCharacter,
   serializeMention,
   trimDetails
 } from '../../editor/core/mention';
+import { isEditorEmpty } from '../../editor/core/serializers';
+import {
+  deriveDocDetails,
+  docFromMarkup,
+  inlineFragmentFromText,
+  promptInputSchema
+} from '../prompt-input-markup';
 
 const derive = (markup: string) => deriveDocDetails(docFromMarkup(markup));
-const roundTrip = (markup: string) => serializeMarkup(docFromMarkup(markup));
+const roundTrip = (markup: string) => derive(markup).markup;
+
+/** A doc holding a plain string, the way a plain-text paste builds it. */
+const docFromText = (text: string) =>
+  promptInputSchema.topNodeType.create(
+    null,
+    promptInputSchema.nodes.paragraph.create(null, inlineFragmentFromText(text))
+  );
 
 describe('markup dialect', () => {
   describe('triggers', () => {
@@ -168,18 +174,18 @@ describe('markup dialect', () => {
 
   describe('emptiness', () => {
     it('is true for nothing and for whitespace', () => {
-      expect(isDocEmpty(docFromMarkup(''))).toBe(true);
-      expect(isDocEmpty(docFromMarkup('   '))).toBe(true);
-      expect(isDocEmpty(docFromMarkup('\n\n'))).toBe(true);
+      expect(isEditorEmpty(docFromMarkup(''))).toBe(true);
+      expect(isEditorEmpty(docFromMarkup('   '))).toBe(true);
+      expect(isEditorEmpty(docFromMarkup('\n\n'))).toBe(true);
     });
 
     it('is false for a document holding nothing but a chip', () => {
-      expect(isDocEmpty(docFromMarkup('@[A](p:1)'))).toBe(false);
-      expect(isDocEmpty(docFromMarkup(' @[A](p:1) '))).toBe(false);
+      expect(isEditorEmpty(docFromMarkup('@[A](p:1)'))).toBe(false);
+      expect(isEditorEmpty(docFromMarkup(' @[A](p:1) '))).toBe(false);
     });
 
     it('is false for text', () => {
-      expect(isDocEmpty(docFromMarkup('hi'))).toBe(false);
+      expect(isEditorEmpty(docFromMarkup('hi'))).toBe(false);
     });
   });
 
@@ -215,7 +221,7 @@ describe('markup dialect', () => {
     });
 
     it('splits newlines into hard breaks', () => {
-      expect(serializeText(docFromText('a\nb\nc'))).toBe('a\nb\nc');
+      expect(deriveDocDetails(docFromText('a\nb\nc')).text).toBe('a\nb\nc');
     });
   });
 });

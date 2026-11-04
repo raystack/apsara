@@ -323,7 +323,8 @@ describe('PromptInput.Mentions', () => {
       const active = editor.getAttribute('aria-activedescendant');
       expect(active).toBeTruthy();
       expect(screen.getAllByRole('option')[0]).toHaveAttribute('id', active);
-      expect(editor).toHaveAttribute('aria-expanded', 'true');
+      // `role="textbox"` does not allow `aria-expanded`.
+      expect(editor).not.toHaveAttribute('aria-expanded');
       expect(editor).toHaveAttribute(
         'aria-controls',
         screen.getByRole('listbox').id

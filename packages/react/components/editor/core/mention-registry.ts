@@ -60,7 +60,8 @@ function sameData(a: MentionsData, b: MentionsData): boolean {
 /**
  * Shared between a `Mentions` part (which writes the config), the part that
  * drives the menu and decorates chips, and the root (which reads `data` back
- * when assembling a message). PromptInput and Editor each own one.
+ * when assembling a message). An `Editor` store creates its own. The store
+ * behind `PromptInput.Editor` uses the one that the PromptInput root owns.
  *
  * `icon`, `trailing` and `data` cannot survive serialization, so they live here
  * rather than on the document, keyed by `trigger|type|id` and filled in when an

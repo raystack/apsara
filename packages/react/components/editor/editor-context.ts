@@ -2,12 +2,13 @@
 
 import type { EditorState } from 'prosemirror-state';
 import { createContext, useContext, useRef, useSyncExternalStore } from 'react';
+import type { RichEditorStore } from './editor-rich-store';
 import type { EditorStore } from './editor-store';
 import type { EditorApi } from './editor-types';
 
-export const EditorContext = createContext<EditorStore | null>(null);
+export const EditorContext = createContext<RichEditorStore | null>(null);
 
-export function useEditorStore(part: string): EditorStore {
+export function useEditorStore(part: string): RichEditorStore {
   const store = useContext(EditorContext);
   if (!store) throw new Error(`${part} must be used within <Editor>`);
   return store;
@@ -18,14 +19,14 @@ export function useEditorStore(part: string): EditorStore {
  * selector each render is fine: `isEqual` keeps the previous value when the
  * result is the same.
  */
-export function useStoreSelector<T>(
-  store: EditorStore,
-  selector: (store: EditorStore) => T,
+export function useStoreSelector<S extends EditorStore, T>(
+  store: S,
+  selector: (store: S) => T,
   isEqual: (a: T, b: T) => boolean = Object.is
 ): T {
   const cache = useRef<{
     revision: number;
-    selector: (store: EditorStore) => T;
+    selector: (store: S) => T;
     value: T;
   } | null>(null);
 

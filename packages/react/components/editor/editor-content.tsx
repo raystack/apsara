@@ -16,6 +16,7 @@ import { docToHTML } from './core/serializers';
 import { useMentionRegistryVersion } from './core/use-suggestion-menu';
 import styles from './editor.module.css';
 import { useEditorStore, useStoreSelector } from './editor-context';
+import type { EditorStore } from './editor-store';
 
 export interface EditorContentProps
   extends Omit<
@@ -30,13 +31,35 @@ export interface EditorContentProps
 }
 
 /** The mount point for the editable document. */
-export function EditorContent({
+export function EditorContent({ className, ...props }: EditorContentProps) {
+  const store = useEditorStore('Editor.Content');
+  return (
+    <EditorHost
+      {...props}
+      store={store}
+      data-slot='editor-content'
+      className={cx(styles.content, className)}
+    />
+  );
+}
+
+EditorContent.displayName = 'Editor.Content';
+
+export interface EditorHostProps extends EditorContentProps {
+  store: EditorStore;
+}
+
+/**
+ * Mounts the store's view and renders the chip portals. `Editor.Content` and
+ * `PromptInput.Editor` use it, each with its own typography.
+ */
+export function EditorHost({
+  store,
   className,
   spellCheck = true,
   ref,
   ...props
-}: EditorContentProps) {
-  const store = useEditorStore('Editor.Content');
+}: EditorHostProps) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const mergedRef = useMergedRefs(hostRef, ref);
 
@@ -49,7 +72,7 @@ export function EditorContent({
   // ProseMirror adds its own classes to the element, and React would drop
   // them when it writes a new `className`. React writes the first value only,
   // and ProseMirror's `attributes` prop applies the later ones.
-  const classes = cx(coreStyles.editor, styles.content, className);
+  const classes = cx(coreStyles.editor, className);
   const [initialClasses] = useState(classes);
   const classesRef = useRef(classes);
   classesRef.current = classes;
@@ -97,7 +120,6 @@ export function EditorContent({
       <div
         {...props}
         ref={mergedRef}
-        data-slot='editor-content'
         className={initialClasses}
         role='textbox'
         aria-multiline='true'
@@ -130,5 +152,3 @@ export function EditorContent({
     </>
   );
 }
-
-EditorContent.displayName = 'Editor.Content';
