@@ -15,8 +15,8 @@ import {
   useRef,
   useState
 } from 'react';
-import { useScaling } from '~/hooks/useScaling';
 import { Badge } from '../../badge';
+import { useScaling } from '../../theme/use-scaling';
 import styles from '../data-view.module.css';
 import {
   DataViewTimelineProps,
@@ -27,7 +27,11 @@ import {
 } from '../data-view.types';
 import { useDataView } from '../hooks/useDataView';
 import { orderByX } from '../utils/order-by-x';
-import { packLanes, packLanesBySortValue } from '../utils/pack-lanes';
+import {
+  DEFAULT_CARD_GAP_PX,
+  packLanes,
+  packLanesBySortValue
+} from '../utils/pack-lanes';
 import {
   buildAxis,
   createTimeScale,
@@ -417,17 +421,18 @@ export function DataViewTimeline<TData>({
   // Multi-view gate: with no `name`, this is the only renderer, so always render.
   const isActive = !name || activeView === undefined || activeView === name;
 
+  // The defaults describe token-driven boxes, so they follow the theme zoom.
+  // An explicit prop is a pixel value the consumer chose, and is left alone.
+  const scaling = useScaling();
+
   // Clamped: a zero width zeroes px density and hangs createTimeScale's fill loop.
   const effectiveUnitWidth = Math.max(
     1,
-    unitWidth ?? TIMELINE_DEFAULT_UNIT_WIDTH[scale]
+    unitWidth ?? TIMELINE_DEFAULT_UNIT_WIDTH[scale] * scaling
   );
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  // The defaults describe token-driven boxes, so they follow the theme zoom.
-  // An explicit prop is a pixel value the consumer chose, and is left alone.
-  const scaling = useScaling(scrollRef);
   const estimatedRowHeight =
     estimatedRowHeightProp ?? DEFAULT_ROW_HEIGHT * scaling;
   const laneGap = laneGapProp ?? DEFAULT_LANE_GAP * scaling;
@@ -435,6 +440,9 @@ export function DataViewTimeline<TData>({
   const estimatedPointWidth =
     estimatedPointWidthProp ?? DEFAULT_POINT_WIDTH * scaling;
   const groupBandHeight = GROUP_BAND_HEIGHT * scaling;
+  const minRenderWidth = MIN_RENDER_WIDTH * scaling;
+  const cardGap = DEFAULT_CARD_GAP_PX * scaling;
+  const scrollEdgeInset = SCROLL_EDGE_INSET_PX * scaling;
 
   // Viewport fill: a domain narrower than the container extends so the axis
   // spans the full width. It only ever widens, so a wider `range` is untouched.
@@ -644,8 +652,11 @@ export function DataViewTimeline<TData>({
   );
 
   const { ticks, bands } = useMemo(
-    () => buildAxis(timeScale, scale, effectiveUnitWidth, tickInterval),
-    [timeScale, scale, effectiveUnitWidth, tickInterval]
+    () =>
+      // Tick labels are token-sized text, so label thinning compares their
+      // spacing floor against the unit width at scaling 1.
+      buildAxis(timeScale, scale, effectiveUnitWidth / scaling, tickInterval),
+    [timeScale, scale, effectiveUnitWidth, tickInterval, scaling]
   );
 
   // Gridline thinning is visual only. Positioning (cards, today, cursor
@@ -671,7 +682,7 @@ export function DataViewTimeline<TData>({
             ? (item.endTime - item.startTime) * timeScale.pxPerMs
             : 0;
         const renderWidth =
-          item.endTime !== null ? Math.max(spanWidth, MIN_RENDER_WIDTH) : null;
+          item.endTime !== null ? Math.max(spanWidth, minRenderWidth) : null;
         // Point cards size to their content, so the packer can't know their
         // width; `estimatedPointWidth` stands in so wide chips don't overlap.
         const packWidth = renderWidth ?? estimatedPointWidth;
@@ -691,7 +702,7 @@ export function DataViewTimeline<TData>({
       list.push({ key: section.key, group: section.group, items });
     }
     return list;
-  }, [timedSections, timeScale, estimatedPointWidth]);
+  }, [timedSections, timeScale, estimatedPointWidth, minRenderWidth]);
 
   // Per section, so a card only shares a lane within its own group. Section-
   // relative lanes are what `renderCard` sees; `laneOffset` maps them into the
@@ -711,20 +722,22 @@ export function DataViewTimeline<TData>({
                   laneKey: item.laneKey,
                   x: item.x,
                   width: item.packWidth
-                }))
+                })),
+                cardGap
               )
             : packLanes(
                 section.items.map(item => ({
                   x: item.x,
                   width: item.packWidth
-                }))
+                })),
+                cardGap
               );
       const entry = { ...section, ...packed, laneOffset: offset };
       offset += packed.laneCount;
       return entry;
     });
     return { laidOutSections: list, laneCount: offset };
-  }, [positionedSections, lanePacking, sortValueLanes]);
+  }, [positionedSections, lanePacking, sortValueLanes, cardGap]);
 
   // An off-screen card never mounts and so never measures, which would resize
   // lanes under the user mid-scroll. Virtualized lanes therefore take
@@ -1300,10 +1313,9 @@ export function DataViewTimeline<TData>({
       stopMomentum();
       const clamped = Math.max(timeScale.t0, Math.min(time, timeScale.t1));
       let targetX = timeScale.x(clamped);
-      if (align === 'start') targetX -= SCROLL_EDGE_INSET_PX;
+      if (align === 'start') targetX -= scrollEdgeInset;
       else if (align === 'center') targetX -= el.clientWidth / 2;
-      else if (align === 'end')
-        targetX -= el.clientWidth - SCROLL_EDGE_INSET_PX;
+      else if (align === 'end') targetX -= el.clientWidth - scrollEdgeInset;
       const left = Math.max(
         0,
         Math.min(targetX, timeScale.totalWidth - el.clientWidth)
@@ -1317,7 +1329,7 @@ export function DataViewTimeline<TData>({
         el.scrollLeft = left;
       }
     },
-    [timeScale, stopMomentum]
+    [timeScale, stopMomentum, scrollEdgeInset]
   );
 
   // Filtering while scrolled away from the matches would park the user on empty
