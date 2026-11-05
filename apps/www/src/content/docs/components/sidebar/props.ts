@@ -39,9 +39,12 @@ export interface SidebarRootProps {
   /** Called when a hover peek starts or ends. */
   onPeekChange?: (isPeeking: boolean) => void;
 
-  /** Position of the Sidebar.
+  /** The edge of the layout the sidebar sits on.
    * @default "left"
    */
+  side?: 'left' | 'right';
+
+  /** @deprecated Use `side`. */
   position?: 'left' | 'right';
 
   /** Visual style variant of the Sidebar.

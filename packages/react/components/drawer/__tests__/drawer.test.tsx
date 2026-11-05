@@ -29,7 +29,7 @@ const BasicDrawer = ({
 } & Record<string, unknown>) => (
   <Drawer side={side} {...props}>
     <Drawer.Trigger render={<Button />}>{TRIGGER_TEXT}</Drawer.Trigger>
-    <Drawer.Content side={side} showCloseButton={showCloseButton}>
+    <Drawer.Content showCloseButton={showCloseButton}>
       <Drawer.Header>
         <Drawer.Title>{DRAWER_TITLE}</Drawer.Title>
         <Drawer.Description>{DRAWER_DESCRIPTION}</Drawer.Description>
@@ -279,7 +279,7 @@ describe('Drawer', () => {
       render(
         <Drawer side={side}>
           <Drawer.SwipeArea data-testid='swipe-area' />
-          <Drawer.Content side={side}>{DRAWER_CONTENT}</Drawer.Content>
+          <Drawer.Content>{DRAWER_CONTENT}</Drawer.Content>
         </Drawer>
       ).getByTestId('swipe-area');
 
@@ -332,7 +332,7 @@ describe('Drawer', () => {
       <Drawer.Provider>
         <Drawer.Indent data-testid='indent'>
           <Drawer open={open} side='bottom'>
-            <Drawer.Content side='bottom'>{DRAWER_CONTENT}</Drawer.Content>
+            <Drawer.Content>{DRAWER_CONTENT}</Drawer.Content>
           </Drawer>
         </Drawer.Indent>
       </Drawer.Provider>
@@ -366,7 +366,7 @@ describe('Drawer', () => {
   describe('Virtual Keyboard', () => {
     const KeyboardDrawer = (props: { enableVirtualKeyboard?: boolean }) => (
       <Drawer open side='bottom'>
-        <Drawer.Content side='bottom' {...props}>
+        <Drawer.Content {...props}>
           <input aria-label='Name' />
         </Drawer.Content>
       </Drawer>

@@ -25,23 +25,44 @@ export function SelectContent({
   className,
   children,
   searchPlaceholder = 'Search...',
-  sideOffset = 4,
+  radius,
   side = 'bottom',
+  sideOffset = 4,
   align = 'start',
   alignItemWithTrigger = false,
-  radius,
+  alignOffset,
+  anchor,
+  arrowPadding,
+  collisionAvoidance,
+  collisionBoundary,
+  collisionPadding,
+  disableAnchorTracking,
+  positionMethod,
+  sticky,
   ...props
 }: SelectContentProps) {
   const { autocomplete, multiple } = useSelectContext();
   const theme = useThemeInjection();
+  const positionerProps = {
+    side,
+    sideOffset,
+    align,
+    alignOffset,
+    anchor,
+    arrowPadding,
+    collisionAvoidance,
+    collisionBoundary,
+    collisionPadding,
+    disableAnchorTracking,
+    positionMethod,
+    sticky
+  };
 
   if (autocomplete) {
     return (
       <ComboboxPrimitive.Portal keepMounted {...theme}>
         <ComboboxPrimitive.Positioner
-          sideOffset={sideOffset}
-          side={side}
-          align={align}
+          {...positionerProps}
           className={styles.positioner}
           data-slot='select-positioner'
         >
@@ -78,9 +99,7 @@ export function SelectContent({
   // TODO @rohanchkrabrty: Add select.portal when it supports keepMounted
   return (
     <SelectPrimitive.Positioner
-      sideOffset={sideOffset}
-      side={side}
-      align={align}
+      {...positionerProps}
       className={styles.positioner}
       alignItemWithTrigger={alignItemWithTrigger}
       data-slot='select-positioner'

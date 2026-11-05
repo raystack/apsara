@@ -43,13 +43,13 @@ export function SidebarItem({
   render = <a />,
   ...props
 }: SidebarItemProps) {
-  const { isCollapsed, position, hideItemTooltips } = useSidebarSafe();
+  const { isCollapsed, side, hideItemTooltips } = useSidebarSafe();
   const onPopupOpenChange = useContext(SidebarPopupContext);
   const insideSidebarMore = useInsideSidebarMore();
   const textRef = useRef<HTMLSpanElement>(null);
   const [tooltipOpen, setTooltipOpen] = useState(false);
   // Open away from the sidebar's edge, like the More menu and handle tooltip.
-  const tooltipSide = position === 'left' ? 'right' : 'left';
+  const tooltipSide = side === 'left' ? 'right' : 'left';
 
   // Report to the sidebar so an open tooltip holds a hover peek. An effect
   // (not the onOpenChange handler) so unmounting mid-tooltip still
