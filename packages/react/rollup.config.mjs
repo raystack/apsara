@@ -1,4 +1,5 @@
-import { posix } from 'node:path';
+import { readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
@@ -8,6 +9,7 @@ import nodeExternals from 'rollup-plugin-node-externals';
 import postcss from 'rollup-plugin-postcss';
 import preserveDirectives from 'rollup-plugin-preserve-directives';
 import tsconfigPaths from 'rollup-plugin-tsconfig-paths';
+import { replaceTscAliasPaths } from 'tsc-alias';
 
 /** Matches `@import url("https://fonts.googleapis.com/…");` in any quoting. */
 const FONT_IMPORT =
@@ -44,50 +46,38 @@ const emitFontFreeCss = ({ from, to }) => {
 };
 
 /** Matches a quoted `~/` module specifier. */
-const ALIAS_SPECIFIER = /(['"])~\/([^'"]+)\1/g;
+const ALIAS_SPECIFIER = /(['"])~\/[^'"]+\1/g;
 
 /**
  * Rewrites `~/` specifiers in emitted declarations to relative paths, because
  * TypeScript keeps `paths` aliases as written and apps cannot resolve them.
- * `aliasRoot` is where the package root's declarations land. Fails the build
- * if a specifier is left. Must be ordered after `typescript()`.
+ * `tsconfig.alias.json` leaves out the `react` entry of `tsconfig.json`, which
+ * tsc-alias would otherwise rewrite to `node_modules/@types/react`. Fails the
+ * build if a specifier is left. Must be ordered after `typescript()`.
  */
-const resolveDeclarationAliases = ({ aliasRoot }) => ({
+const resolveDeclarationAliases = () => ({
   name: 'apsara-declaration-aliases',
-  // Runs for each output, and each output gets its own copy of the assets.
-  generateBundle({ dir }, bundle) {
-    const declarations = Object.entries(bundle).filter(
-      ([fileName, asset]) =>
-        asset.type === 'asset' && fileName.endsWith('.d.ts')
-    );
-    const emitted = new Set(
-      declarations.map(([fileName]) => posix.join(dir, fileName))
-    );
+  async closeBundle() {
+    await replaceTscAliasPaths({
+      configFile: 'tsconfig.alias.json',
+      outDir: 'dist'
+    });
     const leaks = [];
-    for (const [fileName, asset] of declarations) {
-      const from = posix.dirname(posix.join(dir, fileName));
-      asset.source = asset.source
-        .toString()
-        .replace(ALIAS_SPECIFIER, (specifier, quote, rest) => {
-          const target = posix.join(aliasRoot, rest);
-          if (
-            !emitted.has(`${target}.d.ts`) &&
-            !emitted.has(`${target}/index.d.ts`)
-          ) {
-            return specifier;
+    const declarations = readdirSync('dist', { recursive: true }).filter(
+      fileName => fileName.endsWith('.d.ts')
+    );
+    for (const fileName of declarations) {
+      readFileSync(join('dist', fileName), 'utf8')
+        .split('\n')
+        .forEach((line, index) => {
+          for (const [specifier] of line.matchAll(ALIAS_SPECIFIER)) {
+            leaks.push(`dist/${fileName}:${index + 1} ${specifier}`);
           }
-          const relative = posix.relative(from, target);
-          return `${quote}${relative.startsWith('.') ? relative : `./${relative}`}${quote}`;
         });
-      asset.source.split('\n').forEach((line, index) => {
-        for (const [specifier] of line.matchAll(ALIAS_SPECIFIER)) {
-          leaks.push(`${fileName}:${index + 1} ${specifier}`);
-        }
-      });
     }
     if (leaks.length > 0) {
       this.error(
-        `Declarations import through the ~/ alias, and no emitted declaration matches:\n${leaks.join('\n')}`
+        `Declarations still import through the ~/ alias:\n${leaks.join('\n')}`
       );
     }
   }
@@ -130,8 +120,7 @@ const createPlugins = ({ rootDir, declarationDir }) => [
     rootDir: rootDir,
     declarationDir: declarationDir
   }),
-  // `~/*` maps to the package root (tsconfig.json), emitted under `dist`.
-  resolveDeclarationAliases({ aliasRoot: 'dist' }),
+  resolveDeclarationAliases(),
   preserveDirectives() //preserve `use client` directive
 ];
 
