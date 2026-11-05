@@ -85,4 +85,5 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 - The Trigger uses `aria-expanded` to indicate the open/closed state of the panel.
 - Supports keyboard interaction with Enter and Space to toggle the panel.
 - The Panel is automatically associated with the Trigger via `aria-controls`.
+- A disabled Trigger has the native `disabled` attribute, so it is left out of the Tab order.
 - Respects motion preferences: panel expand/collapse motion is enabled only when `prefers-reduced-motion: no-preference`

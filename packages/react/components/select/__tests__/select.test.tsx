@@ -291,6 +291,28 @@ describe('Select', () => {
       await flushMicrotasks();
       expect(handleValueChange).toHaveBeenCalledTimes(1);
     });
+
+    it('accepts a readonly array as the value', async () => {
+      const value = ['apple', 'banana'] as const;
+      const user = userEvent.setup();
+      render(
+        <Select multiple value={value}>
+          <Select.Trigger>{TRIGGER_TEXT}</Select.Trigger>
+          <Select.Content>
+            {FRUIT_OPTIONS.map(option => (
+              <Select.Item key={option.value} value={option.value}>
+                {option.label}
+              </Select.Item>
+            ))}
+          </Select.Content>
+        </Select>
+      );
+      await openSelect(user);
+
+      expect(
+        within(screen.getAllByRole('option')[0]).getByRole('checkbox')
+      ).toHaveAttribute('aria-checked', 'true');
+    });
   });
 
   describe('Keyboard Navigation', () => {

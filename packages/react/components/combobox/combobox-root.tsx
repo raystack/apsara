@@ -58,8 +58,8 @@ export interface SingleComboboxProps<Value = string, Item = Value>
 export interface MultipleComboboxProps<Value = string, Item = Value>
   extends BaseComboboxRootProps<Value, Item> {
   multiple: true;
-  value?: Value[];
-  defaultValue?: Value[];
+  value?: readonly Value[];
+  defaultValue?: readonly Value[];
   onValueChange?: (value: Value[]) => void;
 }
 
@@ -95,7 +95,7 @@ export const ComboboxRoot = <Value extends unknown | unknown[], Item = Value>({
     state: 'inputValue'
   });
   const [computedValue, setValueUnwrapped] = useControlled<
-    Value | Value[] | null
+    Value | readonly Value[] | null
   >({
     controlled: providedValue,
     default: defaultValue ?? null,

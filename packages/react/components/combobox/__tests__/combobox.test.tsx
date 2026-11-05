@@ -605,6 +605,13 @@ describe('Combobox chips', () => {
     expect(screen.getByText('banana')).toBeInTheDocument();
   });
 
+  it('accepts a readonly array as the value', () => {
+    const value = ['apple', 'banana'] as const;
+    render(<BasicCombobox multiple value={value} />);
+    expect(screen.getByText('apple')).toBeInTheDocument();
+    expect(screen.getByText('banana')).toBeInTheDocument();
+  });
+
   it('removes the last chip on Backspace in an empty input', async () => {
     const user = userEvent.setup();
     const handleValueChange = vi.fn();
