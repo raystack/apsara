@@ -4,8 +4,7 @@
 
 ### Base UI 1.9.0
 
-Apsara uses `@base-ui/react` 1.9.0 and `@base-ui/utils` 0.5.0. The
-changes below are the ones an app can see.
+Apsara uses `@base-ui/react` 1.9.0 and `@base-ui/utils` 0.5.0.
 
 #### Changes
 
@@ -13,9 +12,9 @@ changes below are the ones an app can see.
   `disabled` attribute. It is dimmed and left out of the Tab order.
 - A multiple `Combobox` or `Select` accepts a readonly array for `value`
   and `defaultValue`. `onValueChange` still receives a mutable array.
-- In `Menu`, `ContextMenu` and `Menubar`, activating the trigger of an
-  open submenu closes it, and a submenu closes when focus leaves it
-  through its focus guard.
+- In `Menu`, `ContextMenu` and `Menubar`, pressing the trigger of an open
+  submenu with touch or the keyboard closes it, and a submenu closes when
+  focus moves back to its trigger through its focus guard.
 - The `ScrollArea` viewport has no `role="presentation"`.
 - `Checkbox`, `Radio` and `Switch` take their accessible name from
   `aria-label` when they also have an associated label.
