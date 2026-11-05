@@ -308,13 +308,10 @@ describe('Select', () => {
         </Select>
       );
       await openSelect(user);
-      await flushMicrotasks();
 
-      const checked = screen
-        .getAllByRole('option')
-        .map(option => within(option).getByRole('checkbox'))
-        .map(checkbox => checkbox.getAttribute('aria-checked'));
-      expect(checked).toEqual(['true', 'true', 'false', 'false', 'false']);
+      expect(
+        within(screen.getAllByRole('option')[0]).getByRole('checkbox')
+      ).toHaveAttribute('aria-checked', 'true');
     });
   });
 

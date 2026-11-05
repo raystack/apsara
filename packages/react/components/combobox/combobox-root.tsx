@@ -19,7 +19,7 @@ interface ComboboxContextValue<Value = string> {
   hasItems: boolean;
   inputId: string;
   inputContainerRef: RefObject<HTMLDivElement | null>;
-  value: Value | readonly Value[] | null | undefined;
+  value: Value | Value[] | null | undefined;
   getLabel: (value: Value) => string;
 }
 
