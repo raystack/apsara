@@ -15,10 +15,11 @@ export interface PackLanesResult {
 }
 
 /**
- * Horizontal gap between cards sharing a lane. Not the vertical gap between
- * lanes. That's the `laneGap` prop (default 16) applied in timeline.tsx.
+ * Horizontal gap between cards sharing a lane, at scaling 1. Not the vertical
+ * gap between lanes. That's the `laneGap` prop (default 16) applied in
+ * timeline.tsx.
  */
-const DEFAULT_CARD_GAP_PX = 8;
+export const DEFAULT_CARD_GAP_PX = 8;
 
 /**
  * Below this, scanning `laneEnds` linearly beats the sweep's typed-array

@@ -29,6 +29,7 @@ export function SelectContent({
   side = 'bottom',
   sideOffset = 4,
   align = 'start',
+  alignItemWithTrigger = false,
   alignOffset,
   anchor,
   arrowPadding,
@@ -95,11 +96,12 @@ export function SelectContent({
     );
   }
 
+  // TODO @rohanchkrabrty: Add select.portal when it supports keepMounted
   return (
     <SelectPrimitive.Positioner
       {...positionerProps}
       className={styles.positioner}
-      alignItemWithTrigger={false}
+      alignItemWithTrigger={alignItemWithTrigger}
       data-slot='select-positioner'
     >
       <SelectPrimitive.Popup

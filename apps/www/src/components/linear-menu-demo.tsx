@@ -149,7 +149,7 @@ const menuData: MenuItem[] = [
         type: 'item',
         label: 'Delete...',
         trailingIcon: (
-          <Text size='micro' variant='secondary'>
+          <Text size='micro' color='secondary'>
             ⌘⇧D
           </Text>
         )

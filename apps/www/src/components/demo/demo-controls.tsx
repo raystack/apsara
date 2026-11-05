@@ -67,7 +67,7 @@ export default function DemoControls({
                 justify='between'
                 className={styles.controlHeader}
               >
-                <Text variant='secondary' size='small' weight='medium'>
+                <Text color='secondary' size='small' weight='medium'>
                   {propLabel}
                 </Text>
                 {isIconOptional && (
@@ -126,7 +126,7 @@ export default function DemoControls({
           return (
             <div key={prop} className={styles.controlField}>
               <Text
-                variant='secondary'
+                color='secondary'
                 size='mini'
                 weight='medium'
                 className={styles.selectLabel}
