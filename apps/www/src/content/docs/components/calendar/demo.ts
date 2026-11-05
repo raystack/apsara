@@ -197,7 +197,7 @@ function DatePickerFieldExample() {
       style={{ maxWidth: 240 }}
     >
       <DatePicker
-        onErrorChange={setError}
+        onValidityChange={({ message }) => setError(message)}
         slotProps={{ input: { size: "medium" } }}
       />
     </Field>

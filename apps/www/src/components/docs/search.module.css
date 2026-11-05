@@ -1,4 +1,5 @@
 .searchContainer {
+  width: 512px;
   border-radius: var(--rs-radius-5);
   overflow: hidden;
 }
