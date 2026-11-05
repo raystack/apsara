@@ -30,7 +30,7 @@ export interface SidePanelHeaderProps {
   /**
    * Optional icon element to display before the title.
    */
-  icon?: React.ReactNode;
+  leadingIcon?: React.ReactNode;
 
   /**
    * Array of action elements to display in the header.

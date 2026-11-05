@@ -13,6 +13,7 @@ import {
   type ChangeDetails,
   createChangeDetails
 } from '~/shared/change-details';
+import type { CalendarPreviewInputValidity } from '../calendar-preview/calendar-preview-input';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
 import { Popover } from '../popover';
@@ -36,6 +37,8 @@ export type DatePickerChangeDetails = ChangeDetails<
   'item-press' | 'input-change'
 >;
 
+const VALID: CalendarPreviewInputValidity = { valid: true };
+
 export interface DatePickerSlotProps {
   input?: InputProps;
   calendar?: DatePickerCalendarSlot;
@@ -56,22 +59,19 @@ export interface DatePickerProps {
   /** @deprecated Use `slotProps.popover` instead. */
   popoverProps?: PopoverContentProps;
   onValueChange?: (date: Date, details: DatePickerChangeDetails) => void;
-  /**
-   * Fires when the typed-input validation state changes: with a message when
-   * the typed text stops parsing as a valid in-bounds date, and with
-   * `undefined` when it becomes valid again (or the picker commits/closes).
-   * DatePicker renders no error UI of its own, not even `aria-invalid`.
-   * Lift this into `Field`'s `error` prop (or your form library) to display
-   * it; `Field` also wires `aria-invalid` onto the input.
-   */
-  onErrorChange?: (error: string | undefined) => void;
+  /** Called when the typed date becomes invalid or valid again. */
+  onValidityChange?: (validity: CalendarPreviewInputValidity) => void;
   /** The date (controlled). `null` is a controlled empty date. */
   value?: Date | null;
   defaultValue?: Date;
   children?:
     | React.ReactNode
     | ((props: { selectedDate: string }) => React.ReactNode);
-  showCalendarIcon?: boolean;
+  /**
+   * Hides the calendar icon in the input.
+   * @default false
+   */
+  hideCalendarIcon?: boolean;
   timeZone?: string;
 }
 
@@ -84,9 +84,9 @@ export function DatePicker({
   value: valueProp,
   defaultValue,
   onValueChange,
-  onErrorChange,
+  onValidityChange,
   children,
-  showCalendarIcon = true,
+  hideCalendarIcon = false,
   timeZone
 }: DatePickerProps) {
   // Merge legacy props with slotProps; slotProps wins when both are set.
@@ -112,11 +112,14 @@ export function DatePicker({
   const [typedDate, setTypedDate] = useState<Date | undefined>();
   const selectedDate = typedDate ?? value;
 
-  const errorRef = useRef<string | undefined>(undefined);
+  const validityRef = useRef<CalendarPreviewInputValidity>(VALID);
 
-  function updateError(next: string | undefined) {
-    if (next !== errorRef.current) onErrorChange?.(next);
-    errorRef.current = next;
+  function updateValidity(next: CalendarPreviewInputValidity) {
+    const prev = validityRef.current;
+    validityRef.current = next;
+    if (next.valid !== prev.valid || next.reason !== prev.reason) {
+      onValidityChange?.(next);
+    }
   }
 
   const formattedDate = selectedDate
@@ -163,11 +166,11 @@ export function DatePicker({
 
   function closePicker(event?: Event) {
     popover.disengage();
-    const hadError = errorRef.current !== undefined;
+    const hadError = !validityRef.current.valid;
     const nextDate = hadError ? value : selectedDate;
     setTypedDate(undefined);
     setInputValue(nextDate ? dayjs(nextDate).format(dateFormat) : '');
-    updateError(undefined);
+    updateValidity(VALID);
     if (!hadError && typedDate && typedDate.getTime() !== value?.getTime()) {
       setValue(typedDate, createChangeDetails('input-change', event));
     }
@@ -187,7 +190,7 @@ export function DatePicker({
     } else {
       setValueUnwrapped(undefined);
     }
-    updateError(undefined);
+    updateValidity(VALID);
     popover.disengage();
   }
 
@@ -227,9 +230,13 @@ export function DatePicker({
 
     if (isValid) {
       setTypedDate(date.toDate());
-      updateError(undefined);
+      updateValidity(VALID);
     } else {
-      updateError('Invalid date');
+      updateValidity({
+        valid: false,
+        reason: isValidDate ? 'out-of-bounds' : 'unparseable',
+        message: 'Invalid date'
+      });
     }
   }
 
@@ -238,7 +245,7 @@ export function DatePicker({
       size='small'
       placeholder='Select date'
       className={styles.datePickerInput}
-      trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+      trailingIcon={hideCalendarIcon ? undefined : <CalendarIcon />}
       data-slot='date-picker-input'
       {...inputProps}
       ref={popover.inputRef}

@@ -198,7 +198,7 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
       >
         <SearchIcon />
       </Command.DialogTrigger>
-      <Command.DialogContent width={512} className={styles.searchContainer}>
+      <Command.DialogContent className={styles.searchContainer}>
         <Command
           items={itemValues}
           mode='none'

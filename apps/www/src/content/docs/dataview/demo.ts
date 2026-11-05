@@ -209,13 +209,13 @@ export const loadingPreview = {
       label: 'index.tsx',
       code: `
       /* \`DataView.List\` renders \`loadingRowCount\` skeleton rows while
-         \`isLoading\` is true. Existing rows render alongside skeletons in
+         \`loading\` is true. Existing rows render alongside skeletons in
          server mode (load-more). */
       <DataView
         data={loadingRows}
         fields={fields}
         defaultSort={{ name: "name", order: "asc" }}
-        isLoading={isLoading}
+        loading={loading}
         loadingRowCount={4}
       >
         <DataView.Toolbar>
@@ -387,10 +387,9 @@ function SelectionBar() {
         size="large"
         color="neutral"
         leadingIcon={<Frame size={16} strokeWidth={1.5} />}
-        isDismissible
-        onDismiss={() => table.resetRowSelection()}
       >
         {selectedCount} selected
+        <Chip.Remove onClick={() => table.resetRowSelection()} />
       </Chip>
       <FloatingActions.Separator />
       <Button variant="outline" color="neutral" size="small">Change team</Button>
@@ -449,7 +448,7 @@ export const timelinePreview = {
           startField="start"
           endField="end"
           actionsRef={timelineActions}
-          markers={[{ date: releaseDate, label: "Release", variant: "accent" }]}
+          markers={[{ date: releaseDate, label: "Release", color: "accent" }]}
           renderCard={(row, context) =>
             context.collapsed
               ? <CompactStub task={row.original} />
@@ -495,7 +494,7 @@ export const timelineGroupingPreview = {
         <DataView.Timeline
           startField="start"
           endField="end"
-          // showGroupHeaders={false} hides the bands, keeps the sections
+          // hideGroupHeaders hides the bands, keeps the sections
           renderCard={(row, context) => <TaskCard task={row.original} context={context} />}
         />
       </DataView>`
@@ -561,7 +560,7 @@ export const timelinePointPreview = {
           startField="date"
           estimatedRowHeight={28}
           renderCard={(row) => (
-            <Badge variant={row.original.channel === "stable" ? "accent" : "neutral"}>
+            <Badge color={row.original.channel === "stable" ? "accent" : "neutral"}>
               {row.original.version}
             </Badge>
           )}

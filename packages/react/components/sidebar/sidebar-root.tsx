@@ -30,6 +30,8 @@ export interface SidebarContextValue {
   setOpen: (open: boolean, details?: SidebarOpenChangeDetails) => void;
   /** Mirrors the `collapsible` prop; `'none'` means it cannot be collapsed. */
   collapsible: 'icon' | 'hidden' | 'none';
+  side: 'left' | 'right';
+  /** @deprecated Use `side`. */
   position: 'left' | 'right';
   hideItemTooltips?: boolean;
   /** id of the sidebar element, for `aria-controls` on toggle controls. */
@@ -56,6 +58,7 @@ const FALLBACK_CONTEXT: SidebarContextValue = {
   open: true,
   setOpen: () => undefined,
   collapsible: 'icon',
+  side: 'left',
   position: 'left',
   hideItemTooltips: undefined
 };
@@ -73,6 +76,12 @@ export const SidebarPopupContext = createContext<(open: boolean) => void>(
 );
 
 export interface SidebarRootProps extends ComponentProps<'aside'> {
+  /**
+   * The edge of the layout the sidebar sits on.
+   * @default 'left'
+   */
+  side?: 'left' | 'right';
+  /** @deprecated Use `side`. */
   position?: 'left' | 'right';
   variant?: 'plain' | 'floating' | 'inset';
   /**
@@ -117,7 +126,8 @@ const DEFAULT_PEEK_DELAY = 100;
 export function SidebarRoot({
   className,
   id: providedId,
-  position = 'left',
+  side: providedSide,
+  position,
   variant = 'plain',
   open: providedOpen,
   onOpenChange,
@@ -135,6 +145,7 @@ export function SidebarRoot({
 }: SidebarRootProps) {
   const generatedId = useId();
   const sidebarId = providedId ?? generatedId;
+  const side = providedSide ?? position ?? 'left';
   const [open, setOpenUnwrapped] = useControlled({
     controlled: providedOpen,
     default: defaultOpen,
@@ -224,7 +235,8 @@ export function SidebarRoot({
         open,
         setOpen: handleOpenChange,
         collapsible,
-        position,
+        side,
+        position: side,
         hideItemTooltips,
         sidebarId
       }}
@@ -233,7 +245,7 @@ export function SidebarRoot({
         <aside
           id={sidebarId}
           className={cx(styles.root, className)}
-          data-position={position}
+          data-side={side}
           data-variant={variant}
           data-open={visualOpen ? '' : undefined}
           data-closed={!visualOpen ? '' : undefined}
@@ -267,7 +279,7 @@ export function SidebarRoot({
                 }
               />
               <Tooltip.Content
-                side={position === 'left' ? 'right' : 'left'}
+                side={side === 'left' ? 'right' : 'left'}
                 sideOffset={10}
               >
                 {collapseTooltip ??

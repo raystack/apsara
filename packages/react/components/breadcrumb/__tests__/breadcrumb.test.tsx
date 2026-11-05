@@ -178,10 +178,10 @@ describe('Breadcrumb', () => {
       expect(link?.textContent).toMatch(/L\s*Label\s*T/);
     });
 
-    it('applies current/active state and renders as span with aria-current', () => {
+    it('applies active state and renders as span with aria-current', () => {
       const { container } = render(
         <Breadcrumb>
-          <Breadcrumb.Item current>Current Page</Breadcrumb.Item>
+          <Breadcrumb.Item active>Current Page</Breadcrumb.Item>
         </Breadcrumb>
       );
 
@@ -193,7 +193,7 @@ describe('Breadcrumb', () => {
       expect(currentEl).toHaveAttribute('aria-current', 'page');
       expect(currentEl).toHaveClass(styles['breadcrumb-link']);
       expect(currentEl).toHaveClass(styles['breadcrumb-link-active']);
-      expect(currentEl).toHaveAttribute('data-current', 'true');
+      expect(currentEl).toHaveAttribute('data-active', 'true');
       expect(currentEl).toHaveTextContent('Current Page');
       expect(container.querySelector('a')).not.toBeInTheDocument();
     });
@@ -549,7 +549,7 @@ describe('Breadcrumb', () => {
             Electronics
           </Breadcrumb.Item>
           <Breadcrumb.Separator>/</Breadcrumb.Separator>
-          <Breadcrumb.Item current>Laptop</Breadcrumb.Item>
+          <Breadcrumb.Item active>Laptop</Breadcrumb.Item>
         </Breadcrumb>
       );
 
@@ -596,7 +596,7 @@ describe('Breadcrumb', () => {
             Categories
           </Breadcrumb.Item>
           <Breadcrumb.Separator />
-          <Breadcrumb.Item current>Product</Breadcrumb.Item>
+          <Breadcrumb.Item active>Product</Breadcrumb.Item>
         </Breadcrumb>
       );
 

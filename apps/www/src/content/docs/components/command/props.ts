@@ -83,6 +83,17 @@ export interface CommandContentProps {
 }
 
 export interface CommandEmptyProps {
+  /** Content to show when no items match. */
+  children?: React.ReactNode;
+
+  /** Additional CSS class names. */
+  className?: string;
+}
+
+export interface CommandStatusProps {
+  /** Text to announce. A function receives the number of matching items, or `null` without the `items` prop. */
+  children?: React.ReactNode | ((count: number | null) => React.ReactNode);
+
   /** Additional CSS class names. */
   className?: string;
 }
@@ -155,8 +166,8 @@ export interface CommandDialogContentProps {
   /** Additional CSS class names applied to the dialog popup. */
   className?: string;
 
-  /** Explicit width for the dialog popup. */
-  width?: string | number;
+  /** Inline styles applied to the dialog popup. */
+  style?: React.CSSProperties;
 
   /**
    * Corner radius for this palette only. Overrides the theme's `radius`.

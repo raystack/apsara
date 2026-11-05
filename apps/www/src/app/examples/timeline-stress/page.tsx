@@ -49,7 +49,7 @@ const isoDay = (ms: number) => new Date(ms).toISOString().slice(0, 10);
  * every commit, churn this page would then report as its own frame cost.
  */
 const MARKERS: TimelineMarker[] = [
-  { date: '2025-07-01', label: 'H2', variant: 'accent' }
+  { date: '2025-07-01', label: 'H2', color: 'accent' }
 ];
 
 /** Seeded LCG, so the same row count always renders the same canvas. */
@@ -278,7 +278,7 @@ export default function TimelineStressPage() {
 
   const stat = (label: string, value: string | number) => (
     <Flex direction='column' gap={1} style={{ minWidth: 108 }}>
-      <Text size='micro' variant='secondary'>
+      <Text size='micro' color='secondary'>
         {label}
       </Text>
       <Text size='small' style={{ fontVariantNumeric: 'tabular-nums' }}>
@@ -295,7 +295,7 @@ export default function TimelineStressPage() {
     >
       <Flex direction='column' gap={2}>
         <Text size='large'>Timeline virtualization stress</Text>
-        <Text size='small' variant='secondary'>
+        <Text size='small' color='secondary'>
           Scroll the canvas in both directions and watch the counts. Culling is
           bounded by the viewport, so they should barely move with row count.
         </Text>
@@ -303,7 +303,7 @@ export default function TimelineStressPage() {
 
       <Flex gap={7} align='end' wrap='wrap'>
         <Flex direction='column' gap={2}>
-          <Text size='micro' variant='secondary'>
+          <Text size='micro' color='secondary'>
             Rows
           </Text>
           <Flex gap={2}>
@@ -320,7 +320,7 @@ export default function TimelineStressPage() {
           </Flex>
         </Flex>
         <Flex direction='column' gap={2}>
-          <Text size='micro' variant='secondary'>
+          <Text size='micro' color='secondary'>
             Span
           </Text>
           <Flex gap={2}>
@@ -337,7 +337,7 @@ export default function TimelineStressPage() {
           </Flex>
         </Flex>
         <Flex direction='column' gap={2}>
-          <Text size='micro' variant='secondary'>
+          <Text size='micro' color='secondary'>
             Options
           </Text>
           <Flex gap={2}>

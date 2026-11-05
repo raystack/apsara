@@ -4,7 +4,7 @@ description: A banner that displays a short site-wide message with an optional a
 source: packages/react/components/announcement-bar
 ---
 
-import { playground, variantsDemo,
+import { playground, colorDemo,
   actionDemo,
   dismissDemo,
 } from "./demo.ts";
@@ -25,11 +25,11 @@ import { AnnouncementBar } from '@raystack/apsara'
 
 Set how loud the bar looks, and what sits beside the message.
 
-### Variant
+### Color
 
-Variants convey the tone of the announcement. Default is `normal`; use `error` for urgent notices and `gradient` for promotional messages.
+`color` sets the tone of the announcement. The default is `neutral`. Use `danger` for urgent notices and `gradient` for promotional messages.
 
-<Demo data={variantsDemo} />
+<Demo data={colorDemo} />
 
 ### Icon and action
 
@@ -56,7 +56,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | Slot | Element |
 |------|---------|
 | `announcement-bar` | The root `<div>` element |
-| `announcement-bar-icon` | Wrapper around the leading icon (when `leadingIcon` is set) |
+| `announcement-bar-leading-icon` | Wrapper around the leading icon (when `leadingIcon` is set) |
 | `announcement-bar-text` | The main text |
 | `announcement-bar-action` | The action `<button>` (when `actionLabel` or `actionIcon` is set) |
 | `announcement-bar-action-label` | The action button's text label |

@@ -81,7 +81,7 @@ useful for action-gated steps (draw a shape, open a panel).
     {({ step, index, totalSteps, isLastStep, actions }) => (
       <Flex direction="column" gap={3}>
         <Text weight="medium">{step.title}</Text>
-        <Text variant="secondary">{step.content}</Text>
+        <Text color="secondary">{step.content}</Text>
         <Flex justify="between" align="center">
           <Text size="mini">{index + 1} of {totalSteps}</Text>
           <Button size="small" onClick={isLastStep ? actions.stop : actions.next}>
