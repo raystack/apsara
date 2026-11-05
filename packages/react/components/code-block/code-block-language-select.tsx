@@ -18,7 +18,11 @@ export const CodeBlockLanguageSelect = (
   const handleValueChange = (value: string) => {
     setValue(value as Language);
   };
-  return <Select onValueChange={handleValueChange} value={value} {...props} />;
+  // The value is unset until a CodeBlock.Code sets it. Pass '' so the Select
+  // is controlled from its first render.
+  return (
+    <Select onValueChange={handleValueChange} value={value ?? ''} {...props} />
+  );
 };
 
 CodeBlockLanguageSelect.displayName = 'CodeBlock.LanguageSelect';

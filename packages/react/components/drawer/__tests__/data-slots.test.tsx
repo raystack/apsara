@@ -38,4 +38,21 @@ describe('Drawer data-slot contract', () => {
     render(<OpenDrawer showCloseButton={false} />);
     expect(getSlot(document.body, 'drawer-close')).toBeNull();
   });
+
+  it('exposes slots for the swipe area and indent parts', () => {
+    render(
+      <Drawer.Provider>
+        <Drawer.Indent>
+          <Drawer>
+            <Drawer.SwipeArea />
+          </Drawer>
+        </Drawer.Indent>
+      </Drawer.Provider>
+    );
+    expectSlots(document.body, [
+      'drawer-swipe-area',
+      'drawer-indent',
+      'drawer-indent-background'
+    ]);
+  });
 });

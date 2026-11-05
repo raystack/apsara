@@ -1,8 +1,9 @@
 'use client';
 
+import { Autocomplete as AutocompletePrimitive } from '@base-ui/react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { cx } from 'class-variance-authority';
-import { ComponentProps, Fragment, ReactNode } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import styles from './menu.module.css';
 import { useMenuContext } from './menu-root';
 
@@ -11,12 +12,7 @@ export function MenuGroup({
   children,
   ...props
 }: MenuPrimitive.Group.Props) {
-  const { shouldFilter } = useMenuContext();
-
-  if (shouldFilter) {
-    return <Fragment>{children}</Fragment>;
-  }
-
+  // Stays rendered while filtering. Removing it would remount the items and reset their state.
   return (
     <MenuPrimitive.Group
       data-slot='menu-group'
@@ -76,14 +72,21 @@ export function MenuEmptyState({
   children,
   ...props
 }: MenuEmptyStateProps) {
+  const { autocomplete } = useMenuContext();
+  const Component = autocomplete ? AutocompletePrimitive.Empty : 'div';
+
   return (
-    <div
+    <Component
       data-slot='menu-empty-state'
+      // The search list is a listbox, which only allows options and groups inside.
+      role={undefined}
+      aria-live={undefined}
+      aria-atomic={undefined}
       className={cx(styles.empty, className)}
       {...props}
     >
       {children}
-    </div>
+    </Component>
   );
 }
 MenuEmptyState.displayName = 'Menu.EmptyState';

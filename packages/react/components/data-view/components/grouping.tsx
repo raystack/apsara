@@ -35,7 +35,7 @@ export function Grouping<TData>({
       <Text
         size='small'
         weight='medium'
-        variant='secondary'
+        color='secondary'
         className={styles['display-popover-properties-label']}
         data-slot='data-view-grouping-label'
       >

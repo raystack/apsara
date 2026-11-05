@@ -117,7 +117,11 @@ export {
   type CheckboxGroupProps,
   type CheckboxProps
 } from './components/checkbox';
-export { Chip, type ChipProps } from './components/chip';
+export {
+  Chip,
+  type ChipProps,
+  type ChipRemoveProps
+} from './components/chip';
 export {
   CodeBlock,
   type CodeBlockCodeProps,
@@ -130,10 +134,13 @@ export { Collapsible } from './components/collapsible';
 export * from './components/color-picker';
 export {
   Combobox,
+  type ComboboxClearProps,
   type ComboboxContentProps,
   type ComboboxInputProps,
   type ComboboxItemProps,
-  type ComboboxProps
+  type ComboboxLabelProps,
+  type ComboboxProps,
+  type ComboboxStatusProps
 } from './components/combobox';
 export {
   Command,
@@ -145,16 +152,21 @@ export {
   type CommandItemProps,
   type CommandLabelProps,
   type CommandProps,
-  type CommandSeparatorProps
+  type CommandSeparatorProps,
+  type CommandStatusProps
 } from './components/command';
 export { Container, type ContainerProps } from './components/container';
 export {
   ContextMenu,
+  type ContextMenuCheckboxItemProps,
   type ContextMenuContentProps,
   type ContextMenuGroupProps,
   type ContextMenuItemProps,
   type ContextMenuLabelProps,
+  type ContextMenuLinkItemProps,
   type ContextMenuProps,
+  type ContextMenuRadioGroupProps,
+  type ContextMenuRadioItemProps,
   type ContextMenuSubMenuProps,
   type ContextMenuSubTriggerProps,
   type ContextMenuTriggerProps
@@ -205,7 +217,9 @@ export { Dialog, type DialogContentProps } from './components/dialog';
 export {
   Drawer,
   type DrawerContentProps,
-  type DrawerProps
+  type DrawerIndentProps,
+  type DrawerProps,
+  type DrawerSwipeAreaProps
 } from './components/drawer';
 export {
   defaultShortcuts,
@@ -287,10 +301,14 @@ export {
 } from './components/list';
 export {
   Menu,
+  type MenuCheckboxItemProps,
   type MenuContentProps,
   type MenuEmptyStateProps,
   type MenuItemProps,
+  type MenuLinkItemProps,
   type MenuProps,
+  type MenuRadioGroupProps,
+  type MenuRadioItemProps,
   type MenuSubMenuProps,
   type MenuSubTriggerProps,
   type MenuTriggerProps
@@ -364,6 +382,8 @@ export { Search, type SearchProps } from './components/search';
 export {
   Select,
   type SelectContentProps,
+  type SelectEmptyProps,
+  type SelectGroupLabelProps,
   type SelectGroupProps,
   type SelectItemProps,
   type SelectLabelProps,

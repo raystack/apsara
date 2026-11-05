@@ -22,6 +22,12 @@
   transition: opacity var(--rs-duration-normal) var(--rs-ease-out);
 }
 
+/* The arrow sits outside the popup box, so the popup must not clip it. */
+.show-arrow {
+  position: relative;
+  overflow: visible;
+}
+
 .popover[data-starting-style],
 .popover[data-ending-style] {
   opacity: 0;
