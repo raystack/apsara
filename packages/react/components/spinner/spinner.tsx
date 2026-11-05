@@ -14,7 +14,7 @@ const spinner = cva(styles.spinner, {
       6: styles['spinner-size-6']
     },
     color: {
-      default: styles['spinner-color-default'],
+      inherit: styles['spinner-color-inherit'],
       neutral: styles['spinner-color-neutral'],
       accent: styles['spinner-color-accent'],
       danger: styles['spinner-color-danger'],
@@ -32,7 +32,7 @@ export interface SpinnerProps
   extends ComponentProps<'div'>,
     VariantProps<typeof spinner> {
   size?: 1 | 2 | 3 | 4 | 5 | 6;
-  color?: 'default' | 'neutral' | 'accent' | 'danger' | 'success' | 'attention';
+  color?: 'inherit' | 'neutral' | 'accent' | 'danger' | 'success' | 'attention';
 }
 
 export function Spinner({

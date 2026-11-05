@@ -63,7 +63,7 @@ A trigger wrapping an `.Input`, with the day view in a popover.
 
 `minDate`, `maxDate` and `isDateUnavailable` disable cells.
 
-<Callout type="info">
+<Callout color="neutral">
   None of them clamps navigation — the chevrons and the scroller still reach any month. `isDateUnavailable` is day scale only; period cells are bounded by `minDate` and `maxDate` instead.
 </Callout>
 
@@ -79,7 +79,7 @@ A trigger wrapping an `.Input`, with the day view in a popover.
 
 Typed dates are checked on every keystroke, and a date that fails is never committed.
 
-<Callout type="warn" title="A failed commit keeps the text">
+<Callout color="attention" title="A failed commit keeps the text">
   Blurring or pressing Enter on a date that does not resolve leaves the typed text in the field. The field stays marked invalid but now shows something other than the committed value — read the value from `onValueChange`, never from the input's text.
 </Callout>
 
@@ -89,7 +89,7 @@ Typed dates are checked on every keystroke, and a date that fails is never commi
 
 Restores `defaultDate`. Stays visible but disabled when there is nothing to restore.
 
-<Callout type="info">
+<Callout color="neutral">
   `defaultDate={null}` clears the selection and reports `reason: 'clear'`; omitting it hides the button.
 </Callout>
 
@@ -291,7 +291,7 @@ interface ScaleValue { date: 'YYYY-MM-DD'; scale: Scale }
 
 `onValueChange` fires on a complete range or not at all. Typing is stricter than clicking: an endpoint that crosses its partner is rejected as `out-of-order` rather than restarting.
 
-<Callout type="warn">
+<Callout color="attention">
   A read-only endpoint with no value makes the range unsatisfiable — the free endpoint sets, the range never completes, and nothing emits. Give a read-only endpoint a value.
 </Callout>
 

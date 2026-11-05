@@ -4,8 +4,8 @@
 
 import figma from 'figma';
 
-const variant = figma.selectedInstance.getEnum('Variant', {
-  Error: 'error',
+const color = figma.selectedInstance.getEnum('Variant', {
+  Error: 'danger',
   Gradient: 'gradient'
 });
 const text = figma.selectedInstance.getString('Message');
@@ -19,8 +19,8 @@ export default {
   id: 'AnnouncementBar',
   imports: ["import { AnnouncementBar } from '@raystack/apsara'"],
   example: figma.code`<AnnouncementBar${figma.helpers.react.renderProp(
-    'variant',
-    variant
+    'color',
+    color
   )}${figma.helpers.react.renderProp(
     'text',
     text

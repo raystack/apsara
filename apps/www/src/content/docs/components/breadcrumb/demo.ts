@@ -9,7 +9,7 @@ export const getCode = (props: ComponentPropsType) => {
         <Breadcrumb.Separator/>
         <Breadcrumb.Item href="#">Products</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="#" current>Shoes</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" active>Shoes</Breadcrumb.Item>
       </Breadcrumb>`;
 };
 
@@ -36,7 +36,7 @@ export const sizeDemo = {
     <Breadcrumb.Separator/>
     <Breadcrumb.Item href="#">Products</Breadcrumb.Item>
     <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="#" current>Shoes</Breadcrumb.Item>
+    <Breadcrumb.Item href="#" active>Shoes</Breadcrumb.Item>
   </Breadcrumb>`
     },
     {
@@ -47,7 +47,7 @@ export const sizeDemo = {
     <Breadcrumb.Separator/>
     <Breadcrumb.Item href="#">Products</Breadcrumb.Item>
     <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="#" current>Shoes</Breadcrumb.Item>
+    <Breadcrumb.Item href="#" active>Shoes</Breadcrumb.Item>
   </Breadcrumb>`
     }
   ]
@@ -62,14 +62,14 @@ export const separatorDemo = {
       <Breadcrumb.Separator>|</Breadcrumb.Separator>
       <Breadcrumb.Item href="#">Products</Breadcrumb.Item>
       <Breadcrumb.Separator>|</Breadcrumb.Separator>
-      <Breadcrumb.Item href="#" current>Shoes</Breadcrumb.Item>
+      <Breadcrumb.Item href="#" active>Shoes</Breadcrumb.Item>
     </Breadcrumb>
     <Breadcrumb>
       <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
       <Breadcrumb.Separator>-</Breadcrumb.Separator>
       <Breadcrumb.Item href="#">Products</Breadcrumb.Item>
       <Breadcrumb.Separator>-</Breadcrumb.Separator>
-      <Breadcrumb.Item href="#" current>Shoes</Breadcrumb.Item>
+      <Breadcrumb.Item href="#" active>Shoes</Breadcrumb.Item>
     </Breadcrumb>
   </Flex>`
 };
@@ -82,7 +82,7 @@ export const ellipsisDemo = {
     <Breadcrumb.Separator/>
     <Breadcrumb.Ellipsis/>
     <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="#" current>Shoes</Breadcrumb.Item>
+    <Breadcrumb.Item href="#" active>Shoes</Breadcrumb.Item>
   </Breadcrumb>`
 };
 
@@ -115,7 +115,7 @@ export const dropdownLinksDemo = {
         { children: 'Books', onClick: () => {console.log('Books')}}
       ]}>Categories</Breadcrumb.Item>
     <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="#" current>Current</Breadcrumb.Item>
+    <Breadcrumb.Item href="#" active>Current</Breadcrumb.Item>
   </Breadcrumb>`
 };
 
@@ -127,7 +127,7 @@ export const asDemo = {
     <Breadcrumb.Separator/>
     <Breadcrumb.Item href="#" render={<NextLink />}>Playground</Breadcrumb.Item>
     <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="#" current>Docs</Breadcrumb.Item>
+    <Breadcrumb.Item href="#" active>Docs</Breadcrumb.Item>
   </Breadcrumb>`
 };
 
@@ -139,7 +139,7 @@ export const disabledDemo = {
     <Breadcrumb.Separator/>
     <Breadcrumb.Item disabled>Loading…</Breadcrumb.Item>
     <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="#" current>Products</Breadcrumb.Item>
+    <Breadcrumb.Item href="#" active>Products</Breadcrumb.Item>
   </Breadcrumb>`
 };
 

@@ -55,6 +55,28 @@ export interface SelectTriggerProps {
   'aria-label'?: string;
 }
 
+export interface SelectValueProps {
+  /** Text shown when no item is selected. */
+  placeholder?: string;
+
+  /**
+   * Content shown in place of the selected item's label.
+   * A function receives the selected item, or an array of items when `multiple` is set.
+   *
+   * @remarks `ReactNode | function`
+   */
+  children?:
+    | React.ReactNode
+    | ((
+        value?:
+          | { value: string; leadingIcon?: React.ReactNode }
+          | { value: string; leadingIcon?: React.ReactNode }[]
+      ) => React.ReactNode);
+
+  /** Additional CSS class names */
+  className?: string;
+}
+
 export interface SelectContentProps {
   /** Placeholder text for the autocomplete search input
    * @default "Search..."
@@ -78,6 +100,55 @@ export interface SelectContentProps {
    * @default 4
    */
   sideOffset?: number;
+
+  /**
+   * Additional offset in pixels along the alignment axis.
+   * @default 0
+   */
+  alignOffset?: number;
+
+  /** Space in pixels to keep from the edge of the collision boundary. */
+  collisionPadding?: number;
+
+  /**
+   * The element or area that confines the content.
+   * @default "clipping-ancestors"
+   */
+  collisionBoundary?: Element | Element[] | 'clipping-ancestors';
+
+  /** How the content moves when it does not fit on the chosen side. */
+  collisionAvoidance?: {
+    side?: 'flip' | 'shift' | 'none';
+    align?: 'flip' | 'shift' | 'none';
+    fallbackAxisSide?: 'start' | 'end' | 'none';
+  };
+
+  /**
+   * Keeps the content in the viewport after the trigger scrolls out of view.
+   * @default false
+   */
+  sticky?: boolean;
+
+  /**
+   * The CSS `position` of the content.
+   * @default "absolute"
+   */
+  positionMethod?: 'absolute' | 'fixed';
+
+  /** An element to place the content against, in place of the trigger. */
+  anchor?: Element | React.RefObject<Element | null> | null;
+
+  /**
+   * Stops the content from following layout shifts of the anchor.
+   * @default false
+   */
+  disableAnchorTracking?: boolean;
+
+  /**
+   * Overlaps the trigger so the selected item's text lines up with the trigger's value. Has no effect in autocomplete mode.
+   * @default false
+   */
+  alignItemWithTrigger?: boolean;
 
   /** Additional CSS class names. */
   className?: string;
@@ -111,6 +182,21 @@ export interface SelectGroupProps {
 }
 
 export interface SelectLabelProps {
+  /**
+   * Whether the select is required. When `false`, an optional
+   * indicator (see `optionalText`) is rendered next to the label.
+   */
+  required?: boolean;
+
+  /**
+   * Text rendered next to the label when `required={false}`.
+   * @defaultValue "(optional)"
+   */
+  optionalText?: string;
+
+  /** Text rendered next to the label when `required={true}`. No indicator is rendered if this is omitted. */
+  requiredText?: string;
+
   /** Additional CSS class names */
   className?: string;
 
@@ -121,6 +207,27 @@ export interface SelectLabelProps {
    * @remarks `ReactElement | function`
    */
   render?: React.ReactElement;
+}
+
+export interface SelectGroupLabelProps {
+  /** Additional CSS class names */
+  className?: string;
+
+  /**
+   * Allows rendering as a different element.
+   * Accepts a React element or a function that receives props and returns an element.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?: React.ReactElement;
+}
+
+export interface SelectEmptyProps {
+  /** Content shown when the list has no items, or when no item matches the search. */
+  children?: React.ReactNode;
+
+  /** Additional CSS class names */
+  className?: string;
 }
 
 export interface SelectSeparatorProps {

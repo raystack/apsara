@@ -565,21 +565,25 @@ describe('FilterChip', () => {
       expect(icons(true)).toBe(1);
     });
 
-    it('reports a typed error through onErrorChange', () => {
-      const onErrorChange = vi.fn();
+    it('reports a typed error through onValidityChange', () => {
+      const onValidityChange = vi.fn();
       render(
         <FilterChip
           label='Created'
           columnType={FilterType.date}
-          calendarProps={{ onErrorChange }}
+          calendarProps={{ slotProps: { input: { onValidityChange } } }}
         />
       );
       const input = screen.getByPlaceholderText('Select date');
       fireEvent.focus(input);
       fireEvent.change(input, { target: { value: 'not a date' } });
-      expect(onErrorChange).toHaveBeenLastCalledWith('Invalid date');
+      expect(onValidityChange).toHaveBeenLastCalledWith({
+        valid: false,
+        reason: 'unparseable',
+        message: 'Invalid date'
+      });
       fireEvent.change(input, { target: { value: '27 May 2026' } });
-      expect(onErrorChange).toHaveBeenLastCalledWith(undefined);
+      expect(onValidityChange).toHaveBeenLastCalledWith({ valid: true });
     });
 
     it('keeps a typed error when a string value rerenders the chip', () => {
@@ -592,7 +596,13 @@ describe('FilterChip', () => {
               label='Created'
               columnType={FilterType.date}
               value='2026-05-27'
-              calendarProps={{ onErrorChange: setError }}
+              calendarProps={{
+                slotProps: {
+                  input: {
+                    onValidityChange: validity => setError(validity.message)
+                  }
+                }
+              }}
             />
           </>
         );

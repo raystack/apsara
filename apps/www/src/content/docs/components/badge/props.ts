@@ -1,11 +1,11 @@
 export interface BadgeProps {
   /**
-   * Visual style variant
+   * Intent color of the badge.
    * @defaultValue "accent"
    */
-  variant?:
+  color?:
     | 'accent'
-    | 'warning'
+    | 'attention'
     | 'danger'
     | 'success'
     | 'neutral'

@@ -387,10 +387,9 @@ function SelectionBar() {
         size="large"
         color="neutral"
         leadingIcon={<Frame size={16} strokeWidth={1.5} />}
-        dismissible
-        onDismiss={() => table.resetRowSelection()}
       >
         {selectedCount} selected
+        <Chip.Remove onClick={() => table.resetRowSelection()} />
       </Chip>
       <FloatingActions.Separator />
       <Button variant="outline" color="neutral" size="small">Change team</Button>
@@ -449,7 +448,7 @@ export const timelinePreview = {
           startField="start"
           endField="end"
           actionsRef={timelineActions}
-          markers={[{ date: releaseDate, label: "Release", variant: "accent" }]}
+          markers={[{ date: releaseDate, label: "Release", color: "accent" }]}
           renderCard={(row, context) =>
             context.collapsed
               ? <CompactStub task={row.original} />
@@ -561,7 +560,7 @@ export const timelinePointPreview = {
           startField="date"
           estimatedRowHeight={28}
           renderCard={(row) => (
-            <Badge variant={row.original.channel === "stable" ? "accent" : "neutral"}>
+            <Badge color={row.original.channel === "stable" ? "accent" : "neutral"}>
               {row.original.version}
             </Badge>
           )}

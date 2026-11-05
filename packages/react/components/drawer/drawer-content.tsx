@@ -1,13 +1,14 @@
 'use client';
 
 import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
-import { cva, cx, type VariantProps } from 'class-variance-authority';
+import { cva, cx } from 'class-variance-authority';
 import { ReactNode } from 'react';
 import { XIcon } from '~/icons';
 import { type Radius, radiusVariants } from '../../shared/radius';
 import { IconButton } from '../icon-button';
 import { useThemeInjection } from '../theme/portal';
 import styles from './drawer.module.css';
+import { useDrawerSide } from './drawer-root';
 
 const drawerPopup = cva(styles.drawerPopup, {
   variants: {
@@ -18,15 +19,11 @@ const drawerPopup = cva(styles.drawerPopup, {
       left: styles['drawerPopup-left'],
       right: styles['drawerPopup-right']
     }
-  },
-  defaultVariants: {
-    side: 'right'
   }
 });
 
 export interface DrawerContentProps
-  extends Omit<DrawerPrimitive.Popup.Props, 'children'>,
-    VariantProps<typeof drawerPopup> {
+  extends Omit<DrawerPrimitive.Popup.Props, 'children'> {
   /**
    * Hides the close button.
    * @default false
@@ -41,25 +38,34 @@ export interface DrawerContentProps
    * @default 'Close'
    */
   closeLabel?: string;
+  /**
+   * Keeps a focused input above the on-screen keyboard on phones.
+   * @default false
+   */
+  enableVirtualKeyboard?: boolean;
+  /** Element to render the drawer into. Defaults to `document.body`. */
+  container?: DrawerPrimitive.Portal.Props['container'];
 }
 
 export function DrawerContent({
   className,
   children,
-  side = 'right',
   hideCloseButton = false,
   overlayProps,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
   closeLabel = 'Close',
   radius,
+  enableVirtualKeyboard = false,
+  container,
   ...props
 }: DrawerContentProps) {
+  const side = useDrawerSide();
   const resolvedAriaLabel =
     ariaLabel ?? (ariaLabelledBy ? undefined : 'Drawer');
   const theme = useThemeInjection();
-  return (
-    <DrawerPrimitive.Portal {...theme}>
+  const portal = (
+    <DrawerPrimitive.Portal {...theme} container={container}>
       <DrawerPrimitive.Backdrop
         data-slot='drawer-backdrop'
         {...overlayProps}
@@ -100,6 +106,13 @@ export function DrawerContent({
         </DrawerPrimitive.Popup>
       </DrawerPrimitive.Viewport>
     </DrawerPrimitive.Portal>
+  );
+  return enableVirtualKeyboard ? (
+    <DrawerPrimitive.VirtualKeyboardProvider>
+      {portal}
+    </DrawerPrimitive.VirtualKeyboardProvider>
+  ) : (
+    portal
   );
 }
 DrawerContent.displayName = 'Drawer.Content';

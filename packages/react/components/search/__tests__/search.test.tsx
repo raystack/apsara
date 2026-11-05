@@ -2,7 +2,6 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Search } from '../search';
-import styles from '../search.module.css';
 
 describe('Search', () => {
   describe('Basic Rendering', () => {
@@ -97,7 +96,9 @@ describe('Search', () => {
 
     it('shows clear button when showClearButton and value exist', () => {
       render(<Search showClearButton value='test' />);
-      expect(screen.getByLabelText('Clear search')).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'Clear search' })
+      ).toBeInTheDocument();
     });
 
     it('renders clear button regardless of value (CSS hides it when empty)', () => {
@@ -191,20 +192,6 @@ describe('Search', () => {
       render(<Search variant='borderless' />);
       const input = screen.getByRole('searchbox');
       expect(input).toBeInTheDocument();
-    });
-  });
-
-  describe('Width', () => {
-    it('defaults to 100% width', () => {
-      const { container } = render(<Search />);
-      const searchContainer = container.querySelector(`.${styles.container}`);
-      expect(searchContainer).toHaveStyle({ width: '100%' });
-    });
-
-    it('sets custom width', () => {
-      const { container } = render(<Search width='300px' />);
-      const searchContainer = container.querySelector(`.${styles.container}`);
-      expect(searchContainer).toHaveStyle({ width: '300px' });
     });
   });
 

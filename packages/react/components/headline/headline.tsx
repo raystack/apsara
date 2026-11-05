@@ -15,9 +15,9 @@ const headline = cva(styles.headline, {
       medium: styles['headline-weight-medium']
     },
     align: {
-      left: styles['headline-align-left'],
-      center: styles['headline-align-center'],
-      right: styles['headline-align-right']
+      start: styles['align-start'],
+      center: styles['align-center'],
+      end: styles['align-end']
     },
     truncate: {
       true: styles['headline-truncate']
@@ -26,7 +26,7 @@ const headline = cva(styles.headline, {
   defaultVariants: {
     size: 't2',
     weight: 'medium',
-    align: 'left',
+    align: 'start',
     truncate: false
   }
 });
