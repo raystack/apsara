@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import labelStyles from '../../label/label.module.css';
 import { Select } from '../select';
 import { SelectRootProps } from '../select-root';
 
@@ -77,6 +78,86 @@ describe('Select', () => {
       FRUIT_OPTIONS.forEach(option => {
         expect(screen.getByText(option.label)).toBeInTheDocument();
       });
+    });
+  });
+
+  describe('Label', () => {
+    it('labels the trigger', async () => {
+      render(
+        <Select>
+          <Select.Label>Fruit</Select.Label>
+          <Select.Trigger aria-label={undefined}>
+            <Select.Value placeholder={TRIGGER_TEXT} />
+          </Select.Trigger>
+          <Select.Content>
+            <Select.Item value='apple'>Apple</Select.Item>
+          </Select.Content>
+        </Select>
+      );
+      await flushMicrotasks();
+
+      const label = screen.getByText('Fruit');
+      expect(screen.getByRole('combobox')).toHaveAttribute(
+        'aria-labelledby',
+        expect.stringContaining(label.id)
+      );
+    });
+
+    it('renders the Label component with its props', () => {
+      const { container } = render(
+        <Select>
+          <Select.Label required={false}>Fruit</Select.Label>
+          <Select.Trigger>
+            <Select.Value placeholder={TRIGGER_TEXT} />
+          </Select.Trigger>
+        </Select>
+      );
+
+      const label = container.querySelector('[data-slot="select-label"]');
+      expect(label?.tagName).toBe('LABEL');
+      expect(label).toHaveClass(labelStyles.label);
+      expect(label).toHaveTextContent('(optional)');
+    });
+  });
+
+  describe('Empty', () => {
+    const EmptySelect = ({
+      withItem,
+      ...props
+    }: SelectRootProps & { withItem: boolean }) => (
+      <Select {...props}>
+        <Select.Trigger>
+          <Select.Value placeholder={TRIGGER_TEXT} />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Empty>No fruit found</Select.Empty>
+          {withItem && <Select.Item value='apple'>Apple</Select.Item>}
+        </Select.Content>
+      </Select>
+    );
+
+    it('shows its content only when the list has no items', async () => {
+      const { rerender } = render(<EmptySelect withItem />);
+      await flushMicrotasks();
+      expect(screen.queryByText('No fruit found')).not.toBeInTheDocument();
+
+      rerender(<EmptySelect withItem={false} />);
+      await flushMicrotasks();
+      expect(screen.getByText('No fruit found')).toBeInTheDocument();
+    });
+
+    it('shows its content only when no item matches the search', async () => {
+      const user = userEvent.setup();
+      render(<EmptySelect autocomplete withItem />);
+
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+      expect(screen.queryByText('No fruit found')).not.toBeInTheDocument();
+
+      await user.type(screen.getByPlaceholderText('Search...'), 'zzz');
+      await flushMicrotasks();
+      expect(screen.getByText('No fruit found')).toBeInTheDocument();
+      expect(screen.queryAllByRole('option')).toHaveLength(0);
     });
   });
 
@@ -188,6 +269,18 @@ describe('Select', () => {
       ).toHaveAttribute('aria-checked', 'true');
     });
 
+    it('keeps the item checkbox out of the tab order', async () => {
+      const user = userEvent.setup();
+      render(<BasicSelect multiple />);
+      await openSelect(user);
+
+      const option = screen.getAllByRole('option')[0];
+      expect(within(option).getByRole('checkbox')).toHaveAttribute(
+        'tabindex',
+        '-1'
+      );
+    });
+
     it('fires onValueChange exactly once per click on an option', async () => {
       const handleValueChange = vi.fn();
       render(<BasicSelect multiple onValueChange={handleValueChange} />);
@@ -293,6 +386,62 @@ describe('Select', () => {
       await user.type(searchInput, 'app');
       await flushMicrotasks();
 
+      const options = screen.getAllByRole('option');
+      expect(options.length).toBe(2);
+      expect(options[0]).toHaveTextContent('Apple');
+      expect(options[1]).toHaveTextContent('Pineapple');
+    });
+
+    it('filters options by a controlled searchValue', async () => {
+      const onSearch = vi.fn();
+      render(
+        <Select autocomplete searchValue='app' onSearch={onSearch}>
+          <Select.Trigger>
+            <Select.Value placeholder={TRIGGER_TEXT} />
+          </Select.Trigger>
+          <Select.Content>
+            {FRUIT_OPTIONS.map(option => (
+              <Select.Item key={option.value} value={option.value}>
+                {option.label}
+              </Select.Item>
+            ))}
+          </Select.Content>
+        </Select>
+      );
+
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+      fireEvent.change(screen.getByPlaceholderText('Search...'), {
+        target: { value: 'b' }
+      });
+      await flushMicrotasks();
+
+      expect(onSearch).toHaveBeenCalledWith('b');
+      const options = screen.getAllByRole('option');
+      expect(options.length).toBe(2);
+      expect(options[0]).toHaveTextContent('Apple');
+      expect(options[1]).toHaveTextContent('Pineapple');
+    });
+
+    it('shows a controlled searchValue in the search input', async () => {
+      render(<BasicSelect autocomplete searchValue='app' />);
+
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+      const searchInput = screen.getByPlaceholderText('Search...');
+      fireEvent.change(searchInput, { target: { value: 'b' } });
+      await flushMicrotasks();
+
+      expect(searchInput).toHaveValue('app');
+    });
+
+    it('shows and filters by defaultSearchValue', async () => {
+      render(<BasicSelect autocomplete defaultSearchValue='app' />);
+
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+
+      expect(screen.getByPlaceholderText('Search...')).toHaveValue('app');
       const options = screen.getAllByRole('option');
       expect(options.length).toBe(2);
       expect(options[0]).toHaveTextContent('Apple');

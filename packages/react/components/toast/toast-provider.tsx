@@ -5,10 +5,12 @@ import { cx } from 'class-variance-authority';
 import { useThemeInjection } from '../theme/portal';
 import styles from './toast.module.css';
 import {
+  anchoredManager,
   toastManager as defaultToastManager,
-  type ToastManager
+  type ToastManager,
+  ToastManagerContext
 } from './toast-manager';
-import { ToastRoot } from './toast-root';
+import { AnchoredToastRoot, ToastRoot } from './toast-root';
 
 export type ToastPosition =
   | 'top-left'
@@ -33,11 +35,45 @@ export interface ToastProviderProps
   toastManager?: ToastManager;
 }
 
-function ToastList({ position }: { position: ToastPosition }) {
+function StackedToasts({ position }: { position: ToastPosition }) {
+  const theme = useThemeInjection();
   const { toasts } = ToastPrimitive.useToastManager();
-  return toasts.map(toast => (
-    <ToastRoot key={toast.id} toast={toast} position={position} />
-  ));
+  return (
+    <ToastPrimitive.Portal {...theme}>
+      <ToastPrimitive.Viewport
+        {...theme}
+        className={cx(
+          styles.viewport,
+          styles[`viewport-${position}`],
+          theme?.className
+        )}
+        data-slot='toast-viewport'
+      >
+        {toasts.map(toast => (
+          <ToastRoot key={toast.id} toast={toast} position={position} />
+        ))}
+      </ToastPrimitive.Viewport>
+    </ToastPrimitive.Portal>
+  );
+}
+
+function AnchoredToasts() {
+  const theme = useThemeInjection();
+  const { toasts } = ToastPrimitive.useToastManager();
+  return (
+    <ToastPrimitive.Portal {...theme}>
+      <ToastPrimitive.Viewport
+        {...theme}
+        aria-label='Anchored notifications'
+        className={cx(styles.anchoredViewport, theme?.className)}
+        data-slot='toast-anchored-viewport'
+      >
+        {toasts.map(toast => (
+          <AnchoredToastRoot key={toast.id} toast={toast} />
+        ))}
+      </ToastPrimitive.Viewport>
+    </ToastPrimitive.Portal>
+  );
 }
 
 export function ToastProvider({
@@ -46,31 +82,27 @@ export function ToastProvider({
   children,
   ...props
 }: ToastProviderProps) {
-  const theme = useThemeInjection();
   return (
-    <ToastPrimitive.Provider
-      // The Provider only reads the subscribe channel, which our manager keeps from
-      // Base UI's. The cast is needed because Base UI's `update` is generic over toast data.
-      toastManager={
-        toastManager as unknown as ToastPrimitive.Provider.Props['toastManager']
-      }
-      {...props}
-    >
-      {children}
-      <ToastPrimitive.Portal {...theme}>
-        <ToastPrimitive.Viewport
-          {...theme}
-          className={cx(
-            styles.viewport,
-            styles[`viewport-${position}`],
-            theme?.className
-          )}
-          data-slot='toast-viewport'
-        >
-          <ToastList position={position} />
-        </ToastPrimitive.Viewport>
-      </ToastPrimitive.Portal>
-    </ToastPrimitive.Provider>
+    <ToastManagerContext.Provider value={toastManager}>
+      {/* Comes first, so it subscribes before effects in `children` run. */}
+      <ToastPrimitive.Provider
+        toastManager={toastManager[anchoredManager]}
+        {...props}
+      >
+        <AnchoredToasts />
+      </ToastPrimitive.Provider>
+      <ToastPrimitive.Provider
+        // The Provider only reads the subscribe channel, which our manager keeps from
+        // Base UI's. The cast is needed because Base UI's `update` is generic over toast data.
+        toastManager={
+          toastManager as unknown as ToastPrimitive.Provider.Props['toastManager']
+        }
+        {...props}
+      >
+        {children}
+        <StackedToasts position={position} />
+      </ToastPrimitive.Provider>
+    </ToastManagerContext.Provider>
   );
 }
 

@@ -90,6 +90,19 @@ describe('server rendering', () => {
     );
     expect(html).toContain('nonce="abc123"');
   });
+
+  it("carries the parent's nonce onto a nested theme's script", () => {
+    const html = renderToString(
+      <Theme nonce='abc123'>
+        <Theme defaultValue={{ accentColor: 'mint' }}>content</Theme>
+      </Theme>
+    );
+    const scripts = html.match(/<script[^>]*>/g) ?? [];
+    expect(scripts.map(tag => tag.includes('nonce="abc123"'))).toEqual([
+      true,
+      true
+    ]);
+  });
 });
 
 describe('hydration', () => {

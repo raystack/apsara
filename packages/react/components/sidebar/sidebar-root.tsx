@@ -1,5 +1,6 @@
 'use client';
 
+import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
 import {
   ComponentProps,
@@ -128,8 +129,12 @@ export function SidebarRoot({
 }: SidebarRootProps) {
   const generatedId = useId();
   const sidebarId = providedId ?? generatedId;
-  const [internalOpen, setInternalOpen] = useState(defaultOpen);
-  const open = providedOpen ?? internalOpen;
+  const [open, setOpenUnwrapped] = useControlled({
+    controlled: providedOpen,
+    default: defaultOpen,
+    name: 'Sidebar',
+    state: 'open'
+  });
   const [isPeeking, setIsPeeking] = useState(false);
   const peekTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const openPopupCountRef = useRef(0);
@@ -137,10 +142,10 @@ export function SidebarRoot({
 
   const handleOpenChange = useCallback(
     (value: boolean) => {
-      setInternalOpen(value);
+      setOpenUnwrapped(value);
       onOpenChange?.(value);
     },
-    [onOpenChange]
+    [onOpenChange, setOpenUnwrapped]
   );
 
   const canCollapse = collapsible !== 'none';

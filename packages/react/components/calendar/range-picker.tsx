@@ -1,5 +1,6 @@
 'use client';
 
+import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -110,11 +111,16 @@ export function RangePicker({
 
   const [currentRangeField, setCurrentRangeField] =
     useState<RangeFields>('from');
-  const [internalValue, setInternalValue] = useState<DateRange | undefined>(
-    value ?? defaultValue
-  );
+  const [computedValue, setValueUnwrapped] = useControlled<
+    DateRange | undefined
+  >({
+    controlled: value,
+    default: defaultValue,
+    name: 'RangePicker',
+    state: 'value'
+  });
   const [currentMonth, setCurrentMonth] = useState<Date | undefined>(
-    internalValue?.from
+    computedValue?.from
   );
 
   /*
@@ -132,8 +138,7 @@ export function RangePicker({
   }, [valueFromTime, isControlled]);
 
   // Empty-range fallback so downstream `.from`/`.to` reads don't need guards.
-  const selectedRange: DateRange = value ??
-    internalValue ?? { from: undefined };
+  const selectedRange: DateRange = computedValue ?? { from: undefined };
 
   const startDate = selectedRange.from
     ? dayjs(selectedRange.from).format(dateFormat)
@@ -208,8 +213,7 @@ export function RangePicker({
     }
 
     if (newField !== currentRangeField) setCurrentRangeField(newField);
-    // Only update internal state when uncontrolled, since controlled consumers own `value`.
-    if (!isControlled) setInternalValue(newRange);
+    setValueUnwrapped(newRange);
     onSelect(newRange);
     if (shouldClose) popover.disengage();
   };
