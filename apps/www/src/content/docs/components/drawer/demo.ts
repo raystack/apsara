@@ -137,7 +137,7 @@ function SwipeAreaDemo() {
           style={{ backgroundColor: 'var(--rs-color-background-accent-primary)', borderLeft: '2px dashed var(--rs-color-border-accent-emphasis)' }}
         />
         <Flex align="center" justify="center" style={{ minHeight: 320 }}>
-          <Text variant="secondary">Swipe from the right edge to open the drawer.</Text>
+          <Text color="secondary">Swipe from the right edge to open the drawer.</Text>
         </Flex>
         <Drawer.Content container={container}>
           <Drawer.Header>

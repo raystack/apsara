@@ -1,16 +1,16 @@
 export interface CalloutProps {
   /**
-   * Visual style variant
-   * @defaultValue "grey"
+   * Intent color. `primary` uses the base background.
+   * @defaultValue "neutral"
    */
-  type?:
-    | 'grey'
+  color?:
+    | 'primary'
+    | 'neutral'
     | 'success'
-    | 'alert'
-    | 'gradient'
+    | 'danger'
     | 'accent'
     | 'attention'
-    | 'normal';
+    | 'gradient';
 
   /**
    * Visual style variant.

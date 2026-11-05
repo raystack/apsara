@@ -80,7 +80,7 @@ export default function TourDemo() {
         <Text size='regular' weight='medium'>
           Guided tour
         </Text>
-        <Text size='small' variant='secondary'>
+        <Text size='small' color='secondary'>
           Four steps: a centered welcome, then the search box, analytics, and
           notifications, each anchored and spotlighted.
         </Text>

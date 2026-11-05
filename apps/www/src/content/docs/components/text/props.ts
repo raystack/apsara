@@ -9,10 +9,10 @@ export interface TextProps {
     | ((props: React.ComponentPropsWithRef<'span'>) => React.ReactElement);
 
   /**
-   * The visual style variant.
+   * The text color: a token level or an intent.
    * @default "primary"
    */
-  variant?:
+  color?:
     | 'primary'
     | 'secondary'
     | 'tertiary'

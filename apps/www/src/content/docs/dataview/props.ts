@@ -371,9 +371,9 @@ export interface TimelineMarker {
 
   /**
    * Badge/line color.
-   * @defaultValue "default"
+   * @defaultValue "neutral"
    */
-  variant?: 'default' | 'accent' | 'danger';
+  color?: 'neutral' | 'accent' | 'danger';
 }
 
 export interface TimelineActions {

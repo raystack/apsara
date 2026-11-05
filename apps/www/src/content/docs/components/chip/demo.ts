@@ -25,7 +25,7 @@ export const playground = {
     },
     color: {
       type: 'select',
-      options: ['neutral', 'accent', 'danger', 'success', 'warning'],
+      options: ['neutral', 'accent', 'danger', 'success', 'attention'],
       defaultValue: 'neutral'
     },
     removable: {
@@ -69,14 +69,14 @@ export const colorDemo = {
       <Chip color="accent" variant="outline">Accent</Chip>
       <Chip color="danger" variant="outline">Danger</Chip>
       <Chip color="success" variant="outline">Success</Chip>
-      <Chip color="warning" variant="outline">Warning</Chip>
+      <Chip color="attention" variant="outline">Attention</Chip>
     </Flex>
     <Flex gap={9}>
       <Chip color="neutral" variant="filled">Neutral</Chip>
       <Chip color="accent" variant="filled">Accent</Chip>
       <Chip color="danger" variant="filled">Danger</Chip>
       <Chip color="success" variant="filled">Success</Chip>
-      <Chip color="warning" variant="filled">Warning</Chip>
+      <Chip color="attention" variant="filled">Attention</Chip>
     </Flex>
   </Flex>`
 };

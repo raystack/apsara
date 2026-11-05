@@ -78,7 +78,7 @@ function ControlledNumberField() {
   return (
     <Flex direction="column" gap={5}>
       <NumberField value={qty} onValueChange={setQty} min={1} max={10} />
-      <Text size="small" variant="secondary">Subtotal: {qty * 12} credits</Text>
+      <Text size="small" color="secondary">Subtotal: {qty * 12} credits</Text>
     </Flex>
   );
 }`

@@ -1,9 +1,9 @@
 export interface AnnouncementBarProps {
   /**
-   * Visual style variant
-   * @defaultValue "normal"
+   * Intent color of the bar.
+   * @defaultValue "neutral"
    */
-  variant?: 'normal' | 'error' | 'gradient';
+  color?: 'neutral' | 'danger' | 'gradient';
 
   /**
    * Text content for the component

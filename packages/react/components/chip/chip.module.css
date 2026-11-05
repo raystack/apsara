@@ -80,8 +80,7 @@
   --chip-filled-bg-active: var(--rs-color-background-success-primary);
 }
 
-/* The public value is `warning`, backed by the `attention` tokens, as in Badge. */
-.chip-color-warning {
+.chip-color-attention {
   --chip-border: var(--rs-color-border-attention-primary);
   --chip-border-hover: var(--rs-color-border-attention-emphasis);
   --chip-border-active: var(--rs-color-border-attention-emphasis);
