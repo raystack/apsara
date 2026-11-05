@@ -111,18 +111,18 @@ describe('Headline', () => {
   });
 
   describe('Alignment', () => {
-    const alignments = ['left', 'center', 'right'] as const;
+    const alignments = ['start', 'center', 'end'] as const;
 
     it.each(alignments)('renders %s alignment correctly', align => {
       render(<Headline align={align}>Heading</Headline>);
       const heading = screen.getByText('Heading');
-      expect(heading).toHaveClass(styles[`headline-align-${align}`]);
+      expect(heading).toHaveClass(styles[`align-${align}`]);
     });
 
-    it('defaults to left alignment', () => {
+    it('defaults to start alignment', () => {
       render(<Headline>Heading</Headline>);
       const heading = screen.getByText('Heading');
-      expect(heading).toHaveClass(styles['headline-align-left']);
+      expect(heading).toHaveClass(styles['align-start']);
     });
   });
 

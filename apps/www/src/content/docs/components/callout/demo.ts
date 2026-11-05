@@ -13,18 +13,18 @@ export const getCode = (props: ComponentPropsType) => {
 export const playground = {
   type: 'playground',
   controls: {
-    type: {
+    color: {
       type: 'select',
       options: [
-        'grey',
+        'primary',
+        'neutral',
         'success',
-        'alert',
-        'gradient',
+        'danger',
         'accent',
         'attention',
-        'normal'
+        'gradient'
       ],
-      defaultValue: 'grey',
+      defaultValue: 'neutral',
       initialValue: 'gradient'
     },
     children: {
@@ -50,17 +50,17 @@ export const playground = {
   },
   getCode
 };
-export const typeDemo = {
+export const colorDemo = {
   type: 'code',
   code: `
   <Flex gap={5} direction="column">
-    <Callout type="grey">Default Callout</Callout>
-    <Callout type="success">Success Callout</Callout>
-    <Callout type="alert">Alert Callout</Callout>
-    <Callout type="gradient">Gradient Callout</Callout>
-    <Callout type="accent">Accent Callout</Callout>
-    <Callout type="attention">Attention Callout</Callout>
-    <Callout type="normal">Normal Callout</Callout>
+    <Callout color="neutral">Neutral Callout</Callout>
+    <Callout color="success">Success Callout</Callout>
+    <Callout color="danger">Danger Callout</Callout>
+    <Callout color="gradient">Gradient Callout</Callout>
+    <Callout color="accent">Accent Callout</Callout>
+    <Callout color="attention">Attention Callout</Callout>
+    <Callout color="primary">Primary Callout</Callout>
   </Flex>`
 };
 
@@ -68,8 +68,8 @@ export const outlineDemo = {
   type: 'code',
   code: `
   <Flex gap={5} direction="column">
-    <Callout type="success">Without Outline Callout</Callout>
-    <Callout type="success" variant="outline">With Outline Callout</Callout>
+    <Callout color="success">Without Outline Callout</Callout>
+    <Callout color="success" variant="outline">With Outline Callout</Callout>
   </Flex>`
 };
 
@@ -77,8 +77,8 @@ export const highContrastDemo = {
   type: 'code',
   code: `
   <Flex gap={5} direction="column">
-    <Callout type="alert">Normal Callout</Callout>
-    <Callout type="alert" highContrast>High Contrast Callout</Callout>
+    <Callout color="danger">Normal Callout</Callout>
+    <Callout color="danger" highContrast>High Contrast Callout</Callout>
   </Flex>`
 };
 
@@ -93,7 +93,7 @@ export const dismissibleDemo = {
 export const actionDemo = {
   type: 'code',
   code: `
-  <Callout type="success" action={<Button>Action</Button>}>
+  <Callout color="success" action={<Button>Action</Button>}>
     A short message to attract user's attention
   </Callout>`
 };

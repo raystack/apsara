@@ -17,7 +17,16 @@ export const playground = {
     },
     color: {
       type: 'select',
-      options: ['primary', 'secondary', 'tertiary'],
+      options: [
+        'primary',
+        'secondary',
+        'tertiary',
+        'emphasis',
+        'accent',
+        'attention',
+        'danger',
+        'success'
+      ],
       defaultValue: 'primary'
     },
     orientation: {
@@ -45,6 +54,11 @@ export const colorDemo = {
     <Separator color="primary" />
     <Separator color="secondary" />
     <Separator color="tertiary" />
+    <Separator color="emphasis" />
+    <Separator color="accent" />
+    <Separator color="attention" />
+    <Separator color="danger" />
+    <Separator color="success" />
   </Flex>`
 };
 export const orientationDemo = {

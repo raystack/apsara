@@ -4,14 +4,14 @@ import { Callout } from '../components/callout';
 figma.connect(Callout, '<FIGMA_LINK>?node-id=661-1063', {
   imports: ["import { Callout } from '@raystack/apsara'"],
   props: {
-    type: figma.enum('Type', {
+    color: figma.enum('Type', {
       Accent: 'accent',
       Success: 'success',
-      Alert: 'alert',
+      Alert: 'danger',
       Gradient: 'gradient',
       Attentio: 'attention',
-      Normal: 'normal',
-      Grey: 'grey'
+      Normal: 'primary',
+      Grey: 'neutral'
     }),
     variant: figma.boolean('Outline', {
       true: 'outline',

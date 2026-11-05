@@ -1,8 +1,11 @@
 'use client';
 
-import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react';
+import {
+  Autocomplete as AutocompletePrimitive,
+  ContextMenu as ContextMenuPrimitive
+} from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { ComponentProps, Fragment } from 'react';
+import { ComponentProps } from 'react';
 import styles from '../menu/menu.module.css';
 import { useMenuContext } from '../menu/menu-root';
 
@@ -12,12 +15,7 @@ export const ContextMenuGroup = ({
   children,
   ...props
 }: ContextMenuGroupProps) => {
-  const { shouldFilter } = useMenuContext();
-
-  if (shouldFilter) {
-    return <Fragment>{children}</Fragment>;
-  }
-
+  // Stays rendered while filtering. Removing it would remount the items and reset their state.
   return (
     <ContextMenuPrimitive.Group
       data-slot='context-menu-group'
@@ -76,13 +74,22 @@ export const ContextMenuEmptyState = ({
   className,
   children,
   ...props
-}: ComponentProps<'div'>) => (
-  <div
-    data-slot='context-menu-empty-state'
-    className={cx(styles.empty, className)}
-    {...props}
-  >
-    {children}
-  </div>
-);
+}: ComponentProps<'div'>) => {
+  const { autocomplete } = useMenuContext();
+  const Component = autocomplete ? AutocompletePrimitive.Empty : 'div';
+
+  return (
+    <Component
+      data-slot='context-menu-empty-state'
+      // The search list is a listbox, which only allows options and groups inside.
+      role={undefined}
+      aria-live={undefined}
+      aria-atomic={undefined}
+      className={cx(styles.empty, className)}
+      {...props}
+    >
+      {children}
+    </Component>
+  );
+};
 ContextMenuEmptyState.displayName = 'ContextMenu.EmptyState';

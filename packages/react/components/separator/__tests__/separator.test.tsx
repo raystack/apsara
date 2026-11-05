@@ -58,7 +58,16 @@ describe('Separator', () => {
   });
 
   describe('Colors', () => {
-    const colors = ['primary', 'secondary', 'tertiary'] as const;
+    const colors = [
+      'primary',
+      'secondary',
+      'tertiary',
+      'emphasis',
+      'accent',
+      'attention',
+      'danger',
+      'success'
+    ] as const;
 
     it.each(colors)('renders %s color correctly', color => {
       render(<Separator color={color} />);

@@ -68,6 +68,8 @@ Selects a date range across two inputs. The grid uses a state machine that branc
 
 Single-date selection with a typable input. The popover opens on focus; pressing Enter, blurring, or clicking outside commits the value and fires `onSelect`.
 
+`onValidityChange` reports typed text that is not a date (`reason: 'unparseable'`) or is outside `startMonth` and `endMonth` (`reason: 'out-of-bounds'`), with the message `'Invalid date'`. It reports `{ valid: true }` when the text is valid again, or when the picker commits or closes. DatePicker shows no error and sets no `aria-invalid`. To show the error, pass `message` to the `error` prop of `Field`, as in the With Field example. `Field` also sets `aria-invalid` on the input.
+
 <Demo data={datePickerDemo} />
 
 ### Controlled

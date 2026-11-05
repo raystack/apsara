@@ -9,10 +9,10 @@
 
 .legend {
   color: var(--rs-color-foreground-base-primary);
-  font-weight: var(--rs-font-weight-semibold);
-  font-size: var(--rs-font-size-base);
-  line-height: var(--rs-line-height-base);
-  letter-spacing: var(--rs-letter-spacing-base);
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-regular);
+  line-height: var(--rs-line-height-regular);
+  letter-spacing: var(--rs-letter-spacing-regular);
   padding: 0;
   margin-bottom: var(--rs-space-2);
 }

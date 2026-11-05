@@ -48,6 +48,189 @@ const items = [{ id: 'ada', label: 'Ada', leadingIcon: <Avatar />, trailingIcon:
 | `select-value-icon` | `select-value-leading-icon` |
 | `tabs-tab-icon` | `tabs-tab-leading-icon` |
 
+## Unreleased: boolean props use one naming rule
+
+A boolean prop that removes a part which shows by default is `hide<Part>`. A
+prop that turns off a behavior which is on by default is `disable<Behavior>`.
+Each flipped prop defaults to `false`, so a component looks and behaves the
+same when you do not pass it. TypeScript reports each old name.
+
+| Component | Before | After |
+|---|---|---|
+| `Dialog.Content`, `Drawer.Content` | `showCloseButton={false}` | `hideCloseButton` |
+| `Dialog.Content`, `AlertDialog.Content` | `showNestedAnimation={false}` | `disableNestedAnimation` |
+| `Editor` toolbar controls | `tooltip={false}` | `hideTooltip` |
+| `DatePicker`, `RangePicker` | `showCalendarIcon={false}` | `hideCalendarIcon` |
+| `CalendarPreview.Body` | `showIcon` | `showCalendarIcon` |
+| `DataView.List`, `DataView.Timeline` | `showGroupHeaders={false}` | `hideGroupHeaders` |
+| `DataView.Timeline` | `showGridlines={false}` | `hideGridlines` |
+| `DataView.Timeline` | `showCursorLine={false}` | `hideCursorLine` |
+| `Skeleton` | `enableAnimation={false}` | `disableAnimation` |
+| `DataView` | `isLoading` | `loading` |
+| `Calendar` | `loadingData` | `loading` |
+| `CopyButton` | `resetIcon={false}` | `resetTimeout={Infinity}` |
+
+```tsx
+// Before
+<Dialog.Content showCloseButton={false} showNestedAnimation={false} />
+<DataView isLoading={fetching} />
+
+// After
+<Dialog.Content hideCloseButton disableNestedAnimation />
+<DataView loading={fetching} />
+```
+
+`useDataView().isLoading` keeps its name.
+
+### A loading `Button` is disabled
+
+`Button` with `loading` ignores clicks and sets `aria-disabled="true"`, as
+`IconButton` does. The button stays focusable, and it keeps its loading style.
+If your code let a user click a loading button, for example to cancel, render
+a separate cancel button.
+
+## Unreleased: Sidebar and Drawer use one `side`
+
+`Sidebar` names its edge with `side`, as other components do. `Drawer` takes
+`side` on the root only.
+
+### 1. Rename Sidebar `position` to `side`
+
+| Before | After |
+|---|---|
+| `<Sidebar position="right">` | `<Sidebar side="right">` |
+| `[data-position="right"]` on the sidebar element | `[data-side="right"]` |
+| `useSidebar().position` | `useSidebar().side` |
+
+The `position` prop and `useSidebar().position` still work, and are
+deprecated. The `data-position` attribute is gone, so update CSS that selects
+it.
+
+### 2. Remove `side` from `Drawer.Content`
+
+`Drawer.Content` reads `side` from `Drawer`. Delete `side` from
+`Drawer.Content`, and set it on `Drawer`.
+
+```tsx
+// Before
+<Drawer side="left">
+  <Drawer.Content side="left">...</Drawer.Content>
+</Drawer>
+
+// After
+<Drawer side="left">
+  <Drawer.Content>...</Drawer.Content>
+</Drawer>
+```
+
+If only `Drawer.Content` had `side`, the drawer now slides in from the right,
+the default of `Drawer`.
+
+## Unreleased: `color` holds the intent
+
+`color` holds the meaning of a component, and `variant` holds only its visual
+style. Each intent has one name: `attention`, `danger` and `neutral`.
+
+| Component | Prop | Values |
+|---|---|---|
+| `Badge`, `Indicator` | `variant` becomes `color` | `warning` becomes `attention` |
+| `Chip` | `color` | `warning` becomes `attention` |
+| `Callout` | `type` becomes `color` | `grey` becomes `neutral`, `alert` becomes `danger`, `normal` becomes `primary` |
+| `Text`, `Link` | `variant` becomes `color` | No change |
+| `AnnouncementBar` | `variant` becomes `color` | `normal` becomes `neutral`, `error` becomes `danger` |
+| `DataView.Timeline` `markers` | `variant` becomes `color` | `default` becomes `neutral` |
+| `Spinner` | `color` | `default` becomes `inherit` |
+
+```tsx
+// Before
+<Badge variant="warning">Pending</Badge>
+<Callout type="alert" variant="outline">Payment failed</Callout>
+<Text variant="secondary">Updated 2 hours ago</Text>
+
+// After
+<Badge color="attention">Pending</Badge>
+<Callout color="danger" variant="outline">Payment failed</Callout>
+<Text color="secondary">Updated 2 hours ago</Text>
+```
+
+`Callout` keeps `variant` (`solid` or `outline`). A `danger` callout has the
+`alert` role, as `alert` did. The timeline marker line sets `data-color` in
+place of `data-variant`. `Separator` `color` also takes `emphasis`, `accent`,
+`attention`, `danger` and `success`.
+
+`Badge`, `Callout`, `Indicator`, `Link` and `Text` no longer pass the HTML
+`color` attribute to the DOM. If a wrapper spreads HTML attributes into one of
+them, omit `color` from its props type, for example
+`Omit<HTMLAttributes<HTMLElement>, 'color'>`.
+
+## Unreleased: `align` takes `start` and `end`
+
+`Headline` and `Container` take `start` and `end` for `align` in place of
+`left` and `right`. Both values follow the text direction. `Headline` already
+aligned its text this way. In a right-to-left layout, `Container` with
+`align="start"` now sits on the right edge, where `align="left"` sat on the
+left. Left-to-right layouts look the same.
+
+| Component | Before | After |
+|---|---|---|
+| `Headline` `align` | `left`, `center`, `right` | `start`, `center`, `end` |
+| `Container` `align` | `left`, `center`, `right` | `start`, `center`, `end` |
+
+```tsx
+// Before
+<Headline align="left">Title</Headline>
+<Container size="small" align="right">...</Container>
+
+// After
+<Headline align="start">Title</Headline>
+<Container size="small" align="end">...</Container>
+```
+
+## Unreleased: `Chip.Remove` replaces the dismiss props
+
+### 1. Move `isDismissible` and `onDismiss` to `Chip.Remove`
+
+`Chip` has no `isDismissible` or `onDismiss`. Add `Chip.Remove` as the last
+child, and move the handler to its `onClick`.
+
+```tsx
+// Before
+<Chip isDismissible onDismiss={handleRemove}>Tag</Chip>
+
+// After
+<Chip>
+  Tag
+  <Chip.Remove onClick={handleRemove} />
+</Chip>
+```
+
+The remove button slots are `chip-remove` and `chip-remove-icon`. They were
+`chip-dismiss` and `chip-dismiss-icon`. A `trailingIcon` no longer hides when
+the chip has a remove button.
+
+### 2. Pass chip props or elements to `Input` `chips`
+
+Each item in `Input` `chips` is `Chip` props or a `Chip` element. `label` is
+now `children`. For a removable chip, pass an element with `Chip.Remove`.
+
+```tsx
+// Before
+<Input chips={[{ label: 'Tag', onRemove: handleRemove }]} />
+
+// After
+<Input
+  chips={[
+    <Chip key="tag">
+      Tag
+      <Chip.Remove onClick={handleRemove} />
+    </Chip>
+  ]}
+/>
+```
+
+A disabled input disables the chips that you pass as props. Chip elements
+render as given, so pass `disabled` to them.
+
 ## Unreleased: date filters compare whole days
 
 `DataView`, `DataTable` and `FilterChip` read and compare dates as calendar
@@ -94,9 +277,10 @@ it to the viewer's zone.
 `FilterChip`'s `calendarProps` and `DataTable`'s `filterProps.calendar` take
 CalendarPreview props now. `slotProps.popover` and `showCalendarIcon` work as
 before. `slotProps.input` takes `CalendarPreview.Input` props, which have no
-`value` or `defaultValue`. `onErrorChange` still reports `'Invalid date'`, but
-the error clears only when the typed text is valid or empty, or a date is
-committed. Closing the popup does not clear it.
+`value` or `defaultValue`. The typed-date error is still `'Invalid date'`, but
+it clears only when the typed text is valid or empty, or a date is committed.
+Closing the popup does not clear it. The callback that reports the error has a
+new name. See [One callback for typed dates](#one-callback-for-typed-dates).
 
 | Removed | Replacement |
 |---|---|
@@ -156,6 +340,64 @@ These filters used to match by mistake, and now match differently:
 - A row holding a `T` time after a slashed, unpadded or partial date, such as
   `'2026/1/1T10:30'`, used to be read. It now matches only `neq`, and the
   timeline does not draw it. Store such dates as ISO 8601 (`2026-01-01T10:30`).
+
+## Unreleased: one-off props
+
+Some props that only one component had are removed or renamed to the names
+other components use. Defaults do not change, so only code that passes an old
+prop needs a change. TypeScript reports each old prop.
+
+| Component | Before | After |
+|---|---|---|
+| `Command.DialogContent` | `width={640}` | `style={{ width: 640 }}` or a `className` |
+| `Search`, `DataView.Search` | `width={240}` | A sized parent. `Search` fills its parent's width. |
+| `Skeleton` | `borderRadius` | `radius`: `none`, `small`, `medium`, `large` or `full` |
+| `Breadcrumb.Item` | `current` | `active`, as on `Sidebar.Item` |
+| `DatePicker` | `onErrorChange` | `onValidityChange` |
+| `FilterChip` | `calendarProps.onErrorChange` | `calendarProps.slotProps.input.onValidityChange` |
+
+```tsx
+// Before
+<Command.DialogContent width={640}>…</Command.DialogContent>
+<Search width={240} />
+<Skeleton borderRadius="50%" />
+<Breadcrumb.Item current>Profile</Breadcrumb.Item>
+
+// After
+<Command.DialogContent style={{ width: 640 }}>…</Command.DialogContent>
+<div style={{ width: 240 }}>
+  <Search />
+</div>
+<Skeleton radius="full" />
+<Breadcrumb.Item active>Profile</Breadcrumb.Item>
+```
+
+`Skeleton` keeps its default corner radius. For a value outside the radius
+scale, set `style={{ borderRadius }}`.
+
+The active `Breadcrumb.Item` has `data-active="true"` in place of
+`data-current="true"`. Update CSS that targets the old attribute.
+
+### One callback for typed dates
+
+`DatePicker` and `CalendarPreview.Input` report the validity of typed text with
+`onValidityChange`. `FilterChip` takes it on `calendarProps.slotProps.input`,
+which is its `CalendarPreview.Input`. The callback receives
+`{ valid, reason, message }`.
+`message` is `undefined` while the text is valid, so read `message` where you
+used the old error string:
+
+```tsx
+// Before
+<DatePicker onErrorChange={setError} />
+
+// After
+<DatePicker onValidityChange={({ message }) => setError(message)} />
+```
+
+`DatePicker` reports the reason `unparseable` or `out-of-bounds`, with the
+message `'Invalid date'`. The callback also fires when the reason changes and
+the text stays invalid.
 
 ## 2.0: `Theme` is rewritten
 
@@ -258,7 +500,7 @@ properties on `:root` from `--rs-*` values, and hand-rolled portals that
 rendered outside the provider, have to move inside it. `<html>` no longer needs
 `suppressHydrationWarning`.
 
-<Callout type="grey">
+<Callout color="neutral">
   `Image` and `Avatar` now use the shared five radius values. `Image` gains
   `large`. `Avatar` has no default radius and follows the theme, so pass
   `radius="full"` to keep circles.
@@ -283,7 +525,7 @@ The range is wide, `>=0.500.0 <2.0.0`, so your app picks the version — both th
 0.x and 1.x lines satisfy it. If a lucide release changes a drawing you care
 about, replace that one icon (step 5) rather than pinning the whole library.
 
-<Callout type="grey">
+<Callout color="neutral">
   `@radix-ui/react-icons` is no longer a dependency of Apsara. If your own code
   imports from it, keep it in your own `dependencies`.
 </Callout>
@@ -294,7 +536,7 @@ That path used to export raw in-house SVG components. It now exports the 31
 icons Apsara's components draw, as replaceable icon components. Twelve of the old
 names are gone.
 
-<Callout type="alert">
+<Callout color="danger">
   These twelve imports fail to resolve. Import the glyph from `lucide-react`
   instead.
 </Callout>

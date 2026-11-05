@@ -10,10 +10,10 @@ export const getCode = (props: ComponentPropsType) => {
 export const playground = {
   type: 'playground',
   controls: {
-    variant: {
+    color: {
       type: 'select',
-      options: ['normal', 'error', 'gradient'],
-      defaultValue: 'normal'
+      options: ['neutral', 'danger', 'gradient'],
+      defaultValue: 'neutral'
     },
     text: { type: 'text', initialValue: 'We have introduced a new feature' },
     leadingIcon: { type: 'icon', defaultValue: '' },
@@ -26,22 +26,22 @@ export const playground = {
   }
 };
 
-export const variantsDemo = {
+export const colorDemo = {
   type: 'code',
   code: `
   <Flex direction="column" gap={5} style={{ width: '100%' }}>
     <AnnouncementBar
-      variant="normal"
+      color="neutral"
       text="We have introduced a new feature"
       actionLabel="Read More"
     />
     <AnnouncementBar
-      variant="error"
+      color="danger"
       text="Your trial has expired"
       actionLabel="Upgrade"
     />
     <AnnouncementBar
-      variant="gradient"
+      color="gradient"
       text="Apsara v1 is now available"
       actionLabel="See what's new"
     />

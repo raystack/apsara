@@ -22,6 +22,11 @@
   overflow: auto;
 }
 
+/* With alignItemWithTrigger, Base UI sizes the positioner and the popup must fill it. */
+.content[data-side="none"] {
+  max-height: none;
+}
+
 .content[data-starting-style],
 .content[data-ending-style] {
   opacity: 0;
@@ -63,10 +68,18 @@
   pointer-events: none;
 }
 
-.label {
+.groupLabel {
   padding: var(--rs-space-2) var(--rs-space-3);
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-mini);
+}
+
+.empty:not(:empty) {
+  padding: var(--rs-space-4);
+  color: var(--rs-color-foreground-base-secondary);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
 }
 
 .separator {
@@ -289,4 +302,9 @@
 
 .hidden {
   display: none;
+}
+
+.itemText {
+  flex: 1;
+  min-width: 0;
 }

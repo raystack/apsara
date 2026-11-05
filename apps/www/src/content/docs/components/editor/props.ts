@@ -136,10 +136,10 @@ interface EditorControlProps {
   label?: string;
 
   /**
-   * Shows the label and shortcut in a tooltip.
-   * @defaultValue true
+   * Hides the tooltip that shows the label and shortcut.
+   * @defaultValue false
    */
-  tooltip?: boolean;
+  hideTooltip?: boolean;
 
   /** Replaces the default icon. */
   children?: React.ReactNode;

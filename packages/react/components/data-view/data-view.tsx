@@ -1,5 +1,6 @@
 'use client';
 
+import { useControlled } from '@base-ui/utils/useControlled';
 import {
   getCoreRowModel,
   getExpandedRowModel,
@@ -51,7 +52,7 @@ function DataViewRoot<TData>({
   fields,
   query,
   mode = 'client',
-  isLoading = false,
+  loading = false,
   totalRowCount,
   loadingRowCount = 3,
   defaultSort,
@@ -74,17 +75,20 @@ function DataViewRoot<TData>({
   );
 
   // Active view (controlled / uncontrolled).
-  const isViewControlled = view !== undefined;
-  const [internalActiveView, setInternalActiveView] = useState<
+  const [activeView, setActiveViewUnwrapped] = useControlled<
     string | undefined
-  >(defaultView ?? views?.[0]?.value);
-  const activeView = isViewControlled ? view : internalActiveView;
+  >({
+    controlled: view,
+    default: defaultView ?? views?.[0]?.value,
+    name: 'DataView',
+    state: 'view'
+  });
   const setActiveView = useCallback(
     (next: string) => {
-      if (!isViewControlled) setInternalActiveView(next);
+      setActiveViewUnwrapped(next);
       onViewChange?.(next);
     },
-    [isViewControlled, onViewChange]
+    [onViewChange, setActiveViewUnwrapped]
   );
 
   // Per-view field overrides registered by mounted renderers.
@@ -254,7 +258,7 @@ function DataViewRoot<TData>({
     }
   })();
 
-  const hasData = rowCount > 0 || isLoading;
+  const hasData = rowCount > 0 || loading;
 
   const hasActiveQueryFlag = useMemo(
     () => computeHasActiveQuery(tableQuery, defaultSort),
@@ -275,7 +279,7 @@ function DataViewRoot<TData>({
       rootFields: fields,
       data,
       mode,
-      isLoading,
+      isLoading: loading,
       loadMoreData,
       tableQuery,
       updateTableQuery,
@@ -304,7 +308,7 @@ function DataViewRoot<TData>({
       fields,
       data,
       mode,
-      isLoading,
+      loading,
       loadMoreData,
       tableQuery,
       updateTableQuery,

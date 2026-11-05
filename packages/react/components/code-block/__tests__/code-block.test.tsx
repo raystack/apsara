@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ComponentProps } from 'react';
+import { ComponentProps, StrictMode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { CodeBlock } from '../code-block';
 
@@ -147,6 +147,31 @@ describe('CodeBlock', () => {
       expect(screen.getByText('def')).toBeInTheDocument();
       expect(screen.queryByText('function')).not.toBeInTheDocument();
     });
+
+    it('shows the language of the code when no value is set', () => {
+      render(
+        <CodeBlock>
+          <CodeBlock.Header>
+            <CodeBlock.LanguageSelect>
+              <CodeBlock.LanguageSelectTrigger />
+              <CodeBlock.LanguageSelectContent>
+                <CodeBlock.LanguageSelectItem value='jsx'>
+                  JavaScript
+                </CodeBlock.LanguageSelectItem>
+                <CodeBlock.LanguageSelectItem value='python'>
+                  Python
+                </CodeBlock.LanguageSelectItem>
+              </CodeBlock.LanguageSelectContent>
+            </CodeBlock.LanguageSelect>
+          </CodeBlock.Header>
+          <CodeBlock.Content>
+            <CodeBlock.Code language='python'>{PYTHON_CODE}</CodeBlock.Code>
+          </CodeBlock.Content>
+        </CodeBlock>
+      );
+
+      expect(screen.getByRole('combobox')).toHaveTextContent('Python');
+    });
   });
 
   describe('Copy Button', () => {
@@ -195,6 +220,45 @@ describe('CodeBlock', () => {
       expect(
         container.querySelectorAll('[data-slot="code-block-line"]')
       ).toHaveLength(2);
+    });
+
+    it('reports the next state when collapsed is controlled', async () => {
+      const user = userEvent.setup();
+      const onCollapseChange = vi.fn();
+      render(
+        <BasicCodeBlock
+          maxLines={2}
+          hasCollapseTrigger
+          collapsed={false}
+          onCollapseChange={onCollapseChange}
+        />
+      );
+
+      await user.click(screen.getByText('Hide Code'));
+
+      expect(onCollapseChange).toHaveBeenCalledTimes(1);
+      expect(onCollapseChange).toHaveBeenCalledWith(true);
+      expect(screen.getByText('Hide Code')).toBeInTheDocument();
+    });
+
+    it('calls onCollapseChange once per click in StrictMode', async () => {
+      const user = userEvent.setup();
+      const onCollapseChange = vi.fn();
+      render(
+        <StrictMode>
+          <BasicCodeBlock
+            maxLines={2}
+            hasCollapseTrigger
+            onCollapseChange={onCollapseChange}
+          />
+        </StrictMode>
+      );
+
+      await user.click(screen.getByText('Show Code'));
+
+      expect(onCollapseChange).toHaveBeenCalledTimes(1);
+      expect(onCollapseChange).toHaveBeenCalledWith(false);
+      expect(screen.getByText('Hide Code')).toBeInTheDocument();
     });
 
     it('hides collapse trigger when code fits in maxLines', () => {

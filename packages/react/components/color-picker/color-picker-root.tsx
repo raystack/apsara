@@ -1,13 +1,13 @@
 'use client';
 
+import { useControlled } from '@base-ui/utils/useControlled';
 import {
   ComponentProps,
   createContext,
   useCallback,
   useContext,
   useMemo,
-  useRef,
-  useState
+  useRef
 } from 'react';
 import { Flex } from '../flex';
 import {
@@ -64,25 +64,26 @@ export const ColorPickerRoot = ({
     [value]
   );
 
-  const [internalColor, setInternalColor] = useState(() =>
-    parseColor(defaultValue)
-  );
-  const [internalMode, setInternalMode] = useState(defaultMode);
-
-  const mode = providedMode ?? internalMode;
+  const [color, setColorUnwrapped] = useControlled({
+    controlled: providedColor,
+    default: parseColor(defaultValue),
+    name: 'ColorPicker',
+    state: 'value'
+  });
+  const [mode, setModeUnwrapped] = useControlled({
+    controlled: providedMode,
+    default: defaultMode,
+    name: 'ColorPicker',
+    state: 'mode'
+  });
 
   // In non-oklch modes, derive a display value clamped to the sRGB gamut so
   // the pad / thumb / input only reflect colors the active output mode can
   // actually represent. Internal state stays raw so switching back to oklch
   // restores any wide-gamut pick the user hadn't yet overwritten.
   const rawColor = useMemo<ColorObject>(
-    () => ({
-      l: providedColor ? providedColor.l : internalColor.l,
-      c: providedColor ? providedColor.c : internalColor.c,
-      h: providedColor ? providedColor.h : internalColor.h,
-      alpha: (providedColor ? providedColor.alpha : internalColor.alpha) ?? 1
-    }),
-    [providedColor, internalColor]
+    () => ({ ...color, alpha: color.alpha ?? 1 }),
+    [color]
   );
   // clampToSrgb wraps culori's clampChroma, which is iterative, so memoize
   // it doesn't re-run on unrelated re-renders during a drag.
@@ -98,7 +99,7 @@ export const ColorPickerRoot = ({
 
   // Mirror the current effective color in a ref so setColor can compute the
   // next value synchronously, without putting onValueChange inside the
-  // setInternalColor updater (where StrictMode would fire it twice).
+  // state updater (where StrictMode would fire it twice).
   const rawColorRef = useRef(rawColor);
   rawColorRef.current = rawColor;
 
@@ -106,18 +107,18 @@ export const ColorPickerRoot = ({
     value => {
       const next = { ...rawColorRef.current, ...value };
       rawColorRef.current = next;
-      setInternalColor(next);
+      setColorUnwrapped(next);
       onValueChange?.(getColorString(next, mode), mode);
     },
-    [mode, onValueChange]
+    [mode, onValueChange, setColorUnwrapped]
   );
 
   const setMode = useCallback<ColorPickerContextValue['setMode']>(
     value => {
-      setInternalMode(value);
+      setModeUnwrapped(value);
       onModeChange?.(value);
     },
-    [onModeChange]
+    [onModeChange, setModeUnwrapped]
   );
 
   // Memoize the context value so consumers (Area, Hue, Alpha, Input, Mode) only
