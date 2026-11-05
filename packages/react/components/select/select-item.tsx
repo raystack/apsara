@@ -50,7 +50,19 @@ export function SelectItem({
             {leadingIcon}
           </div>
         )}
-        <Text data-slot='select-item-text'>{children}</Text>
+        {autocomplete ? (
+          <Text className={styles.itemText} data-slot='select-item-text'>
+            {children}
+          </Text>
+        ) : (
+          <SelectPrimitive.ItemText
+            render={<Text />}
+            className={styles.itemText}
+            data-slot='select-item-text'
+          >
+            {children}
+          </SelectPrimitive.ItemText>
+        )}
       </>
     ) : (
       children
@@ -81,7 +93,7 @@ export function SelectItem({
       {...props}
       render={(renderProps, state) => (
         <div {...renderProps}>
-          {multiple && <Checkbox checked={state.selected} />}
+          {multiple && <Checkbox checked={state.selected} tabIndex={-1} />}
           {element}
         </div>
       )}

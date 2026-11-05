@@ -160,9 +160,11 @@ In [server mode](/docs/dataview#server-mode) the sort is the backend's to apply:
 Four props control the axis, and they compose rather than overlap:
 
 - `scale` sets the tick unit: `day` (default), `week`, `month`, or `quarter`.
-- `unitWidth` sets pixels per unit (defaults: day 20, week 56, month 96, quarter 140). This is the zoom knob.
+- `unitWidth` sets pixels per unit (defaults: day 20, week 56, month 96, quarter 140). This is the zoom knob. The defaults are multiplied by the theme's [`scaling`](/docs/theme/overview#scaling), so a scaled UI keeps the same proportions. An explicit `unitWidth` is used as passed.
 - `tickInterval` labels every Nth unit. Labels never render closer than a collision floor, so a too-dense value degrades gracefully instead of overlapping.
 - `gridlineInterval` draws a gridline every Nth unit. Purely visual: cards, the today line, and cursor snapping still land on every unit.
+
+The other size defaults (`estimatedRowHeight`, `laneGap`, `minCardWidth`, `estimatedPointWidth`) and the axis height follow `scaling` the same way.
 
 The domain defaults to the data extent (plus today and markers) with padding. Pass an explicit `range` to fix the coordinate space. This is essential for range-window loading, since the scrollbar then never jumps as data streams in. Rows entirely outside an explicit `range` are culled.
 

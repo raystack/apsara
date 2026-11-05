@@ -211,4 +211,218 @@ describe('Menu', () => {
       expect(screen.getByText('Banana')).toBeInTheDocument();
     });
   });
+
+  describe('Checkbox Items', () => {
+    it('toggles the checked state and aria-checked', async () => {
+      const onCheckedChange = vi.fn();
+      await renderAndOpenDropdown(
+        <Menu>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content>
+            <Menu.CheckboxItem onCheckedChange={onCheckedChange}>
+              Show grid
+            </Menu.CheckboxItem>
+          </Menu.Content>
+        </Menu>
+      );
+
+      const item = screen.getByRole('menuitemcheckbox');
+      expect(item).toHaveAttribute('aria-checked', 'false');
+
+      fireEvent.click(item);
+      expect(item).toHaveAttribute('aria-checked', 'true');
+      expect(onCheckedChange).toHaveBeenCalledWith(true, expect.anything());
+      expect(screen.getByRole('menu')).toBeInTheDocument();
+
+      fireEvent.click(item);
+      expect(item).toHaveAttribute('aria-checked', 'false');
+    });
+
+    it('respects the controlled checked prop', async () => {
+      await renderAndOpenDropdown(
+        <Menu>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content>
+            <Menu.CheckboxItem checked>Show grid</Menu.CheckboxItem>
+          </Menu.Content>
+        </Menu>
+      );
+
+      const item = screen.getByRole('menuitemcheckbox');
+      fireEvent.click(item);
+      expect(item).toHaveAttribute('aria-checked', 'true');
+    });
+  });
+
+  describe('Radio Items', () => {
+    it('keeps a single item checked in a group', async () => {
+      const onValueChange = vi.fn();
+      await renderAndOpenDropdown(
+        <Menu>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content>
+            <Menu.RadioGroup defaultValue='list' onValueChange={onValueChange}>
+              <Menu.RadioItem value='list'>List</Menu.RadioItem>
+              <Menu.RadioItem value='board'>Board</Menu.RadioItem>
+            </Menu.RadioGroup>
+          </Menu.Content>
+        </Menu>
+      );
+
+      const [list, board] = screen.getAllByRole('menuitemradio');
+      expect(list).toHaveAttribute('aria-checked', 'true');
+      expect(board).toHaveAttribute('aria-checked', 'false');
+
+      fireEvent.click(board);
+      expect(list).toHaveAttribute('aria-checked', 'false');
+      expect(board).toHaveAttribute('aria-checked', 'true');
+      expect(onValueChange).toHaveBeenCalledWith('board', expect.anything());
+    });
+  });
+
+  describe('Link Items', () => {
+    it('renders an anchor with role menuitem', async () => {
+      await renderAndOpenDropdown(
+        <Menu>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content>
+            <Menu.LinkItem href='/projects'>Projects</Menu.LinkItem>
+          </Menu.Content>
+        </Menu>
+      );
+
+      const link = screen.getByRole('menuitem', { name: 'Projects' });
+      expect(link.tagName).toBe('A');
+      expect(link).toHaveAttribute('href', '/projects');
+    });
+
+    it('renders a custom link element through render', async () => {
+      const RouterLink = (props: React.ComponentProps<'a'>) => (
+        <a data-router='' {...props} />
+      );
+      await renderAndOpenDropdown(
+        <Menu>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content>
+            <Menu.LinkItem render={<RouterLink href='/settings' />}>
+              Settings
+            </Menu.LinkItem>
+          </Menu.Content>
+        </Menu>
+      );
+
+      const link = screen.getByRole('menuitem', { name: 'Settings' });
+      expect(link).toHaveAttribute('data-router');
+      expect(link).toHaveAttribute('href', '/settings');
+    });
+  });
+
+  describe('Autocomplete', () => {
+    const SearchMenu = () => (
+      <Menu autocomplete>
+        <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+        <Menu.Content>
+          {MENU_ITEMS.map(item => (
+            <Menu.Item key={item.id}>{item.label}</Menu.Item>
+          ))}
+          <Menu.CheckboxItem>Show grid</Menu.CheckboxItem>
+          <Menu.RadioGroup defaultValue='list'>
+            <Menu.RadioItem value='list'>List view</Menu.RadioItem>
+            <Menu.RadioItem value='board'>Board view</Menu.RadioItem>
+          </Menu.RadioGroup>
+          <Menu.LinkItem href='/docs'>Docs</Menu.LinkItem>
+        </Menu.Content>
+      </Menu>
+    );
+
+    const search = (value: string) => {
+      fireEvent.change(screen.getByRole('combobox'), { target: { value } });
+    };
+
+    it('filters items as the user types', async () => {
+      await renderAndOpenDropdown(<SearchMenu />);
+      expect(screen.getAllByRole('option')).toHaveLength(9);
+
+      search('set');
+      const options = screen.getAllByRole('option');
+      expect(options).toHaveLength(1);
+      expect(options[0]).toHaveTextContent('Settings');
+
+      search('view');
+      expect(screen.getAllByRole('option')).toHaveLength(2);
+    });
+
+    it('toggles checkbox and radio items and keeps the search', async () => {
+      await renderAndOpenDropdown(<SearchMenu />);
+
+      search('grid');
+      const checkbox = screen.getByRole('option', { name: 'Show grid' });
+      expect(checkbox).toHaveAttribute('aria-checked', 'false');
+      fireEvent.click(checkbox);
+      expect(checkbox).toHaveAttribute('aria-checked', 'true');
+      expect(screen.getByRole('combobox')).toHaveValue('grid');
+
+      search('view');
+      const board = screen.getByRole('option', { name: 'Board view' });
+      fireEvent.click(board);
+      expect(board).toHaveAttribute('aria-checked', 'true');
+      expect(screen.getByRole('option', { name: 'List view' })).toHaveAttribute(
+        'aria-checked',
+        'false'
+      );
+    });
+
+    it('keeps uncontrolled checkbox and radio state while filtering', async () => {
+      await renderAndOpenDropdown(
+        <Menu autocomplete>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content>
+            <Menu.CheckboxItem defaultChecked>Show grid</Menu.CheckboxItem>
+            <Menu.Group>
+              <Menu.CheckboxItem defaultChecked>Show rulers</Menu.CheckboxItem>
+              <Menu.RadioGroup defaultValue='list'>
+                <Menu.RadioItem value='list'>List view</Menu.RadioItem>
+                <Menu.RadioItem value='board'>Board view</Menu.RadioItem>
+              </Menu.RadioGroup>
+            </Menu.Group>
+          </Menu.Content>
+        </Menu>
+      );
+      const option = (name: string) => screen.getByRole('option', { name });
+      fireEvent.click(option('Show grid'));
+      fireEvent.click(option('Show rulers'));
+      fireEvent.click(option('Board view'));
+
+      search('view');
+      expect(option('Board view')).toHaveAttribute('aria-checked', 'true');
+
+      search('');
+      expect(option('Show grid')).toHaveAttribute('aria-checked', 'false');
+      expect(option('Show rulers')).toHaveAttribute('aria-checked', 'false');
+      expect(option('Board view')).toHaveAttribute('aria-checked', 'true');
+    });
+
+    it('renders link items as anchors', async () => {
+      await renderAndOpenDropdown(<SearchMenu />);
+      const link = screen.getByRole('option', { name: 'Docs' });
+      expect(link.tagName).toBe('A');
+      expect(link).toHaveAttribute('href', '/docs');
+    });
+
+    it('renders the empty state without live region attributes', async () => {
+      await renderAndOpenDropdown(
+        <Menu autocomplete>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content>
+            <Menu.Item>Profile</Menu.Item>
+            <Menu.EmptyState>No results</Menu.EmptyState>
+          </Menu.Content>
+        </Menu>
+      );
+      const empty = document.querySelector('[data-slot="menu-empty-state"]');
+      expect(empty).not.toHaveAttribute('role');
+      expect(empty).not.toHaveAttribute('aria-live');
+      expect(empty).not.toHaveAttribute('aria-atomic');
+    });
+  });
 });
