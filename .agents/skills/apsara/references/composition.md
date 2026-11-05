@@ -89,7 +89,7 @@ import { Select } from "@raystack/apsara";
 ```
 
 - Put `placeholder` on `Select.Value`, not the trigger.
-- `Select.Item` supports `leadingIcon`; `disabled` marks unavailable rows.
+- `Select.Item` supports `leadingIcon` and `trailingIcon`; `disabled` marks unavailable rows.
 - Sub-parts: `Select.Trigger`, `Select.Value`, `Select.Content`, `Select.Item`, `Select.Group`, `Select.Label`, `Select.Separator`, `Select.List`.
 
 ## Menu / ContextMenu

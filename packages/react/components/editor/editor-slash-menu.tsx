@@ -124,9 +124,11 @@ export function EditorSlashMenu({
         id: item.id,
         label: item.label,
         description: item.description,
-        icon: item.icon,
+        leadingIcon: item.leadingIcon,
         disabled: item.disabled,
-        trailing: shortcut ? <EditorShortcutKeys shortcut={shortcut} /> : null
+        trailingIcon: shortcut ? (
+          <EditorShortcutKeys shortcut={shortcut} />
+        ) : null
       };
     })
   }));

@@ -11,6 +11,7 @@ import { useComboboxContext } from './combobox-root';
 
 export interface ComboboxItemProps extends ComboboxPrimitive.Item.Props {
   leadingIcon?: ReactNode;
+  trailingIcon?: ReactNode;
 }
 
 export const ComboboxItem = ({
@@ -18,6 +19,7 @@ export const ComboboxItem = ({
   children,
   value: providedValue,
   leadingIcon,
+  trailingIcon,
   disabled,
   render,
   ...props
@@ -40,11 +42,22 @@ export const ComboboxItem = ({
     typeof children === 'string' ? (
       <>
         {leadingIcon && (
-          <div className={styles.itemIcon} data-slot='combobox-item-icon'>
+          <div
+            className={styles.itemIcon}
+            data-slot='combobox-item-leading-icon'
+          >
             {leadingIcon}
           </div>
         )}
         <Text data-slot='combobox-item-text'>{children}</Text>
+        {trailingIcon && (
+          <div
+            className={cx(styles.itemIcon, styles.itemTrailingIcon)}
+            data-slot='combobox-item-trailing-icon'
+          >
+            {trailingIcon}
+          </div>
+        )}
       </>
     ) : (
       children

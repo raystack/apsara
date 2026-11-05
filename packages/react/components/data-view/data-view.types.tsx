@@ -81,7 +81,7 @@ export interface DataViewField<TData = unknown> {
   accessorKey: Extract<keyof TData, string> | (string & {});
   /** Human-readable label shown in filter chips, Display controls, and the default Table header. */
   label: string;
-  icon?: React.ReactNode;
+  leadingIcon?: React.ReactNode;
 
   // filter capability
   filterable?: boolean;

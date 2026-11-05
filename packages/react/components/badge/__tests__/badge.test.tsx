@@ -72,7 +72,7 @@ describe('Badge', () => {
   describe('Icon Support', () => {
     it('renders with icon', () => {
       const icon = <svg data-testid='badge-icon' />;
-      render(<Badge icon={icon}>With Icon</Badge>);
+      render(<Badge leadingIcon={icon}>With Icon</Badge>);
 
       expect(screen.getByTestId('badge-icon')).toBeInTheDocument();
       expect(screen.getByText('With Icon')).toBeInTheDocument();
@@ -86,7 +86,7 @@ describe('Badge', () => {
 
     it('renders complex icon components', () => {
       const ComplexIcon = () => <span data-testid='complex-icon'>★</span>;
-      render(<Badge icon={<ComplexIcon />}>Badge</Badge>);
+      render(<Badge leadingIcon={<ComplexIcon />}>Badge</Badge>);
 
       expect(screen.getByTestId('complex-icon')).toBeInTheDocument();
       expect(screen.getByText('★')).toBeInTheDocument();

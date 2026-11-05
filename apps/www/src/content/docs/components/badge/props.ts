@@ -18,7 +18,7 @@ export interface BadgeProps {
   size?: 'micro' | 'small' | 'regular';
 
   /** Optional ReactNode to display an icon before the text */
-  icon?: React.ReactNode;
+  leadingIcon?: React.ReactNode;
 
   /** Additional text content only announced to screen readers */
   screenReaderText?: string;

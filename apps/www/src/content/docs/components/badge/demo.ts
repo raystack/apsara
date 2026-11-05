@@ -27,7 +27,7 @@ export const playground = {
       options: ['micro', 'small', 'regular'],
       defaultValue: 'small'
     },
-    icon: {
+    leadingIcon: {
       type: 'icon'
     },
     screenReaderText: {
@@ -69,9 +69,9 @@ export const iconDemo = {
   type: 'code',
   code: `
   <Flex gap={5}>
-    <Badge icon={<Home size="16"/>}>Badge</Badge>
-    <Badge icon={<Laugh size="16"/>}>Badge</Badge>
-    <Badge icon="🔥">Badge</Badge>
+    <Badge leadingIcon={<Home size="16"/>}>Badge</Badge>
+    <Badge leadingIcon={<Laugh size="16"/>}>Badge</Badge>
+    <Badge leadingIcon="🔥">Badge</Badge>
   </Flex>`
 };
 
