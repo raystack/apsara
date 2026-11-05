@@ -24,10 +24,10 @@ export interface SkeletonProps {
   highlightColor?: string;
 
   /**
-   * Border radius of the skeleton
-   * @defaultValue "var(--rs-radius-2)"
+   * Corner radius for this skeleton only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
    */
-  borderRadius?: string | number;
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 
   /**
    * Whether to display as inline-block
@@ -42,10 +42,10 @@ export interface SkeletonProps {
   duration?: number;
 
   /**
-   * Whether to enable the shimmer animation
-   * @defaultValue true
+   * Turns off the shimmer animation.
+   * @defaultValue false
    */
-  enableAnimation?: boolean;
+  disableAnimation?: boolean;
 
   /**
    * Number of skeleton elements to render

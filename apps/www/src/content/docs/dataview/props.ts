@@ -22,10 +22,10 @@ export interface DataViewProps {
   mode?: 'client' | 'server';
 
   /**
-   * Loading state.
+   * Shows skeleton rows and holds back `onLoadMore`.
    * @defaultValue false
    */
-  isLoading?: boolean;
+  loading?: boolean;
 
   /** Initial query state. */
   query?: DataViewQuery;
@@ -87,7 +87,7 @@ export interface DataViewField {
   label: string;
 
   /** Optional icon (e.g. for grouping menu). */
-  icon?: ReactNode;
+  leadingIcon?: ReactNode;
 
   /** Allow filtering on this field. */
   filterable?: boolean;
@@ -151,7 +151,7 @@ export interface DataViewListProps {
   /**
    * Initial row-height estimate (px). Rows are auto-measured after they paint,
    * so this is only used until the first measurement. Default 40 for table,
-   * 56 for list.
+   * 56 for list. The default is multiplied by the theme's `scaling`. An explicit value is used as passed.
    */
   estimatedRowHeight?: number;
 
@@ -161,8 +161,11 @@ export interface DataViewListProps {
   /** Render dividers between rows (default true for table). */
   showDividers?: boolean;
 
-  /** Render group section headers when grouping is active. Default true. */
-  showGroupHeaders?: boolean;
+  /**
+   * Hides group section headers when grouping is active.
+   * @defaultValue false
+   */
+  hideGroupHeaders?: boolean;
 
   /** When true, the active group header sticks under the table header while scrolling. */
   stickyGroupHeader?: boolean;
@@ -225,7 +228,10 @@ export interface DataViewTimelineProps {
    */
   scale?: 'day' | 'week' | 'month' | 'quarter';
 
-  /** Pixel width of one `scale` unit — density/zoom override. Defaults per scale (day 20, week 56, month 96, quarter 140). */
+  /**
+   * Pixel width of one `scale` unit, as a density or zoom override. Defaults per scale
+   * (day 20, week 56, month 96, quarter 140). The default is multiplied by the theme's `scaling`. An explicit value is used as passed.
+   */
   unitWidth?: number;
 
   /**
@@ -244,10 +250,10 @@ export interface DataViewTimelineProps {
   markers?: TimelineMarker[];
 
   /**
-   * Vertical gridlines at axis ticks.
-   * @defaultValue true
+   * Hides the vertical gridlines at axis ticks.
+   * @defaultValue false
    */
-  showGridlines?: boolean;
+  hideGridlines?: boolean;
 
   /** Label every Nth `scale` unit on the axis. Labels never render closer than the collision floor. Default: densest interval that fits. */
   tickInterval?: number;
@@ -259,10 +265,10 @@ export interface DataViewTimelineProps {
   gridlineInterval?: number;
 
   /**
-   * Hover crosshair snapped to the unit under the pointer, with a date badge on the axis.
-   * @defaultValue true
+   * Hides the hover crosshair snapped to the unit under the pointer, with a date badge on the axis.
+   * @defaultValue false
    */
-  showCursorLine?: boolean;
+  hideCursorLine?: boolean;
 
   // The literals are named in the description because the rendered type
   // column can't show them — TS collapses them into TimelineDateInput's
@@ -306,26 +312,26 @@ export interface DataViewTimelineProps {
   /**
    * Estimated card height in px, same contract as `DataView.List`: cards render at their
    * natural content height and auto-measure after paint; the estimate seeds lane layout
-   * until real heights arrive. Each lane sizes to its tallest card.
+   * until real heights arrive. Each lane sizes to its tallest card. The default is multiplied by the theme's `scaling`. An explicit value is used as passed.
    * @defaultValue 66
    */
   estimatedRowHeight?: number;
 
   /**
-   * Vertical gap between lanes in px.
+   * Vertical gap between lanes in px. The default is multiplied by the theme's `scaling`. An explicit value is used as passed.
    * @defaultValue 16
    */
   laneGap?: number;
 
   /**
-   * Spans narrower than this (px) flip `context.collapsed` for `renderCard`.
+   * Spans narrower than this (px) flip `context.collapsed` for `renderCard`. The default is multiplied by the theme's `scaling`. An explicit value is used as passed.
    * @defaultValue 60
    */
   minCardWidth?: number;
 
   /**
    * Assumed width (px) of point-marker cards (rows without `endField`) for lane packing.
-   * Set to roughly the widest point card to prevent horizontal overlap within a lane.
+   * Set to roughly the widest point card to prevent horizontal overlap within a lane. The default is multiplied by the theme's `scaling`. An explicit value is used as passed.
    * @defaultValue 120
    */
   estimatedPointWidth?: number;
@@ -334,12 +340,12 @@ export interface DataViewTimelineProps {
   virtualized?: boolean;
 
   /**
-   * Render the group header band above each swim-lane section while `group_by`
-   * is active. False hides the bands only — rows stay grouped into sections
-   * (same contract as `DataViewListProps.showGroupHeaders`).
-   * @defaultValue true
+   * Hides the group header band above each swim-lane section while `group_by`
+   * is active. Rows stay grouped into sections
+   * (same contract as `DataViewListProps.hideGroupHeaders`).
+   * @defaultValue false
    */
-  showGroupHeaders?: boolean;
+  hideGroupHeaders?: boolean;
 }
 
 export interface TimelineCardContext {
@@ -371,9 +377,9 @@ export interface TimelineMarker {
 
   /**
    * Badge/line color.
-   * @defaultValue "default"
+   * @defaultValue "neutral"
    */
-  variant?: 'default' | 'accent' | 'danger';
+  color?: 'neutral' | 'accent' | 'danger';
 }
 
 export interface TimelineActions {

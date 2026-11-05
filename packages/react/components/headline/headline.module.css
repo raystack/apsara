@@ -29,15 +29,15 @@
   letter-spacing: var(--rs-letter-spacing-t4);
 }
 
-.headline-align-left {
+.align-start {
   text-align: start;
 }
 
-.headline-align-center {
+.align-center {
   text-align: center;
 }
 
-.headline-align-right {
+.align-end {
   text-align: end;
 }
 

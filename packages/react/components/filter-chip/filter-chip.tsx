@@ -5,7 +5,7 @@ import { cva, cx, VariantProps } from 'class-variance-authority';
 import { parseISO } from 'date-fns';
 import {
   ComponentProps,
-  ReactElement,
+  ReactNode,
   useCallback,
   useMemo,
   useState
@@ -67,7 +67,7 @@ export type FilterChipChangeDetails = ChangeDetails<
   { operation: string }
 >;
 
-/* The message `DatePicker` reports, so `onErrorChange` reads the same. */
+/* The message `DatePicker` reports, so `onValidityChange` reads the same. */
 const INVALID_DATE = 'Invalid date';
 
 /* A year the calendar cannot show leaves the field empty. */
@@ -107,8 +107,6 @@ export type FilterChipCalendarProps = Pick<
    * @default false
    */
   showCalendarIcon?: boolean;
-  /** Called with a message when the typed date is invalid, and with `undefined` when it is valid again. */
-  onErrorChange?: (error: string | undefined) => void;
 };
 
 export interface FilterChipProps
@@ -124,7 +122,7 @@ export interface FilterChipProps
     details: FilterChipChangeDetails
   ) => void;
   onOperationChange?: (operation: string) => void;
-  leadingIcon?: ReactElement;
+  leadingIcon?: ReactNode;
   operations?: FilterOperator<string>[];
   selectProps?: BaseSelectProps;
   /** Props forwarded to the `CalendarPreview` for `columnType="date"`. */
@@ -184,7 +182,6 @@ export const FilterChip = ({
     formatValue: formatDate,
     slotProps: dateSlotProps,
     showCalendarIcon = false,
-    onErrorChange,
     ...calendarRest
   } = calendarProps ?? {};
   const { classNames: inputClassNames, ...inputProps } =
@@ -341,12 +338,6 @@ export const FilterChip = ({
                     'out-of-bounds': INVALID_DATE,
                     unavailable: INVALID_DATE,
                     ...inputProps.errorMessages
-                  }}
-                  onValidityChange={validity => {
-                    inputProps.onValidityChange?.(validity);
-                    onErrorChange?.(
-                      validity.valid ? undefined : validity.message
-                    );
                   }}
                 />
               </CalendarPreview.Trigger>

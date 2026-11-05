@@ -4,7 +4,7 @@ import styles from './text.module.css';
 
 export const textVariants = cva(styles.text, {
   variants: {
-    variant: {
+    color: {
       primary: styles['text-primary'],
       secondary: styles['text-secondary'],
       tertiary: styles['text-tertiary'],
@@ -54,7 +54,7 @@ export const textVariants = cva(styles.text, {
     }
   },
   defaultVariants: {
-    variant: 'primary',
+    color: 'primary',
     size: 'small',
     weight: 'regular'
   },
@@ -69,12 +69,13 @@ export const textVariants = cva(styles.text, {
 
 export type TextBaseProps = VariantProps<typeof textVariants>;
 
-export type TextProps = TextBaseProps & useRender.ComponentProps<'span'>;
+export type TextProps = TextBaseProps &
+  Omit<useRender.ComponentProps<'span'>, 'color'>;
 
 export function Text({
   className,
   size,
-  variant,
+  color,
   weight,
   transform,
   align,
@@ -90,7 +91,7 @@ export function Text({
     size,
     className,
     weight,
-    variant,
+    color,
     transform,
     align,
     lineClamp,

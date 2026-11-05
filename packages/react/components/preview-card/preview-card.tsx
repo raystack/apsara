@@ -2,6 +2,7 @@
 
 import { PreviewCard as PreviewCardPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import { Arrow } from '../../shared/arrow';
 import { type Radius, radiusStyle } from '../../shared/radius';
 import { useThemeInjection } from '../theme/portal';
 import styles from './preview-card.module.css';
@@ -57,22 +58,9 @@ function PreviewCardContent({
           {children}
           {showArrow && (
             <PreviewCardPrimitive.Arrow
-              className={styles.arrow}
               data-slot='preview-card-arrow'
-            >
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width='6'
-                height='7'
-                viewBox='0 0 6 7'
-                fill='none'
-              >
-                <path
-                  d='M2.90809 6.78553L0 0H6L3.09191 6.78553C3.05728 6.86634 2.94272 6.86634 2.90809 6.78553Z'
-                  fill='currentColor'
-                />
-              </svg>
-            </PreviewCardPrimitive.Arrow>
+              render={<Arrow />}
+            />
           )}
         </PreviewCardPrimitive.Popup>
       </PreviewCardPrimitive.Positioner>
