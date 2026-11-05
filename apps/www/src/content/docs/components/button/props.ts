@@ -25,7 +25,10 @@ export type ButtonProps = {
    */
   disabled?: boolean;
 
-  /** Shows a loading spinner inside the button */
+  /**
+   * Shows a spinner in place of the content and blocks clicks. The button stays focusable.
+   * @defaultValue false
+   */
   loading?: boolean;
 
   /** Optional text to display next to the loading spinner */

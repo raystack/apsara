@@ -31,8 +31,11 @@ export interface DrawerProps {
 }
 
 export interface DrawerContentProps {
-  /** Whether to show the close button. */
-  showCloseButton?: boolean;
+  /**
+   * Hides the close button.
+   * @default false
+   */
+  hideCloseButton?: boolean;
 
   /**
    * Accessible label for the close button. Override for localisation.

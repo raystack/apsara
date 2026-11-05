@@ -42,10 +42,10 @@ export interface SkeletonProps {
   duration?: number;
 
   /**
-   * Whether to enable the shimmer animation
-   * @defaultValue true
+   * Turns off the shimmer animation.
+   * @defaultValue false
    */
-  enableAnimation?: boolean;
+  disableAnimation?: boolean;
 
   /**
    * Number of skeleton elements to render

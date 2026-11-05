@@ -157,7 +157,7 @@ export const Button = ({
         button({ variant, size, color, radius, disabled, loading, className }),
         isLoaderOnly && getLoaderOnlyClass(size)
       )}
-      disabled={disabled}
+      disabled={disabled || loading}
       render={render}
       nativeButton={!render}
       focusableWhenDisabled={loading}

@@ -24,7 +24,11 @@ const drawerPopup = cva(styles.drawerPopup, {
 
 export interface DrawerContentProps
   extends Omit<DrawerPrimitive.Popup.Props, 'children'> {
-  showCloseButton?: boolean;
+  /**
+   * Hides the close button.
+   * @default false
+   */
+  hideCloseButton?: boolean;
   overlayProps?: DrawerPrimitive.Backdrop.Props;
   children?: ReactNode;
   /** Corner radius for this drawer only. Overrides the theme's `radius`. */
@@ -46,7 +50,7 @@ export interface DrawerContentProps
 export function DrawerContent({
   className,
   children,
-  showCloseButton = true,
+  hideCloseButton = false,
   overlayProps,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
@@ -88,7 +92,7 @@ export function DrawerContent({
             data-slot='drawer-content-body'
           >
             {children}
-            {showCloseButton && (
+            {!hideCloseButton && (
               <DrawerPrimitive.Close
                 className={styles.close}
                 aria-label={closeLabel}

@@ -377,10 +377,10 @@ export function DataViewTimeline<TData>({
   range,
   today = true,
   markers,
-  showGridlines = true,
+  hideGridlines = false,
   tickInterval,
   gridlineInterval = 1,
-  showCursorLine = true,
+  hideCursorLine = false,
   defaultScrollTo = 'today',
   scrollToResults = true,
   onVisibleRangeChange,
@@ -391,7 +391,7 @@ export function DataViewTimeline<TData>({
   minCardWidth: minCardWidthProp,
   estimatedPointWidth: estimatedPointWidthProp,
   virtualized = false,
-  showGroupHeaders = true,
+  hideGroupHeaders = false,
   classNames = {}
 }: DataViewTimelineProps<TData>) {
   const {
@@ -834,7 +834,7 @@ export function DataViewTimeline<TData>({
     let y = 0;
     for (const section of laidOutSections) {
       const sectionTop = y;
-      const banded = showGroupHeaders && section.group !== null;
+      const banded = !hideGroupHeaders && section.group !== null;
       if (banded) y += groupBandHeight;
       y += laneGap;
       for (let i = 0; i < section.laneCount; i++) {
@@ -887,7 +887,7 @@ export function DataViewTimeline<TData>({
     fixedLaneHeight,
     laneGap,
     groupBandHeight,
-    showGroupHeaders,
+    hideGroupHeaders,
     measureVersion
   ]);
 
@@ -1003,7 +1003,7 @@ export function DataViewTimeline<TData>({
   const cursorRafRef = useRef<number | null>(null);
 
   const updateCursorFromPointer = useCallback(() => {
-    if (!showCursorLine) return;
+    if (hideCursorLine) return;
     const el = scrollRef.current;
     const pointerX = pointerXRef.current;
     if (!el || pointerX === null) return;
@@ -1015,11 +1015,11 @@ export function DataViewTimeline<TData>({
     );
     const snapped = startOfUnit(new Date(time), scale).getTime();
     setCursorTime(prev => (prev === snapped ? prev : snapped));
-  }, [showCursorLine, timeScale, scale]);
+  }, [hideCursorLine, timeScale, scale]);
 
   const handlePointerMove = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
-      if (!showCursorLine) return;
+      if (hideCursorLine) return;
       pointerXRef.current = event.clientX;
       if (cursorRafRef.current !== null) return;
       cursorRafRef.current = requestAnimationFrame(() => {
@@ -1027,7 +1027,7 @@ export function DataViewTimeline<TData>({
         updateCursorFromPointer();
       });
     },
-    [showCursorLine, updateCursorFromPointer]
+    [hideCursorLine, updateCursorFromPointer]
   );
 
   const handlePointerLeave = useCallback(() => {
@@ -1193,7 +1193,7 @@ export function DataViewTimeline<TData>({
     if (el) {
       savedScrollRef.current = { left: el.scrollLeft, top: el.scrollTop };
     }
-    if (!needsViewport && !showCursorLine) return;
+    if (!needsViewport && hideCursorLine) return;
     if (rafIdRef.current !== null) return;
     rafIdRef.current = requestAnimationFrame(() => {
       rafIdRef.current = null;
@@ -1203,7 +1203,7 @@ export function DataViewTimeline<TData>({
       }
       updateCursorFromPointer();
     });
-  }, [needsViewport, showCursorLine, readViewport, updateCursorFromPointer]);
+  }, [needsViewport, hideCursorLine, readViewport, updateCursorFromPointer]);
 
   useEffect(
     () => () => {
@@ -1588,8 +1588,8 @@ export function DataViewTimeline<TData>({
       data-dragging={isDragging || undefined}
       data-slot='data-view-timeline'
       onScroll={handleScroll}
-      onMouseMove={showCursorLine ? handlePointerMove : undefined}
-      onMouseLeave={showCursorLine ? handlePointerLeave : undefined}
+      onMouseMove={hideCursorLine ? undefined : handlePointerMove}
+      onMouseLeave={hideCursorLine ? undefined : handlePointerLeave}
       onPointerDown={handleDragPointerDown}
       onPointerMove={handleDragPointerMove}
       onPointerUp={handleDragEnd}
@@ -1701,7 +1701,7 @@ export function DataViewTimeline<TData>({
         style={{ width: timeScale.totalWidth, height: canvasHeight }}
         data-slot='data-view-timeline-canvas'
       >
-        {showGridlines
+        {!hideGridlines
           ? visibleTicks.map(tick =>
               tick.index % gridlineEvery === 0 ? (
                 <div

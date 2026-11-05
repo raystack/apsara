@@ -40,7 +40,7 @@ describe('DatePicker', () => {
      * Two regressions on the picker's `calendarProps` type:
      * - Original type required `mode`/`selected`/`onSelect`, which the picker
      *   overrides after the spread, so consumer values were silently ignored.
-     * - CalendarPropsExtended fields (tooltipMessages, dateInfo, loadingData,
+     * - CalendarPropsExtended fields (tooltipMessages, dateInfo, loading,
      *   showTooltip) were unreachable because the type didn't include them.
      */
     it('accepts CalendarPropsExtended fields via calendarProps without type cast', () => {
@@ -53,7 +53,7 @@ describe('DatePicker', () => {
               endMonth: new Date(2030, 0, 1),
               tooltipMessages: { '15-06-2025': 'Sample tooltip' },
               dateInfo: { '15-06-2025': 'i' },
-              loadingData: false,
+              loading: false,
               showTooltip: true
             }}
           />

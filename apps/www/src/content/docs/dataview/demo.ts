@@ -209,13 +209,13 @@ export const loadingPreview = {
       label: 'index.tsx',
       code: `
       /* \`DataView.List\` renders \`loadingRowCount\` skeleton rows while
-         \`isLoading\` is true. Existing rows render alongside skeletons in
+         \`loading\` is true. Existing rows render alongside skeletons in
          server mode (load-more). */
       <DataView
         data={loadingRows}
         fields={fields}
         defaultSort={{ name: "name", order: "asc" }}
-        isLoading={isLoading}
+        loading={loading}
         loadingRowCount={4}
       >
         <DataView.Toolbar>
@@ -494,7 +494,7 @@ export const timelineGroupingPreview = {
         <DataView.Timeline
           startField="start"
           endField="end"
-          // showGroupHeaders={false} hides the bands, keeps the sections
+          // hideGroupHeaders hides the bands, keeps the sections
           renderCard={(row, context) => <TaskCard task={row.original} context={context} />}
         />
       </DataView>`

@@ -35,7 +35,7 @@ export const calendarDemo = {
     },
     {
       name: 'With Loading',
-      code: `<Calendar loadingData={true} numberOfMonths={2} />`
+      code: `<Calendar loading numberOfMonths={2} />`
     },
     {
       name: 'With Dropdowns',
@@ -129,7 +129,7 @@ export const rangePickerDemo = {
     },
     {
       name: 'Without Calendar Icon',
-      code: `<RangePicker showCalendarIcon={false} />`
+      code: `<RangePicker hideCalendarIcon />`
     },
     {
       name: 'Custom Trigger',
@@ -182,7 +182,7 @@ export const datePickerDemo = {
     },
     {
       name: 'Without Calendar Icon',
-      code: `<DatePicker showCalendarIcon={false} slotProps={{ input: { size: "medium" } }} />`
+      code: `<DatePicker hideCalendarIcon slotProps={{ input: { size: "medium" } }} />`
     },
     {
       name: 'With Field',

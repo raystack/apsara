@@ -177,7 +177,7 @@ export const periodsDemo = {
               defaultMonth={new Date(2026, 7, 1)}
               defaultScale="quarter"
             >
-              <CalendarPreview.Body showIcon />
+              <CalendarPreview.Body showCalendarIcon />
             </CalendarPreview>`
     },
     {
@@ -188,7 +188,7 @@ export const periodsDemo = {
             >
               <CalendarPreview.Trigger placeholder="Add start date" />
               <CalendarPreview.Content>
-                <CalendarPreview.Body showIcon />
+                <CalendarPreview.Body showCalendarIcon />
               </CalendarPreview.Content>
             </CalendarPreview>`
     },
@@ -200,19 +200,19 @@ export const periodsDemo = {
               defaultMonth={new Date(2026, 7, 1)}
               yearRange={{ from: 2025, to: 2027 }}
             >
-              <CalendarPreview.Body showIcon />
+              <CalendarPreview.Body showCalendarIcon />
             </CalendarPreview>`
     },
     {
       name: 'Month',
       code: `<CalendarPreview scales={['month', 'quarter', 'year']} defaultScale="month">
-              <CalendarPreview.Body showIcon />
+              <CalendarPreview.Body showCalendarIcon />
             </CalendarPreview>`
     },
     {
       name: 'Quarter',
       code: `<CalendarPreview scales="quarter" defaultMonth={new Date(2026, 7, 1)}>
-              <CalendarPreview.Body showIcon />
+              <CalendarPreview.Body showCalendarIcon />
             </CalendarPreview>`
     },
     {
@@ -232,7 +232,7 @@ export const periodsDemo = {
             placeholder="Add start date"
           />
           <CalendarPreview.Content>
-            <CalendarPreview.Body showIcon label="Start date" />
+            <CalendarPreview.Body showCalendarIcon label="Start date" />
           </CalendarPreview.Content>
         </CalendarPreview>
 
@@ -245,7 +245,7 @@ export const periodsDemo = {
             placeholder="Add end date"
           />
           <CalendarPreview.Content>
-            <CalendarPreview.Body showIcon label="End date" />
+            <CalendarPreview.Body showCalendarIcon label="End date" />
           </CalendarPreview.Content>
         </CalendarPreview>
       </Flex>
@@ -299,7 +299,7 @@ export const limitsDemo = {
               trailingValue
               minDate={new Date(2026, 6, 15)}
             >
-              <CalendarPreview.Body showIcon />
+              <CalendarPreview.Body showCalendarIcon />
             </CalendarPreview>`
     }
   ]

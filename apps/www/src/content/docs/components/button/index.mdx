@@ -98,8 +98,9 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 - Uses the native `<button>` element so keyboard activation with Enter and
   Space works out of the box.
 - Disabled state is communicated via the native `disabled` attribute.
-- Loading state sets `aria-busy="true"` on the button so screen readers
-  announce the busy state. The internal spinner is rendered with
-  `aria-hidden="true"` to avoid double-announcing.
+- Loading state sets `aria-busy="true"` and `aria-disabled="true"` on the
+  button. The button stays focusable, so focus does not move while the action
+  runs. The internal spinner is rendered with `aria-hidden="true"` to avoid
+  double-announcing.
 - Respects motion preferences: button loader rotation is enabled only when
   `prefers-reduced-motion: no-preference`.
