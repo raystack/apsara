@@ -45,7 +45,7 @@ export const Indicator = ({
   'aria-label': ariaLabel,
   ...props
 }: IndicatorProps) => {
-  const accessibilityLabel = ariaLabel || label || `${color} indicator`;
+  const accessibilityLabel = ariaLabel || label || 'Indicator';
 
   return (
     <div

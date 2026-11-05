@@ -298,6 +298,28 @@
   margin: 0;
 }
 
+/* ===== Anchored toasts (the surface comes from the tooltip) ===== */
+.anchoredViewport {
+  outline: none;
+}
+
+.positioner {
+  z-index: calc(var(--rs-z-index-toast) - var(--toast-index));
+}
+
+.positioner[data-anchor-hidden] {
+  visibility: hidden;
+}
+
+.anchored[data-limited] {
+  opacity: 0;
+}
+
+.anchoredTitle {
+  margin: 0;
+  font: inherit;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .root {
     transition:

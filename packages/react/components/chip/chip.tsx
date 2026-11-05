@@ -1,7 +1,15 @@
 'use client';
 
+import { mergeProps, useRender } from '@base-ui/react';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
-import { ComponentProps, ReactNode } from 'react';
+import {
+  Children,
+  ComponentProps,
+  createContext,
+  isValidElement,
+  ReactNode,
+  useContext
+} from 'react';
 import { XIcon } from '~/icons';
 import { radiusVariants } from '../../shared/radius';
 import styles from './chip.module.css';
@@ -32,42 +40,51 @@ const chip = cva(styles.chip, {
   }
 });
 
-export type ChipProps = ComponentProps<'span'> &
+const ChipContext = createContext<{ label?: string; disabled?: boolean }>({});
+
+export type ChipProps = useRender.ComponentProps<'span'> &
   VariantProps<typeof chip> & {
     trailingIcon?: ReactNode;
     leadingIcon?: ReactNode;
-    isDismissible?: boolean;
-    onDismiss?: () => void;
     disabled?: boolean;
   };
 
-export const Chip = ({
+export type ChipRemoveProps = useRender.ComponentProps<'button'>;
+
+function getTextLabel(children: ReactNode) {
+  const text = Children.toArray(children)
+    .filter(child => typeof child === 'string' || typeof child === 'number')
+    .join('')
+    .trim();
+  return text || undefined;
+}
+
+const ChipRoot = ({
   variant,
   radius,
   size,
   color,
   trailingIcon,
   leadingIcon,
-  isDismissible,
   children,
   className,
-  onDismiss,
   onClick,
   role,
   disabled,
   'aria-label': ariaLabel,
+  render,
+  ref,
   ...props
 }: ChipProps) => {
-  const handleDismiss = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onDismiss?.();
-  };
-
-  const isInteractive = !!onClick && !isDismissible;
+  const label = ariaLabel ?? getTextLabel(children);
+  // A chip with a remove button stays a span, so the buttons do not nest.
+  const hasRemove = Children.toArray(children).some(
+    child => isValidElement(child) && child.type === ChipRemove
+  );
+  const isInteractive = !!onClick && !hasRemove;
 
   const sharedProps = {
-    'aria-label':
-      ariaLabel ?? (typeof children === 'string' ? children : undefined),
+    'aria-label': label,
     'data-disabled': disabled || undefined
   };
 
@@ -84,25 +101,7 @@ export const Chip = ({
         </span>
       )}
       {children}
-      {isDismissible ? (
-        <button
-          onClick={handleDismiss}
-          className={styles['dismiss-button']}
-          aria-label={`Remove ${
-            typeof children === 'string' ? children : 'item'
-          }`}
-          type='button'
-          data-slot='chip-dismiss'
-        >
-          <XIcon
-            width={12}
-            height={12}
-            aria-hidden='true'
-            role='presentation'
-            data-slot='chip-dismiss-icon'
-          />
-        </button>
-      ) : trailingIcon ? (
+      {trailingIcon && (
         <span
           className={styles['trailing-icon']}
           aria-hidden='true'
@@ -111,47 +110,78 @@ export const Chip = ({
         >
           {trailingIcon}
         </span>
-      ) : null}
+      )}
     </>
   );
 
-  if (isInteractive) {
-    return (
-      <button
-        data-slot='chip'
-        {...(props as React.ComponentProps<'button'>)}
-        {...sharedProps}
-        type='button'
-        disabled={disabled}
-        role={role}
-        className={chip({
+  const ownProps = isInteractive
+    ? {
+        type: 'button',
+        disabled,
+        role,
+        className: chip({
           variant,
           radius,
           size,
           color,
           className: cx(styles['chip-interactive'], className)
-        })}
-        onClick={
-          onClick as unknown as React.MouseEventHandler<HTMLButtonElement>
-        }
-      >
-        {content}
-      </button>
-    );
-  }
+        }),
+        onClick
+      }
+    : {
+        className: chip({ variant, size, color, radius, className }),
+        role: role ?? 'status',
+        onClick: disabled ? undefined : onClick
+      };
 
-  return (
-    <span
-      data-slot='chip'
-      {...props}
-      {...sharedProps}
-      className={chip({ variant, size, color, radius, className })}
-      role={role ?? 'status'}
-      onClick={disabled ? undefined : onClick}
-    >
-      {content}
-    </span>
-  );
+  const element = useRender({
+    defaultTagName: isInteractive ? 'button' : 'span',
+    render,
+    ref,
+    props: mergeProps<'span'>(
+      { 'data-slot': 'chip' } as useRender.ComponentProps<'span'>,
+      props,
+      {
+        ...sharedProps,
+        ...(ownProps as ComponentProps<'span'>),
+        children: content
+      }
+    )
+  });
+
+  return <ChipContext value={{ label, disabled }}>{element}</ChipContext>;
 };
+ChipRoot.displayName = 'Chip';
 
-Chip.displayName = 'Chip';
+const ChipRemove = ({ render, ref, ...props }: ChipRemoveProps) => {
+  const { label, disabled } = useContext(ChipContext);
+
+  return useRender({
+    defaultTagName: 'button',
+    render,
+    ref,
+    props: mergeProps<'button'>(
+      {
+        type: 'button',
+        className: styles.remove,
+        'aria-label': `Remove ${label ?? 'item'}`,
+        disabled: disabled || undefined,
+        'data-slot': 'chip-remove',
+        onClick: event => event.stopPropagation(),
+        children: (
+          <XIcon
+            width={12}
+            height={12}
+            aria-hidden='true'
+            role='presentation'
+            data-slot='chip-remove-icon'
+          />
+        )
+      } as useRender.ComponentProps<'button'>,
+      props
+    )
+  });
+};
+ChipRemove.displayName = 'Chip.Remove';
+
+export const Chip = Object.assign(ChipRoot, { Remove: ChipRemove });

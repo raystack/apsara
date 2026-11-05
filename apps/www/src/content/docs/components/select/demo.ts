@@ -58,7 +58,7 @@ export const iconDemo = {
     <Select.Item value="apple" leadingIcon={<Info size={16} />}>Apple</Select.Item>
     <Select.Item value="banana" leadingIcon={<X size={16} />}>Banana</Select.Item>
     <Select.Item value="grape" leadingIcon={<Home size={16} />}>Grape</Select.Item>
-    <Select.Item value="Orange" leadingIcon={<Laugh size={16} />}>Orange</Select.Item>
+    <Select.Item value="orange" leadingIcon={<Laugh size={16} />}>Orange</Select.Item>
   </Select.Content>
 </Select>`
 };
@@ -91,7 +91,7 @@ export const sizeDemo = {
 </Select>
   <Select>
   <Select.Trigger>
-    <Select.Value placeholder="Small select" />
+    <Select.Value placeholder="Medium select" />
   </Select.Trigger>
   <Select.Content>
     <Select.Item value="1">Option 1</Select.Item>
@@ -187,6 +187,7 @@ export const autocompleteDemo = {
     <Select.Value placeholder="Select..." />
   </Select.Trigger>
   <Select.Content>
+    <Select.Empty>No results</Select.Empty>
     <Select.Group>
       <Select.Item value="1">Option 1</Select.Item>
       <Select.Item value="2">Option 2</Select.Item>
@@ -252,4 +253,21 @@ function ControlledSelect() {
     </Flex>
   );
 }`
+};
+
+export const labelDemo = {
+  type: 'code',
+  code: `
+  <Flex direction="column" gap={2}>
+  <Select>
+    <Select.Label>Fruit</Select.Label>
+    <Select.Trigger>
+      <Select.Value placeholder="Select a fruit" />
+    </Select.Trigger>
+    <Select.Content>
+      <Select.Item value="apple">Apple</Select.Item>
+      <Select.Item value="banana">Banana</Select.Item>
+    </Select.Content>
+  </Select>
+</Flex>`
 };
