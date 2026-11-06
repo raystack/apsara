@@ -4,9 +4,10 @@ import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: ComponentPropsType) => {
-  const { children, ...rest } = props;
+  const { children, removable, ...rest } = props;
+  const remove = removable ? '<Chip.Remove />' : '';
 
-  return `<Chip${getPropsString(rest)}>${children}</Chip>`;
+  return `<Chip${getPropsString(rest)}>${children}${remove}</Chip>`;
 };
 
 export const playground = {
@@ -24,10 +25,10 @@ export const playground = {
     },
     color: {
       type: 'select',
-      options: ['neutral', 'accent', 'danger', 'success', 'warning'],
+      options: ['neutral', 'accent', 'danger', 'success', 'attention'],
       defaultValue: 'neutral'
     },
-    isDismissible: {
+    removable: {
       type: 'checkbox',
       defaultValue: false
     },
@@ -68,25 +69,34 @@ export const colorDemo = {
       <Chip color="accent" variant="outline">Accent</Chip>
       <Chip color="danger" variant="outline">Danger</Chip>
       <Chip color="success" variant="outline">Success</Chip>
-      <Chip color="warning" variant="outline">Warning</Chip>
+      <Chip color="attention" variant="outline">Attention</Chip>
     </Flex>
     <Flex gap={9}>
       <Chip color="neutral" variant="solid">Neutral</Chip>
       <Chip color="accent" variant="solid">Accent</Chip>
       <Chip color="danger" variant="solid">Danger</Chip>
       <Chip color="success" variant="solid">Success</Chip>
-      <Chip color="warning" variant="solid">Warning</Chip>
+      <Chip color="attention" variant="solid">Attention</Chip>
     </Flex>
   </Flex>`
 };
 
-export const dismissableDemo = {
+export const removeDemo = {
   type: 'code',
   code: `
   <Flex gap={9}>
-    <Chip isDismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
-    <Chip variant="outline" color="accent" isDismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
-    <Chip variant="solid" color="accent" isDismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
+    <Chip>
+      Removable Chip
+      <Chip.Remove onClick={() => alert('removed')} />
+    </Chip>
+    <Chip variant="outline" color="accent">
+      Removable Chip
+      <Chip.Remove onClick={() => alert('removed')} />
+    </Chip>
+    <Chip variant="solid" color="accent">
+      Removable Chip
+      <Chip.Remove onClick={() => alert('removed')} />
+    </Chip>
   </Flex>`
 };
 

@@ -228,7 +228,7 @@ function ControlledFilterChip() {
           { label: "Inactive", value: "inactive" }
         ]}
       />
-      <Text size="small" variant="secondary">Querying for: {status}</Text>
+      <Text size="small" color="secondary">Querying for: {status}</Text>
     </Flex>
   );
 }`

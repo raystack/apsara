@@ -1,5 +1,8 @@
 export interface DrawerProps {
-  /** The direction from which the drawer appears and can be swiped to dismiss. */
+  /**
+   * The edge the drawer slides in from. It also sets the swipe-to-dismiss direction.
+   * @default "right"
+   */
   side?: 'top' | 'right' | 'bottom' | 'left';
 
   /** Boolean to control the default open state. */
@@ -28,11 +31,11 @@ export interface DrawerProps {
 }
 
 export interface DrawerContentProps {
-  /** The direction from which the drawer appears. */
-  side?: 'top' | 'right' | 'bottom' | 'left';
-
-  /** Whether to show the close button. */
-  showCloseButton?: boolean;
+  /**
+   * Hides the close button.
+   * @default false
+   */
+  hideCloseButton?: boolean;
 
   /**
    * Accessible label for the close button. Override for localisation.
@@ -60,4 +63,63 @@ export interface DrawerContentProps {
    * @defaultValue The theme's `radius`
    */
   radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
+
+  /**
+   * Keeps a focused input above the on-screen keyboard on phones.
+   * @default false
+   */
+  enableVirtualKeyboard?: boolean;
+
+  /**
+   * Element to render the drawer into.
+   * @defaultValue `document.body`
+   */
+  container?:
+    | HTMLElement
+    | ShadowRoot
+    | React.RefObject<HTMLElement | ShadowRoot | null>
+    | null;
+}
+
+export interface DrawerSwipeAreaProps {
+  /** The swipe direction that opens the drawer. Defaults to the opposite of the root's `swipeDirection`. */
+  swipeDirection?: 'up' | 'down' | 'left' | 'right';
+
+  /**
+   * Turns off swipe-to-open.
+   * @default false
+   */
+  disabled?: boolean;
+
+  /**
+   * Allows rendering as a different element.
+   * Accepts a React element or a function that receives props and returns an element.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?: React.ReactElement;
+
+  /** Additional CSS class name. */
+  className?: string;
+}
+
+export interface DrawerProviderProps {
+  /** The app content. An open drawer inside it activates `Drawer.Indent`. */
+  children?: React.ReactNode;
+}
+
+export interface DrawerIndentProps {
+  /** Your app content. */
+  children?: React.ReactNode;
+
+  /**
+   * Allows rendering as a different element.
+   * Accepts a React element or a function that receives props and returns an element.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?: React.ReactElement;
+
+  /** Additional CSS class name. */
+  className?: string;
 }

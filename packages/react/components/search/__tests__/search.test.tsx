@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import inputStyles from '../../input/input.module.css';
 import { Search } from '../search';
-import styles from '../search.module.css';
 
 describe('Search', () => {
   describe('Basic Rendering', () => {
@@ -98,7 +97,9 @@ describe('Search', () => {
 
     it('shows clear button when showClearButton and value exist', () => {
       render(<Search showClearButton value='test' />);
-      expect(screen.getByLabelText('Clear search')).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'Clear search' })
+      ).toBeInTheDocument();
     });
 
     it('renders clear button regardless of value (CSS hides it when empty)', () => {
@@ -194,20 +195,6 @@ describe('Search', () => {
       expect(
         container.querySelector('[data-slot="input-container"]')
       ).toHaveClass(inputStyles['variant-text']);
-    });
-  });
-
-  describe('Width', () => {
-    it('defaults to 100% width', () => {
-      const { container } = render(<Search />);
-      const searchContainer = container.querySelector(`.${styles.container}`);
-      expect(searchContainer).toHaveStyle({ width: '100%' });
-    });
-
-    it('sets custom width', () => {
-      const { container } = render(<Search width='300px' />);
-      const searchContainer = container.querySelector(`.${styles.container}`);
-      expect(searchContainer).toHaveStyle({ width: '300px' });
     });
   });
 

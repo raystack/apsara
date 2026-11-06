@@ -157,7 +157,7 @@ export const Button = ({
         button({ variant, size, color, radius, disabled, loading, className }),
         isLoaderOnly && getLoaderOnlyClass(size)
       )}
-      disabled={disabled}
+      disabled={disabled || loading}
       render={render}
       nativeButton={!render}
       focusableWhenDisabled={loading}
@@ -169,7 +169,7 @@ export const Button = ({
         <>
           <Spinner
             size={1}
-            color='default'
+            color='inherit'
             aria-hidden='true'
             data-slot='button-loader'
           />

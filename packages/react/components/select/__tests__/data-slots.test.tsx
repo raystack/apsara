@@ -45,7 +45,7 @@ describe('Select data-slot contract', () => {
     ]);
   });
 
-  it('exposes content, list, group, label, separator and item slots when open', async () => {
+  it('exposes content, list, group, group label, separator and item slots when open', async () => {
     const user = userEvent.setup();
     render(
       <Select>
@@ -54,7 +54,7 @@ describe('Select data-slot contract', () => {
         </Select.Trigger>
         <Select.Content>
           <Select.Group>
-            <Select.Label>Fruits</Select.Label>
+            <Select.GroupLabel>Fruits</Select.GroupLabel>
             {FRUIT_OPTIONS.map(option => (
               <Select.Item key={option.value} value={option.value}>
                 {option.label}
@@ -73,14 +73,14 @@ describe('Select data-slot contract', () => {
       'select-content',
       'select-list',
       'select-group',
-      'select-label',
+      'select-group-label',
       'select-separator',
       'select-item',
       'select-item-text'
     ]);
   });
 
-  it('exposes the leading icon slot on items when provided', async () => {
+  it('exposes the leading and trailing icon slots on items when provided', async () => {
     const user = userEvent.setup();
     render(
       <Select>
@@ -88,14 +88,19 @@ describe('Select data-slot contract', () => {
           <Select.Value placeholder='Select a fruit' />
         </Select.Trigger>
         <Select.Content>
-          <Select.Item value='apple' leadingIcon={<span>i</span>}>
+          <Select.Item
+            value='apple'
+            leadingIcon={<span>i</span>}
+            trailingIcon={<span>t</span>}
+          >
             Apple
           </Select.Item>
         </Select.Content>
       </Select>
     );
     await openSelect(user);
-    expect(getSlot(document.body, 'select-item-icon')).not.toBeNull();
+    expect(getSlot(document.body, 'select-item-leading-icon')).not.toBeNull();
+    expect(getSlot(document.body, 'select-item-trailing-icon')).not.toBeNull();
   });
 
   it('exposes the multiple-value slot once items are selected', async () => {
@@ -117,6 +122,32 @@ describe('Select data-slot contract', () => {
     await openSelect(user);
     await user.click(screen.getAllByRole('option')[0]);
     expect(getSlot(container, 'select-value')).not.toBeNull();
+  });
+
+  it('exposes the label slot', () => {
+    const { container } = render(
+      <Select>
+        <Select.Label>Fruit</Select.Label>
+        <Select.Trigger>
+          <Select.Value placeholder='Select a fruit' />
+        </Select.Trigger>
+      </Select>
+    );
+    expect(getSlot(container, 'select-label')).not.toBeNull();
+  });
+
+  it('exposes the empty slot', () => {
+    const { container } = render(
+      <Select>
+        <Select.Trigger>
+          <Select.Value placeholder='Select a fruit' />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Empty>No fruit found</Select.Empty>
+        </Select.Content>
+      </Select>
+    );
+    expect(getSlot(container, 'select-empty')).not.toBeNull();
   });
 
   it('lets FilterChip/DataView-style overrides win over Select defaults', () => {

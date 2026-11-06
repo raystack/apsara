@@ -1,6 +1,7 @@
 'use client';
 
 import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
+import { createContext, useContext } from 'react';
 
 type Side = 'top' | 'right' | 'bottom' | 'left';
 
@@ -14,8 +15,15 @@ const sideToSwipeDirection: Record<
   left: 'left'
 };
 
+const DrawerSideContext = createContext<Side>('right');
+
+export const useDrawerSide = () => useContext(DrawerSideContext);
+
 export interface DrawerRootProps extends DrawerPrimitive.Root.Props {
-  /** The direction from which the drawer appears and can be swiped to dismiss. */
+  /**
+   * The edge the drawer slides in from. It also sets the swipe-to-dismiss direction.
+   * @default 'right'
+   */
   side?: Side;
 }
 
@@ -25,10 +33,12 @@ export function DrawerRoot({
   ...props
 }: DrawerRootProps) {
   return (
-    <DrawerPrimitive.Root
-      swipeDirection={swipeDirection ?? sideToSwipeDirection[side]}
-      {...props}
-    />
+    <DrawerSideContext value={side}>
+      <DrawerPrimitive.Root
+        swipeDirection={swipeDirection ?? sideToSwipeDirection[side]}
+        {...props}
+      />
+    </DrawerSideContext>
   );
 }
 DrawerRoot.displayName = 'Drawer';

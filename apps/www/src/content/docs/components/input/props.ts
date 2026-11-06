@@ -1,3 +1,5 @@
+import type { ChipProps } from '../chip/props';
+
 export interface InputProps {
   /**
    * Size variant of the input.
@@ -5,7 +7,7 @@ export interface InputProps {
    */
   size?: 'small' | 'large';
 
-  /** Whether the input is disabled. When true, chips are also disabled and their dismiss buttons are hidden. */
+  /** Whether the input is disabled. When true, chips passed as props are also disabled. */
   disabled?: boolean;
 
   /** Icon element to display at the start of input. */
@@ -20,10 +22,8 @@ export interface InputProps {
   /** Text or symbol to show after input value. */
   suffix?: string;
 
-  /**
-   * Array of chip objects with label and optional onRemove function.
-   */
-  chips?: { label: string; onRemove?: () => void }[];
+  /** Chips shown before the text. Elements render as given; props render a `Chip`. */
+  chips?: Array<React.ReactElement | ChipProps>;
 
   /**
    * Maximum number of chips to show before displaying overflow count.

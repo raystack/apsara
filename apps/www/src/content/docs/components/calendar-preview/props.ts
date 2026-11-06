@@ -282,10 +282,10 @@ export interface CalendarPreviewBodyProps {
   label?: ReactNode;
 
   /**
-   * Whether the field carries the calendar glyph.
+   * Shows the calendar icon in the date input.
    * @default false
    */
-  showIcon?: boolean;
+  showCalendarIcon?: boolean;
 }
 
 export interface CalendarPreviewScaleProps {
