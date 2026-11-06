@@ -1,6 +1,8 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
+import type { FilterOperations } from '~/shared/filter-operations';
+import type { FilterOperatorTypes } from '~/types/filters';
 import { DataTable } from '../data-table';
 import styles from '../data-table.module.css';
 import { DataTableColumnDef, DataTableQuery } from '../data-table.types';
@@ -732,7 +734,7 @@ describe('DataTable', () => {
   });
 });
 
-describe('DataTable column filter operators', () => {
+describe('DataTable column filter operations', () => {
   type Dated = { id: string; when?: string };
 
   const dated: Dated[] = [
@@ -742,8 +744,15 @@ describe('DataTable column filter operators', () => {
     { id: 'dNone' }
   ];
 
+  const only =
+    (...values: FilterOperatorTypes[]): FilterOperations =>
+    defaults =>
+      values.flatMap(value =>
+        defaults.filter(operation => operation.value === value)
+      );
+
   const datedColumns = (
-    filterOperators?: DataTableColumnDef<Dated, unknown>['filterOperators']
+    filterOperations?: DataTableColumnDef<Dated, unknown>['filterOperations']
   ): DataTableColumnDef<Dated, unknown>[] => [
     { accessorKey: 'id', header: 'ID' },
     {
@@ -751,7 +760,7 @@ describe('DataTable column filter operators', () => {
       header: 'When',
       filterType: 'date',
       enableColumnFilter: true,
-      filterOperators
+      filterOperations
     }
   ];
 
@@ -811,8 +820,8 @@ describe('DataTable column filter operators', () => {
       onTableQueryChange.mock.calls.length - 1
     ]?.[0] as DataTableQuery;
 
-  it('offers only the operators the column lists', async () => {
-    await addWhenFilter(datedColumns(['gte', 'lt']));
+  it('offers only the operations the column keeps', async () => {
+    await addWhenFilter(datedColumns(only('gte', 'lt')));
 
     const operation = document.querySelector(
       '[data-slot="filter-chip-operation"]'
@@ -829,8 +838,16 @@ describe('DataTable column filter operators', () => {
     ]);
   });
 
-  it('shows a single listed operator as text', async () => {
-    await addWhenFilter(datedColumns(['lt']));
+  it('shows the labels an array of operations gives', async () => {
+    await addWhenFilter(datedColumns([{ value: 'gte', label: 'from' }]));
+
+    expect(
+      document.querySelector('[data-slot="filter-chip-operation"]')
+    ).toHaveTextContent('from');
+  });
+
+  it('shows a single operation as text', async () => {
+    await addWhenFilter(datedColumns(only('lt')));
 
     expect(
       document.querySelector('[data-slot="filter-chip-operation"]')
@@ -838,15 +855,15 @@ describe('DataTable column filter operators', () => {
     expect(screen.queryByLabelText('When filter operation')).toBeNull();
   });
 
-  it('adds a filter with the first operator the column lists', async () => {
+  it('adds a filter with the first operation the column offers', async () => {
     const onTableQueryChange = vi.fn();
-    await addWhenFilter(datedColumns(['gte', 'lt']), onTableQueryChange);
+    await addWhenFilter(datedColumns(only('gte', 'lt')), onTableQueryChange);
 
     expect(lastQuery(onTableQueryChange).filters?.[0]?.operator).toBe('gte');
   });
 
-  it('keeps a restored filter whose operator the column lists', () => {
-    renderRestored(datedColumns(['gte', 'lt']), [
+  it('keeps a restored filter whose operation the column offers', () => {
+    renderRestored(datedColumns(only('gte', 'lt')), [
       { name: 'when', operator: 'gte', value: '2026-08-15' }
     ]);
 
@@ -854,8 +871,8 @@ describe('DataTable column filter operators', () => {
     expect(document.querySelector('[data-slot="filter-chip"]')).not.toBeNull();
   });
 
-  it('drops a restored filter whose operator the column does not list', () => {
-    renderRestored(datedColumns(['gte', 'lt']), [
+  it('drops a restored filter whose operation the column does not offer', () => {
+    renderRestored(datedColumns(only('gte', 'lt')), [
       { name: 'when', operator: 'eq', value: '2026-08-15' }
     ]);
 
@@ -866,7 +883,7 @@ describe('DataTable column filter operators', () => {
   it('leaves a dropped filter out of the query it sends', () => {
     const onTableQueryChange = vi.fn();
     renderRestored(
-      datedColumns(['gte', 'lt']),
+      datedColumns(only('gte', 'lt')),
       [{ name: 'when', operator: 'eq', value: '2026-08-15' }],
       onTableQueryChange
     );
@@ -874,7 +891,7 @@ describe('DataTable column filter operators', () => {
     expect(lastQuery(onTableQueryChange).filters).toEqual([]);
   });
 
-  it('keeps a restored filter on a column that lists no operators', () => {
+  it('keeps a restored filter on a column that sets no operations', () => {
     renderRestored(datedColumns(), [
       { name: 'when', operator: 'eq', value: '2026-08-15' }
     ]);

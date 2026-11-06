@@ -6,7 +6,7 @@ import {
 } from '@tanstack/table-core';
 
 import { toDayKey, withDateFilterTypes } from '~/shared/date-filters';
-import { dropDisallowedFilters } from '~/shared/filter-operators';
+import { dropDisallowedFilters } from '~/shared/filter-operations';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import {
   DataViewField,
@@ -407,7 +407,7 @@ export function getDefaultTableQuery(
   oldQuery: DataViewQuery = {},
   fields: Pick<
     DataViewField,
-    'accessorKey' | 'filterType' | 'filterOperators'
+    'accessorKey' | 'filterType' | 'filterOperations'
   >[] = []
 ): InternalQuery {
   const internalQuery = dataViewQueryToInternal(oldQuery);

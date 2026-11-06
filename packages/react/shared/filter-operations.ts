@@ -5,10 +5,16 @@ import type {
 } from '~/types/filters';
 import { FilterType, filterOperators } from '~/types/filters';
 
-type OperatorField = {
+export type FilterOperations =
+  | FilterOperator<FilterOperatorTypes>[]
+  | ((
+      defaults: FilterOperator<FilterOperatorTypes>[]
+    ) => FilterOperator<FilterOperatorTypes>[]);
+
+type OperationField = {
   accessorKey?: unknown;
   filterType?: FilterTypes;
-  filterOperators?: FilterOperatorTypes[];
+  filterOperations?: FilterOperations;
 };
 
 type OperatorFilter = {
@@ -17,36 +23,33 @@ type OperatorFilter = {
 };
 
 /**
- * The operators a column offers, in the order `allowed` lists them. A value the
- * filter type does not have is ignored, and a list that leaves nothing falls
- * back to the type's own operators, since a chip needs one operator to filter
- * with.
+ * The operations a column offers. An array replaces the operations of the
+ * filter type, a function receives them and returns the list to use. An empty
+ * result falls back to the type's own operations, since a chip needs one
+ * operation to filter with.
  */
-export function resolveFilterOperators(
+export function resolveFilterOperations(
   filterType: FilterTypes = FilterType.string,
-  allowed?: FilterOperatorTypes[]
+  operations?: FilterOperations
 ): FilterOperator<FilterOperatorTypes>[] {
   const defaults = filterOperators[
     filterType
   ] as FilterOperator<FilterOperatorTypes>[];
-  if (!allowed?.length) return defaults;
+  if (!operations) return defaults;
 
-  const picked: FilterOperator<FilterOperatorTypes>[] = [];
-  for (const value of allowed) {
-    const operator = defaults.find(option => option.value === value);
-    if (operator && !picked.includes(operator)) picked.push(operator);
-  }
-  return picked.length ? picked : defaults;
+  const resolved =
+    typeof operations === 'function' ? operations(defaults) : operations;
+  return resolved.length ? resolved : defaults;
 }
 
 /* A chip cannot show an operator its column does not offer, so such a filter is
-   dropped: it never reaches the rows or the server. A column that lists no
-   operators keeps whatever the query carries. */
+   dropped: it never reaches the rows or the server. A column that sets no
+   operations keeps whatever the query carries. */
 export function dropDisallowedFilters<Filter extends OperatorFilter>(
   filters: Filter[],
-  fields: OperatorField[]
+  fields: OperationField[]
 ): Filter[] {
-  const fieldByName = new Map<unknown, OperatorField>();
+  const fieldByName = new Map<unknown, OperationField>();
   for (const field of fields) {
     if (!fieldByName.has(field.accessorKey)) {
       fieldByName.set(field.accessorKey, field);
@@ -61,12 +64,12 @@ export function dropDisallowedFilters<Filter extends OperatorFilter>(
       const field = fieldByName.get(filter.name);
       allowedByName.set(
         filter.name,
-        field?.filterOperators?.length
+        field?.filterOperations
           ? new Set(
-              resolveFilterOperators(
+              resolveFilterOperations(
                 field.filterType,
-                field.filterOperators
-              ).map(operator => operator.value)
+                field.filterOperations
+              ).map(operation => operation.value)
             )
           : null
       );

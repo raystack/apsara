@@ -2,7 +2,7 @@ import type { Row, Table } from '@tanstack/react-table';
 import { TableState } from '@tanstack/table-core';
 
 import { toDayKey, withDateFilterTypes } from '~/shared/date-filters';
-import { dropDisallowedFilters } from '~/shared/filter-operators';
+import { dropDisallowedFilters } from '~/shared/filter-operations';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import {
   DataTableColumnDef,
@@ -350,7 +350,7 @@ export function getDefaultTableQuery(
   oldQuery: DataTableQuery = {},
   columns: Pick<
     DataTableColumnDef<unknown, unknown>,
-    'accessorKey' | 'filterType' | 'filterOperators'
+    'accessorKey' | 'filterType' | 'filterOperations'
   >[] = []
 ): InternalQuery {
   // Convert DataTableQuery to InternalQuery

@@ -1,6 +1,6 @@
 'use client';
 
-import { resolveFilterOperators } from '~/shared/filter-operators';
+import { resolveFilterOperations } from '~/shared/filter-operations';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import type { DataViewField, DataViewFilterValue } from '../data-view.types';
 import { getDataType } from '../utils/filter-operations';
@@ -13,9 +13,9 @@ export function useFilters<TData>() {
     const options = field.filterOptions || [];
     const filterType = field.filterType || FilterType.string;
     const dataType = getDataType({ filterType, dataType: field.dataType });
-    const defaultFilter = resolveFilterOperators(
+    const defaultFilter = resolveFilterOperations(
       filterType,
-      field.filterOperators
+      field.filterOperations
     )[0];
     const defaultValue =
       field.defaultFilterValue ??

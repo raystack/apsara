@@ -1,4 +1,4 @@
-import { resolveFilterOperators } from '~/shared/filter-operators';
+import { resolveFilterOperations } from '~/shared/filter-operations';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import { DataTableColumn } from '../data-table.types';
 import { getDataType } from '../utils/filter-operations';
@@ -13,9 +13,9 @@ export function useFilters<TData, TValue>() {
     const options = columnDef.filterOptions || [];
     const filterType = columnDef.filterType || FilterType.string;
     const dataType = getDataType({ filterType, dataType: columnDef.dataType });
-    const defaultFilter = resolveFilterOperators(
+    const defaultFilter = resolveFilterOperations(
       filterType,
-      columnDef.filterOperators
+      columnDef.filterOperations
     )[0];
     const defaultValue =
       columnDef.defaultFilterValue ??

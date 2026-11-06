@@ -47,6 +47,45 @@ describe('FilterChip', () => {
     });
   });
 
+  describe('Operations', () => {
+    const operationText = (ui: React.ReactElement) => {
+      const { container } = render(ui);
+      return getSlot(container, 'filter-chip-operation')?.textContent;
+    };
+
+    it('replaces the operations with the array given', () => {
+      expect(
+        operationText(
+          <FilterChip
+            label='Name'
+            operations={[{ value: 'eq', label: 'matches' }]}
+          />
+        )
+      ).toBe('matches');
+    });
+
+    it('calls the function with the operations of the column type', () => {
+      expect(
+        operationText(
+          <FilterChip
+            label='Name'
+            operations={defaults => defaults.slice(-1)}
+          />
+        )
+      ).toBe('ends with');
+    });
+
+    it('falls back to the column type when the function returns nothing', () => {
+      const { container } = render(
+        <FilterChip label='Name' operations={() => []} />
+      );
+      expect(getSlot(container, 'filter-chip-operation')).toHaveAttribute(
+        'aria-label',
+        'Name filter operation'
+      );
+    });
+  });
+
   describe('Remove Functionality', () => {
     it('shows remove button when onRemove is provided', () => {
       const onRemove = vi.fn();

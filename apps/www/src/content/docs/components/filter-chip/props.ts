@@ -23,8 +23,12 @@ export interface FilterChipProps {
   /** Array of options for the select and multiselect type inputs */
   options?: { label: string; value: string | number | boolean }[];
 
-  /** Optional array of operations for the type of filter operation */
-  operations?: { label: string; value: string }[];
+  /** Operations the chip offers. An array replaces the operations of the columnType, a function receives them and returns the list to use. An empty result falls back to the operations of the columnType. */
+  operations?:
+    | { label: string; value: string }[]
+    | ((
+        defaults: { label: string; value: string }[]
+      ) => { label: string; value: string }[]);
 
   /** Callback when the filter value changes; receives the value and the active
    * operation. For `select` and `multiselect`, the value is the picked

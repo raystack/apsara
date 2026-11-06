@@ -9,7 +9,8 @@ import {
   it,
   vi
 } from 'vitest';
-
+import type { FilterOperations } from '~/shared/filter-operations';
+import type { FilterOperatorTypes } from '~/types/filters';
 // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
 import { DataView } from '../data-view';
 import type {
@@ -1495,7 +1496,7 @@ describe('DataView', () => {
   });
 });
 
-describe('DataView field filter operators', () => {
+describe('DataView field filter operations', () => {
   type Dated = { id: string; when?: string };
 
   const dated: Dated[] = [
@@ -1505,8 +1506,15 @@ describe('DataView field filter operators', () => {
     { id: 'dNone' }
   ];
 
+  const only =
+    (...values: FilterOperatorTypes[]): FilterOperations =>
+    defaults =>
+      values.flatMap(value =>
+        defaults.filter(operation => operation.value === value)
+      );
+
   const datedFields = (
-    filterOperators?: DataViewField<Dated>['filterOperators']
+    filterOperations?: DataViewField<Dated>['filterOperations']
   ): DataViewField<Dated>[] => [
     { accessorKey: 'id', label: 'ID' },
     {
@@ -1514,7 +1522,7 @@ describe('DataView field filter operators', () => {
       label: 'When',
       filterable: true,
       filterType: 'date',
-      filterOperators
+      filterOperations
     }
   ];
 
@@ -1574,8 +1582,8 @@ describe('DataView field filter operators', () => {
       onTableQueryChange.mock.calls.length - 1
     ]?.[0] as DataViewQuery;
 
-  it('offers only the operators the field lists', async () => {
-    await addWhenFilter(datedFields(['gte', 'lt']));
+  it('offers only the operations the field keeps', async () => {
+    await addWhenFilter(datedFields(only('gte', 'lt')));
 
     const operation = document.querySelector(
       '[data-slot="filter-chip-operation"]'
@@ -1592,15 +1600,15 @@ describe('DataView field filter operators', () => {
     ]);
   });
 
-  it('adds a filter with the first operator the field lists', async () => {
+  it('adds a filter with the first operation the field offers', async () => {
     const onTableQueryChange = vi.fn();
-    await addWhenFilter(datedFields(['gte', 'lt']), onTableQueryChange);
+    await addWhenFilter(datedFields(only('gte', 'lt')), onTableQueryChange);
 
     expect(lastQuery(onTableQueryChange).filters?.[0]?.operator).toBe('gte');
   });
 
-  it('drops a restored filter whose operator the field does not list', () => {
-    renderRestored(datedFields(['gte', 'lt']), [
+  it('drops a restored filter whose operation the field does not offer', () => {
+    renderRestored(datedFields(only('gte', 'lt')), [
       { name: 'when', operator: 'eq', value: '2026-08-15' }
     ]);
 
@@ -1608,7 +1616,7 @@ describe('DataView field filter operators', () => {
     expect(document.querySelector('[data-slot="filter-chip"]')).toBeNull();
   });
 
-  it('keeps a restored filter on a field that lists no operators', () => {
+  it('keeps a restored filter on a field that sets no operations', () => {
     renderRestored(datedFields(), [
       { name: 'when', operator: 'eq', value: '2026-08-15' }
     ]);

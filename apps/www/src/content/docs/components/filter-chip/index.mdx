@@ -56,11 +56,19 @@ FilterChip can include a remove action to allow users to dismiss the filter.
 
 ### Custom operations
 
-FilterChip supports custom filter operations through the `operations` prop. When specified, these operations override the default operations that are automatically selected based on the `columnType`.
+FilterChip supports custom filter operations through the `operations` prop. Pass an array to replace the operations that the `columnType` gives, or a function that receives them and returns the list to use.
 
 - When multiple operations are provided, they are rendered as a select dropdown
 - When a single operation is provided, it is displayed as static text
 - If no operations are specified, default operations are used based on the column type
+- An empty array, or a function that returns one, falls back to the operations of the `columnType`
+
+```tsx
+<FilterChip
+  label="Name"
+  operations={(defaults) => defaults.filter(({ value }) => value !== "eq")}
+/>
+```
 
 <Demo data={operationsDemo} />
 

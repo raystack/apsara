@@ -4,6 +4,7 @@ import type {
   Table,
   VisibilityState
 } from '@tanstack/table-core';
+import type { FilterOperations } from '~/shared/filter-operations';
 import type {
   DataTableFilterOperatorTypes,
   FilterDataType,
@@ -83,10 +84,11 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   defaultHidden?: boolean;
   filterOptions?: FilterSelectOption[];
   /**
-   * Operators the filter chip offers, in order. Unknown values are ignored.
-   * @default all operators of the filter type
+   * Operations the filter chip offers. An array replaces the operations of the
+   * filter type, a function receives them and returns the list to use.
+   * @default the operations of the filter type
    */
-  filterOperators?: FilterOperatorTypes[];
+  filterOperations?: FilterOperations;
   defaultFilterValue?: unknown;
   filterProps?: {
     select?: BaseSelectProps;

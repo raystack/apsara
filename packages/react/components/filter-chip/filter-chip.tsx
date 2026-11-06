@@ -91,6 +91,10 @@ export type FilterChipCalendarProps = Pick<
   showCalendarIcon?: boolean;
 };
 
+export type FilterChipOperations =
+  | FilterOperator<string>[]
+  | ((defaults: FilterOperator<string>[]) => FilterOperator<string>[]);
+
 export interface FilterChipProps
   extends ComponentProps<'div'>,
     VariantProps<typeof chip> {
@@ -102,7 +106,12 @@ export interface FilterChipProps
   onValueChange?: (value: FilterChipValue, operation: string) => void;
   onOperationChange?: (operation: string) => void;
   leadingIcon?: ReactNode;
-  operations?: FilterOperator<string>[];
+  /**
+   * Operations the chip offers. An array replaces the operations of the
+   * `columnType`, a function receives them and returns the list to use.
+   * @default the operations of the `columnType`
+   */
+  operations?: FilterChipOperations;
   selectProps?: BaseSelectProps;
   /** Props forwarded to the `CalendarPreview` for `columnType="date"`. */
   calendarProps?: FilterChipCalendarProps;
@@ -133,9 +142,13 @@ export const FilterChip = ({
   calendarProps,
   ...props
 }: FilterChipProps) => {
-  const computedOperations = operations?.length
-    ? operations
-    : filterOperators[columnType];
+  const computedOperations = useMemo(() => {
+    const defaults: FilterOperator<string>[] = filterOperators[columnType];
+    if (!operations) return defaults;
+    const resolved =
+      typeof operations === 'function' ? operations(defaults) : operations;
+    return resolved.length ? resolved : defaults;
+  }, [columnType, operations]);
 
   const [operation, setOperation] = useState<FilterOperation | undefined>(
     computedOperations?.[0]
