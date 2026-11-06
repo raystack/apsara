@@ -47,6 +47,48 @@ describe('FilterChip', () => {
     });
   });
 
+  describe('Operation', () => {
+    const flushMicrotasks = async () =>
+      await new Promise(r => setTimeout(r, 0));
+
+    const operationText = async (ui: React.ReactElement) => {
+      const { container } = render(ui);
+      await act(flushMicrotasks);
+      return getSlot(container, 'filter-chip-operation')?.textContent;
+    };
+
+    it('shows the operation named by the prop', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' operation='neq' />)
+      ).toBe('is not');
+    });
+
+    it('falls back to the first operation when the type does not have it', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' operation='in' />)
+      ).toBe('is');
+    });
+
+    it('shows the first operation when the prop is absent', async () => {
+      expect(await operationText(<FilterChip label='Name' />)).toBe('is');
+    });
+
+    it('reads the operation from a custom list', async () => {
+      expect(
+        await operationText(
+          <FilterChip
+            label='Name'
+            operations={[
+              { value: 'eq', label: 'is' },
+              { value: 'neq', label: 'is not' }
+            ]}
+            operation='neq'
+          />
+        )
+      ).toBe('is not');
+    });
+  });
+
   describe('Remove Functionality', () => {
     it('shows remove button when onRemove is provided', () => {
       const onRemove = vi.fn();
