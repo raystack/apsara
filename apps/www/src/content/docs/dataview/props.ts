@@ -95,7 +95,7 @@ export interface DataViewField {
   /** Options when filterType is select/multiselect. The add-filter menu leaves out the field while this is empty, and the trigger is disabled if no other field is available. */
   filterOptions?: Array<{ label: string; value: string | number | boolean }>;
 
-  /** Operators the filter chip offers, in order. A value the filterType does not have is ignored. Defaults to every operator of the filterType. */
+  /** Operators the filter chip offers, in order. A value the filterType does not have is ignored, and no filterType has `empty`. Defaults to every operator of the filterType. */
   filterOperators?: Array<
     | 'eq'
     | 'neq'
@@ -108,6 +108,7 @@ export interface DataViewField {
     | 'ends_with'
     | 'in'
     | 'notin'
+    | 'empty'
   >;
 
   /** Allow sorting. */
