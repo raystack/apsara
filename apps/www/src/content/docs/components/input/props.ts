@@ -33,9 +33,9 @@ export interface InputProps {
 
   /**
    * Visual variant of the input.
-   * @defaultValue "default"
+   * @defaultValue "outline"
    */
-  variant?: 'default' | 'borderless';
+  variant?: 'outline' | 'text';
 
   /** Ref to the outer container div. */
   containerRef?: React.RefObject<HTMLDivElement | null>;

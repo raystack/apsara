@@ -149,10 +149,11 @@ describe('Grid', () => {
 
   describe('Alignment', () => {
     const alignments = ['start', 'end', 'center', 'stretch'] as const;
-    const extendedAlignments = [
-      'space-around',
-      'space-between',
-      'space-evenly'
+    const contentAlignments = [
+      ...alignments.map(align => [align, align] as const),
+      ['around', 'space-around'],
+      ['between', 'space-between'],
+      ['evenly', 'space-evenly']
     ] as const;
 
     it.each(alignments)('renders %s justify items correctly', align => {
@@ -161,28 +162,24 @@ describe('Grid', () => {
       expect(grid).toHaveStyle({ justifyItems: align });
     });
 
-    it.each(alignments)('renders %s align items correctly', align => {
-      const { container } = render(<Grid alignItems={align}>Content</Grid>);
+    it.each(alignments)('renders %s align correctly', align => {
+      const { container } = render(<Grid align={align}>Content</Grid>);
       const grid = container.firstChild as HTMLElement;
       expect(grid).toHaveStyle({ alignItems: align });
     });
 
-    it.each([
-      ...alignments,
-      ...extendedAlignments
-    ])('renders %s justify content correctly', align => {
-      const { container } = render(<Grid justifyContent={align}>Content</Grid>);
+    it.each(contentAlignments)('renders %s justify correctly', (align, css) => {
+      const { container } = render(<Grid justify={align}>Content</Grid>);
       const grid = container.firstChild as HTMLElement;
-      expect(grid).toHaveStyle({ justifyContent: align });
+      expect(grid).toHaveStyle({ justifyContent: css });
     });
 
-    it.each([
-      ...alignments,
-      ...extendedAlignments
-    ])('renders %s align content correctly', align => {
+    it.each(
+      contentAlignments
+    )('renders %s align content correctly', (align, css) => {
       const { container } = render(<Grid alignContent={align}>Content</Grid>);
       const grid = container.firstChild as HTMLElement;
-      expect(grid).toHaveStyle({ alignContent: align });
+      expect(grid).toHaveStyle({ alignContent: css });
     });
   });
 
