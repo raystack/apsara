@@ -79,6 +79,37 @@ const tableColumns: DataViewListColumn<Person>[] = [
 
 The split is what lets one set of filters, sorts, and toggles drive every renderer. Declare capability once on the root; declare presentation per renderer.
 
+### Filter operations
+
+A filter chip offers every operation of its `filterType`. Set `filterOperations` on the field to control that list. It goes straight to the chip's `operations` prop.
+
+Pass an array to replace the list, with the labels you want:
+
+```ts
+const fields: DataViewField<Person>[] = [
+  {
+    accessorKey: "joined",
+    label: "Joined",
+    filterable: true,
+    filterType: "date",
+    filterOperations: [
+      { value: "gte", label: "from" },
+      { value: "lt", label: "until" },
+    ],
+  },
+];
+```
+
+Pass a function to work from the operations of the `filterType`:
+
+```ts
+filterOperations: (defaults) => defaults.filter(({ value }) => value !== "eq");
+```
+
+Adding the filter picks the first operation in the list. A list of one renders as text instead of a dropdown. An empty list, or a function that returns one, falls back to the operations of the `filterType`.
+
+A filter in the `query` prop whose operation the field does not offer is dropped. It renders no chip, filters no rows in client mode, and is left out of the query sent in server mode. A field that sets no `filterOperations` keeps whatever the query carries.
+
 ### Search
 
 `DataView.Search` writes the input to `query.search`, which feeds TanStack's `globalFilter`, so rows are filtered across every field as the user types. Drop it into the toolbar wherever you want it; in client mode no extra wiring is needed. Type a name, email, or team below to filter the rows.

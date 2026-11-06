@@ -6,6 +6,7 @@ import type {
   Updater,
   VisibilityState
 } from '@tanstack/table-core';
+import type { FilterOperations } from '~/shared/filter-operations';
 import type {
   DataTableFilterOperatorTypes,
   FilterDataType,
@@ -88,6 +89,12 @@ export interface DataViewField<TData = unknown> {
   filterType?: FilterTypes;
   dataType?: FilterDataType;
   filterOptions?: FilterSelectOption[];
+  /**
+   * Operations the filter chip offers. An array replaces the operations of the
+   * filter type, a function receives them and returns the list to use.
+   * @default the operations of the filter type
+   */
+  filterOperations?: FilterOperations;
   defaultFilterValue?: DataViewFilterValue;
   filterProps?: {
     select?: BaseSelectProps;

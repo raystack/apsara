@@ -9,7 +9,8 @@ import {
   it,
   vi
 } from 'vitest';
-
+import type { FilterOperations } from '~/shared/filter-operations';
+import type { FilterOperatorTypes } from '~/types/filters';
 // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
 import { DataView } from '../data-view';
 import type {
@@ -1492,5 +1493,135 @@ describe('DataView', () => {
         stringValue: 'd15'
       });
     });
+  });
+});
+
+describe('DataView field filter operations', () => {
+  type Dated = { id: string; when?: string };
+
+  const dated: Dated[] = [
+    { id: 'd14', when: '2026-08-14' },
+    { id: 'd15', when: '2026-08-15' },
+    { id: 'd16', when: '2026-08-16' },
+    { id: 'dNone' }
+  ];
+
+  const only =
+    (...values: FilterOperatorTypes[]): FilterOperations =>
+    defaults =>
+      values.flatMap(value =>
+        defaults.filter(operation => operation.value === value)
+      );
+
+  const datedFields = (
+    filterOperations?: DataViewField<Dated>['filterOperations']
+  ): DataViewField<Dated>[] => [
+    { accessorKey: 'id', label: 'ID' },
+    {
+      accessorKey: 'when',
+      label: 'When',
+      filterable: true,
+      filterType: 'date',
+      filterOperations
+    }
+  ];
+
+  const Rows = () => {
+    const { table } = useDataViewForTest<Dated>();
+    return (
+      <output data-testid='rows'>
+        {table
+          .getRowModel()
+          .rows.map(row => (row.original as Dated).id)
+          .join(',')}
+      </output>
+    );
+  };
+
+  const addWhenFilter = async (
+    fields: DataViewField<Dated>[],
+    onTableQueryChange?: (query: DataViewQuery) => void
+  ) => {
+    const user = userEvent.setup();
+    render(
+      <DataView
+        data={dated}
+        fields={fields}
+        defaultSort={{ name: 'id', order: 'asc' }}
+        mode={onTableQueryChange ? 'server' : 'client'}
+        onTableQueryChange={onTableQueryChange}
+      >
+        <DataView.Filters />
+      </DataView>
+    );
+    await user.click(screen.getByRole('button', { name: /filter/i }));
+    await user.click(await screen.findByRole('menuitem', { name: 'When' }));
+  };
+
+  const renderRestored = (
+    fields: DataViewField<Dated>[],
+    filters: NonNullable<DataViewQuery['filters']>,
+    onTableQueryChange?: (query: DataViewQuery) => void
+  ) =>
+    render(
+      <DataView
+        data={dated}
+        fields={fields}
+        defaultSort={{ name: 'id', order: 'asc' }}
+        mode={onTableQueryChange ? 'server' : 'client'}
+        query={{ filters }}
+        onTableQueryChange={onTableQueryChange}
+      >
+        <DataView.Filters />
+        <Rows />
+      </DataView>
+    );
+
+  const lastQuery = (onTableQueryChange: ReturnType<typeof vi.fn>) =>
+    onTableQueryChange.mock.calls[
+      onTableQueryChange.mock.calls.length - 1
+    ]?.[0] as DataViewQuery;
+
+  it('offers only the operations the field keeps', async () => {
+    await addWhenFilter(datedFields(only('gte', 'lt')));
+
+    const operation = document.querySelector(
+      '[data-slot="filter-chip-operation"]'
+    ) as Element;
+    expect(operation).toHaveTextContent('is on or after');
+
+    fireEvent.click(operation);
+    await act(async () => {
+      await new Promise(r => setTimeout(r, 0));
+    });
+    expect(screen.getAllByRole('option').map(o => o.textContent)).toEqual([
+      'is on or after',
+      'is before'
+    ]);
+  });
+
+  it('adds a filter with the first operation the field offers', async () => {
+    const onTableQueryChange = vi.fn();
+    await addWhenFilter(datedFields(only('gte', 'lt')), onTableQueryChange);
+
+    expect(lastQuery(onTableQueryChange).filters?.[0]?.operator).toBe('gte');
+  });
+
+  it('drops a restored filter whose operation the field does not offer', () => {
+    renderRestored(datedFields(only('gte', 'lt')), [
+      { name: 'when', operator: 'eq', value: '2026-08-15' }
+    ]);
+
+    expect(screen.getByTestId('rows').textContent).toBe('d14,d15,d16,dNone');
+    expect(document.querySelector('[data-slot="filter-chip"]')).toBeNull();
+  });
+
+  it('keeps a restored filter on a field that sets no operations', () => {
+    renderRestored(datedFields(), [
+      { name: 'when', operator: 'eq', value: '2026-08-15' }
+    ]);
+
+    expect(screen.getByTestId('rows').textContent).toBe('d15');
+    expect(document.querySelector('[data-slot="filter-chip"]')).not.toBeNull();
   });
 });

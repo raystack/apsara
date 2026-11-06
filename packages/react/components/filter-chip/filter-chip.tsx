@@ -7,6 +7,7 @@ import {
   ComponentProps,
   ReactNode,
   useCallback,
+  useEffect,
   useMemo,
   useState
 } from 'react';
@@ -91,6 +92,10 @@ export type FilterChipCalendarProps = Pick<
   showCalendarIcon?: boolean;
 };
 
+export type FilterChipOperations =
+  | FilterOperator<string>[]
+  | ((defaults: FilterOperator<string>[]) => FilterOperator<string>[]);
+
 export interface FilterChipProps
   extends ComponentProps<'div'>,
     VariantProps<typeof chip> {
@@ -102,7 +107,12 @@ export interface FilterChipProps
   onValueChange?: (value: FilterChipValue, operation: string) => void;
   onOperationChange?: (operation: string) => void;
   leadingIcon?: ReactNode;
-  operations?: FilterOperator<string>[];
+  /**
+   * Operations the chip offers. An array replaces the operations of the
+   * `columnType`, a function receives them and returns the list to use.
+   * @default the operations of the `columnType`
+   */
+  operations?: FilterChipOperations;
   selectProps?: BaseSelectProps;
   /** Props forwarded to the `CalendarPreview` for `columnType="date"`. */
   calendarProps?: FilterChipCalendarProps;
@@ -133,13 +143,31 @@ export const FilterChip = ({
   calendarProps,
   ...props
 }: FilterChipProps) => {
-  const computedOperations = operations?.length
-    ? operations
-    : filterOperators[columnType];
+  const computedOperations = useMemo(() => {
+    const defaults: FilterOperator<string>[] = filterOperators[columnType];
+    if (!operations) return defaults;
+    const resolved =
+      typeof operations === 'function' ? operations(defaults) : operations;
+    return resolved.length ? resolved : defaults;
+  }, [columnType, operations]);
 
-  const [operation, setOperation] = useState<FilterOperation | undefined>(
+  const [selected, setSelected] = useState<FilterOperation | undefined>(
     computedOperations?.[0]
   );
+
+  /* The list can change while the chip is mounted, so a selection it no longer
+     offers would be shown with the wrong label and sent with every edit. */
+  const operation = computedOperations.some(
+    option => option.value === selected?.value
+  )
+    ? selected
+    : computedOperations[0];
+
+  useEffect(() => {
+    if (operation === selected) return;
+    setSelected(operation);
+    if (operation?.value) onOperationChange?.(operation.value);
+  }, [operation, selected, onOperationChange]);
   const isNumberColumn = columnType === FilterType.number;
   // `??` not `||`, since a falsy option value like `0` is a real selection.
   // For `number`, the value is shown without an exponent (`1e-7`), and a
@@ -180,7 +208,7 @@ export const FilterChip = ({
 
   const handleOperationChange = useCallback(
     (operation: FilterOperation) => {
-      setOperation(operation);
+      setSelected(operation);
       if (operation?.value) onOperationChange?.(operation.value);
     },
     [onOperationChange]

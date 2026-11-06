@@ -3,6 +3,7 @@
 import { cx } from 'class-variance-authority';
 import { isValidElement, ReactNode, useMemo } from 'react';
 import { FilterIcon } from '~/icons';
+import { resolveFilterOperations } from '~/shared/filter-operations';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import { Button } from '../../button';
 import { FilterChip, type FilterChipValue } from '../../filter-chip';
@@ -131,6 +132,10 @@ export function Filters<TData, TValue>({
         filterType: columnDef?.filterType || FilterType.string,
         label: (columnDef?.header as string) || '',
         options: columnDef?.filterOptions || [],
+        operations: resolveFilterOperations(
+          columnDef?.filterType,
+          columnDef?.filterOperations
+        ),
         selectProps: columnDef?.filterProps?.select,
         calendarProps: columnDef?.filterProps?.calendar,
         ...filter
@@ -159,6 +164,7 @@ export function Filters<TData, TValue>({
           }
           columnType={filter.filterType}
           options={filter.options}
+          operations={filter.operations}
           selectProps={filter.selectProps}
           calendarProps={filter.calendarProps}
           className={classNames?.filterChips}

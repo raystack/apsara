@@ -47,6 +47,101 @@ describe('FilterChip', () => {
     });
   });
 
+  describe('Operations', () => {
+    const operationText = (ui: React.ReactElement) => {
+      const { container } = render(ui);
+      return getSlot(container, 'filter-chip-operation')?.textContent;
+    };
+
+    it('replaces the operations with the array given', () => {
+      expect(
+        operationText(
+          <FilterChip
+            label='Name'
+            operations={[{ value: 'eq', label: 'matches' }]}
+          />
+        )
+      ).toBe('matches');
+    });
+
+    it('calls the function with the operations of the column type', () => {
+      expect(
+        operationText(
+          <FilterChip
+            label='Name'
+            operations={defaults => defaults.slice(-1)}
+          />
+        )
+      ).toBe('ends with');
+    });
+
+    it('moves to the first operation when the list drops the selected one', () => {
+      const onOperationChange = vi.fn();
+      const { rerender, container } = render(
+        <FilterChip
+          label='Name'
+          onOperationChange={onOperationChange}
+          operations={[
+            { value: 'eq', label: 'is' },
+            { value: 'neq', label: 'is not' }
+          ]}
+        />
+      );
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'is'
+      );
+
+      rerender(
+        <FilterChip
+          label='Name'
+          onOperationChange={onOperationChange}
+          operations={[{ value: 'neq', label: 'is not' }]}
+        />
+      );
+
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'is not'
+      );
+      expect(onOperationChange).toHaveBeenCalledWith('neq');
+    });
+
+    it('keeps a selection the new list still offers', () => {
+      const onOperationChange = vi.fn();
+      const { rerender } = render(
+        <FilterChip
+          label='Name'
+          onOperationChange={onOperationChange}
+          operations={[
+            { value: 'eq', label: 'is' },
+            { value: 'neq', label: 'is not' }
+          ]}
+        />
+      );
+      rerender(
+        <FilterChip
+          label='Name'
+          onOperationChange={onOperationChange}
+          operations={[
+            { value: 'eq', label: 'is' },
+            { value: 'contains', label: 'contains' }
+          ]}
+        />
+      );
+
+      expect(onOperationChange).not.toHaveBeenCalled();
+    });
+
+    it('falls back to the column type when the function returns nothing', () => {
+      const { container } = render(
+        <FilterChip label='Name' operations={() => []} />
+      );
+      expect(getSlot(container, 'filter-chip-operation')).toHaveAttribute(
+        'aria-label',
+        'Name filter operation'
+      );
+    });
+  });
+
   describe('Remove Functionality', () => {
     it('shows remove button when onRemove is provided', () => {
       const onRemove = vi.fn();
