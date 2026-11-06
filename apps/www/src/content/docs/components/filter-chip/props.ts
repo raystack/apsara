@@ -26,7 +26,7 @@ export interface FilterChipProps {
   /** Optional array of operations for the type of filter operation */
   operations?: { label: string; value: string }[];
 
-  /** Callback when the filter value changes; receives the value and the active
+  /** Callback when the filter value changes. `details.operation` is the active
    * operation. For `select` and `multiselect`, the value is the picked
    * option's `value`, with its type kept. For `number`, non-numeric input is
    * rejected and never reported, and the value arrives as a `number`, except
@@ -34,7 +34,7 @@ export interface FilterChipProps {
    * reported as-is so the field stays editable. */
   onValueChange?: (
     value: string | number | boolean | Array<string | number | boolean> | Date,
-    operation: string
+    details: { reason: string; event: Event; operation: string }
   ) => void;
 
   /** Callback when the filter operation changes */

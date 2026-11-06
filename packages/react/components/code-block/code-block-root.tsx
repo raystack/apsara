@@ -9,6 +9,10 @@ import {
   useContext,
   useState
 } from 'react';
+import {
+  type ChangeDetails,
+  createChangeDetails
+} from '~/shared/change-details';
 import styles from './code-block.module.css';
 
 interface CodeBlockCommonProps {
@@ -22,7 +26,7 @@ interface CodeBlockContextValue extends CodeBlockCommonProps {
   setValue: (value: string) => void;
   code?: string;
   setCode: (code: string) => void;
-  toggleCollapsed: () => void;
+  toggleCollapsed: (event: Event) => void;
 }
 
 const CodeBlockContext = createContext<CodeBlockContextValue | undefined>(
@@ -37,6 +41,8 @@ export const useCodeBlockContext = () => {
   return context;
 };
 
+export type CodeBlockCollapseChangeDetails = ChangeDetails<'trigger-press'>;
+
 export interface CodeBlockProps
   extends ComponentProps<'div'>,
     CodeBlockCommonProps {
@@ -44,7 +50,10 @@ export interface CodeBlockProps
   maxHeight?: string | number;
   onValueChange?: (value: string) => void;
   defaultCollapsed?: boolean;
-  onCollapseChange?: (value: boolean) => void;
+  onCollapseChange?: (
+    value: boolean,
+    details: CodeBlockCollapseChangeDetails
+  ) => void;
 }
 
 export const CodeBlockRoot = ({
@@ -83,11 +92,14 @@ export const CodeBlockRoot = ({
     [onValueChange, setValueUnwrapped]
   );
 
-  const toggleCollapsed = useCallback(() => {
-    const next = !collapsed;
-    setCollapsedUnwrapped(next);
-    onCollapseChange?.(next);
-  }, [collapsed, onCollapseChange, setCollapsedUnwrapped]);
+  const toggleCollapsed = useCallback(
+    (event: Event) => {
+      const next = !collapsed;
+      setCollapsedUnwrapped(next);
+      onCollapseChange?.(next, createChangeDetails('trigger-press', event));
+    },
+    [collapsed, onCollapseChange, setCollapsedUnwrapped]
+  );
 
   return (
     <CodeBlockContext

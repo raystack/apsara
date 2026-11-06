@@ -1,4 +1,7 @@
 import { Field as FieldPrimitive } from '@base-ui/react/field';
+import type { Input as InputPrimitive } from '@base-ui/react/input';
+import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
+import { REASONS } from '@base-ui/react/internals/reasons';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ChangeEvent, type ComponentProps } from 'react';
 import { radiusVariants } from '../../shared/radius';
@@ -33,7 +36,7 @@ export interface TextAreaProps
   onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   onValueChange?: (
     value: string,
-    event: ChangeEvent<HTMLTextAreaElement>
+    eventDetails: InputPrimitive.ChangeEventDetails
   ) => void;
 }
 
@@ -55,7 +58,10 @@ export function TextArea({
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     onChange?.(event);
-    onValueChange?.(event.target.value, event);
+    onValueChange?.(
+      event.target.value,
+      createChangeEventDetails(REASONS.none, event.nativeEvent)
+    );
   };
 
   const textarea = (

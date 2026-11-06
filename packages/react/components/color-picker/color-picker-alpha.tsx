@@ -27,7 +27,9 @@ export const ColorPickerAlpha = ({
     <Slider.Root
       className={cx(styles.sliderRoot, className)}
       max={100}
-      onValueChange={value => setColor({ alpha: (value as number) / 100 })}
+      onValueChange={(value, { reason, event }) =>
+        setColor({ alpha: (value as number) / 100 }, reason, event)
+      }
       step={1}
       value={alpha * 100}
       thumbAlignment='edge'

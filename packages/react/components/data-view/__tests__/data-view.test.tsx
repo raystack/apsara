@@ -616,6 +616,31 @@ describe('DataView', () => {
       expect(screen.getByRole('list')).toBeInTheDocument();
     });
 
+    it('passes details to onViewChange', async () => {
+      const user = userEvent.setup();
+      const onViewChange = vi.fn();
+      render(
+        <DataView
+          data={mockData}
+          fields={mockFields}
+          defaultSort={defaultSort}
+          views={views}
+          defaultView='table'
+          onViewChange={onViewChange}
+        >
+          <DataView.DisplayControls />
+          <DataView.List name='table' variant='table' columns={mockColumns} />
+          <DataView.List name='list' variant='list' columns={mockColumns} />
+        </DataView>
+      );
+      await user.click(screen.getByRole('button', { name: 'Display' }));
+      await user.click(await screen.findByRole('tab', { name: 'List' }));
+      expect(onViewChange).toHaveBeenCalledWith(
+        'list',
+        expect.objectContaining({ reason: 'none', event: expect.any(Event) })
+      );
+    });
+
     it('renderer with name not matching any views[].value renders nothing', () => {
       render(
         <DataView
