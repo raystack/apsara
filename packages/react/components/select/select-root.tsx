@@ -19,13 +19,11 @@ import { ItemType } from './types';
 interface CommonProps {
   autocomplete?: boolean;
   autocompleteMode?: 'auto' | 'manual';
-  searchValue?: string;
-  onSearch?: (value: string) => void;
-  defaultSearchValue?: string;
 }
 
 interface SelectContextValue extends CommonProps {
   value?: string | string[];
+  inputValue?: string;
   registerItem: (item: ItemType) => void;
   unregisterItem: (value: string) => void;
   multiple: boolean;
@@ -51,7 +49,7 @@ export const useSelectContext = (): UseSelectContext => {
   const shouldFilter = !!(
     context?.autocomplete &&
     context?.autocompleteMode === 'auto' &&
-    context?.searchValue?.length
+    context?.inputValue?.length
   );
   return {
     ...context,
@@ -65,6 +63,12 @@ export type SelectChangeEventDetails =
   | ComboboxPrimitive.Root.ChangeEventDetails;
 
 export interface BaseSelectProps extends CommonProps {
+  inputValue?: string;
+  defaultInputValue?: string;
+  onInputValueChange?: (
+    inputValue: string,
+    eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
+  ) => void;
   children?: ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
@@ -108,9 +112,9 @@ export const SelectRoot = (props: SelectRootProps) => {
     defaultValue,
     autocomplete,
     autocompleteMode = 'auto',
-    searchValue: providedSearchValue,
-    onSearch,
-    defaultSearchValue = '',
+    inputValue: providedInputValue,
+    onInputValueChange,
+    defaultInputValue = '',
     open: providedOpen,
     defaultOpen = false,
     onOpenChange,
@@ -133,11 +137,11 @@ export const SelectRoot = (props: SelectRootProps) => {
     name: 'Select',
     state: 'value'
   });
-  const [searchValue, setSearchValueUnwrapped] = useControlled({
-    controlled: providedSearchValue,
-    default: defaultSearchValue,
+  const [inputValue, setInputValueUnwrapped] = useControlled({
+    controlled: providedInputValue,
+    default: defaultInputValue,
     name: 'Select',
-    state: 'searchValue'
+    state: 'inputValue'
   });
   const [registeredItems, setRegisteredItems] = useState<
     SelectContextValue['items']
@@ -165,12 +169,16 @@ export const SelectRoot = (props: SelectRootProps) => {
     [multiple, onValueChange, setValueUnwrapped]
   );
 
-  const handleSearchValueChange = useCallback(
-    (value: string) => {
-      setSearchValueUnwrapped(value);
-      onSearch?.(value);
+  const handleInputValueChange = useCallback(
+    (
+      value: string,
+      eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
+    ) => {
+      onInputValueChange?.(value, eventDetails);
+      if (eventDetails.isCanceled) return;
+      setInputValueUnwrapped(value);
     },
-    [onSearch, setSearchValueUnwrapped]
+    [onInputValueChange, setInputValueUnwrapped]
   );
 
   const registerItem = useCallback<SelectContextValue['registerItem']>(item => {
@@ -194,7 +202,7 @@ export const SelectRoot = (props: SelectRootProps) => {
       unregisterItem,
       autocomplete,
       autocompleteMode,
-      searchValue,
+      inputValue,
       multiple,
       items: registeredItems,
       hasItems: !!itemsProp
@@ -205,7 +213,7 @@ export const SelectRoot = (props: SelectRootProps) => {
       unregisterItem,
       autocomplete,
       autocompleteMode,
-      searchValue,
+      inputValue,
       multiple,
       registeredItems,
       itemsProp
@@ -232,9 +240,9 @@ export const SelectRoot = (props: SelectRootProps) => {
       <SelectContext value={contextValue}>
         <ComboboxPrimitive.Root
           {...commonProps}
-          inputValue={providedSearchValue}
-          defaultInputValue={defaultSearchValue}
-          onInputValueChange={handleSearchValueChange}
+          inputValue={providedInputValue}
+          defaultInputValue={defaultInputValue}
+          onInputValueChange={handleInputValueChange}
           filter={itemsProp ? undefined : null}
           items={itemsProp}
           loopFocus={false}

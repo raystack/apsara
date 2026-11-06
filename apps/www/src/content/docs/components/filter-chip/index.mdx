@@ -66,7 +66,7 @@ FilterChip supports custom filter operations through the `operations` prop. When
 
 ### Controlled
 
-Pass `value` with `onValueChange` to own the filter. Do this when the chip drives a query and the value has to survive a refetch or a shared URL. `onValueChange` receives the value and a `details` object, and `details.operation` is the active operation.
+Pass `value` with `onValueChange` to own the filter. Do this when the chip drives a query and the value has to survive a refetch or a shared URL. `onValueChange` receives the value and a `details` object, and `details.operation` is the active operation. Pass `operation` with `onOperationChange` to own the operation too. To set only the first value or operation, pass `defaultValue` or `defaultOperation`.
 
 <Demo data={controlledDemo} />
 

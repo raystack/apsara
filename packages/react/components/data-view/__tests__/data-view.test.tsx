@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { StrictMode, useState } from 'react';
 import {
   afterEach,
   beforeAll,
@@ -304,7 +305,7 @@ describe('DataView', () => {
           data={mockData}
           fields={mockFields}
           defaultSort={defaultSort}
-          query={{
+          defaultQuery={{
             filters: [{ name: 'name', operator: 'eq', value: 'NonExistent' }]
           }}
         >
@@ -520,7 +521,7 @@ describe('DataView', () => {
             fields={mockFields}
             defaultSort={defaultSort}
             mode='server'
-            query={{
+            defaultQuery={{
               filters: [{ name: 'name', operator: 'neq', value: 'John Doe' }]
             }}
           >
@@ -543,7 +544,9 @@ describe('DataView', () => {
           data={mockData}
           fields={mockFields}
           defaultSort={defaultSort}
-          query={{ filters: [{ name: 'name', operator: 'eq', value: 'x' }] }}
+          defaultQuery={{
+            filters: [{ name: 'name', operator: 'eq', value: 'x' }]
+          }}
         >
           <DataView.Toolbar />
         </DataView>
@@ -665,7 +668,7 @@ describe('DataView', () => {
           defaultSort={defaultSort}
           views={views}
           view='table'
-          query={{
+          defaultQuery={{
             filters: [{ name: 'status', operator: 'eq', value: 'active' }]
           }}
         >
@@ -684,7 +687,7 @@ describe('DataView', () => {
           defaultSort={defaultSort}
           views={views}
           view='list'
-          query={{
+          defaultQuery={{
             filters: [{ name: 'status', operator: 'eq', value: 'active' }]
           }}
         >
@@ -896,7 +899,7 @@ describe('DataView', () => {
           data={mockData}
           fields={mockFields}
           defaultSort={defaultSort}
-          query={{
+          defaultQuery={{
             filters: [{ name: 'name', operator: 'eq', value: 'NonExistent' }]
           }}
         >
@@ -927,7 +930,7 @@ describe('DataView', () => {
           defaultSort={defaultSort}
           mode='server'
           totalRowCount={10}
-          query={{
+          defaultQuery={{
             filters: [{ name: 'name', operator: 'neq', value: 'John Doe' }]
           }}
         >
@@ -947,7 +950,7 @@ describe('DataView', () => {
           data={mockData}
           fields={mockFields}
           defaultSort={defaultSort}
-          query={{ group_by: ['status'] }}
+          defaultQuery={{ group_by: ['status'] }}
         >
           <DataView.List variant='table' columns={mockColumns} />
         </DataView>
@@ -966,7 +969,7 @@ describe('DataView', () => {
           data={dataWithDate}
           fields={mockFields}
           defaultSort={defaultSort}
-          query={{ group_by: ['name_first_letter'] }}
+          defaultQuery={{ group_by: ['name_first_letter'] }}
           groupByResolvers={{
             name_first_letter: row => row.name.charAt(0).toUpperCase()
           }}
@@ -981,8 +984,8 @@ describe('DataView', () => {
   });
 
   describe('Wire-format translation', () => {
-    it('does NOT call onTableQueryChange in client mode', async () => {
-      const onTableQueryChange = vi.fn();
+    it('calls onQueryChange in client mode on change, not on mount', async () => {
+      const onQueryChange = vi.fn();
       const user = userEvent.setup();
       render(
         <DataView
@@ -990,7 +993,7 @@ describe('DataView', () => {
           fields={mockFields}
           defaultSort={defaultSort}
           mode='client'
-          onTableQueryChange={onTableQueryChange}
+          onQueryChange={onQueryChange}
         >
           <DataView.Toolbar>
             <DataView.Search />
@@ -998,12 +1001,76 @@ describe('DataView', () => {
           <DataView.List variant='table' columns={mockColumns} />
         </DataView>
       );
-      await user.type(screen.getByRole('searchbox'), 'jane');
-      expect(onTableQueryChange).not.toHaveBeenCalled();
+      expect(onQueryChange).not.toHaveBeenCalled();
+      await user.type(screen.getByRole('searchbox'), 'j');
+      expect(onQueryChange).toHaveBeenCalledWith(
+        expect.objectContaining({ search: 'j' }),
+        expect.objectContaining({ reason: 'none' })
+      );
     });
 
-    it('calls onTableQueryChange in server mode after query change', async () => {
-      const onTableQueryChange = vi.fn();
+    it('follows a controlled query without calling onQueryChange', () => {
+      const onQueryChange = vi.fn();
+      const renderWith = (search: string) => (
+        <DataView
+          data={mockData}
+          fields={mockFields}
+          defaultSort={defaultSort}
+          query={{ search }}
+          onQueryChange={onQueryChange}
+        >
+          <DataView.List variant='table' columns={mockColumns} />
+        </DataView>
+      );
+      const { rerender } = render(renderWith('John'));
+      expect(screen.queryByText('Jane Smith')).not.toBeInTheDocument();
+
+      rerender(renderWith('Jane'));
+      expect(screen.getByText('Jane Smith')).toBeInTheDocument();
+      expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
+      expect(onQueryChange).not.toHaveBeenCalled();
+    });
+
+    it('keeps a new filter with no value when the controlled query is a JSON copy', async () => {
+      const user = userEvent.setup();
+      const fields: DataViewField<TestData>[] = [
+        ...mockFields,
+        {
+          accessorKey: 'created',
+          label: 'Created',
+          filterable: true,
+          filterType: 'date'
+        }
+      ];
+      function Controlled() {
+        const [query, setQuery] = useState<DataViewQuery>({});
+        return (
+          <DataView
+            data={mockData}
+            fields={fields}
+            defaultSort={defaultSort}
+            query={query}
+            onQueryChange={next => setQuery(JSON.parse(JSON.stringify(next)))}
+          >
+            <DataView.Filters />
+          </DataView>
+        );
+      }
+      render(<Controlled />);
+      await user.click(screen.getByRole('button', { name: /filter/i }));
+      await user.click(await screen.findByRole('menuitem', { name: 'Name' }));
+      await user.click(screen.getByRole('button', { name: 'Add filter' }));
+      await user.click(
+        await screen.findByRole('menuitem', { name: 'Created' })
+      );
+
+      expect(
+        document.querySelectorAll('[data-slot="filter-chip"]')
+      ).toHaveLength(2);
+    });
+
+    it('calls onQueryChange in server mode after query change', async () => {
+      const onQueryChange = vi.fn();
       const user = userEvent.setup();
       render(
         <DataView
@@ -1011,7 +1078,7 @@ describe('DataView', () => {
           fields={mockFields}
           defaultSort={defaultSort}
           mode='server'
-          onTableQueryChange={onTableQueryChange}
+          onQueryChange={onQueryChange}
         >
           <DataView.Toolbar>
             <DataView.Search />
@@ -1020,14 +1087,32 @@ describe('DataView', () => {
         </DataView>
       );
       await user.type(screen.getByRole('searchbox'), 'a');
-      expect(onTableQueryChange).toHaveBeenCalled();
-      const calls = onTableQueryChange.mock.calls;
+      expect(onQueryChange).toHaveBeenCalled();
+      const calls = onQueryChange.mock.calls;
       const lastCall = calls[calls.length - 1]?.[0];
       expect(lastCall?.search).toBe('a');
     });
 
+    it('calls onQueryChange once on mount in server mode under StrictMode', () => {
+      const onQueryChange = vi.fn();
+      render(
+        <StrictMode>
+          <DataView
+            data={mockData}
+            fields={mockFields}
+            defaultSort={defaultSort}
+            mode='server'
+            onQueryChange={onQueryChange}
+          >
+            <DataView.List variant='table' columns={mockColumns} />
+          </DataView>
+        </StrictMode>
+      );
+      expect(onQueryChange).toHaveBeenCalledTimes(1);
+    });
+
     it('keeps the option type when a select filter value is picked', async () => {
-      const onTableQueryChange = vi.fn();
+      const onQueryChange = vi.fn();
       const user = userEvent.setup();
       render(
         <DataView
@@ -1047,7 +1132,7 @@ describe('DataView', () => {
           ]}
           defaultSort={defaultSort}
           mode='server'
-          onTableQueryChange={onTableQueryChange}
+          onQueryChange={onQueryChange}
         >
           <DataView.Filters />
         </DataView>
@@ -1062,7 +1147,7 @@ describe('DataView', () => {
       });
       await user.click(screen.getByRole('option', { name: 'No' }));
 
-      const calls = onTableQueryChange.mock.calls;
+      const calls = onQueryChange.mock.calls;
       expect(calls[calls.length - 1]?.[0].filters).toEqual([
         { name: 'status', operator: 'eq', value: false, boolValue: false }
       ]);
@@ -1303,7 +1388,7 @@ describe('DataView', () => {
             data={mockData}
             fields={mockFields}
             defaultSort={defaultSort}
-            query={{ group_by: ['status'] }}
+            defaultQuery={{ group_by: ['status'] }}
           >
             <DataView.List
               variant='table'
@@ -1458,7 +1543,7 @@ describe('DataView', () => {
     const renderRestored = (
       filters: NonNullable<DataViewQuery['filters']>,
       mode: 'client' | 'server' = 'client',
-      onTableQueryChange?: (query: DataViewQuery) => void
+      onQueryChange?: (query: DataViewQuery) => void
     ) =>
       render(
         <DataView
@@ -1466,8 +1551,8 @@ describe('DataView', () => {
           fields={datedFields}
           defaultSort={{ name: 'id', order: 'asc' }}
           mode={mode}
-          query={{ filters }}
-          onTableQueryChange={onTableQueryChange}
+          defaultQuery={{ filters }}
+          onQueryChange={onQueryChange}
         >
           <DataView.Custom>
             {ctx => (
@@ -1488,27 +1573,27 @@ describe('DataView', () => {
     });
 
     it('emits a restored date filter as a day key', () => {
-      const onTableQueryChange = vi.fn();
+      const onQueryChange = vi.fn();
       renderRestored(
         [{ name: 'when', operator: 'eq', value: new Date(2026, 7, 15) }],
         'server',
-        onTableQueryChange
+        onQueryChange
       );
-      const last = onTableQueryChange.mock.calls[
-        onTableQueryChange.mock.calls.length - 1
+      const last = onQueryChange.mock.calls[
+        onQueryChange.mock.calls.length - 1
       ]?.[0] as DataViewQuery;
       expect(last.filters?.[0]?.stringValue).toBe('2026-08-15');
     });
 
     it('leaves a restored string filter as it was sent', () => {
-      const onTableQueryChange = vi.fn();
+      const onQueryChange = vi.fn();
       renderRestored(
         [{ name: 'id', operator: 'eq', value: 'd15' }],
         'server',
-        onTableQueryChange
+        onQueryChange
       );
-      const last = onTableQueryChange.mock.calls[
-        onTableQueryChange.mock.calls.length - 1
+      const last = onQueryChange.mock.calls[
+        onQueryChange.mock.calls.length - 1
       ]?.[0] as DataViewQuery;
       expect(last.filters?.[0]).toEqual({
         name: 'id',
