@@ -494,3 +494,11 @@ export {
 export * from './icons/icons';
 export type { IconName } from './icons/types';
 export { radiusStyle } from './shared/radius';
+export type {
+  DateFilterOperatorType,
+  FilterOperatorTypes,
+  MultiSelectFilterOperatorType,
+  NumberFilterOperatorType,
+  SelectFilterOperatorType,
+  StringFilterOperatorType
+} from './types/filters';

@@ -82,6 +82,11 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   enableHiding?: boolean;
   defaultHidden?: boolean;
   filterOptions?: FilterSelectOption[];
+  /**
+   * Operators the filter chip offers, in order. Unknown values are ignored.
+   * @default all operators of the filter type
+   */
+  filterOperators?: FilterOperatorTypes[];
   defaultFilterValue?: unknown;
   filterProps?: {
     select?: BaseSelectProps;

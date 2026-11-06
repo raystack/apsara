@@ -6,6 +6,7 @@ import {
 } from '@tanstack/table-core';
 
 import { toDayKey, withDateFilterTypes } from '~/shared/date-filters';
+import { dropDisallowedFilters } from '~/shared/filter-operators';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import {
   DataViewField,
@@ -404,7 +405,10 @@ export function hasActiveTableFiltering<T>(table: Table<T>): boolean {
 export function getDefaultTableQuery(
   defaultSort: DataViewSort,
   oldQuery: DataViewQuery = {},
-  fields: Pick<DataViewField, 'accessorKey' | 'filterType'>[] = []
+  fields: Pick<
+    DataViewField,
+    'accessorKey' | 'filterType' | 'filterOperators'
+  >[] = []
 ): InternalQuery {
   const internalQuery = dataViewQueryToInternal(oldQuery);
   return {
@@ -412,7 +416,10 @@ export function getDefaultTableQuery(
     group_by: [defaultGroupOption.id],
     ...internalQuery,
     ...(internalQuery.filters && {
-      filters: withDateFilterTypes(internalQuery.filters, fields)
+      filters: dropDisallowedFilters(
+        withDateFilterTypes(internalQuery.filters, fields),
+        fields
+      )
     })
   };
 }

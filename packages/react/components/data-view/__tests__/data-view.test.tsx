@@ -1494,3 +1494,126 @@ describe('DataView', () => {
     });
   });
 });
+
+describe('DataView field filter operators', () => {
+  type Dated = { id: string; when?: string };
+
+  const dated: Dated[] = [
+    { id: 'd14', when: '2026-08-14' },
+    { id: 'd15', when: '2026-08-15' },
+    { id: 'd16', when: '2026-08-16' },
+    { id: 'dNone' }
+  ];
+
+  const datedFields = (
+    filterOperators?: DataViewField<Dated>['filterOperators']
+  ): DataViewField<Dated>[] => [
+    { accessorKey: 'id', label: 'ID' },
+    {
+      accessorKey: 'when',
+      label: 'When',
+      filterable: true,
+      filterType: 'date',
+      filterOperators
+    }
+  ];
+
+  const Rows = () => {
+    const { table } = useDataViewForTest<Dated>();
+    return (
+      <output data-testid='rows'>
+        {table
+          .getRowModel()
+          .rows.map(row => (row.original as Dated).id)
+          .join(',')}
+      </output>
+    );
+  };
+
+  const addWhenFilter = async (
+    fields: DataViewField<Dated>[],
+    onTableQueryChange?: (query: DataViewQuery) => void
+  ) => {
+    const user = userEvent.setup();
+    render(
+      <DataView
+        data={dated}
+        fields={fields}
+        defaultSort={{ name: 'id', order: 'asc' }}
+        mode={onTableQueryChange ? 'server' : 'client'}
+        onTableQueryChange={onTableQueryChange}
+      >
+        <DataView.Filters />
+      </DataView>
+    );
+    await user.click(screen.getByRole('button', { name: /filter/i }));
+    await user.click(await screen.findByRole('menuitem', { name: 'When' }));
+  };
+
+  const renderRestored = (
+    fields: DataViewField<Dated>[],
+    filters: NonNullable<DataViewQuery['filters']>,
+    onTableQueryChange?: (query: DataViewQuery) => void
+  ) =>
+    render(
+      <DataView
+        data={dated}
+        fields={fields}
+        defaultSort={{ name: 'id', order: 'asc' }}
+        mode={onTableQueryChange ? 'server' : 'client'}
+        query={{ filters }}
+        onTableQueryChange={onTableQueryChange}
+      >
+        <DataView.Filters />
+        <Rows />
+      </DataView>
+    );
+
+  const lastQuery = (onTableQueryChange: ReturnType<typeof vi.fn>) =>
+    onTableQueryChange.mock.calls[
+      onTableQueryChange.mock.calls.length - 1
+    ]?.[0] as DataViewQuery;
+
+  it('offers only the operators the field lists', async () => {
+    await addWhenFilter(datedFields(['gte', 'lt']));
+
+    const operation = document.querySelector(
+      '[data-slot="filter-chip-operation"]'
+    ) as Element;
+    expect(operation).toHaveTextContent('is on or after');
+
+    fireEvent.click(operation);
+    await act(async () => {
+      await new Promise(r => setTimeout(r, 0));
+    });
+    expect(screen.getAllByRole('option').map(o => o.textContent)).toEqual([
+      'is on or after',
+      'is before'
+    ]);
+  });
+
+  it('adds a filter with the first operator the field lists', async () => {
+    const onTableQueryChange = vi.fn();
+    await addWhenFilter(datedFields(['gte', 'lt']), onTableQueryChange);
+
+    expect(lastQuery(onTableQueryChange).filters?.[0]?.operator).toBe('gte');
+  });
+
+  it('drops a restored filter whose operator the field does not list', () => {
+    renderRestored(datedFields(['gte', 'lt']), [
+      { name: 'when', operator: 'eq', value: '2026-08-15' }
+    ]);
+
+    expect(screen.getByTestId('rows').textContent).toBe('d14,d15,d16,dNone');
+    expect(document.querySelector('[data-slot="filter-chip"]')).toBeNull();
+  });
+
+  it('keeps a restored filter on a field that lists no operators', () => {
+    renderRestored(datedFields(), [
+      { name: 'when', operator: 'eq', value: '2026-08-15' }
+    ]);
+
+    expect(screen.getByTestId('rows').textContent).toBe('d15');
+    expect(document.querySelector('[data-slot="filter-chip"]')).not.toBeNull();
+  });
+});

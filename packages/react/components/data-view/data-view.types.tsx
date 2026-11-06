@@ -88,6 +88,11 @@ export interface DataViewField<TData = unknown> {
   filterType?: FilterTypes;
   dataType?: FilterDataType;
   filterOptions?: FilterSelectOption[];
+  /**
+   * Operators the filter chip offers, in order. Unknown values are ignored.
+   * @default all operators of the filter type
+   */
+  filterOperators?: FilterOperatorTypes[];
   defaultFilterValue?: DataViewFilterValue;
   filterProps?: {
     select?: BaseSelectProps;
