@@ -7,6 +7,7 @@ import {
   ComponentProps,
   ReactNode,
   useCallback,
+  useEffect,
   useMemo,
   useState
 } from 'react';
@@ -150,9 +151,23 @@ export const FilterChip = ({
     return resolved.length ? resolved : defaults;
   }, [columnType, operations]);
 
-  const [operation, setOperation] = useState<FilterOperation | undefined>(
+  const [selected, setSelected] = useState<FilterOperation | undefined>(
     computedOperations?.[0]
   );
+
+  /* The list can change while the chip is mounted, so a selection it no longer
+     offers would be shown with the wrong label and sent with every edit. */
+  const operation = computedOperations.some(
+    option => option.value === selected?.value
+  )
+    ? selected
+    : computedOperations[0];
+
+  useEffect(() => {
+    if (operation === selected) return;
+    setSelected(operation);
+    if (operation?.value) onOperationChange?.(operation.value);
+  }, [operation, selected, onOperationChange]);
   const isNumberColumn = columnType === FilterType.number;
   // `??` not `||`, since a falsy option value like `0` is a real selection.
   // For `number`, the value is shown without an exponent (`1e-7`), and a
@@ -193,7 +208,7 @@ export const FilterChip = ({
 
   const handleOperationChange = useCallback(
     (operation: FilterOperation) => {
-      setOperation(operation);
+      setSelected(operation);
       if (operation?.value) onOperationChange?.(operation.value);
     },
     [onOperationChange]

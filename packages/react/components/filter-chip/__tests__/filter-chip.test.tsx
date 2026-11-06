@@ -75,6 +75,62 @@ describe('FilterChip', () => {
       ).toBe('ends with');
     });
 
+    it('moves to the first operation when the list drops the selected one', () => {
+      const onOperationChange = vi.fn();
+      const { rerender, container } = render(
+        <FilterChip
+          label='Name'
+          onOperationChange={onOperationChange}
+          operations={[
+            { value: 'eq', label: 'is' },
+            { value: 'neq', label: 'is not' }
+          ]}
+        />
+      );
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'is'
+      );
+
+      rerender(
+        <FilterChip
+          label='Name'
+          onOperationChange={onOperationChange}
+          operations={[{ value: 'neq', label: 'is not' }]}
+        />
+      );
+
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'is not'
+      );
+      expect(onOperationChange).toHaveBeenCalledWith('neq');
+    });
+
+    it('keeps a selection the new list still offers', () => {
+      const onOperationChange = vi.fn();
+      const { rerender } = render(
+        <FilterChip
+          label='Name'
+          onOperationChange={onOperationChange}
+          operations={[
+            { value: 'eq', label: 'is' },
+            { value: 'neq', label: 'is not' }
+          ]}
+        />
+      );
+      rerender(
+        <FilterChip
+          label='Name'
+          onOperationChange={onOperationChange}
+          operations={[
+            { value: 'eq', label: 'is' },
+            { value: 'contains', label: 'contains' }
+          ]}
+        />
+      );
+
+      expect(onOperationChange).not.toHaveBeenCalled();
+    });
+
     it('falls back to the column type when the function returns nothing', () => {
       const { container } = render(
         <FilterChip label='Name' operations={() => []} />
