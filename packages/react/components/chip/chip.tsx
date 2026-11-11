@@ -19,7 +19,7 @@ const chip = cva(styles.chip, {
     ...radiusVariants,
     variant: {
       outline: styles['chip-variant-outline'],
-      filled: styles['chip-variant-filled']
+      solid: styles['chip-variant-solid']
     },
     size: {
       large: styles['chip-size-large'],
@@ -30,7 +30,7 @@ const chip = cva(styles.chip, {
       accent: styles['chip-color-accent'],
       danger: styles['chip-color-danger'],
       success: styles['chip-color-success'],
-      warning: styles['chip-color-warning']
+      attention: styles['chip-color-attention']
     }
   },
   defaultVariants: {

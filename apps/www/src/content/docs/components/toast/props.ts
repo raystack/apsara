@@ -12,6 +12,12 @@ export interface ToastProviderProps {
     | 'bottom-center';
 
   /**
+   * Corner radius for these toasts only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
+
+  /**
    * Maximum number of visible toasts.
    * @default 3
    */

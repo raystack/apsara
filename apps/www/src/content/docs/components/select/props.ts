@@ -6,7 +6,10 @@ export interface SelectRootProps {
   defaultValue?: string | string[];
 
   /** Called when the selection changes. Receives an array when `multiple` is set. */
-  onValueChange?: (value: string | string[]) => void;
+  onValueChange?: (
+    value: string | string[],
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Whether the list is open. */
   open?: boolean;
@@ -17,7 +20,10 @@ export interface SelectRootProps {
   defaultOpen?: boolean;
 
   /** Called when the list opens or closes. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Whether the select is disabled. */
   disabled?: boolean;
@@ -46,19 +52,22 @@ export interface SelectRootProps {
 
   /** Controls the autocomplete behavior mode
    * - "auto": Automatically filters items as user types
-   * - "manual": Requires explicit filtering through onSearch callback
+   * - "manual": Requires explicit filtering through the onInputValueChange callback
    * @default "auto"
    */
   autocompleteMode?: 'auto' | 'manual';
 
-  /** Current search value for autocomplete */
-  searchValue?: string;
+  /** The search text with `autocomplete` (controlled). */
+  inputValue?: string;
 
-  /** Initial search value for autocomplete */
-  defaultSearchValue?: string;
+  /** The search text on the first render (uncontrolled). */
+  defaultInputValue?: string;
 
-  /** Callback fired when the search value changes */
-  onSearch?: (value: string) => void;
+  /** Callback fired when the search text changes. */
+  onInputValueChange?: (
+    inputValue: string,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** All item values. In autocomplete mode, setting it turns off filtering of the `Select.Item` children. It has no effect without `autocomplete`. */
   items?: string[];
@@ -139,6 +148,49 @@ export interface SelectContentProps {
   sideOffset?: number;
 
   /**
+   * Additional offset in pixels along the alignment axis.
+   * @default 0
+   */
+  alignOffset?: number;
+
+  /** Space in pixels to keep from the edge of the collision boundary. */
+  collisionPadding?: number;
+
+  /**
+   * The element or area that confines the content.
+   * @default "clipping-ancestors"
+   */
+  collisionBoundary?: Element | Element[] | 'clipping-ancestors';
+
+  /** How the content moves when it does not fit on the chosen side. */
+  collisionAvoidance?: {
+    side?: 'flip' | 'shift' | 'none';
+    align?: 'flip' | 'shift' | 'none';
+    fallbackAxisSide?: 'start' | 'end' | 'none';
+  };
+
+  /**
+   * Keeps the content in the viewport after the trigger scrolls out of view.
+   * @default false
+   */
+  sticky?: boolean;
+
+  /**
+   * The CSS `position` of the content.
+   * @default "absolute"
+   */
+  positionMethod?: 'absolute' | 'fixed';
+
+  /** An element to place the content against, in place of the trigger. */
+  anchor?: Element | React.RefObject<Element | null> | null;
+
+  /**
+   * Stops the content from following layout shifts of the anchor.
+   * @default false
+   */
+  disableAnchorTracking?: boolean;
+
+  /**
    * Overlaps the trigger so the selected item's text lines up with the trigger's value. Has no effect in autocomplete mode.
    * @default false
    */
@@ -158,8 +210,11 @@ export interface SelectItemProps {
   /** The value of the item. */
   value: string;
 
-  /** Icon rendered before the item text. Rendered only when `children` is a string. */
+  /** Icon before the item text. Rendered only when `children` is a string. */
   leadingIcon?: React.ReactNode;
+
+  /** Icon after the item text. Rendered only when `children` is a string. */
+  trailingIcon?: React.ReactNode;
 
   /** Additional CSS class names. */
   className?: string;

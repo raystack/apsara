@@ -16,7 +16,7 @@ describe('Callout data-slot contract', () => {
       'callout',
       'callout-container',
       'callout-message-container',
-      'callout-icon',
+      'callout-leading-icon',
       'callout-message',
       'callout-actions',
       'callout-action',
@@ -25,8 +25,10 @@ describe('Callout data-slot contract', () => {
   });
 
   it('omits the icon, action, and dismiss slots when their props are absent', () => {
-    const { container } = render(<Callout icon={null}>Plain message</Callout>);
-    expect(getSlot(container, 'callout-icon')).toBeNull();
+    const { container } = render(
+      <Callout leadingIcon={null}>Plain message</Callout>
+    );
+    expect(getSlot(container, 'callout-leading-icon')).toBeNull();
     expect(getSlot(container, 'callout-action')).toBeNull();
     expect(getSlot(container, 'callout-dismiss')).toBeNull();
   });

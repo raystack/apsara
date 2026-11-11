@@ -17,7 +17,7 @@ export interface BreadcrumbItem {
    * Whether the item is the current page
    * @defaultValue false
    */
-  current?: boolean;
+  active?: boolean;
 
   /**
    * When true, the item is non-clickable and visually muted (e.g. loading or no access).
