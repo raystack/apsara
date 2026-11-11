@@ -62,9 +62,10 @@ FilterChip supports custom filter operations through the `operations` prop. When
 - When a single operation is provided, it is displayed as static text
 - If no operations are specified, default operations are used based on the column type
 
-The chip starts on the first operation. Pass `operation` with the active value to
-start on another one, for example when you restore a filter from a saved query.
-A value the list does not have falls back to the first one.
+The chip starts on the first operation. Pass `defaultOperation` to start on
+another one. Pass `operation` to own the choice, for example when a saved query
+keeps the operator and the chip must show it after a reload. `operation` wins
+when you pass both. A value the list does not have falls back to the first one.
 
 <Demo data={operationsDemo} />
 

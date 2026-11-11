@@ -87,6 +87,50 @@ describe('FilterChip', () => {
         )
       ).toBe('is not');
     });
+
+    it('starts on the default operation', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' defaultOperation='neq' />)
+      ).toBe('is not');
+    });
+
+    it('falls back to the first operation when the list does not have the default', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' defaultOperation='in' />)
+      ).toBe('is');
+    });
+
+    it('prefers the operation prop over the default', async () => {
+      expect(
+        await operationText(
+          <FilterChip label='Name' operation='eq' defaultOperation='neq' />
+        )
+      ).toBe('is');
+    });
+
+    it('changes the operation the default started on', async () => {
+      const onOperationChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Name'
+          defaultOperation='neq'
+          onOperationChange={onOperationChange}
+        />
+      );
+      await act(flushMicrotasks);
+
+      fireEvent.click(getSlot(container, 'filter-chip-operation') as Element);
+      await act(flushMicrotasks);
+      const item = screen.getByLabelText('Filter Name contains');
+      fireEvent.pointerDown(item);
+      fireEvent.click(item);
+      await act(flushMicrotasks);
+
+      expect(onOperationChange).toHaveBeenCalledWith('contains');
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'contains'
+      );
+    });
   });
 
   describe('Remove Functionality', () => {

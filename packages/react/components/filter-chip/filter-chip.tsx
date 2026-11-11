@@ -110,6 +110,11 @@ export interface FilterChipProps
    * @default the first entry of `operations`
    */
   operation?: string;
+  /**
+   * Operation to start on, by its `value`, when `operation` is not set.
+   * @default the first entry of `operations`
+   */
+  defaultOperation?: string;
   selectProps?: BaseSelectProps;
   /** Props forwarded to the `CalendarPreview` for `columnType="date"`. */
   calendarProps?: FilterChipCalendarProps;
@@ -137,6 +142,7 @@ export const FilterChip = ({
   variant,
   operations,
   operation: operationProp,
+  defaultOperation,
   selectProps,
   calendarProps,
   ...props
@@ -145,15 +151,15 @@ export const FilterChip = ({
     ? operations
     : filterOperators[columnType];
 
-  const selectedOperation =
-    operationProp === undefined
+  const toOperation = (value?: string) =>
+    value === undefined
       ? undefined
-      : (computedOperations?.find(option => option.value === operationProp) ??
+      : (computedOperations?.find(option => option.value === value) ??
         computedOperations?.[0]);
 
   const [operation, setOperation] = useControlled<FilterOperation | undefined>({
-    controlled: selectedOperation,
-    default: computedOperations?.[0],
+    controlled: toOperation(operationProp),
+    default: toOperation(defaultOperation) ?? computedOperations?.[0],
     name: 'FilterChip',
     state: 'operation'
   });

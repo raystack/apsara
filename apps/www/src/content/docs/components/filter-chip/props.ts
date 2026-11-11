@@ -31,6 +31,11 @@ export interface FilterChipProps {
    */
   operation?: string;
 
+  /** Operation to start on, by its `value`, when `operation` is not set.
+   * @default the first entry of `operations`
+   */
+  defaultOperation?: string;
+
   /** Callback when the filter value changes; receives the value and the active
    * operation. For `select` and `multiselect`, the value is the picked
    * option's `value`, with its type kept. For `number`, non-numeric input is
