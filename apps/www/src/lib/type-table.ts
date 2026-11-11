@@ -37,6 +37,8 @@ const base = createGenerator({
   tsconfigPath: path.resolve('tsconfig.props.json')
 });
 
+// `generateTypeTable` calls `this.generateDocumentation`, so it runs this
+// filter. A cache would store the entries before the filter, so it stays off.
 export const generator: typeof base = {
   ...base,
   async generateDocumentation(...args) {
@@ -148,10 +150,9 @@ export const transform: Transform = function (entry, _type, prop) {
   let written = writtenType(
     apsara.length > 0 ? apsara.find(node => node.type) : declarations[0]
   );
-  // A cva variant has no written type, and cva adds `null` to it. Its values
-  // keep the order of the variant's keys.
+  // A cva variant has no written type, and cva adds `null` to it. The variant
+  // is an object of classes, and its values keep the order of its keys.
   if (!written) {
-    entry.type = entry.type.replace(/ \| null\b/, '');
     const variant = declarations.find(node => node.initializer)?.initializer;
     const checker = this.checker as unknown as Checker;
     const keys = variant
@@ -159,6 +160,7 @@ export const transform: Transform = function (entry, _type, prop) {
           .getPropertiesOfType(checker.getTypeAtLocation(variant))
           .map(key => key.name)
       : [];
+    if (keys.length > 0) entry.type = entry.type.replace(/ \| null\b/, '');
     if (keys.length > 0 && !keys.includes('true'))
       written = keys
         .map(key => (/^\d+$/.test(key) ? key : `"${key}"`))
