@@ -148,7 +148,7 @@ describe('DataView data-slot contract', () => {
         data={data}
         fields={fields}
         defaultSort={defaultSort}
-        query={{ group_by: ['status'] }}
+        defaultQuery={{ group_by: ['status'] }}
       >
         <DataView.List variant='table' columns={columns} />
       </DataView>
@@ -162,7 +162,7 @@ describe('DataView data-slot contract', () => {
         data={data}
         fields={fields}
         defaultSort={defaultSort}
-        query={{
+        defaultQuery={{
           filters: [{ name: 'name', operator: 'eq', value: 'John' }]
         }}
       >
@@ -185,7 +185,7 @@ describe('DataView data-slot contract', () => {
         data={data}
         fields={fields}
         defaultSort={defaultSort}
-        query={{
+        defaultQuery={{
           filters: [{ name: 'name', operator: 'eq', value: 'John' }]
         }}
       >
@@ -236,7 +236,7 @@ describe('DataView data-slot contract', () => {
         data={data}
         fields={fields}
         defaultSort={defaultSort}
-        query={{ search: 'John' }}
+        defaultQuery={{ search: 'John' }}
       >
         <DataView.List variant='table' columns={columns} />
       </DataView>
@@ -257,7 +257,7 @@ describe('DataView data-slot contract', () => {
         data={[]}
         fields={fields}
         defaultSort={defaultSort}
-        query={{ search: 'nomatch' }}
+        defaultQuery={{ search: 'nomatch' }}
       >
         <DataView.EmptyState>No results</DataView.EmptyState>
       </DataView>

@@ -43,7 +43,10 @@ export interface CodeBlockProps {
   /**
    * Callback when collapse state changes
    */
-  onCollapseChange?: (collapsed: boolean) => void;
+  onCollapseChange?: (
+    collapsed: boolean,
+    details: { reason: 'trigger-press'; event: Event }
+  ) => void;
 
   /**
    * The code content to display

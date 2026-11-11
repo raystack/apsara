@@ -12,7 +12,10 @@ import {
   useRef
 } from 'react';
 import styles from './color-picker.module.css';
-import { useColorPicker } from './color-picker-root';
+import {
+  type ColorPickerChangeReason,
+  useColorPicker
+} from './color-picker-root';
 import {
   CHROMA_MAX,
   clamp01,
@@ -33,24 +36,36 @@ const STEP_LARGE = 0.1;
 
 export type ColorPickerAreaProps = ComponentProps<'div'>;
 
+type ApplyPosition = (
+  x: number,
+  y: number,
+  reason: ColorPickerChangeReason,
+  event: Event
+) => void;
+
 // Pointer capture sends the drag's move events to the pad, so the pad needs
 // no window listeners.
-const getPointerHandlers = (applyPosition: (x: number, y: number) => void) => {
-  const apply = (e: ReactPointerEvent<HTMLDivElement>) => {
+const getPointerHandlers = (applyPosition: ApplyPosition) => {
+  const apply = (
+    e: ReactPointerEvent<HTMLDivElement>,
+    reason: ColorPickerChangeReason
+  ) => {
     const rect = e.currentTarget.getBoundingClientRect();
     applyPosition(
       (e.clientX - rect.left) / rect.width,
-      (e.clientY - rect.top) / rect.height
+      (e.clientY - rect.top) / rect.height,
+      reason,
+      e.nativeEvent
     );
   };
   return {
     onPointerDown: (e: ReactPointerEvent<HTMLDivElement>) => {
       e.preventDefault();
       e.currentTarget.setPointerCapture(e.pointerId);
-      apply(e);
+      apply(e, 'track-press');
     },
     onPointerMove: (e: ReactPointerEvent<HTMLDivElement>) => {
-      if (e.currentTarget.hasPointerCapture(e.pointerId)) apply(e);
+      if (e.currentTarget.hasPointerCapture(e.pointerId)) apply(e, 'drag');
     }
   };
 };
@@ -129,9 +144,13 @@ const OklchArea = (props: ColorPickerAreaProps) => {
   // Shared color-computation path. Takes normalized 0..1 pad coordinates
   // (x = chroma axis, y = lightness axis) and writes them into OKLCH state.
   // Pointer drag and keyboard both go through this so behavior can't diverge.
-  const applyPosition = useCallback(
-    (x: number, y: number) => {
-      setColor({ c: clamp01(x) * CHROMA_MAX, l: 1 - clamp01(y) });
+  const applyPosition = useCallback<ApplyPosition>(
+    (x, y, reason, event) => {
+      setColor(
+        { c: clamp01(x) * CHROMA_MAX, l: 1 - clamp01(y) },
+        reason,
+        event
+      );
     },
     [setColor]
   );
@@ -172,7 +191,7 @@ const OklchArea = (props: ColorPickerAreaProps) => {
           return; // let other keys (Tab, etc.) pass through
       }
       e.preventDefault();
-      applyPosition(x, y);
+      applyPosition(x, y, 'keyboard', e.nativeEvent);
     },
     [applyPosition, chroma, lightness]
   );
@@ -256,14 +275,14 @@ const HslArea = (props: ColorPickerAreaProps) => {
   // (x = saturation axis, y = scaled-lightness axis) and round-trips through
   // hslToOklch into OKLCH state. Pointer drag and keyboard both go through
   // this so behavior can't diverge.
-  const applyPosition = useCallback(
-    (x: number, y: number) => {
+  const applyPosition = useCallback<ApplyPosition>(
+    (x, y, reason, event) => {
       const cx0 = clamp01(x);
       const saturation = cx0 * 100;
       const topLightness = cx0 < 0.01 ? 100 : 50 + 50 * (1 - cx0);
       const nextL = topLightness * (1 - clamp01(y));
       const next = hslToOklch(hsl.h, saturation, nextL);
-      setColor({ l: next.l, c: next.c, h: next.h });
+      setColor({ l: next.l, c: next.c, h: next.h }, reason, event);
     },
     [hsl.h, setColor]
   );
@@ -304,7 +323,7 @@ const HslArea = (props: ColorPickerAreaProps) => {
           return;
       }
       e.preventDefault();
-      applyPosition(x, y);
+      applyPosition(x, y, 'keyboard', e.nativeEvent);
     },
     [applyPosition, hsl.s, hsl.l]
   );

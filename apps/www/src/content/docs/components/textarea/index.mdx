@@ -79,7 +79,7 @@ Pass `value` with `onChange` to own the state, the same contract as a native tex
 
 ### Using `onValueChange`
 
-`onValueChange` is a convenience callback that fires alongside `onChange` and receives just the new string value. Use it when you don't need the full React change event.
+`onValueChange` fires alongside `onChange` with the new string value and an `eventDetails` object, as on `Input`. `eventDetails.event` is the native input event. Use it when you don't need the React change event.
 
 <Demo data={onValueChangeDemo} />
 

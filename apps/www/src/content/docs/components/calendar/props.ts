@@ -159,7 +159,10 @@ export interface RangePickerProps {
    * is set only when the range is complete. Check `range.to` to handle only
    * completed ranges.
    */
-  onSelect?: (range: { from: Date | undefined; to?: Date }) => void;
+  onValueChange?: (
+    range: { from: Date | undefined; to?: Date },
+    details: { reason: 'item-press'; event: Event }
+  ) => void;
 
   /** Initial (uncontrolled) date range. */
   defaultValue?: { from: Date | undefined; to?: Date };
@@ -172,7 +175,7 @@ export interface RangePickerProps {
    * `inputsProps` / `calendarProps` / `popoverProps` are set, `slotProps` wins.
    *
    * The inputs are read-only. RangePicker replaces their `value` and `onClick`.
-   * Use `onSelect` for value changes.
+   * Use `onValueChange` for value changes.
    */
   slotProps?: {
     startInput?: InputProps;
@@ -230,7 +233,7 @@ export interface DatePickerProps {
    * `inputProps` / `calendarProps` / `popoverProps` are set, `slotProps` wins.
    *
    * Input event handlers (`onChange`, `onFocus`, `onBlur`, `onKeyUp`) are not
-   * forwarded — use `onSelect` for value changes.
+   * forwarded — use `onValueChange` for value changes.
    */
   slotProps?: {
     input?: InputProps;
@@ -239,11 +242,12 @@ export interface DatePickerProps {
   };
 
   /**
-   * Controlled date value. Pair with `onSelect`. Omit (along with
-   * `defaultValue`) to start the picker in an unselected state — the
-   * input shows its placeholder until the user selects a date.
+   * Controlled date value. Pair with `onValueChange`. Pass `null` for a
+   * controlled empty date. Omit (along with `defaultValue`) to start the
+   * picker in an unselected state — the input shows its placeholder until
+   * the user selects a date.
    */
-  value?: Date;
+  value?: Date | null;
 
   /**
    * Initial (uncontrolled) date value. Ignored if `value` is set. Omit to
@@ -251,8 +255,14 @@ export interface DatePickerProps {
    */
   defaultValue?: Date;
 
-  /** Callback function when date is selected */
-  onSelect?: (date: Date) => void;
+  /**
+   * Called when a day is clicked, and when a typed date is committed with
+   * Enter, blur or an outside click.
+   */
+  onValueChange?: (
+    date: Date,
+    details: { reason: 'item-press' | 'input-change'; event: Event }
+  ) => void;
 
   /** Called when the typed date becomes invalid or valid again. */
   onValidityChange?: (validity: {

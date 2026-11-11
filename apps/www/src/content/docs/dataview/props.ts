@@ -28,11 +28,17 @@ export interface DataViewProps {
    */
   loading?: boolean;
 
-  /** Initial query state. */
+  /** The query (controlled). */
   query?: DataViewQuery;
 
-  /** Called whenever the internal query changes — only in server mode. */
-  onTableQueryChange?: (query: DataViewQuery) => void;
+  /** The query on the first render (uncontrolled). */
+  defaultQuery?: DataViewQuery;
+
+  /** Called when the query changes. In server mode it is also called on mount. */
+  onQueryChange?: (
+    query: DataViewQuery,
+    details: { reason: 'none'; event: Event }
+  ) => void;
 
   /** Infinite scroll callback. */
   onLoadMore?: () => Promise<void> | void;
@@ -68,7 +74,10 @@ export interface DataViewProps {
   view?: string;
 
   /** Called when the active view changes. */
-  onViewChange?: (view: string) => void;
+  onViewChange?: (
+    view: string,
+    details: { reason: string; event: Event }
+  ) => void;
 
   /**
    * Optional local resolvers for non-accessor `group_by` keys.

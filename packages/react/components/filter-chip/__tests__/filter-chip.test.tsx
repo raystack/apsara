@@ -126,7 +126,10 @@ describe('FilterChip', () => {
       fireEvent.click(item);
       await act(flushMicrotasks);
 
-      expect(onOperationChange).toHaveBeenCalledWith('contains');
+      expect(onOperationChange).toHaveBeenCalledWith(
+        'contains',
+        expect.objectContaining({ reason: expect.any(String) })
+      );
       expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
         'contains'
       );
@@ -195,7 +198,7 @@ describe('FilterChip', () => {
 
       expect(onValueChange).toHaveBeenCalledWith(
         'test value',
-        expect.any(String)
+        expect.objectContaining({ operation: expect.any(String) })
       );
     });
 
@@ -212,6 +215,71 @@ describe('FilterChip', () => {
         `.${styles.inputFieldWrapper} input`
       );
       expect(input).toHaveValue('initial value');
+    });
+
+    it('follows a controlled value', () => {
+      const onValueChange = vi.fn();
+      const { container, rerender } = render(
+        <FilterChip label='Name' value='one' onValueChange={onValueChange} />
+      );
+      const input = container.querySelector(
+        `.${styles.inputFieldWrapper} input`
+      ) as HTMLInputElement;
+
+      fireEvent.change(input, { target: { value: 'typed' } });
+      expect(onValueChange).toHaveBeenCalledWith('typed', expect.anything());
+      expect(input).toHaveValue('one');
+
+      rerender(<FilterChip label='Name' value='two' />);
+      expect(input).toHaveValue('two');
+    });
+  });
+
+  describe('Operation', () => {
+    it('starts at defaultOperation and reports a change with details', async () => {
+      const onOperationChange = vi.fn();
+      render(
+        <FilterChip
+          label='Status'
+          columnType={FilterType.select}
+          defaultOperation='neq'
+          onOperationChange={onOperationChange}
+        />
+      );
+      const trigger = getSlot(document.body, 'filter-chip-operation');
+      expect(trigger).toHaveTextContent('is not');
+
+      fireEvent.click(trigger as Element);
+      await act(async () => {
+        await new Promise(r => setTimeout(r, 0));
+      });
+      await userEvent.click(screen.getByRole('option', { name: /is$/ }));
+      expect(onOperationChange).toHaveBeenCalledWith(
+        'eq',
+        expect.objectContaining({ reason: expect.any(String) })
+      );
+      expect(trigger).toHaveTextContent(/^is$/);
+    });
+
+    it('shows a controlled operation', () => {
+      const { rerender } = render(
+        <FilterChip
+          label='Status'
+          columnType={FilterType.select}
+          operation='eq'
+        />
+      );
+      const trigger = getSlot(document.body, 'filter-chip-operation');
+      expect(trigger).toHaveTextContent(/^is$/);
+
+      rerender(
+        <FilterChip
+          label='Status'
+          columnType={FilterType.select}
+          operation='neq'
+        />
+      );
+      expect(trigger).toHaveTextContent('is not');
     });
   });
 
@@ -243,7 +311,10 @@ describe('FilterChip', () => {
 
       await userEvent.click(screen.getByRole('option', { name: 'Two' }));
       await flush();
-      expect(onValueChange).toHaveBeenLastCalledWith([1, 2], 'in');
+      expect(onValueChange).toHaveBeenLastCalledWith(
+        [1, 2],
+        expect.objectContaining({ operation: 'in' })
+      );
     });
   });
 
@@ -265,7 +336,10 @@ describe('FilterChip', () => {
 
       fireEvent.change(getInput(container), { target: { value: '42' } });
 
-      expect(onValueChange).toHaveBeenCalledWith(42, expect.any(String));
+      expect(onValueChange).toHaveBeenCalledWith(
+        42,
+        expect.objectContaining({ operation: expect.any(String) })
+      );
     });
 
     it('rejects non-numeric input', () => {
@@ -320,8 +394,16 @@ describe('FilterChip', () => {
       fireEvent.change(input, { target: { value: '1.' } });
       expect(input).toHaveValue('1.');
 
-      expect(onValueChange).toHaveBeenNthCalledWith(1, '-', expect.any(String));
-      expect(onValueChange).toHaveBeenNthCalledWith(2, 1, expect.any(String));
+      expect(onValueChange).toHaveBeenNthCalledWith(
+        1,
+        '-',
+        expect.objectContaining({ operation: expect.any(String) })
+      );
+      expect(onValueChange).toHaveBeenNthCalledWith(
+        2,
+        1,
+        expect.objectContaining({ operation: expect.any(String) })
+      );
     });
 
     it('emits a trailing decimal as the number it parses to', () => {
@@ -337,10 +419,16 @@ describe('FilterChip', () => {
       const input = getInput(container);
 
       fireEvent.change(input, { target: { value: '1.' } });
-      expect(onValueChange).toHaveBeenLastCalledWith(1, expect.any(String));
+      expect(onValueChange).toHaveBeenLastCalledWith(
+        1,
+        expect.objectContaining({ operation: expect.any(String) })
+      );
 
       fireEvent.change(input, { target: { value: '1.5' } });
-      expect(onValueChange).toHaveBeenLastCalledWith(1.5, expect.any(String));
+      expect(onValueChange).toHaveBeenLastCalledWith(
+        1.5,
+        expect.objectContaining({ operation: expect.any(String) })
+      );
     });
 
     it('rejects a second decimal point', () => {
@@ -415,7 +503,10 @@ describe('FilterChip', () => {
 
       fireEvent.change(getInput(container), { target: { value: '' } });
 
-      expect(onValueChange).toHaveBeenCalledWith('', expect.any(String));
+      expect(onValueChange).toHaveBeenCalledWith(
+        '',
+        expect.objectContaining({ operation: expect.any(String) })
+      );
     });
   });
 
@@ -540,7 +631,7 @@ describe('FilterChip', () => {
       fireEvent.keyDown(input, { key: 'Enter' });
       expect(onValueChange).toHaveBeenCalledWith(
         new Date(2026, 4, 27),
-        expect.any(String)
+        expect.objectContaining({ operation: expect.any(String) })
       );
     });
 
@@ -550,14 +641,17 @@ describe('FilterChip', () => {
         <FilterChip
           label='Created'
           columnType={FilterType.date}
-          value={new Date(2026, 4, 27)}
+          defaultValue={new Date(2026, 4, 27)}
           onValueChange={onValueChange}
         />
       );
       const input = screen.getByPlaceholderText('Select date');
       fireEvent.change(input, { target: { value: '' } });
       fireEvent.blur(input);
-      expect(onValueChange).toHaveBeenCalledWith('', expect.any(String));
+      expect(onValueChange).toHaveBeenCalledWith(
+        '',
+        expect.objectContaining({ operation: expect.any(String) })
+      );
       expect(input).toHaveValue('');
     });
 
@@ -590,7 +684,7 @@ describe('FilterChip', () => {
       clickDay('12');
       expect(onValueChange).toHaveBeenCalledWith(
         new Date(2026, 4, 12),
-        expect.any(String)
+        expect.objectContaining({ operation: expect.any(String) })
       );
       await act(() => new Promise(resolve => setTimeout(resolve, 100)));
       expect(isOpen()).toBe(false);

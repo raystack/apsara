@@ -161,7 +161,8 @@ export function Filters<TData>({
         <FilterChip
           key={filter.name}
           label={filter.label}
-          value={filter.value ?? undefined}
+          value={filter.value ?? ''}
+          operation={filter.operator}
           onRemove={() => handleRemoveFilter(filter.name)}
           onValueChange={value => handleFilterValueChange(filter.name, value)}
           onOperationChange={operator =>
@@ -171,7 +172,6 @@ export function Filters<TData>({
             )
           }
           columnType={filter.filterType}
-          operation={filter.operator}
           options={filter.options}
           selectProps={filter.selectProps}
           className={classNames?.filterChips}
