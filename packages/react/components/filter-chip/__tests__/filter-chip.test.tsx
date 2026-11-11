@@ -15,11 +15,11 @@ describe('FilterChip', () => {
       expect(screen.getByText('Name')).toBeInTheDocument();
     });
 
-    it('applies default variant classes', () => {
+    it('applies outline variant classes by default', () => {
       const { container } = render(<FilterChip label='Test' />);
       const chip = container.querySelector(`.${styles.chip}`);
       expect(chip).toBeInTheDocument();
-      expect(chip).toHaveClass(styles['chip-default']);
+      expect(chip).toHaveClass(styles['variant-outline']);
     });
 
     it('applies text variant', () => {

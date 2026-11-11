@@ -7,9 +7,9 @@ export interface TextAreaProps {
 
   /**
    * Visual variant of the textarea.
-   * @defaultValue "default"
+   * @defaultValue "outline"
    */
-  variant?: 'default' | 'borderless';
+  variant?: 'outline' | 'text';
 
   /** Whether the textarea is disabled. */
   disabled?: boolean;

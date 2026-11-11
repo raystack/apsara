@@ -6,7 +6,7 @@ import { CalendarPreview } from '../calendar-preview';
 import type { Scale } from '../lib/scale';
 
 const TODAY = new Date(2026, 7, 15);
-const ALL: Scale[] = ['day', 'month', 'quarter', 'halfYear', 'year'];
+const ALL: Scale[] = ['day', 'month', 'quarter', 'half-year', 'year'];
 
 function renderBody(props = {}) {
   return render(
@@ -69,7 +69,7 @@ describe('CalendarPreview trailingValue', () => {
   it.each([
     ['month', 'Aug', '2026-08-01', '2026-08-31'],
     ['quarter', 'Q3', '2026-07-01', '2026-09-30'],
-    ['halfYear', 'H2', '2026-07-01', '2026-12-31'],
+    ['half-year', 'H2', '2026-07-01', '2026-12-31'],
     ['year', '2026', '2026-01-01', '2026-12-31']
   ] as const)('flips the emitted edge for %s', (scale, label, lead, trail) => {
     for (const [trailing, expected] of [
@@ -124,7 +124,7 @@ describe('CalendarPreview availability differs by field', () => {
 
   it('disables H1 2026 for an end field, which would emit 30 June', () => {
     const { container } = renderBody({ ...bounded, trailingValue: true });
-    switchTo(container, 'halfYear');
+    switchTo(container, 'half-year');
     expect(period(container, 'H1')).toBeDisabled();
     expect(period(container, 'H2')).not.toBeDisabled();
   });
@@ -397,7 +397,7 @@ describe('CalendarPreview period views mount alone', () => {
   it.each([
     ['quarter', CalendarPreview.Quarters, 'calendar-preview-quarters'],
     ['month', CalendarPreview.Months, 'calendar-preview-months'],
-    ['halfYear', CalendarPreview.HalfYears, 'calendar-preview-half-years'],
+    ['half-year', CalendarPreview.HalfYears, 'calendar-preview-half-years'],
     ['year', CalendarPreview.Years, 'calendar-preview-years']
   ] as const)('%s renders with no other view in the tree', (scale, View, slot) => {
     const { container } = render(
@@ -422,7 +422,7 @@ describe('CalendarPreview.Trigger annotation', () => {
     ['day', '2026-07-02', '02 Jul 2026'],
     ['month', '2026-06-01', 'Jun 2026'],
     ['quarter', '2026-07-01', 'Q3 2026'],
-    ['halfYear', '2026-01-01', 'H1 2026'],
+    ['half-year', '2026-01-01', 'H1 2026'],
     ['year', '2025-01-01', '2025']
   ] as const)('formats %s with no popover open', (scale, date, expected) => {
     const { container } = render(
@@ -1143,7 +1143,7 @@ describe('CalendarPreview period cells match the value scale', () => {
   it('does not light a quarter for a half-year value', () => {
     const { container } = renderBody({
       defaultScale: 'quarter',
-      value: { date: '2028-01-01', scale: 'halfYear' }
+      value: { date: '2028-01-01', scale: 'half-year' }
     });
     expect(marked(container)).toEqual([]);
   });

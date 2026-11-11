@@ -16,9 +16,9 @@ export interface FilterChipProps {
   columnType?: 'select' | 'multiselect' | 'date' | 'string' | 'number';
 
   /** Filterchip variant
-   * @default "default"
+   * @default "outline"
    */
-  variant?: 'default' | 'text';
+  variant?: 'outline' | 'text';
 
   /** Array of options for the select and multiselect type inputs */
   options?: { label: string; value: string | number | boolean }[];

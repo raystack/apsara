@@ -149,16 +149,16 @@ describe('TextArea', () => {
   });
 
   describe('Variants', () => {
-    it('renders default variant by default', () => {
+    it('renders outline variant by default', () => {
       render(<TextArea />);
       const textarea = screen.getByRole('textbox');
-      expect(textarea).toHaveClass(styles['variant-default']);
+      expect(textarea).not.toHaveClass(styles['variant-text']);
     });
 
-    it('renders borderless variant when specified', () => {
-      render(<TextArea variant='borderless' />);
+    it('renders text variant when specified', () => {
+      render(<TextArea variant='text' />);
       const textarea = screen.getByRole('textbox');
-      expect(textarea).toHaveClass(styles['variant-borderless']);
+      expect(textarea).toHaveClass(styles['variant-text']);
     });
   });
 
