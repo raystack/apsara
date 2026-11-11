@@ -19,11 +19,14 @@ export interface FilterChipProps {
     | Array<string | number | boolean>
     | Date;
 
-  /** The operation value (controlled), for example `"eq"`. */
+  /** Active operation, by its `value`. A value `operations` does not have falls back to the first one.
+   * @default the first entry of `operations`
+   */
   operation?: string;
 
-  /** The operation value on the first render (uncontrolled). Defaults to the
-   * first operation. */
+  /** Operation to start on, by its `value`, when `operation` is not set.
+   * @default the first entry of `operations`
+   */
   defaultOperation?: string;
 
   /** Type of input for the filter
@@ -32,9 +35,9 @@ export interface FilterChipProps {
   columnType?: 'select' | 'multiselect' | 'date' | 'string' | 'number';
 
   /** Filterchip variant
-   * @default "default"
+   * @default "outline"
    */
-  variant?: 'default' | 'text';
+  variant?: 'outline' | 'text';
 
   /** Array of options for the select and multiselect type inputs */
   options?: { label: string; value: string | number | boolean }[];

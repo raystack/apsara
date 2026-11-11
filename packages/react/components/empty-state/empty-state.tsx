@@ -26,7 +26,7 @@ export interface EmptyStateProps extends ComponentProps<typeof Flex> {
    * `[data-slot="empty-state-subheading"]`.
    */
   classNames?: Partial<Record<classNameKeys, string>>;
-  variant?: 'empty1' | 'empty2';
+  variant?: 'compact' | 'page';
 }
 
 export function EmptyState({
@@ -36,10 +36,10 @@ export function EmptyState({
   primaryAction,
   secondaryAction,
   classNames,
-  variant = 'empty1',
+  variant = 'compact',
   ...props
 }: EmptyStateProps) {
-  if (variant === 'empty2') {
+  if (variant === 'page') {
     return (
       <Flex
         align='center'

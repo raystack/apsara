@@ -62,6 +62,26 @@ describe('Reasoning', () => {
     ).toHaveAttribute('aria-expanded', 'false');
   });
 
+  it('auto-collapses after a canceled toggle', () => {
+    const onOpenChange: ReasoningProps['onOpenChange'] = (
+      _open,
+      eventDetails
+    ) => {
+      if (eventDetails.reason === 'trigger-press') eventDetails.cancel();
+    };
+    const { rerender } = render(
+      <ReasoningExample streaming onOpenChange={onOpenChange} />
+    );
+    fireEvent.click(screen.getByRole('button'));
+    expect(screen.getByRole('button')).toHaveAttribute('aria-expanded', 'true');
+
+    rerender(<ReasoningExample streaming={false} duration={2} />);
+    expect(screen.getByRole('button')).toHaveAttribute(
+      'aria-expanded',
+      'false'
+    );
+  });
+
   it('toggles via the trigger when idle', () => {
     render(<ReasoningExample duration={3} />);
     const trigger = screen.getByRole('button', {

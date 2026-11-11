@@ -47,12 +47,12 @@ import { Operation } from './filter-chip-operation';
 const chip = cva(styles.chip, {
   variants: {
     variant: {
-      default: styles['chip-default'],
+      outline: styles['variant-outline'],
       text: null
     }
   },
   defaultVariants: {
-    variant: 'default'
+    variant: 'outline'
   }
 });
 
@@ -138,7 +138,16 @@ export interface FilterChipProps
   label: string;
   value?: FilterChipValue;
   defaultValue?: FilterChipValue;
+  /**
+   * Active operation, by its `value`. A value `operations` does not have falls
+   * back to the first one.
+   * @default the first entry of `operations`
+   */
   operation?: string;
+  /**
+   * Operation to start on, by its `value`, when `operation` is not set.
+   * @default the first entry of `operations`
+   */
   defaultOperation?: string;
   onRemove?: () => void;
   columnType?: FilterTypes;
@@ -198,7 +207,9 @@ export const FilterChip = ({
       state: 'operation'
     }
   );
-  const operation = computedOperations?.find(o => o.value === operationValue);
+  const operation =
+    computedOperations?.find(o => o.value === operationValue) ??
+    computedOperations?.[0];
   const isNumberColumn = columnType === FilterType.number;
   // `??` not `||`, since a falsy option value like `0` is a real selection.
   const [filterValue, setFilterValue] = useControlled<FilterChipValue>({
@@ -253,12 +264,12 @@ export const FilterChip = ({
       onValueChange?.(
         value,
         createChangeDetails(reason, event, {
-          operation: operationValue ?? ''
+          operation: operation?.value ?? ''
         })
       );
       setFilterValue(value);
     },
-    [operationValue, onValueChange, setFilterValue]
+    [operation, onValueChange, setFilterValue]
   );
 
   // Select works on strings, so map each pick back to its option's value.
@@ -387,7 +398,7 @@ export const FilterChip = ({
             data-slot='filter-chip-value'
           >
             <Input
-              variant={variant === 'text' ? 'borderless' : 'default'}
+              variant={variant === 'text' ? 'text' : 'outline'}
               classNames={{ container: styles.inputField }}
               value={isNumberColumn ? shownNumberText : filterValue.toString()}
               onChange={e =>

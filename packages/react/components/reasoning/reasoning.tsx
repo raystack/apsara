@@ -109,8 +109,8 @@ function ReasoningRoot({
         className={cx(styles.reasoning, className)}
         open={open}
         onOpenChange={(next, eventDetails) => {
-          userToggledRef.current = true;
           setOpen(next, eventDetails);
+          if (!eventDetails.isCanceled) userToggledRef.current = true;
         }}
         data-slot='reasoning'
         {...props}
