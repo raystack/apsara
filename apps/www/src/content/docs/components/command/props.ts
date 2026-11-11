@@ -16,7 +16,10 @@ export interface CommandRootProps {
   /**
    * Callback fired when the input value changes.
    */
-  onValueChange?: (value: string) => void;
+  onValueChange?: (
+    value: string,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /**
    * Whether the list is rendered inline (without a popup).
@@ -159,7 +162,10 @@ export interface CommandDialogProps {
   defaultOpen?: boolean;
 
   /** Event handler called when the dialog is opened or closed. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /**
    * Whether the dialog is modal. `'trap-focus'` traps focus without locking scroll or outside interaction.

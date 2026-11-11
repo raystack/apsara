@@ -138,7 +138,10 @@ export interface CodeBlockLanguageSelectProps {
   /**
    * Callback fired when the open state changes
    */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /**
    * Prevents the user from changing the language
