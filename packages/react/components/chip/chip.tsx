@@ -19,7 +19,7 @@ const chip = cva(styles.chip, {
     ...radiusVariants,
     variant: {
       outline: styles['chip-variant-outline'],
-      filled: styles['chip-variant-filled']
+      solid: styles['chip-variant-solid']
     },
     size: {
       large: styles['chip-size-large'],

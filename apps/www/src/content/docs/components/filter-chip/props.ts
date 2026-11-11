@@ -16,15 +16,25 @@ export interface FilterChipProps {
   columnType?: 'select' | 'multiselect' | 'date' | 'string' | 'number';
 
   /** Filterchip variant
-   * @default "default"
+   * @default "outline"
    */
-  variant?: 'default' | 'text';
+  variant?: 'outline' | 'text';
 
   /** Array of options for the select and multiselect type inputs */
   options?: { label: string; value: string | number | boolean }[];
 
   /** Optional array of operations for the type of filter operation */
   operations?: { label: string; value: string }[];
+
+  /** Active operation, by its `value`. A value `operations` does not have falls back to the first one.
+   * @default the first entry of `operations`
+   */
+  operation?: string;
+
+  /** Operation to start on, by its `value`, when `operation` is not set.
+   * @default the first entry of `operations`
+   */
+  defaultOperation?: string;
 
   /** Callback when the filter value changes. `details.operation` is the active
    * operation. For `select` and `multiselect`, the value is the picked

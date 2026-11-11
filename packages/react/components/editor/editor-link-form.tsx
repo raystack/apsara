@@ -38,7 +38,7 @@ export function EditorLinkForm({ onDone }: EditorLinkFormProps) {
     <div className={styles['link-form']} data-slot='editor-link-form'>
       <Input
         size='small'
-        variant='borderless'
+        variant='text'
         data-slot='editor-link-input'
         aria-label='Link URL'
         placeholder='Paste a link…'

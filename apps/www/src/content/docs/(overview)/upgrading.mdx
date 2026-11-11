@@ -52,6 +52,43 @@ expects the details object.
   `onModeChange`, DataView `onViewChange`, and `onOpenChange` on
   Editor.SlashMenu, Editor.Mentions and PromptInput.Mentions.
 
+## Unreleased: variant and enum values are renamed
+
+The values in this table are kebab-case, and a variant uses the same name as on other
+components. `Grid` takes `align` and `justify`, as `Flex` does.
+
+| Component | Before | After |
+|---|---|---|
+| `Input`, `TextArea`, `Search` `variant` | `default`, `borderless` | `outline`, `text` |
+| `FilterChip` `variant` | `default`, `text` | `outline`, `text` |
+| `Chip` `variant` | `outline`, `filled` | `outline`, `solid` |
+| `EmptyState` `variant` | `empty1`, `empty2` | `compact`, `page` |
+| `Grid` props | `alignItems`, `justifyContent` | `align`, `justify` |
+| `Grid` `justify` and `alignContent` values | `space-between`, `space-around`, `space-evenly` | `between`, `around`, `evenly` |
+| `CalendarPreview` scale | `halfYear` | `half-year` |
+
+```tsx
+// Before
+<Search variant="borderless" />
+<Chip variant="filled">Label</Chip>
+<EmptyState variant="empty2" icon={<Bell />} heading="No projects" />
+<Grid alignItems="center" justifyContent="space-between" />
+<CalendarPreview scales={['quarter', 'halfYear']} />
+
+// After
+<Search variant="text" />
+<Chip variant="solid">Label</Chip>
+<EmptyState variant="page" icon={<Bell />} heading="No projects" />
+<Grid align="center" justify="between" />
+<CalendarPreview scales={['quarter', 'half-year']} />
+```
+
+The scale name changes in `scales`, `scale`, `defaultScale`, `onScaleChange`,
+the `scale` field of a value, and the `data-scale` attribute. `scales` drops a
+name it does not know, so `'halfYear'` hides the half-year view without an
+error. Convert stored values that hold `scale: 'halfYear'`, and update CSS that
+selects `[data-scale="halfYear"]`.
+
 ## Unreleased: icon props are `leadingIcon` and `trailingIcon`
 
 An icon before or after the content is set with `leadingIcon` or

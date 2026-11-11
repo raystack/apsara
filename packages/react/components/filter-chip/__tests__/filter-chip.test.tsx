@@ -15,11 +15,11 @@ describe('FilterChip', () => {
       expect(screen.getByText('Name')).toBeInTheDocument();
     });
 
-    it('applies default variant classes', () => {
+    it('applies outline variant classes by default', () => {
       const { container } = render(<FilterChip label='Test' />);
       const chip = container.querySelector(`.${styles.chip}`);
       expect(chip).toBeInTheDocument();
-      expect(chip).toHaveClass(styles['chip-default']);
+      expect(chip).toHaveClass(styles['variant-outline']);
     });
 
     it('applies text variant', () => {
@@ -44,6 +44,92 @@ describe('FilterChip', () => {
 
       expect(screen.getByTestId('filter-icon')).toBeInTheDocument();
       expect(screen.getByText('📅')).toBeInTheDocument();
+    });
+  });
+
+  describe('Operation', () => {
+    const flushMicrotasks = async () =>
+      await new Promise(r => setTimeout(r, 0));
+
+    const operationText = async (ui: React.ReactElement) => {
+      const { container } = render(ui);
+      await act(flushMicrotasks);
+      return getSlot(container, 'filter-chip-operation')?.textContent;
+    };
+
+    it('shows the operation named by the prop', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' operation='neq' />)
+      ).toBe('is not');
+    });
+
+    it('falls back to the first operation when the type does not have it', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' operation='in' />)
+      ).toBe('is');
+    });
+
+    it('shows the first operation when the prop is absent', async () => {
+      expect(await operationText(<FilterChip label='Name' />)).toBe('is');
+    });
+
+    it('reads the operation from a custom list', async () => {
+      expect(
+        await operationText(
+          <FilterChip
+            label='Name'
+            operations={[
+              { value: 'eq', label: 'is' },
+              { value: 'neq', label: 'is not' }
+            ]}
+            operation='neq'
+          />
+        )
+      ).toBe('is not');
+    });
+
+    it('starts on the default operation', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' defaultOperation='neq' />)
+      ).toBe('is not');
+    });
+
+    it('falls back to the first operation when the list does not have the default', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' defaultOperation='in' />)
+      ).toBe('is');
+    });
+
+    it('prefers the operation prop over the default', async () => {
+      expect(
+        await operationText(
+          <FilterChip label='Name' operation='eq' defaultOperation='neq' />
+        )
+      ).toBe('is');
+    });
+
+    it('changes the operation the default started on', async () => {
+      const onOperationChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Name'
+          defaultOperation='neq'
+          onOperationChange={onOperationChange}
+        />
+      );
+      await act(flushMicrotasks);
+
+      fireEvent.click(getSlot(container, 'filter-chip-operation') as Element);
+      await act(flushMicrotasks);
+      const item = screen.getByLabelText('Filter Name contains');
+      fireEvent.pointerDown(item);
+      fireEvent.click(item);
+      await act(flushMicrotasks);
+
+      expect(onOperationChange).toHaveBeenCalledWith('contains');
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'contains'
+      );
     });
   });
 
