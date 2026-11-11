@@ -11,6 +11,7 @@ import {
   VisibilityState
 } from '@tanstack/react-table';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createChangeDetails } from '~/shared/change-details';
 
 import { DataViewClearFilters } from './components/clear-filters';
 import { DataViewCustom } from './components/custom';
@@ -28,6 +29,7 @@ import {
   DataViewContextType,
   DataViewField,
   DataViewProps,
+  DataViewViewChangeDetails,
   defaultGroupOption,
   GroupedData,
   InternalQuery,
@@ -84,9 +86,12 @@ function DataViewRoot<TData>({
     state: 'view'
   });
   const setActiveView = useCallback(
-    (next: string) => {
+    (
+      next: string,
+      details: DataViewViewChangeDetails = createChangeDetails('none')
+    ) => {
       setActiveViewUnwrapped(next);
-      onViewChange?.(next);
+      onViewChange?.(next, details);
     },
     [onViewChange, setActiveViewUnwrapped]
   );

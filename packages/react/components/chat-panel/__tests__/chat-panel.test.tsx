@@ -99,7 +99,10 @@ describe('ChatPanel', () => {
         screen.getByRole('button', { name: 'Minimize chat panel' })
       );
 
-      expect(onModeChange).toHaveBeenCalledWith('minimized');
+      expect(onModeChange).toHaveBeenCalledWith(
+        'minimized',
+        expect.objectContaining({ reason: 'trigger-press' })
+      );
       expect(screen.getByTestId('panel')).toHaveAttribute(
         'data-mode',
         'minimized'
@@ -231,7 +234,7 @@ describe('ChatPanel', () => {
       await user.click(
         screen.getByRole('button', { name: 'Minimize chat panel' })
       );
-      expect(onModeChange).toHaveBeenCalledWith('minimized');
+      expect(onModeChange).toHaveBeenCalledWith('minimized', expect.anything());
       // The parent did not update the prop, so the panel stays docked.
       expect(screen.getByTestId('panel')).toHaveAttribute(
         'data-mode',

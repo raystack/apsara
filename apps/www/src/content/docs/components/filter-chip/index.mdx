@@ -71,7 +71,7 @@ when you pass both. A value the list does not have falls back to the first one.
 
 ### Controlled
 
-Pass `value` with `onValueChange` to own the filter. Do this when the chip drives a query and the value has to survive a refetch or a shared URL.
+Pass `value` with `onValueChange` to own the filter. Do this when the chip drives a query and the value has to survive a refetch or a shared URL. `onValueChange` receives the value and a `details` object, and `details.operation` is the active operation.
 
 <Demo data={controlledDemo} />
 

@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { mentionKey } from './mention';
+import type { SuggestionOpenChangeDetails } from './use-suggestion-menu';
 
 export interface EditorMentionItem {
   id: string;
@@ -37,7 +38,7 @@ export interface MentionsData {
     context: { trigger: string; signal: AbortSignal }
   ) => Promise<EditorMentionItem[]>;
   resolveMentions?: (refs: EditorMentionRef[]) => Promise<EditorMentionItem[]>;
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (open: boolean, details: SuggestionOpenChangeDetails) => void;
   emptyMessage?: ReactNode;
   loadingRowCount?: number;
 }

@@ -207,7 +207,10 @@ export interface EditorSlashMenuProps {
   emptyMessage?: React.ReactNode;
 
   /** Observes the menu's open state. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    details: { reason: 'none'; event: Event }
+  ) => void;
 }
 
 export interface EditorMentionsProps {
@@ -250,7 +253,10 @@ export interface EditorMentionsProps {
   loadingRowCount?: number;
 
   /** Observes the menu's open state. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    details: { reason: 'none'; event: Event }
+  ) => void;
 }
 
 export interface EditorMentionItem {

@@ -36,7 +36,7 @@ The picker is composed from an area pad, sliders and an input, so you can drop i
 
 ### Basic usage
 
-An uncontrolled picker. Pass `defaultValue` for the starting color and read changes from `onValueChange`.
+An uncontrolled picker. Pass `defaultValue` for the starting color and read changes from `onValueChange`. Its second argument is a `details` object: `details.mode` is the mode of the emitted string, and `details.reason` tells which control changed it.
 
 <Demo data={basicDemo} />
 
