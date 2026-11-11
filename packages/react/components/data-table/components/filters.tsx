@@ -163,6 +163,7 @@ export function Filters<TData, TValue>({
             )
           }
           columnType={filter.filterType}
+          operation={filter.operator}
           options={filter.options}
           operations={filter.operations}
           selectProps={filter.selectProps}

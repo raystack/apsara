@@ -1,3 +1,4 @@
+import { reset as resetBaseUiLog } from '@base-ui/utils/error';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
@@ -44,6 +45,92 @@ describe('FilterChip', () => {
 
       expect(screen.getByTestId('filter-icon')).toBeInTheDocument();
       expect(screen.getByText('📅')).toBeInTheDocument();
+    });
+  });
+
+  describe('Operation', () => {
+    const flushMicrotasks = async () =>
+      await new Promise(r => setTimeout(r, 0));
+
+    const operationText = async (ui: React.ReactElement) => {
+      const { container } = render(ui);
+      await act(flushMicrotasks);
+      return getSlot(container, 'filter-chip-operation')?.textContent;
+    };
+
+    it('shows the operation named by the prop', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' operation='neq' />)
+      ).toBe('is not');
+    });
+
+    it('falls back to the first operation when the type does not have it', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' operation='in' />)
+      ).toBe('is');
+    });
+
+    it('shows the first operation when the prop is absent', async () => {
+      expect(await operationText(<FilterChip label='Name' />)).toBe('is');
+    });
+
+    it('reads the operation from a custom list', async () => {
+      expect(
+        await operationText(
+          <FilterChip
+            label='Name'
+            operations={[
+              { value: 'eq', label: 'is' },
+              { value: 'neq', label: 'is not' }
+            ]}
+            operation='neq'
+          />
+        )
+      ).toBe('is not');
+    });
+
+    it('starts on the default operation', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' defaultOperation='neq' />)
+      ).toBe('is not');
+    });
+
+    it('falls back to the first operation when the list does not have the default', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' defaultOperation='in' />)
+      ).toBe('is');
+    });
+
+    it('prefers the operation prop over the default', async () => {
+      expect(
+        await operationText(
+          <FilterChip label='Name' operation='eq' defaultOperation='neq' />
+        )
+      ).toBe('is');
+    });
+
+    it('changes the operation the default started on', async () => {
+      const onOperationChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Name'
+          defaultOperation='neq'
+          onOperationChange={onOperationChange}
+        />
+      );
+      await act(flushMicrotasks);
+
+      fireEvent.click(getSlot(container, 'filter-chip-operation') as Element);
+      await act(flushMicrotasks);
+      const item = screen.getByLabelText('Filter Name contains');
+      fireEvent.pointerDown(item);
+      fireEvent.click(item);
+      await act(flushMicrotasks);
+
+      expect(onOperationChange).toHaveBeenCalledWith('contains');
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'contains'
+      );
     });
   });
 
@@ -103,6 +190,32 @@ describe('FilterChip', () => {
         'is not'
       );
       expect(onOperationChange).toHaveBeenCalledWith('neq');
+    });
+
+    it('does not warn when the list changes', () => {
+      // Base UI logs each message once per process, so earlier tests can hide it.
+      resetBaseUiLog();
+      const error = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined);
+      const { rerender } = render(
+        <FilterChip
+          label='Name'
+          operations={[
+            { value: 'eq', label: 'is' },
+            { value: 'neq', label: 'is not' }
+          ]}
+        />
+      );
+      rerender(
+        <FilterChip
+          label='Name'
+          operations={[{ value: 'neq', label: 'is not' }]}
+        />
+      );
+
+      expect(error).not.toHaveBeenCalled();
+      error.mockRestore();
     });
 
     it('keeps a selection the new list still offers', () => {

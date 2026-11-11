@@ -175,6 +175,7 @@ export function Filters<TData>({
             )
           }
           columnType={filter.filterType}
+          operation={filter.operator}
           options={filter.options}
           operations={filter.operations}
           selectProps={filter.selectProps}

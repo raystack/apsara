@@ -1,5 +1,6 @@
 'use client';
 
+import { useControlled } from '@base-ui/utils/useControlled';
 import { TZDate } from '@date-fns/tz';
 import { cva, cx, VariantProps } from 'class-variance-authority';
 import { parseISO } from 'date-fns';
@@ -113,6 +114,17 @@ export interface FilterChipProps
    * @default the operations of the `columnType`
    */
   operations?: FilterChipOperations;
+  /**
+   * Active operation, by its `value`. A value `operations` does not have falls
+   * back to the first one.
+   * @default the first entry of `operations`
+   */
+  operation?: string;
+  /**
+   * Operation to start on, by its `value`, when `operation` is not set.
+   * @default the first entry of `operations`
+   */
+  defaultOperation?: string;
   selectProps?: BaseSelectProps;
   /** Props forwarded to the `CalendarPreview` for `columnType="date"`. */
   calendarProps?: FilterChipCalendarProps;
@@ -139,6 +151,8 @@ export const FilterChip = ({
   leadingIcon,
   variant,
   operations,
+  operation: operationProp,
+  defaultOperation,
   selectProps,
   calendarProps,
   ...props
@@ -151,9 +165,23 @@ export const FilterChip = ({
     return resolved.length ? resolved : defaults;
   }, [columnType, operations]);
 
-  const [selected, setSelected] = useState<FilterOperation | undefined>(
-    computedOperations?.[0]
+  const toOperation = (value?: string) =>
+    value === undefined
+      ? undefined
+      : (computedOperations.find(option => option.value === value) ??
+        computedOperations[0]);
+
+  /* Read once. A `default` that changes warns, and `operations` can change. */
+  const [initialOperation] = useState(
+    () => toOperation(defaultOperation) ?? computedOperations[0]
   );
+
+  const [selected, setSelected] = useControlled<FilterOperation | undefined>({
+    controlled: toOperation(operationProp),
+    default: initialOperation,
+    name: 'FilterChip',
+    state: 'operation'
+  });
 
   /* The list can change while the chip is mounted, so a selection it no longer
      offers would be shown with the wrong label and sent with every edit. */
@@ -167,7 +195,8 @@ export const FilterChip = ({
     if (operation === selected) return;
     setSelected(operation);
     if (operation?.value) onOperationChange?.(operation.value);
-  }, [operation, selected, onOperationChange]);
+  }, [operation, selected, onOperationChange, setSelected]);
+
   const isNumberColumn = columnType === FilterType.number;
   // `??` not `||`, since a falsy option value like `0` is a real selection.
   // For `number`, the value is shown without an exponent (`1e-7`), and a
@@ -211,7 +240,7 @@ export const FilterChip = ({
       setSelected(operation);
       if (operation?.value) onOperationChange?.(operation.value);
     },
-    [onOperationChange]
+    [onOperationChange, setSelected]
   );
 
   const handleFilterValueChange = useCallback(
