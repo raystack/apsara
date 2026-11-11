@@ -15,11 +15,11 @@ describe('FilterChip', () => {
       expect(screen.getByText('Name')).toBeInTheDocument();
     });
 
-    it('applies default variant classes', () => {
+    it('applies outline variant classes by default', () => {
       const { container } = render(<FilterChip label='Test' />);
       const chip = container.querySelector(`.${styles.chip}`);
       expect(chip).toBeInTheDocument();
-      expect(chip).toHaveClass(styles['chip-default']);
+      expect(chip).toHaveClass(styles['variant-outline']);
     });
 
     it('applies text variant', () => {
@@ -44,6 +44,92 @@ describe('FilterChip', () => {
 
       expect(screen.getByTestId('filter-icon')).toBeInTheDocument();
       expect(screen.getByText('📅')).toBeInTheDocument();
+    });
+  });
+
+  describe('Operation', () => {
+    const flushMicrotasks = async () =>
+      await new Promise(r => setTimeout(r, 0));
+
+    const operationText = async (ui: React.ReactElement) => {
+      const { container } = render(ui);
+      await act(flushMicrotasks);
+      return getSlot(container, 'filter-chip-operation')?.textContent;
+    };
+
+    it('shows the operation named by the prop', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' operation='neq' />)
+      ).toBe('is not');
+    });
+
+    it('falls back to the first operation when the type does not have it', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' operation='in' />)
+      ).toBe('is');
+    });
+
+    it('shows the first operation when the prop is absent', async () => {
+      expect(await operationText(<FilterChip label='Name' />)).toBe('is');
+    });
+
+    it('reads the operation from a custom list', async () => {
+      expect(
+        await operationText(
+          <FilterChip
+            label='Name'
+            operations={[
+              { value: 'eq', label: 'is' },
+              { value: 'neq', label: 'is not' }
+            ]}
+            operation='neq'
+          />
+        )
+      ).toBe('is not');
+    });
+
+    it('starts on the default operation', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' defaultOperation='neq' />)
+      ).toBe('is not');
+    });
+
+    it('falls back to the first operation when the list does not have the default', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' defaultOperation='in' />)
+      ).toBe('is');
+    });
+
+    it('prefers the operation prop over the default', async () => {
+      expect(
+        await operationText(
+          <FilterChip label='Name' operation='eq' defaultOperation='neq' />
+        )
+      ).toBe('is');
+    });
+
+    it('changes the operation the default started on', async () => {
+      const onOperationChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Name'
+          defaultOperation='neq'
+          onOperationChange={onOperationChange}
+        />
+      );
+      await act(flushMicrotasks);
+
+      fireEvent.click(getSlot(container, 'filter-chip-operation') as Element);
+      await act(flushMicrotasks);
+      const item = screen.getByLabelText('Filter Name contains');
+      fireEvent.pointerDown(item);
+      fireEvent.click(item);
+      await act(flushMicrotasks);
+
+      expect(onOperationChange).toHaveBeenCalledWith('contains');
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'contains'
+      );
     });
   });
 
@@ -565,21 +651,25 @@ describe('FilterChip', () => {
       expect(icons(true)).toBe(1);
     });
 
-    it('reports a typed error through onErrorChange', () => {
-      const onErrorChange = vi.fn();
+    it('reports a typed error through onValidityChange', () => {
+      const onValidityChange = vi.fn();
       render(
         <FilterChip
           label='Created'
           columnType={FilterType.date}
-          calendarProps={{ onErrorChange }}
+          calendarProps={{ slotProps: { input: { onValidityChange } } }}
         />
       );
       const input = screen.getByPlaceholderText('Select date');
       fireEvent.focus(input);
       fireEvent.change(input, { target: { value: 'not a date' } });
-      expect(onErrorChange).toHaveBeenLastCalledWith('Invalid date');
+      expect(onValidityChange).toHaveBeenLastCalledWith({
+        valid: false,
+        reason: 'unparseable',
+        message: 'Invalid date'
+      });
       fireEvent.change(input, { target: { value: '27 May 2026' } });
-      expect(onErrorChange).toHaveBeenLastCalledWith(undefined);
+      expect(onValidityChange).toHaveBeenLastCalledWith({ valid: true });
     });
 
     it('keeps a typed error when a string value rerenders the chip', () => {
@@ -592,7 +682,13 @@ describe('FilterChip', () => {
               label='Created'
               columnType={FilterType.date}
               value='2026-05-27'
-              calendarProps={{ onErrorChange: setError }}
+              calendarProps={{
+                slotProps: {
+                  input: {
+                    onValidityChange: validity => setError(validity.message)
+                  }
+                }
+              }}
             />
           </>
         );

@@ -3,9 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { expectSlots, getSlot } from '~/test-utils/data-slots';
 import { Dialog } from '../dialog';
 
-const OpenDialog = ({ showCloseButton = true }) => (
+const OpenDialog = ({ hideCloseButton = false }) => (
   <Dialog open>
-    <Dialog.Content showCloseButton={showCloseButton}>
+    <Dialog.Content hideCloseButton={hideCloseButton}>
       <Dialog.Header>
         <Dialog.Title>Title</Dialog.Title>
       </Dialog.Header>
@@ -37,7 +37,7 @@ describe('Dialog data-slot contract', () => {
   });
 
   it('omits the close slot when the close button is hidden', () => {
-    render(<OpenDialog showCloseButton={false} />);
+    render(<OpenDialog hideCloseButton />);
     expect(getSlot(document.body, 'dialog-close')).toBeNull();
   });
 });

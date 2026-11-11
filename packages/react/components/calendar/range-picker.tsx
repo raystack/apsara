@@ -49,7 +49,11 @@ export interface RangePickerProps {
   children?:
     | React.ReactNode
     | ((props: { startDate: string; endDate: string }) => React.ReactNode);
-  showCalendarIcon?: boolean;
+  /**
+   * Hides the calendar icon in the input.
+   * @default false
+   */
+  hideCalendarIcon?: boolean;
   footer?: React.ReactNode;
   timeZone?: string;
 }
@@ -71,7 +75,7 @@ export function RangePicker({
   defaultValue,
   pickerGroupClassName,
   children,
-  showCalendarIcon = true,
+  hideCalendarIcon = false,
   footer,
   timeZone
 }: RangePickerProps) {
@@ -227,7 +231,7 @@ export function RangePicker({
       <Input
         size='small'
         placeholder='Select start date'
-        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+        trailingIcon={hideCalendarIcon ? undefined : <CalendarIcon />}
         className={styles.datePickerInput}
         data-slot='range-picker-start-input'
         {...startInputProps}
@@ -241,7 +245,7 @@ export function RangePicker({
       <Input
         size='small'
         placeholder='Select end date'
-        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+        trailingIcon={hideCalendarIcon ? undefined : <CalendarIcon />}
         className={styles.datePickerInput}
         data-slot='range-picker-end-input'
         {...endInputProps}

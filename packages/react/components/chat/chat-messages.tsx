@@ -467,7 +467,7 @@ export function ChatJumpButton({
         <span
           className={styles['jump-icon']}
           aria-hidden='true'
-          data-slot='chat-jump-button-icon'
+          data-slot='chat-jump-button-leading-icon'
         >
           {leadingIcon ?? <ArrowDownIcon />}
         </span>

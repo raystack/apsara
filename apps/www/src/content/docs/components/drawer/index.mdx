@@ -20,7 +20,7 @@ import { Drawer } from "@raystack/apsara";
 <Drawer side="right">
   <Drawer.Trigger />
   <Drawer.SwipeArea />
-  <Drawer.Content side="right">
+  <Drawer.Content>
     <Drawer.Header>
       <Drawer.Title />
       <Drawer.Description />
@@ -51,7 +51,7 @@ A drawer slides in from the edge named by the `side` of `Drawer.Content` and tra
 
 ### Positioning
 
-The Drawer can slide in from different sides of the screen. Swipe-to-dismiss is automatically configured based on the `side` prop.
+Set `side` on the root. `Drawer.Content` slides in from that edge, and swipe-to-dismiss follows it.
 
 <Demo data={positionDemo} />
 
@@ -105,7 +105,7 @@ Renders the button that opens the drawer.
 
 ### Close
 
-Renders a button that closes the drawer. `Drawer.Content` already renders one unless `showCloseButton` is `false`.
+Renders a button that closes the drawer. `Drawer.Content` already renders one unless `hideCloseButton` is set.
 
 - Inherits all Base UI Drawer.Close props
 
@@ -164,7 +164,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `drawer-viewport` | Viewport wrapper that positions the drawer |
 | `drawer-content` | The drawer panel (popup) |
 | `drawer-content-body` | Content wrapper inside the panel |
-| `drawer-close` | The built-in close button (when `showCloseButton`) |
+| `drawer-close` | The built-in close button (unless `hideCloseButton`) |
 | `drawer-header` | The `Drawer.Header` container |
 | `drawer-title` | The `Drawer.Title` element |
 | `drawer-description` | The `Drawer.Description` element |

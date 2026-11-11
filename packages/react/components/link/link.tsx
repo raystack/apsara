@@ -5,7 +5,7 @@ import styles from './link.module.css';
 
 export interface LinkProps
   extends TextBaseProps,
-    useRender.ComponentProps<'a'> {
+    Omit<useRender.ComponentProps<'a'>, 'color'> {
   external?: boolean;
   download?: boolean | string;
 }
@@ -13,7 +13,7 @@ export interface LinkProps
 export function Link({
   children,
   className,
-  variant = 'accent',
+  color = 'accent',
   size = 'small',
   external,
   download,
@@ -45,7 +45,7 @@ export function Link({
     <Text
       data-slot='link'
       className={cx(styles.link, className)}
-      variant={variant}
+      color={color}
       size={size}
       {...externalProps}
       {...downloadProps}

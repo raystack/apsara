@@ -16,15 +16,25 @@ export interface FilterChipProps {
   columnType?: 'select' | 'multiselect' | 'date' | 'string' | 'number';
 
   /** Filterchip variant
-   * @default "default"
+   * @default "outline"
    */
-  variant?: 'default' | 'text';
+  variant?: 'outline' | 'text';
 
   /** Array of options for the select and multiselect type inputs */
   options?: { label: string; value: string | number | boolean }[];
 
   /** Optional array of operations for the type of filter operation */
   operations?: { label: string; value: string }[];
+
+  /** Active operation, by its `value`. A value `operations` does not have falls back to the first one.
+   * @default the first entry of `operations`
+   */
+  operation?: string;
+
+  /** Operation to start on, by its `value`, when `operation` is not set.
+   * @default the first entry of `operations`
+   */
+  defaultOperation?: string;
 
   /** Callback when the filter value changes; receives the value and the active
    * operation. For `select` and `multiselect`, the value is the picked
@@ -67,7 +77,7 @@ export interface FilterChipProps {
     yearRange?: { from: number; to: number };
     defaultMonth?: Date;
     today?: Date;
-    /** Props for the date input (`CalendarPreview.Input`) and its popup (`CalendarPreview.Content`). `input.disabled` and `input.readOnly` also apply to the calendar. */
+    /** Props for the date input (`CalendarPreview.Input`) and its popup (`CalendarPreview.Content`). `input.disabled` and `input.readOnly` also apply to the calendar. `input.onValidityChange` reports typed-date errors. */
     slotProps?: {
       input?: Omit<CalendarPreviewInputProps, 'field'>;
       popover?: Omit<PopoverContentProps, 'children'>;
@@ -77,8 +87,6 @@ export interface FilterChipProps {
      * @default false
      */
     showCalendarIcon?: boolean;
-    /** Called with a message when the typed date is invalid, and with `undefined` when it is valid again. */
-    onErrorChange?: (error: string | undefined) => void;
   };
 
   /** Additional CSS class names */

@@ -89,7 +89,7 @@ export const separatorDemo = {
 
 export const withTextDemo = {
   type: 'code',
-  code: `<Text size="small" variant="secondary">
+  code: `<Text size="small" color="secondary">
     Press <Kbd.Group><Kbd aria-label="Command">⌘</Kbd><Kbd>K</Kbd></Kbd.Group> to open the command palette.
   </Text>`
 };

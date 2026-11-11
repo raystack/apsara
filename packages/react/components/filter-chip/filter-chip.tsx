@@ -1,11 +1,12 @@
 'use client';
 
+import { useControlled } from '@base-ui/utils/useControlled';
 import { TZDate } from '@date-fns/tz';
 import { cva, cx, VariantProps } from 'class-variance-authority';
 import { parseISO } from 'date-fns';
 import {
   ComponentProps,
-  ReactElement,
+  ReactNode,
   useCallback,
   useMemo,
   useState
@@ -38,18 +39,18 @@ import { Operation } from './filter-chip-operation';
 const chip = cva(styles.chip, {
   variants: {
     variant: {
-      default: styles['chip-default'],
+      outline: styles['variant-outline'],
       text: null
     }
   },
   defaultVariants: {
-    variant: 'default'
+    variant: 'outline'
   }
 });
 
 export type FilterChipValue = FilterValueType | FilterValueType[] | Date;
 
-/* The message `DatePicker` reports, so `onErrorChange` reads the same. */
+/* The message `DatePicker` reports, so `onValidityChange` reads the same. */
 const INVALID_DATE = 'Invalid date';
 
 /* A year the calendar cannot show leaves the field empty. */
@@ -89,8 +90,6 @@ export type FilterChipCalendarProps = Pick<
    * @default false
    */
   showCalendarIcon?: boolean;
-  /** Called with a message when the typed date is invalid, and with `undefined` when it is valid again. */
-  onErrorChange?: (error: string | undefined) => void;
 };
 
 export interface FilterChipProps
@@ -103,8 +102,19 @@ export interface FilterChipProps
   options?: FilterSelectOption[];
   onValueChange?: (value: FilterChipValue, operation: string) => void;
   onOperationChange?: (operation: string) => void;
-  leadingIcon?: ReactElement;
+  leadingIcon?: ReactNode;
   operations?: FilterOperator<string>[];
+  /**
+   * Active operation, by its `value`. A value `operations` does not have falls
+   * back to the first one.
+   * @default the first entry of `operations`
+   */
+  operation?: string;
+  /**
+   * Operation to start on, by its `value`, when `operation` is not set.
+   * @default the first entry of `operations`
+   */
+  defaultOperation?: string;
   selectProps?: BaseSelectProps;
   /** Props forwarded to the `CalendarPreview` for `columnType="date"`. */
   calendarProps?: FilterChipCalendarProps;
@@ -131,6 +141,8 @@ export const FilterChip = ({
   leadingIcon,
   variant,
   operations,
+  operation: operationProp,
+  defaultOperation,
   selectProps,
   calendarProps,
   ...props
@@ -139,9 +151,18 @@ export const FilterChip = ({
     ? operations
     : filterOperators[columnType];
 
-  const [operation, setOperation] = useState<FilterOperation | undefined>(
-    computedOperations?.[0]
-  );
+  const toOperation = (value?: string) =>
+    value === undefined
+      ? undefined
+      : (computedOperations?.find(option => option.value === value) ??
+        computedOperations?.[0]);
+
+  const [operation, setOperation] = useControlled<FilterOperation | undefined>({
+    controlled: toOperation(operationProp),
+    default: toOperation(defaultOperation) ?? computedOperations?.[0],
+    name: 'FilterChip',
+    state: 'operation'
+  });
   const isNumberColumn = columnType === FilterType.number;
   // `??` not `||`, since a falsy option value like `0` is a real selection.
   // For `number`, the value is shown without an exponent (`1e-7`), and a
@@ -163,7 +184,6 @@ export const FilterChip = ({
     formatValue: formatDate,
     slotProps: dateSlotProps,
     showCalendarIcon = false,
-    onErrorChange,
     ...calendarRest
   } = calendarProps ?? {};
   const { classNames: inputClassNames, ...inputProps } =
@@ -186,7 +206,7 @@ export const FilterChip = ({
       setOperation(operation);
       if (operation?.value) onOperationChange?.(operation.value);
     },
-    [onOperationChange]
+    [onOperationChange, setOperation]
   );
 
   const handleFilterValueChange = useCallback(
@@ -307,12 +327,6 @@ export const FilterChip = ({
                     unavailable: INVALID_DATE,
                     ...inputProps.errorMessages
                   }}
-                  onValidityChange={validity => {
-                    inputProps.onValidityChange?.(validity);
-                    onErrorChange?.(
-                      validity.valid ? undefined : validity.message
-                    );
-                  }}
                 />
               </CalendarPreview.Trigger>
               <CalendarPreview.Content {...dateSlotProps?.popover}>
@@ -328,7 +342,7 @@ export const FilterChip = ({
             data-slot='filter-chip-value'
           >
             <Input
-              variant={variant === 'text' ? 'borderless' : 'default'}
+              variant={variant === 'text' ? 'text' : 'outline'}
               classNames={{ container: styles.inputField }}
               value={filterValue.toString()}
               onChange={e => handleTextInputChange(e.target.value)}

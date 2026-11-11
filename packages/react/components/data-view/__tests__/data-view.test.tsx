@@ -9,7 +9,7 @@ import {
   it,
   vi
 } from 'vitest';
-
+import { getSlot } from '~/test-utils/data-slots';
 // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
 import { DataView } from '../data-view';
 import type {
@@ -562,6 +562,31 @@ describe('DataView', () => {
     });
   });
 
+  describe('Restored filter chips', () => {
+    it('shows the operator the query carries', async () => {
+      const { container } = render(
+        <DataView
+          data={mockData}
+          fields={mockFields}
+          defaultSort={defaultSort}
+          query={{
+            filters: [{ name: 'name', operator: 'neq', value: 'John Doe' }]
+          }}
+        >
+          <DataView.Toolbar>
+            <DataView.Filters />
+          </DataView.Toolbar>
+          <DataView.List variant='table' columns={mockColumns} />
+        </DataView>
+      );
+      await act(() => new Promise(r => setTimeout(r, 0)));
+
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'is not'
+      );
+    });
+  });
+
   describe('Multi-view', () => {
     const views: ViewSpec[] = [
       { value: 'table', label: 'Table' },
@@ -1045,13 +1070,13 @@ describe('DataView', () => {
   });
 
   describe('Loading state', () => {
-    it('renders skeleton rows when isLoading is true (non-virtualized)', () => {
+    it('renders skeleton rows when loading is true (non-virtualized)', () => {
       const { container } = render(
         <DataView
           data={mockData}
           fields={mockFields}
           defaultSort={defaultSort}
-          isLoading
+          loading
           loadingRowCount={4}
         >
           <DataView.List variant='table' columns={mockColumns} />
@@ -1061,14 +1086,14 @@ describe('DataView', () => {
       expect(loaderRows.length).toBe(4);
     });
 
-    it('renders skeleton rows when isLoading is true (virtualized)', () => {
+    it('renders skeleton rows when loading is true (virtualized)', () => {
       const { container } = render(
         <div style={{ height: 300 }}>
           <DataView
             data={mockData}
             fields={mockFields}
             defaultSort={defaultSort}
-            isLoading
+            loading
             loadingRowCount={5}
           >
             <DataView.List variant='table' columns={mockColumns} virtualized />
@@ -1085,7 +1110,7 @@ describe('DataView', () => {
           data={[]}
           fields={mockFields}
           defaultSort={defaultSort}
-          isLoading
+          loading
           loadingRowCount={3}
         >
           <DataView.List variant='table' columns={mockColumns} />
@@ -1107,7 +1132,7 @@ describe('DataView', () => {
             data={[]}
             fields={mockFields}
             defaultSort={defaultSort}
-            isLoading
+            loading
             loadingRowCount={3}
           >
             <DataView.List variant='table' columns={mockColumns} virtualized />
@@ -1124,7 +1149,7 @@ describe('DataView', () => {
           data={mockData}
           fields={mockFields}
           defaultSort={defaultSort}
-          isLoading
+          loading
           loadingRowCount={2}
         >
           <DataView.List variant='table' columns={mockColumns} />
@@ -1137,7 +1162,7 @@ describe('DataView', () => {
           data={mockData}
           fields={mockFields}
           defaultSort={defaultSort}
-          isLoading
+          loading
           loadingRowCount={7}
         >
           <DataView.List variant='table' columns={mockColumns} />
@@ -1188,7 +1213,7 @@ describe('DataView', () => {
       expect(onLoadMore).toHaveBeenCalledTimes(1);
     });
 
-    it('does not trigger onLoadMore while isLoading is true', () => {
+    it('does not trigger onLoadMore while loading is true', () => {
       const onLoadMore = vi.fn();
       render(
         <DataView
@@ -1196,7 +1221,7 @@ describe('DataView', () => {
           fields={mockFields}
           defaultSort={defaultSort}
           mode='server'
-          isLoading
+          loading
           onLoadMore={onLoadMore}
         >
           <DataView.List variant='table' columns={mockColumns} />

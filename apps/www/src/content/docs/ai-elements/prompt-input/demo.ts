@@ -69,7 +69,7 @@ export const statusDemo = {
     <Flex gap={5} wrap="wrap">
       {STATUSES.map(status => (
         <Flex key={status} direction="column" gap={2} style={{ width: 320 }}>
-          <Text size="small" variant="secondary">status="{status}"</Text>
+          <Text size="small" color="secondary">status="{status}"</Text>
           <PromptInput
             status={status}
             defaultValue="Summarize this thread"
@@ -105,7 +105,7 @@ export const controlledDemo = {
           <PromptInput.Submit />
         </PromptInput.Footer>
       </PromptInput>
-      <Text size="small" variant="secondary">{value.length} characters</Text>
+      <Text size="small" color="secondary">{value.length} characters</Text>
     </Flex>
   );
 }`
@@ -138,7 +138,7 @@ export const editorCapabilitiesDemo = {
       id: 'page',
       label: 'This page',
       type: 'page',
-      icon: <FileTextIcon />,
+      leadingIcon: <FileTextIcon />,
       data: { path: '/docs/ai-elements/prompt-input' }
     },
     {
@@ -146,7 +146,7 @@ export const editorCapabilitiesDemo = {
       label: 'Button',
       type: 'component',
       group: 'Components',
-      icon: <Component size={16} strokeWidth={1.5} />,
+      leadingIcon: <Component size={16} strokeWidth={1.5} />,
       data: { status: 'stable' }
     },
     {
@@ -154,7 +154,7 @@ export const editorCapabilitiesDemo = {
       label: 'DataTable',
       type: 'component',
       group: 'Components',
-      icon: <Component size={16} strokeWidth={1.5} />,
+      leadingIcon: <Component size={16} strokeWidth={1.5} />,
       data: { status: 'stable' }
     },
     {
@@ -162,7 +162,7 @@ export const editorCapabilitiesDemo = {
       label: 'PromptInput',
       type: 'component',
       group: 'Components',
-      icon: <Component size={16} strokeWidth={1.5} />,
+      leadingIcon: <Component size={16} strokeWidth={1.5} />,
       data: { status: 'beta' }
     },
     {
@@ -170,22 +170,22 @@ export const editorCapabilitiesDemo = {
       label: 'Maya Chen',
       type: 'user',
       group: 'Users',
-      icon: <Avatar size={1} fallback="M" />
+      leadingIcon: <Avatar size={1} fallback="M" />
     },
     {
       id: 'u2',
       label: 'Apsara Assistant',
       type: 'user',
       group: 'Users',
-      icon: <Avatar size={1} fallback="A" />,
-      trailing: <Badge size="micro" variant="neutral">Agent</Badge>
+      leadingIcon: <Avatar size={1} fallback="A" />,
+      trailingIcon: <Badge size="micro" color="neutral">Agent</Badge>
     },
     {
       id: 'u3',
       label: 'Dana Whitfield',
       type: 'user',
       group: 'Users',
-      icon: <Avatar size={1} fallback="D" />,
+      leadingIcon: <Avatar size={1} fallback="D" />,
       disabled: true
     }
   ];
@@ -240,7 +240,7 @@ export const editorCapabilitiesDemo = {
                 id: 'data-table',
                 label: 'DataTable',
                 type: 'component',
-                icon: <Component size={16} strokeWidth={1.5} />,
+                leadingIcon: <Component size={16} strokeWidth={1.5} />,
                 data: { status: 'stable' }
               })
             }
@@ -256,7 +256,7 @@ export const editorCapabilitiesDemo = {
           >
             Clear
           </Button>
-          <Text size="micro" variant="secondary">
+          <Text size="micro" color="secondary">
             {draft.text.length}/{MAX_LENGTH}
           </Text>
           <PromptInput.Submit />
@@ -268,13 +268,13 @@ export const editorCapabilitiesDemo = {
         gap={3}
         style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}
       >
-        <Text size="micro" variant="secondary">text</Text>
+        <Text size="micro" color="secondary">text</Text>
         <Text size="small" style={mono}>{draft.text || '—'}</Text>
 
-        <Text size="micro" variant="secondary">markup (save this as the draft)</Text>
+        <Text size="micro" color="secondary">markup (save this as the draft)</Text>
         <Text size="small" style={mono}>{draft.markup || '—'}</Text>
 
-        <Text size="micro" variant="secondary">mentions</Text>
+        <Text size="micro" color="secondary">mentions</Text>
         {draft.mentions.length === 0 ? (
           <Text size="small" style={mono}>—</Text>
         ) : (
@@ -309,7 +309,7 @@ export const mentionsDemo = {
       label: 'Apsara Assistant',
       type: 'user',
       group: 'Users',
-      trailing: <Badge size="micro" variant="neutral">Agent</Badge>
+      trailingIcon: <Badge size="micro" color="neutral">Agent</Badge>
     },
     { id: 'u3', label: 'Dana Whitfield', type: 'user', group: 'Users' }
   ];
@@ -332,9 +332,9 @@ export const mentionsDemo = {
       </PromptInput>
       {sent ? (
         <Flex direction="column" gap={2}>
-          <Text size="small" variant="secondary">text: {sent.text}</Text>
-          <Text size="small" variant="secondary">markup: {sent.markup}</Text>
-          <Text size="small" variant="secondary">
+          <Text size="small" color="secondary">text: {sent.text}</Text>
+          <Text size="small" color="secondary">markup: {sent.markup}</Text>
+          <Text size="small" color="secondary">
             mentions: {sent.mentions.map(m => m.type + ':' + m.id).join(', ') || '—'}
           </Text>
         </Flex>
@@ -427,7 +427,7 @@ export const insertMentionDemo = {
                 id: 'prompt-input',
                 label: 'PromptInput',
                 type: 'component',
-                icon: <Component size={16} strokeWidth={1.5} />
+                leadingIcon: <Component size={16} strokeWidth={1.5} />
               })
             }
           >

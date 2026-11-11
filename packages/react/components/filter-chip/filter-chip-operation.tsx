@@ -35,7 +35,7 @@ export const Operation = ({
   if (operations.length === 1)
     return (
       <Text
-        variant='secondary'
+        color='secondary'
         className={cx(styles.selectValue, styles.operationValue)}
         data-slot='filter-chip-operation'
       >
