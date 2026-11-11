@@ -1442,10 +1442,10 @@ describe('defaultFormatValue', () => {
     const value = { date: '2026-08-31', scale: 'month' as const };
     expect(defaultFormatValue(value, 'month')).toBe('Aug 2026');
     expect(defaultFormatValue(value, 'quarter')).toBe('Q3 2026');
-    expect(defaultFormatValue(value, 'halfYear')).toBe('H2 2026');
+    expect(defaultFormatValue(value, 'half-year')).toBe('H2 2026');
     expect(defaultFormatValue(value, 'year')).toBe('2026');
     expect(
-      defaultFormatValue({ date: '2026-02-01', scale: 'day' }, 'halfYear')
+      defaultFormatValue({ date: '2026-02-01', scale: 'day' }, 'half-year')
     ).toBe('H1 2026');
   });
 });

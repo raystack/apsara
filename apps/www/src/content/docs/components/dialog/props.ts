@@ -3,7 +3,10 @@ export interface DialogProps {
   open?: boolean;
 
   /** Callback when open state changes */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /**
    * Whether the dialog is modal. `'trap-focus'` traps focus without locking scroll or outside interaction.
@@ -14,16 +17,16 @@ export interface DialogProps {
 
 export interface DialogContentProps {
   /**
-   * Controls whether to show the close button
-   * @default true
+   * Hides the close button.
+   * @default false
    */
-  showCloseButton?: boolean;
+  hideCloseButton?: boolean;
 
   /**
-   * Toggle nested dialog animation (scaling and translation)
-   * @default true
+   * Turns off the scale and offset of a dialog that has a nested dialog open.
+   * @default false
    */
-  showNestedAnimation?: boolean;
+  disableNestedAnimation?: boolean;
 
   /** Overlay configuration including blur, className, and style */
   overlay?: {

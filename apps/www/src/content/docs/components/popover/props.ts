@@ -6,7 +6,10 @@ export interface PopoverRootProps {
   open?: boolean;
 
   /** Callback when open state changes. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /**
    * Locks scroll and blocks outside interaction while open. `'trap-focus'` only traps focus.

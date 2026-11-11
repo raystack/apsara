@@ -198,7 +198,7 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
       >
         <SearchIcon />
       </Command.DialogTrigger>
-      <Command.DialogContent width={512} className={styles.searchContainer}>
+      <Command.DialogContent className={styles.searchContainer}>
         <Command
           items={itemValues}
           mode='none'
@@ -231,7 +231,7 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
                 <Spinner size={5} aria-label='Searching docs' />
               ) : (
                 <EmptyState
-                  variant='empty1'
+                  variant='compact'
                   heading='No result found'
                   subHeading='The keyword you’re searching for isn’t in the document. Try a different term.'
                   icon={<WarningIcon />}

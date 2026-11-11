@@ -78,7 +78,7 @@ export default function DocsNavbar({
                 />
               </Fragment>
             ))}
-            <Breadcrumb.Item current>{title}</Breadcrumb.Item>
+            <Breadcrumb.Item active>{title}</Breadcrumb.Item>
           </Breadcrumb>
         )}
       </div>

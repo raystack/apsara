@@ -1,3 +1,4 @@
+import type { Tabs as TabsPrimitive } from '@base-ui/react';
 import type {
   ColumnDef,
   Row,
@@ -6,6 +7,7 @@ import type {
   Updater,
   VisibilityState
 } from '@tanstack/table-core';
+import type { ChangeDetails } from '~/shared/change-details';
 import type {
   DataTableFilterOperatorTypes,
   FilterDataType,
@@ -17,6 +19,11 @@ import type {
 import type { BaseSelectProps } from '../select/select-root';
 
 export type DataViewMode = 'client' | 'server';
+
+export type DataViewViewChangeDetails =
+  ChangeDetails<TabsPrimitive.Root.ChangeEventReason>;
+
+export type DataViewQueryChangeDetails = ChangeDetails<'none'>;
 
 export const SortOrders = {
   ASC: 'asc',
@@ -81,7 +88,7 @@ export interface DataViewField<TData = unknown> {
   accessorKey: Extract<keyof TData, string> | (string & {});
   /** Human-readable label shown in filter chips, Display controls, and the default Table header. */
   label: string;
-  icon?: React.ReactNode;
+  leadingIcon?: React.ReactNode;
 
   // filter capability
   filterable?: boolean;
@@ -161,13 +168,19 @@ export interface DataViewProps<TData> {
   data: TData[];
   /** Renderer-agnostic field metadata. Drives filter/sort/group/visibility. */
   fields: DataViewField<TData>[];
-  /** Initial query. Transformed to the internal shape on mount. */
+  /** The query (controlled). */
   query?: DataViewQuery;
+  /** The query on the first render (uncontrolled). */
+  defaultQuery?: DataViewQuery;
   mode?: DataViewMode;
-  isLoading?: boolean;
+  loading?: boolean;
   totalRowCount?: number;
   loadingRowCount?: number;
-  onTableQueryChange?: (query: DataViewQuery) => void;
+  /** Called when the query changes. Server mode also calls it on mount. */
+  onQueryChange?: (
+    query: DataViewQuery,
+    details: DataViewQueryChangeDetails
+  ) => void;
   defaultSort: DataViewSort;
   onLoadMore?: () => Promise<void> | void;
   onRowClick?: (row: TData) => void;
@@ -189,7 +202,7 @@ export interface DataViewProps<TData> {
   /** Active view (controlled). */
   view?: string;
   /** Called when the active view changes. */
-  onViewChange?: (view: string) => void;
+  onViewChange?: (view: string, details: DataViewViewChangeDetails) => void;
   /**
    * Optional local resolver map for non-accessor `group_by` keys. The wire
    * format (`group_by: string[]`) stays unchanged; resolvers run in client mode
@@ -232,15 +245,16 @@ export interface DataViewListProps<TData, TValue = unknown> {
   /**
    * Initial row-height estimate (px). Rows are auto-measured after they paint,
    * so this is only used until the first measurement. Default 40 for
-   * `variant="table"`, 56 for `variant="list"`.
+   * `variant="table"`, 56 for `variant="list"`, multiplied by the theme's
+   * `scaling`. An explicit value is used as passed.
    */
   estimatedRowHeight?: number;
   /** When true, only viewport-visible rows render. Parent must have a fixed height. */
   virtualized?: boolean;
   /** Render thin dividers between rows. Defaults to true for `variant="table"`. */
   showDividers?: boolean;
-  /** Show group section headers when grouping is active. Default true. */
-  showGroupHeaders?: boolean;
+  /** Hide group section headers when grouping is active. Default false. */
+  hideGroupHeaders?: boolean;
   /** When true, group headers stick under the table header while scrolling. Default false. */
   stickyGroupHeader?: boolean;
   /** @deprecated Style rendered parts by `[data-slot]` instead. See `DataViewListClassNames`. */
@@ -258,7 +272,7 @@ export interface TimelineMarker {
   date: TimelineDateInput;
   /** Badge content. Defaults to the marker date formatted as "17 Jan". */
   label?: React.ReactNode;
-  variant?: 'default' | 'accent' | 'danger';
+  color?: 'neutral' | 'accent' | 'danger';
 }
 
 /**
@@ -373,7 +387,11 @@ export interface DataViewTimelineProps<TData> {
 
   /** Tick granularity of the time axis. Default 'day'. */
   scale?: TimelineScale;
-  /** Pixel width of one `scale` unit, as a density or zoom override. */
+  /**
+   * Pixel width of one `scale` unit, as a density or zoom override. The default
+   * (day 20, week 56, month 96, quarter 140) is multiplied by the theme's
+   * `scaling`. An explicit value is used as passed.
+   */
   unitWidth?: number;
   /**
    * Explicit time domain. Defaults to the data extent (plus today when shown)
@@ -385,8 +403,8 @@ export interface DataViewTimelineProps<TData> {
   today?: boolean | TimelineDateInput;
   /** Additional full-height marker lines with axis badges. */
   markers?: TimelineMarker[];
-  /** Vertical gridlines at every axis tick. Default true. */
-  showGridlines?: boolean;
+  /** Hide the vertical gridlines at every axis tick. Default false. */
+  hideGridlines?: boolean;
   /**
    * Label every Nth `scale` unit on the axis, counted from the domain start
    * (e.g. `2` on a day scale labels every other day). Labels never render
@@ -401,10 +419,10 @@ export interface DataViewTimelineProps<TData> {
    */
   gridlineInterval?: number;
   /**
-   * Hover crosshair: a darker line snapped to the sub-interval (tick unit)
-   * under the pointer, with a date badge pinned to the axis. Default true.
+   * Hide the hover crosshair: a darker line snapped to the sub-interval (tick
+   * unit) under the pointer, with a date badge pinned to the axis. Default false.
    */
-  showCursorLine?: boolean;
+  hideCursorLine?: boolean;
   /** Initial horizontal scroll target. Default 'today'. */
   defaultScrollTo?: TimelineDateInput | 'today' | 'start' | 'end';
   /**
@@ -437,7 +455,8 @@ export interface DataViewTimelineProps<TData> {
    */
   lanePacking?: 'auto' | 'one-per-row' | 'one-per-sort-value';
   /**
-   * Lane height in px. Default 66.
+   * Lane height in px. Default 66, multiplied by the theme's `scaling`. An
+   * explicit value is used as passed.
    *
    * Unvirtualized this is an estimate, same contract as `DataView.List`: cards
    * render at their natural content height and are measured after paint, the
@@ -450,15 +469,23 @@ export interface DataViewTimelineProps<TData> {
    * lane rather than growing it. Set it to your card's height.
    */
   estimatedRowHeight?: number;
-  /** Vertical gap between lanes in px. Default 16. */
+  /**
+   * Vertical gap between lanes in px. Default 16, multiplied by the theme's
+   * `scaling`. An explicit value is used as passed.
+   */
   laneGap?: number;
-  /** Spans narrower than this (px) flip `context.collapsed` for `renderCard`. Default 60. */
+  /**
+   * Spans narrower than this (px) flip `context.collapsed` for `renderCard`.
+   * Default 60, multiplied by the theme's `scaling`. An explicit value is used
+   * as passed.
+   */
   minCardWidth?: number;
   /**
    * Assumed width (px) of point-marker cards (rows without `endField`) for
    * lane packing. Point cards size to their content, so the packer can't know
    * their width, so set this to roughly the widest point card to prevent
-   * horizontal overlap within a lane. Default 120.
+   * horizontal overlap within a lane. Default 120, multiplied by the theme's
+   * `scaling`. An explicit value is used as passed.
    */
   estimatedPointWidth?: number;
 
@@ -472,11 +499,11 @@ export interface DataViewTimelineProps<TData> {
   virtualized?: boolean;
 
   /**
-   * Render the group header band above each section when `group_by` is active.
-   * Same contract as `DataViewListProps.showGroupHeaders`: false hides the
-   * bands only, and rows stay grouped into their sections. Default true.
+   * Hide the group header band above each section when `group_by` is active.
+   * Same contract as `DataViewListProps.hideGroupHeaders`: true hides the
+   * bands only, and rows stay grouped into their sections. Default false.
    */
-  showGroupHeaders?: boolean;
+  hideGroupHeaders?: boolean;
   /** @deprecated Style rendered parts by `[data-slot]` instead. See `DataViewTimelineClassNames`. */
   classNames?: DataViewTimelineClassNames;
 }
@@ -516,7 +543,7 @@ export type DataViewContextType<TData> = {
   // multi-view
   views?: ViewSpec[];
   activeView?: string;
-  setActiveView: (view: string) => void;
+  setActiveView: (view: string, details?: DataViewViewChangeDetails) => void;
   /** Called by each renderer on mount to register its `fields` override for its `name`. Returns a cleanup function. */
   registerFieldsForView: (
     name: string,

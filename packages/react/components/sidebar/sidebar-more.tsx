@@ -36,7 +36,7 @@ export function SidebarMore({
   leadingIcon,
   classNames
 }: SidebarMoreProps) {
-  const { isCollapsed, position, hideItemTooltips } = useSidebarSafe();
+  const { isCollapsed, side, hideItemTooltips } = useSidebarSafe();
   const onPopupOpenChange = useContext(SidebarPopupContext);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -87,7 +87,7 @@ export function SidebarMore({
         <Tooltip>
           <Tooltip.Trigger render={<Menu.Trigger render={triggerContent} />} />
           <Tooltip.Content
-            side={position === 'left' ? 'right' : 'left'}
+            side={side === 'left' ? 'right' : 'left'}
             sideOffset={16}
           >
             {label}
@@ -98,7 +98,7 @@ export function SidebarMore({
       )}
       <Menu.Content
         className={classNames?.menuContent}
-        side={position === 'left' ? 'right' : 'left'}
+        side={side === 'left' ? 'right' : 'left'}
       >
         <SidebarMoreContext value={true}>{children}</SidebarMoreContext>
       </Menu.Content>

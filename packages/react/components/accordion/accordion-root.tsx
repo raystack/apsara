@@ -18,14 +18,20 @@ type AccordionSingleProps<Value> = AccordionBaseProps<Value> & {
   multiple?: false;
   value?: SingleValue<Value>;
   defaultValue?: NotArray<Value>;
-  onValueChange?: (value: Value | '') => void;
+  onValueChange?: (
+    value: Value | '',
+    eventDetails: AccordionPrimitive.Root.ChangeEventDetails
+  ) => void;
 };
 
 type AccordionMultipleProps<Value> = AccordionBaseProps<Value> & {
   multiple: true;
   value?: Value[];
   defaultValue?: Value[];
-  onValueChange?: (value: Value[]) => void;
+  onValueChange?: (
+    value: Value[],
+    eventDetails: AccordionPrimitive.Root.ChangeEventDetails
+  ) => void;
 };
 
 export type AccordionRootProps<Value = string> =
@@ -65,13 +71,20 @@ export function AccordionRoot<Value = string>({
   onValueChange,
   ...rest
 }: AccordionRootProps<Value>) {
-  const handleValueChange = (newValue: Value[]) => {
-    if (!onValueChange) return;
-
+  const handleValueChange = (
+    newValue: Value[],
+    eventDetails: AccordionPrimitive.Root.ChangeEventDetails
+  ) => {
     if (multiple) {
-      (onValueChange as (v: Value[]) => void)(newValue);
+      (onValueChange as AccordionMultipleProps<Value>['onValueChange'])?.(
+        newValue,
+        eventDetails
+      );
     } else {
-      (onValueChange as (v: Value | '') => void)(newValue[0] ?? '');
+      (onValueChange as AccordionSingleProps<Value>['onValueChange'])?.(
+        newValue[0] ?? '',
+        eventDetails
+      );
     }
   };
 

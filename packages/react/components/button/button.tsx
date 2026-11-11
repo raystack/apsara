@@ -134,7 +134,10 @@ const getLoaderOnlyClass = (size: 'small' | 'normal' | null) =>
 
 export type ButtonProps = VariantProps<typeof button> &
   ButtonPrimitive.Props & {
-    /** Shows a loading spinner inside the button. */
+    /**
+     * Shows a spinner in place of the content and blocks clicks. The button stays focusable.
+     * @default false
+     */
     loading?: boolean;
     /** Text shown next to the loading spinner. */
     loaderText?: ReactNode;
@@ -173,7 +176,7 @@ export const Button = ({
         button({ variant, size, color, radius, disabled, loading, className }),
         isLoaderOnly && getLoaderOnlyClass(size)
       )}
-      disabled={disabled}
+      disabled={disabled || loading}
       render={render}
       nativeButton={!render}
       focusableWhenDisabled={loading}
@@ -185,7 +188,7 @@ export const Button = ({
         <>
           <Spinner
             size={1}
-            color='default'
+            color='inherit'
             aria-hidden='true'
             data-slot='button-loader'
           />

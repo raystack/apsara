@@ -21,7 +21,7 @@ export const playground = {
   controls: {
     gap: {
       type: 'select',
-      options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+      options: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
       initialValue: 3
     },
     rows: {
@@ -41,7 +41,7 @@ export const playground = {
       options: ['start', 'end', 'center', 'stretch'],
       initialValue: 'center'
     },
-    alignItems: {
+    align: {
       type: 'select',
       options: ['start', 'end', 'center', 'stretch'],
       initialValue: 'center'
@@ -94,7 +94,7 @@ export const areasDemo = {
 export const alignmentDemo = {
   type: 'code',
   code: `
-<Grid columns={3} gap={3} rows="80px" alignItems="center" justifyItems="center">
+<Grid columns={3} gap={3} rows="80px" align="center" justifyItems="center">
   <Grid.Item style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>centered</Grid.Item>
   <Grid.Item alignSelf="start" style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>alignSelf start</Grid.Item>
   <Grid.Item alignSelf="end" style={{ background: 'var(--rs-color-background-base-primary-hover)', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 4, padding: 12, fontSize: 13 }}>alignSelf end</Grid.Item>

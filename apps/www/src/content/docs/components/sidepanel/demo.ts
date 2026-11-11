@@ -5,7 +5,7 @@ export const preview = {
   code: `
 <Flex style={{ gap: '24px', flexWrap: 'wrap' }}>
     <SidePanel side="right">
-      <SidePanel.Header title="Right Side Panel" icon={<Avatar fallback="A" />} description="This is a description." actions={[<Button>Action</Button>]} />
+      <SidePanel.Header title="Right Side Panel" leadingIcon={<Avatar fallback="A" />} description="This is a description." actions={[<Button>Action</Button>]} />
       <SidePanel.Section>
           <List>
             <List.Header>User Information</List.Header>

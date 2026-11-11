@@ -186,6 +186,22 @@ describe('Button', () => {
       expect(handleClick).not.toHaveBeenCalled();
     });
 
+    it('blocks clicks and stays focusable when loading', () => {
+      const handleClick = vi.fn();
+      render(
+        <Button loading onClick={handleClick}>
+          Button
+        </Button>
+      );
+      const button = screen.getByRole('button');
+      expect(button).not.toBeDisabled();
+      expect(button).toHaveAttribute('aria-disabled', 'true');
+      button.focus();
+      expect(button).toHaveFocus();
+      fireEvent.click(button);
+      expect(handleClick).not.toHaveBeenCalled();
+    });
+
     it('handles focus events', () => {
       const handleFocus = vi.fn();
       render(<Button onFocus={handleFocus}>Button</Button>);

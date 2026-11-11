@@ -20,7 +20,10 @@ export interface MenuRootProps {
   defaultInputValue?: string;
 
   /** Callback fired when the search input value changes */
-  onInputValueChange?: (value: string) => void;
+  onInputValueChange?: (
+    value: string,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Control the open state of the menu */
   open?: boolean;
@@ -31,7 +34,10 @@ export interface MenuRootProps {
   defaultOpen?: boolean;
 
   /** Callback fired when the menu is opened or closed */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Whether the menu is modal (traps focus and blocks outside interaction)
    * @default true
@@ -124,7 +130,10 @@ export interface MenuCheckboxItemProps {
   defaultChecked?: boolean;
 
   /** Callback fired when the checked state changes */
-  onCheckedChange?: (checked: boolean) => void;
+  onCheckedChange?: (
+    checked: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Whether to close the menu when the item is clicked
    * @default false
@@ -158,7 +167,10 @@ export interface MenuRadioGroupProps {
   defaultValue?: unknown;
 
   /** Callback fired when the checked radio item changes */
-  onValueChange?: (value: unknown) => void;
+  onValueChange?: (
+    value: unknown,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Whether all radio items in the group are disabled
    * @default false
@@ -264,7 +276,10 @@ export interface MenuSubMenuProps {
   defaultInputValue?: string;
 
   /** Callback fired when the search input value changes */
-  onInputValueChange?: (value: string) => void;
+  onInputValueChange?: (
+    value: string,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Control the open state of the submenu */
   open?: boolean;
@@ -275,7 +290,10 @@ export interface MenuSubMenuProps {
   defaultOpen?: boolean;
 
   /** Callback fired when the submenu is opened or closed */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 }
 
 export interface MenuSubTriggerProps {

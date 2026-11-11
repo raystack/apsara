@@ -221,16 +221,16 @@
   padding-right: var(--rs-space-2);
 }
 
-.variant-borderless {
+.variant-text {
   border-color: transparent;
 }
 
-.variant-borderless:focus-within {
+.variant-text:focus-within {
   border-color: transparent;
   outline: none;
 }
 
 /* Keyboard focus must still be visible on the chromeless variant. */
-.variant-borderless:has(.input-field:focus-visible) {
+.variant-text:has(.input-field:focus-visible) {
   box-shadow: var(--rs-focus-ring-shadow);
 }

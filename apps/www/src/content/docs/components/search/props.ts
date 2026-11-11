@@ -7,9 +7,9 @@ export interface SearchProps {
 
   /**
    * Visual variant of the input.
-   * @default "default"
+   * @default "outline"
    */
-  variant?: 'default' | 'borderless';
+  variant?: 'outline' | 'text';
 
   /**
    * Placeholder text for the input.

@@ -43,7 +43,10 @@ export interface CodeBlockProps {
   /**
    * Callback when collapse state changes
    */
-  onCollapseChange?: (collapsed: boolean) => void;
+  onCollapseChange?: (
+    collapsed: boolean,
+    details: { reason: 'trigger-press'; event: Event }
+  ) => void;
 
   /**
    * The code content to display
@@ -135,7 +138,10 @@ export interface CodeBlockLanguageSelectProps {
   /**
    * Callback fired when the open state changes
    */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /**
    * Prevents the user from changing the language
