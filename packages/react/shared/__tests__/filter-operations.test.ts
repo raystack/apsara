@@ -51,6 +51,11 @@ describe('resolveFilterOperations', () => {
     ).toEqual(['eq', 'neq', 'contains']);
   });
 
+  it('does not change the operations of the type', () => {
+    resolveFilterOperations('date', defaults => defaults.reverse());
+    expect(values('date')).toEqual(['eq', 'neq', 'lt', 'lte', 'gt', 'gte']);
+  });
+
   it('falls back to the type for an empty array', () => {
     expect(values('select', [])).toEqual(['eq', 'neq']);
   });
@@ -105,6 +110,11 @@ describe('dropDisallowedFilters', () => {
 
   it('keeps every filter on a field that sets no operations', () => {
     const filters = [filter('name', 'ends_with')];
+    expect(dropDisallowedFilters(filters, fields)).toEqual(filters);
+  });
+
+  it('keeps an empty filter, which no type lists', () => {
+    const filters = [filter('when', 'empty')];
     expect(dropDisallowedFilters(filters, fields)).toEqual(filters);
   });
 

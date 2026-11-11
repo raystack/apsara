@@ -38,7 +38,7 @@ export function resolveFilterOperations(
   if (!operations) return defaults;
 
   const resolved =
-    typeof operations === 'function' ? operations(defaults) : operations;
+    typeof operations === 'function' ? operations([...defaults]) : operations;
   return resolved.length ? resolved : defaults;
 }
 
@@ -76,6 +76,8 @@ export function dropDisallowedFilters<Filter extends OperatorFilter>(
     }
 
     const allowed = allowedByName.get(filter.name);
-    return allowed ? allowed.has(filter.operator) : true;
+    if (!allowed) return true;
+    // The empty option of a select sends `empty`, which no filter type lists.
+    return filter.operator === 'empty' || allowed.has(filter.operator);
   });
 }

@@ -108,7 +108,9 @@ filterOperations: (defaults) => defaults.filter(({ value }) => value !== "eq");
 
 Adding the filter picks the first operation in the list. A list of one renders as text instead of a dropdown. An empty list, or a function that returns one, falls back to the operations of the `filterType`.
 
-A filter in the `query` prop whose operation the field does not offer is dropped. It renders no chip, filters no rows in client mode, and is left out of the query sent in server mode. A field that sets no `filterOperations` keeps whatever the query carries.
+An operation that the `filterType` does not have works in server mode only. In client mode the rows are filtered by the `filterType`, so a `gt` added to a string field shows a chip and filters nothing.
+
+A filter in the `query` prop whose operation the field does not offer is dropped. It renders no chip, filters no rows in client mode, and is left out of the query sent in server mode. A field that sets no `filterOperations` keeps whatever the query carries. The check reads the `fields` of `DataView`, so `filterOperations` on the `fields` of a renderer such as `DataView.List` is not checked. Such a filter keeps its chip, which moves to the first operation the renderer's field offers and reports it. A select filter on the empty option carries the operator `empty`, which no list has, and is kept.
 
 ### Search
 
