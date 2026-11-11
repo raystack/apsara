@@ -116,7 +116,7 @@ export interface FilterChipProps
   operations?: FilterChipOperations;
   /**
    * Active operation, by its `value`. A value `operations` does not have falls
-   * back to the first one.
+   * back to the first one, which the chip reports through `onOperationChange`.
    * @default the first entry of `operations`
    */
   operation?: string;
@@ -161,7 +161,7 @@ export const FilterChip = ({
     const defaults: FilterOperator<string>[] = filterOperators[columnType];
     if (!operations) return defaults;
     const resolved =
-      typeof operations === 'function' ? operations(defaults) : operations;
+      typeof operations === 'function' ? operations([...defaults]) : operations;
     return resolved.length ? resolved : defaults;
   }, [columnType, operations]);
 
@@ -183,19 +183,23 @@ export const FilterChip = ({
     state: 'operation'
   });
 
-  /* The list can change while the chip is mounted, so a selection it no longer
-     offers would be shown with the wrong label and sent with every edit. */
+  /* The list can change while the chip is mounted, and a caller can name an
+     operation the list does not have. Such a selection would be shown with the
+     wrong label and sent with every edit. */
   const operation = computedOperations.some(
     option => option.value === selected?.value
   )
     ? selected
     : computedOperations[0];
 
+  /* What the caller holds, so a controlled chip also reports the fallback. */
+  const heldValue = operationProp ?? selected?.value;
+
   useEffect(() => {
-    if (operation === selected) return;
+    if (!operation || operation.value === heldValue) return;
     setSelected(operation);
-    if (operation?.value) onOperationChange?.(operation.value);
-  }, [operation, selected, onOperationChange, setSelected]);
+    onOperationChange?.(operation.value);
+  }, [operation, heldValue, onOperationChange, setSelected]);
 
   const isNumberColumn = columnType === FilterType.number;
   // `??` not `||`, since a falsy option value like `0` is a real selection.

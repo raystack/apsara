@@ -30,7 +30,7 @@ export interface FilterChipProps {
         defaults: { label: string; value: string }[]
       ) => { label: string; value: string }[]);
 
-  /** Active operation, by its `value`. A value `operations` does not have falls back to the first one.
+  /** Active operation, by its `value`. A value `operations` does not have falls back to the first one, which the chip reports through `onOperationChange`.
    * @default the first entry of `operations`
    */
   operation?: string;
