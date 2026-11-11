@@ -9,7 +9,7 @@ import {
   it,
   vi
 } from 'vitest';
-
+import { getSlot } from '~/test-utils/data-slots';
 // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
 import { DataView } from '../data-view';
 import type {
@@ -559,6 +559,31 @@ describe('DataView', () => {
       expect(
         screen.getByRole('button', { name: 'Sort direction: descending' })
       ).toBeInTheDocument();
+    });
+  });
+
+  describe('Restored filter chips', () => {
+    it('shows the operator the query carries', async () => {
+      const { container } = render(
+        <DataView
+          data={mockData}
+          fields={mockFields}
+          defaultSort={defaultSort}
+          query={{
+            filters: [{ name: 'name', operator: 'neq', value: 'John Doe' }]
+          }}
+        >
+          <DataView.Toolbar>
+            <DataView.Filters />
+          </DataView.Toolbar>
+          <DataView.List variant='table' columns={mockColumns} />
+        </DataView>
+      );
+      await act(() => new Promise(r => setTimeout(r, 0)));
+
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'is not'
+      );
     });
   });
 
