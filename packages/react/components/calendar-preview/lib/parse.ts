@@ -62,7 +62,7 @@ export function parseScaleInput(
   const half = HALF_YEAR.exec(text);
   if (half) {
     const year = yearFrom(half[2], referenceDate);
-    return at(year, half[1] === '1' ? 1 : 7, 'halfYear', trailing);
+    return at(year, half[1] === '1' ? 1 : 7, 'half-year', trailing);
   }
 
   const year = YEAR.exec(text);

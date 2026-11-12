@@ -22,21 +22,18 @@ export interface AccordionRootProps<Value = string> {
   /**
    * Event handler called when the value changes. In single mode it receives `''` when every item closes.
    *
-   * @remarks `(value: Value | '') => void` in single mode, `(value: Value[]) => void` with `multiple`
+   * @remarks `(value: Value | '', eventDetails) => void` in single mode, `(value: Value[], eventDetails) => void` with `multiple`
    */
-  onValueChange?: (value: Value | '' | Value[]) => void;
+  onValueChange?: (
+    value: Value | '' | Value[],
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /**
    * Whether the accordion is disabled
    * @defaultValue false
    */
   disabled?: boolean;
-
-  /**
-   * The orientation of the accordion
-   * @defaultValue "vertical"
-   */
-  orientation?: 'horizontal' | 'vertical';
 
   /**
    * Whether to keep the element in the DOM while the panel is closed
@@ -56,9 +53,9 @@ export interface AccordionRootProps<Value = string> {
 
 export interface AccordionItemProps {
   /**
-   * A unique value for the item
+   * A unique value for the item. Base UI generates one when it is not set.
    */
-  value: string;
+  value?: string;
 
   /**
    * Whether the item is disabled

@@ -3,7 +3,7 @@
 import { Accordion, CodeBlock, Flex, Text } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
 import Link from 'fumadocs-core/link';
-import { type ReactNode } from 'react';
+import { isValidElement, type ReactNode } from 'react';
 import styles from './typetable.module.css';
 
 export interface ParameterNode {
@@ -40,6 +40,13 @@ export interface TypeNode {
   parameters?: ParameterNode[];
 
   returns?: ReactNode;
+}
+
+// remarkAutoTypeTable passes each type as a fragment around its text.
+function toText(node: ReactNode): string {
+  if (isValidElement<{ children?: ReactNode }>(node))
+    return toText(node.props.children);
+  return node == null ? '' : String(node);
 }
 
 export function TypeTable({
@@ -83,6 +90,7 @@ function Item({
   name: string;
   item: TypeNode;
 }) {
+  const fullType = toText(typeDescription ?? type);
   return (
     <Accordion.Item value={name} className={styles.accordionItem}>
       <Accordion.Trigger className={styles.trigger}>
@@ -100,7 +108,7 @@ function Item({
           ) : (
             <CodeBlock hideLineNumbers>
               <CodeBlock.Code language='tsx' className={styles.fieldCode}>
-                {String(type)}
+                {toText(type)}
               </CodeBlock.Code>
             </CodeBlock>
           )}
@@ -133,8 +141,8 @@ function Item({
                 language='tsx'
                 className={cx(styles.fieldCode, styles.fieldValue)}
               >
-                {String(type) +
-                  (!required && !String(type).includes('undefined')
+                {fullType +
+                  (!required && !fullType.includes('undefined')
                     ? ' | undefined'
                     : '')}
               </CodeBlock.Code>
@@ -150,7 +158,7 @@ function Item({
                   language='tsx'
                   className={cx(styles.fieldCode, styles.fieldValue)}
                 >
-                  {String(defaultValue)}
+                  {toText(defaultValue)}
                 </CodeBlock.Code>
               </CodeBlock>
             </Flex>

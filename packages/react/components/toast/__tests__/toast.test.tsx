@@ -2,6 +2,7 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useEffect, useRef } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { radiusClasses } from '../../../shared/radius';
 import tooltipStyles from '../../tooltip/tooltip.module.css';
 import { Toast, toastManager, useToastManager } from '../toast';
 
@@ -27,6 +28,17 @@ describe('Toast', () => {
       expect(
         screen.getAllByRole('region', { name: 'Notifications' })
       ).toHaveLength(1);
+    });
+
+    it('applies radius to each toast', async () => {
+      renderWithProvider({ radius: 'full' });
+      act(() => {
+        toastManager.add({ title: 'Rounded toast' });
+      });
+      const title = await screen.findByText('Rounded toast');
+      expect(title.closest('[data-slot="toast"]')).toHaveClass(
+        radiusClasses.full
+      );
     });
   });
 

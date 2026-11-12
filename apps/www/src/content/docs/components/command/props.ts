@@ -16,7 +16,10 @@ export interface CommandRootProps {
   /**
    * Callback fired when the input value changes.
    */
-  onValueChange?: (value: string) => void;
+  onValueChange?: (
+    value: string,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /**
    * Whether the list is rendered inline (without a popup).
@@ -55,10 +58,13 @@ export interface CommandRootProps {
 }
 
 export interface CommandInputProps {
-  /** Placeholder text for the input. */
+  /**
+   * Placeholder text for the input.
+   * @defaultValue "Search..."
+   */
   placeholder?: string;
 
-  /** Icon rendered at the start of the input. Defaults to a magnifying glass. */
+  /** Icon rendered at the start of the input. */
   leadingIcon?: React.ReactNode;
 
   /**
@@ -80,6 +86,9 @@ export interface CommandInputProps {
 export interface CommandContentProps {
   /** Additional CSS class names. */
   className?: string;
+
+  /** Ref to the list element. */
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 export interface CommandEmptyProps {
@@ -153,21 +162,24 @@ export interface CommandDialogProps {
   defaultOpen?: boolean;
 
   /** Event handler called when the dialog is opened or closed. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /**
-   * Whether the dialog is modal.
-   * @defaultValue true
+   * Whether the dialog is modal. `'trap-focus'` traps focus without locking scroll or outside interaction.
+   * @default true
    */
-  modal?: boolean;
+  modal?: boolean | 'trap-focus';
 }
 
 export interface CommandDialogContentProps {
   /** Additional CSS class names applied to the dialog popup. */
   className?: string;
 
-  /** Explicit width for the dialog popup. */
-  width?: string | number;
+  /** Inline styles applied to the dialog popup. */
+  style?: React.CSSProperties;
 
   /**
    * Corner radius for this palette only. Overrides the theme's `radius`.

@@ -43,12 +43,15 @@ export interface CodeBlockProps {
   /**
    * Callback when collapse state changes
    */
-  onCollapseChange?: (collapsed: boolean) => void;
+  onCollapseChange?: (
+    collapsed: boolean,
+    details: { reason: 'trigger-press'; event: Event }
+  ) => void;
 
   /**
    * The code content to display
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Additional CSS class name
@@ -83,7 +86,7 @@ export interface CodeBlockHeaderProps {
   /**
    * The content to display in the header
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Additional CSS class name
@@ -95,7 +98,7 @@ export interface CodeBlockContentProps {
   /**
    * The content to display
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Additional CSS class name
@@ -107,7 +110,7 @@ export interface CodeBlockLabelProps {
   /**
    * The label text to display
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
    * Additional CSS class name
@@ -117,14 +120,33 @@ export interface CodeBlockLabelProps {
 
 export interface CodeBlockLanguageSelectProps {
   /**
-   * Available languages for selection
+   * The `CodeBlock.LanguageSelectTrigger` and `CodeBlock.LanguageSelectContent` parts
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
-   * Additional CSS class name
+   * The controlled open state of the dropdown
    */
-  className?: string;
+  open?: boolean;
+
+  /**
+   * The initial open state when uncontrolled
+   * @default false
+   */
+  defaultOpen?: boolean;
+
+  /**
+   * Callback fired when the open state changes
+   */
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
+
+  /**
+   * Prevents the user from changing the language
+   */
+  disabled?: boolean;
 }
 
 export interface CodeBlockLanguageSelectTriggerProps {

@@ -3,7 +3,7 @@ export interface ChipProps {
    * Visual style variant
    * @defaultValue "outline"
    */
-  variant?: 'outline' | 'filled';
+  variant?: 'outline' | 'solid';
 
   /**
    * Size of the chip
@@ -12,16 +12,19 @@ export interface ChipProps {
   size?: 'small' | 'large';
 
   /**
-   * Color style. `danger`, `success` and `warning` convey status.
+   * Color style. `danger`, `success` and `attention` convey status.
    * @defaultValue "neutral"
    */
-  color?: 'neutral' | 'accent' | 'danger' | 'success' | 'warning';
+  color?: 'neutral' | 'accent' | 'danger' | 'success' | 'attention';
 
   /** ReactNode to display as an icon before the label */
   leadingIcon?: React.ReactNode;
 
   /** ReactNode to display as an icon after the label */
   trailingIcon?: React.ReactNode;
+
+  /** Disables the chip and blocks pointer clicks on it */
+  disabled?: boolean;
 
   /** Content to display inside the chip */
   children?: React.ReactNode;

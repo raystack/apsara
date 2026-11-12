@@ -5,7 +5,7 @@
 import figma from 'figma';
 
 const variant = figma.selectedInstance.getEnum('Variant', {
-  Filled: 'filled'
+  Filled: 'solid'
 });
 const size = figma.selectedInstance.getEnum('Size', {
   Large: 'large'

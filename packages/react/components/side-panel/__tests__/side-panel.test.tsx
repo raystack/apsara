@@ -64,7 +64,7 @@ describe('SidePanel', () => {
       const icon = <span data-testid='panel-icon'>📋</span>;
       render(
         <SidePanel>
-          <SidePanel.Header title='Panel Title' icon={icon} />
+          <SidePanel.Header title='Panel Title' leadingIcon={icon} />
         </SidePanel>
       );
 
@@ -112,7 +112,7 @@ describe('SidePanel', () => {
         <SidePanel>
           <SidePanel.Header
             title='Complete Panel'
-            icon={icon}
+            leadingIcon={icon}
             description='Panel with all elements'
             actions={actions}
           />
@@ -175,7 +175,7 @@ describe('SidePanel', () => {
         <SidePanel side='left'>
           <SidePanel.Header
             title='Full Panel'
-            icon={icon}
+            leadingIcon={icon}
             description='A complete side panel example'
             actions={actions}
           />

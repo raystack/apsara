@@ -13,7 +13,10 @@ export interface CollapsibleProps {
   /**
    * Event handler called when the open state changes.
    */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /**
    * Whether the collapsible is disabled.

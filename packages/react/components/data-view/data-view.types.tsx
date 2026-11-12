@@ -1,3 +1,4 @@
+import type { Tabs as TabsPrimitive } from '@base-ui/react';
 import type {
   ColumnDef,
   Row,
@@ -6,6 +7,7 @@ import type {
   Updater,
   VisibilityState
 } from '@tanstack/table-core';
+import type { ChangeDetails } from '~/shared/change-details';
 import type {
   DataTableFilterOperatorTypes,
   FilterDataType,
@@ -17,6 +19,11 @@ import type {
 import type { BaseSelectProps } from '../select/select-root';
 
 export type DataViewMode = 'client' | 'server';
+
+export type DataViewViewChangeDetails =
+  ChangeDetails<TabsPrimitive.Root.ChangeEventReason>;
+
+export type DataViewQueryChangeDetails = ChangeDetails<'none'>;
 
 export const SortOrders = {
   ASC: 'asc',
@@ -81,7 +88,7 @@ export interface DataViewField<TData = unknown> {
   accessorKey: Extract<keyof TData, string> | (string & {});
   /** Human-readable label shown in filter chips, Display controls, and the default Table header. */
   label: string;
-  icon?: React.ReactNode;
+  leadingIcon?: React.ReactNode;
 
   // filter capability
   filterable?: boolean;
@@ -161,13 +168,19 @@ export interface DataViewProps<TData> {
   data: TData[];
   /** Renderer-agnostic field metadata. Drives filter/sort/group/visibility. */
   fields: DataViewField<TData>[];
-  /** Initial query. Transformed to the internal shape on mount. */
+  /** The query (controlled). */
   query?: DataViewQuery;
+  /** The query on the first render (uncontrolled). */
+  defaultQuery?: DataViewQuery;
   mode?: DataViewMode;
-  isLoading?: boolean;
+  loading?: boolean;
   totalRowCount?: number;
   loadingRowCount?: number;
-  onTableQueryChange?: (query: DataViewQuery) => void;
+  /** Called when the query changes. Server mode also calls it on mount. */
+  onQueryChange?: (
+    query: DataViewQuery,
+    details: DataViewQueryChangeDetails
+  ) => void;
   defaultSort: DataViewSort;
   onLoadMore?: () => Promise<void> | void;
   onRowClick?: (row: TData) => void;
@@ -189,7 +202,7 @@ export interface DataViewProps<TData> {
   /** Active view (controlled). */
   view?: string;
   /** Called when the active view changes. */
-  onViewChange?: (view: string) => void;
+  onViewChange?: (view: string, details: DataViewViewChangeDetails) => void;
   /**
    * Optional local resolver map for non-accessor `group_by` keys. The wire
    * format (`group_by: string[]`) stays unchanged; resolvers run in client mode
@@ -240,8 +253,8 @@ export interface DataViewListProps<TData, TValue = unknown> {
   virtualized?: boolean;
   /** Render thin dividers between rows. Defaults to true for `variant="table"`. */
   showDividers?: boolean;
-  /** Show group section headers when grouping is active. Default true. */
-  showGroupHeaders?: boolean;
+  /** Hide group section headers when grouping is active. Default false. */
+  hideGroupHeaders?: boolean;
   /** When true, group headers stick under the table header while scrolling. Default false. */
   stickyGroupHeader?: boolean;
   /** @deprecated Style rendered parts by `[data-slot]` instead. See `DataViewListClassNames`. */
@@ -259,7 +272,7 @@ export interface TimelineMarker {
   date: TimelineDateInput;
   /** Badge content. Defaults to the marker date formatted as "17 Jan". */
   label?: React.ReactNode;
-  variant?: 'default' | 'accent' | 'danger';
+  color?: 'neutral' | 'accent' | 'danger';
 }
 
 /**
@@ -390,8 +403,8 @@ export interface DataViewTimelineProps<TData> {
   today?: boolean | TimelineDateInput;
   /** Additional full-height marker lines with axis badges. */
   markers?: TimelineMarker[];
-  /** Vertical gridlines at every axis tick. Default true. */
-  showGridlines?: boolean;
+  /** Hide the vertical gridlines at every axis tick. Default false. */
+  hideGridlines?: boolean;
   /**
    * Label every Nth `scale` unit on the axis, counted from the domain start
    * (e.g. `2` on a day scale labels every other day). Labels never render
@@ -406,10 +419,10 @@ export interface DataViewTimelineProps<TData> {
    */
   gridlineInterval?: number;
   /**
-   * Hover crosshair: a darker line snapped to the sub-interval (tick unit)
-   * under the pointer, with a date badge pinned to the axis. Default true.
+   * Hide the hover crosshair: a darker line snapped to the sub-interval (tick
+   * unit) under the pointer, with a date badge pinned to the axis. Default false.
    */
-  showCursorLine?: boolean;
+  hideCursorLine?: boolean;
   /** Initial horizontal scroll target. Default 'today'. */
   defaultScrollTo?: TimelineDateInput | 'today' | 'start' | 'end';
   /**
@@ -486,11 +499,11 @@ export interface DataViewTimelineProps<TData> {
   virtualized?: boolean;
 
   /**
-   * Render the group header band above each section when `group_by` is active.
-   * Same contract as `DataViewListProps.showGroupHeaders`: false hides the
-   * bands only, and rows stay grouped into their sections. Default true.
+   * Hide the group header band above each section when `group_by` is active.
+   * Same contract as `DataViewListProps.hideGroupHeaders`: true hides the
+   * bands only, and rows stay grouped into their sections. Default false.
    */
-  showGroupHeaders?: boolean;
+  hideGroupHeaders?: boolean;
   /** @deprecated Style rendered parts by `[data-slot]` instead. See `DataViewTimelineClassNames`. */
   classNames?: DataViewTimelineClassNames;
 }
@@ -530,7 +543,7 @@ export type DataViewContextType<TData> = {
   // multi-view
   views?: ViewSpec[];
   activeView?: string;
-  setActiveView: (view: string) => void;
+  setActiveView: (view: string, details?: DataViewViewChangeDetails) => void;
   /** Called by each renderer on mount to register its `fields` override for its `name`. Returns a cleanup function. */
   registerFieldsForView: (
     name: string,

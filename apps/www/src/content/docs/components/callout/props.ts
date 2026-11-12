@@ -1,16 +1,16 @@
 export interface CalloutProps {
   /**
-   * Visual style variant
-   * @defaultValue "grey"
+   * Intent color. `primary` uses the base background.
+   * @defaultValue "neutral"
    */
-  type?:
-    | 'grey'
+  color?:
+    | 'primary'
+    | 'neutral'
     | 'success'
-    | 'alert'
-    | 'gradient'
+    | 'danger'
     | 'accent'
     | 'attention'
-    | 'normal';
+    | 'gradient';
 
   /**
    * Visual style variant.
@@ -37,7 +37,7 @@ export interface CalloutProps {
    * Custom leading icon
    * @defaultValue InfoIcon
    */
-  icon?: React.ReactNode;
+  leadingIcon?: React.ReactNode;
 
   /**
    * Called when the dismiss button is clicked. When provided, the consumer owns
@@ -46,10 +46,13 @@ export interface CalloutProps {
   onDismiss?: () => void;
 
   /** Text content of the callout */
-  children?: React.ReactNode;
+  children: React.ReactNode;
 
   /** Additional CSS class names */
   className?: string;
+
+  /** Inline styles for the callout */
+  style?: React.CSSProperties;
 
   /**
    * Corner radius for this callout only. Overrides the theme's `radius`.

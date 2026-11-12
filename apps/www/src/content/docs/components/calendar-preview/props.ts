@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-type Scale = 'day' | 'month' | 'quarter' | 'halfYear' | 'year';
+type Scale = 'day' | 'month' | 'quarter' | 'half-year' | 'year';
 
 export interface CalendarPreviewProps {
   /**
@@ -282,10 +282,10 @@ export interface CalendarPreviewBodyProps {
   label?: ReactNode;
 
   /**
-   * Whether the field carries the calendar glyph.
+   * Shows the calendar icon in the date input.
    * @default false
    */
-  showIcon?: boolean;
+  showCalendarIcon?: boolean;
 }
 
 export interface CalendarPreviewScaleProps {
@@ -331,7 +331,7 @@ export interface UseCalendarReturn {
    * The granularity the value is committed at. Read-only — switching scale is
    * `.Scales` and `.Scale`, which take `render` for custom chrome.
    */
-  scale: 'day' | 'month' | 'quarter' | 'halfYear' | 'year';
+  scale: 'day' | 'month' | 'quarter' | 'half-year' | 'year';
 
   /** The range mid-build, at `selection="range"`. Never emitted. */
   draft: { from?: Date; to?: Date } | null;

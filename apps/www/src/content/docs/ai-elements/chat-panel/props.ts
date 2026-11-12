@@ -21,7 +21,10 @@ export interface ChatPanelProps {
   defaultMode?: 'docked' | 'floating' | 'minimized';
 
   /** Called when the mode changes. */
-  onModeChange?: (mode: 'docked' | 'floating' | 'minimized') => void;
+  onModeChange?: (
+    mode: 'docked' | 'floating' | 'minimized',
+    details: { reason: 'trigger-press'; event: Event }
+  ) => void;
 
   /**
    * Which edge the panel docks to; also picks the corner used by the

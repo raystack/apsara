@@ -4,7 +4,7 @@ import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ComponentProps, SyntheticEvent, useRef, useState } from 'react';
 
-import { radiusVariants } from '../../shared/radius';
+import { radiusClasses } from '../../shared/radius';
 import styles from './image.module.css';
 
 const image = cva(styles.image, {
@@ -14,7 +14,8 @@ const image = cva(styles.image, {
       cover: styles['image-cover'],
       fill: styles['image-fill']
     },
-    ...radiusVariants
+    /** Corner radius of the image. */
+    radius: radiusClasses
   },
   defaultVariants: {
     fit: 'cover',

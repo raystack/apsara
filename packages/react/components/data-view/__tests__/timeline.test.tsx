@@ -344,7 +344,7 @@ function renderTimeline(
       fields={root.fields ?? fields}
       mode='client'
       defaultSort={root.sort ?? { name: 'title', order: 'asc' }}
-      query={root.query}
+      defaultQuery={root.query}
       getRowId={(row: Order) => row.id}
     >
       <DataView.Timeline<Order>
@@ -495,7 +495,7 @@ describe('DataView.Timeline', () => {
       today: '2025-01-17',
       markers: [
         { date: '2025-01-25' },
-        { date: '2025-01-28', label: 'Launch', variant: 'danger' }
+        { date: '2025-01-28', label: 'Launch', color: 'danger' }
       ]
     });
     expect(screen.getByText('17 Jan')).toBeInTheDocument();
@@ -654,8 +654,8 @@ describe('DataView.Timeline', () => {
     expect(screen.getByText(label)).toBeInTheDocument();
   });
 
-  it('does not track the cursor when showCursorLine is false', async () => {
-    const { container } = renderTimeline({ showCursorLine: false });
+  it('does not track the cursor when hideCursorLine is set', async () => {
+    const { container } = renderTimeline({ hideCursorLine: true });
     const root = container.firstElementChild as HTMLElement;
     await act(async () => {
       fireEvent.mouseMove(root, { clientX: 100 });
@@ -1584,8 +1584,8 @@ describe('DataView.Timeline grouping', () => {
     );
   });
 
-  it('hides the bands but keeps the sections with showGroupHeaders={false}', () => {
-    const { container } = renderGrouped({ showGroupHeaders: false });
+  it('hides the bands but keeps the sections with hideGroupHeaders', () => {
+    const { container } = renderGrouped({ hideGroupHeaders: true });
     expect(bands(container)).toHaveLength(0);
     expect(container.querySelector('[class*="timelineGroupSlot"]')).toBeNull();
     // Rows stay grouped (List semantics): the 38px bands are gone, so every
@@ -1670,7 +1670,7 @@ describe('DataView.Timeline grouping', () => {
         ]}
         mode='client'
         defaultSort={{ name: 'title', order: 'asc' }}
-        query={{ group_by: ['team'] }}
+        defaultQuery={{ group_by: ['team'] }}
         getRowId={(row: Order) => row.id}
       >
         <ApplyFilterButton
@@ -2373,7 +2373,7 @@ describe('DataView.Timeline theme scaling', () => {
           getRowId={(row: Order) => row.id}
           views={views}
           view={view}
-          isLoading
+          loading
           loadingRowCount={1}
         >
           <DataView.List<Order>

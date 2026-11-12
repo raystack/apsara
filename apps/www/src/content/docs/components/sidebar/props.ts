@@ -5,7 +5,10 @@ export interface SidebarRootProps {
   open?: boolean;
 
   /** Callback when expanded/collapsed state changes. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    details: { reason: 'trigger-press' | 'none'; event: Event }
+  ) => void;
 
   /** Default expanded/collapsed state.
    * @default true
@@ -39,9 +42,12 @@ export interface SidebarRootProps {
   /** Called when a hover peek starts or ends. */
   onPeekChange?: (isPeeking: boolean) => void;
 
-  /** Position of the Sidebar.
+  /** The edge of the layout the sidebar sits on.
    * @default "left"
    */
+  side?: 'left' | 'right';
+
+  /** @deprecated Use `side`. */
   position?: 'left' | 'right';
 
   /** Visual style variant of the Sidebar.
@@ -80,7 +86,10 @@ export interface SidebarGroupProps {
   defaultOpen?: boolean;
 
   /** Callback when the group's expanded/collapsed state changes. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Optional ReactNode for group icon. */
   leadingIcon?: ReactNode;

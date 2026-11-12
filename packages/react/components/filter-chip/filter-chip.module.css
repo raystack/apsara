@@ -15,7 +15,7 @@
   overflow: clip;
 }
 
-.chip-default {
+.variant-outline {
   border: 1px solid var(--rs-color-border-base-tertiary);
 }
 

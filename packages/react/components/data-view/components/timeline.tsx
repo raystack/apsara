@@ -343,17 +343,8 @@ interface ResolvedMarker {
   time: number;
   x: number;
   label: ReactNode;
-  variant: 'default' | 'accent' | 'danger';
+  color: 'neutral' | 'accent' | 'danger';
 }
-
-const MARKER_BADGE_VARIANT: Record<
-  ResolvedMarker['variant'],
-  'accent' | 'danger' | 'neutral'
-> = {
-  accent: 'accent',
-  danger: 'danger',
-  default: 'neutral'
-};
 
 /** Axis-badge label for the hover cursor, formatted per scale granularity. */
 function cursorLabel(time: number, scale: TimelineScale): string {
@@ -386,10 +377,10 @@ export function DataViewTimeline<TData>({
   range,
   today = true,
   markers,
-  showGridlines = true,
+  hideGridlines = false,
   tickInterval,
   gridlineInterval = 1,
-  showCursorLine = true,
+  hideCursorLine = false,
   defaultScrollTo = 'today',
   scrollToResults = true,
   onVisibleRangeChange,
@@ -400,7 +391,7 @@ export function DataViewTimeline<TData>({
   minCardWidth: minCardWidthProp,
   estimatedPointWidth: estimatedPointWidthProp,
   virtualized = false,
-  showGroupHeaders = true,
+  hideGroupHeaders = false,
   classNames = {}
 }: DataViewTimelineProps<TData>) {
   const {
@@ -843,7 +834,7 @@ export function DataViewTimeline<TData>({
     let y = 0;
     for (const section of laidOutSections) {
       const sectionTop = y;
-      const banded = showGroupHeaders && section.group !== null;
+      const banded = !hideGroupHeaders && section.group !== null;
       if (banded) y += groupBandHeight;
       y += laneGap;
       for (let i = 0; i < section.laneCount; i++) {
@@ -896,7 +887,7 @@ export function DataViewTimeline<TData>({
     fixedLaneHeight,
     laneGap,
     groupBandHeight,
-    showGroupHeaders,
+    hideGroupHeaders,
     measureVersion
   ]);
 
@@ -939,7 +930,7 @@ export function DataViewTimeline<TData>({
         time: todayTime,
         x: timeScale.x(todayTime),
         label: format(todayTime, 'd MMM'),
-        variant: 'accent'
+        color: 'accent'
       });
     }
     markers?.forEach((marker, index) => {
@@ -950,7 +941,7 @@ export function DataViewTimeline<TData>({
         time,
         x: timeScale.x(time),
         label: marker.label ?? format(time, 'd MMM'),
-        variant: marker.variant ?? 'default'
+        color: marker.color ?? 'neutral'
       });
     });
     return list;
@@ -1012,7 +1003,7 @@ export function DataViewTimeline<TData>({
   const cursorRafRef = useRef<number | null>(null);
 
   const updateCursorFromPointer = useCallback(() => {
-    if (!showCursorLine) return;
+    if (hideCursorLine) return;
     const el = scrollRef.current;
     const pointerX = pointerXRef.current;
     if (!el || pointerX === null) return;
@@ -1024,11 +1015,11 @@ export function DataViewTimeline<TData>({
     );
     const snapped = startOfUnit(new Date(time), scale).getTime();
     setCursorTime(prev => (prev === snapped ? prev : snapped));
-  }, [showCursorLine, timeScale, scale]);
+  }, [hideCursorLine, timeScale, scale]);
 
   const handlePointerMove = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
-      if (!showCursorLine) return;
+      if (hideCursorLine) return;
       pointerXRef.current = event.clientX;
       if (cursorRafRef.current !== null) return;
       cursorRafRef.current = requestAnimationFrame(() => {
@@ -1036,7 +1027,7 @@ export function DataViewTimeline<TData>({
         updateCursorFromPointer();
       });
     },
-    [showCursorLine, updateCursorFromPointer]
+    [hideCursorLine, updateCursorFromPointer]
   );
 
   const handlePointerLeave = useCallback(() => {
@@ -1202,7 +1193,7 @@ export function DataViewTimeline<TData>({
     if (el) {
       savedScrollRef.current = { left: el.scrollLeft, top: el.scrollTop };
     }
-    if (!needsViewport && !showCursorLine) return;
+    if (!needsViewport && hideCursorLine) return;
     if (rafIdRef.current !== null) return;
     rafIdRef.current = requestAnimationFrame(() => {
       rafIdRef.current = null;
@@ -1212,7 +1203,7 @@ export function DataViewTimeline<TData>({
       }
       updateCursorFromPointer();
     });
-  }, [needsViewport, showCursorLine, readViewport, updateCursorFromPointer]);
+  }, [needsViewport, hideCursorLine, readViewport, updateCursorFromPointer]);
 
   useEffect(
     () => () => {
@@ -1597,8 +1588,8 @@ export function DataViewTimeline<TData>({
       data-dragging={isDragging || undefined}
       data-slot='data-view-timeline'
       onScroll={handleScroll}
-      onMouseMove={showCursorLine ? handlePointerMove : undefined}
-      onMouseLeave={showCursorLine ? handlePointerLeave : undefined}
+      onMouseMove={hideCursorLine ? undefined : handlePointerMove}
+      onMouseLeave={hideCursorLine ? undefined : handlePointerLeave}
       onPointerDown={handleDragPointerDown}
       onPointerMove={handleDragPointerMove}
       onPointerUp={handleDragEnd}
@@ -1646,7 +1637,7 @@ export function DataViewTimeline<TData>({
             style={{ left: marker.x }}
             data-slot='data-view-timeline-axis-marker'
           >
-            <Badge size='micro' variant={MARKER_BADGE_VARIANT[marker.variant]}>
+            <Badge size='micro' color={marker.color}>
               {marker.label}
             </Badge>
           </div>
@@ -1658,7 +1649,7 @@ export function DataViewTimeline<TData>({
             style={{ left: timeScale.x(cursorTime) }}
             data-slot='data-view-timeline-axis-cursor'
           >
-            <Badge size='micro' variant='neutral'>
+            <Badge size='micro' color='neutral'>
               {cursorLabel(cursorTime, scale)}
             </Badge>
           </div>
@@ -1695,7 +1686,7 @@ export function DataViewTimeline<TData>({
                 >
                   {band.group.label}
                   {band.group.showGroupCount ? (
-                    <Badge variant='neutral'>{band.group.count}</Badge>
+                    <Badge color='neutral'>{band.group.count}</Badge>
                   ) : null}
                 </span>
               </div>
@@ -1710,7 +1701,7 @@ export function DataViewTimeline<TData>({
         style={{ width: timeScale.totalWidth, height: canvasHeight }}
         data-slot='data-view-timeline-canvas'
       >
-        {showGridlines
+        {!hideGridlines
           ? visibleTicks.map(tick =>
               tick.index % gridlineEvery === 0 ? (
                 <div
@@ -1728,7 +1719,7 @@ export function DataViewTimeline<TData>({
             key={marker.key}
             aria-hidden='true'
             className={cx(styles.timelineMarkerLine, classNames.marker)}
-            data-variant={marker.variant}
+            data-color={marker.color}
             style={{ left: marker.x, ...lineSpan }}
             data-slot='data-view-timeline-marker'
           />

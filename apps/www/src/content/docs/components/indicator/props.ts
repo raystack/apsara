@@ -1,9 +1,9 @@
 export interface IndicatorProps {
   /**
-   * Visual style variant
+   * Intent color of the indicator.
    * @default "accent"
    */
-  variant?: 'accent' | 'warning' | 'danger' | 'success' | 'neutral';
+  color?: 'accent' | 'attention' | 'danger' | 'success' | 'neutral';
 
   /** Optional text label to display (if omitted, shows a dot) */
   label?: string;
@@ -15,11 +15,11 @@ export interface IndicatorProps {
   pulse?: boolean;
 
   /** Optional custom description for screen readers */
-  ariaLabel?: string;
+  'aria-label'?: string;
 
   /** The content to show the indicator on */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 
-  /** Additional CSS class names */
+  /** Additional CSS class names for the badge */
   className?: string;
 }

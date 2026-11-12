@@ -29,7 +29,7 @@ const BasicSidebar = ({
   open,
   onOpenChange,
   collapsible = 'icon',
-  position = 'left',
+  side = 'left',
   children,
   ...props
 }: SidebarRootProps) => (
@@ -38,7 +38,7 @@ const BasicSidebar = ({
     open={open}
     onOpenChange={onOpenChange}
     collapsible={collapsible}
-    position={position}
+    side={side}
     {...props}
   >
     <Sidebar.Header>
@@ -132,7 +132,10 @@ describe('Sidebar', () => {
       const handle = screen.getByRole('button', { name: COLLAPSE_TEXT });
       fireEvent.click(handle);
 
-      expect(onOpenChange).toHaveBeenCalledWith(false);
+      expect(onOpenChange).toHaveBeenCalledWith(
+        false,
+        expect.objectContaining({ reason: 'trigger-press' })
+      );
     });
 
     it('supports keyboard navigation on handle', async () => {
@@ -144,7 +147,7 @@ describe('Sidebar', () => {
       handle.focus();
       await user.keyboard('{Enter}');
 
-      expect(onOpenChange).toHaveBeenCalledWith(false);
+      expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
     });
 
     it('supports space key on handle', async () => {
@@ -156,7 +159,7 @@ describe('Sidebar', () => {
       handle.focus();
       await user.keyboard(' ');
 
-      expect(onOpenChange).toHaveBeenCalledWith(false);
+      expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
     });
 
     it('shows a custom handle tooltip via collapseTooltip', async () => {
@@ -358,7 +361,7 @@ describe('Sidebar', () => {
       const handle = screen.getByRole('button', { name: 'Expand sidebar' });
       fireEvent.click(handle);
 
-      expect(onOpenChange).toHaveBeenCalledWith(true);
+      expect(onOpenChange).toHaveBeenCalledWith(true, expect.anything());
     });
 
     it('flips the visual open state so collapse-hiding styles turn off', async () => {
@@ -467,18 +470,29 @@ describe('Sidebar', () => {
     });
   });
 
-  describe('Position Variants', () => {
-    it('applies left position by default', () => {
+  describe('Side and Variants', () => {
+    it('applies left side by default', () => {
       const { container } = render(<BasicSidebar />);
 
-      const sidebar = container.querySelector('[data-position="left"]');
+      const sidebar = container.querySelector('[data-side="left"]');
       expect(sidebar).toBeInTheDocument();
     });
 
-    it('applies right position when specified', () => {
-      const { container } = render(<BasicSidebar position='right' />);
+    it('applies right side when specified', () => {
+      const { container } = render(<BasicSidebar side='right' />);
 
-      const sidebar = container.querySelector('[data-position="right"]');
+      const sidebar = container.querySelector('[data-side="right"]');
+      expect(sidebar).toBeInTheDocument();
+    });
+
+    it('reads the deprecated position prop as side', () => {
+      const { container } = render(
+        <Sidebar position='right'>
+          <Sidebar.Main />
+        </Sidebar>
+      );
+
+      const sidebar = container.querySelector('[data-side="right"]');
       expect(sidebar).toBeInTheDocument();
     });
 
@@ -681,9 +695,9 @@ describe('Sidebar', () => {
       expect(screen.getAllByText(HELP_ITEM_TEXT)).toHaveLength(1);
     });
 
-    it('opens the clipped-label tooltip away from a right-positioned sidebar', async () => {
+    it('opens the clipped-label tooltip away from a right-side sidebar', async () => {
       const user = userEvent.setup();
-      render(<BasicSidebar position='right' />);
+      render(<BasicSidebar side='right' />);
 
       const text = screen.getByText(HELP_ITEM_TEXT);
       Object.defineProperty(text, 'scrollWidth', {
@@ -702,7 +716,7 @@ describe('Sidebar', () => {
       });
       const tooltip = screen
         .getAllByText(HELP_ITEM_TEXT)
-        .map(el => el.closest('[data-side]'))
+        .map(el => el.closest('[data-slot="tooltip-content"]'))
         .find(Boolean);
       expect(tooltip).toHaveAttribute('data-side', 'left');
     });
@@ -887,7 +901,10 @@ describe('Sidebar', () => {
 
       const trigger = screen.getByRole('button', { name: /Main/ });
       fireEvent.click(trigger);
-      expect(onOpenChange).toHaveBeenCalledWith(true);
+      expect(onOpenChange).toHaveBeenCalledWith(
+        true,
+        expect.objectContaining({ reason: 'trigger-press' })
+      );
       expect(screen.queryByText(DASHBOARD_ITEM_TEXT)).not.toBeInTheDocument();
 
       rerender(
@@ -930,11 +947,11 @@ describe('Sidebar', () => {
 
       const trigger = screen.getByRole('button', { name: /Main/ });
       fireEvent.click(trigger);
-      expect(onOpenChange).toHaveBeenLastCalledWith(false);
+      expect(onOpenChange).toHaveBeenLastCalledWith(false, expect.anything());
       expect(screen.queryByText(DASHBOARD_ITEM_TEXT)).not.toBeInTheDocument();
 
       fireEvent.click(trigger);
-      expect(onOpenChange).toHaveBeenLastCalledWith(true);
+      expect(onOpenChange).toHaveBeenLastCalledWith(true, expect.anything());
       expect(screen.getByText(DASHBOARD_ITEM_TEXT)).toBeInTheDocument();
     });
 
@@ -1091,7 +1108,10 @@ describe('Sidebar', () => {
       );
 
       fireEvent.click(screen.getByTestId('sidebar-trigger'));
-      expect(onOpenChange).toHaveBeenCalledWith(false);
+      expect(onOpenChange).toHaveBeenCalledWith(
+        false,
+        expect.objectContaining({ reason: 'trigger-press' })
+      );
     });
 
     it('is disabled when the sidebar is not collapsible', () => {
@@ -1126,11 +1146,11 @@ describe('Sidebar', () => {
 
   describe('useSidebar', () => {
     const CollapseStatus = () => {
-      const { isCollapsed, open, position, collapsible } = useSidebar();
+      const { isCollapsed, open, side, collapsible } = useSidebar();
       return (
         <div
           data-testid='collapse-status'
-          data-position={position}
+          data-side={side}
           data-collapsible={collapsible}
         >
           {isCollapsed ? 'collapsed' : 'expanded'}:{open ? 'open' : 'closed'}
@@ -1150,7 +1170,7 @@ describe('Sidebar', () => {
 
       const status = screen.getByTestId('collapse-status');
       expect(status).toHaveTextContent('expanded:open');
-      expect(status).toHaveAttribute('data-position', 'left');
+      expect(status).toHaveAttribute('data-side', 'left');
       expect(status).toHaveAttribute('data-collapsible', 'icon');
 
       fireEvent.click(screen.getByTestId('sidebar-trigger'));

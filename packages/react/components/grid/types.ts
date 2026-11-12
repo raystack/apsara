@@ -1,6 +1,2 @@
 export type AlignType = 'start' | 'end' | 'center' | 'stretch';
-export type AlignExtendedType =
-  | AlignType
-  | 'space-around'
-  | 'space-between'
-  | 'space-evenly';
+export type AlignExtendedType = AlignType | 'between' | 'around' | 'evenly';
