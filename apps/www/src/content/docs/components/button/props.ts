@@ -65,6 +65,9 @@ export type ButtonProps = {
   /** Additional CSS class names */
   className?: string;
 
+  /** Inline styles for the button */
+  style?: React.CSSProperties;
+
   /**
    * Corner radius for this button only. Overrides the theme's `radius`.
    * @defaultValue The theme's `radius`

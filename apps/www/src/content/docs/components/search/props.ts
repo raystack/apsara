@@ -5,17 +5,20 @@ export interface SearchProps {
    */
   size?: 'small' | 'large';
 
-  /** Placeholder text for the input. */
+  /**
+   * Visual variant of the input.
+   * @default "outline"
+   */
+  variant?: 'outline' | 'text';
+
+  /**
+   * Placeholder text for the input.
+   * @default "Search"
+   */
   placeholder?: string;
 
   /** Whether the search input is disabled. */
   disabled?: boolean;
-
-  /**
-   * Visual variant of the search input.
-   * @default outline
-   */
-  variant?: 'outline' | 'text';
 
   /**
    * Icon before the input. Pass `null` to hide it.

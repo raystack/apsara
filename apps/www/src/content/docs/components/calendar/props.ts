@@ -138,6 +138,11 @@ export interface CalendarProps {
 
 export interface RangePickerProps {
   /**
+   * Additional CSS class names for the group that holds the start and end inputs. Ignored when `children` is set.
+   */
+  pickerGroupClassName?: string;
+
+  /**
    * Format for displaying the date. Supports various formats:
    * - With slashes: "DD/MM/YYYY", "MM/DD/YYYY", "YYYY/MM/DD"
    * - With dashes: "DD-MM-YYYY", "MM-DD-YYYY", "YYYY-MM-DD"
@@ -150,27 +155,27 @@ export interface RangePickerProps {
   dateFormat?: string;
 
   /**
-   * Fires on every step of range selection — not only on the completed range.
-   * Both fields are optional during partial selection; gate on `range.to` if
-   * you only want completed ranges.
+   * Fires on each day picked in the calendar. `from` is always set, and `to`
+   * is set only when the range is complete. Check `range.to` to handle only
+   * completed ranges.
    */
   onValueChange?: (
-    range: { from?: Date; to?: Date },
+    range: { from: Date | undefined; to?: Date },
     details: { reason: 'item-press'; event: Event }
   ) => void;
 
   /** Initial (uncontrolled) date range. */
-  defaultValue?: { from?: Date; to?: Date };
+  defaultValue?: { from: Date | undefined; to?: Date };
 
   /** Controlled date range. */
-  value?: { from?: Date; to?: Date };
+  value?: { from: Date | undefined; to?: Date };
 
   /**
    * Props for each picker slot. When both this and the legacy
    * `inputsProps` / `calendarProps` / `popoverProps` are set, `slotProps` wins.
    *
-   * Input event handlers (`onChange`, `onFocus`, `onBlur`, `onKeyUp`) are not
-   * forwarded — use `onValueChange` for value changes.
+   * The inputs are read-only. RangePicker replaces their `value` and `onClick`.
+   * Use `onValueChange` for value changes.
    */
   slotProps?: {
     startInput?: InputProps;
@@ -265,9 +270,6 @@ export interface DatePickerProps {
     reason?: 'unparseable' | 'out-of-bounds' | 'unavailable' | 'out-of-order';
     message?: string;
   }) => void;
-
-  /** @deprecated Use `slotProps.calendar` instead. */
-  calendarProps?: CalendarProps;
 
   /**
    * Render prop or custom trigger. Pass a function to render a custom trigger

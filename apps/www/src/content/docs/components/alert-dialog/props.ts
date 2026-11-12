@@ -3,7 +3,10 @@ export interface AlertDialogProps {
   open?: boolean;
 
   /** Callback when open state changes */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 }
 
 export interface AlertDialogContentProps {

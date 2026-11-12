@@ -3,13 +3,16 @@ export interface DialogProps {
   open?: boolean;
 
   /** Callback when open state changes */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /**
-   * Whether the dialog is modal
+   * Whether the dialog is modal. `'trap-focus'` traps focus without locking scroll or outside interaction.
    * @default true
    */
-  modal?: boolean;
+  modal?: boolean | 'trap-focus';
 }
 
 export interface DialogContentProps {

@@ -47,6 +47,7 @@ export interface CodeBlockProps
   extends ComponentProps<'div'>,
     CodeBlockCommonProps {
   defaultValue?: string;
+  /** @deprecated Has no effect. */
   maxHeight?: string | number;
   onValueChange?: (value: string) => void;
   defaultCollapsed?: boolean;

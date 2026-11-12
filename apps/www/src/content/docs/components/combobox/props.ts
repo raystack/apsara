@@ -49,7 +49,10 @@ export interface ComboboxRootProps {
   defaultOpen?: boolean;
 
   /** Callback fired when the open state changes. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Whether the popover should be modal.
    * @default false
@@ -105,7 +108,7 @@ export interface ComboboxInputProps {
 
 export interface ComboboxContentProps {
   /** Alignment of the content relative to the trigger.
-   * @default "start"
+   * @default "center"
    */
   align?: 'start' | 'center' | 'end';
 
