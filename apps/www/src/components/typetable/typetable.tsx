@@ -1,9 +1,9 @@
 'use client';
 
-import { Accordion, Flex, Text } from '@raystack/apsara';
+import { Accordion, CodeBlock, Flex, Text } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
 import Link from 'fumadocs-core/link';
-import { type ReactNode } from 'react';
+import { isValidElement, type ReactNode } from 'react';
 import styles from './typetable.module.css';
 
 export interface ParameterNode {
@@ -40,6 +40,13 @@ export interface TypeNode {
   parameters?: ParameterNode[];
 
   returns?: ReactNode;
+}
+
+// remarkAutoTypeTable passes each type as a fragment around its text.
+function toText(node: ReactNode): string {
+  if (isValidElement<{ children?: ReactNode }>(node))
+    return toText(node.props.children);
+  return node == null ? '' : String(node);
 }
 
 export function TypeTable({
@@ -83,6 +90,7 @@ function Item({
   name: string;
   item: TypeNode;
 }) {
+  const fullType = toText(typeDescription ?? type);
   return (
     <Accordion.Item value={name} className={styles.accordionItem}>
       <Accordion.Trigger className={styles.trigger}>
@@ -92,13 +100,17 @@ function Item({
           {name}
           {required ? <span className={styles.required}>*</span> : ''}
         </code>
-        <span className={cx(styles.code, styles.fieldValue)}>
+        <span className={styles.fieldValue}>
           {typeDescriptionLink ? (
             <Link href={typeDescriptionLink} className={styles.typeLink}>
               {type}
             </Link>
           ) : (
-            type
+            <CodeBlock hideLineNumbers>
+              <CodeBlock.Code language='tsx' className={styles.fieldCode}>
+                {toText(type)}
+              </CodeBlock.Code>
+            </CodeBlock>
           )}
         </span>
       </Accordion.Trigger>
@@ -124,18 +136,31 @@ function Item({
             <Text size='small' className={styles.fieldLabel}>
               Type
             </Text>
-            <span className={cx(styles.code, styles.fieldValue)}>
-              {typeDescription ?? type}
-            </span>
+            <CodeBlock hideLineNumbers>
+              <CodeBlock.Code
+                language='tsx'
+                className={cx(styles.fieldCode, styles.fieldValue)}
+              >
+                {fullType +
+                  (!required && !fullType.includes('undefined')
+                    ? ' | undefined'
+                    : '')}
+              </CodeBlock.Code>
+            </CodeBlock>
           </Flex>
           {defaultValue && (
             <Flex gap={5}>
               <Text size='small' className={styles.fieldLabel}>
                 Default
               </Text>
-              <span className={cx(styles.code, styles.fieldValue)}>
-                {defaultValue}
-              </span>
+              <CodeBlock hideLineNumbers>
+                <CodeBlock.Code
+                  language='tsx'
+                  className={cx(styles.fieldCode, styles.fieldValue)}
+                >
+                  {toText(defaultValue)}
+                </CodeBlock.Code>
+              </CodeBlock>
             </Flex>
           )}
           {parameters.length > 0 && (

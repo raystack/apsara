@@ -43,7 +43,15 @@ export default defineConfig({
         remarkNpm,
         remarkStructure,
         // remarkInstall,
-        [remarkAutoTypeTable, { generator, options: { transform } }]
+        [
+          remarkAutoTypeTable,
+          {
+            generator,
+            options: { transform },
+            // TypeTable highlights types with CodeBlock.
+            renderType: (type: string) => ({ type: 'text', value: type })
+          }
+        ]
       ];
     },
     rehypePlugins: () => [rehypeToc]
