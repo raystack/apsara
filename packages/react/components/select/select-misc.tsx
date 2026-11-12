@@ -70,13 +70,13 @@ export function SelectEmpty({
   children,
   ...props
 }: SelectEmptyProps) {
-  const { autocomplete, autocompleteMode, items, searchValue } =
+  const { autocomplete, autocompleteMode, items, inputValue } =
     useSelectContext();
 
   const hasMatch = Object.values(items).some(
     item =>
       autocompleteMode === 'manual' ||
-      getMatch(item.value, item.children, searchValue)
+      getMatch(item.value, item.children, inputValue)
   );
 
   // Base UI's Empty counts only root `items`, so the match check happens here.

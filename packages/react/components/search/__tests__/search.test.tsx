@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import inputStyles from '../../input/input.module.css';
 import { Search } from '../search';
-import styles from '../search.module.css';
 
 describe('Search', () => {
   describe('Basic Rendering', () => {
@@ -183,30 +183,18 @@ describe('Search', () => {
   });
 
   describe('Variants', () => {
-    it('defaults to default variant', () => {
-      render(<Search />);
-      const input = screen.getByRole('searchbox');
-      expect(input).toBeInTheDocument();
-    });
-
-    it('renders borderless variant', () => {
-      render(<Search variant='borderless' />);
-      const input = screen.getByRole('searchbox');
-      expect(input).toBeInTheDocument();
-    });
-  });
-
-  describe('Width', () => {
-    it('defaults to 100% width', () => {
+    it('defaults to outline variant', () => {
       const { container } = render(<Search />);
-      const searchContainer = container.querySelector(`.${styles.container}`);
-      expect(searchContainer).toHaveStyle({ width: '100%' });
+      expect(
+        container.querySelector('[data-slot="input-container"]')
+      ).not.toHaveClass(inputStyles['variant-text']);
     });
 
-    it('sets custom width', () => {
-      const { container } = render(<Search width='300px' />);
-      const searchContainer = container.querySelector(`.${styles.container}`);
-      expect(searchContainer).toHaveStyle({ width: '300px' });
+    it('renders text variant', () => {
+      const { container } = render(<Search variant='text' />);
+      expect(
+        container.querySelector('[data-slot="input-container"]')
+      ).toHaveClass(inputStyles['variant-text']);
     });
   });
 

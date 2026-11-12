@@ -173,22 +173,22 @@ export const periodsDemo = {
     {
       name: 'All scales',
       code: `<CalendarPreview
-              scales={['day', 'month', 'quarter', 'halfYear', 'year']}
+              scales={['day', 'month', 'quarter', 'half-year', 'year']}
               defaultMonth={new Date(2026, 7, 1)}
               defaultScale="quarter"
             >
-              <CalendarPreview.Body showIcon />
+              <CalendarPreview.Body showCalendarIcon />
             </CalendarPreview>`
     },
     {
       name: 'In a popover',
       code: `<CalendarPreview
-              scales={['day', 'month', 'quarter', 'halfYear', 'year']}
+              scales={['day', 'month', 'quarter', 'half-year', 'year']}
               defaultMonth={new Date(2026, 7, 1)}
             >
               <CalendarPreview.Trigger placeholder="Add start date" />
               <CalendarPreview.Content>
-                <CalendarPreview.Body showIcon />
+                <CalendarPreview.Body showCalendarIcon />
               </CalendarPreview.Content>
             </CalendarPreview>`
     },
@@ -200,25 +200,25 @@ export const periodsDemo = {
               defaultMonth={new Date(2026, 7, 1)}
               yearRange={{ from: 2025, to: 2027 }}
             >
-              <CalendarPreview.Body showIcon />
+              <CalendarPreview.Body showCalendarIcon />
             </CalendarPreview>`
     },
     {
       name: 'Month',
       code: `<CalendarPreview scales={['month', 'quarter', 'year']} defaultScale="month">
-              <CalendarPreview.Body showIcon />
+              <CalendarPreview.Body showCalendarIcon />
             </CalendarPreview>`
     },
     {
       name: 'Quarter',
       code: `<CalendarPreview scales="quarter" defaultMonth={new Date(2026, 7, 1)}>
-              <CalendarPreview.Body showIcon />
+              <CalendarPreview.Body showCalendarIcon />
             </CalendarPreview>`
     },
     {
       name: 'Trailing value',
       code: `function CalendarPreviewTrailingExample() {
-  const scales = ['day', 'month', 'quarter', 'halfYear', 'year'];
+  const scales = ['day', 'month', 'quarter', 'half-year', 'year'];
   const [start, setStart] = React.useState({ date: '2026-07-01', scale: 'quarter' });
   const [end, setEnd] = React.useState({ date: '2026-09-30', scale: 'quarter' });
 
@@ -232,11 +232,11 @@ export const periodsDemo = {
             placeholder="Add start date"
           />
           <CalendarPreview.Content>
-            <CalendarPreview.Body showIcon label="Start date" />
+            <CalendarPreview.Body showCalendarIcon label="Start date" />
           </CalendarPreview.Content>
         </CalendarPreview>
 
-        <Text size="small" variant="secondary">→</Text>
+        <Text size="small" color="secondary">→</Text>
 
         <CalendarPreview scales={scales} trailingValue value={end} onValueChange={setEnd}>
           <CalendarPreview.Trigger
@@ -245,12 +245,12 @@ export const periodsDemo = {
             placeholder="Add end date"
           />
           <CalendarPreview.Content>
-            <CalendarPreview.Body showIcon label="End date" />
+            <CalendarPreview.Body showCalendarIcon label="End date" />
           </CalendarPreview.Content>
         </CalendarPreview>
       </Flex>
 
-      <Text size="micro" variant="secondary">
+      <Text size="micro" color="secondary">
         Emitted: {start.date} → {end.date}
       </Text>
     </Flex>
@@ -294,12 +294,12 @@ export const limitsDemo = {
     {
       name: 'Bounded periods',
       code: `<CalendarPreview
-              scales={['month', 'quarter', 'halfYear']}
+              scales={['month', 'quarter', 'half-year']}
               defaultScale="quarter"
               trailingValue
               minDate={new Date(2026, 6, 15)}
             >
-              <CalendarPreview.Body showIcon />
+              <CalendarPreview.Body showCalendarIcon />
             </CalendarPreview>`
     }
   ]
@@ -509,8 +509,8 @@ export const customisingDemo = {
               <CalendarPreview.Days />
               <CalendarPreview.Footer>
                 <Flex align="center" gap={3}>
-                  <Badge variant="accent">Beta</Badge>
-                  <Text size="small" variant="secondary">Times are UTC</Text>
+                  <Badge color="accent">Beta</Badge>
+                  <Text size="small" color="secondary">Times are UTC</Text>
                 </Flex>
               </CalendarPreview.Footer>
             </CalendarPreview>`
@@ -523,7 +523,7 @@ export const customisingDemo = {
                 <CalendarPreview.Grid
                   dateInfo={date =>
                     date.getDate() % 7 === 0 ? (
-                      <Text size="micro" variant="accent">$</Text>
+                      <Text size="micro" color="accent">$</Text>
                     ) : null
                   }
                 />

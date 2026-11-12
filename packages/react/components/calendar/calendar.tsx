@@ -30,7 +30,7 @@ export interface CalendarPropsExtended {
    * (consumer must apply `timeZone` themselves to stay consistent).
    */
   dateInfo?: Record<string, ReactNode> | ((date: Date) => ReactNode | null);
-  loadingData?: boolean;
+  loading?: boolean;
   timeZone?: string;
 }
 
@@ -118,7 +118,7 @@ export const Calendar = function ({
   showTooltip = false,
   tooltipMessages = {},
   dateInfo = {},
-  loadingData = false,
+  loading = false,
   timeZone,
   ...props
 }: CalendarProps) {
@@ -130,8 +130,8 @@ export const Calendar = function ({
         PreviousMonthButton: ({ children, ...props }) => (
           <IconButton
             {...props}
-            disabled={loadingData || props.disabled}
-            className={cx(props.className, loadingData && styles.disabled)}
+            disabled={loading || props.disabled}
+            className={cx(props.className, loading && styles.disabled)}
             size={3}
             aria-label='Previous month'
             data-slot='calendar-nav-previous'
@@ -142,8 +142,8 @@ export const Calendar = function ({
         NextMonthButton: ({ children, ...props }) => (
           <IconButton
             {...props}
-            disabled={loadingData || props.disabled}
-            className={cx(props.className, loadingData && styles.disabled)}
+            disabled={loading || props.disabled}
+            className={cx(props.className, loading && styles.disabled)}
             size={3}
             aria-label='Next month'
             data-slot='calendar-nav-next'
@@ -155,7 +155,7 @@ export const Calendar = function ({
           <DropDown
             {...props}
             onDropdownOpen={onDropdownOpen}
-            disabled={loadingData}
+            disabled={loading}
           />
         ),
         DayButton: props => {
@@ -177,12 +177,12 @@ export const Calendar = function ({
           const hasDateInfo = Boolean(dateComponent);
 
           return (
-            <Tooltip disabled={loadingData || !showTooltip || !message}>
+            <Tooltip disabled={loading || !showTooltip || !message}>
               <Tooltip.Trigger
                 render={
                   <button
                     {...buttonProps}
-                    disabled={loadingData || buttonProps.disabled}
+                    disabled={loading || buttonProps.disabled}
                     className={cx(
                       buttonProps.className,
                       hasDateInfo && styles.dayButtonWithInfo
@@ -216,12 +216,12 @@ export const Calendar = function ({
           <div className={styles.monthGridWrap} data-slot='calendar-month-grid'>
             <table
               {...props}
-              aria-busy={loadingData || undefined}
+              aria-busy={loading || undefined}
               data-slot='calendar-grid-table'
             />
             <div
               className={styles.monthGridSkeleton}
-              data-visible={loadingData || undefined}
+              data-visible={loading || undefined}
               aria-hidden='true'
               data-slot='calendar-grid-skeleton'
             >

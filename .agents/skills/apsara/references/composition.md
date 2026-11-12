@@ -65,6 +65,10 @@ const [open, setOpen] = useState(false);
 </Dialog>
 ```
 
+Most change callbacks (`onValueChange`, `onOpenChange`, `onInputValueChange`, and the like) take the new value first and a details object second. Components that wrap Base UI pass Base UI's `eventDetails`. Other components pass their own `details`, for example `details.mode` on `ColorPicker` and `details.operation` on `FilterChip`. A few callbacks take only the value, for example CodeBlock `onValueChange` and ColorPicker `onModeChange`. Check the props table for the exact signature.
+
+State props follow `x`, `defaultX` and `onXChange`, for example Select `inputValue`, Tour `stepIndex`, DataView `query` and FilterChip `operation`. The first render decides: pass `x` with `onXChange` to own the state, or `defaultX` to set only the first value. Do not switch a prop between `undefined` and a value.
+
 Several overlay roots (`Dialog`, `Menu`, `Popover`, `Tooltip`) also expose `createHandle` for advanced imperative open/close from outside the subtree — use only when a trigger can't live in the same tree.
 
 ## Select
@@ -89,7 +93,7 @@ import { Select } from "@raystack/apsara";
 ```
 
 - Put `placeholder` on `Select.Value`, not the trigger.
-- `Select.Item` supports `leadingIcon`; `disabled` marks unavailable rows.
+- `Select.Item` supports `leadingIcon` and `trailingIcon`; `disabled` marks unavailable rows.
 - Sub-parts: `Select.Trigger`, `Select.Value`, `Select.Content`, `Select.Item`, `Select.Group`, `Select.Label`, `Select.Separator`, `Select.List`.
 
 ## Menu / ContextMenu

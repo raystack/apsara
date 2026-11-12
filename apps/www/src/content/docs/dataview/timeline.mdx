@@ -115,7 +115,7 @@ The active sort does double duty here: it picks the field lanes are built from *
 
 ### Grouping
 
-Set `group_by`, either from `DataView.DisplayControls` → Grouping or on the initial `query`, and the timeline splits into **swim-lane sections** stacked under the single shared time axis: a full-width header band per group, with that group's cards lane-packed beneath it. Horizontal position stays purely time; grouping reorganizes vertically only.
+Set `group_by`, either from `DataView.DisplayControls` → Grouping or in `defaultQuery`, and the timeline splits into **swim-lane sections** stacked under the single shared time axis: a full-width header band per group, with that group's cards lane-packed beneath it. Horizontal position stays purely time; grouping reorganizes vertically only.
 
 <Demo data={timelineGroupingPreview} />
 
@@ -126,7 +126,7 @@ const fields = [
   …
 ];
 
-<DataView data={tasks} fields={fields} query={{ group_by: ["team"] }} …>
+<DataView data={tasks} fields={fields} defaultQuery={{ group_by: ["team"] }} …>
   <DataView.Timeline startField="start" endField="end" renderCard={renderCard} />
 </DataView>
 ```
@@ -138,7 +138,7 @@ Section order is the field's `groupOrder` where it declares one (`['High', 'Medi
 - **Packing is per section.** A card only ever shares a lane with cards in its own group, and `context.laneIndex` is section-relative. Every section starts at lane 0. `lanePacking="one-per-row"` and `"one-per-sort-value"` apply within each section too.
 - **Bands pin while their section is in view.** The active band sticks directly under the time axis and is pushed off by the next section's band; its label sticks to the left edge so it stays readable while you pan to a distant month. Always on, in pure CSS, with no prop.
 - **Empty sections disappear.** A group whose cards all fall outside an explicit `range`, or that has no valid `startField` values, renders nothing: no band, no empty strip. A band that *does* render shows the full group count, even when some of its cards are culled, matching List.
-- **`showGroupHeaders={false}`** hides the bands but keeps the sections, the same semantics as the prop on `DataView.List`. Style a band with `classNames.groupHeader`.
+- **`hideGroupHeaders`** hides the bands but keeps the sections, the same semantics as the prop on `DataView.List`. Style a band with `classNames.groupHeader`.
 
 Bands are labels only in this release: no chevron, no collapsing.
 
@@ -153,16 +153,18 @@ Leave the Ordering control visible for both.
 
 Under the default `auto` packing the sort has no visible effect at all, since lanes are assigned by dense chronological first-fit, so there hide the control with `<DataView.DisplayControls hideOrdering />`, or leave `sortable` off the timeline's per-view `fields`.
 
-In [server mode](/docs/dataview#server-mode) the sort is the backend's to apply: rows arrive already ordered and `one-per-sort-value` takes lane order from that row order, first value seen first. A backend that ignores the `sort` in `onTableQueryChange` therefore produces lanes in whatever order it returned rows, with nothing logged to say so. The lane *membership* is still correct, only the ranking is arbitrary.
+In [server mode](/docs/dataview#server-mode) the sort is the backend's to apply: rows arrive already ordered and `one-per-sort-value` takes lane order from that row order, first value seen first. A backend that ignores the `sort` in `onQueryChange` therefore produces lanes in whatever order it returned rows, with nothing logged to say so. The lane *membership* is still correct, only the ranking is arbitrary.
 
 ### Scale and axis
 
 Four props control the axis, and they compose rather than overlap:
 
 - `scale` sets the tick unit: `day` (default), `week`, `month`, or `quarter`.
-- `unitWidth` sets pixels per unit (defaults: day 20, week 56, month 96, quarter 140). This is the zoom knob.
+- `unitWidth` sets pixels per unit (defaults: day 20, week 56, month 96, quarter 140). This is the zoom knob. The defaults are multiplied by the theme's [`scaling`](/docs/theme/overview#scaling), so a scaled UI keeps the same proportions. An explicit `unitWidth` is used as passed.
 - `tickInterval` labels every Nth unit. Labels never render closer than a collision floor, so a too-dense value degrades gracefully instead of overlapping.
 - `gridlineInterval` draws a gridline every Nth unit. Purely visual: cards, the today line, and cursor snapping still land on every unit.
+
+The other size defaults (`estimatedRowHeight`, `laneGap`, `minCardWidth`, `estimatedPointWidth`) and the axis height follow `scaling` the same way.
 
 The domain defaults to the data extent (plus today and markers) with padding. Pass an explicit `range` to fix the coordinate space. This is essential for range-window loading, since the scrollbar then never jumps as data streams in. Rows entirely outside an explicit `range` are culled.
 
@@ -174,8 +176,8 @@ The domain defaults to the data extent (plus today and markers) with padding. Pa
 <DataView.Timeline
   markers={[
     { date: "2026-08-01", label: "Code freeze" },
-    { date: "2026-08-15", label: "Release", variant: "accent" },
-    { date: "2026-08-20", label: "EOL", variant: "danger" },
+    { date: "2026-08-15", label: "Release", color: "accent" },
+    { date: "2026-08-20", label: "EOL", color: "danger" },
   ]}
 />
 ```
@@ -217,13 +219,13 @@ Offset pagination doesn't fit a 2-D time canvas. The natural unit of fetching is
 
 ```tsx
 const [orders, setOrders] = useState<Order[]>([]);
-const [isLoading, setIsLoading] = useState(true); // initial fetch in flight
+const [loading, setLoading] = useState(true); // initial fetch in flight
 
 <DataView
   data={orders}
   fields={fields}
   mode="client" // filters/search run locally against loaded rows
-  isLoading={isLoading}
+  loading={loading}
   defaultSort={{ name: "start", order: "asc" }}
   getRowId={(o) => o.id}
 >
@@ -238,7 +240,7 @@ const [isLoading, setIsLoading] = useState(true); // initial fetch in flight
 </DataView>
 ```
 
-Start with `isLoading={true}` and fire an initial fetch on mount. With no data and no loading flag the timeline renders `null` and the zero state takes over, so `onVisibleRangeChange` would never fire to bootstrap the first window.
+Start with `loading` set to `true` and fire an initial fetch on mount. With no data and no loading flag the timeline renders `null` and the zero state takes over, so `onVisibleRangeChange` would never fire to bootstrap the first window.
 
 Keep the row model **cumulative**. The domain is stable, so previously fetched cards stay mounted and scrolling back is instant. Scroll position is anchored by *time*, not pixels: if the domain shifts (a `range` extension, or rows prepended by a fetch), the date under the viewport's left edge stays put instead of the content jumping.
 

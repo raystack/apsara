@@ -91,6 +91,17 @@ describe('Accordion', () => {
       expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
+    it('passes eventDetails to onValueChange', () => {
+      const onValueChange = vi.fn();
+      render(<BasicAccordion onValueChange={onValueChange} />);
+
+      fireEvent.click(screen.getByRole('button', { name: ITEM_1_TEXT }));
+      expect(onValueChange).toHaveBeenCalledWith(
+        'item-1',
+        expect.objectContaining({ reason: 'trigger-press' })
+      );
+    });
+
     it('supports keyboard navigation', async () => {
       const user = userEvent.setup();
       render(<BasicAccordion />);

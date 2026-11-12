@@ -4,8 +4,8 @@
 
 import figma from 'figma';
 
-const variant = figma.selectedInstance.getEnum('Variant', {
-  Warning: 'warning',
+const color = figma.selectedInstance.getEnum('Variant', {
+  Warning: 'attention',
   Danger: 'danger',
   Success: 'success',
   Neutral: 'neutral',
@@ -17,7 +17,7 @@ const size = figma.selectedInstance.getEnum('Size', {
 });
 // "Icon" BOOLEAN toggles the leading icon; resolve the child instance named "Icon"
 // when enabled (guarded, since findInstance returns an ErrorHandle when absent).
-const icon = figma.selectedInstance.getBoolean('Icon', {
+const leadingIcon = figma.selectedInstance.getBoolean('Icon', {
   true: (function () {
     const i = figma.selectedInstance.findInstance('Icon');
     return i && i.type === 'INSTANCE' ? i.executeTemplate().example : undefined;
@@ -32,14 +32,14 @@ export default {
   id: 'Badge',
   imports: ["import { Badge } from '@raystack/apsara'"],
   example: figma.code`<Badge${figma.helpers.react.renderProp(
-    'variant',
-    variant
+    'color',
+    color
   )}${figma.helpers.react.renderProp(
     'size',
     size
   )}${figma.helpers.react.renderProp(
-    'icon',
-    icon
+    'leadingIcon',
+    leadingIcon
   )}>${figma.helpers.react.renderChildren(children)}</Badge>`,
   metadata: { nestable: true }
 };

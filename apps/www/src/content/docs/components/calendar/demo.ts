@@ -35,7 +35,7 @@ export const calendarDemo = {
     },
     {
       name: 'With Loading',
-      code: `<Calendar loadingData={true} numberOfMonths={2} />`
+      code: `<Calendar loading numberOfMonths={2} />`
     },
     {
       name: 'With Dropdowns',
@@ -112,7 +112,7 @@ export const rangePickerDemo = {
     {
       name: 'Disabled',
       code: `
-      /* Disabling either input gates the whole picker — the shared popover would otherwise let users rewrite the "disabled" side through the calendar grid. To fix one side, constrain the calendar via \`calendarProps\` instead. */
+      /* Disabling either input gates the whole picker. The shared popover would otherwise let users rewrite the "disabled" side through the calendar grid. To fix one side, constrain the calendar via \`slotProps.calendar\` instead. */
       <RangePicker slotProps={{ startInput: { disabled: true }, endInput: { disabled: true } }} />
       `
     },
@@ -129,14 +129,14 @@ export const rangePickerDemo = {
     },
     {
       name: 'Without Calendar Icon',
-      code: `<RangePicker showCalendarIcon={false} />`
+      code: `<RangePicker hideCalendarIcon />`
     },
     {
       name: 'Custom Trigger',
       code: `
       <RangePicker
         dateFormat="DD/MM/YYYY"
-        onSelect={(range) => console.log('Date range:', range)}
+        onValueChange={(range) => console.log('Date range:', range)}
         value={{
           from: new Date(2024, 0, 1),
           to: new Date(2024, 0, 15)
@@ -182,7 +182,7 @@ export const datePickerDemo = {
     },
     {
       name: 'Without Calendar Icon',
-      code: `<DatePicker showCalendarIcon={false} slotProps={{ input: { size: "medium" } }} />`
+      code: `<DatePicker hideCalendarIcon slotProps={{ input: { size: "medium" } }} />`
     },
     {
       name: 'With Field',
@@ -197,7 +197,7 @@ function DatePickerFieldExample() {
       style={{ maxWidth: 240 }}
     >
       <DatePicker
-        onErrorChange={setError}
+        onValidityChange={({ message }) => setError(message)}
         slotProps={{ input: { size: "medium" } }}
       />
     </Field>
@@ -252,7 +252,7 @@ function ControlledCalendar() {
     <Flex direction="column" align="center" gap={5}>
       <Calendar mode="single" selected={date} onSelect={setDate} />
       <Flex align="center" gap={4}>
-        <Text size="small" variant="secondary">
+        <Text size="small" color="secondary">
           {date ? dayjs(date).format('D MMM YYYY') : 'nothing selected'}
         </Text>
         <Button size="small" variant="outline" onClick={() => setDate(new Date())}>Today</Button>

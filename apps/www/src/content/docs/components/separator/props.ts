@@ -7,7 +7,15 @@ export interface SeparatorProps {
   /** Sets the color of the separator.
    * @default "primary"
    */
-  color?: 'primary' | 'secondary' | 'tertiary';
+  color?:
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'emphasis'
+    | 'accent'
+    | 'attention'
+    | 'danger'
+    | 'success';
 
   /** Sets the direction of the separator.
    * @default "horizontal"

@@ -1,11 +1,11 @@
 export interface BadgeProps {
   /**
-   * Visual style variant
+   * Intent color of the badge.
    * @defaultValue "accent"
    */
-  variant?:
+  color?:
     | 'accent'
-    | 'warning'
+    | 'attention'
     | 'danger'
     | 'success'
     | 'neutral'
@@ -18,7 +18,7 @@ export interface BadgeProps {
   size?: 'micro' | 'small' | 'regular';
 
   /** Optional ReactNode to display an icon before the text */
-  icon?: React.ReactNode;
+  leadingIcon?: React.ReactNode;
 
   /** Additional text content only announced to screen readers */
   screenReaderText?: string;

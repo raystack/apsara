@@ -86,7 +86,7 @@ export function CodeBlockCollapseTrigger({
   return (
     <Button
       onClick={e => {
-        toggleCollapsed();
+        toggleCollapsed(e.nativeEvent);
         onClick?.(e);
       }}
       variant='text'
