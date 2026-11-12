@@ -122,7 +122,7 @@ describe('Collapsible', () => {
       render(<BasicCollapsible disabled />);
 
       const trigger = screen.getByRole('button', { name: TRIGGER_TEXT });
-      expect(trigger).toHaveAttribute('aria-disabled', 'true');
+      expect(trigger).toBeDisabled();
 
       fireEvent.click(trigger);
       expect(trigger).toHaveAttribute('aria-expanded', 'false');
