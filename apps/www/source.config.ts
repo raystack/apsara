@@ -13,6 +13,7 @@ import {
   metaSchema
 } from 'fumadocs-mdx/config';
 import { remarkAutoTypeTable } from 'fumadocs-typescript';
+import { remarkChangelog } from '@/lib/remark-changelog';
 import { generator, transform } from '@/lib/type-table';
 import { SourceSchema, TagSchema } from '@/lib/types';
 
@@ -37,6 +38,7 @@ export default defineConfig({
     remarkPlugins: () => {
       return [
         remarkGfm,
+        remarkChangelog,
         [remarkHeading, { generateToc: false }],
         [remarkImage, { useImport: undefined }],
         // remarkCodeTab,
