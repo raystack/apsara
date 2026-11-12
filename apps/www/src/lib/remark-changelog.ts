@@ -24,8 +24,7 @@ interface ChangelogEntry {
 }
 
 interface ChangelogRelease {
-  /** `null` for the changes after the latest release. */
-  tag: string | null;
+  tag: string;
   entries: ChangelogEntry[];
 }
 
@@ -72,7 +71,7 @@ function getChangelog(): ChangelogRelease[] | null {
       .filter(tag => /^v\d+\.\d+\.\d+$/.test(tag));
     const first = tags.indexOf(FIRST_TAG);
     if (first === -1) return null;
-    const ranges: [string | null, string][] = [[null, `${tags[0]}..HEAD`]];
+    const ranges: [string, string][] = [];
     for (let index = 0; index < first; index += 1)
       ranges.push([tags[index], `${tags[index + 1]}..${tags[index]}`]);
     return ranges
@@ -141,9 +140,8 @@ function changelogNodes(): RootContent[] {
     const heading: RootContent = {
       type: 'heading',
       depth: 2,
-      children: [{ type: 'text', value: release.tag ?? 'Unreleased' }]
+      children: [{ type: 'text', value: release.tag }]
     };
-    if (!release.tag) return [heading, list];
     return [
       heading,
       {
