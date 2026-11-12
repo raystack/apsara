@@ -7,9 +7,8 @@ const PULL_URL = 'https://github.com/raystack/apsara/pull';
 // Releases before v1.0.0 are the Radix-based library.
 const FIRST_TAG = 'v1.0.0';
 const TYPES = new Set(['feat', 'fix', 'refactor']);
-// Older subjects put the `!` before or after the parenthesized scope.
 const SUBJECT =
-  /^(\w+)(!?)(?:\(([^)]*)\))?(!?):\s*(?:\[([^\]]*)\]\s*)?(.+?)\s*\(#(\d+)\)$/;
+  /^(\w+)(!?)(?:\(([^)]*)\))?:\s*(?:\[([^\]]*)\]\s*)?(.+?)\s*\(#(\d+)\)$/;
 const BREAKING_FOOTER = /^BREAKING[ -]CHANGE:/m;
 // Separates commits and the subject from the body in the `git log` output.
 const COMMIT_END = '\x1e';
@@ -37,18 +36,12 @@ function parseCommit(commit: string): ChangelogEntry | undefined {
   const [subject, body = ''] = commit.trim().split(BODY_START);
   const match = SUBJECT.exec(subject);
   if (!match || !TYPES.has(match[1])) return undefined;
-  const [, type, bangBefore, parenScopes, bangAfter, bracketScopes, text, pr] =
-    match;
-  // Some older subjects write `BREAKING CHANGE` as the scope or in the summary.
+  const [, type, bang, parenScopes, bracketScopes, summary, pr] = match;
   const scopes = (bracketScopes ?? parenScopes ?? '')
     .split(',')
     .map(scope => scope.trim())
-    .filter(scope => scope && scope !== 'BREAKING CHANGE');
-  const summary = text.replace(/^BREAKING CHANGE:?\s*/, '');
-  const breaking =
-    Boolean(bangBefore || bangAfter) ||
-    subject.includes('BREAKING CHANGE') ||
-    BREAKING_FOOTER.test(body);
+    .filter(Boolean);
+  const breaking = Boolean(bang) || BREAKING_FOOTER.test(body);
   return { type, breaking, scopes, summary, pr: Number(pr) };
 }
 
