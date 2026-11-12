@@ -1,6 +1,11 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "types": ["react"]
+    "types": ["react"],
+    "paths": {
+      "react": ["./node_modules/@types/react"],
+      "@raystack/apsara": ["../../packages/react/index.tsx"],
+      "~/*": ["../../packages/react/*"]
+    }
   }
 }
