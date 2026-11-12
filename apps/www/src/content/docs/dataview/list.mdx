@@ -77,11 +77,11 @@ In virtualized mode, a single sticky-anchor element swaps its content as the use
 
 ### Loading
 
-While `isLoading` is `true`, `DataView.List` renders `loadingRowCount` skeleton rows at the tail. Behaviour is identical in virtualized and non-virtualized mode, and during initial load (skeletons fill the row pane) as well as during paginated load-more (skeletons render below the last loaded row).
+While `loading` is `true`, `DataView.List` renders `loadingRowCount` skeleton rows at the tail. Behaviour is identical in virtualized and non-virtualized mode, and during initial load (skeletons fill the row pane) as well as during paginated load-more (skeletons render below the last loaded row).
 
 <Demo data={loadingPreview} />
 
-In [server mode](/docs/dataview#server-mode), infinite scroll triggers via a single sentinel and an `IntersectionObserver`, so there are no scroll-distance knobs to tune. While `isLoading` is true the sentinel is suppressed so your `onLoadMore` isn't fired again during a fetch.
+In [server mode](/docs/dataview#server-mode), infinite scroll triggers via a single sentinel and an `IntersectionObserver`, so there are no scroll-distance knobs to tune. While `loading` is true the sentinel is suppressed so your `onLoadMore` isn't fired again during a fetch.
 
 ### Row selection
 
@@ -124,7 +124,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `data-view-list-row` | Data row |
 | `data-view-list-cell` | Cell (data and loader rows) |
 | `data-view-list-group-header` | Group header (incl. the sticky anchor) |
-| `data-view-list-loader-row` | Skeleton row while `isLoading` |
+| `data-view-list-loader-row` | Skeleton row while `loading` |
 | `data-view-list-sentinel` | Infinite-scroll sentinel |
 
 Header cells, body cells, and loader cells also carry `data-column="{accessorKey}"`, so a single column can be targeted without a per-column `classNames` entry:

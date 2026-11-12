@@ -25,8 +25,8 @@ describe('Text', () => {
     });
   });
 
-  describe('Variant Styling', () => {
-    const variants = [
+  describe('Color Styling', () => {
+    const colors = [
       'primary',
       'secondary',
       'tertiary',
@@ -36,13 +36,13 @@ describe('Text', () => {
       'danger',
       'success'
     ] as const;
-    variants.forEach(variant => {
-      it(`applies ${variant} variant`, () => {
-        const { container } = render(<Text variant={variant}>{variant}</Text>);
-        expect(container.firstChild).toHaveClass(styles[`text-${variant}`]);
+    colors.forEach(color => {
+      it(`applies ${color} color`, () => {
+        const { container } = render(<Text color={color}>{color}</Text>);
+        expect(container.firstChild).toHaveClass(styles[`text-${color}`]);
       });
     });
-    it('defaults to primary variant', () => {
+    it('defaults to primary color', () => {
       const { container } = render(<Text>Default</Text>);
       expect(container.firstChild).toHaveClass(styles['text-primary']);
     });

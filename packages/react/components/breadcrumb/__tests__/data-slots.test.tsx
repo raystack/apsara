@@ -16,7 +16,7 @@ describe('Breadcrumb data-slot contract', () => {
         </Breadcrumb.Item>
         <Breadcrumb.Separator />
         <Breadcrumb.Ellipsis />
-        <Breadcrumb.Item current>Current</Breadcrumb.Item>
+        <Breadcrumb.Item active>Current</Breadcrumb.Item>
       </Breadcrumb>
     );
     expectSlots(container, [
@@ -42,7 +42,7 @@ describe('Breadcrumb data-slot contract', () => {
     expect(getSlot(container, 'breadcrumb-trailing-icon')).toBeNull();
   });
 
-  it('exposes a link slot on disabled/current items rendered as spans', () => {
+  it('exposes a link slot on disabled/active items rendered as spans', () => {
     const { container } = render(
       <Breadcrumb>
         <Breadcrumb.Item disabled>Disabled</Breadcrumb.Item>

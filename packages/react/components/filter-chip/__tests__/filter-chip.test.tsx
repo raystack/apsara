@@ -15,11 +15,11 @@ describe('FilterChip', () => {
       expect(screen.getByText('Name')).toBeInTheDocument();
     });
 
-    it('applies default variant classes', () => {
+    it('applies outline variant classes by default', () => {
       const { container } = render(<FilterChip label='Test' />);
       const chip = container.querySelector(`.${styles.chip}`);
       expect(chip).toBeInTheDocument();
-      expect(chip).toHaveClass(styles['chip-default']);
+      expect(chip).toHaveClass(styles['variant-outline']);
     });
 
     it('applies text variant', () => {
@@ -44,6 +44,95 @@ describe('FilterChip', () => {
 
       expect(screen.getByTestId('filter-icon')).toBeInTheDocument();
       expect(screen.getByText('📅')).toBeInTheDocument();
+    });
+  });
+
+  describe('Operation', () => {
+    const flushMicrotasks = async () =>
+      await new Promise(r => setTimeout(r, 0));
+
+    const operationText = async (ui: React.ReactElement) => {
+      const { container } = render(ui);
+      await act(flushMicrotasks);
+      return getSlot(container, 'filter-chip-operation')?.textContent;
+    };
+
+    it('shows the operation named by the prop', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' operation='neq' />)
+      ).toBe('is not');
+    });
+
+    it('falls back to the first operation when the type does not have it', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' operation='in' />)
+      ).toBe('is');
+    });
+
+    it('shows the first operation when the prop is absent', async () => {
+      expect(await operationText(<FilterChip label='Name' />)).toBe('is');
+    });
+
+    it('reads the operation from a custom list', async () => {
+      expect(
+        await operationText(
+          <FilterChip
+            label='Name'
+            operations={[
+              { value: 'eq', label: 'is' },
+              { value: 'neq', label: 'is not' }
+            ]}
+            operation='neq'
+          />
+        )
+      ).toBe('is not');
+    });
+
+    it('starts on the default operation', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' defaultOperation='neq' />)
+      ).toBe('is not');
+    });
+
+    it('falls back to the first operation when the list does not have the default', async () => {
+      expect(
+        await operationText(<FilterChip label='Name' defaultOperation='in' />)
+      ).toBe('is');
+    });
+
+    it('prefers the operation prop over the default', async () => {
+      expect(
+        await operationText(
+          <FilterChip label='Name' operation='eq' defaultOperation='neq' />
+        )
+      ).toBe('is');
+    });
+
+    it('changes the operation the default started on', async () => {
+      const onOperationChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Name'
+          defaultOperation='neq'
+          onOperationChange={onOperationChange}
+        />
+      );
+      await act(flushMicrotasks);
+
+      fireEvent.click(getSlot(container, 'filter-chip-operation') as Element);
+      await act(flushMicrotasks);
+      const item = screen.getByLabelText('Filter Name contains');
+      fireEvent.pointerDown(item);
+      fireEvent.click(item);
+      await act(flushMicrotasks);
+
+      expect(onOperationChange).toHaveBeenCalledWith(
+        'contains',
+        expect.objectContaining({ reason: expect.any(String) })
+      );
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'contains'
+      );
     });
   });
 
@@ -109,7 +198,7 @@ describe('FilterChip', () => {
 
       expect(onValueChange).toHaveBeenCalledWith(
         'test value',
-        expect.any(String)
+        expect.objectContaining({ operation: expect.any(String) })
       );
     });
 
@@ -126,6 +215,71 @@ describe('FilterChip', () => {
         `.${styles.inputFieldWrapper} input`
       );
       expect(input).toHaveValue('initial value');
+    });
+
+    it('follows a controlled value', () => {
+      const onValueChange = vi.fn();
+      const { container, rerender } = render(
+        <FilterChip label='Name' value='one' onValueChange={onValueChange} />
+      );
+      const input = container.querySelector(
+        `.${styles.inputFieldWrapper} input`
+      ) as HTMLInputElement;
+
+      fireEvent.change(input, { target: { value: 'typed' } });
+      expect(onValueChange).toHaveBeenCalledWith('typed', expect.anything());
+      expect(input).toHaveValue('one');
+
+      rerender(<FilterChip label='Name' value='two' />);
+      expect(input).toHaveValue('two');
+    });
+  });
+
+  describe('Operation', () => {
+    it('starts at defaultOperation and reports a change with details', async () => {
+      const onOperationChange = vi.fn();
+      render(
+        <FilterChip
+          label='Status'
+          columnType={FilterType.select}
+          defaultOperation='neq'
+          onOperationChange={onOperationChange}
+        />
+      );
+      const trigger = getSlot(document.body, 'filter-chip-operation');
+      expect(trigger).toHaveTextContent('is not');
+
+      fireEvent.click(trigger as Element);
+      await act(async () => {
+        await new Promise(r => setTimeout(r, 0));
+      });
+      await userEvent.click(screen.getByRole('option', { name: /is$/ }));
+      expect(onOperationChange).toHaveBeenCalledWith(
+        'eq',
+        expect.objectContaining({ reason: expect.any(String) })
+      );
+      expect(trigger).toHaveTextContent(/^is$/);
+    });
+
+    it('shows a controlled operation', () => {
+      const { rerender } = render(
+        <FilterChip
+          label='Status'
+          columnType={FilterType.select}
+          operation='eq'
+        />
+      );
+      const trigger = getSlot(document.body, 'filter-chip-operation');
+      expect(trigger).toHaveTextContent(/^is$/);
+
+      rerender(
+        <FilterChip
+          label='Status'
+          columnType={FilterType.select}
+          operation='neq'
+        />
+      );
+      expect(trigger).toHaveTextContent('is not');
     });
   });
 
@@ -157,7 +311,10 @@ describe('FilterChip', () => {
 
       await userEvent.click(screen.getByRole('option', { name: 'Two' }));
       await flush();
-      expect(onValueChange).toHaveBeenLastCalledWith([1, 2], 'in');
+      expect(onValueChange).toHaveBeenLastCalledWith(
+        [1, 2],
+        expect.objectContaining({ operation: 'in' })
+      );
     });
   });
 
@@ -179,7 +336,10 @@ describe('FilterChip', () => {
 
       fireEvent.change(getInput(container), { target: { value: '42' } });
 
-      expect(onValueChange).toHaveBeenCalledWith(42, expect.any(String));
+      expect(onValueChange).toHaveBeenCalledWith(
+        42,
+        expect.objectContaining({ operation: expect.any(String) })
+      );
     });
 
     it('rejects non-numeric input', () => {
@@ -234,8 +394,16 @@ describe('FilterChip', () => {
       fireEvent.change(input, { target: { value: '1.' } });
       expect(input).toHaveValue('1.');
 
-      expect(onValueChange).toHaveBeenNthCalledWith(1, '-', expect.any(String));
-      expect(onValueChange).toHaveBeenNthCalledWith(2, 1, expect.any(String));
+      expect(onValueChange).toHaveBeenNthCalledWith(
+        1,
+        '-',
+        expect.objectContaining({ operation: expect.any(String) })
+      );
+      expect(onValueChange).toHaveBeenNthCalledWith(
+        2,
+        1,
+        expect.objectContaining({ operation: expect.any(String) })
+      );
     });
 
     it('emits a trailing decimal as the number it parses to', () => {
@@ -251,10 +419,16 @@ describe('FilterChip', () => {
       const input = getInput(container);
 
       fireEvent.change(input, { target: { value: '1.' } });
-      expect(onValueChange).toHaveBeenLastCalledWith(1, expect.any(String));
+      expect(onValueChange).toHaveBeenLastCalledWith(
+        1,
+        expect.objectContaining({ operation: expect.any(String) })
+      );
 
       fireEvent.change(input, { target: { value: '1.5' } });
-      expect(onValueChange).toHaveBeenLastCalledWith(1.5, expect.any(String));
+      expect(onValueChange).toHaveBeenLastCalledWith(
+        1.5,
+        expect.objectContaining({ operation: expect.any(String) })
+      );
     });
 
     it('rejects a second decimal point', () => {
@@ -329,7 +503,10 @@ describe('FilterChip', () => {
 
       fireEvent.change(getInput(container), { target: { value: '' } });
 
-      expect(onValueChange).toHaveBeenCalledWith('', expect.any(String));
+      expect(onValueChange).toHaveBeenCalledWith(
+        '',
+        expect.objectContaining({ operation: expect.any(String) })
+      );
     });
   });
 
@@ -454,7 +631,7 @@ describe('FilterChip', () => {
       fireEvent.keyDown(input, { key: 'Enter' });
       expect(onValueChange).toHaveBeenCalledWith(
         new Date(2026, 4, 27),
-        expect.any(String)
+        expect.objectContaining({ operation: expect.any(String) })
       );
     });
 
@@ -464,14 +641,17 @@ describe('FilterChip', () => {
         <FilterChip
           label='Created'
           columnType={FilterType.date}
-          value={new Date(2026, 4, 27)}
+          defaultValue={new Date(2026, 4, 27)}
           onValueChange={onValueChange}
         />
       );
       const input = screen.getByPlaceholderText('Select date');
       fireEvent.change(input, { target: { value: '' } });
       fireEvent.blur(input);
-      expect(onValueChange).toHaveBeenCalledWith('', expect.any(String));
+      expect(onValueChange).toHaveBeenCalledWith(
+        '',
+        expect.objectContaining({ operation: expect.any(String) })
+      );
       expect(input).toHaveValue('');
     });
 
@@ -504,7 +684,7 @@ describe('FilterChip', () => {
       clickDay('12');
       expect(onValueChange).toHaveBeenCalledWith(
         new Date(2026, 4, 12),
-        expect.any(String)
+        expect.objectContaining({ operation: expect.any(String) })
       );
       await act(() => new Promise(resolve => setTimeout(resolve, 100)));
       expect(isOpen()).toBe(false);
@@ -565,21 +745,25 @@ describe('FilterChip', () => {
       expect(icons(true)).toBe(1);
     });
 
-    it('reports a typed error through onErrorChange', () => {
-      const onErrorChange = vi.fn();
+    it('reports a typed error through onValidityChange', () => {
+      const onValidityChange = vi.fn();
       render(
         <FilterChip
           label='Created'
           columnType={FilterType.date}
-          calendarProps={{ onErrorChange }}
+          calendarProps={{ slotProps: { input: { onValidityChange } } }}
         />
       );
       const input = screen.getByPlaceholderText('Select date');
       fireEvent.focus(input);
       fireEvent.change(input, { target: { value: 'not a date' } });
-      expect(onErrorChange).toHaveBeenLastCalledWith('Invalid date');
+      expect(onValidityChange).toHaveBeenLastCalledWith({
+        valid: false,
+        reason: 'unparseable',
+        message: 'Invalid date'
+      });
       fireEvent.change(input, { target: { value: '27 May 2026' } });
-      expect(onErrorChange).toHaveBeenLastCalledWith(undefined);
+      expect(onValidityChange).toHaveBeenLastCalledWith({ valid: true });
     });
 
     it('keeps a typed error when a string value rerenders the chip', () => {
@@ -592,7 +776,13 @@ describe('FilterChip', () => {
               label='Created'
               columnType={FilterType.date}
               value='2026-05-27'
-              calendarProps={{ onErrorChange: setError }}
+              calendarProps={{
+                slotProps: {
+                  input: {
+                    onValidityChange: validity => setError(validity.message)
+                  }
+                }
+              }}
             />
           </>
         );

@@ -2,6 +2,7 @@
 
 import { Toast as ToastPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import type { Radius } from '../../shared/radius';
 import { useThemeInjection } from '../theme/portal';
 import styles from './toast.module.css';
 import {
@@ -27,6 +28,8 @@ export interface ToastProviderProps
    * @default "bottom-right"
    */
   position?: ToastPosition;
+  /** Corner radius for these toasts only. Overrides the theme's `radius`. */
+  radius?: Radius;
   /**
    * Toast manager instance. Defaults to the singleton exported as
    * `toastManager`. Provide a custom one created via
@@ -35,7 +38,13 @@ export interface ToastProviderProps
   toastManager?: ToastManager;
 }
 
-function StackedToasts({ position }: { position: ToastPosition }) {
+function StackedToasts({
+  position,
+  radius
+}: {
+  position: ToastPosition;
+  radius?: Radius;
+}) {
   const theme = useThemeInjection();
   const { toasts } = ToastPrimitive.useToastManager();
   return (
@@ -50,7 +59,12 @@ function StackedToasts({ position }: { position: ToastPosition }) {
         data-slot='toast-viewport'
       >
         {toasts.map(toast => (
-          <ToastRoot key={toast.id} toast={toast} position={position} />
+          <ToastRoot
+            key={toast.id}
+            toast={toast}
+            position={position}
+            radius={radius}
+          />
         ))}
       </ToastPrimitive.Viewport>
     </ToastPrimitive.Portal>
@@ -78,6 +92,7 @@ function AnchoredToasts() {
 
 export function ToastProvider({
   position = 'bottom-right',
+  radius,
   toastManager = defaultToastManager,
   children,
   ...props
@@ -100,7 +115,7 @@ export function ToastProvider({
         {...props}
       >
         {children}
-        <StackedToasts position={position} />
+        <StackedToasts position={position} radius={radius} />
       </ToastPrimitive.Provider>
     </ToastManagerContext.Provider>
   );

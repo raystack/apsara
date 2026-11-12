@@ -10,7 +10,7 @@ export const getCode = (props: ComponentPropsType) => {
 export const playground = {
   type: 'playground',
   controls: {
-    variant: {
+    color: {
       type: 'select',
       options: [
         'primary',
@@ -73,25 +73,25 @@ export const playground = {
   getCode
 };
 
-export const variantDemo = {
+export const colorDemo = {
   type: 'code',
   code: `
   <Flex gap={5} align="center">
-    <Text variant="primary">primary</Text>
-    <Text variant="secondary">secondary</Text>
-    <Text variant="tertiary">tertiary</Text>
+    <Text color="primary">primary</Text>
+    <Text color="secondary">secondary</Text>
+    <Text color="tertiary">tertiary</Text>
     <div
       style={{
         backgroundColor: "var(--rs-color-background-neutral-tertiary)",
         padding: "var(--rs-space-3)",
       }}
     >
-      <Text variant="emphasis">emphasis</Text>
+      <Text color="emphasis">emphasis</Text>
     </div>
-    <Text variant="accent">accent</Text>
-    <Text variant="attention">attention</Text>
-    <Text variant="danger">danger</Text>
-    <Text variant="success">success</Text>
+    <Text color="accent">accent</Text>
+    <Text color="attention">attention</Text>
+    <Text color="danger">danger</Text>
+    <Text color="success">success</Text>
   </Flex>`
 };
 export const sizeDemo = {

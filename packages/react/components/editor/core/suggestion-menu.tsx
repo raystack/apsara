@@ -13,8 +13,8 @@ export interface SuggestionMenuItem {
   /** Shown under the label. */
   description?: string;
   type?: string;
-  icon?: ReactNode;
-  trailing?: ReactNode;
+  leadingIcon?: ReactNode;
+  trailingIcon?: ReactNode;
   group?: string;
   disabled?: boolean;
   data?: unknown;
@@ -146,8 +146,8 @@ export function SuggestionMenu({
                     aria-disabled={item.disabled || undefined}
                     data-highlighted={highlighted ? '' : undefined}
                     className={cx(styles.suggestionRow)}
-                    leadingIcon={item.icon}
-                    trailingIcon={item.trailing}
+                    leadingIcon={item.leadingIcon}
+                    trailingIcon={item.trailingIcon}
                     onPointerMove={() => {
                       if (!item.disabled) onHighlightChange(index);
                     }}

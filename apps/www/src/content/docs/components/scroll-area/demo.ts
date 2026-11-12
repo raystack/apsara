@@ -67,7 +67,7 @@ export const horizontalDemo = {
         <Text weight="medium" size="small">
           Column {i + 1}
         </Text>
-        <Text size="small" variant="secondary">
+        <Text size="small" color="secondary">
           Content here
         </Text>
       </Flex>
@@ -87,7 +87,7 @@ export const bothScrollbarsDemo = {
           Column {i + 1}
         </Text>
         {Array.from({ length: 20 }, (_, j) => (
-          <Text key={j} size="small" variant="secondary">
+          <Text key={j} size="small" color="secondary">
             Row {j + 1}
           </Text>
         ))}

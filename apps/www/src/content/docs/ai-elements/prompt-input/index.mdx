@@ -215,7 +215,7 @@ arrive with their ids and your own `data` next to the text:
 
 ### Textarea
 
-The text field, built on `TextArea variant="borderless"`. It grows with its
+The text field, built on `TextArea variant="text"`. It grows with its
 content up to a max-height cap (override with
 `--prompt-input-textarea-max-height`), then scrolls.
 
@@ -308,7 +308,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
   usual.
 - Each chip has an accessible name, like `"mention: DataTable"`.
 - The composer frame carries the focus treatment, so the border tints when a
-  child has visible focus (`:has(:focus-visible)`), while the borderless
+  child has visible focus (`:has(:focus-visible)`), while the `text` variant
   input suppresses its own duplicate focus ring.
 - Click-to-focus runs on `mousedown` and cancels the default focus shift, so
   focus never leaves the input and back again, a round trip that would dismiss

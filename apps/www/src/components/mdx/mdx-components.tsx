@@ -77,7 +77,7 @@ const mdxComponents = {
   h4: (props: HTMLAttributes<HTMLHeadingElement>) => (
     <h4 {...props} className={cx(styles['prose-h4'], props.className)} />
   ),
-  h5: (props: HTMLAttributes<HTMLHeadingElement>) => (
+  h5: (props: Omit<HTMLAttributes<HTMLHeadingElement>, 'color'>) => (
     <Text
       render={<h5 />}
       size='large'
@@ -85,7 +85,7 @@ const mdxComponents = {
       className={cx(styles['prose-h5'], props.className)}
     />
   ),
-  h6: (props: HTMLAttributes<HTMLHeadingElement>) => (
+  h6: (props: Omit<HTMLAttributes<HTMLHeadingElement>, 'color'>) => (
     <Text
       render={<h6 />}
       size='regular'

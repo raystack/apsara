@@ -1,6 +1,9 @@
 'use client';
 
-import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react';
+import {
+  ContextMenu as ContextMenuPrimitive,
+  Menu as MenuPrimitive
+} from '@base-ui/react';
 import {
   MenuFilter,
   useMenuContext,
@@ -21,7 +24,10 @@ export interface AutocompleteContextMenuRootProps
   autocomplete: true;
   autocompleteMode?: 'auto' | 'manual';
   inputValue?: string;
-  onInputValueChange?: (value: string) => void;
+  onInputValueChange?: (
+    value: string,
+    eventDetails: MenuPrimitive.FilterProvider.ChangeEventDetails
+  ) => void;
   defaultInputValue?: string;
 }
 
@@ -71,7 +77,10 @@ export interface AutocompleteContextMenuSubMenuProps
   autocomplete: true;
   autocompleteMode?: 'auto' | 'manual';
   inputValue?: string;
-  onInputValueChange?: (value: string) => void;
+  onInputValueChange?: (
+    value: string,
+    eventDetails: MenuPrimitive.FilterProvider.ChangeEventDetails
+  ) => void;
   defaultInputValue?: string;
 }
 

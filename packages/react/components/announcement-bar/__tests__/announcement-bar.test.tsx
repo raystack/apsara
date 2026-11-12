@@ -70,22 +70,22 @@ describe('AnnouncementBar', () => {
     });
   });
 
-  describe('Variants', () => {
-    const variants = ['normal', 'gradient', 'error'] as const;
-    variants.forEach(variant => {
-      it(`renders ${variant} variant`, () => {
+  describe('Colors', () => {
+    const colors = ['neutral', 'gradient', 'danger'] as const;
+    colors.forEach(color => {
+      it(`renders ${color} color`, () => {
         const { container } = render(
-          <AnnouncementBar text='Test' variant={variant} />
+          <AnnouncementBar text='Test' color={color} />
         );
         const bar = container.querySelector('[class*="announcement-bar"]');
-        expect(bar).toHaveClass(styles[`announcement-bar-${variant}`]);
+        expect(bar).toHaveClass(styles[`announcement-bar-${color}`]);
       });
     });
 
-    it('renders normal variant by default', () => {
+    it('renders neutral color by default', () => {
       const { container } = render(<AnnouncementBar text='Test' />);
       const bar = container.querySelector('[class*="announcement-bar"]');
-      expect(bar).toHaveClass(styles['announcement-bar-normal']);
+      expect(bar).toHaveClass(styles['announcement-bar-neutral']);
     });
   });
 

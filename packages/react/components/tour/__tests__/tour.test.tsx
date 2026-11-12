@@ -167,6 +167,18 @@ describe('Tour', () => {
     expect(onOpenChange).toHaveBeenCalledWith(false, { status: 'closed' });
   });
 
+  it('passes the new step in onStepIndexChange details', async () => {
+    const user = userEvent.setup();
+    const onStepIndexChange = vi.fn();
+    render(<Page defaultOpen onStepIndexChange={onStepIndexChange} />);
+    await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
+    await user.click(screen.getByRole('button', { name: 'Next' }));
+    expect(onStepIndexChange).toHaveBeenCalledWith(
+      1,
+      expect.objectContaining({ reason: 'none', step: STEPS[1] })
+    );
+  });
+
   it('emits lifecycle events in order', async () => {
     const user = userEvent.setup();
     const events: TourEvent[] = [];
@@ -460,7 +472,7 @@ describe('Tour', () => {
   });
 
   it('ignores navigation actions while closed', () => {
-    const onStepChange = vi.fn();
+    const onStepIndexChange = vi.fn();
     const Harness = () => {
       const actionsRef = useRef<TourActions>(null);
       return (
@@ -475,14 +487,14 @@ describe('Tour', () => {
           <Tour
             steps={STEPS}
             actionsRef={actionsRef}
-            onStepChange={onStepChange}
+            onStepIndexChange={onStepIndexChange}
           />
         </div>
       );
     };
     render(<Harness />);
     fireEvent.click(screen.getByText('poke'));
-    expect(onStepChange).not.toHaveBeenCalled();
+    expect(onStepIndexChange).not.toHaveBeenCalled();
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
@@ -498,7 +510,12 @@ describe('Tour', () => {
           <button type='button' onClick={() => setIndex(1)}>
             jump
           </button>
-          <Tour steps={STEPS} open stepIndex={index} onStepChange={setIndex} />
+          <Tour
+            steps={STEPS}
+            open
+            stepIndex={index}
+            onStepIndexChange={setIndex}
+          />
         </div>
       );
     };

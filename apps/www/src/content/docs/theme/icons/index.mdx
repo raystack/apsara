@@ -145,7 +145,7 @@ Apsara then uses your component everywhere that icon appears, including inside i
 components too. The map is partial: a key you do not name keeps its default, so
 you never have to supply a complete set.
 
-<Callout type="grey">
+<Callout color="neutral">
   You may pass the object as an inline literal. Apsara compares its contents, so
   a new literal on every render costs nothing.
 </Callout>
@@ -205,7 +205,7 @@ Your icons read the same context, so the `props` half of `<Theme icons>` reaches
 them too. The `components` half only accepts the keys Apsara ships. To change
 one of your own, edit the file above.
 
-<Callout type="grey">
+<Callout color="neutral">
   lucide exports several aliases per icon, so `Search`, `SearchIcon` and
   `LucideSearch` are the same drawing. Apsara's names collide with the middle
   flavour, so `import { SearchIcon } from 'lucide-react'` and `import

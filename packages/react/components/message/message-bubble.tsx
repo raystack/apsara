@@ -24,7 +24,7 @@ const bubble = cva(styles.bubble, {
   }
 });
 
-const GHOST_TEXT_VARIANT = {
+const GHOST_TEXT_COLOR = {
   neutral: 'primary',
   accent: 'accent',
   danger: 'danger'
@@ -69,7 +69,7 @@ export function MessageBubble({
       <Text
         render={<p ref={ref} />}
         size='small'
-        variant={GHOST_TEXT_VARIANT[color]}
+        color={GHOST_TEXT_COLOR[color]}
         {...bubbleProps}
       />
     );

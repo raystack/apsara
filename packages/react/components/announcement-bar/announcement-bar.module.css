@@ -21,20 +21,20 @@
   );
 }
 
-.announcement-bar-normal {
+.announcement-bar-neutral {
   background: var(--rs-color-foreground-base-primary);
 }
 
-.announcement-bar-error {
+.announcement-bar-danger {
   background: var(--rs-color-background-danger-emphasis);
 }
 
-.announcement-bar-normal > .text,
-.announcement-bar-error > .text,
-.announcement-bar-normal > .icon,
-.announcement-bar-error > .icon,
-.announcement-bar-normal > .action-btn,
-.announcement-bar-error > .action-btn {
+.announcement-bar-neutral > .text,
+.announcement-bar-danger > .text,
+.announcement-bar-neutral > .icon,
+.announcement-bar-danger > .icon,
+.announcement-bar-neutral > .action-btn,
+.announcement-bar-danger > .action-btn {
   color: var(--rs-color-foreground-base-emphasis);
 }
 
@@ -67,7 +67,7 @@
 }
 
 /* Press reads as scale, not a second dim, since 0.64 text mid-press is barely
-   legible on the gradient variant, and hover's 0.8 still applies. */
+   legible on the gradient color, and hover's 0.8 still applies. */
 .action-btn:active {
   transform: scale(var(--rs-scale-pressed));
 }

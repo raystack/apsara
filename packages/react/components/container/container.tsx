@@ -12,9 +12,9 @@ const container = cva(styles.container, {
       none: styles['container-none']
     },
     align: {
-      left: styles['container-align-left'],
-      center: styles['container-align-center'],
-      right: styles['container-align-right']
+      start: styles['align-start'],
+      center: styles['align-center'],
+      end: styles['align-end']
     }
   },
   defaultVariants: {

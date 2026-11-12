@@ -1,6 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { getSlot } from '~/test-utils/data-slots';
 import { DataTable } from '../data-table';
 import styles from '../data-table.module.css';
 import { DataTableColumnDef, DataTableQuery } from '../data-table.types';
@@ -666,6 +667,37 @@ describe('DataTable', () => {
       );
       expect(screen.getByRole('table')).toBeInTheDocument();
       expect(screen.getByText('John Doe')).toBeInTheDocument();
+    });
+  });
+
+  describe('Restored filter chips', () => {
+    const chipColumns: DataTableColumnDef<TestData, unknown>[] = [
+      {
+        accessorKey: 'name',
+        header: 'Name',
+        enableColumnFilter: true,
+        filterType: 'string'
+      }
+    ];
+
+    it('shows the operator the query carries', async () => {
+      const { container } = render(
+        <DataTable
+          data={mockData}
+          columns={chipColumns}
+          defaultSort={{ name: 'name', order: 'asc' }}
+          query={{
+            filters: [{ name: 'name', operator: 'neq', value: 'John Doe' }]
+          }}
+        >
+          <DataTable.Toolbar />
+        </DataTable>
+      );
+      await act(() => new Promise(r => setTimeout(r, 0)));
+
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'is not'
+      );
     });
   });
 

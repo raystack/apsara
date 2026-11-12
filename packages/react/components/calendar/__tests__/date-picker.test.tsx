@@ -40,7 +40,7 @@ describe('DatePicker', () => {
      * Two regressions on the picker's `calendarProps` type:
      * - Original type required `mode`/`selected`/`onSelect`, which the picker
      *   overrides after the spread, so consumer values were silently ignored.
-     * - CalendarPropsExtended fields (tooltipMessages, dateInfo, loadingData,
+     * - CalendarPropsExtended fields (tooltipMessages, dateInfo, loading,
      *   showTooltip) were unreachable because the type didn't include them.
      */
     it('accepts CalendarPropsExtended fields via calendarProps without type cast', () => {
@@ -53,7 +53,7 @@ describe('DatePicker', () => {
               endMonth: new Date(2030, 0, 1),
               tooltipMessages: { '15-06-2025': 'Sample tooltip' },
               dateInfo: { '15-06-2025': 'i' },
-              loadingData: false,
+              loading: false,
               showTooltip: true
             }}
           />
@@ -136,9 +136,9 @@ describe('DatePicker', () => {
 
     it('selecting a date via the calendar updates both selected and month', async () => {
       const initial = new Date(2026, 0, 15);
-      const onSelect = vi.fn();
+      const onValueChange = vi.fn();
       const calls = renderWithCalendarSpy(
-        <DatePicker value={initial} onSelect={onSelect} />
+        <DatePicker defaultValue={initial} onValueChange={onValueChange} />
       );
 
       const firstCall = calls[calls.length - 1];
@@ -158,7 +158,10 @@ describe('DatePicker', () => {
        * month follows selection via the open-time sync effect (picker re-opens
        * on next mount; while open, the click also closes the popover).
        */
-      expect(onSelect).toHaveBeenCalledWith(newSelection);
+      expect(onValueChange).toHaveBeenCalledWith(
+        newSelection,
+        expect.objectContaining({ reason: 'item-press' })
+      );
     });
   });
 
@@ -191,6 +194,40 @@ describe('DatePicker', () => {
       rerender(<DatePicker value={new Date(2026, 5, 15)} />);
       expect(input.value).toBe('15 Jun 2026');
     });
+
+    it('follows a controlled value that starts as null', () => {
+      const { rerender } = render(<DatePicker value={null} />);
+      const input = screen.getByPlaceholderText(
+        'Select date'
+      ) as HTMLInputElement;
+      expect(input.value).toBe('');
+
+      rerender(<DatePicker value={new Date(2026, 5, 15)} />);
+      expect(input.value).toBe('15 Jun 2026');
+    });
+
+    it('keeps a controlled value that the parent does not update', () => {
+      const onValueChange = vi.fn();
+      render(
+        <DatePicker
+          dateFormat='DD/MM/YYYY'
+          value={new Date(2026, 0, 1)}
+          onValueChange={onValueChange}
+        />
+      );
+      const input = screen.getByPlaceholderText(
+        'Select date'
+      ) as HTMLInputElement;
+      fireEvent.focus(input);
+      fireEvent.change(input, { target: { value: '15/06/2025' } });
+      fireEvent.keyUp(input, { code: 'Enter' });
+
+      expect(onValueChange).toHaveBeenCalledWith(
+        new Date(2025, 5, 15),
+        expect.objectContaining({ reason: 'input-change' })
+      );
+      expect(input.value).toBe('01/01/2026');
+    });
   });
 
   describe('unselected initial state (CLD-3195 #4)', () => {
@@ -202,16 +239,16 @@ describe('DatePicker', () => {
       expect(input.value).toBe('');
     });
 
-    it('does not fire onSelect on close when nothing was ever selected', () => {
-      const onSelect = vi.fn();
-      render(<DatePicker onSelect={onSelect} />);
+    it('does not fire onValueChange on close when nothing was ever selected', () => {
+      const onValueChange = vi.fn();
+      render(<DatePicker onValueChange={onValueChange} />);
       const input = screen.getByPlaceholderText(
         'Select date'
       ) as HTMLInputElement;
       // Open + close without selecting.
       fireEvent.focus(input);
       fireEvent.keyUp(input, { code: 'Enter' });
-      expect(onSelect).not.toHaveBeenCalled();
+      expect(onValueChange).not.toHaveBeenCalled();
     });
 
     it('passes selected=undefined to Calendar when picker has no value', () => {
@@ -269,15 +306,17 @@ describe('DatePicker', () => {
     });
   });
 
-  describe('onSelect fires once per commit', () => {
+  describe('onValueChange fires once per commit', () => {
     /*
      * Regression for CLD-3195 #25: each commit path (calendar click, Enter,
-     * outside click) should fire onSelect exactly once with a single canonical
+     * outside click) should fire onValueChange exactly once with a single canonical
      * Date.
      */
-    it('Enter after typing a valid date fires onSelect exactly once', () => {
-      const onSelect = vi.fn();
-      render(<DatePicker dateFormat='DD/MM/YYYY' onSelect={onSelect} />);
+    it('Enter after typing a valid date fires onValueChange exactly once', () => {
+      const onValueChange = vi.fn();
+      render(
+        <DatePicker dateFormat='DD/MM/YYYY' onValueChange={onValueChange} />
+      );
 
       const input = screen.getByPlaceholderText(
         'Select date'
@@ -286,8 +325,8 @@ describe('DatePicker', () => {
       fireEvent.change(input, { target: { value: '15/06/2025' } });
       fireEvent.keyUp(input, { code: 'Enter' });
 
-      expect(onSelect).toHaveBeenCalledTimes(1);
-      const calledWith = onSelect.mock.calls[0][0] as Date;
+      expect(onValueChange).toHaveBeenCalledTimes(1);
+      const calledWith = onValueChange.mock.calls[0][0] as Date;
       expect(dayjs(calledWith).format('DD/MM/YYYY')).toBe('15/06/2025');
     });
   });
@@ -300,9 +339,12 @@ describe('DatePicker', () => {
      * are now allowed; bounds come from `startMonth` / `endMonth`.
      */
     it('accepts a future date when no calendarProps bounds are set', () => {
-      const onErrorChange = vi.fn();
+      const onValidityChange = vi.fn();
       render(
-        <DatePicker dateFormat='DD/MM/YYYY' onErrorChange={onErrorChange} />
+        <DatePicker
+          dateFormat='DD/MM/YYYY'
+          onValidityChange={onValidityChange}
+        />
       );
 
       const input = screen.getByPlaceholderText(
@@ -310,16 +352,16 @@ describe('DatePicker', () => {
       ) as HTMLInputElement;
       // Pick a date far in the future to avoid clock skew in tests.
       fireEvent.change(input, { target: { value: '15/06/2099' } });
-      expect(onErrorChange).not.toHaveBeenCalled();
+      expect(onValidityChange).not.toHaveBeenCalled();
     });
 
     it('accepts a future date within endMonth', () => {
-      const onErrorChange = vi.fn();
+      const onValidityChange = vi.fn();
       render(
         <DatePicker
           dateFormat='DD/MM/YYYY'
           calendarProps={{ endMonth: new Date(2099, 11, 31) }}
-          onErrorChange={onErrorChange}
+          onValidityChange={onValidityChange}
         />
       );
 
@@ -327,16 +369,16 @@ describe('DatePicker', () => {
         'Select date'
       ) as HTMLInputElement;
       fireEvent.change(input, { target: { value: '15/06/2099' } });
-      expect(onErrorChange).not.toHaveBeenCalled();
+      expect(onValidityChange).not.toHaveBeenCalled();
     });
 
     it('rejects a date past endMonth', () => {
-      const onErrorChange = vi.fn();
+      const onValidityChange = vi.fn();
       render(
         <DatePicker
           dateFormat='DD/MM/YYYY'
           calendarProps={{ endMonth: new Date(2026, 11, 31) }}
-          onErrorChange={onErrorChange}
+          onValidityChange={onValidityChange}
         />
       );
 
@@ -344,16 +386,20 @@ describe('DatePicker', () => {
         'Select date'
       ) as HTMLInputElement;
       fireEvent.change(input, { target: { value: '15/06/2099' } });
-      expect(onErrorChange).toHaveBeenLastCalledWith('Invalid date');
+      expect(onValidityChange).toHaveBeenLastCalledWith({
+        valid: false,
+        reason: 'out-of-bounds',
+        message: 'Invalid date'
+      });
     });
 
     it('rejects a date before startMonth', () => {
-      const onErrorChange = vi.fn();
+      const onValidityChange = vi.fn();
       render(
         <DatePicker
           dateFormat='DD/MM/YYYY'
           calendarProps={{ startMonth: new Date(2026, 0, 1) }}
-          onErrorChange={onErrorChange}
+          onValidityChange={onValidityChange}
         />
       );
 
@@ -361,7 +407,11 @@ describe('DatePicker', () => {
         'Select date'
       ) as HTMLInputElement;
       fireEvent.change(input, { target: { value: '15/06/2020' } });
-      expect(onErrorChange).toHaveBeenLastCalledWith('Invalid date');
+      expect(onValidityChange).toHaveBeenLastCalledWith({
+        valid: false,
+        reason: 'out-of-bounds',
+        message: 'Invalid date'
+      });
     });
   });
 
@@ -374,13 +424,13 @@ describe('DatePicker', () => {
      * visibly snapped. Now uses `dateFormat` with strict parsing.
      */
     it('does not commit partial single-digit input as a date', () => {
-      const onSelect = vi.fn();
+      const onValueChange = vi.fn();
       const initial = new Date(2026, 4, 20); // 20/05/2026
       render(
         <DatePicker
           dateFormat='DD/MM/YYYY'
           value={initial}
-          onSelect={onSelect}
+          onValueChange={onValueChange}
         />
       );
 
@@ -393,8 +443,8 @@ describe('DatePicker', () => {
 
       // Input must NOT have jumped to a 2001 date.
       expect(input.value).not.toMatch(/2001/);
-      // onSelect must not have been called with a 2001 date.
-      for (const call of onSelect.mock.calls) {
+      // onValueChange must not have been called with a 2001 date.
+      for (const call of onValueChange.mock.calls) {
         const arg = call[0] as Date;
         expect(dayjs(arg).year()).not.toBe(2001);
       }
@@ -414,9 +464,12 @@ describe('DatePicker', () => {
     });
 
     it('accepts a fully-typed valid date matching dateFormat', () => {
-      const onErrorChange = vi.fn();
+      const onValidityChange = vi.fn();
       render(
-        <DatePicker dateFormat='DD/MM/YYYY' onErrorChange={onErrorChange} />
+        <DatePicker
+          dateFormat='DD/MM/YYYY'
+          onValidityChange={onValidityChange}
+        />
       );
 
       const input = screen.getByPlaceholderText(
@@ -425,7 +478,7 @@ describe('DatePicker', () => {
 
       fireEvent.change(input, { target: { value: '15/06/2025' } });
       // The change handler accepted it, so no error transition fired.
-      expect(onErrorChange).not.toHaveBeenCalled();
+      expect(onValidityChange).not.toHaveBeenCalled();
     });
 
     /*
@@ -434,12 +487,12 @@ describe('DatePicker', () => {
      * render and typing felt broken, and only paste of the full string worked.
      */
     it('keeps typed characters visible while typing a full date one char at a time', () => {
-      const onSelect = vi.fn();
+      const onValueChange = vi.fn();
       render(
         <DatePicker
           dateFormat='DD/MM/YYYY'
           value={new Date(2026, 4, 20)}
-          onSelect={onSelect}
+          onValueChange={onValueChange}
         />
       );
 
@@ -466,14 +519,14 @@ describe('DatePicker', () => {
       }
     });
 
-    it('does not fire onSelect while typing, so partial stays uncommitted, valid waits for commit (Enter/blur/outside-click)', () => {
-      const onSelect = vi.fn();
-      const onErrorChange = vi.fn();
+    it('does not fire onValueChange while typing, so partial stays uncommitted, valid waits for commit (Enter/blur/outside-click)', () => {
+      const onValueChange = vi.fn();
+      const onValidityChange = vi.fn();
       render(
         <DatePicker
           dateFormat='DD/MM/YYYY'
-          onSelect={onSelect}
-          onErrorChange={onErrorChange}
+          onValueChange={onValueChange}
+          onValidityChange={onValidityChange}
         />
       );
 
@@ -483,40 +536,50 @@ describe('DatePicker', () => {
 
       // Partial input is not even parseable, so no commit.
       fireEvent.change(input, { target: { value: '15/06' } });
-      expect(onSelect).not.toHaveBeenCalled();
+      expect(onValueChange).not.toHaveBeenCalled();
 
-      // Full valid input parses internally but still doesn't fire onSelect,
+      // Full valid input parses internally but still doesn't fire onValueChange,
       // commit only happens via Enter / blur / outside-click (see the
       // dedicated single-fire test below for that path).
       fireEvent.change(input, { target: { value: '15/06/2025' } });
-      expect(onErrorChange).toHaveBeenLastCalledWith(undefined);
-      expect(onSelect).not.toHaveBeenCalled();
+      expect(onValidityChange).toHaveBeenLastCalledWith({ valid: true });
+      expect(onValueChange).not.toHaveBeenCalled();
     });
   });
 
-  describe('onErrorChange', () => {
+  describe('onValidityChange', () => {
     /*
      * DatePicker renders no error message itself, and consumers lift validity
      * into `Field`'s `error` prop (or a form library) via this callback.
      * It fires on transitions only, like `onOpenChange`.
      */
     it('fires with a message when typed text stops parsing as a date', () => {
-      const onErrorChange = vi.fn();
+      const onValidityChange = vi.fn();
       render(
-        <DatePicker dateFormat='DD/MM/YYYY' onErrorChange={onErrorChange} />
+        <DatePicker
+          dateFormat='DD/MM/YYYY'
+          onValidityChange={onValidityChange}
+        />
       );
 
       const input = screen.getByPlaceholderText('Select date');
       fireEvent.change(input, { target: { value: 'not a date' } });
 
-      expect(onErrorChange).toHaveBeenCalledTimes(1);
-      expect(onErrorChange).toHaveBeenCalledWith('Invalid date');
+      expect(onValidityChange).toHaveBeenCalledTimes(1);
+      expect(onValidityChange).toHaveBeenCalledWith({
+        valid: false,
+        reason: 'unparseable',
+        message: 'Invalid date'
+      });
     });
 
     it('does not re-fire on consecutive invalid keystrokes', () => {
-      const onErrorChange = vi.fn();
+      const onValidityChange = vi.fn();
       render(
-        <DatePicker dateFormat='DD/MM/YYYY' onErrorChange={onErrorChange} />
+        <DatePicker
+          dateFormat='DD/MM/YYYY'
+          onValidityChange={onValidityChange}
+        />
       );
 
       const input = screen.getByPlaceholderText('Select date');
@@ -524,39 +587,48 @@ describe('DatePicker', () => {
       fireEvent.change(input, { target: { value: '15/0' } });
       fireEvent.change(input, { target: { value: '15/06' } });
 
-      expect(onErrorChange).toHaveBeenCalledTimes(1);
+      expect(onValidityChange).toHaveBeenCalledTimes(1);
     });
 
-    it('fires with undefined when the typed text becomes valid again', () => {
-      const onErrorChange = vi.fn();
+    it('fires with valid when the typed text becomes valid again', () => {
+      const onValidityChange = vi.fn();
       render(
-        <DatePicker dateFormat='DD/MM/YYYY' onErrorChange={onErrorChange} />
+        <DatePicker
+          dateFormat='DD/MM/YYYY'
+          onValidityChange={onValidityChange}
+        />
       );
 
       const input = screen.getByPlaceholderText('Select date');
       fireEvent.change(input, { target: { value: '15/06' } });
       fireEvent.change(input, { target: { value: '15/06/2025' } });
 
-      expect(onErrorChange).toHaveBeenCalledTimes(2);
-      expect(onErrorChange).toHaveBeenLastCalledWith(undefined);
+      expect(onValidityChange).toHaveBeenCalledTimes(2);
+      expect(onValidityChange).toHaveBeenLastCalledWith({ valid: true });
     });
 
     it('never fires while typing stays valid', () => {
-      const onErrorChange = vi.fn();
+      const onValidityChange = vi.fn();
       render(
-        <DatePicker dateFormat='DD/MM/YYYY' onErrorChange={onErrorChange} />
+        <DatePicker
+          dateFormat='DD/MM/YYYY'
+          onValidityChange={onValidityChange}
+        />
       );
 
       const input = screen.getByPlaceholderText('Select date');
       fireEvent.change(input, { target: { value: '15/06/2025' } });
 
-      expect(onErrorChange).not.toHaveBeenCalled();
+      expect(onValidityChange).not.toHaveBeenCalled();
     });
 
-    it('fires with undefined when the picker commits via Enter with invalid text', () => {
-      const onErrorChange = vi.fn();
+    it('fires with valid when the picker commits via Enter with invalid text', () => {
+      const onValidityChange = vi.fn();
       render(
-        <DatePicker dateFormat='DD/MM/YYYY' onErrorChange={onErrorChange} />
+        <DatePicker
+          dateFormat='DD/MM/YYYY'
+          onValidityChange={onValidityChange}
+        />
       );
 
       const input = screen.getByPlaceholderText('Select date');
@@ -564,7 +636,7 @@ describe('DatePicker', () => {
       fireEvent.change(input, { target: { value: 'garbage' } });
       fireEvent.keyUp(input, { code: 'Enter' });
 
-      expect(onErrorChange).toHaveBeenLastCalledWith(undefined);
+      expect(onValidityChange).toHaveBeenLastCalledWith({ valid: true });
     });
 
     it('renders no error presentation of its own, with no message and no aria-invalid', () => {
@@ -573,7 +645,7 @@ describe('DatePicker', () => {
       const input = screen.getByPlaceholderText('Select date');
       fireEvent.change(input, { target: { value: 'not a date' } });
 
-      // Presentation is fully consumer-owned: `onErrorChange` lifted into
+      // Presentation is fully consumer-owned: `onValidityChange` lifted into
       // `Field`'s `error` prop renders the message and wires aria-invalid.
       expect(input.getAttribute('aria-invalid')).toBeNull();
       expect(screen.queryByRole('alert')).toBeNull();

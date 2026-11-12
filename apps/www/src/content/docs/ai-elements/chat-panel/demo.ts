@@ -74,7 +74,7 @@ export const preview = {
                 <Chat.Item>
                   <Message>
                     <Message.Content>
-                      <Text size="small" variant="secondary">Thinking…</Text>
+                      <Text size="small" color="secondary">Thinking…</Text>
                     </Message.Content>
                   </Message>
                 </Chat.Item>
@@ -95,7 +95,7 @@ export const preview = {
       </ChatPanel>
       <Flex direction="column" gap={3} style={{ flex: 1, padding: 'var(--rs-space-5)' }}>
         <Text size="large" weight="medium">Main content</Text>
-        <Text size="small" variant="secondary">
+        <Text size="small" color="secondary">
           The docked panel is a real flex sibling — it squeezes this content
           instead of covering it. Pop it out or minimize it from the header;
           floating and minimized modes are fixed to the browser viewport.
@@ -119,10 +119,10 @@ export const controlledDemo = {
         <Button size="small" variant="outline" color="neutral" onClick={() => setMode('floating')}>Float</Button>
         <Button size="small" variant="outline" color="neutral" onClick={() => setMode('minimized')}>Minimize</Button>
       </Flex>
-      <Text size="small" variant="secondary">mode: {mode}</Text>
+      <Text size="small" color="secondary">mode: {mode}</Text>
       <Flex style={{ width: '100%', height: 360, border: '0.5px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-4)', overflow: 'hidden' }}>
         <Flex style={{ flex: 1, padding: 'var(--rs-space-5)' }}>
-          <Text size="small" variant="secondary">
+          <Text size="small" color="secondary">
             Floating and minimized modes leave this frame and pin to the
             browser viewport.
           </Text>
@@ -137,7 +137,7 @@ export const controlledDemo = {
           </ChatPanel.Header>
           <ChatPanel.Content>
             <Flex style={{ padding: 'var(--rs-space-5)' }}>
-              <Text size="small" variant="secondary">
+              <Text size="small" color="secondary">
                 Drag the header to move the floating window; resize from any
                 edge or corner.
               </Text>
@@ -173,7 +173,7 @@ export const transitionDemo = {
       </Flex>
       <Flex style={{ width: '100%', height: 360, border: '0.5px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-4)', overflow: 'hidden' }}>
         <Flex style={{ flex: 1, padding: 'var(--rs-space-5)' }}>
-          <Text size="small" variant="secondary">
+          <Text size="small" color="secondary">
             Switch modes with either transition to compare them. Morph tweens
             the panel out of the box it just left; minimal eases it in from its
             own edge.
@@ -189,7 +189,7 @@ export const transitionDemo = {
           </ChatPanel.Header>
           <ChatPanel.Content>
             <Flex style={{ padding: 'var(--rs-space-5)' }}>
-              <Text size="small" variant="secondary">
+              <Text size="small" color="secondary">
                 transition: {transition}
               </Text>
             </Flex>
@@ -243,7 +243,7 @@ export const boundedDragDemo = {
             </ChatPanel.Header>
             <ChatPanel.Content>
               <Flex style={{ padding: 'var(--rs-space-5)' }}>
-                <Text size="small" variant="secondary">
+                <Text size="small" color="secondary">
                   Drag the header — the window can't leave the dashed frame.
                 </Text>
               </Flex>
@@ -265,7 +265,7 @@ export const resizeDemo = {
   return (
     <Flex direction="column" gap={4} style={{ width: '100%' }}>
       <Flex gap={3} align="center">
-        <Text size="small" variant="secondary">resize:</Text>
+        <Text size="small" color="secondary">resize:</Text>
         {['both', 'horizontal', 'vertical', 'none'].map(value => (
           <Button
             key={value}
@@ -280,7 +280,7 @@ export const resizeDemo = {
       </Flex>
       <Flex style={{ width: '100%', height: 380, border: '0.5px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-4)', overflow: 'hidden' }}>
         <Flex style={{ flex: 1, padding: 'var(--rs-space-5)' }}>
-          <Text size="small" variant="secondary">
+          <Text size="small" color="secondary">
             Pop the panel out with the header button — the floating window
             pins to the browser viewport and only renders handles for the
             allowed axes. By default it can only shrink below its initial
@@ -302,7 +302,7 @@ export const resizeDemo = {
           </ChatPanel.Header>
           <ChatPanel.Content>
             <Flex style={{ padding: 'var(--rs-space-5)' }}>
-              <Text size="small" variant="secondary">
+              <Text size="small" color="secondary">
                 {mode === 'floating'
                   ? resize === 'none'
                     ? 'Resizing is disabled.'
@@ -325,14 +325,14 @@ export const draggableBubbleDemo = {
 
   return (
     <Flex direction="column" gap={4} style={{ width: '100%' }}>
-      <Text size="small" variant="secondary">
+      <Text size="small" color="secondary">
         The minimized bubble accepts draggable — a short click still
         restores the panel, and the dropped spot is kept the next time you
         minimize.
       </Text>
       <Flex style={{ width: '100%', height: 280, border: '0.5px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-4)', overflow: 'hidden' }}>
         <Flex style={{ flex: 1, padding: 'var(--rs-space-5)' }}>
-          <Text size="small" variant="secondary">
+          <Text size="small" color="secondary">
             Minimize the panel from its header, then drag the bubble that
             appears at the bottom-right of the browser window. Click it to
             restore the panel here.
@@ -368,13 +368,13 @@ export const unreadBadgeDemo = {
   // instead of stacking on the page's other panels.
   return (
     <Flex direction="column" gap={4} style={{ width: '100%' }}>
-      <Text size="small" variant="secondary">
+      <Text size="small" color="secondary">
         The minimized trigger is a slot — compose Indicator or Badge for
         unread counts. Look at the bottom-right of this frame.
       </Text>
       <Flex style={{ width: '100%', height: 280, border: '0.5px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-4)', overflow: 'hidden', transform: 'translateZ(0)' }}>
         <Flex style={{ flex: 1, padding: 'var(--rs-space-5)' }}>
-          <Text size="small" variant="secondary">
+          <Text size="small" color="secondary">
             Click the bubble to restore the panel; minimize it again from the
             header.
           </Text>

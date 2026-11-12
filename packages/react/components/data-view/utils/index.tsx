@@ -232,6 +232,10 @@ export const hasActiveQuery = (
   return hasFilters || hasSearch || sortChanged || groupChanged;
 };
 
+/** Compares two wire queries by value, so a JSON copy matches its source. */
+export const isSameQuery = (a?: DataViewQuery, b?: DataViewQuery): boolean =>
+  JSON.stringify(a) === JSON.stringify(b);
+
 export const hasQueryChanged = (
   oldQuery: InternalQuery | null,
   newQuery: InternalQuery

@@ -58,7 +58,10 @@ export function useMenuInputValue({
 }: {
   inputValue?: string;
   defaultInputValue: string;
-  onInputValueChange?: (value: string) => void;
+  onInputValueChange?: (
+    value: string,
+    eventDetails: MenuPrimitive.FilterProvider.ChangeEventDetails
+  ) => void;
   name: string;
 }) {
   const [value, setValueUnwrapped] = useControlled({
@@ -69,9 +72,13 @@ export function useMenuInputValue({
   });
 
   const setValue = useCallback(
-    (next: string) => {
+    (
+      next: string,
+      eventDetails: MenuPrimitive.FilterProvider.ChangeEventDetails
+    ) => {
+      onInputValueChange?.(next, eventDetails);
+      if (eventDetails.isCanceled) return;
       setValueUnwrapped(next);
-      onInputValueChange?.(next);
     },
     [onInputValueChange, setValueUnwrapped]
   );
@@ -91,7 +98,10 @@ export function MenuFilter({
   parent,
   children
 }: MenuContextValue & {
-  onInputValueChange: (value: string) => void;
+  onInputValueChange: (
+    value: string,
+    eventDetails: MenuPrimitive.FilterProvider.ChangeEventDetails
+  ) => void;
   children: ReactNode;
 }) {
   return (
@@ -99,7 +109,7 @@ export function MenuFilter({
       {autocomplete ? (
         <MenuPrimitive.FilterProvider
           value={inputValue}
-          onValueChange={value => onInputValueChange(value)}
+          onValueChange={onInputValueChange}
           filter={autocompleteMode === 'manual' ? null : undefined}
           autoHighlight='always'
         >
@@ -132,7 +142,10 @@ export interface AutocompleteMenuRootProps
   extends MenuPrimitive.Root.Props,
     CommonProps {
   autocomplete: true;
-  onInputValueChange?: (value: string) => void;
+  onInputValueChange?: (
+    value: string,
+    eventDetails: MenuPrimitive.FilterProvider.ChangeEventDetails
+  ) => void;
   defaultInputValue?: string;
 }
 
@@ -180,7 +193,10 @@ export interface AutocompleteMenuSubMenuProps
   autocomplete: true;
   autocompleteMode?: 'auto' | 'manual';
   inputValue?: string;
-  onInputValueChange?: (value: string) => void;
+  onInputValueChange?: (
+    value: string,
+    eventDetails: MenuPrimitive.FilterProvider.ChangeEventDetails
+  ) => void;
   defaultInputValue?: string;
 }
 

@@ -3,7 +3,7 @@ import { cx } from 'class-variance-authority';
 import { HTMLAttributes } from 'react';
 import styles from './kbd.module.css';
 
-interface KBDProps extends HTMLAttributes<HTMLElement> {
+interface KBDProps extends Omit<HTMLAttributes<HTMLElement>, 'color'> {
   children: string | number;
   mode?: 'single' | 'combination';
 }
@@ -25,7 +25,7 @@ export const Kbd = ({
             className={cx(styles.kbd, className)}
             key={index}
             as='span'
-            variant='tertiary'
+            color='tertiary'
             size='mini'
             weight='medium'
           >
@@ -40,7 +40,7 @@ export const Kbd = ({
     <Text
       className={cx(styles.kbd, className)}
       as='span'
-      variant='tertiary'
+      color='tertiary'
       size='mini'
       weight='medium'
       {...props}

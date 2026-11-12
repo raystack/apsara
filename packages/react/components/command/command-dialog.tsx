@@ -25,7 +25,6 @@ export const CommandDialogTrigger = forwardRef<
 CommandDialogTrigger.displayName = 'Command.DialogTrigger';
 
 export interface CommandDialogContentProps extends DialogPrimitive.Popup.Props {
-  width?: string | number;
   /** Corner radius for this palette only. Overrides the theme's `radius`. */
   radius?: Radius;
 }
@@ -33,8 +32,6 @@ export interface CommandDialogContentProps extends DialogPrimitive.Popup.Props {
 export function CommandDialogContent({
   className,
   children,
-  width,
-  style,
   radius,
   ...props
 }: CommandDialogContentProps) {
@@ -64,7 +61,6 @@ export function CommandDialogContent({
             radiusStyle({ radius }),
             className
           )}
-          style={{ width, ...style }}
           initialFocus={openType => {
             /* Runs before focus moves into the popup, so activeElement is
                still the element focused before opening. */

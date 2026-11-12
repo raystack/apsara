@@ -6,9 +6,9 @@ import figma from 'figma';
 
 const instance = figma.selectedInstance;
 
-// Default variant 'empty1' (Figma "Empty") is omitted; only Zero → 'empty2'.
+// Default variant 'compact' (Figma "Empty") is omitted; only Zero → 'page'.
 const variant = instance.getEnum('Variant', {
-  Zero: 'empty2'
+  Zero: 'page'
 });
 
 const findTextContent = (name: string) => {
@@ -41,8 +41,8 @@ const secondaryAction = instance.getBoolean('Secondary Action', {
   false: undefined
 });
 
-// Icon: the "empty1" variant wraps it in ".state icon" (instance-swap "Icon");
-// the "empty2" variant uses a direct icon instance. Try the wrapper first, then
+// Icon: the "compact" variant wraps it in ".state icon" (instance-swap "Icon");
+// the "page" variant uses a direct icon instance. Try the wrapper first, then
 // fall back to the first connected instance that isn't an action button.
 const icon = (function () {
   const stateIcon = instance.findInstance('.state icon');

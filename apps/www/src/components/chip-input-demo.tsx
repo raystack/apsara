@@ -1,4 +1,4 @@
-import { Input } from '@raystack/apsara';
+import { Chip, Input } from '@raystack/apsara';
 import { useState } from 'react';
 
 export default function ChipInputDemo() {
@@ -23,10 +23,14 @@ export default function ChipInputDemo() {
           setInput('');
         }
       }}
-      chips={chips.map((c, i) => ({
-        label: c.label,
-        onRemove: () => setChips(prev => prev.filter((_, j) => j !== i))
-      }))}
+      chips={chips.map((c, i) => (
+        <Chip key={i}>
+          {c.label}
+          <Chip.Remove
+            onClick={() => setChips(prev => prev.filter((_, j) => j !== i))}
+          />
+        </Chip>
+      ))}
       maxChipsVisible={4}
     />
   );

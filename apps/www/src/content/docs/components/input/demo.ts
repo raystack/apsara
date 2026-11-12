@@ -75,10 +75,7 @@ export const disabledChipsDemo = {
   code: `<Input
   placeholder="Type and press Enter..."
   disabled
-  chips={[
-    { label: "Tag1", onRemove: () => console.log("Remove Tag1") },
-    { label: "Tag2", onRemove: () => console.log("Remove Tag2") }
-  ]}
+  chips={[{ children: "Tag1" }, { children: "Tag2" }]}
 />`
 };
 
@@ -100,18 +97,12 @@ export const sizeChipDemo = {
   code: `<Flex direction="column" gap={5}>
   <Input
     placeholder="Type and press Enter..."
-    chips={[
-      { label: "A", onRemove: () => console.log("Remove A") },
-      { label: "B", onRemove: () => console.log("Remove B") }
-    ]}
+    chips={[{ children: "A" }, { children: "B" }]}
   />
   <Input
     placeholder="Type and press Enter..."
     size="small"
-    chips={[
-      { label: "A", onRemove: () => console.log("Remove A") },
-      { label: "B", onRemove: () => console.log("Remove B") }
-    ]}
+    chips={[{ children: "A" }, { children: "B" }]}
   />
 </Flex>`
 };
@@ -165,10 +156,12 @@ export const interactiveChipDemo = {
             setInput("");
           }
         }}
-        chips={chips.map((c, i) => ({
-          label: c.label,
-          onRemove: () => setChips(chips.filter((_, j) => j !== i))
-        }))}
+        chips={chips.map((c, i) => (
+          <Chip key={i}>
+            {c.label}
+            <Chip.Remove onClick={() => setChips(chips.filter((_, j) => j !== i))} />
+          </Chip>
+        ))}
         maxChipsVisible={4}
       />`
     }

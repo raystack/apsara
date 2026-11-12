@@ -5,10 +5,29 @@ export interface FilterChipProps {
   /** Text label for the filter (required) */
   label: string;
 
-  /** Current value of the filter. `multiselect` takes an array; `date`
+  /** The filter value (controlled). `multiselect` takes an array; `date`
    * takes a `Date` (a string or epoch number is parsed for you); `number`
    * shows a value that is not a number as empty. */
   value?: string | number | boolean | Array<string | number | boolean> | Date;
+
+  /** The filter value on the first render (uncontrolled). Takes the same
+   * types as `value`. */
+  defaultValue?:
+    | string
+    | number
+    | boolean
+    | Array<string | number | boolean>
+    | Date;
+
+  /** Active operation, by its `value`. A value `operations` does not have falls back to the first one.
+   * @default the first entry of `operations`
+   */
+  operation?: string;
+
+  /** Operation to start on, by its `value`, when `operation` is not set.
+   * @default the first entry of `operations`
+   */
+  defaultOperation?: string;
 
   /** Type of input for the filter
    * @default "string"
@@ -16,9 +35,9 @@ export interface FilterChipProps {
   columnType?: 'select' | 'multiselect' | 'date' | 'string' | 'number';
 
   /** Filterchip variant
-   * @default "default"
+   * @default "outline"
    */
-  variant?: 'default' | 'text';
+  variant?: 'outline' | 'text';
 
   /** Array of options for the select and multiselect type inputs */
   options?: { label: string; value: string | number | boolean }[];
@@ -26,7 +45,7 @@ export interface FilterChipProps {
   /** Optional array of operations for the type of filter operation */
   operations?: { label: string; value: string }[];
 
-  /** Callback when the filter value changes; receives the value and the active
+  /** Callback when the filter value changes. `details.operation` is the active
    * operation. For `select` and `multiselect`, the value is the picked
    * option's `value`, with its type kept. For `number`, non-numeric input is
    * rejected and never reported, and the value arrives as a `number`, except
@@ -34,11 +53,14 @@ export interface FilterChipProps {
    * reported as-is so the field stays editable. */
   onValueChange?: (
     value: string | number | boolean | Array<string | number | boolean> | Date,
-    operation: string
+    details: { reason: string; event: Event; operation: string }
   ) => void;
 
-  /** Callback when the filter operation changes */
-  onOperationChange?: (operation: string) => void;
+  /** Callback when the filter operation changes. */
+  onOperationChange?: (
+    operation: string,
+    details: { reason: string; event: Event }
+  ) => void;
 
   /** Icon element to display before the label */
   leadingIcon?: React.ReactNode;
@@ -50,9 +72,12 @@ export interface FilterChipProps {
   selectProps?: {
     autocomplete?: boolean;
     autocompleteMode?: 'auto' | 'manual';
-    onSearch?: (value: string) => void;
-    searchValue?: string;
-    defaultSearchValue?: string;
+    inputValue?: string;
+    defaultInputValue?: string;
+    onInputValueChange?: (
+      inputValue: string,
+      eventDetails: { reason: string; event: Event }
+    ) => void;
   };
 
   /** Props for the date control at `columnType="date"`. `timeZone` through `today` are CalendarPreview props. */
@@ -67,7 +92,7 @@ export interface FilterChipProps {
     yearRange?: { from: number; to: number };
     defaultMonth?: Date;
     today?: Date;
-    /** Props for the date input (`CalendarPreview.Input`) and its popup (`CalendarPreview.Content`). `input.disabled` and `input.readOnly` also apply to the calendar. */
+    /** Props for the date input (`CalendarPreview.Input`) and its popup (`CalendarPreview.Content`). `input.disabled` and `input.readOnly` also apply to the calendar. `input.onValidityChange` reports typed-date errors. */
     slotProps?: {
       input?: Omit<CalendarPreviewInputProps, 'field'>;
       popover?: Omit<PopoverContentProps, 'children'>;
@@ -77,8 +102,6 @@ export interface FilterChipProps {
      * @default false
      */
     showCalendarIcon?: boolean;
-    /** Called with a message when the typed date is invalid, and with `undefined` when it is valid again. */
-    onErrorChange?: (error: string | undefined) => void;
   };
 
   /** Additional CSS class names */

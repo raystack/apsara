@@ -16,7 +16,7 @@ describe('AnnouncementBar data-slot contract', () => {
     );
     expectSlots(container, [
       'announcement-bar',
-      'announcement-bar-icon',
+      'announcement-bar-leading-icon',
       'announcement-bar-text',
       'announcement-bar-action',
       'announcement-bar-action-label',
@@ -27,7 +27,7 @@ describe('AnnouncementBar data-slot contract', () => {
 
   it('omits icon, action, and dismiss slots when not provided', () => {
     const { container } = render(<AnnouncementBar text='Just text' />);
-    expect(getSlot(container, 'announcement-bar-icon')).toBeNull();
+    expect(getSlot(container, 'announcement-bar-leading-icon')).toBeNull();
     expect(getSlot(container, 'announcement-bar-action')).toBeNull();
     expect(getSlot(container, 'announcement-bar-action-icon')).toBeNull();
     expect(getSlot(container, 'announcement-bar-dismiss')).toBeNull();

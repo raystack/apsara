@@ -26,11 +26,13 @@ import {
   useRef,
   useState
 } from 'react';
+import { createChangeDetails } from '~/shared/change-details';
 import styles from './chat-panel.module.css';
 import {
   ChatPanelContext,
   type ChatPanelContextValue,
   type ChatPanelMode,
+  type ChatPanelModeChangeDetails,
   type ChatPanelSide
 } from './chat-panel-context';
 
@@ -196,7 +198,10 @@ export interface ChatPanelRootProps extends ComponentProps<'aside'> {
    */
   defaultMode?: ChatPanelMode;
   /** Called when the mode changes. */
-  onModeChange?: (mode: ChatPanelMode) => void;
+  onModeChange?: (
+    mode: ChatPanelMode,
+    details: ChatPanelModeChangeDetails
+  ) => void;
   /**
    * Which edge the panel docks to; also picks the corner used by the
    * floating default position and the minimized trigger.
@@ -345,7 +350,7 @@ export function ChatPanelRoot({
   dragBoundaryRef.current = dragBoundary;
 
   const setMode = useCallback(
-    (next: ChatPanelMode) => {
+    (next: ChatPanelMode, details: ChatPanelModeChangeDetails) => {
       if (next === modeRef.current) return;
       if (modeRef.current !== 'minimized') {
         previousModeRef.current = modeRef.current as Exclude<
@@ -354,7 +359,7 @@ export function ChatPanelRoot({
         >;
       }
       setModeUnwrapped(next);
-      onModeChangeRef.current?.(next);
+      onModeChangeRef.current?.(next, details);
     },
     [setModeUnwrapped]
   );
@@ -685,10 +690,18 @@ export function ChatPanelRoot({
       mode,
       side,
       setMode,
-      minimize: () => setMode('minimized'),
-      restore: () => setMode(previousModeRef.current),
-      toggleFloating: () =>
-        setMode(modeRef.current === 'floating' ? 'docked' : 'floating'),
+      minimize: (event: Event) =>
+        setMode('minimized', createChangeDetails('trigger-press', event)),
+      restore: (event: Event) =>
+        setMode(
+          previousModeRef.current,
+          createChangeDetails('trigger-press', event)
+        ),
+      toggleFloating: (event: Event) =>
+        setMode(
+          modeRef.current === 'floating' ? 'docked' : 'floating',
+          createChangeDetails('trigger-press', event)
+        ),
       bubbleDraggableId,
       bubbleElementRef
     }),

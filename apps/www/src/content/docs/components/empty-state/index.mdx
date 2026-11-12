@@ -14,7 +14,7 @@ import { playground, variantsDemo,
 
 `EmptyState` fills a view that has no content yet: an empty inbox, zero search results, a feature that needs setup. It pairs a required `icon` with an optional `heading`, `subHeading`, and up to two action slots (`primaryAction`, `secondaryAction`) so users always have a next step.
 
-Use `empty1`, the default, for compact centered placeholders inside panels and lists. Use `empty2` for full-page states, which left-align the content and put the actions in a side-by-side row.
+Use `compact`, the default, for centered placeholders inside panels and lists. Use `page` for full-page states, which left-align the content and put the actions in a side-by-side row.
 
 ## Anatomy
 
@@ -33,7 +33,7 @@ Pick the variant that suits the space, then fill in the icon, the message and up
 
 ### Variants
 
-`empty1` (the default) centers everything and stacks the actions vertically, which suits panels, tables, and lists. `empty2` left-aligns the content, uses a larger icon, and places both actions in a row, which suits full-page states.
+`compact` (the default) centers everything and stacks the actions vertically, which suits panels, tables, and lists. `page` left-aligns the content, uses a larger icon, and places both actions in a row, which suits full-page states.
 
 <Demo data={variantsDemo} />
 
@@ -61,7 +61,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `empty-state-content` | Wrapper around the heading and subheading |
 | `empty-state-heading` | The heading text (when `heading` is set) |
 | `empty-state-subheading` | The subheading text (when `subHeading` is set) |
-| `empty-state-actions` | Wrapper around the action buttons (`empty2` variant only) |
+| `empty-state-actions` | Wrapper around the action buttons (`page` variant only) |
 
 ## Accessibility
 

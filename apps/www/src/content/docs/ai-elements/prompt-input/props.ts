@@ -159,10 +159,10 @@ export interface PromptInputMentionItem {
    */
   type?: string;
 
-  icon?: React.ReactNode;
+  leadingIcon?: React.ReactNode;
 
   /** Shown at the end of the row — a badge, a shortcut, a timestamp. */
-  trailing?: React.ReactNode;
+  trailingIcon?: React.ReactNode;
 
   /** Section heading. Sections appear in the order they first show up. */
   group?: string;
@@ -190,7 +190,7 @@ export interface PromptInputMentionsProps {
   ) => Promise<PromptInputMentionItem[]>;
 
   /**
-   * Looks up the icon, trailing content and `data` for chips restored from
+   * Looks up the leading icon, trailing icon and `data` for chips restored from
    * `value` / `defaultValue`, which can't carry them, and refreshes their
    * labels. Calls are batched and cached.
    */
@@ -199,7 +199,10 @@ export interface PromptInputMentionsProps {
   ) => Promise<PromptInputMentionItem[]>;
 
   /** Called when the menu opens or closes. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    details: { reason: 'none'; event: Event }
+  ) => void;
 
   /** Shown when nothing matches. @defaultValue "No results" */
   emptyMessage?: React.ReactNode;

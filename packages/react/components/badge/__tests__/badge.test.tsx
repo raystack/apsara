@@ -30,23 +30,23 @@ describe('Badge', () => {
     });
   });
 
-  describe('Variants', () => {
-    const variants = [
+  describe('Colors', () => {
+    const colors = [
       'accent',
-      'warning',
+      'attention',
       'danger',
       'success',
       'neutral',
       'gradient'
     ] as const;
 
-    it.each(variants)('renders %s variant correctly', variant => {
-      const { container } = render(<Badge variant={variant}>Badge</Badge>);
+    it.each(colors)('renders %s color correctly', color => {
+      const { container } = render(<Badge color={color}>Badge</Badge>);
       const badge = container.querySelector('span');
-      expect(badge).toHaveClass(styles[`badge-${variant}`]);
+      expect(badge).toHaveClass(styles[`badge-${color}`]);
     });
 
-    it('defaults to accent variant', () => {
+    it('defaults to accent color', () => {
       const { container } = render(<Badge>Default</Badge>);
       const badge = container.querySelector('span');
       expect(badge).toHaveClass(styles['badge-accent']);
@@ -72,7 +72,7 @@ describe('Badge', () => {
   describe('Icon Support', () => {
     it('renders with icon', () => {
       const icon = <svg data-testid='badge-icon' />;
-      render(<Badge icon={icon}>With Icon</Badge>);
+      render(<Badge leadingIcon={icon}>With Icon</Badge>);
 
       expect(screen.getByTestId('badge-icon')).toBeInTheDocument();
       expect(screen.getByText('With Icon')).toBeInTheDocument();
@@ -86,7 +86,7 @@ describe('Badge', () => {
 
     it('renders complex icon components', () => {
       const ComplexIcon = () => <span data-testid='complex-icon'>★</span>;
-      render(<Badge icon={<ComplexIcon />}>Badge</Badge>);
+      render(<Badge leadingIcon={<ComplexIcon />}>Badge</Badge>);
 
       expect(screen.getByTestId('complex-icon')).toBeInTheDocument();
       expect(screen.getByText('★')).toBeInTheDocument();

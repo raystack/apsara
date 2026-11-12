@@ -221,9 +221,11 @@ export function PromptInputEditor({
         );
         return (
           <Fragment key={portal.id}>
-            {item?.icon ? createPortal(item.icon, portal.iconTarget) : null}
-            {item?.trailing
-              ? createPortal(item.trailing, portal.trailingTarget)
+            {item?.leadingIcon
+              ? createPortal(item.leadingIcon, portal.iconTarget)
+              : null}
+            {item?.trailingIcon
+              ? createPortal(item.trailingIcon, portal.trailingTarget)
               : null}
           </Fragment>
         );

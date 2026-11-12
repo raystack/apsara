@@ -15,7 +15,7 @@
   background-color: var(--rs-color-background-base-primary);
 }
 
-/* The search bar sits in its own dialog panel, so the borderless input's
+/* The search bar sits in its own dialog panel, so the `text` variant input's
    keyboard focus ring is redundant here. The doubled class outranks the base
    ring rule without needing !important. */
 .commandInputContainer.commandInputContainer:has(input:focus-visible) {

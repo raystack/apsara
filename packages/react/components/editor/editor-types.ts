@@ -86,7 +86,7 @@ export interface EditorSlashItem {
   label: string;
   /** Shown under the label. The filter matches it at the start of a word. */
   description?: string;
-  icon?: ReactNode;
+  leadingIcon?: ReactNode;
   group?: string;
   keywords?: string[];
   /** Shortcut shown on the row, in ProseMirror keymap syntax. Built-in commands show their default key. */

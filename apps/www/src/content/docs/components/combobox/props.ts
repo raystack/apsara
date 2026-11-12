@@ -18,10 +18,13 @@ export interface ComboboxRootProps {
   defaultValue?: string | string[];
 
   /** Callback fired when the value changes.
-   * For single selection: (value: string) => void
-   * For multiple selection: (value: string[]) => void
+   * For single selection: (value: string, eventDetails) => void
+   * For multiple selection: (value: string[], eventDetails) => void
    */
-  onValueChange?: (value: string | string[]) => void;
+  onValueChange?: (
+    value: string | string[],
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** The controlled input value of the combobox. */
   inputValue?: string;
@@ -30,7 +33,10 @@ export interface ComboboxRootProps {
   defaultInputValue?: string;
 
   /** Callback fired when the input value changes. */
-  onInputValueChange?: (inputValue: string) => void;
+  onInputValueChange?: (
+    inputValue: string,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Whether the combobox is open.
    * @default false
@@ -43,7 +49,10 @@ export interface ComboboxRootProps {
   defaultOpen?: boolean;
 
   /** Callback fired when the open state changes. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Whether the popover should be modal.
    * @default false
@@ -60,6 +69,9 @@ export interface ComboboxRootProps {
 
   /** Converts a value to the text shown in the input and in multi-select chips. */
   itemToStringLabel?: (value: string) => string;
+
+  /** The `id` of the input. `Combobox.Label` uses it. */
+  id?: string;
 }
 
 export interface ComboboxInputProps {
@@ -71,6 +83,12 @@ export interface ComboboxInputProps {
 
   /** Whether the input is disabled. */
   disabled?: boolean;
+
+  /**
+   * Shows a clear button before the chevron.
+   * @default false
+   */
+  showClearButton?: boolean;
 
   /** Icon element to display at the start of input. */
   leadingIcon?: React.ReactNode;
@@ -90,7 +108,7 @@ export interface ComboboxInputProps {
 
 export interface ComboboxContentProps {
   /** Alignment of the content relative to the trigger.
-   * @default "start"
+   * @default "center"
    */
   align?: 'start' | 'center' | 'end';
 
@@ -128,6 +146,9 @@ export interface ComboboxItemProps {
   /** Leading icon to display before the item text. */
   leadingIcon?: React.ReactNode;
 
+  /** Trailing icon to display after the item text. */
+  trailingIcon?: React.ReactNode;
+
   /** Additional CSS class names. */
   className?: string;
 }
@@ -138,6 +159,59 @@ export interface ComboboxGroupProps {
 }
 
 export interface ComboboxLabelProps {
+  /** Shows `optionalText` after the label when `false`. */
+  required?: boolean;
+
+  /**
+   * Text shown after the label when `required` is `false`.
+   * @default "(optional)"
+   */
+  optionalText?: string;
+
+  /** Additional CSS class names. */
+  className?: string;
+}
+
+export interface ComboboxClearProps {
+  /**
+   * Size of the button.
+   * @default 2
+   */
+  size?: 1 | 2 | 3 | 4;
+
+  /**
+   * Accessible name of the button.
+   * @default "Clear"
+   */
+  'aria-label'?: string;
+
+  /**
+   * The icon inside the button.
+   * @default <ClearIcon />
+   */
+  children?: React.ReactNode;
+
+  /** Additional CSS class names. */
+  className?: string;
+}
+
+export interface ComboboxEmptyProps {
+  /** The text shown when no item matches. */
+  children?: React.ReactNode;
+
+  /** Additional CSS class names. */
+  className?: string;
+}
+
+export interface ComboboxStatusProps {
+  /** Text to announce. A function receives the number of matching items, or `null` without the `items` prop. */
+  children?: React.ReactNode | ((count: number | null) => React.ReactNode);
+
+  /** Additional CSS class names. */
+  className?: string;
+}
+
+export interface ComboboxGroupLabelProps {
   /** Additional CSS class names. */
   className?: string;
 }

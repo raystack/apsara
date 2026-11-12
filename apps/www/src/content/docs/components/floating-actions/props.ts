@@ -39,13 +39,27 @@ export interface FloatingActionsSeparatorProps {
    * Color variant inherited from the underlying `Separator`.
    * @defaultValue "primary"
    */
-  color?: 'primary' | 'secondary' | 'tertiary';
+  color?:
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'emphasis'
+    | 'accent'
+    | 'attention'
+    | 'danger'
+    | 'success';
 
   /**
    * Size variant inherited from the underlying `Separator`.
    * @defaultValue "full"
    */
   size?: 'small' | 'half' | 'full';
+
+  /**
+   * Hides the separator from assistive technology.
+   * @default false
+   */
+  decorative?: boolean;
 
   /** Additional CSS class names. */
   className?: string;

@@ -22,7 +22,7 @@ export default {
   <Breadcrumb.Separator />
   <Breadcrumb.Item href="/components">Components</Breadcrumb.Item>
   <Breadcrumb.Separator />
-  <Breadcrumb.Item current>Breadcrumb</Breadcrumb.Item>
+  <Breadcrumb.Item active>Breadcrumb</Breadcrumb.Item>
 </Breadcrumb>`,
   metadata: { nestable: false }
 };

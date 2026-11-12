@@ -137,11 +137,14 @@ describe('PromptInput.Mentions', () => {
 
       type(editorOf(container), '@');
       await flush();
-      expect(onOpenChange).toHaveBeenLastCalledWith(true);
+      expect(onOpenChange).toHaveBeenLastCalledWith(
+        true,
+        expect.objectContaining({ reason: 'none' })
+      );
 
       fireEvent.keyDown(editorOf(container), { key: 'Escape' });
       await flush();
-      expect(onOpenChange).toHaveBeenLastCalledWith(false);
+      expect(onOpenChange).toHaveBeenLastCalledWith(false, expect.anything());
     });
   });
 
@@ -697,7 +700,7 @@ describe('PromptInput.Mentions', () => {
           id: 'data-table',
           label: 'DataTable v2',
           type: 'component',
-          icon: <span data-testid='icon'>◆</span>
+          leadingIcon: <span data-testid='icon'>◆</span>
         }
       ]);
       const { container } = render(

@@ -11,9 +11,9 @@ import {
   useMemo,
   useRef
 } from 'react';
-import { useScaling } from '~/hooks/useScaling';
 import { Badge } from '../../badge';
 import { Skeleton } from '../../skeleton';
+import { useScaling } from '../../theme/use-scaling';
 import styles from '../data-view.module.css';
 import {
   DataViewListColumn,
@@ -48,7 +48,7 @@ export function DataViewList<TData, TValue = unknown>({
   estimatedRowHeight,
   virtualized = false,
   showDividers,
-  showGroupHeaders = true,
+  hideGroupHeaders = false,
   stickyGroupHeader = false,
   classNames = {}
 }: DataViewListProps<TData, TValue>) {
@@ -133,7 +133,7 @@ export function DataViewList<TData, TValue = unknown>({
 
   // Rows are sized by tokens, so the estimates the virtualizer and the sticky
   // group anchor run on follow the theme zoom. An explicit prop is left alone.
-  const scaling = useScaling(scrollRef);
+  const scaling = useScaling();
   const groupHeaderHeight = GROUP_HEADER_HEIGHT * scaling;
   const effectiveRowHeight =
     estimatedRowHeight ??
@@ -359,7 +359,7 @@ export function DataViewList<TData, TValue = unknown>({
       >
         {data?.label}
         {data?.showGroupCount ? (
-          <Badge variant='neutral'>{data?.count}</Badge>
+          <Badge color='neutral'>{data?.count}</Badge>
         ) : null}
       </div>
     );
@@ -459,7 +459,7 @@ export function DataViewList<TData, TValue = unknown>({
         >
           {stickyGroup.label}
           {stickyGroup.showGroupCount ? (
-            <Badge variant='neutral'>{stickyGroup.count}</Badge>
+            <Badge color='neutral'>{stickyGroup.count}</Badge>
           ) : null}
         </div>
       ) : null}
@@ -471,7 +471,7 @@ export function DataViewList<TData, TValue = unknown>({
           transform: `translateY(${item.start}px)`
         };
         if (isGroupHeader) {
-          if (!showGroupHeaders) return null;
+          if (hideGroupHeaders) return null;
           const hidden = stickyGroupIndex === item.index;
           return renderGroupHeader(row, {
             style: positionStyle,
@@ -502,7 +502,7 @@ export function DataViewList<TData, TValue = unknown>({
       {rows.map(row => {
         const isGroupHeader = row.subRows && row.subRows.length > 0;
         if (isGroupHeader) {
-          return showGroupHeaders ? renderGroupHeader(row) : null;
+          return hideGroupHeaders ? null : renderGroupHeader(row);
         }
         return renderDataRow(row);
       })}

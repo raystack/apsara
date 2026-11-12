@@ -9,7 +9,7 @@ describe('SidePanel data-slot contract', () => {
       <SidePanel>
         <SidePanel.Header
           title='Title'
-          icon={<span>icon</span>}
+          leadingIcon={<span>icon</span>}
           description='Description'
           actions={[<button key='a'>Action</button>]}
         />
