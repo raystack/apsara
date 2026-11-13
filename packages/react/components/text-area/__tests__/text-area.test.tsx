@@ -66,8 +66,10 @@ describe('TextArea', () => {
 
       fireEvent.change(textarea, { target: { value: 'hello' } });
       expect(handleValueChange).toHaveBeenCalledTimes(1);
-      expect(handleValueChange.mock.calls[0][0]).toBe('hello');
-      expect(handleValueChange.mock.calls[0][1]).toBeDefined();
+      expect(handleValueChange).toHaveBeenCalledWith(
+        'hello',
+        expect.objectContaining({ reason: 'none', event: expect.any(Event) })
+      );
     });
 
     it('calls both onChange and onValueChange', () => {
@@ -149,16 +151,16 @@ describe('TextArea', () => {
   });
 
   describe('Variants', () => {
-    it('renders default variant by default', () => {
+    it('renders outline variant by default', () => {
       render(<TextArea />);
       const textarea = screen.getByRole('textbox');
-      expect(textarea).toHaveClass(styles['variant-default']);
+      expect(textarea).not.toHaveClass(styles['variant-text']);
     });
 
-    it('renders borderless variant when specified', () => {
-      render(<TextArea variant='borderless' />);
+    it('renders text variant when specified', () => {
+      render(<TextArea variant='text' />);
       const textarea = screen.getByRole('textbox');
-      expect(textarea).toHaveClass(styles['variant-borderless']);
+      expect(textarea).toHaveClass(styles['variant-text']);
     });
   });
 

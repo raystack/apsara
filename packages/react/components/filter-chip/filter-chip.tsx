@@ -14,11 +14,16 @@ import {
 } from 'react';
 import {
   CalendarPreview,
+  type CalendarPreviewChangeReason,
   type CalendarPreviewContentProps,
   type CalendarPreviewInputProps,
   type CalendarPreviewProps
 } from '~/components/calendar-preview';
 import { XIcon } from '~/icons';
+import {
+  type ChangeDetails,
+  createChangeDetails
+} from '~/shared/change-details';
 import { toInstant } from '~/shared/date-filters';
 import {
   FilterOperation,
@@ -32,7 +37,10 @@ import {
 import { Flex } from '../flex';
 import { Input } from '../input';
 import { Select } from '../select';
-import { BaseSelectProps } from '../select/select-root';
+import {
+  BaseSelectProps,
+  type SelectChangeEventDetails
+} from '../select/select-root';
 import { Text } from '../text';
 import styles from './filter-chip.module.css';
 import { Operation } from './filter-chip-operation';
@@ -40,16 +48,30 @@ import { Operation } from './filter-chip-operation';
 const chip = cva(styles.chip, {
   variants: {
     variant: {
-      default: styles['chip-default'],
+      outline: styles['variant-outline'],
       text: null
     }
   },
   defaultVariants: {
-    variant: 'default'
+    variant: 'outline'
   }
 });
 
 export type FilterChipValue = FilterValueType | FilterValueType[] | Date;
+
+export type FilterChipChangeReason =
+  | SelectChangeEventDetails['reason']
+  | CalendarPreviewChangeReason
+  | 'none';
+
+export type FilterChipChangeDetails = ChangeDetails<
+  FilterChipChangeReason,
+  { operation: string }
+>;
+
+export type FilterChipOperationChangeDetails = ChangeDetails<
+  SelectChangeEventDetails['reason'] | 'none'
+>;
 
 /* The message `DatePicker` reports, so `onValidityChange` reads the same. */
 const INVALID_DATE = 'Invalid date';
@@ -64,6 +86,24 @@ const toDateValue = (value: unknown, timeZone?: string): Date | undefined => {
 
 /** Checked on change, not keydown, so paste and IME input are covered. */
 const PARTIAL_NUMBER = /^-?\d*\.?\d*$/;
+
+/* A `number` column reports the text as is while it has no digits (`-`, `.`). */
+const toNumberValue = (text: string): FilterChipValue => {
+  const parsed = Number(text);
+  return text === '' || Number.isNaN(parsed) ? text : parsed;
+};
+
+/* Shows a number without an exponent (`1e-7`). A value that is not a number shows as empty. */
+const toNumberText = (value: FilterChipValue): string => {
+  const text =
+    typeof value === 'number'
+      ? value.toLocaleString('en-US', {
+          useGrouping: false,
+          maximumFractionDigits: 20
+        })
+      : String(value);
+  return PARTIAL_NUMBER.test(text) ? text : '';
+};
 
 /**
  * The `CalendarPreview` props that consumers may forward to the chip's
@@ -98,22 +138,11 @@ export type FilterChipOperations =
   | ((defaults: FilterOperator<string>[]) => FilterOperator<string>[]);
 
 export interface FilterChipProps
-  extends ComponentProps<'div'>,
+  extends Omit<ComponentProps<'div'>, 'defaultValue'>,
     VariantProps<typeof chip> {
   label: string;
   value?: FilterChipValue;
-  onRemove?: () => void;
-  columnType?: FilterTypes;
-  options?: FilterSelectOption[];
-  onValueChange?: (value: FilterChipValue, operation: string) => void;
-  onOperationChange?: (operation: string) => void;
-  leadingIcon?: ReactNode;
-  /**
-   * Operations the chip offers. An array replaces the operations of the
-   * `columnType`, a function receives them and returns the list to use.
-   * @default the operations of the `columnType`
-   */
-  operations?: FilterChipOperations;
+  defaultValue?: FilterChipValue;
   /**
    * Active operation, by its `value`. A value `operations` does not have falls
    * back to the first one, which the chip reports through `onOperationChange`.
@@ -125,6 +154,24 @@ export interface FilterChipProps
    * @default the first entry of `operations`
    */
   defaultOperation?: string;
+  onRemove?: () => void;
+  columnType?: FilterTypes;
+  options?: FilterSelectOption[];
+  onValueChange?: (
+    value: FilterChipValue,
+    details: FilterChipChangeDetails
+  ) => void;
+  onOperationChange?: (
+    operation: string,
+    details: FilterChipOperationChangeDetails
+  ) => void;
+  leadingIcon?: ReactNode;
+  /**
+   * Operations the chip offers. An array replaces the operations of the
+   * `columnType`, a function receives them and returns the list to use.
+   * @default the operations of the `columnType`
+   */
+  operations?: FilterChipOperations;
   selectProps?: BaseSelectProps;
   /** Props forwarded to the `CalendarPreview` for `columnType="date"`. */
   calendarProps?: FilterChipCalendarProps;
@@ -141,6 +188,9 @@ export interface FilterChipProps
 export const FilterChip = ({
   label,
   value,
+  defaultValue,
+  operation: operationProp,
+  defaultOperation,
   onRemove,
   className,
   ref,
@@ -151,8 +201,6 @@ export const FilterChip = ({
   leadingIcon,
   variant,
   operations,
-  operation: operationProp,
-  defaultOperation,
   selectProps,
   calendarProps,
   ...props
@@ -165,57 +213,44 @@ export const FilterChip = ({
     return resolved.length ? resolved : defaults;
   }, [columnType, operations]);
 
-  const toOperation = (value?: string) =>
-    value === undefined
-      ? undefined
-      : (computedOperations.find(option => option.value === value) ??
-        computedOperations[0]);
-
   /* Read once. A `default` that changes warns, and `operations` can change. */
   const [initialOperation] = useState(
-    () => toOperation(defaultOperation) ?? computedOperations[0]
+    () => defaultOperation ?? computedOperations?.[0]?.value
   );
-
-  const [selected, setSelected] = useControlled<FilterOperation | undefined>({
-    controlled: toOperation(operationProp),
-    default: initialOperation,
-    name: 'FilterChip',
-    state: 'operation'
-  });
-
+  const [operationValue, setOperationValue] = useControlled<string | undefined>(
+    {
+      controlled: operationProp,
+      default: initialOperation,
+      name: 'FilterChip',
+      state: 'operation'
+    }
+  );
   /* The list can change while the chip is mounted, and a caller can name an
      operation the list does not have. Such a selection would be shown with the
      wrong label and sent with every edit. */
-  const operation = computedOperations.some(
-    option => option.value === selected?.value
-  )
-    ? selected
-    : computedOperations[0];
-
-  /* What the caller holds, so a controlled chip also reports the fallback. */
-  const heldValue = operationProp ?? selected?.value;
+  const operation =
+    computedOperations?.find(o => o.value === operationValue) ??
+    computedOperations?.[0];
 
   useEffect(() => {
-    if (!operation || operation.value === heldValue) return;
-    setSelected(operation);
-    onOperationChange?.(operation.value);
-  }, [operation, heldValue, onOperationChange, setSelected]);
+    if (!operation || operation.value === operationValue) return;
+    setOperationValue(operation.value);
+    onOperationChange?.(operation.value, createChangeDetails('none'));
+  }, [operation, operationValue, onOperationChange, setOperationValue]);
 
   const isNumberColumn = columnType === FilterType.number;
   // `??` not `||`, since a falsy option value like `0` is a real selection.
-  // For `number`, the value is shown without an exponent (`1e-7`), and a
-  // non-numeric value starts empty, since the regex would reject every edit.
-  const [filterValue, setFilterValue] = useState<FilterChipValue>(() => {
-    if (!isNumberColumn) return value ?? '';
-    const text =
-      typeof value === 'number'
-        ? value.toLocaleString('en-US', {
-            useGrouping: false,
-            maximumFractionDigits: 20
-          })
-        : String(value ?? '');
-    return PARTIAL_NUMBER.test(text) ? text : '';
+  const [filterValue, setFilterValue] = useControlled<FilterChipValue>({
+    controlled: value,
+    default: defaultValue ?? '',
+    name: 'FilterChip',
+    state: 'value'
   });
+  // The typed text keeps `1.` and `-` editable. It shows while it matches the value.
+  const [numberText, setNumberText] = useState(() => toNumberText(filterValue));
+  const shownNumberText = Object.is(toNumberValue(numberText), filterValue)
+    ? numberText
+    : toNumberText(filterValue);
 
   const [dateOpen, setDateOpen] = useState(false);
   const {
@@ -240,49 +275,60 @@ export const FilterChip = ({
   );
 
   const handleOperationChange = useCallback(
-    (operation: FilterOperation) => {
-      setSelected(operation);
-      if (operation?.value) onOperationChange?.(operation.value);
+    (next: FilterOperation, eventDetails: SelectChangeEventDetails) => {
+      if (next.value) {
+        onOperationChange?.(
+          next.value,
+          createChangeDetails(eventDetails.reason, eventDetails.event)
+        );
+      }
+      setOperationValue(next.value);
     },
-    [onOperationChange, setSelected]
+    [onOperationChange, setOperationValue]
   );
 
   const handleFilterValueChange = useCallback(
-    (value: FilterChipValue) => {
+    (value: FilterChipValue, reason: FilterChipChangeReason, event?: Event) => {
+      onValueChange?.(
+        value,
+        createChangeDetails(reason, event, {
+          operation: operation?.value ?? ''
+        })
+      );
       setFilterValue(value);
-      onValueChange?.(value, operation?.value ?? '');
     },
-    [operation, onValueChange]
+    [operation, onValueChange, setFilterValue]
   );
 
   // Select works on strings, so map each pick back to its option's value.
   const handleSelectValueChange = useCallback(
-    (picked: string | string[]) => {
+    (picked: string | string[], eventDetails: SelectChangeEventDetails) => {
       const toOption = (v: string) =>
         options.find(o => String(o.value) === v)?.value ?? v;
       handleFilterValueChange(
-        Array.isArray(picked) ? picked.map(toOption) : toOption(picked)
+        Array.isArray(picked) ? picked.map(toOption) : toOption(picked),
+        eventDetails.reason,
+        eventDetails.event
       );
     },
     [options, handleFilterValueChange]
   );
 
   const handleTextInputChange = useCallback(
-    (raw: string) => {
+    (raw: string, event: Event) => {
       if (!isNumberColumn) {
-        handleFilterValueChange(raw);
+        handleFilterValueChange(raw, 'none', event);
         return;
       }
-      // Skipping setFilterValue makes React restore the controlled value.
+      // Skipping the state update makes React restore the shown text.
       if (!PARTIAL_NUMBER.test(raw)) return;
       const parsed = Number(raw);
       if (parsed === Infinity || parsed === -Infinity) return;
 
-      setFilterValue(raw);
-      const isIntermediate = raw === '' || Number.isNaN(parsed);
-      onValueChange?.(isIntermediate ? raw : parsed, operation?.value ?? '');
+      setNumberText(raw);
+      handleFilterValueChange(toNumberValue(raw), 'none', event);
     },
-    [isNumberColumn, handleFilterValueChange, onValueChange, operation]
+    [isNumberColumn, handleFilterValueChange]
   );
 
   const renderValueInput = () => {
@@ -344,8 +390,8 @@ export const FilterChip = ({
               disabled={inputProps.disabled}
               readOnly={inputProps.readOnly}
               value={dateValue}
-              onValueChange={date => {
-                handleFilterValueChange(date ?? '');
+              onValueChange={(date, details) => {
+                handleFilterValueChange(date ?? '', details.reason);
                 if (date) setDateOpen(false);
               }}
               open={dateOpen}
@@ -380,10 +426,12 @@ export const FilterChip = ({
             data-slot='filter-chip-value'
           >
             <Input
-              variant={variant === 'text' ? 'borderless' : 'default'}
+              variant={variant === 'text' ? 'text' : 'outline'}
               classNames={{ container: styles.inputField }}
-              value={filterValue.toString()}
-              onChange={e => handleTextInputChange(e.target.value)}
+              value={isNumberColumn ? shownNumberText : filterValue.toString()}
+              onChange={e =>
+                handleTextInputChange(e.target.value, e.nativeEvent)
+              }
             />
           </div>
         );

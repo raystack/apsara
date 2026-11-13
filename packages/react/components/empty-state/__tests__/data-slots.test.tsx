@@ -4,7 +4,7 @@ import { expectSlots, getSlot } from '~/test-utils/data-slots';
 import { EmptyState } from '../empty-state';
 
 describe('EmptyState data-slot contract', () => {
-  it('exposes slots for every rendered part (empty1 variant)', () => {
+  it('exposes slots for every rendered part (compact variant)', () => {
     const { container } = render(
       <EmptyState
         icon={<div>Icon</div>}
@@ -28,7 +28,7 @@ describe('EmptyState data-slot contract', () => {
     expect(getSlot(container, 'empty-state-subheading')).toBeNull();
   });
 
-  it('exposes slots for every rendered part (empty2 variant)', () => {
+  it('exposes slots for every rendered part (page variant)', () => {
     const { container } = render(
       <EmptyState
         icon={<div>Icon</div>}
@@ -36,7 +36,7 @@ describe('EmptyState data-slot contract', () => {
         subHeading='Try adjusting your filters'
         primaryAction={<button type='button'>Retry</button>}
         secondaryAction={<button type='button'>Cancel</button>}
-        variant='empty2'
+        variant='page'
       />
     );
     expectSlots(container, [

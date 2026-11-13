@@ -1,12 +1,12 @@
 export interface EmptyStateProps {
   /** Icon to show in top of empty state */
-  icon?: React.ReactNode;
+  icon: React.ReactNode;
 
   /** Primary heading message */
-  heading?: string;
+  heading?: React.ReactNode;
 
   /** Secondary heading message */
-  subHeading?: string;
+  subHeading?: React.ReactNode;
 
   /** Action to show in empty state like button or link */
   primaryAction?: React.ReactNode;
@@ -14,8 +14,8 @@ export interface EmptyStateProps {
   /** Secondary action to show in empty state like button or link */
   secondaryAction?: React.ReactNode;
 
-  /** Visual style variant of the empty state
-   * @default "empty1"
+  /** Layout of the empty state
+   * @default "compact"
    */
-  variant?: 'empty1' | 'empty2';
+  variant?: 'compact' | 'page';
 }

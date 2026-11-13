@@ -2,6 +2,7 @@
 
 import { type ReactNode, useEffect, useRef } from 'react';
 import { isTriggerCharacter } from '../editor/core/mention';
+import type { SuggestionOpenChangeDetails } from '../editor/core/use-suggestion-menu';
 import { usePromptInputContext } from './prompt-input-context';
 import type {
   PromptInputMentionItem,
@@ -33,7 +34,7 @@ export interface PromptInputMentionsProps {
     refs: PromptInputMentionRef[]
   ) => Promise<PromptInputMentionItem[]>;
   /** Observes the menu's open state. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (open: boolean, details: SuggestionOpenChangeDetails) => void;
   /**
    * Empty-state content.
    * @defaultValue "No results"

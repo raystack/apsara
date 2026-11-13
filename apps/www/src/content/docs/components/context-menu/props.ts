@@ -20,7 +20,10 @@ export interface ContextMenuRootProps {
   defaultInputValue?: string;
 
   /** Callback fired when the search input value changes */
-  onInputValueChange?: (value: string) => void;
+  onInputValueChange?: (
+    value: string,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Control the open state of the menu */
   open?: boolean;
@@ -31,7 +34,10 @@ export interface ContextMenuRootProps {
   defaultOpen?: boolean;
 
   /** Callback fired when the menu is opened or closed */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Whether the menu should loop focus when navigating with keyboard
    * @default false
@@ -68,7 +74,7 @@ export interface ContextMenuContentProps {
    * The side of the anchor element to place the popup.
    * @default "bottom"
    */
-  side?: 'top' | 'bottom' | 'left' | 'right';
+  side?: 'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end';
 
   /**
    * The alignment of the popup relative to the anchor element.
@@ -137,7 +143,10 @@ export interface ContextMenuCheckboxItemProps {
   defaultChecked?: boolean;
 
   /** Callback fired when the checked state changes */
-  onCheckedChange?: (checked: boolean) => void;
+  onCheckedChange?: (
+    checked: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Whether to close the menu when the item is clicked
    * @default false
@@ -171,7 +180,10 @@ export interface ContextMenuRadioGroupProps {
   defaultValue?: unknown;
 
   /** Callback fired when the checked radio item changes */
-  onValueChange?: (value: unknown) => void;
+  onValueChange?: (
+    value: unknown,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Whether all radio items in the group are disabled
    * @default false
@@ -262,7 +274,10 @@ export interface ContextMenuSubMenuProps {
   defaultInputValue?: string;
 
   /** Callback fired when the search input value changes */
-  onInputValueChange?: (value: string) => void;
+  onInputValueChange?: (
+    value: string,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Control the open state of the submenu */
   open?: boolean;
@@ -273,7 +288,10 @@ export interface ContextMenuSubMenuProps {
   defaultOpen?: boolean;
 
   /** Callback fired when the submenu is opened or closed */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 }
 
 export interface ContextMenuSubTriggerProps {
@@ -301,9 +319,9 @@ export interface ContextMenuSubContentProps {
 
   /**
    * The side of the anchor element to place the popup.
-   * @default "bottom"
+   * @default "inline-end"
    */
-  side?: 'top' | 'bottom' | 'left' | 'right';
+  side?: 'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end';
 
   /**
    * The alignment of the popup relative to the anchor element.

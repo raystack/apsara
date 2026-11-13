@@ -1,4 +1,44 @@
 export interface SelectRootProps {
+  /** The selected value. An array when `multiple` is set. */
+  value?: string | string[];
+
+  /** The value selected on first render when `value` is not set. An array when `multiple` is set. */
+  defaultValue?: string | string[];
+
+  /** Called when the selection changes. Receives an array when `multiple` is set. */
+  onValueChange?: (
+    value: string | string[],
+    eventDetails: { reason: string; event: Event }
+  ) => void;
+
+  /** Whether the list is open. */
+  open?: boolean;
+
+  /** Whether the list is open on first render when `open` is not set.
+   * @default false
+   */
+  defaultOpen?: boolean;
+
+  /** Called when the list opens or closes. */
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
+
+  /** Whether the select is disabled. */
+  disabled?: boolean;
+
+  /**
+   * Whether a value is required. Defaults to the `required` of the surrounding `Field`, otherwise `false`.
+   */
+  required?: boolean;
+
+  /** Name of the field when the select is submitted with a form. */
+  name?: string;
+
+  /** The select's parts, such as `Select.Trigger` and `Select.Content`. */
+  children?: React.ReactNode;
+
   /** Enables multiple selection.
    * When enabled, value, onValueChange, and defaultValue will be an array of strings.
    * @default false
@@ -12,19 +52,25 @@ export interface SelectRootProps {
 
   /** Controls the autocomplete behavior mode
    * - "auto": Automatically filters items as user types
-   * - "manual": Requires explicit filtering through onSearch callback
+   * - "manual": Requires explicit filtering through the onInputValueChange callback
    * @default "auto"
    */
   autocompleteMode?: 'auto' | 'manual';
 
-  /** Current search value for autocomplete */
-  searchValue?: string;
+  /** The search text with `autocomplete` (controlled). */
+  inputValue?: string;
 
-  /** Initial search value for autocomplete */
-  defaultSearchValue?: string;
+  /** The search text on the first render (uncontrolled). */
+  defaultInputValue?: string;
 
-  /** Callback fired when the search value changes */
-  onSearch?: (value: string) => void;
+  /** Callback fired when the search text changes. */
+  onInputValueChange?: (
+    inputValue: string,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
+
+  /** All item values. In autocomplete mode, setting it turns off filtering of the `Select.Item` children. It has no effect without `autocomplete`. */
+  items?: string[];
 }
 
 export interface SelectTriggerProps {
@@ -164,10 +210,10 @@ export interface SelectItemProps {
   /** The value of the item. */
   value: string;
 
-  /** Icon before the item text. */
+  /** Icon before the item text. Rendered only when `children` is a string. */
   leadingIcon?: React.ReactNode;
 
-  /** Icon after the item text. */
+  /** Icon after the item text. Rendered only when `children` is a string. */
   trailingIcon?: React.ReactNode;
 
   /** Additional CSS class names. */

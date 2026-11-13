@@ -213,7 +213,7 @@ export const autocompleteDemo = {
         ];
 
         const [simpleSearchQuery, setSimpleSearchQuery] = React.useState("");
-        return <Select autocomplete autocompleteMode="manual" onSearch={value => setSimpleSearchQuery(value)}>
+        return <Select autocomplete autocompleteMode="manual" onInputValueChange={value => setSimpleSearchQuery(value)}>
   <Select.Trigger>
     <Select.Value placeholder="Select..." />
   </Select.Trigger>

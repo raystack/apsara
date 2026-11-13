@@ -1,3 +1,4 @@
+import type { Tabs as TabsPrimitive } from '@base-ui/react';
 import type {
   ColumnDef,
   Row,
@@ -6,6 +7,7 @@ import type {
   Updater,
   VisibilityState
 } from '@tanstack/table-core';
+import type { ChangeDetails } from '~/shared/change-details';
 import type { FilterOperations } from '~/shared/filter-operations';
 import type {
   DataTableFilterOperatorTypes,
@@ -18,6 +20,11 @@ import type {
 import type { BaseSelectProps } from '../select/select-root';
 
 export type DataViewMode = 'client' | 'server';
+
+export type DataViewViewChangeDetails =
+  ChangeDetails<TabsPrimitive.Root.ChangeEventReason>;
+
+export type DataViewQueryChangeDetails = ChangeDetails<'none'>;
 
 export const SortOrders = {
   ASC: 'asc',
@@ -168,13 +175,19 @@ export interface DataViewProps<TData> {
   data: TData[];
   /** Renderer-agnostic field metadata. Drives filter/sort/group/visibility. */
   fields: DataViewField<TData>[];
-  /** Initial query. Transformed to the internal shape on mount. */
+  /** The query (controlled). */
   query?: DataViewQuery;
+  /** The query on the first render (uncontrolled). */
+  defaultQuery?: DataViewQuery;
   mode?: DataViewMode;
   loading?: boolean;
   totalRowCount?: number;
   loadingRowCount?: number;
-  onTableQueryChange?: (query: DataViewQuery) => void;
+  /** Called when the query changes. Server mode also calls it on mount. */
+  onQueryChange?: (
+    query: DataViewQuery,
+    details: DataViewQueryChangeDetails
+  ) => void;
   defaultSort: DataViewSort;
   onLoadMore?: () => Promise<void> | void;
   onRowClick?: (row: TData) => void;
@@ -196,7 +209,7 @@ export interface DataViewProps<TData> {
   /** Active view (controlled). */
   view?: string;
   /** Called when the active view changes. */
-  onViewChange?: (view: string) => void;
+  onViewChange?: (view: string, details: DataViewViewChangeDetails) => void;
   /**
    * Optional local resolver map for non-accessor `group_by` keys. The wire
    * format (`group_by: string[]`) stays unchanged; resolvers run in client mode
@@ -537,7 +550,7 @@ export type DataViewContextType<TData> = {
   // multi-view
   views?: ViewSpec[];
   activeView?: string;
-  setActiveView: (view: string) => void;
+  setActiveView: (view: string, details?: DataViewViewChangeDetails) => void;
   /** Called by each renderer on mount to register its `fields` override for its `name`. Returns a cleanup function. */
   registerFieldsForView: (
     name: string,

@@ -3,6 +3,7 @@
 import type { BaseUIEvent } from '@base-ui/react/types';
 import { MouseEvent, ReactNode, useCallback } from 'react';
 import { PanelLeftIcon } from '~/icons';
+import { createChangeDetails } from '~/shared/change-details';
 import { IconButton, IconButtonProps } from '../icon-button/icon-button';
 import { useSidebar } from './sidebar-root';
 
@@ -26,7 +27,7 @@ export function SidebarTrigger({
     (event: BaseUIEvent<MouseEvent<HTMLButtonElement>>) => {
       onClick?.(event);
       if (!event.defaultPrevented) {
-        setOpen(!open);
+        setOpen(!open, createChangeDetails('trigger-press', event.nativeEvent));
       }
     },
     [onClick, open, setOpen]

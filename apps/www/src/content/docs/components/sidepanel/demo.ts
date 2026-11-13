@@ -9,15 +9,15 @@ export const preview = {
       <SidePanel.Section>
           <List>
             <List.Header>User Information</List.Header>
-            <List.Item align="center">
+            <List.Item>
               <List.Label style={{ minWidth: "88px" }}>Status</List.Label>
               <List.Value>Active</List.Value>
             </List.Item>
-            <List.Item align="center">
+            <List.Item>
               <List.Label style={{ minWidth: "88px" }}>Type</List.Label>
               <List.Value>Premium Account</List.Value>
             </List.Item>
-            <List.Item align="center">
+            <List.Item>
               <List.Label style={{ minWidth: "88px" }}>Created</List.Label>
               <List.Value>April 24, 2024</List.Value>
             </List.Item>
@@ -26,15 +26,15 @@ export const preview = {
       <SidePanel.Section>
           <List>
             <List.Header>User Information</List.Header>
-            <List.Item align="center">
+            <List.Item>
               <List.Label style={{ minWidth: "88px" }}>Status</List.Label>
               <List.Value>Active</List.Value>
             </List.Item>
-            <List.Item align="center">
+            <List.Item>
               <List.Label style={{ minWidth: "88px" }}>Type</List.Label>
               <List.Value>Premium Account</List.Value>
             </List.Item>
-            <List.Item align="center">
+            <List.Item>
               <List.Label style={{ minWidth: "88px" }}>Created</List.Label>
               <List.Value>April 24, 2024</List.Value>
             </List.Item>
@@ -52,7 +52,7 @@ export const basicDemo = {
   <SidePanel.Section>
     <List>
       <List.Header>User Information</List.Header>
-      <List.Item align="center">
+      <List.Item>
         <List.Label style={{ minWidth: "88px" }}>Status</List.Label>
         <List.Value>Active</List.Value>
       </List.Item>
@@ -73,7 +73,7 @@ export const positionDemo = {
     <SidePanel.Section>
       <List>
         <List.Header>User Information</List.Header>
-        <List.Item align="center">
+        <List.Item>
           <List.Label style={{ minWidth: "88px" }}>Status</List.Label>
           <List.Value>Active</List.Value>
         </List.Item>
@@ -90,7 +90,7 @@ export const positionDemo = {
          <SidePanel.Section>
       <List>
         <List.Header>User Information</List.Header>
-        <List.Item align="center">
+        <List.Item>
           <List.Label style={{ minWidth: "88px" }}>Status</List.Label>
           <List.Value>Active</List.Value>
         </List.Item>

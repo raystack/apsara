@@ -31,7 +31,7 @@ export function SelectItem({
     registerItem,
     unregisterItem,
     autocomplete,
-    searchValue,
+    inputValue,
     value: selectValue,
     shouldFilter,
     hasItems,
@@ -41,7 +41,7 @@ export function SelectItem({
   const isSelected = multiple
     ? selectValue?.includes(value)
     : value === selectValue;
-  const isMatched = getMatch(value, children, searchValue);
+  const isMatched = getMatch(value, children, inputValue);
   const isHidden = shouldFilter && !hasItems && isSelected && !isMatched;
 
   const element =

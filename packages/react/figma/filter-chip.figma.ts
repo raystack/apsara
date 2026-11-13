@@ -5,11 +5,11 @@
 import figma from 'figma';
 
 // The Figma component exposes no properties, so emit a minimal realistic
-// example from the code API (required `label`, plus `columnType` and `value`).
+// example from the code API (required `label`, plus `columnType` and `defaultValue`).
 
 export default {
   id: 'FilterChip',
   imports: ["import { FilterChip } from '@raystack/apsara'"],
-  example: figma.code`<FilterChip label='Status' columnType='select' value='active' />`,
+  example: figma.code`<FilterChip label='Status' columnType='select' defaultValue='active' />`,
   metadata: { nestable: true }
 };

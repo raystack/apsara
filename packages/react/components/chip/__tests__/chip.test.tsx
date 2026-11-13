@@ -60,7 +60,7 @@ describe('Chip', () => {
   });
 
   describe('Variants', () => {
-    const variants = ['outline', 'filled'] as const;
+    const variants = ['outline', 'solid'] as const;
 
     it.each(variants)('renders %s variant correctly', variant => {
       render(<Chip variant={variant}>Test Chip</Chip>);

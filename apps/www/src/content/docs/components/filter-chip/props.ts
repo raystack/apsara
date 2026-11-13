@@ -5,30 +5,19 @@ export interface FilterChipProps {
   /** Text label for the filter (required) */
   label: string;
 
-  /** Current value of the filter. `multiselect` takes an array; `date`
+  /** The filter value (controlled). `multiselect` takes an array; `date`
    * takes a `Date` (a string or epoch number is parsed for you); `number`
    * shows a value that is not a number as empty. */
   value?: string | number | boolean | Array<string | number | boolean> | Date;
 
-  /** Type of input for the filter
-   * @default "string"
-   */
-  columnType?: 'select' | 'multiselect' | 'date' | 'string' | 'number';
-
-  /** Filterchip variant
-   * @default "default"
-   */
-  variant?: 'default' | 'text';
-
-  /** Array of options for the select and multiselect type inputs */
-  options?: { label: string; value: string | number | boolean }[];
-
-  /** Operations the chip offers. An array replaces the operations of the columnType, a function receives them and returns the list to use. An empty result falls back to the operations of the columnType. */
-  operations?:
-    | { label: string; value: string }[]
-    | ((
-        defaults: { label: string; value: string }[]
-      ) => { label: string; value: string }[]);
+  /** The filter value on the first render (uncontrolled). Takes the same
+   * types as `value`. */
+  defaultValue?:
+    | string
+    | number
+    | boolean
+    | Array<string | number | boolean>
+    | Date;
 
   /** Active operation, by its `value`. A value `operations` does not have falls back to the first one, which the chip reports through `onOperationChange`.
    * @default the first entry of `operations`
@@ -40,7 +29,27 @@ export interface FilterChipProps {
    */
   defaultOperation?: string;
 
-  /** Callback when the filter value changes; receives the value and the active
+  /** Type of input for the filter
+   * @default "string"
+   */
+  columnType?: 'select' | 'multiselect' | 'date' | 'string' | 'number';
+
+  /** Filterchip variant
+   * @default "outline"
+   */
+  variant?: 'outline' | 'text';
+
+  /** Array of options for the select and multiselect type inputs */
+  options?: { label: string; value: string | number | boolean }[];
+
+  /** Operations the chip offers. An array replaces the operations of the columnType, a function receives them and returns the list to use. An empty result falls back to the operations of the columnType. */
+  operations?:
+    | { label: string; value: string }[]
+    | ((
+        defaults: { label: string; value: string }[]
+      ) => { label: string; value: string }[]);
+
+  /** Callback when the filter value changes. `details.operation` is the active
    * operation. For `select` and `multiselect`, the value is the picked
    * option's `value`, with its type kept. For `number`, non-numeric input is
    * rejected and never reported, and the value arrives as a `number`, except
@@ -48,11 +57,14 @@ export interface FilterChipProps {
    * reported as-is so the field stays editable. */
   onValueChange?: (
     value: string | number | boolean | Array<string | number | boolean> | Date,
-    operation: string
+    details: { reason: string; event: Event; operation: string }
   ) => void;
 
-  /** Callback when the filter operation changes */
-  onOperationChange?: (operation: string) => void;
+  /** Callback when the filter operation changes. */
+  onOperationChange?: (
+    operation: string,
+    details: { reason: string; event: Event }
+  ) => void;
 
   /** Icon element to display before the label */
   leadingIcon?: React.ReactNode;
@@ -64,9 +76,12 @@ export interface FilterChipProps {
   selectProps?: {
     autocomplete?: boolean;
     autocompleteMode?: 'auto' | 'manual';
-    onSearch?: (value: string) => void;
-    searchValue?: string;
-    defaultSearchValue?: string;
+    inputValue?: string;
+    defaultInputValue?: string;
+    onInputValueChange?: (
+      inputValue: string,
+      eventDetails: { reason: string; event: Event }
+    ) => void;
   };
 
   /** Props for the date control at `columnType="date"`. `timeZone` through `today` are CalendarPreview props. */

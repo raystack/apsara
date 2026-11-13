@@ -164,11 +164,14 @@ describe('ColorPicker', () => {
       area.hasPointerCapture = vi.fn().mockReturnValue(true);
 
       fireEvent.pointerDown(area, { pointerId: 1, clientX: 0, clientY: 0 });
-      expect(onValueChange).toHaveBeenLastCalledWith('oklch(1 0 0)', 'oklch');
+      expect(onValueChange).toHaveBeenLastCalledWith(
+        'oklch(1 0 0)',
+        expect.objectContaining({ reason: 'track-press', mode: 'oklch' })
+      );
       fireEvent.pointerMove(area, { pointerId: 1, clientX: 50, clientY: 50 });
       expect(onValueChange).toHaveBeenLastCalledWith(
         'oklch(0.5 0.2 0)',
-        'oklch'
+        expect.objectContaining({ reason: 'drag', mode: 'oklch' })
       );
       expect(onPointerDown).toHaveBeenCalledTimes(1);
       expect(onPointerMove).toHaveBeenCalledTimes(1);
@@ -282,7 +285,10 @@ describe('ColorPicker', () => {
       // false means the keydown was default-prevented, so a form won't submit.
       expect(fireEvent.keyDown(input, { key: 'Enter' })).toBe(false);
 
-      expect(onValueChange).toHaveBeenCalledWith('#00FF00', 'hex');
+      expect(onValueChange).toHaveBeenCalledWith(
+        '#00FF00',
+        expect.objectContaining({ reason: 'input-change', mode: 'hex' })
+      );
       expect(input).toHaveValue('#00FF00');
     });
 

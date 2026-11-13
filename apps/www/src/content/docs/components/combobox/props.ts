@@ -18,10 +18,13 @@ export interface ComboboxRootProps {
   defaultValue?: string | string[];
 
   /** Callback fired when the value changes.
-   * For single selection: (value: string) => void
-   * For multiple selection: (value: string[]) => void
+   * For single selection: (value: string, eventDetails) => void
+   * For multiple selection: (value: string[], eventDetails) => void
    */
-  onValueChange?: (value: string | string[]) => void;
+  onValueChange?: (
+    value: string | string[],
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** The controlled input value of the combobox. */
   inputValue?: string;
@@ -30,7 +33,10 @@ export interface ComboboxRootProps {
   defaultInputValue?: string;
 
   /** Callback fired when the input value changes. */
-  onInputValueChange?: (inputValue: string) => void;
+  onInputValueChange?: (
+    inputValue: string,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Whether the combobox is open.
    * @default false
@@ -43,7 +49,10 @@ export interface ComboboxRootProps {
   defaultOpen?: boolean;
 
   /** Callback fired when the open state changes. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** Whether the popover should be modal.
    * @default false
@@ -99,7 +108,7 @@ export interface ComboboxInputProps {
 
 export interface ComboboxContentProps {
   /** Alignment of the content relative to the trigger.
-   * @default "start"
+   * @default "center"
    */
   align?: 'start' | 'center' | 'end';
 

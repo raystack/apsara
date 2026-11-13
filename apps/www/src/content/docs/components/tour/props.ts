@@ -34,8 +34,11 @@ export interface TourProps {
    */
   defaultStepIndex?: number;
 
-  /** Called when the active step changes. */
-  onStepChange?: (index: number, step: TourStep) => void;
+  /** Called when the active step changes. `details.step` is the new step. */
+  onStepIndexChange?: (
+    index: number,
+    details: { reason: 'none'; event: Event; step: TourStep }
+  ) => void;
 
   /** Receives every tour lifecycle event. */
   onEvent?: (event: TourEvent) => void;
