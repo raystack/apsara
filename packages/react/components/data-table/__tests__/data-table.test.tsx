@@ -1,7 +1,9 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
+import type { FilterOperations } from '~/shared/filter-operations';
 import { getSlot } from '~/test-utils/data-slots';
+import type { FilterOperatorTypes } from '~/types/filters';
 import { DataTable } from '../data-table';
 import styles from '../data-table.module.css';
 import { DataTableColumnDef, DataTableQuery } from '../data-table.types';
@@ -761,5 +763,172 @@ describe('DataTable', () => {
       ]?.[0] as DataTableQuery;
       expect(last.filters?.[0]?.stringValue).toBe('2026-08-15');
     });
+  });
+});
+
+describe('DataTable column filter operations', () => {
+  type Dated = { id: string; when?: string };
+
+  const dated: Dated[] = [
+    { id: 'd14', when: '2026-08-14' },
+    { id: 'd15', when: '2026-08-15' },
+    { id: 'd16', when: '2026-08-16' },
+    { id: 'dNone' }
+  ];
+
+  const only =
+    (...values: FilterOperatorTypes[]): FilterOperations =>
+    defaults =>
+      values.flatMap(value =>
+        defaults.filter(operation => operation.value === value)
+      );
+
+  const datedColumns = (
+    filterOperations?: DataTableColumnDef<Dated, unknown>['filterOperations']
+  ): DataTableColumnDef<Dated, unknown>[] => [
+    { accessorKey: 'id', header: 'ID' },
+    {
+      accessorKey: 'when',
+      header: 'When',
+      filterType: 'date',
+      enableColumnFilter: true,
+      filterOperations
+    }
+  ];
+
+  const Rows = () => {
+    const { table } = useDataTable();
+    return (
+      <output data-testid='rows'>
+        {table
+          .getRowModel()
+          .rows.map(row => (row.original as Dated).id)
+          .join(',')}
+      </output>
+    );
+  };
+
+  const addWhenFilter = async (
+    columns: DataTableColumnDef<Dated, unknown>[],
+    onTableQueryChange?: (query: DataTableQuery) => void
+  ) => {
+    const user = userEvent.setup();
+    render(
+      <DataTable
+        data={dated}
+        columns={columns}
+        defaultSort={{ name: 'id', order: 'asc' }}
+        mode={onTableQueryChange ? 'server' : 'client'}
+        onTableQueryChange={onTableQueryChange}
+      >
+        <DataTable.Filters />
+      </DataTable>
+    );
+    await user.click(screen.getByRole('button', { name: /filter/i }));
+    await user.click(await screen.findByRole('menuitem', { name: 'When' }));
+  };
+
+  const renderRestored = (
+    columns: DataTableColumnDef<Dated, unknown>[],
+    filters: NonNullable<DataTableQuery['filters']>,
+    onTableQueryChange?: (query: DataTableQuery) => void
+  ) =>
+    render(
+      <DataTable
+        data={dated}
+        columns={columns}
+        defaultSort={{ name: 'id', order: 'asc' }}
+        mode={onTableQueryChange ? 'server' : 'client'}
+        query={{ filters }}
+        onTableQueryChange={onTableQueryChange}
+      >
+        <DataTable.Filters />
+        <Rows />
+      </DataTable>
+    );
+
+  const lastQuery = (onTableQueryChange: ReturnType<typeof vi.fn>) =>
+    onTableQueryChange.mock.calls[
+      onTableQueryChange.mock.calls.length - 1
+    ]?.[0] as DataTableQuery;
+
+  it('offers only the operations the column keeps', async () => {
+    await addWhenFilter(datedColumns(only('gte', 'lt')));
+
+    const operation = document.querySelector(
+      '[data-slot="filter-chip-operation"]'
+    ) as Element;
+    expect(operation).toHaveTextContent('is on or after');
+
+    fireEvent.click(operation);
+    await act(async () => {
+      await new Promise(r => setTimeout(r, 0));
+    });
+    expect(screen.getAllByRole('option').map(o => o.textContent)).toEqual([
+      'is on or after',
+      'is before'
+    ]);
+  });
+
+  it('shows the labels an array of operations gives', async () => {
+    await addWhenFilter(datedColumns([{ value: 'gte', label: 'from' }]));
+
+    expect(
+      document.querySelector('[data-slot="filter-chip-operation"]')
+    ).toHaveTextContent('from');
+  });
+
+  it('shows a single operation as text', async () => {
+    await addWhenFilter(datedColumns(only('lt')));
+
+    expect(
+      document.querySelector('[data-slot="filter-chip-operation"]')
+    ).toHaveTextContent('is before');
+    expect(screen.queryByLabelText('When filter operation')).toBeNull();
+  });
+
+  it('adds a filter with the first operation the column offers', async () => {
+    const onTableQueryChange = vi.fn();
+    await addWhenFilter(datedColumns(only('gte', 'lt')), onTableQueryChange);
+
+    expect(lastQuery(onTableQueryChange).filters?.[0]?.operator).toBe('gte');
+  });
+
+  it('keeps a restored filter whose operation the column offers', () => {
+    renderRestored(datedColumns(only('gte', 'lt')), [
+      { name: 'when', operator: 'gte', value: '2026-08-15' }
+    ]);
+
+    expect(screen.getByTestId('rows').textContent).toBe('d15,d16');
+    expect(document.querySelector('[data-slot="filter-chip"]')).not.toBeNull();
+  });
+
+  it('drops a restored filter whose operation the column does not offer', () => {
+    renderRestored(datedColumns(only('gte', 'lt')), [
+      { name: 'when', operator: 'eq', value: '2026-08-15' }
+    ]);
+
+    expect(screen.getByTestId('rows').textContent).toBe('d14,d15,d16,dNone');
+    expect(document.querySelector('[data-slot="filter-chip"]')).toBeNull();
+  });
+
+  it('leaves a dropped filter out of the query it sends', () => {
+    const onTableQueryChange = vi.fn();
+    renderRestored(
+      datedColumns(only('gte', 'lt')),
+      [{ name: 'when', operator: 'eq', value: '2026-08-15' }],
+      onTableQueryChange
+    );
+
+    expect(lastQuery(onTableQueryChange).filters).toEqual([]);
+  });
+
+  it('keeps a restored filter on a column that sets no operations', () => {
+    renderRestored(datedColumns(), [
+      { name: 'when', operator: 'eq', value: '2026-08-15' }
+    ]);
+
+    expect(screen.getByTestId('rows').textContent).toBe('d15');
+    expect(document.querySelector('[data-slot="filter-chip"]')).not.toBeNull();
   });
 });

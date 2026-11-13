@@ -8,6 +8,7 @@ import {
   ComponentProps,
   ReactNode,
   useCallback,
+  useEffect,
   useMemo,
   useState
 } from 'react';
@@ -69,11 +70,14 @@ export type FilterChipChangeDetails = ChangeDetails<
 >;
 
 export type FilterChipOperationChangeDetails = ChangeDetails<
-  SelectChangeEventDetails['reason']
+  SelectChangeEventDetails['reason'] | 'none'
 >;
 
 /* The message `DatePicker` reports, so `onValidityChange` reads the same. */
 const INVALID_DATE = 'Invalid date';
+
+/* The empty option of a select carries this operator, which no list has. */
+const EMPTY_OPERATION = 'empty';
 
 /* A year the calendar cannot show leaves the field empty. */
 const toDateValue = (value: unknown, timeZone?: string): Date | undefined => {
@@ -132,6 +136,10 @@ export type FilterChipCalendarProps = Pick<
   showCalendarIcon?: boolean;
 };
 
+export type FilterChipOperations =
+  | FilterOperator<string>[]
+  | ((defaults: FilterOperator<string>[]) => FilterOperator<string>[]);
+
 export interface FilterChipProps
   extends Omit<ComponentProps<'div'>, 'defaultValue'>,
     VariantProps<typeof chip> {
@@ -139,8 +147,9 @@ export interface FilterChipProps
   value?: FilterChipValue;
   defaultValue?: FilterChipValue;
   /**
-   * Active operation, by its `value`. A value `operations` does not have falls
-   * back to the first one.
+   * Active operation, by its `value`. A value the list does not have shows as
+   * the first entry. The chip reports that fallback through
+   * `onOperationChange` only when `operations` is set.
    * @default the first entry of `operations`
    */
   operation?: string;
@@ -161,7 +170,13 @@ export interface FilterChipProps
     details: FilterChipOperationChangeDetails
   ) => void;
   leadingIcon?: ReactNode;
-  operations?: FilterOperator<string>[];
+  /**
+   * Operations the chip offers. An array replaces the operations of the
+   * `columnType`, a function receives them and returns the list to use.
+   * Without it the chip keeps whatever `operation` carries.
+   * @default the operations of the `columnType`
+   */
+  operations?: FilterChipOperations;
   selectProps?: BaseSelectProps;
   /** Props forwarded to the `CalendarPreview` for `columnType="date"`. */
   calendarProps?: FilterChipCalendarProps;
@@ -195,21 +210,55 @@ export const FilterChip = ({
   calendarProps,
   ...props
 }: FilterChipProps) => {
-  const computedOperations = operations?.length
-    ? operations
-    : filterOperators[columnType];
+  const computedOperations = useMemo(() => {
+    const defaults: FilterOperator<string>[] = filterOperators[columnType];
+    if (!operations) return defaults;
+    /* Copies, so a resolver that relabels a default leaves `filterOperators`
+       alone. */
+    const resolved =
+      typeof operations === 'function'
+        ? operations(defaults.map(operation => ({ ...operation })))
+        : operations;
+    return resolved.length ? resolved : defaults;
+  }, [columnType, operations]);
 
+  /* Read once. A `default` that changes warns, and `operations` can change. */
+  const [initialOperation] = useState(
+    () => defaultOperation ?? computedOperations?.[0]?.value
+  );
   const [operationValue, setOperationValue] = useControlled<string | undefined>(
     {
       controlled: operationProp,
-      default: defaultOperation ?? computedOperations?.[0]?.value,
+      default: initialOperation,
       name: 'FilterChip',
       state: 'operation'
     }
   );
+  /* The list can change while the chip is mounted, and a caller can name an
+     operation the list does not have. Such a selection would be shown with the
+     wrong label and sent with every edit. */
   const operation =
     computedOperations?.find(o => o.value === operationValue) ??
     computedOperations?.[0];
+
+  /* Only a caller that sets `operations` asks for its list to be enforced. A
+     column that sets none keeps the operator its query carries. */
+  const keepsOperation =
+    operations === undefined || operationValue === EMPTY_OPERATION;
+
+  useEffect(() => {
+    if (keepsOperation || !operation || operation.value === operationValue)
+      return;
+    setOperationValue(operation.value);
+    onOperationChange?.(operation.value, createChangeDetails('none'));
+  }, [
+    keepsOperation,
+    operation,
+    operationValue,
+    onOperationChange,
+    setOperationValue
+  ]);
+
   const isNumberColumn = columnType === FilterType.number;
   // `??` not `||`, since a falsy option value like `0` is a real selection.
   const [filterValue, setFilterValue] = useControlled<FilterChipValue>({

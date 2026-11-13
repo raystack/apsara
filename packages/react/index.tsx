@@ -271,6 +271,7 @@ export { Fieldset, type FieldsetProps } from './components/fieldset';
 export {
   FilterChip,
   type FilterChipCalendarProps,
+  type FilterChipOperations,
   type FilterChipProps,
   type FilterChipValue
 } from './components/filter-chip';
@@ -493,4 +494,13 @@ export {
 } from './icons/create-icon';
 export * from './icons/icons';
 export type { IconName } from './icons/types';
+export type { FilterOperations } from './shared/filter-operations';
 export { radiusStyle } from './shared/radius';
+export type {
+  DateFilterOperatorType,
+  FilterOperatorTypes,
+  MultiSelectFilterOperatorType,
+  NumberFilterOperatorType,
+  SelectFilterOperatorType,
+  StringFilterOperatorType
+} from './types/filters';
