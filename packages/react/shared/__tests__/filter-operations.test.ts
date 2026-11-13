@@ -56,6 +56,14 @@ describe('resolveFilterOperations', () => {
     expect(values('date')).toEqual(['eq', 'neq', 'lt', 'lte', 'gt', 'gte']);
   });
 
+  it('does not change the labels of the type', () => {
+    resolveFilterOperations('date', defaults => {
+      defaults[0].label = 'matches';
+      return defaults;
+    });
+    expect(resolveFilterOperations('date')[0].label).toBe('is');
+  });
+
   it('falls back to the type for an empty array', () => {
     expect(values('select', [])).toEqual(['eq', 'neq']);
   });
@@ -84,6 +92,11 @@ describe('dropDisallowedFilters', () => {
       accessorKey: 'size',
       filterType: 'number',
       filterOperations: defaults => defaults.slice(0, 1)
+    },
+    {
+      accessorKey: 'team',
+      filterType: 'select',
+      filterOperations: [{ value: 'eq', label: 'is' }]
     }
   ];
 
@@ -113,9 +126,15 @@ describe('dropDisallowedFilters', () => {
     expect(dropDisallowedFilters(filters, fields)).toEqual(filters);
   });
 
-  it('keeps an empty filter, which no type lists', () => {
-    const filters = [filter('when', 'empty')];
+  it('keeps an empty filter on a select, which no type lists', () => {
+    const filters = [filter('team', 'empty')];
     expect(dropDisallowedFilters(filters, fields)).toEqual(filters);
+  });
+
+  it('drops an empty filter on a field of another type', () => {
+    expect(dropDisallowedFilters([filter('when', 'empty')], fields)).toEqual(
+      []
+    );
   });
 
   it('keeps a filter for a field it does not know', () => {

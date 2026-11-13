@@ -213,8 +213,12 @@ export const FilterChip = ({
   const computedOperations = useMemo(() => {
     const defaults: FilterOperator<string>[] = filterOperators[columnType];
     if (!operations) return defaults;
+    /* Copies, so a resolver that relabels a default leaves `filterOperators`
+       alone. */
     const resolved =
-      typeof operations === 'function' ? operations([...defaults]) : operations;
+      typeof operations === 'function'
+        ? operations(defaults.map(operation => ({ ...operation })))
+        : operations;
     return resolved.length ? resolved : defaults;
   }, [columnType, operations]);
 

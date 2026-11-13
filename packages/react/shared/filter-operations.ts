@@ -37,8 +37,12 @@ export function resolveFilterOperations(
   ] as FilterOperator<FilterOperatorTypes>[];
   if (!operations) return defaults;
 
+  /* Copies, so a resolver that relabels a default leaves the type's own list
+     alone. */
   const resolved =
-    typeof operations === 'function' ? operations([...defaults]) : operations;
+    typeof operations === 'function'
+      ? operations(defaults.map(operation => ({ ...operation })))
+      : operations;
   return resolved.length ? resolved : defaults;
 }
 
@@ -78,6 +82,11 @@ export function dropDisallowedFilters<Filter extends OperatorFilter>(
     const allowed = allowedByName.get(filter.name);
     if (!allowed) return true;
     // The empty option of a select sends `empty`, which no filter type lists.
-    return filter.operator === 'empty' || allowed.has(filter.operator);
+    if (
+      filter.operator === 'empty' &&
+      fieldByName.get(filter.name)?.filterType === FilterType.select
+    )
+      return true;
+    return allowed.has(filter.operator);
   });
 }

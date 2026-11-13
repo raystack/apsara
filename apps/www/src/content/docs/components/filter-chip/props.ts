@@ -44,10 +44,10 @@ export interface FilterChipProps {
 
   /** Operations the chip offers. An array replaces the operations of the columnType, a function receives them and returns the list to use. An empty result falls back to the operations of the columnType. Without it the chip keeps whatever `operation` carries. */
   operations?:
-    | { label: string; value: string }[]
+    | { label: string; value: string; alternateLabel?: string }[]
     | ((
-        defaults: { label: string; value: string }[]
-      ) => { label: string; value: string }[]);
+        defaults: { label: string; value: string; alternateLabel?: string }[]
+      ) => { label: string; value: string; alternateLabel?: string }[]);
 
   /** Callback when the filter value changes. `details.operation` is the active
    * operation. For `select` and `multiselect`, the value is the picked

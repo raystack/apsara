@@ -318,6 +318,23 @@ describe('FilterChip', () => {
       );
     });
 
+    it('does not change the labels of the column type', () => {
+      render(
+        <FilterChip
+          label='Name'
+          operations={defaults => {
+            defaults[0].label = 'matches';
+            return defaults;
+          }}
+        />
+      );
+
+      const { container } = render(<FilterChip label='Name' />);
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'is'
+      );
+    });
+
     it('keeps a selection the new list still offers', () => {
       const onOperationChange = vi.fn();
       const { rerender } = render(
