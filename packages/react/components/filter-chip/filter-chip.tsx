@@ -76,6 +76,9 @@ export type FilterChipOperationChangeDetails = ChangeDetails<
 /* The message `DatePicker` reports, so `onValidityChange` reads the same. */
 const INVALID_DATE = 'Invalid date';
 
+/* The empty option of a select carries this operator, which no list has. */
+const EMPTY_OPERATION = 'empty';
+
 /* A year the calendar cannot show leaves the field empty. */
 const toDateValue = (value: unknown, timeZone?: string): Date | undefined => {
   const date = toInstant(value);
@@ -144,8 +147,9 @@ export interface FilterChipProps
   value?: FilterChipValue;
   defaultValue?: FilterChipValue;
   /**
-   * Active operation, by its `value`. A value `operations` does not have falls
-   * back to the first one, which the chip reports through `onOperationChange`.
+   * Active operation, by its `value`. A value the list does not have shows as
+   * the first entry. The chip reports that fallback through
+   * `onOperationChange` only when `operations` is set.
    * @default the first entry of `operations`
    */
   operation?: string;
@@ -169,6 +173,7 @@ export interface FilterChipProps
   /**
    * Operations the chip offers. An array replaces the operations of the
    * `columnType`, a function receives them and returns the list to use.
+   * Without it the chip keeps whatever `operation` carries.
    * @default the operations of the `columnType`
    */
   operations?: FilterChipOperations;
@@ -232,11 +237,23 @@ export const FilterChip = ({
     computedOperations?.find(o => o.value === operationValue) ??
     computedOperations?.[0];
 
+  /* Only a caller that sets `operations` asks for its list to be enforced. A
+     column that sets none keeps the operator its query carries. */
+  const keepsOperation =
+    operations === undefined || operationValue === EMPTY_OPERATION;
+
   useEffect(() => {
-    if (!operation || operation.value === operationValue) return;
+    if (keepsOperation || !operation || operation.value === operationValue)
+      return;
     setOperationValue(operation.value);
     onOperationChange?.(operation.value, createChangeDetails('none'));
-  }, [operation, operationValue, onOperationChange, setOperationValue]);
+  }, [
+    keepsOperation,
+    operation,
+    operationValue,
+    onOperationChange,
+    setOperationValue
+  ]);
 
   const isNumberColumn = columnType === FilterType.number;
   // `??` not `||`, since a falsy option value like `0` is a real selection.

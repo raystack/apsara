@@ -19,7 +19,7 @@ export interface FilterChipProps {
     | Array<string | number | boolean>
     | Date;
 
-  /** Active operation, by its `value`. A value `operations` does not have falls back to the first one, which the chip reports through `onOperationChange`.
+  /** Active operation, by its `value`. A value the list does not have shows as the first entry. The chip reports that fallback through `onOperationChange` only when `operations` is set.
    * @default the first entry of `operations`
    */
   operation?: string;
@@ -42,7 +42,7 @@ export interface FilterChipProps {
   /** Array of options for the select and multiselect type inputs */
   options?: { label: string; value: string | number | boolean }[];
 
-  /** Operations the chip offers. An array replaces the operations of the columnType, a function receives them and returns the list to use. An empty result falls back to the operations of the columnType. */
+  /** Operations the chip offers. An array replaces the operations of the columnType, a function receives them and returns the list to use. An empty result falls back to the operations of the columnType. Without it the chip keeps whatever `operation` carries. */
   operations?:
     | { label: string; value: string }[]
     | ((

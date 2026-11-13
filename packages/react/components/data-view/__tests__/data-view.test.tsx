@@ -1760,4 +1760,33 @@ describe('DataView field filter operations', () => {
     expect(screen.getByTestId('rows').textContent).toBe('d15');
     expect(document.querySelector('[data-slot="filter-chip"]')).not.toBeNull();
   });
+
+  it('keeps an operation the filter type does not list', () => {
+    const onQueryChange = vi.fn();
+    render(
+      <DataView
+        data={dated}
+        fields={[
+          { accessorKey: 'id', label: 'ID' },
+          {
+            accessorKey: 'when',
+            label: 'When',
+            filterable: true,
+            filterType: 'string'
+          }
+        ]}
+        defaultSort={{ name: 'id', order: 'asc' }}
+        mode='server'
+        defaultQuery={{
+          filters: [{ name: 'when', operator: 'gt', value: '2026-08-15' }]
+        }}
+        onQueryChange={onQueryChange}
+      >
+        <DataView.Filters />
+      </DataView>
+    );
+
+    expect(lastQuery(onQueryChange).filters?.[0]?.operator).toBe('gt');
+    expect(document.querySelector('[data-slot="filter-chip"]')).not.toBeNull();
+  });
 });

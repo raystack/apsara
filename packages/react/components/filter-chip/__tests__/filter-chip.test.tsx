@@ -253,6 +253,40 @@ describe('FilterChip', () => {
       );
     });
 
+    it('keeps an operation the column type does not list', () => {
+      const onOperationChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Name'
+          operation='gt'
+          onOperationChange={onOperationChange}
+        />
+      );
+
+      expect(onOperationChange).not.toHaveBeenCalled();
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'is'
+      );
+    });
+
+    it('keeps the empty operation, which no list has', () => {
+      const onOperationChange = vi.fn();
+      render(
+        <FilterChip
+          label='Name'
+          columnType='select'
+          operation='empty'
+          onOperationChange={onOperationChange}
+          operations={[
+            { value: 'eq', label: 'is' },
+            { value: 'neq', label: 'is not' }
+          ]}
+        />
+      );
+
+      expect(onOperationChange).not.toHaveBeenCalled();
+    });
+
     it('reports the first operation when the list does not have the one it is given', () => {
       const onOperationChange = vi.fn();
       render(

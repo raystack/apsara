@@ -143,10 +143,9 @@ export function Filters<TData>({
         filterType: field?.filterType || FilterType.string,
         label: field?.label || '',
         options: field?.filterOptions || [],
-        operations: resolveFilterOperations(
-          field?.filterType,
-          field?.filterOperations
-        ),
+        operations: field?.filterOperations
+          ? resolveFilterOperations(field.filterType, field.filterOperations)
+          : undefined,
         selectProps: field?.filterProps?.select,
         ...filter
       };

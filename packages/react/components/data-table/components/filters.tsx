@@ -132,10 +132,12 @@ export function Filters<TData, TValue>({
         filterType: columnDef?.filterType || FilterType.string,
         label: (columnDef?.header as string) || '',
         options: columnDef?.filterOptions || [],
-        operations: resolveFilterOperations(
-          columnDef?.filterType,
-          columnDef?.filterOperations
-        ),
+        operations: columnDef?.filterOperations
+          ? resolveFilterOperations(
+              columnDef.filterType,
+              columnDef.filterOperations
+            )
+          : undefined,
         selectProps: columnDef?.filterProps?.select,
         calendarProps: columnDef?.filterProps?.calendar,
         ...filter
