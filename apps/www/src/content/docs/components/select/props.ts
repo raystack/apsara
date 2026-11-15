@@ -108,7 +108,7 @@ export interface SelectValueProps {
   /**
    * Content shown in place of the selected item's label.
    * A function receives the selected item, or an array of items when `multiple` is set.
-   * A value with no matching item is passed as `{ value, children: value }`.
+   * A value with no matching item is passed with its raw `value` and no `leadingIcon`.
    *
    * @remarks `ReactNode | function`
    */
