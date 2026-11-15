@@ -684,7 +684,6 @@ describe('Menu', () => {
         const root = screen.getByPlaceholderText('Search...');
         await waitFor(() => expect(root).toHaveFocus());
         search('shar');
-        fireEvent.keyDown(root, { key: 'ArrowDown' });
         fireEvent.keyDown(root, { key: 'Enter' });
 
         const sub = await screen.findByPlaceholderText('Search share');
