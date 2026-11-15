@@ -10,7 +10,7 @@ on [GitHub releases](https://github.com/raystack/apsara/releases).
 ## Unreleased: menu search uses Base UI filtering
 
 Search in `Menu`, `ContextMenu` and `Menubar` uses Base UI's menu filtering.
-Props, slots and exported types do not change. When the popup closes,
+Slots do not change. When the popup closes,
 `onInputValueChange` gets `''` with the reason `popup-close`, not
 `input-clear`.
 
@@ -32,6 +32,11 @@ text in its icons. A `RadioItem` matches by its text, not its `value`.
 In a searchable menu, `EmptyState` shows only when no item matches. Render it
 as a direct child of `Content`, or inside a fragment there, so it sits next to
 the list instead of inside it.
+
+### 4. Remove unused props from `Menu`
+
+`MenuProps` no longer has `inputRef`, `contentRef` and `isInitialRender`. The
+menu never read them, so removing them does not change behavior.
 
 ## Unreleased: controlled state uses `x`, `defaultX` and `onXChange`
 

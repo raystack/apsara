@@ -152,7 +152,7 @@ Apsara renders `Calendar`, `DatePicker` or `RangePicker` now.
 
 Menu, ContextMenu and Menubar search use Base UI's `Menu.FilterProvider`,
 `Menu.Input`, `Menu.List` and `Menu.Empty`. Base UI marks this API as
-preview. Props, slots and exported types are unchanged. See the
+preview. Slots are unchanged. See the
 [upgrade guide](https://apsara.raystack.io/docs/upgrading).
 
 #### Breaking changes
@@ -166,8 +166,10 @@ preview. Props, slots and exported types are unchanged. See the
 - An item matches by its rendered text, including text in `leadingIcon`
   and `trailingIcon`. With a `value`, it matches the `value` and its
   `children` text, and text in the icons no longer matches. A radio
-  item's `value` does not match. Matching ignores case, accents and
-  punctuation.
+  item's `value` does not match. Matching ignores case and accents.
+- `MenuProps` no longer has `inputRef`, `contentRef` and
+  `isInitialRender`. The menu never read them. Remove them where you pass
+  them.
 - In search mode, `EmptyState` shows only when no item matches, as a
   `role="status"` live region. It renders next to the list, not inside
   it, when it is a direct child of `Content`.
