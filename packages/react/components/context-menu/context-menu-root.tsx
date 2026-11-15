@@ -43,21 +43,31 @@ export const ContextMenuRoot = ({
   defaultInputValue = '',
   ...props
 }: ContextMenuRootProps) => {
-  const [inputValue, setInputValue] = useMenuInputValue({
+  const search = useMenuInputValue({
     inputValue: providedInputValue,
     defaultInputValue,
     onInputValueChange,
-    name: 'ContextMenu'
+    name: 'ContextMenu',
+    open: props.open,
+    onOpenChange: props.onOpenChange,
+    onOpenChangeComplete: props.onOpenChangeComplete
   });
 
   return (
     <MenuFilter
       autocomplete={autocomplete}
       autocompleteMode={autocompleteMode}
-      inputValue={inputValue}
-      onInputValueChange={setInputValue}
+      inputValue={search.inputValue}
+      shownInputValue={search.shownInputValue}
+      openedByHover={search.openedByHover}
+      onInputValueChange={search.setInputValue}
     >
-      <ContextMenuPrimitive.Root loopFocus={false} {...props} />
+      <ContextMenuPrimitive.Root
+        loopFocus={false}
+        {...props}
+        onOpenChange={search.onOpenChange}
+        onOpenChangeComplete={search.onOpenChangeComplete}
+      />
     </MenuFilter>
   );
 };
@@ -96,11 +106,14 @@ export const ContextMenuSubMenu = ({
   defaultInputValue = '',
   ...props
 }: ContextMenuSubMenuProps) => {
-  const [inputValue, setInputValue] = useMenuInputValue({
+  const search = useMenuInputValue({
     inputValue: providedInputValue,
     defaultInputValue,
     onInputValueChange,
-    name: 'ContextMenu.SubMenu'
+    name: 'ContextMenu.SubMenu',
+    open: props.open,
+    onOpenChange: props.onOpenChange,
+    onOpenChangeComplete: props.onOpenChangeComplete
   });
   const parent = useMenuContext();
 
@@ -108,11 +121,18 @@ export const ContextMenuSubMenu = ({
     <MenuFilter
       autocomplete={autocomplete}
       autocompleteMode={autocompleteMode}
-      inputValue={inputValue}
-      onInputValueChange={setInputValue}
+      inputValue={search.inputValue}
+      shownInputValue={search.shownInputValue}
+      openedByHover={search.openedByHover}
+      onInputValueChange={search.setInputValue}
       parent={parent}
     >
-      <ContextMenuPrimitive.SubmenuRoot loopFocus={false} {...props} />
+      <ContextMenuPrimitive.SubmenuRoot
+        loopFocus={false}
+        {...props}
+        onOpenChange={search.onOpenChange}
+        onOpenChangeComplete={search.onOpenChangeComplete}
+      />
     </MenuFilter>
   );
 };

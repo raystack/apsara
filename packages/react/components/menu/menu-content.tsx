@@ -2,6 +2,7 @@
 
 import { Menu as MenuPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import { useEffect, useRef } from 'react';
 import { type Radius, radiusStyle } from '../../shared/radius';
 import { useThemeInjection } from '../theme/portal';
 import styles from './menu.module.css';
@@ -92,10 +93,21 @@ export function MenuSearch({
   children: React.ReactNode;
 }) {
   const [emptyState, items] = splitChildren(children, emptyStateType);
+  const { openedByHover, parent } = useMenuContext();
+  const isSubmenu = !!parent;
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Base UI leaves focus outside a menu opened by hover, so typed keys are lost.
+  // A submenu keeps Base UI's behavior: focus stays in the parent input.
+  useEffect(() => {
+    if (openedByHover && !isSubmenu)
+      inputRef.current?.focus({ preventScroll: true });
+  }, [openedByHover, isSubmenu]);
 
   return (
     <>
       <MenuPrimitive.Input
+        ref={inputRef}
         data-slot={`${slotPrefix}-search-input`}
         placeholder={placeholder}
         aria-label={placeholder}

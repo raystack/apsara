@@ -516,6 +516,54 @@ describe('Menu', () => {
       expect(screen.queryByRole('separator')).not.toBeInTheDocument();
     });
 
+    it('keeps separators hidden while the popup closes', async () => {
+      // jsdom has no exit animation, so one is held open until `finish` runs.
+      let finish!: () => void;
+      const finished = new Promise<void>(resolve => {
+        finish = resolve;
+      });
+      Element.prototype.getAnimations = function (this: Element) {
+        if (!this.hasAttribute('data-ending-style')) return [];
+        return [{ finished, effect: null } as unknown as Animation];
+      };
+      try {
+        await renderAndOpenDropdown(
+          <Menu autocomplete>
+            <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+            <Menu.Content>
+              <Menu.Item>Apple</Menu.Item>
+              <Menu.Separator />
+              <Menu.Item>Banana</Menu.Item>
+            </Menu.Content>
+          </Menu>
+        );
+        search('a');
+        fireEvent.keyDown(screen.getByPlaceholderText('Search...'), {
+          key: 'Escape'
+        });
+
+        await waitFor(() => {
+          expect(screen.getByRole('dialog', { hidden: true })).toHaveAttribute(
+            'data-ending-style'
+          );
+        });
+        expect(screen.getByText('Apple')).toBeInTheDocument();
+        expect(
+          screen.queryByRole('separator', { hidden: true })
+        ).not.toBeInTheDocument();
+
+        finish();
+        await waitFor(() => {
+          expect(screen.queryByText('Apple')).not.toBeInTheDocument();
+        });
+        fireEvent.click(screen.getByText(TRIGGER_TEXT));
+        expect(await screen.findByRole('separator')).toBeInTheDocument();
+      } finally {
+        // @ts-expect-error jsdom does not implement getAnimations.
+        delete Element.prototype.getAnimations;
+      }
+    });
+
     it('keeps separators for a search of only spaces', async () => {
       await renderAndOpenDropdown(
         <Menu autocomplete>
@@ -563,6 +611,26 @@ describe('Menu', () => {
       );
       search('zzz');
       expect(items()).toHaveLength(2);
+    });
+
+    it('focuses the input when the menu opens on hover', async () => {
+      render(
+        <Menu autocomplete>
+          <Menu.Trigger openOnHover delay={0}>
+            {TRIGGER_TEXT}
+          </Menu.Trigger>
+          <Menu.Content>
+            <Menu.Item>Apple</Menu.Item>
+          </Menu.Content>
+        </Menu>
+      );
+      const trigger = screen.getByText(TRIGGER_TEXT);
+      fireEvent.pointerEnter(trigger, { pointerType: 'mouse' });
+      fireEvent.mouseEnter(trigger);
+      fireEvent.mouseMove(trigger);
+
+      const input = await screen.findByPlaceholderText('Search...');
+      await waitFor(() => expect(input).toHaveFocus());
     });
 
     describe('Submenus', () => {
