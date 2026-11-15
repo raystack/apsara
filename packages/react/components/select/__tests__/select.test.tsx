@@ -590,6 +590,28 @@ describe('Select', () => {
       }
     });
 
+    it('passes an item to a single-mode children function', () => {
+      const renderValue = vi.fn((_value?: unknown) => null);
+      render(
+        <Select defaultValue='apple'>
+          <Select.Trigger>
+            <Select.Value>{renderValue as unknown as ReactNode}</Select.Value>
+          </Select.Trigger>
+          <Select.Content>
+            {FRUIT_OPTIONS.map(option => (
+              <Select.Item key={option.value} value={option.value}>
+                {option.label}
+              </Select.Item>
+            ))}
+          </Select.Content>
+        </Select>
+      );
+      expect(renderValue).toHaveBeenCalled();
+      for (const [arg] of renderValue.mock.calls) {
+        expect(arg).toBeDefined();
+      }
+    });
+
     it('shows one preset multiple value as text', () => {
       const { container } = render(
         <BasicSelect multiple defaultValue={['apple']} />
