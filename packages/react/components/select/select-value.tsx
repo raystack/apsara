@@ -29,12 +29,16 @@ export function SelectValue({
 
   const item = useMemo(() => {
     if (!value) return undefined;
+    // Items register in a layout effect, so a value may have no item yet or none at all.
+    // Comparing `value` also skips Object.prototype keys such as `constructor`.
+    const getItem = (v: string): ItemType =>
+      items[v]?.value === v ? items[v] : { value: v, children: v };
     if (multiple && Array.isArray(value)) {
-      const itemValues = value.map(v => items[v]);
+      const itemValues = value.map(getItem);
       if (itemValues.length === 1) return itemValues[0];
       return itemValues;
     }
-    return items[value as string];
+    return getItem(value as string);
   }, [value, items, multiple]);
 
   if (!hasValue) {
