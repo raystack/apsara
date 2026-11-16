@@ -7,15 +7,15 @@ export interface ComboboxRootProps {
 
   /** The controlled value of the combobox.
    * For single selection: string
-   * For multiple selection: readonly string[]
+   * For multiple selection: string[]
    */
-  value?: string | readonly string[];
+  value?: string | string[];
 
   /** The default value of the combobox (uncontrolled).
    * For single selection: string
-   * For multiple selection: readonly string[]
+   * For multiple selection: string[]
    */
-  defaultValue?: string | readonly string[];
+  defaultValue?: string | string[];
 
   /** Callback fired when the value changes.
    * For single selection: (value: string, eventDetails) => void

@@ -10,8 +10,6 @@ Apsara uses `@base-ui/react` 1.9.0 and `@base-ui/utils` 0.5.0.
 
 - A disabled `Accordion` or `Collapsible` trigger has the native
   `disabled` attribute. It is dimmed and left out of the Tab order.
-- A multiple `Combobox` or `Select` accepts a readonly array for `value`
-  and `defaultValue`. `onValueChange` still receives a mutable array.
 - In `Menu`, `ContextMenu` and `Menubar`, pressing the trigger of an open
   submenu with touch or the keyboard closes it, and a submenu closes when
   focus moves back to its trigger through its focus guard.

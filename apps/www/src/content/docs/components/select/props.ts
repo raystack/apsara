@@ -1,9 +1,9 @@
 export interface SelectRootProps {
   /** The selected value. An array when `multiple` is set. */
-  value?: string | readonly string[];
+  value?: string | string[];
 
   /** The value selected on first render when `value` is not set. An array when `multiple` is set. */
-  defaultValue?: string | readonly string[];
+  defaultValue?: string | string[];
 
   /** Called when the selection changes. Receives an array when `multiple` is set. */
   onValueChange?: (

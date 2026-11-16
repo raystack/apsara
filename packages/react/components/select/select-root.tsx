@@ -22,7 +22,7 @@ interface CommonProps {
 }
 
 interface SelectContextValue extends CommonProps {
-  value?: string | readonly string[];
+  value?: string | string[];
   inputValue?: string;
   registerItem: (item: ItemType) => void;
   unregisterItem: (value: string) => void;
@@ -94,12 +94,12 @@ export interface SingleSelectProps extends BaseSelectProps {
 
 export interface MultipleSelectProps extends BaseSelectProps {
   multiple: true;
-  value?: readonly string[];
+  value?: string[];
   onValueChange?: (
     value: string[],
     eventDetails: SelectChangeEventDetails
   ) => void;
-  defaultValue?: readonly string[];
+  defaultValue?: string[];
 }
 
 export type SelectRootProps = SingleSelectProps | MultipleSelectProps;
@@ -130,7 +130,7 @@ export const SelectRoot = (props: SelectRootProps) => {
   const resolvedRequired = required ?? fieldContext?.required;
 
   const [computedValue, setValueUnwrapped] = useControlled<
-    string | readonly string[] | undefined
+    string | string[] | undefined
   >({
     controlled: providedValue,
     default: defaultValue,
