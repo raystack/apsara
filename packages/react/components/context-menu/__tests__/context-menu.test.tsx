@@ -211,6 +211,23 @@ describe('ContextMenu', () => {
   });
 
   describe('Autocomplete', () => {
+    it('renders the popup as a dialog that holds the searchbox', async () => {
+      await renderAndOpenContextMenu(
+        <ContextMenu autocomplete>
+          <ContextMenu.Trigger>{TRIGGER_TEXT}</ContextMenu.Trigger>
+          <ContextMenu.Content>
+            <ContextMenu.Item>Profile</ContextMenu.Item>
+          </ContextMenu.Content>
+        </ContextMenu>
+      );
+
+      const popup = document.querySelector(
+        '[data-slot="context-menu-content"]'
+      );
+      expect(popup).toHaveAttribute('role', 'dialog');
+      expect(popup).toContainElement(screen.getByRole('searchbox'));
+    });
+
     it('filters checkbox items with the other items', async () => {
       await renderAndOpenContextMenu(
         <ContextMenu autocomplete>
