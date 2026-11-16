@@ -21,11 +21,11 @@
 }
 
 /* Sizes */
-.chip-size-large {
+.chip-size-small {
   padding: var(--rs-space-2) var(--rs-space-3);
 }
 
-.chip-size-small {
+.chip-size-mini {
   padding: var(--rs-space-1) var(--rs-space-2);
 }
 

@@ -261,7 +261,7 @@ describe('Radio', () => {
   });
 
   describe('Sizes', () => {
-    const sizes = ['small', 'large'] as const;
+    const sizes = ['small', 'medium'] as const;
     sizes.forEach(size => {
       it(`renders ${size} size`, () => {
         render(
@@ -274,14 +274,14 @@ describe('Radio', () => {
       });
     });
 
-    it('renders large size by default on the group', () => {
+    it('renders medium size by default on the group', () => {
       render(
         <Radio.Group>
           <Radio value='option1' />
         </Radio.Group>
       );
       const group = screen.getByRole('radiogroup');
-      expect(group).toHaveClass(styles['group-large']);
+      expect(group).toHaveClass(styles['group-medium']);
     });
 
     it('applies radioitem base class with size variant', () => {
@@ -308,11 +308,11 @@ describe('Radio', () => {
     it('item size overrides group size', () => {
       render(
         <Radio.Group size='small'>
-          <Radio value='option1' size='large' />
+          <Radio value='option1' size='medium' />
         </Radio.Group>
       );
       const radio = screen.getByRole('radio');
-      expect(radio).toHaveClass(styles.large);
+      expect(radio).toHaveClass(styles.medium);
     });
   });
 

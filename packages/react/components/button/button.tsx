@@ -18,7 +18,7 @@ const button = cva(styles['button'], {
     /** Size of the button. */
     size: {
       small: styles['button-small'],
-      normal: styles['button-normal']
+      medium: styles['button-medium']
     },
     /**
      * Whether the button is disabled.
@@ -122,15 +122,15 @@ const button = cva(styles['button'], {
   ],
   defaultVariants: {
     variant: 'solid',
-    size: 'normal',
+    size: 'medium',
     color: 'accent'
   }
 });
 
-const getLoaderOnlyClass = (size: 'small' | 'normal' | null) =>
+const getLoaderOnlyClass = (size: 'small' | 'medium' | null) =>
   size === 'small'
     ? styles['loader-only-button-small']
-    : styles['loader-only-button-normal'];
+    : styles['loader-only-button-medium'];
 
 export type ButtonProps = VariantProps<typeof button> &
   ButtonPrimitive.Props & {
@@ -157,7 +157,7 @@ export const Button = ({
   className,
   variant = 'solid',
   color = 'accent',
-  size = 'normal',
+  size = 'medium',
   radius,
   disabled,
   loading,

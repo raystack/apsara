@@ -1,9 +1,9 @@
 export interface TextAreaProps {
   /**
    * Size variant of the textarea.
-   * @defaultValue "large"
+   * @defaultValue "medium"
    */
-  size?: 'small' | 'large';
+  size?: 'small' | 'medium';
 
   /**
    * Visual variant of the textarea.

@@ -23,8 +23,8 @@ export const playground = {
     },
     size: {
       type: 'select',
-      options: ['small', 'normal'],
-      defaultValue: 'normal'
+      options: ['small', 'medium'],
+      defaultValue: 'medium'
     },
     leadingIcon: { type: 'icon' },
     trailingIcon: { type: 'icon' },
@@ -96,7 +96,7 @@ export const sizesDemo = {
   type: 'code',
   code: `<Flex gap={9} align="center">
     <Button size="small">Small</Button>
-    <Button size="normal">Normal</Button>
+    <Button size="medium">Medium</Button>
   </Flex>`
 };
 export const disabledDemo = {

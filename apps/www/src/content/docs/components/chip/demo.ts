@@ -20,8 +20,8 @@ export const playground = {
     },
     size: {
       type: 'select',
-      options: ['small', 'large'],
-      defaultValue: 'small'
+      options: ['mini', 'small'],
+      defaultValue: 'mini'
     },
     color: {
       type: 'select',
@@ -55,8 +55,8 @@ export const sizesDemo = {
   type: 'code',
   code: `
   <Flex gap={9}>
+    <Chip size="mini">Mini</Chip>
     <Chip size="small">Small</Chip>
-    <Chip size="large">Large</Chip>
   </Flex>`
 };
 

@@ -50,9 +50,9 @@ export interface CheckboxProps {
 
   /**
    * The size of the checkbox.
-   * @defaultValue 'large'
+   * @defaultValue 'medium'
    */
-  size?: 'small' | 'large';
+  size?: 'small' | 'medium';
 
   /**
    * Custom render function for the indicator. Receives `(props, state)` where state includes `checked` and `indeterminate`.

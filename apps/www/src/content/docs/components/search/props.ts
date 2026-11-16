@@ -1,9 +1,9 @@
 export interface SearchProps {
   /**
    * Size variant of the search input.
-   * @default large
+   * @default medium
    */
-  size?: 'small' | 'large';
+  size?: 'small' | 'medium';
 
   /**
    * Visual variant of the input.

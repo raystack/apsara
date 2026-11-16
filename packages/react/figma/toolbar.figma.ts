@@ -45,7 +45,7 @@ const items = instance.children.flatMap(child => {
       Danger: 'danger',
       Success: 'success'
     });
-    const size = child.getEnum('Size', { Small: 'small', Normal: 'normal' });
+    const size = child.getEnum('Size', { Small: 'small', Normal: 'medium' });
     // "Plain" = the default Toolbar.Button render (text/neutral/small) with a
     // label and no icons, disabled or loading state, meaning nothing extra.
     const isPlain =

@@ -16,8 +16,8 @@ export const playground = {
     },
     size: {
       type: 'select',
-      options: ['large', 'small'],
-      defaultValue: 'large'
+      options: ['medium', 'small'],
+      defaultValue: 'medium'
     },
     variant: {
       type: 'select',
@@ -87,7 +87,7 @@ export const onValueChangeDemo = {
 export const sizeDemo = {
   type: 'code',
   code: `<Flex direction="column" gap={5} style={{ width: 400 }}>
-  <TextArea placeholder="Large size (default)" />
+  <TextArea placeholder="Medium size (default)" />
   <TextArea placeholder="Small size" size="small" />
 </Flex>`
 };

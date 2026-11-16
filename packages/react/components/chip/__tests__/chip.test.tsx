@@ -78,7 +78,7 @@ describe('Chip', () => {
   });
 
   describe('Sizes', () => {
-    const sizes = ['large', 'small'] as const;
+    const sizes = ['small', 'mini'] as const;
 
     it.each(sizes)('renders %s size correctly', size => {
       render(<Chip size={size}>Test Chip</Chip>);
@@ -87,11 +87,11 @@ describe('Chip', () => {
       expect(chip).toHaveClass(styles[`chip-size-${size}`]);
     });
 
-    it('defaults to small size', () => {
+    it('defaults to mini size', () => {
       render(<Chip>Test Chip</Chip>);
 
       const chip = screen.getByRole('status');
-      expect(chip).toHaveClass(styles['chip-size-small']);
+      expect(chip).toHaveClass(styles['chip-size-mini']);
     });
   });
 

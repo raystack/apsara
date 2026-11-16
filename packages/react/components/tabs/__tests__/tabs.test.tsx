@@ -319,7 +319,7 @@ describe('Tabs', () => {
   });
 
   describe('Sizes', () => {
-    it('defaults to medium size class', () => {
+    it('defaults to small size class', () => {
       render(
         <Tabs defaultValue='tab1'>
           <Tabs.List>
@@ -332,12 +332,12 @@ describe('Tabs', () => {
       const tablist = screen.getByRole('tablist');
       const root = tablist.closest(`.${styles.root}`);
       expect(root).not.toBeNull();
-      expect(root).toHaveClass(styles['size-medium']);
+      expect(root).toHaveClass(styles['size-small']);
     });
 
-    it('applies small size class', () => {
+    it('applies mini size class', () => {
       render(
-        <Tabs defaultValue='tab1' size='small'>
+        <Tabs defaultValue='tab1' size='mini'>
           <Tabs.List>
             <Tabs.Tab value='tab1'>{TAB_1_TEXT}</Tabs.Tab>
           </Tabs.List>
@@ -348,7 +348,7 @@ describe('Tabs', () => {
       const tablist = screen.getByRole('tablist');
       const root = tablist.closest(`.${styles.root}`);
       expect(root).not.toBeNull();
-      expect(root).toHaveClass(styles['size-small']);
+      expect(root).toHaveClass(styles['size-mini']);
     });
   });
 

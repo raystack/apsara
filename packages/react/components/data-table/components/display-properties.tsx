@@ -22,7 +22,7 @@ export function DisplayProperties<TData, TValue>({
           <Chip
             key={column.id}
             variant='outline'
-            size='small'
+            size='mini'
             color={column.getIsVisible() ? 'accent' : 'neutral'}
             onClick={() => column.toggleVisibility()}
           >

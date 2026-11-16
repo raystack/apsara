@@ -9,7 +9,7 @@
   --tabs-trigger-letter-spacing: var(--rs-letter-spacing-regular);
 }
 
-.size-small {
+.size-mini {
   --tabs-trigger-height: var(--rs-space-6);
   --tabs-trigger-padding-inline: var(--rs-space-2);
   --tabs-trigger-font-size: var(--rs-font-size-mini);
@@ -17,7 +17,7 @@
   --tabs-trigger-letter-spacing: var(--rs-letter-spacing-mini);
 }
 
-.size-medium {
+.size-small {
   --tabs-trigger-height: var(--rs-space-7);
   --tabs-trigger-padding-inline: var(--rs-space-3);
   --tabs-trigger-font-size: var(--rs-font-size-small);
