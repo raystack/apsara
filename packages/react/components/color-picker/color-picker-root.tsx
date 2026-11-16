@@ -1,5 +1,6 @@
 'use client';
 
+import type { Slider as SliderPrimitive } from '@base-ui/react/slider';
 import { useControlled } from '@base-ui/utils/useControlled';
 import {
   ComponentProps,
@@ -9,6 +10,10 @@ import {
   useMemo,
   useRef
 } from 'react';
+import {
+  type ChangeDetails,
+  createChangeDetails
+} from '~/shared/change-details';
 import { Flex } from '../flex';
 import {
   ColorObject,
@@ -18,13 +23,24 @@ import {
   parseColor
 } from './utils';
 
+export type ColorPickerChangeReason = SliderPrimitive.Root.ChangeEventReason;
+
+export type ColorPickerChangeDetails = ChangeDetails<
+  ColorPickerChangeReason,
+  { mode: ModeType }
+>;
+
 type ColorPickerContextValue = {
   lightness: number;
   chroma: number;
   hue: number;
   alpha: number;
   mode: ModeType;
-  setColor: (color: Partial<ColorObject>) => void;
+  setColor: (
+    color: Partial<ColorObject>,
+    reason: ColorPickerChangeReason,
+    event?: Event
+  ) => void;
   setMode: (mode: ModeType) => void;
 };
 
@@ -44,7 +60,7 @@ export interface ColorPickerProps
   extends Omit<ComponentProps<typeof Flex>, 'defaultValue'> {
   value?: string;
   defaultValue?: string;
-  onValueChange?: (value: string, mode: string) => void;
+  onValueChange?: (value: string, details: ColorPickerChangeDetails) => void;
   defaultMode?: ModeType;
   mode?: ModeType;
   onModeChange?: (mode: ModeType) => void;
@@ -104,11 +120,14 @@ export const ColorPickerRoot = ({
   rawColorRef.current = rawColor;
 
   const setColor = useCallback<ColorPickerContextValue['setColor']>(
-    value => {
+    (value, reason, event) => {
       const next = { ...rawColorRef.current, ...value };
       rawColorRef.current = next;
       setColorUnwrapped(next);
-      onValueChange?.(getColorString(next, mode), mode);
+      onValueChange?.(
+        getColorString(next, mode),
+        createChangeDetails(reason, event, { mode })
+      );
     },
     [mode, onValueChange, setColorUnwrapped]
   );

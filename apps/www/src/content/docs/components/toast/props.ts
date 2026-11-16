@@ -12,6 +12,12 @@ export interface ToastProviderProps {
     | 'bottom-center';
 
   /**
+   * Corner radius for these toasts only. Overrides the theme's `radius`.
+   * @defaultValue The theme's `radius`
+   */
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
+
+  /**
    * Maximum number of visible toasts.
    * @default 3
    */
@@ -22,6 +28,12 @@ export interface ToastProviderProps {
    * @default 5000
    */
   timeout?: number;
+
+  /**
+   * The manager the provider renders toasts from.
+   * @default toastManager
+   */
+  toastManager?: CreateToastManagerReturn;
 
   children?: React.ReactNode;
 }
@@ -207,7 +219,7 @@ export interface ToastObject {
 }
 
 /**
- * The toast manager returned by `createToastManager()` and exported as the
+ * The toast manager returned by `Toast.createToastManager()` and exported as the
  * `toastManager` singleton.
  */
 export interface CreateToastManagerReturn {
@@ -256,7 +268,7 @@ export interface CreateToastManagerReturn {
 
 /**
  * Return value of the `useToastManager()` hook. Same methods as
- * `createToastManager()` plus a reactive `toasts` array driving component
+ * `Toast.createToastManager()` plus a reactive `toasts` array driving component
  * re-renders.
  */
 export interface UseToastManagerReturn extends CreateToastManagerReturn {

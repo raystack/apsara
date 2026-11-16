@@ -66,7 +66,7 @@ export function IconButton({
         {loading ? (
           <Spinner
             size={1}
-            color='default'
+            color='inherit'
             aria-hidden='true'
             data-slot='icon-button-loader'
           />

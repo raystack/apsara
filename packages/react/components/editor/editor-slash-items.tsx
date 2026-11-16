@@ -109,7 +109,7 @@ export const defaultSlashItems: EditorSlashItem[] = [
     label: 'Text',
     group: 'Text',
     keywords: ['paragraph', 'plain'],
-    icon: <TextIcon />,
+    leadingIcon: <TextIcon />,
     run: editor => editor.commands.setParagraph()
   },
   {
@@ -117,7 +117,7 @@ export const defaultSlashItems: EditorSlashItem[] = [
     label: 'Heading 1',
     group: 'Text',
     keywords: ['h1', 'title'],
-    icon: <Heading1 />,
+    leadingIcon: <Heading1 />,
     run: editor => editor.commands.setHeading(1)
   },
   {
@@ -125,7 +125,7 @@ export const defaultSlashItems: EditorSlashItem[] = [
     label: 'Heading 2',
     group: 'Text',
     keywords: ['h2', 'subtitle'],
-    icon: <Heading2 />,
+    leadingIcon: <Heading2 />,
     run: editor => editor.commands.setHeading(2)
   },
   {
@@ -133,7 +133,7 @@ export const defaultSlashItems: EditorSlashItem[] = [
     label: 'Heading 3',
     group: 'Text',
     keywords: ['h3'],
-    icon: <Heading3 />,
+    leadingIcon: <Heading3 />,
     run: editor => editor.commands.setHeading(3)
   },
   {
@@ -141,7 +141,7 @@ export const defaultSlashItems: EditorSlashItem[] = [
     label: 'Bulleted list',
     group: 'Lists',
     keywords: ['unordered', 'ul', 'bullet'],
-    icon: <BulletIcon />,
+    leadingIcon: <BulletIcon />,
     run: editor => editor.commands.toggleList('bulletList')
   },
   {
@@ -149,7 +149,7 @@ export const defaultSlashItems: EditorSlashItem[] = [
     label: 'Numbered list',
     group: 'Lists',
     keywords: ['ordered', 'ol'],
-    icon: <NumberedIcon />,
+    leadingIcon: <NumberedIcon />,
     run: editor => editor.commands.toggleList('orderedList')
   },
   {
@@ -157,7 +157,7 @@ export const defaultSlashItems: EditorSlashItem[] = [
     label: 'Checklist',
     group: 'Lists',
     keywords: ['todo', 'task', 'checkbox'],
-    icon: <ChecklistIcon />,
+    leadingIcon: <ChecklistIcon />,
     run: editor => editor.commands.toggleList('taskList')
   },
   {
@@ -165,7 +165,7 @@ export const defaultSlashItems: EditorSlashItem[] = [
     label: 'Quote',
     group: 'Blocks',
     keywords: ['blockquote', 'citation'],
-    icon: <QuoteIcon />,
+    leadingIcon: <QuoteIcon />,
     run: editor => editor.commands.toggleBlock('blockquote')
   },
   {
@@ -173,7 +173,7 @@ export const defaultSlashItems: EditorSlashItem[] = [
     label: 'Code block',
     group: 'Blocks',
     keywords: ['code', 'pre', 'snippet'],
-    icon: <CodeBlockIcon />,
+    leadingIcon: <CodeBlockIcon />,
     run: editor => editor.commands.toggleBlock('codeBlock')
   },
   {
@@ -181,7 +181,7 @@ export const defaultSlashItems: EditorSlashItem[] = [
     label: 'Divider',
     group: 'Blocks',
     keywords: ['hr', 'rule', 'separator', 'line'],
-    icon: <DividerIcon />,
+    leadingIcon: <DividerIcon />,
     run: editor => editor.commands.insertHorizontalRule()
   }
 ];

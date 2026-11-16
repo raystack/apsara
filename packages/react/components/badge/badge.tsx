@@ -7,9 +7,9 @@ import styles from './badge.module.css';
 const badge = cva(styles['badge'], {
   variants: {
     ...radiusVariants,
-    variant: {
+    color: {
       accent: styles['badge-accent'],
-      warning: styles['badge-warning'],
+      attention: styles['badge-attention'],
       danger: styles['badge-danger'],
       success: styles['badge-success'],
       neutral: styles['badge-neutral'],
@@ -22,22 +22,22 @@ const badge = cva(styles['badge'], {
     }
   },
   defaultVariants: {
-    variant: 'accent',
+    color: 'accent',
     size: 'small'
   }
 });
 
 export type BadgeProps = VariantProps<typeof badge> &
   ComponentProps<'span'> & {
-    icon?: ReactNode;
+    leadingIcon?: ReactNode;
     screenReaderText?: string;
   };
 
 export const Badge = ({
-  variant,
+  color,
   size,
   radius,
-  icon,
+  leadingIcon,
   children,
   className,
   screenReaderText,
@@ -45,13 +45,13 @@ export const Badge = ({
 }: BadgeProps) => {
   return (
     <span
-      className={badge({ variant, size, radius, className })}
+      className={badge({ color, size, radius, className })}
       data-slot='badge'
       {...props}
     >
-      {icon && (
-        <span className={styles['icon']} data-slot='badge-icon'>
-          {icon}
+      {leadingIcon && (
+        <span className={styles['icon']} data-slot='badge-leading-icon'>
+          {leadingIcon}
         </span>
       )}
       {screenReaderText && (

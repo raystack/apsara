@@ -6,8 +6,8 @@ import figma from 'figma';
 
 const instance = figma.selectedInstance;
 
-// State `Active` maps to the `current` prop; `Default` is the implicit state.
-const current = instance.getEnum('State', {
+// State `Active` maps to the `active` prop; `Default` is the implicit state.
+const active = instance.getEnum('State', {
   Active: true
 });
 // `Show Icon` gates the leading icon INSTANCE_SWAP.
@@ -31,8 +31,8 @@ export default {
   id: 'Breadcrumb.Item',
   imports: ["import { Breadcrumb } from '@raystack/apsara'"],
   example: figma.code`<Breadcrumb.Item${figma.helpers.react.renderProp(
-    'current',
-    current
+    'active',
+    active
   )}${figma.helpers.react.renderProp(
     'leadingIcon',
     leadingIcon

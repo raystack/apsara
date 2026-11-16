@@ -12,9 +12,16 @@ export interface ColorPickerProps {
    */
   defaultValue?: string;
   /**
-   * Callback fired when the color value changes.
+   * Callback fired when the color value changes. `details.mode` is the active mode.
    */
-  onValueChange?: (value: string, mode: string) => void;
+  onValueChange?: (
+    value: string,
+    details: {
+      reason: 'track-press' | 'drag' | 'keyboard' | 'input-change' | 'none';
+      event: Event;
+      mode: 'hex' | 'rgb' | 'hsl' | 'oklch';
+    }
+  ) => void;
   /**
    * The initial color mode (hex, rgb, hsl, oklch).
    * @default 'hex'

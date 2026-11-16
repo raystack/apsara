@@ -1,5 +1,8 @@
 export interface DrawerProps {
-  /** The direction from which the drawer appears and can be swiped to dismiss. */
+  /**
+   * The edge the drawer slides in from. It also sets the swipe-to-dismiss direction.
+   * @default "right"
+   */
   side?: 'top' | 'right' | 'bottom' | 'left';
 
   /** Boolean to control the default open state. */
@@ -28,11 +31,11 @@ export interface DrawerProps {
 }
 
 export interface DrawerContentProps {
-  /** The direction from which the drawer appears. */
-  side?: 'top' | 'right' | 'bottom' | 'left';
-
-  /** Whether to show the close button. */
-  showCloseButton?: boolean;
+  /**
+   * Hides the close button.
+   * @default false
+   */
+  hideCloseButton?: boolean;
 
   /**
    * Accessible label for the close button. Override for localisation.

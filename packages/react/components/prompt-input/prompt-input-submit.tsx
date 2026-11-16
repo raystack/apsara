@@ -44,7 +44,7 @@ export function PromptInputSubmit({
     >
       {children ??
         (context.status === 'submitted' ? (
-          <Spinner size={2} color='default' aria-hidden='true' />
+          <Spinner size={2} color='inherit' aria-hidden='true' />
         ) : context.status === 'streaming' ? (
           <StopIcon aria-hidden='true' />
         ) : (

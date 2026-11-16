@@ -24,21 +24,26 @@ export const ColorPickerHue = ({
   );
   const value = isOklch ? hue : (hsl?.h ?? 0);
 
-  const handleValueChange = (next: number) => {
+  const handleValueChange = (
+    next: number,
+    { reason, event }: Slider.Root.ChangeEventDetails
+  ) => {
     if (isOklch) {
-      setColor({ h: next });
+      setColor({ h: next }, reason, event);
       return;
     }
     if (!hsl) return;
     const oklch = hslToOklch(next, hsl.s, hsl.l);
-    setColor({ l: oklch.l, c: oklch.c, h: oklch.h });
+    setColor({ l: oklch.l, c: oklch.c, h: oklch.h }, reason, event);
   };
 
   return (
     <Slider.Root
       className={cx(styles.sliderRoot, className)}
       max={360}
-      onValueChange={value => handleValueChange(value as number)}
+      onValueChange={(value, eventDetails) =>
+        handleValueChange(value as number, eventDetails)
+      }
       // OKLCH hue is perceptually uniform, so sub-degree precision is meaningful
       // when fine-tuning a tone. HSL hue keeps the classic 1° granularity.
       step={isOklch ? 0.1 : 1}

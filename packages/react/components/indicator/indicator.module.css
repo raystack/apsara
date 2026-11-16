@@ -67,27 +67,27 @@
   }
 }
 
-.indicator-variant-accent {
+.indicator-color-accent {
   background-color: var(--rs-color-background-accent-emphasis);
   color: var(--rs-color-foreground-accent-emphasis);
 }
 
-.indicator-variant-warning {
+.indicator-color-attention {
   background-color: var(--rs-color-background-attention-emphasis);
   color: var(--rs-color-foreground-attention-emphasis);
 }
 
-.indicator-variant-danger {
+.indicator-color-danger {
   background-color: var(--rs-color-background-danger-emphasis);
   color: var(--rs-color-foreground-danger-emphasis);
 }
 
-.indicator-variant-success {
+.indicator-color-success {
   background-color: var(--rs-color-background-success-emphasis);
   color: var(--rs-color-foreground-success-emphasis);
 }
 
-.indicator-variant-neutral {
+.indicator-color-neutral {
   background-color: var(--rs-color-background-neutral-emphasis);
   color: var(--rs-color-foreground-base-emphasis);
 }

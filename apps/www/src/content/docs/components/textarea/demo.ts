@@ -21,8 +21,8 @@ export const playground = {
     },
     variant: {
       type: 'select',
-      options: ['default', 'borderless'],
-      defaultValue: 'default'
+      options: ['outline', 'text'],
+      defaultValue: 'outline'
     },
     rows: {
       type: 'number',
@@ -95,8 +95,8 @@ export const sizeDemo = {
 export const variantDemo = {
   type: 'code',
   code: `<Flex direction="column" gap={5} style={{ width: 400 }}>
-  <TextArea placeholder="Default variant" />
-  <TextArea placeholder="Borderless variant" variant="borderless" />
+  <TextArea placeholder="Outline variant (default)" />
+  <TextArea placeholder="Text variant" variant="text" />
 </Flex>`
 };
 

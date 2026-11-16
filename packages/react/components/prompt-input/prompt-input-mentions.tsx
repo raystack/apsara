@@ -2,6 +2,7 @@
 
 import { type ReactNode, useEffect, useRef } from 'react';
 import { isTriggerCharacter } from '../editor/core/mention';
+import type { SuggestionOpenChangeDetails } from '../editor/core/use-suggestion-menu';
 import { usePromptInputContext } from './prompt-input-context';
 import type {
   PromptInputMentionItem,
@@ -25,7 +26,7 @@ export interface PromptInputMentionsProps {
     context: { trigger: string; signal: AbortSignal }
   ) => Promise<PromptInputMentionItem[]>;
   /**
-   * Fills in the icon, trailing content, `data` and a fresh label for chips
+   * Fills in the leading icon, trailing icon, `data` and a fresh label for chips
    * parsed out of `value` / `defaultValue`, which cannot carry them. Batched
    * into one call per trigger and cached by `trigger|type|id`.
    */
@@ -33,7 +34,7 @@ export interface PromptInputMentionsProps {
     refs: PromptInputMentionRef[]
   ) => Promise<PromptInputMentionItem[]>;
   /** Observes the menu's open state. */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (open: boolean, details: SuggestionOpenChangeDetails) => void;
   /**
    * Empty-state content.
    * @defaultValue "No results"

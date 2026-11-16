@@ -43,10 +43,12 @@ export const ColorPickerInput = ({
     setDraft(null);
   }
 
-  const commit = () => {
+  const commit = (event: Event) => {
     if (draft === null) return;
     setDraft(null);
-    if (draft !== value && parse(draft)) setColor(parseColor(draft));
+    if (draft !== value && parse(draft)) {
+      setColor(parseColor(draft), 'input-change', event);
+    }
   };
 
   // A consumer-supplied trailingIcon always wins; copyable only fills the slot
@@ -64,7 +66,7 @@ export const ColorPickerInput = ({
         onChange?.(event);
       }}
       onBlur={event => {
-        commit();
+        commit(event.nativeEvent);
         onBlur?.(event);
       }}
       onKeyDown={event => {
@@ -74,7 +76,7 @@ export const ColorPickerInput = ({
           event.keyCode !== 229
         ) {
           event.preventDefault();
-          commit();
+          commit(event.nativeEvent);
         }
         onKeyDown?.(event);
       }}

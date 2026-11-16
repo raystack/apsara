@@ -213,7 +213,7 @@ function ControlledRadio() {
         <Flex align="center" gap={3}><Radio value="solo" id="solo" /><Label htmlFor="solo">Solo</Label></Flex>
         <Flex align="center" gap={3}><Radio value="team" id="team" /><Label htmlFor="team">Team</Label></Flex>
       </Radio.Group>
-      <Text size="small" variant="secondary">Selected: {plan}</Text>
+      <Text size="small" color="secondary">Selected: {plan}</Text>
     </Flex>
   );
 }`

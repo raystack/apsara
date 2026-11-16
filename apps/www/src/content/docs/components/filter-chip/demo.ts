@@ -29,8 +29,8 @@ export const playground = {
     },
     variant: {
       type: 'select',
-      options: ['default', 'text'],
-      defaultValue: 'default'
+      options: ['outline', 'text'],
+      defaultValue: 'outline'
     },
     label: {
       type: 'text',
@@ -228,7 +228,7 @@ function ControlledFilterChip() {
           { label: "Inactive", value: "inactive" }
         ]}
       />
-      <Text size="small" variant="secondary">Querying for: {status}</Text>
+      <Text size="small" color="secondary">Querying for: {status}</Text>
     </Flex>
   );
 }`

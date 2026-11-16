@@ -74,7 +74,7 @@ function VirtualGroupHeader<TData>({
       <Flex gap={3} align='center'>
         {data?.label}
         {data.showGroupCount ? (
-          <Badge variant='neutral'>{data?.count}</Badge>
+          <Badge color='neutral'>{data?.count}</Badge>
         ) : null}
       </Flex>
     </div>
@@ -366,7 +366,7 @@ export function VirtualizedContent({
             <Flex gap={3} align='center'>
               {stickyGroup.label}
               {stickyGroup.showGroupCount ? (
-                <Badge variant='neutral'>{stickyGroup.count}</Badge>
+                <Badge color='neutral'>{stickyGroup.count}</Badge>
               ) : null}
             </Flex>
           </div>

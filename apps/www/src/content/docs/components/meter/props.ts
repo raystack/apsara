@@ -26,7 +26,7 @@ export interface MeterProps {
 
 export interface MeterLabelProps {
   /** The label text content. */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 
   /** Additional CSS class name. */
   className?: string;

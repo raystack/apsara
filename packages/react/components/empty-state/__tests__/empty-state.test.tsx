@@ -39,7 +39,7 @@ describe('EmptyState', () => {
   });
 
   describe('Variants', () => {
-    it('renders empty1 variant by default', () => {
+    it('renders compact variant by default', () => {
       const { container } = render(<EmptyState icon={<div>Icon</div>} />);
       expect(
         container.querySelector(`.${styles.emptyState}`)
@@ -49,9 +49,9 @@ describe('EmptyState', () => {
       ).not.toBeInTheDocument();
     });
 
-    it('renders empty2 variant correctly', () => {
+    it('renders page variant correctly', () => {
       const { container } = render(
-        <EmptyState icon={<div>Icon</div>} variant='empty2' />
+        <EmptyState icon={<div>Icon</div>} variant='page' />
       );
       expect(
         container.querySelector(`.${styles.emptyStatePage}`)

@@ -12,7 +12,7 @@ export const playground = {
   type: 'playground',
   controls: {
     href: { type: 'text', initialValue: 'https://apsara.raystack.org/' },
-    variant: {
+    color: {
       type: 'select',
       options: [
         'primary',
@@ -44,17 +44,17 @@ export const playground = {
   getCode
 };
 
-export const variantDemo = {
+export const colorDemo = {
   type: 'code',
   code: `
   <Flex gap={5} align="center">
-    <Link href="#" variant="primary">Primary Link</Link>
-    <Link href="#" variant="secondary">Secondary Link</Link>
-    <Link href="#" variant="tertiary">Tertiary Link</Link>
-    <Link href="#" variant="accent">Accent Link</Link>
-    <Link href="#" variant="attention">Attention Link</Link>
-    <Link href="#" variant="danger">Danger Link</Link>
-    <Link href="#" variant="success">Success Link</Link>
+    <Link href="#" color="primary">Primary Link</Link>
+    <Link href="#" color="secondary">Secondary Link</Link>
+    <Link href="#" color="tertiary">Tertiary Link</Link>
+    <Link href="#" color="accent">Accent Link</Link>
+    <Link href="#" color="attention">Attention Link</Link>
+    <Link href="#" color="danger">Danger Link</Link>
+    <Link href="#" color="success">Success Link</Link>
   </Flex>`
 };
 export const sizeDemo = {
@@ -80,7 +80,7 @@ export const styleDemo = {
   type: 'code',
   code: `
   <Flex gap={5} align="end">
-    <Link href="#" variant="primary" underline>Underlined Link</Link>
+    <Link href="#" color="primary" underline>Underlined Link</Link>
     <Link href="https://example.com" external>External Link</Link>
     <Link href="/assets/logo.svg" download>Download File</Link>
   </Flex>`

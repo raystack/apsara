@@ -20,16 +20,16 @@ const DRAWER_CONTENT = 'This is test drawer content';
 const DRAWER_DESCRIPTION = 'This is test drawer description';
 
 const BasicDrawer = ({
-  showCloseButton = true,
+  hideCloseButton = false,
   side = 'right' as const,
   ...props
 }: {
-  showCloseButton?: boolean;
+  hideCloseButton?: boolean;
   side?: 'top' | 'right' | 'bottom' | 'left';
 } & Record<string, unknown>) => (
   <Drawer side={side} {...props}>
     <Drawer.Trigger render={<Button />}>{TRIGGER_TEXT}</Drawer.Trigger>
-    <Drawer.Content side={side} showCloseButton={showCloseButton}>
+    <Drawer.Content hideCloseButton={hideCloseButton}>
       <Drawer.Header>
         <Drawer.Title>{DRAWER_TITLE}</Drawer.Title>
         <Drawer.Description>{DRAWER_DESCRIPTION}</Drawer.Description>
@@ -177,14 +177,14 @@ describe('Drawer', () => {
   });
 
   describe('Close Behavior', () => {
-    it('renders close button when showCloseButton prop is true', async () => {
-      await renderAndOpenDrawer(<BasicDrawer showCloseButton />);
+    it('renders close button by default', async () => {
+      await renderAndOpenDrawer(<BasicDrawer />);
 
       expect(screen.getByLabelText('Close')).toBeInTheDocument();
     });
 
-    it('does not render close button when showCloseButton prop is false', async () => {
-      await renderAndOpenDrawer(<BasicDrawer showCloseButton={false} />);
+    it('does not render close button when hideCloseButton is set', async () => {
+      await renderAndOpenDrawer(<BasicDrawer hideCloseButton />);
 
       await waitFor(() => {
         expect(screen.queryByLabelText('Close')).not.toBeInTheDocument();
@@ -194,7 +194,7 @@ describe('Drawer', () => {
     it('closes drawer when close button is clicked', async () => {
       const user = userEvent.setup();
 
-      await renderAndOpenDrawer(<BasicDrawer showCloseButton />);
+      await renderAndOpenDrawer(<BasicDrawer />);
 
       await user.click(screen.getByLabelText('Close'));
 
@@ -279,7 +279,7 @@ describe('Drawer', () => {
       render(
         <Drawer side={side}>
           <Drawer.SwipeArea data-testid='swipe-area' />
-          <Drawer.Content side={side}>{DRAWER_CONTENT}</Drawer.Content>
+          <Drawer.Content>{DRAWER_CONTENT}</Drawer.Content>
         </Drawer>
       ).getByTestId('swipe-area');
 
@@ -332,7 +332,7 @@ describe('Drawer', () => {
       <Drawer.Provider>
         <Drawer.Indent data-testid='indent'>
           <Drawer open={open} side='bottom'>
-            <Drawer.Content side='bottom'>{DRAWER_CONTENT}</Drawer.Content>
+            <Drawer.Content>{DRAWER_CONTENT}</Drawer.Content>
           </Drawer>
         </Drawer.Indent>
       </Drawer.Provider>
@@ -366,7 +366,7 @@ describe('Drawer', () => {
   describe('Virtual Keyboard', () => {
     const KeyboardDrawer = (props: { enableVirtualKeyboard?: boolean }) => (
       <Drawer open side='bottom'>
-        <Drawer.Content side='bottom' {...props}>
+        <Drawer.Content {...props}>
           <input aria-label='Name' />
         </Drawer.Content>
       </Drawer>

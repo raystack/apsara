@@ -9,12 +9,11 @@ import { InputProps } from '../input/input';
 
 import styles from './search.module.css';
 
-export interface SearchProps extends InputProps {
+export interface SearchProps extends Omit<InputProps, 'width'> {
   showClearButton?: boolean;
   onClear?: (
     event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
   ) => void;
-  variant?: 'default' | 'borderless';
   /**
    * Clears the input when Escape is pressed and the input has a value.
    * @default true
@@ -46,8 +45,6 @@ export function Search({
   onClear,
   onKeyDown,
   value,
-  width = '100%',
-  variant = 'default',
   ref,
   leadingIcon = <SearchIcon />,
   clearOnEscape = true,
@@ -103,12 +100,7 @@ export function Search({
   ) : undefined;
 
   return (
-    <div
-      className={styles.container}
-      role='search'
-      style={{ width }}
-      data-slot='search'
-    >
+    <div className={styles.container} role='search' data-slot='search'>
       <Input
         data-slot='search-input'
         leadingIcon={leadingIcon}
@@ -118,7 +110,6 @@ export function Search({
         value={value}
         size={size}
         aria-label={placeholder}
-        variant={variant}
         role='searchbox'
         enterKeyHint='search'
         ref={mergedRef}

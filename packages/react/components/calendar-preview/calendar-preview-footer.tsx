@@ -24,7 +24,7 @@ export function CalendarPreviewFooter({
       {typeof children === 'string' ? (
         <Text
           size='small'
-          variant='secondary'
+          color='secondary'
           data-slot='calendar-preview-footer-text'
         >
           {children}
