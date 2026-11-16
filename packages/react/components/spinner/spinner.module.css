@@ -132,7 +132,7 @@
   height: var(--rs-space-10);
 }
 
-.spinner-color-default {
+.spinner-color-inherit {
   color: currentColor;
 }
 

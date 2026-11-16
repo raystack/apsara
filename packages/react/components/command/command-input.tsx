@@ -33,7 +33,7 @@ export const CommandInput = ({
             containerRef={inputContainerRef}
             classNames={{ container: styles.commandInputContainer }}
             leadingIcon={leadingIcon}
-            variant='borderless'
+            variant='text'
             autoFocus={autoFocus}
             placeholder={placeholder}
             {...props}

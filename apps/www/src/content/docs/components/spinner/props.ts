@@ -6,10 +6,10 @@ export interface SpinnerProps {
   size?: 1 | 2 | 3 | 4 | 5 | 6;
 
   /**
-   * Color variant of the spinner.
-   * @default "default"
-   *  */
-  color?: 'default' | 'neutral' | 'accent' | 'danger' | 'success' | 'attention';
+   * Color of the spinner. `inherit` uses `currentColor`.
+   * @default "neutral"
+   */
+  color?: 'inherit' | 'neutral' | 'accent' | 'danger' | 'success' | 'attention';
 
   /** Additional CSS class names. */
   className?: string;

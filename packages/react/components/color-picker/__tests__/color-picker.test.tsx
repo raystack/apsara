@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ColorPicker } from '../color-picker';
@@ -163,11 +164,14 @@ describe('ColorPicker', () => {
       area.hasPointerCapture = vi.fn().mockReturnValue(true);
 
       fireEvent.pointerDown(area, { pointerId: 1, clientX: 0, clientY: 0 });
-      expect(onValueChange).toHaveBeenLastCalledWith('oklch(1 0 0)', 'oklch');
+      expect(onValueChange).toHaveBeenLastCalledWith(
+        'oklch(1 0 0)',
+        expect.objectContaining({ reason: 'track-press', mode: 'oklch' })
+      );
       fireEvent.pointerMove(area, { pointerId: 1, clientX: 50, clientY: 50 });
       expect(onValueChange).toHaveBeenLastCalledWith(
         'oklch(0.5 0.2 0)',
-        'oklch'
+        expect.objectContaining({ reason: 'drag', mode: 'oklch' })
       );
       expect(onPointerDown).toHaveBeenCalledTimes(1);
       expect(onPointerMove).toHaveBeenCalledTimes(1);
@@ -281,7 +285,10 @@ describe('ColorPicker', () => {
       // false means the keydown was default-prevented, so a form won't submit.
       expect(fireEvent.keyDown(input, { key: 'Enter' })).toBe(false);
 
-      expect(onValueChange).toHaveBeenCalledWith('#00FF00', 'hex');
+      expect(onValueChange).toHaveBeenCalledWith(
+        '#00FF00',
+        expect.objectContaining({ reason: 'input-change', mode: 'hex' })
+      );
       expect(input).toHaveValue('#00FF00');
     });
 
@@ -426,6 +433,24 @@ describe('ColorPicker', () => {
 
       const modeSelector = screen.getByTestId('mode-selector');
       expect(modeSelector).toHaveTextContent('HEX');
+    });
+
+    it('switches an uncontrolled mode and calls onModeChange', async () => {
+      const user = userEvent.setup();
+      const onModeChange = vi.fn();
+      render(
+        <ColorPicker defaultValue='#ff0000' onModeChange={onModeChange}>
+          <ColorPicker.Input data-testid='color-input' />
+          <ColorPicker.Mode data-testid='mode-selector' />
+        </ColorPicker>
+      );
+
+      await user.click(screen.getByTestId('mode-selector'));
+      await user.click(await screen.findByRole('option', { name: 'RGB' }));
+
+      expect(onModeChange).toHaveBeenCalledWith('rgb');
+      expect(screen.getByTestId('mode-selector')).toHaveTextContent('RGB');
+      expect(screen.getByTestId('color-input')).toHaveValue('rgb(255, 0, 0)');
     });
 
     it('accepts custom options', () => {

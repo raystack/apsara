@@ -195,12 +195,12 @@
   background: var(--rs-color-background-neutral-secondary);
   border-radius: max(var(--rs-radius-pill, 0px), var(--rs-radius-2));
   white-space: nowrap;
-  height: auto;
+  height: var(--rs-space-6);
 }
 
 .size-medium .prefix,
 .size-medium .suffix {
-  height: 22px;
+  height: var(--rs-space-7);
 }
 
 .prefix {
@@ -221,16 +221,16 @@
   padding-right: var(--rs-space-2);
 }
 
-.variant-borderless {
+.variant-text {
   border-color: transparent;
 }
 
-.variant-borderless:focus-within {
+.variant-text:focus-within {
   border-color: transparent;
   outline: none;
 }
 
 /* Keyboard focus must still be visible on the chromeless variant. */
-.variant-borderless:has(.input-field:focus-visible) {
+.variant-text:has(.input-field:focus-visible) {
   box-shadow: var(--rs-focus-ring-shadow);
 }

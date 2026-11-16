@@ -135,6 +135,10 @@ The second argument of `onValueChange`. The methods convert the doc from that ch
 
 <auto-type-table path="./props.ts" name="EditorChangeDetails" />
 
+With the `markdown` prop, the second argument is `EditorMarkdownChangeDetails`. It has the same methods and `getMarkdown`.
+
+<auto-type-table path="./props.ts" name="EditorMarkdownChangeDetails" />
+
 ### Markdown
 
 `MarkdownAdapter.create(options)` returns an adapter for the `markdown` prop. `MarkdownAdapter.toEditor(markdown)` and `MarkdownAdapter.fromEditor(value)` convert without an editor, for example on the server. An app that never imports `MarkdownAdapter` ships no Markdown code.

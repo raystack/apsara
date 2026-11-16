@@ -1,8 +1,8 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 
-import { useThemeContextOrNull } from './context';
+import { ThemeDirectionContext, useThemeContextOrNull } from './context';
 import { settingsToAttributes, THEME_CLASS } from './settings';
 
 export interface ThemeInjectionProps {
@@ -22,12 +22,14 @@ export interface ThemeInjectionProps {
 export function useThemeInjection(): ThemeInjectionProps | undefined {
   const theme = useThemeContextOrNull();
   const resolved = theme?.resolved;
+  const dir = useContext(ThemeDirectionContext);
 
   return useMemo(() => {
     if (!resolved) return undefined;
     return {
       className: THEME_CLASS,
-      ...settingsToAttributes(resolved)
+      ...settingsToAttributes(resolved),
+      ...(dir ? { dir } : {})
     };
-  }, [resolved]);
+  }, [resolved, dir]);
 }

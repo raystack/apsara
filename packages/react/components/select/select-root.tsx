@@ -4,6 +4,7 @@ import {
   Combobox as ComboboxPrimitive,
   Select as SelectPrimitive
 } from '@base-ui/react';
+import { useControlled } from '@base-ui/utils/useControlled';
 import {
   createContext,
   ReactNode,
@@ -18,13 +19,11 @@ import { ItemType } from './types';
 interface CommonProps {
   autocomplete?: boolean;
   autocompleteMode?: 'auto' | 'manual';
-  searchValue?: string;
-  onSearch?: (value: string) => void;
-  defaultSearchValue?: string;
 }
 
 interface SelectContextValue extends CommonProps {
   value?: string | string[];
+  inputValue?: string;
   registerItem: (item: ItemType) => void;
   unregisterItem: (value: string) => void;
   multiple: boolean;
@@ -50,7 +49,7 @@ export const useSelectContext = (): UseSelectContext => {
   const shouldFilter = !!(
     context?.autocomplete &&
     context?.autocompleteMode === 'auto' &&
-    context?.searchValue?.length
+    context?.inputValue?.length
   );
   return {
     ...context,
@@ -58,11 +57,25 @@ export const useSelectContext = (): UseSelectContext => {
   };
 };
 
+/** Base UI's `eventDetails`, from Combobox when `autocomplete` is set. */
+export type SelectChangeEventDetails =
+  | SelectPrimitive.Root.ChangeEventDetails
+  | ComboboxPrimitive.Root.ChangeEventDetails;
+
 export interface BaseSelectProps extends CommonProps {
+  inputValue?: string;
+  defaultInputValue?: string;
+  onInputValueChange?: (
+    inputValue: string,
+    eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
+  ) => void;
   children?: ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: SelectChangeEventDetails
+  ) => void;
   disabled?: boolean;
   required?: boolean;
   name?: string;
@@ -72,14 +85,20 @@ export interface BaseSelectProps extends CommonProps {
 export interface SingleSelectProps extends BaseSelectProps {
   multiple?: false;
   value?: string;
-  onValueChange?: (value: string) => void;
+  onValueChange?: (
+    value: string,
+    eventDetails: SelectChangeEventDetails
+  ) => void;
   defaultValue?: string;
 }
 
 export interface MultipleSelectProps extends BaseSelectProps {
   multiple: true;
   value?: string[];
-  onValueChange?: (value: string[]) => void;
+  onValueChange?: (
+    value: string[],
+    eventDetails: SelectChangeEventDetails
+  ) => void;
   defaultValue?: string[];
 }
 
@@ -93,9 +112,9 @@ export const SelectRoot = (props: SelectRootProps) => {
     defaultValue,
     autocomplete,
     autocompleteMode = 'auto',
-    searchValue: providedSearchValue,
-    onSearch,
-    defaultSearchValue = '',
+    inputValue: providedInputValue,
+    onInputValueChange,
+    defaultInputValue = '',
     open: providedOpen,
     defaultOpen = false,
     onOpenChange,
@@ -110,47 +129,56 @@ export const SelectRoot = (props: SelectRootProps) => {
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
 
-  const [internalValue, setInternalValue] = useState<
+  const [computedValue, setValueUnwrapped] = useControlled<
     string | string[] | undefined
-  >(defaultValue);
-  const [internalSearchValue, setInternalSearchValue] =
-    useState(defaultSearchValue);
+  >({
+    controlled: providedValue,
+    default: defaultValue,
+    name: 'Select',
+    state: 'value'
+  });
+  const [inputValue, setInputValueUnwrapped] = useControlled({
+    controlled: providedInputValue,
+    default: defaultInputValue,
+    name: 'Select',
+    state: 'inputValue'
+  });
   const [registeredItems, setRegisteredItems] = useState<
     SelectContextValue['items']
   >({});
 
-  const computedValue = providedValue ?? internalValue;
-  const searchValue = providedSearchValue ?? internalSearchValue;
-
   const handleValueChange = useCallback(
-    (value: string | string[] | null) => {
-      setInternalValue(value ?? undefined);
+    (
+      value: string | string[] | null,
+      eventDetails: SelectChangeEventDetails
+    ) => {
       if (multiple) {
         (onValueChange as MultipleSelectProps['onValueChange'])?.(
-          value as string[]
+          value as string[],
+          eventDetails
         );
       } else {
         (onValueChange as SingleSelectProps['onValueChange'])?.(
-          value as string
+          value as string,
+          eventDetails
         );
       }
+      if (eventDetails.isCanceled) return;
+      setValueUnwrapped(value ?? undefined);
     },
-    [multiple, onValueChange]
+    [multiple, onValueChange, setValueUnwrapped]
   );
 
-  const handleSearchValueChange = useCallback(
-    (value: string) => {
-      setInternalSearchValue(value);
-      onSearch?.(value);
+  const handleInputValueChange = useCallback(
+    (
+      value: string,
+      eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
+    ) => {
+      onInputValueChange?.(value, eventDetails);
+      if (eventDetails.isCanceled) return;
+      setInputValueUnwrapped(value);
     },
-    [onSearch]
-  );
-
-  const handleOpenChange = useCallback(
-    (open: boolean) => {
-      onOpenChange?.(open);
-    },
-    [onOpenChange]
+    [onInputValueChange, setInputValueUnwrapped]
   );
 
   const registerItem = useCallback<SelectContextValue['registerItem']>(item => {
@@ -174,7 +202,7 @@ export const SelectRoot = (props: SelectRootProps) => {
       unregisterItem,
       autocomplete,
       autocompleteMode,
-      searchValue,
+      inputValue,
       multiple,
       items: registeredItems,
       hasItems: !!itemsProp
@@ -185,7 +213,7 @@ export const SelectRoot = (props: SelectRootProps) => {
       unregisterItem,
       autocomplete,
       autocompleteMode,
-      searchValue,
+      inputValue,
       multiple,
       registeredItems,
       itemsProp
@@ -198,7 +226,7 @@ export const SelectRoot = (props: SelectRootProps) => {
     onValueChange: handleValueChange,
     open: providedOpen,
     defaultOpen,
-    onOpenChange: handleOpenChange,
+    onOpenChange,
     multiple,
     disabled,
     modal: true as const,
@@ -212,7 +240,9 @@ export const SelectRoot = (props: SelectRootProps) => {
       <SelectContext value={contextValue}>
         <ComboboxPrimitive.Root
           {...commonProps}
-          onInputValueChange={handleSearchValueChange}
+          inputValue={providedInputValue}
+          defaultInputValue={defaultInputValue}
+          onInputValueChange={handleInputValueChange}
           filter={itemsProp ? undefined : null}
           items={itemsProp}
           loopFocus={false}

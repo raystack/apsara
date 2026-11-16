@@ -14,6 +14,7 @@ import { useSelectContext } from './select-root';
 
 export interface SelectItemProps extends SelectPrimitive.Item.Props {
   leadingIcon?: ReactNode;
+  trailingIcon?: ReactNode;
 }
 
 export function SelectItem({
@@ -21,6 +22,7 @@ export function SelectItem({
   children,
   value: providedValue,
   leadingIcon,
+  trailingIcon,
   disabled,
   ...props
 }: SelectItemProps) {
@@ -29,7 +31,7 @@ export function SelectItem({
     registerItem,
     unregisterItem,
     autocomplete,
-    searchValue,
+    inputValue,
     value: selectValue,
     shouldFilter,
     hasItems,
@@ -39,18 +41,38 @@ export function SelectItem({
   const isSelected = multiple
     ? selectValue?.includes(value)
     : value === selectValue;
-  const isMatched = getMatch(value, children, searchValue);
+  const isMatched = getMatch(value, children, inputValue);
   const isHidden = shouldFilter && !hasItems && isSelected && !isMatched;
 
   const element =
     typeof children === 'string' ? (
       <>
         {leadingIcon && (
-          <div className={styles.itemIcon} data-slot='select-item-icon'>
+          <div className={styles.itemIcon} data-slot='select-item-leading-icon'>
             {leadingIcon}
           </div>
         )}
-        <Text data-slot='select-item-text'>{children}</Text>
+        {autocomplete ? (
+          <Text className={styles.itemText} data-slot='select-item-text'>
+            {children}
+          </Text>
+        ) : (
+          <SelectPrimitive.ItemText
+            render={<Text />}
+            className={styles.itemText}
+            data-slot='select-item-text'
+          >
+            {children}
+          </SelectPrimitive.ItemText>
+        )}
+        {trailingIcon && (
+          <div
+            className={cx(styles.itemIcon, styles.itemTrailingIcon)}
+            data-slot='select-item-trailing-icon'
+          >
+            {trailingIcon}
+          </div>
+        )}
       </>
     ) : (
       children
@@ -81,7 +103,7 @@ export function SelectItem({
       {...props}
       render={(renderProps, state) => (
         <div {...renderProps}>
-          {multiple && <Checkbox checked={state.selected} />}
+          {multiple && <Checkbox checked={state.selected} tabIndex={-1} />}
           {element}
         </div>
       )}

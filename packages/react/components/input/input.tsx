@@ -1,8 +1,14 @@
 import { Input as InputPrimitive } from '@base-ui/react/input';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
-import { ReactNode, RefObject } from 'react';
+import {
+  Fragment,
+  isValidElement,
+  ReactElement,
+  ReactNode,
+  RefObject
+} from 'react';
 import { radiusVariants } from '../../shared/radius';
-import { Chip } from '../chip';
+import { Chip, type ChipProps } from '../chip';
 import { useFieldContext } from '../field';
 import styles from './input.module.css';
 
@@ -14,13 +20,13 @@ const inputWrapper = cva(styles['input-wrapper'], {
       medium: styles['size-medium']
     },
     variant: {
-      default: styles['variant-default'],
-      borderless: styles['variant-borderless']
+      outline: null,
+      text: styles['variant-text']
     }
   },
   defaultVariants: {
     size: 'medium',
-    variant: 'default'
+    variant: 'outline'
   }
 });
 
@@ -32,9 +38,10 @@ export interface InputProps
   trailingIcon?: ReactNode;
   prefix?: string;
   suffix?: string;
-  chips?: Array<{ label: string; onRemove?: () => void }>;
+  /** Chips shown before the text. Elements render as given; props render a `Chip`. */
+  chips?: Array<ReactElement | ChipProps>;
   maxChipsVisible?: number;
-  variant?: 'default' | 'borderless';
+  variant?: 'outline' | 'text';
   containerRef?: RefObject<HTMLDivElement | null>;
   /** @deprecated Use `[data-slot="input-container"]` instead. */
   classNames?: { container?: string };
@@ -52,7 +59,7 @@ export function Input({
   maxChipsVisible = 2,
   size,
   radius,
-  variant = 'default',
+  variant = 'outline',
   containerRef,
   classNames,
   required,
@@ -91,19 +98,22 @@ export function Input({
         className={styles['chip-input-container']}
         data-slot='input-chip-container'
       >
-        {chips?.slice(0, maxChipsVisible).map((chip, index) => (
-          <Chip
-            key={index}
-            variant='outline'
-            isDismissible={!disabled && !!chip.onRemove}
-            onDismiss={disabled ? undefined : chip.onRemove}
-            className={styles.chip}
-            disabled={disabled}
-            data-slot='input-chip'
-          >
-            {chip.label}
-          </Chip>
-        ))}
+        {chips
+          ?.slice(0, maxChipsVisible)
+          .map((chip, index) =>
+            isValidElement(chip) ? (
+              <Fragment key={chip.key ?? index}>{chip}</Fragment>
+            ) : (
+              <Chip
+                key={index}
+                variant='outline'
+                data-slot='input-chip'
+                {...chip}
+                className={cx(styles.chip, chip.className)}
+                disabled={disabled || chip.disabled}
+              />
+            )
+          )}
         {chips && chips.length > maxChipsVisible && (
           <span
             className={styles['chip-overflow']}
@@ -137,7 +147,6 @@ export function Input({
       {trailingIcon && (
         <div
           className={styles['trailing-icon']}
-          aria-hidden='true'
           data-slot='input-trailing-icon'
         >
           {trailingIcon}

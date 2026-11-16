@@ -50,7 +50,7 @@ function Controls() {
     options: readonly string[]
   ) => (
     <Flex direction='column' gap={2} key={key}>
-      <Text size='mini' variant='secondary'>
+      <Text size='mini' color='secondary'>
         {label}
       </Text>
       <Select
@@ -82,7 +82,7 @@ function Controls() {
       {field('Reduced motion', 'reducedMotion', SETTING_VALUES.reducedMotion)}
 
       <Separator />
-      <Text size='mini' variant='secondary'>
+      <Text size='mini' color='secondary'>
         Resolved: {resolved.appearance} · {resolved.grayColor}
       </Text>
     </Flex>

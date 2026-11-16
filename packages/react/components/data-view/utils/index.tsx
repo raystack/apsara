@@ -6,6 +6,7 @@ import {
 } from '@tanstack/table-core';
 
 import { toDayKey, withDateFilterTypes } from '~/shared/date-filters';
+import { dropDisallowedFilters } from '~/shared/filter-operations';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import {
   DataViewField,
@@ -232,6 +233,10 @@ export const hasActiveQuery = (
   return hasFilters || hasSearch || sortChanged || groupChanged;
 };
 
+/** Compares two wire queries by value, so a JSON copy matches its source. */
+export const isSameQuery = (a?: DataViewQuery, b?: DataViewQuery): boolean =>
+  JSON.stringify(a) === JSON.stringify(b);
+
 export const hasQueryChanged = (
   oldQuery: InternalQuery | null,
   newQuery: InternalQuery
@@ -404,7 +409,10 @@ export function hasActiveTableFiltering<T>(table: Table<T>): boolean {
 export function getDefaultTableQuery(
   defaultSort: DataViewSort,
   oldQuery: DataViewQuery = {},
-  fields: Pick<DataViewField, 'accessorKey' | 'filterType'>[] = []
+  fields: Pick<
+    DataViewField,
+    'accessorKey' | 'filterType' | 'filterOperations'
+  >[] = []
 ): InternalQuery {
   const internalQuery = dataViewQueryToInternal(oldQuery);
   return {
@@ -412,7 +420,10 @@ export function getDefaultTableQuery(
     group_by: [defaultGroupOption.id],
     ...internalQuery,
     ...(internalQuery.filters && {
-      filters: withDateFilterTypes(internalQuery.filters, fields)
+      filters: dropDisallowedFilters(
+        withDateFilterTypes(internalQuery.filters, fields),
+        fields
+      )
     })
   };
 }

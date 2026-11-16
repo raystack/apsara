@@ -10,10 +10,10 @@ export interface ContainerProps {
   size?: 'small' | 'medium' | 'large' | 'none';
 
   /**
-   * Controls the horizontal alignment of the container
+   * Controls the horizontal alignment of the container. `start` and `end` follow the text direction.
    * @defaultValue "center"
    */
-  align?: 'left' | 'center' | 'right';
+  align?: 'start' | 'center' | 'end';
 
   /**
    * Renders the container as a different element.

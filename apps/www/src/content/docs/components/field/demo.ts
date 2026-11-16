@@ -118,7 +118,9 @@ export const withSelectDemo = {
   type: 'code',
   code: `<Field label="Country" required>
   <Select>
-    <Select.Trigger />
+    <Select.Trigger>
+      <Select.Value placeholder="Select a country" />
+    </Select.Trigger>
     <Select.Content>
       <Select.Item value="us">United States</Select.Item>
       <Select.Item value="uk">United Kingdom</Select.Item>

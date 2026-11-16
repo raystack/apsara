@@ -4,12 +4,15 @@ import { Toast as ToastPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import { ErrorIcon, InfoIcon, SuccessIcon, WarningIcon, XIcon } from '~/icons';
+import { Arrow } from '../../shared/arrow';
+import { type Radius, radiusStyle } from '../../shared/radius';
 import { Button } from '../button';
 import { Flex } from '../flex';
 import { IconButton } from '../icon-button';
 import { Spinner } from '../spinner';
+import tooltipStyles from '../tooltip/tooltip.module.css';
 import styles from './toast.module.css';
-import type { ToastData } from './toast-manager';
+import type { ToastAddOptions, ToastData } from './toast-manager';
 import type { ToastPosition } from './toast-provider';
 
 const TOAST_ICONS: Record<string, ReactNode> = {
@@ -18,7 +21,7 @@ const TOAST_ICONS: Record<string, ReactNode> = {
   error: <ErrorIcon />,
   warning: <WarningIcon />,
   info: <InfoIcon />,
-  loading: <Spinner size={2} color='default' />
+  loading: <Spinner size={2} color='inherit' />
 };
 
 type SwipeDirection = 'up' | 'down' | 'left' | 'right';
@@ -41,12 +44,15 @@ function getSwipeDirection(position: ToastPosition): SwipeDirection[] {
 
 export interface ToastRootProps extends ToastPrimitive.Root.Props {
   position?: ToastPosition;
+  /** Corner radius for this toast only. Overrides the theme's `radius`. */
+  radius?: Radius;
 }
 
 export function ToastRoot({
   toast,
   className,
   position = 'bottom-right',
+  radius,
   ...props
 }: ToastRootProps) {
   const swipeDirection = getSwipeDirection(position);
@@ -67,7 +73,7 @@ export function ToastRoot({
   return (
     <ToastPrimitive.Root
       toast={toast}
-      className={cx(styles.root, className)}
+      className={cx(styles.root, radiusStyle({ radius }), className)}
       swipeDirection={swipeDirection}
       data-position={position}
       data-slot='toast'
@@ -153,3 +159,40 @@ export function ToastRoot({
 }
 
 ToastRoot.displayName = 'Toast';
+
+interface AnchoredToastRootProps {
+  toast: ToastPrimitive.Root.Props['toast'] &
+    Pick<ToastAddOptions, 'showArrow'>;
+}
+
+export function AnchoredToastRoot({ toast }: AnchoredToastRootProps) {
+  const title = toast.title ?? toast.description;
+  return (
+    <ToastPrimitive.Positioner
+      toast={toast}
+      sideOffset={
+        toast.positionerProps?.sideOffset ?? (toast.showArrow ? 10 : 4)
+      }
+      className={styles.positioner}
+      data-slot='toast-positioner'
+    >
+      <ToastPrimitive.Root
+        toast={toast}
+        className={cx(tooltipStyles.content, styles.anchored)}
+        data-slot='toast'
+      >
+        {title && (
+          <ToastPrimitive.Title
+            className={styles.anchoredTitle}
+            data-slot='toast-title'
+          >
+            {title}
+          </ToastPrimitive.Title>
+        )}
+        {toast.showArrow && (
+          <ToastPrimitive.Arrow data-slot='toast-arrow' render={<Arrow />} />
+        )}
+      </ToastPrimitive.Root>
+    </ToastPrimitive.Positioner>
+  );
+}

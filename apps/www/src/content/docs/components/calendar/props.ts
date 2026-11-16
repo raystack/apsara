@@ -77,10 +77,10 @@ export interface CalendarProps {
     | ((date: Date) => boolean);
 
   /**
-   * Boolean to show loading state.
-   * @example loadingData={true}
+   * Shows a skeleton over the days and disables navigation.
+   * @defaultValue false
    */
-  loadingData?: boolean;
+  loading?: boolean;
 
   /**
    * Enable tooltips on dates that have a matching `tooltipMessages` entry.
@@ -138,6 +138,11 @@ export interface CalendarProps {
 
 export interface RangePickerProps {
   /**
+   * Additional CSS class names for the group that holds the start and end inputs. Ignored when `children` is set.
+   */
+  pickerGroupClassName?: string;
+
+  /**
    * Format for displaying the date. Supports various formats:
    * - With slashes: "DD/MM/YYYY", "MM/DD/YYYY", "YYYY/MM/DD"
    * - With dashes: "DD-MM-YYYY", "MM-DD-YYYY", "YYYY-MM-DD"
@@ -150,24 +155,27 @@ export interface RangePickerProps {
   dateFormat?: string;
 
   /**
-   * Fires on every step of range selection — not only on the completed range.
-   * Both fields are optional during partial selection; gate on `range.to` if
-   * you only want completed ranges.
+   * Fires on each day picked in the calendar. `from` is always set, and `to`
+   * is set only when the range is complete. Check `range.to` to handle only
+   * completed ranges.
    */
-  onSelect?: (range: { from?: Date; to?: Date }) => void;
+  onValueChange?: (
+    range: { from: Date | undefined; to?: Date },
+    details: { reason: 'item-press'; event: Event }
+  ) => void;
 
   /** Initial (uncontrolled) date range. */
-  defaultValue?: { from?: Date; to?: Date };
+  defaultValue?: { from: Date | undefined; to?: Date };
 
   /** Controlled date range. */
-  value?: { from?: Date; to?: Date };
+  value?: { from: Date | undefined; to?: Date };
 
   /**
    * Props for each picker slot. When both this and the legacy
    * `inputsProps` / `calendarProps` / `popoverProps` are set, `slotProps` wins.
    *
-   * Input event handlers (`onChange`, `onFocus`, `onBlur`, `onKeyUp`) are not
-   * forwarded — use `onSelect` for value changes.
+   * The inputs are read-only. RangePicker replaces their `value` and `onClick`.
+   * Use `onValueChange` for value changes.
    */
   slotProps?: {
     startInput?: InputProps;
@@ -193,10 +201,10 @@ export interface RangePickerProps {
     | ((props: { startDate: string; endDate: string }) => React.ReactNode);
 
   /**
-   * Boolean to show/hide calendar icon
-   * @defaultValue true
+   * Hides the calendar icon in the input.
+   * @defaultValue false
    */
-  showCalendarIcon?: boolean;
+  hideCalendarIcon?: boolean;
 
   /** Optional footer content for the calendar popover */
   footer?: React.ReactNode;
@@ -225,7 +233,7 @@ export interface DatePickerProps {
    * `inputProps` / `calendarProps` / `popoverProps` are set, `slotProps` wins.
    *
    * Input event handlers (`onChange`, `onFocus`, `onBlur`, `onKeyUp`) are not
-   * forwarded — use `onSelect` for value changes.
+   * forwarded — use `onValueChange` for value changes.
    */
   slotProps?: {
     input?: InputProps;
@@ -234,11 +242,12 @@ export interface DatePickerProps {
   };
 
   /**
-   * Controlled date value. Pair with `onSelect`. Omit (along with
-   * `defaultValue`) to start the picker in an unselected state — the
-   * input shows its placeholder until the user selects a date.
+   * Controlled date value. Pair with `onValueChange`. Pass `null` for a
+   * controlled empty date. Omit (along with `defaultValue`) to start the
+   * picker in an unselected state — the input shows its placeholder until
+   * the user selects a date.
    */
-  value?: Date;
+  value?: Date | null;
 
   /**
    * Initial (uncontrolled) date value. Ignored if `value` is set. Omit to
@@ -246,21 +255,21 @@ export interface DatePickerProps {
    */
   defaultValue?: Date;
 
-  /** Callback function when date is selected */
-  onSelect?: (date: Date) => void;
-
   /**
-   * Fires when the typed-input validation state changes: with a message when
-   * the typed text stops parsing as a valid in-bounds date, and with
-   * `undefined` when it becomes valid again (or the picker commits/closes).
-   * DatePicker renders no error UI of its own — not even `aria-invalid`.
-   * Lift this into `Field`'s `error` prop (or your form library) to display
-   * it; `Field` also wires `aria-invalid` onto the input.
+   * Called when a day is clicked, and when a typed date is committed with
+   * Enter, blur or an outside click.
    */
-  onErrorChange?: (error: string | undefined) => void;
+  onValueChange?: (
+    date: Date,
+    details: { reason: 'item-press' | 'input-change'; event: Event }
+  ) => void;
 
-  /** @deprecated Use `slotProps.calendar` instead. */
-  calendarProps?: CalendarProps;
+  /** Called when the typed date becomes invalid or valid again. */
+  onValidityChange?: (validity: {
+    valid: boolean;
+    reason?: 'unparseable' | 'out-of-bounds' | 'unavailable' | 'out-of-order';
+    message?: string;
+  }) => void;
 
   /**
    * Render prop or custom trigger. Pass a function to render a custom trigger
@@ -279,10 +288,10 @@ export interface DatePickerProps {
     | ((props: { selectedDate: string }) => React.ReactNode);
 
   /**
-   * Boolean to show/hide calendar icon
-   * @defaultValue true
+   * Hides the calendar icon in the input.
+   * @defaultValue false
    */
-  showCalendarIcon?: boolean;
+  hideCalendarIcon?: boolean;
 
   /**
    * IANA timezone name (e.g., "America/New_York"), "UTC", or UTC offset (e.g., "+02:00").

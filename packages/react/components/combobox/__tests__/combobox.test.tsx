@@ -98,7 +98,10 @@ describe('Combobox', () => {
       const bananaOption = await screen.findByText('Banana');
       await clickOption(bananaOption);
 
-      expect(handleValueChange).toHaveBeenCalledWith('banana');
+      expect(handleValueChange).toHaveBeenCalledWith(
+        'banana',
+        expect.objectContaining({ reason: 'item-press' })
+      );
     });
 
     it('closes content after selection in single mode', async () => {
@@ -145,11 +148,17 @@ describe('Combobox', () => {
 
       const bananaOption = await screen.findByText('Banana');
       await clickOption(bananaOption);
-      expect(handleValueChange).toHaveBeenCalledWith(['banana']);
+      expect(handleValueChange).toHaveBeenCalledWith(
+        ['banana'],
+        expect.anything()
+      );
 
       const pineappleOption = await screen.findByText('Pineapple');
       await clickOption(pineappleOption);
-      expect(handleValueChange).toHaveBeenCalledWith(['banana', 'pineapple']);
+      expect(handleValueChange).toHaveBeenCalledWith(
+        ['banana', 'pineapple'],
+        expect.anything()
+      );
     });
 
     it('allows deselecting items in multiple mode', async () => {
@@ -162,10 +171,13 @@ describe('Combobox', () => {
 
       const bananaOption = await screen.findByText('Banana');
       await clickOption(bananaOption);
-      expect(handleValueChange).toHaveBeenCalledWith(['banana']);
+      expect(handleValueChange).toHaveBeenCalledWith(
+        ['banana'],
+        expect.anything()
+      );
 
       await clickOption(bananaOption);
-      expect(handleValueChange).toHaveBeenCalledWith([]);
+      expect(handleValueChange).toHaveBeenCalledWith([], expect.anything());
     });
 
     it('keeps dropdown open after selection in multiple mode', async () => {
@@ -338,7 +350,7 @@ describe('Combobox', () => {
       const input = screen.getByRole('combobox');
       await user.type(input, 'a');
 
-      expect(handleInputChange).toHaveBeenCalledWith('a');
+      expect(handleInputChange).toHaveBeenCalledWith('a', expect.anything());
     });
   });
 
@@ -350,13 +362,13 @@ describe('Combobox', () => {
           <Combobox.Input placeholder='Select' />
           <Combobox.Content>
             <Combobox.Group>
-              <Combobox.Label>Fruits</Combobox.Label>
+              <Combobox.GroupLabel>Fruits</Combobox.GroupLabel>
               <Combobox.Item value='apple'>Apple</Combobox.Item>
               <Combobox.Item value='banana'>Banana</Combobox.Item>
             </Combobox.Group>
             <Combobox.Separator />
             <Combobox.Group>
-              <Combobox.Label>Vegetables</Combobox.Label>
+              <Combobox.GroupLabel>Vegetables</Combobox.GroupLabel>
               <Combobox.Item value='carrot'>Carrot</Combobox.Item>
               <Combobox.Item value='broccoli'>Broccoli</Combobox.Item>
             </Combobox.Group>
@@ -382,7 +394,7 @@ describe('Combobox', () => {
           <Combobox.Input placeholder='Select' />
           <Combobox.Content>
             <Combobox.Group>
-              <Combobox.Label>Fruits</Combobox.Label>
+              <Combobox.GroupLabel>Fruits</Combobox.GroupLabel>
               <Combobox.Item value='apple'>Apple</Combobox.Item>
             </Combobox.Group>
           </Combobox.Content>
@@ -449,6 +461,33 @@ describe('Combobox', () => {
       const input = screen.getByRole('combobox');
       expect(input).toHaveValue('test');
     });
+
+    it('filters items by a controlled inputValue', () => {
+      const handleInputChange = vi.fn();
+      render(
+        <BasicCombobox
+          defaultOpen
+          inputValue='ban'
+          onInputValueChange={handleInputChange}
+        />
+      );
+      const input = screen.getByRole('combobox');
+
+      fireEvent.change(input, { target: { value: 'app' } });
+
+      expect(handleInputChange).toHaveBeenCalledWith('app', expect.anything());
+      expect(input).toHaveValue('ban');
+      expect(screen.getByText('Banana')).toBeInTheDocument();
+      expect(screen.queryByText('Apple')).not.toBeInTheDocument();
+    });
+
+    it('filters items by defaultInputValue', () => {
+      render(<BasicCombobox defaultOpen defaultInputValue='ban' />);
+
+      expect(screen.getByRole('combobox')).toHaveValue('ban');
+      expect(screen.getByText('Banana')).toBeInTheDocument();
+      expect(screen.queryByText('Apple')).not.toBeInTheDocument();
+    });
   });
 
   describe('Accessibility', () => {
@@ -512,7 +551,10 @@ describe('Combobox', () => {
       const appleOption = await screen.findByText('Apple');
       await clickOption(appleOption);
 
-      expect(handleValueChange).toHaveBeenCalledWith('Apple');
+      expect(handleValueChange).toHaveBeenCalledWith(
+        'Apple',
+        expect.anything()
+      );
     });
   });
 });
@@ -551,7 +593,7 @@ describe('Combobox.createItems', () => {
     await user.click(screen.getByRole('combobox'));
     await clickOption(await screen.findByText('John Smith'));
 
-    expect(onValueChange).toHaveBeenCalledWith('u2');
+    expect(onValueChange).toHaveBeenCalledWith('u2', expect.anything());
   });
 
   it('filters by the derived label', async () => {
@@ -565,5 +607,231 @@ describe('Combobox.createItems', () => {
       expect(screen.queryByText('Jane Doe')).not.toBeInTheDocument();
       expect(screen.queryByText('Ada Lovelace')).not.toBeInTheDocument();
     });
+  });
+});
+
+describe('Combobox chips', () => {
+  // Without `items` on the root, chips show the raw value.
+  it('renders chips in a toolbar', () => {
+    render(<BasicCombobox multiple defaultValue={['apple', 'banana']} />);
+    const toolbar = screen.getByRole('toolbar');
+    expect(toolbar).toContainElement(screen.getByRole('combobox'));
+    expect(screen.getByText('apple')).toBeInTheDocument();
+    expect(screen.getByText('banana')).toBeInTheDocument();
+  });
+
+  it('removes the last chip on Backspace in an empty input', async () => {
+    const user = userEvent.setup();
+    const handleValueChange = vi.fn();
+    render(
+      <BasicCombobox
+        multiple
+        defaultValue={['apple', 'banana']}
+        onValueChange={handleValueChange}
+      />
+    );
+    await user.click(screen.getByRole('combobox'));
+    await user.keyboard('{Backspace}');
+
+    expect(handleValueChange).toHaveBeenLastCalledWith(
+      ['apple'],
+      expect.anything()
+    );
+    expect(
+      screen.queryByRole('button', { name: 'Remove banana' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('removes a chip with its remove button', async () => {
+    const user = userEvent.setup();
+    const handleValueChange = vi.fn();
+    render(
+      <BasicCombobox
+        multiple
+        defaultValue={['apple', 'banana']}
+        onValueChange={handleValueChange}
+      />
+    );
+    await user.click(screen.getByRole('button', { name: 'Remove apple' }));
+
+    expect(handleValueChange).toHaveBeenLastCalledWith(
+      ['banana'],
+      expect.anything()
+    );
+    expect(
+      screen.queryByRole('button', { name: 'Remove apple' })
+    ).not.toBeInTheDocument();
+  });
+});
+
+describe('Combobox.Clear', () => {
+  it('clears all selected values', async () => {
+    const user = userEvent.setup();
+    const handleValueChange = vi.fn();
+    render(
+      <Combobox
+        multiple
+        defaultValue={['apple', 'banana']}
+        onValueChange={handleValueChange}
+      >
+        <Combobox.Input placeholder={PLACEHOLDER_TEXT} />
+        <Combobox.Clear />
+        <Combobox.Content>
+          {FRUIT_OPTIONS.map(option => (
+            <Combobox.Item key={option.value} value={option.value}>
+              {option.label}
+            </Combobox.Item>
+          ))}
+        </Combobox.Content>
+      </Combobox>
+    );
+    await user.click(screen.getByRole('button', { name: 'Clear' }));
+
+    expect(handleValueChange).toHaveBeenLastCalledWith([], expect.anything());
+    expect(screen.getByRole('combobox')).toHaveAttribute(
+      'placeholder',
+      PLACEHOLDER_TEXT
+    );
+  });
+
+  it('renders inside the input box with showClearButton', async () => {
+    const user = userEvent.setup();
+    const handleValueChange = vi.fn();
+    const { container } = render(
+      <Combobox
+        multiple
+        defaultValue={['apple', 'banana']}
+        onValueChange={handleValueChange}
+      >
+        <Combobox.Input placeholder={PLACEHOLDER_TEXT} showClearButton />
+        <Combobox.Content>
+          <Combobox.Item value='apple'>Apple</Combobox.Item>
+        </Combobox.Content>
+      </Combobox>
+    );
+    const clear = screen.getByRole('button', { name: 'Clear' });
+    expect(
+      container.querySelector('[data-slot="input-trailing-icon"]')
+    ).toContainElement(clear);
+
+    await user.click(clear);
+
+    expect(handleValueChange).toHaveBeenLastCalledWith([], expect.anything());
+  });
+
+  it('is disabled when Combobox.Input is disabled', () => {
+    render(
+      <Combobox multiple defaultValue={['apple']}>
+        <Combobox.Input
+          placeholder={PLACEHOLDER_TEXT}
+          disabled
+          showClearButton
+        />
+        <Combobox.Content>
+          <Combobox.Item value='apple'>Apple</Combobox.Item>
+        </Combobox.Content>
+      </Combobox>
+    );
+    expect(screen.getByRole('button', { name: 'Clear' })).toBeDisabled();
+  });
+});
+
+describe('Combobox disabled', () => {
+  it('disables the input when the root is disabled', () => {
+    render(<BasicCombobox disabled />);
+    expect(screen.getByRole('combobox')).toBeDisabled();
+  });
+});
+
+describe('Combobox.Empty', () => {
+  it('renders "No results" outside the listbox by default', async () => {
+    const user = userEvent.setup();
+    render(<BasicCombobox />);
+    await user.type(screen.getByRole('combobox'), 'zzz');
+
+    const empty = await screen.findByText(/^No results/);
+    expect(empty).toHaveAttribute('data-slot', 'combobox-empty');
+    expect(screen.getByRole('listbox')).not.toContainElement(empty);
+  });
+
+  it('works with items on the root', async () => {
+    const user = userEvent.setup();
+    render(
+      <Combobox items={FRUIT_OPTIONS.map(option => option.label)}>
+        <Combobox.Input placeholder={PLACEHOLDER_TEXT} />
+        <Combobox.Content>
+          {(item: string) => (
+            <Combobox.Item key={item} value={item}>
+              {item}
+            </Combobox.Item>
+          )}
+        </Combobox.Content>
+      </Combobox>
+    );
+    const input = screen.getByRole('combobox');
+
+    await user.type(input, 'ban');
+    await screen.findByText('Banana');
+    expect(screen.queryByText('No results')).not.toBeInTheDocument();
+
+    await user.type(input, 'zzz');
+    expect(await screen.findByText('No results')).toBeInTheDocument();
+  });
+
+  it('renders custom text outside the listbox', async () => {
+    const user = userEvent.setup();
+    render(
+      <Combobox>
+        <Combobox.Input placeholder={PLACEHOLDER_TEXT} />
+        <Combobox.Content>
+          <Combobox.Empty>No fruit found</Combobox.Empty>
+          <Combobox.Item value='apple'>Apple</Combobox.Item>
+        </Combobox.Content>
+      </Combobox>
+    );
+    await user.type(screen.getByRole('combobox'), 'zzz');
+
+    const empty = await screen.findByText('No fruit found');
+    expect(empty).toHaveAttribute('role', 'status');
+    expect(screen.getByRole('listbox')).not.toContainElement(empty);
+  });
+});
+
+describe('Combobox.Status', () => {
+  it('passes the number of matching items to its children', async () => {
+    const user = userEvent.setup();
+    render(
+      <Combobox items={FRUIT_OPTIONS.map(option => option.label)}>
+        <Combobox.Input placeholder={PLACEHOLDER_TEXT} />
+        <Combobox.Status>{count => `${count} results`}</Combobox.Status>
+        <Combobox.Content>
+          {(item: string) => (
+            <Combobox.Item key={item} value={item}>
+              {item}
+            </Combobox.Item>
+          )}
+        </Combobox.Content>
+      </Combobox>
+    );
+    await user.type(screen.getByRole('combobox'), 'b');
+
+    await waitFor(() => {
+      expect(screen.getByText(/^2 results/)).toHaveAttribute('role', 'status');
+    });
+  });
+});
+
+describe('Combobox.Label', () => {
+  it('labels the input', () => {
+    render(
+      <Combobox>
+        <Combobox.Label>Fruit</Combobox.Label>
+        <Combobox.Input placeholder={PLACEHOLDER_TEXT} />
+        <Combobox.Content>
+          <Combobox.Item value='apple'>Apple</Combobox.Item>
+        </Combobox.Content>
+      </Combobox>
+    );
+    expect(screen.getByLabelText('Fruit')).toBe(screen.getByRole('combobox'));
   });
 });

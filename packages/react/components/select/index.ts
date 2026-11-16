@@ -2,6 +2,8 @@ export { Select } from './select';
 export type { SelectContentProps } from './select-content';
 export type { SelectItemProps } from './select-item';
 export type {
+  SelectEmptyProps,
+  SelectGroupLabelProps,
   SelectGroupProps,
   SelectLabelProps,
   SelectSeparatorProps

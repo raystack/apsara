@@ -32,14 +32,15 @@ describe('Combobox data-slot contract', () => {
     expect(getSlot(container, 'combobox-input')).not.toBeNull();
   });
 
-  it('exposes content, list, group, label, separator and item slots when open', async () => {
+  it('exposes content, list, group, group label, separator and item slots when open', async () => {
     const user = userEvent.setup();
     render(
       <Combobox>
         <Combobox.Input placeholder='Enter a fruit' />
+        <Combobox.Status />
         <Combobox.Content>
           <Combobox.Group>
-            <Combobox.Label>Fruits</Combobox.Label>
+            <Combobox.GroupLabel>Fruits</Combobox.GroupLabel>
             {FRUIT_OPTIONS.map(option => (
               <Combobox.Item key={option.value} value={option.value}>
                 {option.label}
@@ -64,20 +65,26 @@ describe('Combobox data-slot contract', () => {
       'combobox-content',
       'combobox-list',
       'combobox-group',
-      'combobox-label',
+      'combobox-group-label',
       'combobox-separator',
       'combobox-item',
-      'combobox-item-text'
+      'combobox-item-text',
+      'combobox-status',
+      'combobox-empty'
     ]);
   });
 
-  it('exposes the leading icon slot on items when provided', async () => {
+  it('exposes the leading and trailing icon slots on items when provided', async () => {
     const user = userEvent.setup();
     render(
       <Combobox>
         <Combobox.Input placeholder='Enter a fruit' />
         <Combobox.Content>
-          <Combobox.Item value='apple' leadingIcon={<span>i</span>}>
+          <Combobox.Item
+            value='apple'
+            leadingIcon={<span>i</span>}
+            trailingIcon={<span>t</span>}
+          >
             Apple
           </Combobox.Item>
         </Combobox.Content>
@@ -87,7 +94,38 @@ describe('Combobox data-slot contract', () => {
     await user.click(input);
 
     await waitFor(() => {
-      expect(getSlot(document.body, 'combobox-item-icon')).not.toBeNull();
+      expect(
+        getSlot(document.body, 'combobox-item-leading-icon')
+      ).not.toBeNull();
+      expect(
+        getSlot(document.body, 'combobox-item-trailing-icon')
+      ).not.toBeNull();
     });
+  });
+
+  it('exposes the label, clear and chip slots in multiple mode', () => {
+    const { container } = render(
+      <Combobox multiple defaultValue={['apple', 'banana', 'cherry']}>
+        <Combobox.Label>Fruits</Combobox.Label>
+        <Combobox.Input placeholder='Enter a fruit' />
+        <Combobox.Clear />
+        <Combobox.Content>
+          {FRUIT_OPTIONS.map(option => (
+            <Combobox.Item key={option.value} value={option.value}>
+              {option.label}
+            </Combobox.Item>
+          ))}
+        </Combobox.Content>
+      </Combobox>
+    );
+    expectSlots(container, [
+      'combobox-label',
+      'combobox-input',
+      'combobox-clear',
+      'combobox-chips',
+      'combobox-chip',
+      'combobox-chip-remove',
+      'input-chip-overflow'
+    ]);
   });
 });

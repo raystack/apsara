@@ -3,9 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { expectSlots, getSlot } from '~/test-utils/data-slots';
 import { Drawer } from '../drawer';
 
-const OpenDrawer = ({ showCloseButton = true }) => (
+const OpenDrawer = ({ hideCloseButton = false }) => (
   <Drawer open>
-    <Drawer.Content showCloseButton={showCloseButton}>
+    <Drawer.Content hideCloseButton={hideCloseButton}>
       <Drawer.Header>
         <Drawer.Title>Title</Drawer.Title>
         <Drawer.Description>Description</Drawer.Description>
@@ -35,7 +35,24 @@ describe('Drawer data-slot contract', () => {
   });
 
   it('omits the close slot when the close button is hidden', () => {
-    render(<OpenDrawer showCloseButton={false} />);
+    render(<OpenDrawer hideCloseButton />);
     expect(getSlot(document.body, 'drawer-close')).toBeNull();
+  });
+
+  it('exposes slots for the swipe area and indent parts', () => {
+    render(
+      <Drawer.Provider>
+        <Drawer.Indent>
+          <Drawer>
+            <Drawer.SwipeArea />
+          </Drawer>
+        </Drawer.Indent>
+      </Drawer.Provider>
+    );
+    expectSlots(document.body, [
+      'drawer-swipe-area',
+      'drawer-indent',
+      'drawer-indent-background'
+    ]);
   });
 });

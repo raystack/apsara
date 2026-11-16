@@ -1,5 +1,6 @@
 'use client';
 
+import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
 import {
   ComponentProps,
@@ -8,6 +9,10 @@ import {
   useContext,
   useState
 } from 'react';
+import {
+  type ChangeDetails,
+  createChangeDetails
+} from '~/shared/change-details';
 import styles from './code-block.module.css';
 
 interface CodeBlockCommonProps {
@@ -21,7 +26,7 @@ interface CodeBlockContextValue extends CodeBlockCommonProps {
   setValue: (value: string) => void;
   code?: string;
   setCode: (code: string) => void;
-  toggleCollapsed: () => void;
+  toggleCollapsed: (event: Event) => void;
 }
 
 const CodeBlockContext = createContext<CodeBlockContextValue | undefined>(
@@ -36,14 +41,20 @@ export const useCodeBlockContext = () => {
   return context;
 };
 
+export type CodeBlockCollapseChangeDetails = ChangeDetails<'trigger-press'>;
+
 export interface CodeBlockProps
   extends ComponentProps<'div'>,
     CodeBlockCommonProps {
   defaultValue?: string;
+  /** @deprecated Has no effect. */
   maxHeight?: string | number;
   onValueChange?: (value: string) => void;
   defaultCollapsed?: boolean;
-  onCollapseChange?: (value: boolean) => void;
+  onCollapseChange?: (
+    value: boolean,
+    details: CodeBlockCollapseChangeDetails
+  ) => void;
 }
 
 export const CodeBlockRoot = ({
@@ -60,32 +71,36 @@ export const CodeBlockRoot = ({
   onCollapseChange,
   ...props
 }: CodeBlockProps) => {
-  const [internalValue, setInternalValue] = useState<string | undefined>(
-    defaultValue
-  );
+  const [value, setValueUnwrapped] = useControlled<string | undefined>({
+    controlled: providedValue,
+    default: defaultValue,
+    name: 'CodeBlock',
+    state: 'value'
+  });
   const [code, setCode] = useState<string | undefined>();
-  const [internalCollapsed, setInternalCollapsed] = useState<boolean>(
-    defaultCollapsed ?? false
-  );
-
-  const collapsed = providedCollapsed ?? internalCollapsed;
-
-  const value = providedValue ?? internalValue ?? defaultValue;
+  const [collapsed, setCollapsedUnwrapped] = useControlled({
+    controlled: providedCollapsed,
+    default: defaultCollapsed,
+    name: 'CodeBlock',
+    state: 'collapsed'
+  });
 
   const setValue = useCallback(
     (newValue: string) => {
-      setInternalValue(newValue);
+      setValueUnwrapped(newValue);
       onValueChange?.(newValue);
     },
-    [onValueChange]
+    [onValueChange, setValueUnwrapped]
   );
 
-  const toggleCollapsed = useCallback(() => {
-    setInternalCollapsed(_internalCollapsed => {
-      onCollapseChange?.(!_internalCollapsed);
-      return !_internalCollapsed;
-    });
-  }, [onCollapseChange]);
+  const toggleCollapsed = useCallback(
+    (event: Event) => {
+      const next = !collapsed;
+      setCollapsedUnwrapped(next);
+      onCollapseChange?.(next, createChangeDetails('trigger-press', event));
+    },
+    [collapsed, onCollapseChange, setCollapsedUnwrapped]
+  );
 
   return (
     <CodeBlockContext

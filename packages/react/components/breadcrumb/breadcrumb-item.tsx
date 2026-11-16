@@ -19,7 +19,7 @@ export type BreadcrumbDropdownItem = ComponentProps<typeof Menu.Item> & {
 export interface BreadcrumbItemProps extends useRender.ComponentProps<'a'> {
   leadingIcon?: ReactNode;
   trailingIcon?: ReactNode;
-  current?: boolean;
+  active?: boolean;
   /** When true, the item is non-clickable and visually muted (e.g. loading or no access). */
   disabled?: boolean;
   dropdownItems?: BreadcrumbDropdownItem[];
@@ -32,7 +32,7 @@ export const BreadcrumbItem = ({
   className,
   leadingIcon,
   trailingIcon,
-  current,
+  active,
   disabled,
   href,
   dropdownItems,
@@ -136,7 +136,7 @@ export const BreadcrumbItem = ({
     );
   }
 
-  if (disabled || current) {
+  if (disabled || active) {
     return (
       <li
         className={cx(styles['breadcrumb-item'], className)}
@@ -147,14 +147,14 @@ export const BreadcrumbItem = ({
           className={cx(
             styles['breadcrumb-link'],
             disabled && styles['breadcrumb-link-disabled'],
-            current && styles['breadcrumb-link-active']
+            active && styles['breadcrumb-link-active']
           )}
           data-slot='breadcrumb-link'
           {...(disabled && {
             'aria-disabled': 'true',
             'data-disabled': 'true'
           })}
-          {...(current && { 'aria-current': 'page', 'data-current': 'true' })}
+          {...(active && { 'aria-current': 'page', 'data-active': 'true' })}
         >
           {label}
         </span>

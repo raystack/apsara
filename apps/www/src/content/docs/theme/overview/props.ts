@@ -1,3 +1,5 @@
+import type { IconOptions } from '../icons/props';
+
 export type Appearance = 'light' | 'dark';
 export type AppearanceSetting = 'light' | 'dark' | 'system';
 export type AccentColor = 'indigo' | 'orange' | 'mint';
@@ -99,8 +101,14 @@ export type ThemeProps = {
    */
   disableTransitionOnChange?: boolean;
 
-  /** CSP nonce for the inline script. */
+  /** CSP nonce for the theme's inline tags and Base UI's inline tags. */
   nonce?: string;
+
+  /**
+   * Text direction for this scope and its Base UI components. A nested theme inherits it when unset.
+   * @defaultValue "ltr"
+   */
+  dir?: 'ltr' | 'rtl';
 
   /** Renders the theme on your own element instead of a `div`. */
   render?: React.ReactElement | ((props: object) => React.ReactElement);
@@ -109,6 +117,15 @@ export type ThemeProps = {
   className?: string;
 
   children?: React.ReactNode;
+
+  /** Icon overrides: `components` replaces icons by key, and `props` applies to every icon. */
+  icons?: IconOptions;
+
+  /** Ref to the theme's element: its `div`, or the element passed to `render`. */
+  ref?: React.Ref<HTMLElement>;
+
+  /** Inline styles for the theme's element. */
+  style?: React.CSSProperties;
 };
 
 /** The theme, as read and driven from anywhere inside a provider. */
@@ -139,4 +156,8 @@ export type ThemeSwitcherProps = {
    * @defaultValue "nearest"
    */
   target?: 'nearest' | 'root';
+  /**
+   * Accessible name for the button. Defaults to "Switch to light theme" when the `target` theme is dark, otherwise "Switch to dark theme".
+   */
+  'aria-label'?: string;
 };

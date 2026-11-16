@@ -6,7 +6,10 @@ export interface TabsRootProps {
   value?: any;
 
   /** Callback function triggered when the active tab changes. */
-  onValueChange?: (value: any) => void;
+  onValueChange?: (
+    value: any,
+    eventDetails: { reason: string; event: Event }
+  ) => void;
 
   /** The orientation of the tabs. */
   orientation?: 'horizontal' | 'vertical';

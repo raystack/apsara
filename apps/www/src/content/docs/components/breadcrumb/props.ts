@@ -1,8 +1,8 @@
 import { ReactElement, ReactNode } from 'react';
 
 export interface BreadcrumbItem {
-  /** Text to display for the item */
-  label: string;
+  /** Content of the item, usually its text */
+  children?: ReactNode;
 
   /** URL for the item link */
   href?: string;
@@ -17,7 +17,7 @@ export interface BreadcrumbItem {
    * Whether the item is the current page
    * @defaultValue false
    */
-  current?: boolean;
+  active?: boolean;
 
   /**
    * When true, the item is non-clickable and visually muted (e.g. loading or no access).
@@ -63,7 +63,7 @@ export interface BreadcrumbProps {
 export interface BreadcrumbSeparatorProps {
   /**
    * Custom separator between items
-   * @defaultValue "/"
+   * @defaultValue <ChevronRightIcon />
    */
   children?: ReactNode;
   /** Custom CSS class names */

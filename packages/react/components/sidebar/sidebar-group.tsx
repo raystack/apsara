@@ -1,8 +1,9 @@
 'use client';
 
 import { Accordion as AccordionPrimitive } from '@base-ui/react';
+import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
-import { ComponentProps, ReactNode, useCallback, useState } from 'react';
+import { ComponentProps, ReactNode, useCallback } from 'react';
 import { ChevronDownIcon } from '~/icons';
 import { Flex } from '../flex';
 import styles from './sidebar.module.css';
@@ -20,7 +21,10 @@ export interface SidebarGroupProps extends ComponentProps<'section'> {
   collapsible?: boolean;
   open?: boolean;
   defaultOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: AccordionPrimitive.Root.ChangeEventDetails
+  ) => void;
   leadingIcon?: ReactNode;
   trailingIcon?: ReactNode;
   /** @deprecated Every key here has an equivalent `[data-slot]`. See the Slots table in the Sidebar docs. */
@@ -56,17 +60,26 @@ export function SidebarNavigationGroup({
   ...props
 }: SidebarGroupProps) {
   const { isCollapsed } = useSidebarSafe();
-  const [internalOpen, setInternalOpen] = useState(defaultOpen);
-  const isOpen = isCollapsed || (providedOpen ?? internalOpen);
+  const [open, setOpenUnwrapped] = useControlled({
+    controlled: providedOpen,
+    default: defaultOpen,
+    name: 'Sidebar.Group',
+    state: 'open'
+  });
+  const isOpen = isCollapsed || open;
 
   const handleOpenChange = useCallback(
-    (value: unknown[]) => {
+    (
+      value: unknown[],
+      eventDetails: AccordionPrimitive.Root.ChangeEventDetails
+    ) => {
       if (isCollapsed) return;
       const nextOpen = value.length > 0;
-      setInternalOpen(nextOpen);
-      onOpenChange?.(nextOpen);
+      onOpenChange?.(nextOpen, eventDetails);
+      if (eventDetails.isCanceled) return;
+      setOpenUnwrapped(nextOpen);
     },
-    [isCollapsed, onOpenChange]
+    [isCollapsed, onOpenChange, setOpenUnwrapped]
   );
 
   const labelContent = (

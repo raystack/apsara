@@ -8,13 +8,17 @@ import styles from './dialog.module.css';
 import { CloseButton } from './dialog-misc';
 
 export interface DialogContentProps extends DialogPrimitive.Popup.Props {
-  showCloseButton?: boolean;
+  /**
+   * Hides the close button.
+   * @default false
+   */
+  hideCloseButton?: boolean;
   overlay?: DialogPrimitive.Backdrop.Props & { blur?: boolean };
   /**
-   * Toggles nested dialog animation (scaling and translation)
-   * `@default` true
+   * Turns off the scale and offset of a dialog that has a nested dialog open.
+   * @default false
    */
-  showNestedAnimation?: boolean;
+  disableNestedAnimation?: boolean;
   /** Corner radius for this dialog only. Overrides the theme's `radius`. */
   radius?: Radius;
 }
@@ -22,9 +26,9 @@ export interface DialogContentProps extends DialogPrimitive.Popup.Props {
 export function DialogContent({
   className,
   children,
-  showCloseButton = true,
+  hideCloseButton = false,
   overlay,
-  showNestedAnimation = true,
+  disableNestedAnimation = false,
   radius,
   ...props
 }: DialogContentProps) {
@@ -48,7 +52,7 @@ export function DialogContent({
           {...theme}
           className={cx(
             styles.dialogContent,
-            showNestedAnimation && styles.showNestedAnimation,
+            !disableNestedAnimation && styles.nestedAnimation,
             theme?.className,
             radiusStyle({ radius }),
             className
@@ -57,7 +61,7 @@ export function DialogContent({
           {...props}
         >
           {children}
-          {showCloseButton && <CloseButton className={styles.closeButton} />}
+          {!hideCloseButton && <CloseButton className={styles.closeButton} />}
         </DialogPrimitive.Popup>
       </DialogPrimitive.Viewport>
     </DialogPrimitive.Portal>

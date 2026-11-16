@@ -3,6 +3,7 @@
 import { cx } from 'class-variance-authority';
 import { isValidElement, ReactNode, useMemo } from 'react';
 import { FilterIcon } from '~/icons';
+import { resolveFilterOperations } from '~/shared/filter-operations';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import { Button } from '../../button';
 import { FilterChip } from '../../filter-chip';
@@ -103,6 +104,7 @@ function AddFilter<TData>({
 }
 
 export interface DataViewFiltersProps<TData> extends PositionerProps {
+  /** @deprecated Use the `data-slot` selectors instead. */
   classNames?: {
     /** @deprecated Use `[data-slot="filter-chip"]` instead. */
     filterChips?: string;
@@ -141,6 +143,9 @@ export function Filters<TData>({
         filterType: field?.filterType || FilterType.string,
         label: field?.label || '',
         options: field?.filterOptions || [],
+        operations: field?.filterOperations
+          ? resolveFilterOperations(field.filterType, field.filterOperations)
+          : undefined,
         selectProps: field?.filterProps?.select,
         ...filter
       };
@@ -160,7 +165,8 @@ export function Filters<TData>({
         <FilterChip
           key={filter.name}
           label={filter.label}
-          value={filter.value ?? undefined}
+          value={filter.value ?? ''}
+          operation={filter.operator}
           onRemove={() => handleRemoveFilter(filter.name)}
           onValueChange={value => handleFilterValueChange(filter.name, value)}
           onOperationChange={operator =>
@@ -171,6 +177,7 @@ export function Filters<TData>({
           }
           columnType={filter.filterType}
           options={filter.options}
+          operations={filter.operations}
           selectProps={filter.selectProps}
           className={classNames?.filterChips}
         />

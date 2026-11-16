@@ -25,7 +25,7 @@ const size = figma.selectedInstance.getEnum('Size', {
   Small: 'small'
 });
 const variant = figma.selectedInstance.getEnum('Outline', {
-  False: 'borderless'
+  False: 'text'
 });
 
 export default {

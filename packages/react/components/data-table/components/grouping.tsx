@@ -45,7 +45,7 @@ export function Grouping<TData, TValue>({
       <Text
         size='small'
         weight='medium'
-        variant='secondary'
+        color='secondary'
         className={styles['display-popover-properties-label']}
       >
         Grouping

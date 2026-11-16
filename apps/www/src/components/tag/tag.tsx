@@ -16,7 +16,7 @@ export default function Tag({ value, size = 'small' }: TagProps) {
     <Badge
       screenReaderText={value}
       size={size === 'medium' ? 'medium' : 'mini'}
-      variant={value === 'beta' ? 'neutral' : 'gradient'}
+      color={value === 'beta' ? 'neutral' : 'gradient'}
       className={cx(styles.tag, styles[size])}
     >
       {value.toUpperCase()}

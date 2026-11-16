@@ -100,7 +100,7 @@ export function ChatPanelMinimizeTrigger({
   const handleClick = (event: BaseUIEvent<MouseEvent<HTMLButtonElement>>) => {
     onClick?.(event);
     if (event.defaultPrevented) return;
-    minimize();
+    minimize(event.nativeEvent);
   };
 
   return (
@@ -144,7 +144,7 @@ export function ChatPanelExpandTrigger({
   const handleClick = (event: BaseUIEvent<MouseEvent<HTMLButtonElement>>) => {
     onClick?.(event);
     if (event.defaultPrevented) return;
-    toggleFloating();
+    toggleFloating(event.nativeEvent);
   };
 
   const resolvedChildren =

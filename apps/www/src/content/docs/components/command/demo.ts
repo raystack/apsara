@@ -233,6 +233,9 @@ export const itemsDemo = {
                 </Command.Item>
               )}
             </Command.Content>
+            <Command.Status>
+              {(count) => (count === 1 ? '1 result' : \`\${count} results\`)}
+            </Command.Status>
           </Command>
         </Command.DialogContent>
       </Command.Dialog>

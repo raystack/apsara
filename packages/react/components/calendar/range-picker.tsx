@@ -1,10 +1,15 @@
 'use client';
 
+import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { DateRange, PropsBase } from 'react-day-picker';
+import { DateRange, type Modifiers, PropsBase } from 'react-day-picker';
 import { CalendarIcon } from '~/icons';
+import {
+  type ChangeDetails,
+  createChangeDetails
+} from '~/shared/change-details';
 import { Flex } from '../flex';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
@@ -20,6 +25,8 @@ import { usePickerPopover } from './use-picker-popover';
  * they're already unreachable.
  */
 type RangePickerCalendarSlot = Omit<PropsBase, 'mode'> & CalendarPropsExtended;
+
+export type RangePickerChangeDetails = ChangeDetails<'item-press'>;
 
 export interface RangePickerSlotProps {
   startInput?: InputProps;
@@ -41,14 +48,18 @@ export interface RangePickerProps {
   calendarProps?: RangePickerCalendarSlot;
   /** @deprecated Use `slotProps.popover` instead. */
   popoverProps?: PopoverContentProps;
-  onSelect?: (date: DateRange) => void;
+  onValueChange?: (range: DateRange, details: RangePickerChangeDetails) => void;
   pickerGroupClassName?: string;
   value?: DateRange;
   defaultValue?: DateRange;
   children?:
     | React.ReactNode
     | ((props: { startDate: string; endDate: string }) => React.ReactNode);
-  showCalendarIcon?: boolean;
+  /**
+   * Hides the calendar icon in the input.
+   * @default false
+   */
+  hideCalendarIcon?: boolean;
   footer?: React.ReactNode;
   timeZone?: string;
 }
@@ -61,7 +72,7 @@ export function RangePicker({
   inputsProps: legacyInputsProps = {},
   calendarProps: legacyCalendarProps,
   popoverProps: legacyPopoverProps,
-  onSelect = () => undefined,
+  onValueChange,
   value,
   /*
    * No inline default, since the state machine's "first click sets `from`" branch
@@ -70,7 +81,7 @@ export function RangePicker({
   defaultValue,
   pickerGroupClassName,
   children,
-  showCalendarIcon = true,
+  hideCalendarIcon = false,
   footer,
   timeZone
 }: RangePickerProps) {
@@ -110,11 +121,16 @@ export function RangePicker({
 
   const [currentRangeField, setCurrentRangeField] =
     useState<RangeFields>('from');
-  const [internalValue, setInternalValue] = useState<DateRange | undefined>(
-    value ?? defaultValue
-  );
+  const [computedValue, setValueUnwrapped] = useControlled<
+    DateRange | undefined
+  >({
+    controlled: value,
+    default: defaultValue,
+    name: 'RangePicker',
+    state: 'value'
+  });
   const [currentMonth, setCurrentMonth] = useState<Date | undefined>(
-    internalValue?.from
+    computedValue?.from
   );
 
   /*
@@ -132,8 +148,7 @@ export function RangePicker({
   }, [valueFromTime, isControlled]);
 
   // Empty-range fallback so downstream `.from`/`.to` reads don't need guards.
-  const selectedRange: DateRange = value ??
-    internalValue ?? { from: undefined };
+  const selectedRange: DateRange = computedValue ?? { from: undefined };
 
   const startDate = selectedRange.from
     ? dayjs(selectedRange.from).format(dateFormat)
@@ -180,10 +195,15 @@ export function RangePicker({
    *   B1. from, before    -> reset
    *   B2. from, after     -> commit `to`, close
    *   C.  from && to      -> restart
-   * `onSelect` fires on every step; consumers gate on `range.to` for completed
-   * ranges.
+   * `onValueChange` fires on every step; consumers gate on `range.to` for
+   * completed ranges.
    */
-  const handleSelect = (_: DateRange, selectedDay: Date) => {
+  const handleSelect = (
+    _: DateRange,
+    selectedDay: Date,
+    _modifiers?: Modifiers,
+    event?: React.MouseEvent | React.KeyboardEvent
+  ) => {
     const { from, to } = selectedRange;
     let newRange: DateRange;
     let newField: RangeFields = 'to';
@@ -208,9 +228,11 @@ export function RangePicker({
     }
 
     if (newField !== currentRangeField) setCurrentRangeField(newField);
-    // Only update internal state when uncontrolled, since controlled consumers own `value`.
-    if (!isControlled) setInternalValue(newRange);
-    onSelect(newRange);
+    onValueChange?.(
+      newRange,
+      createChangeDetails('item-press', event?.nativeEvent)
+    );
+    setValueUnwrapped(newRange);
     if (shouldClose) popover.disengage();
   };
 
@@ -223,7 +245,7 @@ export function RangePicker({
       <Input
         size='small'
         placeholder='Select start date'
-        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+        trailingIcon={hideCalendarIcon ? undefined : <CalendarIcon />}
         className={styles.datePickerInput}
         data-slot='range-picker-start-input'
         {...startInputProps}
@@ -237,7 +259,7 @@ export function RangePicker({
       <Input
         size='small'
         placeholder='Select end date'
-        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+        trailingIcon={hideCalendarIcon ? undefined : <CalendarIcon />}
         className={styles.datePickerInput}
         data-slot='range-picker-end-input'
         {...endInputProps}

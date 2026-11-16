@@ -24,7 +24,7 @@ export interface EditorMention extends MentionAttrs {
   end: number;
 }
 
-/** Cache key for the item store that backs a chip's icon, trailing and data. */
+/** Cache key for the item store that backs a chip's icons and data. */
 export function mentionKey(trigger: string, type: string, id: string): string {
   return `${trigger}|${type}|${id}`;
 }

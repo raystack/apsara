@@ -2,10 +2,11 @@
 
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import type { ReactNode } from 'react';
+import { Children, isValidElement, type ReactNode } from 'react';
 import { type Radius, radiusStyle } from '../../shared/radius';
 import { useThemeInjection } from '../theme/portal';
 import styles from './combobox.module.css';
+import { ComboboxEmpty } from './combobox-misc';
 import { useComboboxContext } from './combobox-root';
 
 export interface ComboboxContentProps<Item = unknown>
@@ -36,6 +37,18 @@ export const ComboboxContent = <Item,>({
 }: ComboboxContentProps<Item>) => {
   const { inputContainerRef } = useComboboxContext();
   const theme = useThemeInjection();
+
+  // Empty is a live region, and a listbox only allows options and groups, so
+  // it is taken out of the children and rendered before the list.
+  let empty: ReactNode = <ComboboxEmpty>No results</ComboboxEmpty>;
+  let listChildren = children;
+  if (typeof children !== 'function') {
+    listChildren = Children.toArray(children).filter(child => {
+      if (!isValidElement(child) || child.type !== ComboboxEmpty) return true;
+      empty = child;
+      return false;
+    });
+  }
   return (
     <ComboboxPrimitive.Portal {...theme}>
       <ComboboxPrimitive.Positioner
@@ -60,11 +73,12 @@ export const ComboboxContent = <Item,>({
           finalFocus={finalFocus}
           data-slot='combobox-content'
         >
+          {empty}
           <ComboboxPrimitive.List
             className={styles.list}
             data-slot='combobox-list'
           >
-            {children}
+            {listChildren}
           </ComboboxPrimitive.List>
         </ComboboxPrimitive.Popup>
       </ComboboxPrimitive.Positioner>

@@ -68,7 +68,7 @@ export function ChatPanelTrigger({
     }
     onClick?.(event);
     if (event.defaultPrevented) return;
-    restore();
+    restore(event.nativeEvent);
   };
 
   const handlePointerDown = (event: PointerEvent<HTMLButtonElement>) => {

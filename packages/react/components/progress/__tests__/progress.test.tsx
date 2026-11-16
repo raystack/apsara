@@ -25,6 +25,14 @@ describe('Progress', () => {
       expect(progress).toHaveClass('custom-progress');
     });
 
+    it('defaults value to 0', () => {
+      render(<Progress />);
+      expect(screen.getByRole('progressbar')).toHaveAttribute(
+        'aria-valuenow',
+        '0'
+      );
+    });
+
     it('renders track and indicator by default', () => {
       const { container } = render(<Progress value={50} />);
       expect(container.querySelector(`.${styles.track}`)).toBeInTheDocument();

@@ -30,7 +30,7 @@ describe('Calendar', () => {
       expect(screen.getByLabelText('Next month')).toBeInTheDocument();
     });
     it('disables navigation when loading', () => {
-      render(<Calendar loadingData={true} />);
+      render(<Calendar loading />);
 
       const prevButton = screen.getByLabelText('Previous month');
       const nextButton = screen.getByLabelText('Next month');

@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import labelStyles from '../../label/label.module.css';
 import { Select } from '../select';
 import { SelectRootProps } from '../select-root';
 
@@ -80,6 +81,110 @@ describe('Select', () => {
     });
   });
 
+  describe('Positioning', () => {
+    it.each([
+      false,
+      true
+    ])('forwards positioner props to the positioner (autocomplete: %s)', async autocomplete => {
+      render(
+        <Select autocomplete={autocomplete}>
+          <Select.Trigger>
+            <Select.Value placeholder={TRIGGER_TEXT} />
+          </Select.Trigger>
+          <Select.Content positionMethod='fixed'>
+            <Select.Item value='apple'>Apple</Select.Item>
+          </Select.Content>
+        </Select>
+      );
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+
+      expect(
+        document.querySelector('[data-slot="select-positioner"]')
+      ).toHaveStyle({ position: 'fixed' });
+    });
+  });
+
+  describe('Label', () => {
+    it('labels the trigger', async () => {
+      render(
+        <Select>
+          <Select.Label>Fruit</Select.Label>
+          <Select.Trigger aria-label={undefined}>
+            <Select.Value placeholder={TRIGGER_TEXT} />
+          </Select.Trigger>
+          <Select.Content>
+            <Select.Item value='apple'>Apple</Select.Item>
+          </Select.Content>
+        </Select>
+      );
+      await flushMicrotasks();
+
+      const label = screen.getByText('Fruit');
+      expect(screen.getByRole('combobox')).toHaveAttribute(
+        'aria-labelledby',
+        expect.stringContaining(label.id)
+      );
+    });
+
+    it('renders the Label component with its props', () => {
+      const { container } = render(
+        <Select>
+          <Select.Label required={false}>Fruit</Select.Label>
+          <Select.Trigger>
+            <Select.Value placeholder={TRIGGER_TEXT} />
+          </Select.Trigger>
+        </Select>
+      );
+
+      const label = container.querySelector('[data-slot="select-label"]');
+      expect(label?.tagName).toBe('LABEL');
+      expect(label).toHaveClass(labelStyles.label);
+      expect(label).toHaveTextContent('(optional)');
+    });
+  });
+
+  describe('Empty', () => {
+    const EmptySelect = ({
+      withItem,
+      ...props
+    }: SelectRootProps & { withItem: boolean }) => (
+      <Select {...props}>
+        <Select.Trigger>
+          <Select.Value placeholder={TRIGGER_TEXT} />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Empty>No fruit found</Select.Empty>
+          {withItem && <Select.Item value='apple'>Apple</Select.Item>}
+        </Select.Content>
+      </Select>
+    );
+
+    it('shows its content only when the list has no items', async () => {
+      const { rerender } = render(<EmptySelect withItem />);
+      await flushMicrotasks();
+      expect(screen.queryByText('No fruit found')).not.toBeInTheDocument();
+
+      rerender(<EmptySelect withItem={false} />);
+      await flushMicrotasks();
+      expect(screen.getByText('No fruit found')).toBeInTheDocument();
+    });
+
+    it('shows its content only when no item matches the search', async () => {
+      const user = userEvent.setup();
+      render(<EmptySelect autocomplete withItem />);
+
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+      expect(screen.queryByText('No fruit found')).not.toBeInTheDocument();
+
+      await user.type(screen.getByPlaceholderText('Search...'), 'zzz');
+      await flushMicrotasks();
+      expect(screen.getByText('No fruit found')).toBeInTheDocument();
+      expect(screen.queryAllByRole('option')).toHaveLength(0);
+    });
+  });
+
   describe('Single Selection', () => {
     it('displays selected value in trigger', async () => {
       render(<BasicSelect defaultValue='apple' />);
@@ -110,8 +215,27 @@ describe('Select', () => {
       await user.click(options[1]);
       await flushMicrotasks();
 
-      expect(handleValueChange).toHaveBeenCalledWith('banana');
+      expect(handleValueChange).toHaveBeenCalledWith(
+        'banana',
+        expect.objectContaining({ reason: 'item-press' })
+      );
       expect(handleValueChange).toHaveBeenCalledTimes(1);
+    });
+
+    it('keeps the value when onValueChange cancels the change', async () => {
+      render(
+        <BasicSelect
+          defaultValue='apple'
+          onValueChange={(_, eventDetails) => eventDetails.cancel()}
+        />
+      );
+      const user = userEvent.setup();
+      await openSelect(user);
+
+      await user.click(screen.getAllByRole('option')[1]);
+      await flushMicrotasks();
+
+      expect(screen.getByRole('combobox')).toHaveTextContent('Apple');
     });
 
     it('closes content after selection', async () => {
@@ -141,11 +265,17 @@ describe('Select', () => {
 
       await user.click(options[1]);
       await flushMicrotasks();
-      expect(handleValueChange).toHaveBeenCalledWith(['banana']);
+      expect(handleValueChange).toHaveBeenCalledWith(
+        ['banana'],
+        expect.anything()
+      );
 
       await user.click(options[4]);
       await flushMicrotasks();
-      expect(handleValueChange).toHaveBeenCalledWith(['banana', 'pineapple']);
+      expect(handleValueChange).toHaveBeenCalledWith(
+        ['banana', 'pineapple'],
+        expect.anything()
+      );
 
       const optionsAfterSelection = screen.getAllByRole('option');
       expect(optionsAfterSelection[1]).toHaveAttribute('aria-selected', 'true');
@@ -162,11 +292,14 @@ describe('Select', () => {
 
       await user.click(options[1]);
       await flushMicrotasks();
-      expect(handleValueChange).toHaveBeenCalledWith(['banana']);
+      expect(handleValueChange).toHaveBeenCalledWith(
+        ['banana'],
+        expect.anything()
+      );
 
       await user.click(options[1]);
       await flushMicrotasks();
-      expect(handleValueChange).toHaveBeenCalledWith([]);
+      expect(handleValueChange).toHaveBeenCalledWith([], expect.anything());
     });
 
     it('renders a checkbox indicator that reflects selection state', async () => {
@@ -186,6 +319,18 @@ describe('Select', () => {
       expect(
         within(screen.getAllByRole('option')[1]).getByRole('checkbox')
       ).toHaveAttribute('aria-checked', 'true');
+    });
+
+    it('keeps the item checkbox out of the tab order', async () => {
+      const user = userEvent.setup();
+      render(<BasicSelect multiple />);
+      await openSelect(user);
+
+      const option = screen.getAllByRole('option')[0];
+      expect(within(option).getByRole('checkbox')).toHaveAttribute(
+        'tabindex',
+        '-1'
+      );
     });
 
     it('fires onValueChange exactly once per click on an option', async () => {
@@ -246,7 +391,10 @@ describe('Select', () => {
       await user.keyboard('{Enter}');
       await flushMicrotasks();
 
-      expect(handleValueChange).toHaveBeenCalledWith('banana');
+      expect(handleValueChange).toHaveBeenCalledWith(
+        'banana',
+        expect.anything()
+      );
       expect(handleValueChange).toHaveBeenCalledTimes(1);
     });
 
@@ -264,7 +412,10 @@ describe('Select', () => {
       await user.keyboard('{ArrowDown}{ArrowDown}{Enter}');
       await flushMicrotasks();
 
-      expect(handleValueChange).toHaveBeenCalledWith('blueberry');
+      expect(handleValueChange).toHaveBeenCalledWith(
+        'blueberry',
+        expect.anything()
+      );
     });
   });
 
@@ -293,6 +444,69 @@ describe('Select', () => {
       await user.type(searchInput, 'app');
       await flushMicrotasks();
 
+      const options = screen.getAllByRole('option');
+      expect(options.length).toBe(2);
+      expect(options[0]).toHaveTextContent('Apple');
+      expect(options[1]).toHaveTextContent('Pineapple');
+    });
+
+    it('filters options by a controlled inputValue', async () => {
+      const onInputValueChange = vi.fn();
+      render(
+        <Select
+          autocomplete
+          inputValue='app'
+          onInputValueChange={onInputValueChange}
+        >
+          <Select.Trigger>
+            <Select.Value placeholder={TRIGGER_TEXT} />
+          </Select.Trigger>
+          <Select.Content>
+            {FRUIT_OPTIONS.map(option => (
+              <Select.Item key={option.value} value={option.value}>
+                {option.label}
+              </Select.Item>
+            ))}
+          </Select.Content>
+        </Select>
+      );
+
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+      fireEvent.change(screen.getByPlaceholderText('Search...'), {
+        target: { value: 'b' }
+      });
+      await flushMicrotasks();
+
+      expect(onInputValueChange).toHaveBeenCalledWith(
+        'b',
+        expect.objectContaining({ reason: 'input-change' })
+      );
+      const options = screen.getAllByRole('option');
+      expect(options.length).toBe(2);
+      expect(options[0]).toHaveTextContent('Apple');
+      expect(options[1]).toHaveTextContent('Pineapple');
+    });
+
+    it('shows a controlled inputValue in the search input', async () => {
+      render(<BasicSelect autocomplete inputValue='app' />);
+
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+      const searchInput = screen.getByPlaceholderText('Search...');
+      fireEvent.change(searchInput, { target: { value: 'b' } });
+      await flushMicrotasks();
+
+      expect(searchInput).toHaveValue('app');
+    });
+
+    it('shows and filters by defaultInputValue', async () => {
+      render(<BasicSelect autocomplete defaultInputValue='app' />);
+
+      fireEvent.click(screen.getByLabelText('Select option'));
+      await flushMicrotasks();
+
+      expect(screen.getByPlaceholderText('Search...')).toHaveValue('app');
       const options = screen.getAllByRole('option');
       expect(options.length).toBe(2);
       expect(options[0]).toHaveTextContent('Apple');
