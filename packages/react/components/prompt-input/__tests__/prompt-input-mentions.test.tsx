@@ -799,6 +799,31 @@ describe('PromptInput.Mentions', () => {
 
       expect(resolveMentions).not.toHaveBeenCalled();
     });
+
+    it('does not report a label that resolves after unmount', async () => {
+      let resolve: (items: PromptInputMentionItem[]) => void = () => undefined;
+      const resolveMentions = vi.fn(
+        () =>
+          new Promise<PromptInputMentionItem[]>(done => {
+            resolve = done;
+          })
+      );
+      const onValueChange = vi.fn();
+      const { unmount } = render(
+        <Composer
+          defaultValue='@[DataTable](component:data-table)'
+          onValueChange={onValueChange}
+          mentions={{ resolveMentions }}
+        />
+      );
+
+      await waitFor(() => expect(resolveMentions).toHaveBeenCalled());
+      unmount();
+      resolve([{ id: 'data-table', label: 'DataTable v2', type: 'component' }]);
+      await flush();
+
+      expect(onValueChange).not.toHaveBeenCalled();
+    });
   });
 
   describe('Requires an Editor', () => {

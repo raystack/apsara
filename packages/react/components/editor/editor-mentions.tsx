@@ -149,12 +149,10 @@ export function MentionsMenu({
     items,
     onSearch,
     onSelect: (item, state) => {
-      const type = item.type ?? 'mention';
-      registry.remember(state.trigger, { ...item, type });
-      store.insertMentionAt(
-        { id: item.id, label: item.label, type, trigger: state.trigger },
-        { from: state.from, to: state.to }
-      );
+      store.insertMentionAt(store.rememberMention(item, state.trigger), {
+        from: state.from,
+        to: state.to
+      });
     },
     onOpenChange,
     name

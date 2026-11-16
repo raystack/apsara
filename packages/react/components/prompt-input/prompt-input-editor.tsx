@@ -139,6 +139,8 @@ export function PromptInputEditor({
   // The Editor applies labels from `resolveMentions` without reporting them.
   // PromptInput reports them, so `onValueChange` carries the fresh label.
   function refreshLabels(labels: Map<string, string>) {
+    // `resolveMentions` can settle after this part unmounts.
+    if (!store.view) return;
     const before = store.state.doc;
     store.refreshMentionLabels(labels);
     if (store.state.doc !== before) report(store.state.doc);
@@ -156,18 +158,15 @@ export function PromptInputEditor({
       insertMention: (item, options) => {
         const view = store.view;
         if (!view) return;
-        const trigger = options?.trigger ?? registry.triggers()[0] ?? '@';
-        const type = item.type ?? 'mention';
-        registry.remember(trigger, { ...item, type });
         // Not focused: the chip goes at the end of the draft.
         const end = Selection.atEnd(store.state.doc).from;
         store.insertMentionAt(
-          { id: item.id, label: item.label, type, trigger },
+          store.rememberMention(item, options?.trigger),
           view.hasFocus() ? undefined : { from: end, to: end }
         );
       }
     }),
-    [store, registry]
+    [store]
   );
 
   const registerInput = context.registerInput;

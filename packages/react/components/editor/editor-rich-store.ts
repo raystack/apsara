@@ -399,16 +399,8 @@ export class RichEditorStore extends EditorStore {
         runCommand((state, dispatch) => {
           if (!state.schema.nodes.mention) return false;
           if (!dispatch) return true;
-          const trigger =
-            options?.trigger ?? this.mentions.triggers()[0] ?? '@';
-          const type = item.type ?? 'mention';
-          this.mentions.remember(trigger, { ...item, type });
-          const tr = mentionTransaction(state, {
-            id: item.id,
-            label: item.label,
-            type,
-            trigger
-          });
+          const attrs = this.rememberMention(item, options?.trigger);
+          const tr = mentionTransaction(state, attrs);
           if (tr) dispatch(tr);
           return true;
         }),

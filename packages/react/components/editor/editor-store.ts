@@ -21,7 +21,10 @@ import {
   type MentionPortal,
   type MentionPortalRegistry
 } from './core/mention-node-view';
-import { MentionRegistry } from './core/mention-registry';
+import {
+  type EditorMentionItem,
+  MentionRegistry
+} from './core/mention-registry';
 import { showsPlaceholder } from './core/serializers';
 import type { EditorAction } from './core/shortcuts';
 import {
@@ -427,6 +430,19 @@ export class EditorStore {
       this.group = null;
     }
     this.view?.focus();
+  }
+
+  /**
+   * Stores `item` in the mention registry and returns its chip attrs. The
+   * trigger defaults to the first registered one.
+   */
+  rememberMention(
+    item: EditorMentionItem,
+    trigger = this.mentions.triggers()[0] ?? '@'
+  ): MentionAttrs {
+    const type = item.type ?? 'mention';
+    this.mentions.remember(trigger, { ...item, type });
+    return { id: item.id, label: item.label, type, trigger };
   }
 
   insertMentionAt(
