@@ -118,21 +118,26 @@ These filters used to match by mistake, and now match differently:
 
 ## Unreleased: one size name per control height
 
-Controls share one set of size names. The 32px input and button size is
-`medium` everywhere. The pixel sizes do not change, and each component keeps
+Controls share one set of size names. From smallest to largest, the names are
+`micro`, `mini`, `small`, `medium` and `large`. The 32px input and button size
+is `medium` everywhere. The pixel sizes do not change, and each component keeps
 its default size, so only code that passes an old value needs a change.
-TypeScript reports each old value.
 
 | Component | Before | After |
 |---|---|---|
 | `Button` | `size="normal"` (default) | `size="medium"` (default) |
 | `Input`, `TextArea`, `Search`, `Combobox.Input`, `Command.Input` | `size="large"` (default) | `size="medium"` (default) |
 | `Checkbox`, `Radio`, `Radio.Group`, `Switch` | `size="large"` (default) | `size="medium"` (default) |
-| `Badge` | `size="micro"` | `size="xsmall"` |
+| `Badge` | `size="micro"` | `size="mini"` |
 | `Badge` | `size="regular"` | `size="medium"` |
+| `Tabs` | `size="small"` | `size="mini"` |
+| `Tabs` | `size="medium"` (default) | `size="small"` (default) |
+| `Tabs` | `size="large"` | `size="medium"` |
 
-`small` keeps its name on every component, and `small` is still the `Badge`
-default.
+TypeScript reports each old value, except on `Tabs`. `Tabs` still accepts
+`small` and `medium`, but each one now renders the next size up, so check every
+`Tabs` `size`. On the other components, `small` keeps its name, and `small` is
+still the `Badge` default.
 
 ### Separator `size` becomes `variant`
 

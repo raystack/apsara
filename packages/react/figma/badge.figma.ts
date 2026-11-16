@@ -12,7 +12,7 @@ const variant = figma.selectedInstance.getEnum('Variant', {
   Gradient: 'gradient'
 });
 const size = figma.selectedInstance.getEnum('Size', {
-  Micro: 'xsmall',
+  Micro: 'mini',
   Regular: 'medium'
 });
 // "Icon" BOOLEAN toggles the leading icon; resolve the child instance named "Icon"

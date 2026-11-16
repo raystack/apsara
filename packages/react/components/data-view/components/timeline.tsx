@@ -1634,7 +1634,7 @@ export function DataViewTimeline<TData>({
             style={{ left: marker.x }}
             data-slot='data-view-timeline-axis-marker'
           >
-            <Badge size='xsmall' variant={MARKER_BADGE_VARIANT[marker.variant]}>
+            <Badge size='mini' variant={MARKER_BADGE_VARIANT[marker.variant]}>
               {marker.label}
             </Badge>
           </div>
@@ -1646,7 +1646,7 @@ export function DataViewTimeline<TData>({
             style={{ left: timeScale.x(cursorTime) }}
             data-slot='data-view-timeline-axis-cursor'
           >
-            <Badge size='xsmall' variant='neutral'>
+            <Badge size='mini' variant='neutral'>
               {cursorLabel(cursorTime, scale)}
             </Badge>
           </div>

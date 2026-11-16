@@ -54,7 +54,7 @@ describe('Badge', () => {
   });
 
   describe('Sizes', () => {
-    const sizes = ['xsmall', 'small', 'medium'] as const;
+    const sizes = ['mini', 'small', 'medium'] as const;
 
     it.each(sizes)('renders %s size correctly', size => {
       const { container } = render(<Badge size={size}>Badge</Badge>);

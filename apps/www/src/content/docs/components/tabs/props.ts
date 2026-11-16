@@ -16,9 +16,9 @@ export interface TabsRootProps {
 
   /**
    * Size variant applied to all tab triggers.
-   * @default 'medium'
+   * @default 'small'
    */
-  size?: 'small' | 'medium' | 'large';
+  size?: 'mini' | 'small' | 'medium';
 
   /** Additional CSS class names. */
   className?: string;

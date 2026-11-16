@@ -16,7 +16,7 @@ const badge = cva(styles['badge'], {
       gradient: styles['badge-gradient']
     },
     size: {
-      xsmall: styles['badge-xsmall'],
+      mini: styles['badge-mini'],
       small: styles['badge-small'],
       medium: styles['badge-medium']
     }

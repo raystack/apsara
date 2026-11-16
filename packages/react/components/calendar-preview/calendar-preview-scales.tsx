@@ -36,7 +36,7 @@ export function CalendarPreviewScales({
         'data-slot': 'calendar-preview-scales',
         children: children ?? (
           <Tabs
-            size='medium'
+            size='small'
             variant='standalone'
             value={scale}
             onValueChange={next => switchScale(next as Scale)}

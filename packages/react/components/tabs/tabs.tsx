@@ -11,14 +11,14 @@ const tabsRoot = cva(styles.root, {
       plain: styles['variant-plain']
     },
     size: {
+      mini: styles['size-mini'],
       small: styles['size-small'],
-      medium: styles['size-medium'],
-      large: styles['size-large']
+      medium: styles['size-medium']
     }
   },
   defaultVariants: {
     variant: 'segmented',
-    size: 'medium'
+    size: 'small'
   }
 });
 

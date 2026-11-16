@@ -15,7 +15,7 @@ export default function Tag({ value, size = 'small' }: TagProps) {
   return (
     <Badge
       screenReaderText={value}
-      size={size === 'medium' ? 'medium' : 'xsmall'}
+      size={size === 'medium' ? 'medium' : 'mini'}
       variant={value === 'beta' ? 'neutral' : 'gradient'}
       className={cx(styles.tag, styles[size])}
     >
