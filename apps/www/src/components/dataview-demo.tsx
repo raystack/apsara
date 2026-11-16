@@ -859,8 +859,9 @@ function TaskCard({
 }) {
   // Card height is content-driven (the wrapper auto-measures, like
   // DataView.List rows), so fix it here and collapsed stubs match full cards.
+  // The content scales with the theme, so the height scales too.
   const chrome: React.CSSProperties = {
-    height: 64,
+    height: 'calc(64px * var(--rs-scaling, 1))',
     boxSizing: 'border-box',
     borderRadius: 'var(--rs-radius-3)',
     border: '1px solid var(--rs-color-border-base-primary)',
