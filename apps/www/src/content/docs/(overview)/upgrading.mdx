@@ -505,11 +505,13 @@ its default size, so only code that passes an old value needs a change.
 | `Tabs` | `size="small"` | `size="mini"` |
 | `Tabs` | `size="medium"` (default) | `size="small"` (default) |
 | `Tabs` | `size="large"` | `size="medium"` |
+| `Chip` | `size="small"` (default) | `size="mini"` (default) |
+| `Chip` | `size="large"` | `size="small"` |
 
-TypeScript reports each old value, except on `Tabs`. `Tabs` still accepts
-`small` and `medium`, but each one now renders the next size up, so check every
-`Tabs` `size`. On the other components, `small` keeps its name, and `small` is
-still the `Badge` default.
+TypeScript reports each old value, except on `Tabs` and `Chip`. `Tabs` still
+accepts `small` and `medium`, and `Chip` still accepts `small`, but each one now
+renders the next size up, so check every `Tabs` and `Chip` `size`. On the other
+components, `small` keeps its name, and `small` is still the `Badge` default.
 
 ### Separator `size` becomes `variant`
 
