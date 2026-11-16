@@ -326,7 +326,8 @@ describe('PromptInput.Mentions', () => {
       const active = editor.getAttribute('aria-activedescendant');
       expect(active).toBeTruthy();
       expect(screen.getAllByRole('option')[0]).toHaveAttribute('id', active);
-      expect(editor).toHaveAttribute('aria-expanded', 'true');
+      // `role="textbox"` does not allow `aria-expanded`.
+      expect(editor).not.toHaveAttribute('aria-expanded');
       expect(editor).toHaveAttribute(
         'aria-controls',
         screen.getByRole('listbox').id
@@ -800,6 +801,31 @@ describe('PromptInput.Mentions', () => {
       await flush();
 
       expect(resolveMentions).not.toHaveBeenCalled();
+    });
+
+    it('does not report a label that resolves after unmount', async () => {
+      let resolve: (items: PromptInputMentionItem[]) => void = () => undefined;
+      const resolveMentions = vi.fn(
+        () =>
+          new Promise<PromptInputMentionItem[]>(done => {
+            resolve = done;
+          })
+      );
+      const onValueChange = vi.fn();
+      const { unmount } = render(
+        <Composer
+          defaultValue='@[DataTable](component:data-table)'
+          onValueChange={onValueChange}
+          mentions={{ resolveMentions }}
+        />
+      );
+
+      await waitFor(() => expect(resolveMentions).toHaveBeenCalled());
+      unmount();
+      resolve([{ id: 'data-table', label: 'DataTable v2', type: 'component' }]);
+      await flush();
+
+      expect(onValueChange).not.toHaveBeenCalled();
     });
   });
 

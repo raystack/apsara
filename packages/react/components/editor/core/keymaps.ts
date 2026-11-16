@@ -1,10 +1,4 @@
-import {
-  chainCommands,
-  exitCode,
-  newlineInCode,
-  setBlockType
-} from 'prosemirror-commands';
-import { redo } from 'prosemirror-history';
+import { chainCommands, exitCode, setBlockType } from 'prosemirror-commands';
 import { undoInputRule } from 'prosemirror-inputrules';
 import { keymap } from 'prosemirror-keymap';
 import type { Schema } from 'prosemirror-model';
@@ -14,8 +8,6 @@ import {
   splitListItem
 } from 'prosemirror-schema-list';
 import type { Command, Plugin } from 'prosemirror-state';
-import { insertHardBreak } from './base';
-import { deleteAdjacentMention, moveOverMention } from './mention-commands';
 
 const never: Command = () => false;
 
@@ -62,14 +54,11 @@ const resetBlockAtStart: Command = (state, dispatch) => {
 };
 
 /**
- * Keys for lists, mentions and block edges. Sits after the shortcut keymap
- * and before history and the base keymap. `Mod-y` redoes unless `redo` is
- * false.
+ * Keys for lists and block edges. `Editor` adds it after the shortcut keymap
+ * and before the store's own keys, so Backspace tries an input rule undo, a
+ * list lift and a block reset before it deletes a chip.
  */
-export function buildEditingKeymap(
-  schema: Schema,
-  options: { redo: boolean }
-): Plugin {
+export function buildEditingKeymap(schema: Schema): Plugin {
   const { listItem, taskItem } = schema.nodes;
   const items = [listItem?.name, taskItem?.name].filter(
     (name): name is string => !!name
@@ -87,24 +76,19 @@ export function buildEditingKeymap(
     taskItem ? liftListItem(taskItem) : null
   );
 
-  const bindings: Record<string, Command> = {
+  return keymap({
     Enter: splitItem,
-    'Shift-Enter': chainCommands(newlineInCode, insertHardBreak),
     'Mod-Enter': exitCode,
     // Tab stays in the editor inside a list, and moves focus everywhere else.
     Tab: (state, dispatch) => sink(state, dispatch) || inListItem(state),
     'Shift-Tab': (state, dispatch) =>
       lift(state, dispatch) || inListItem(state),
+    // A chip is never before the caret at the start of a block, so these
+    // never compete with the store's chip delete.
     Backspace: chainCommands(
       undoInputRule,
-      deleteAdjacentMention(-1),
       liftAtItemStart(items),
       resetBlockAtStart
-    ),
-    Delete: deleteAdjacentMention(1),
-    ArrowLeft: moveOverMention(-1),
-    ArrowRight: moveOverMention(1)
-  };
-  if (options.redo) bindings['Mod-y'] = redo;
-  return keymap(bindings);
+    )
+  });
 }
