@@ -13,7 +13,11 @@ import styles from './select.module.css';
 import { useSelectContext } from './select-root';
 
 export interface SelectItemProps extends SelectPrimitive.Item.Props {
+  /** Content of the item. `Select.Value` shows it when the item is selected. */
+  children?: ReactNode;
+  /** Icon before the item text. Shown only when `children` is a string. */
   leadingIcon?: ReactNode;
+  /** Icon after the item text. Shown only when `children` is a string. */
   trailingIcon?: ReactNode;
 }
 

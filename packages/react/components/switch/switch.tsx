@@ -6,6 +6,7 @@ import styles from './switch.module.css';
 
 const switchVariants = cva(styles.switch, {
   variants: {
+    /** Size of the switch. */
     size: {
       medium: styles.medium,
       small: styles.small
@@ -18,7 +19,10 @@ const switchVariants = cva(styles.switch, {
 
 export interface SwitchProps
   extends SwitchPrimitive.Root.Props,
-    VariantProps<typeof switchVariants> {}
+    VariantProps<typeof switchVariants> {
+  /** Whether the user must activate the switch before submitting a form. Defaults to the `required` of the surrounding `Field`, otherwise `false`. */
+  required?: boolean;
+}
 
 export function Switch({ className, size, required, ...props }: SwitchProps) {
   const fieldContext = useFieldContext();

@@ -18,7 +18,14 @@ export interface PopoverContentProps
    * @default false
    */
   showArrow?: boolean;
-  /** Corner radius for this popup only. Overrides the theme's `radius`. */
+  /** Distance between the anchor and the popup in pixels. Defaults to `4`, or `10` with `showArrow`. */
+  sideOffset?: PopoverPrimitive.Positioner.Props['sideOffset'];
+  /**
+   * Additional space to keep from the edge of the collision boundary.
+   * @default 3
+   */
+  collisionPadding?: PopoverPrimitive.Positioner.Props['collisionPadding'];
+  /** Corner radius for this popup only. Defaults to the theme's `radius`. */
   radius?: Radius;
 }
 

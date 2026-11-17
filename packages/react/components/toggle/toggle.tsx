@@ -23,6 +23,10 @@ const toggleVariants = cva(styles.toggle, {
 export interface ToggleProps
   extends TogglePrimitive.Props,
     VariantProps<typeof toggleVariants> {
+  /**
+   * Size of the toggle.
+   * @default 3
+   */
   size?: 1 | 2 | 3 | 4;
 }
 
@@ -42,7 +46,15 @@ function ToggleRoot({ className, children, size, ...props }: ToggleProps) {
 
 ToggleRoot.displayName = 'Toggle';
 
-function ToggleGroup({ className, ...props }: ToggleGroupPrimitive.Props) {
+type ToggleGroupProps = ToggleGroupPrimitive.Props & {
+  /**
+   * Orientation of the toggle group.
+   * @default "horizontal"
+   */
+  orientation?: 'horizontal' | 'vertical';
+};
+
+function ToggleGroup({ className, ...props }: ToggleGroupProps) {
   return (
     <ToggleGroupPrimitive
       className={cx(styles.group, className)}

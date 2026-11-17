@@ -15,11 +15,17 @@ export interface TooltipContentProps
     >,
     TooltipPrimitive.Popup.Props {
   /**
-   * Controls whether to show the arrow
-   * `@default` false
+   * Shows an arrow that points at the trigger.
+   * @default false
    */
   showArrow?: boolean;
-  /** Corner radius for this tooltip only. Overrides the theme's `radius`. */
+  /** Distance between the anchor and the popup in pixels. Defaults to `4`, or `10` with `showArrow`. */
+  sideOffset?: TooltipPrimitive.Positioner.Props['sideOffset'];
+  /** Accessible name of the tooltip popup. */
+  'aria-label'?: string;
+  /** ID of the element that labels the tooltip popup. */
+  'aria-labelledby'?: string;
+  /** Corner radius for this tooltip only. Defaults to the theme's `radius`. */
   radius?: Radius;
 }
 

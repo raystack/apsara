@@ -1,7 +1,7 @@
 'use client';
 
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { KeyboardEvent, MouseEvent, useRef } from 'react';
+import { KeyboardEvent, MouseEvent, ReactNode, useRef } from 'react';
 import { ClearIcon, SearchIcon } from '~/icons';
 import { IconButton } from '../icon-button';
 import { Input } from '../input';
@@ -10,7 +10,19 @@ import { InputProps } from '../input/input';
 import styles from './search.module.css';
 
 export interface SearchProps extends Omit<InputProps, 'width'> {
+  /**
+   * Text shown when the input is empty. It is also the default `aria-label`.
+   * @default "Search"
+   */
+  placeholder?: string;
+  /** Icon shown at the start of the input. Defaults to a search icon. Pass `null` to hide it. */
+  leadingIcon?: ReactNode;
+  /**
+   * Shows a clear button while the input has a value.
+   * @default false
+   */
   showClearButton?: boolean;
+  /** Called after the clear button or Escape clears the input. Receives the event that cleared it. */
   onClear?: (
     event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
   ) => void;

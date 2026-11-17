@@ -23,8 +23,22 @@ export interface MenuContentProps
       'render' | 'className' | 'style'
     >,
     MenuPrimitive.Popup.Props {
+  /**
+   * Placeholder of the search input.
+   * @default "Search..."
+   */
   searchPlaceholder?: string;
-  /** Corner radius for this menu only. Overrides the theme's `radius`. */
+  /**
+   * Distance between the anchor and the popup in pixels.
+   * @default 4
+   */
+  sideOffset?: MenuPrimitive.Positioner.Props['sideOffset'];
+  /**
+   * How to align the popup relative to the specified side.
+   * @default "start"
+   */
+  align?: MenuPrimitive.Positioner.Props['align'];
+  /** Corner radius for this menu only. Defaults to the theme's `radius`. */
   radius?: Radius;
 }
 
@@ -197,7 +211,20 @@ export function MenuContent({
 }
 MenuContent.displayName = 'Menu.Content';
 
-export function MenuSubContent(props: MenuContentProps) {
+interface MenuSubContentProps extends MenuContentProps {
+  /**
+   * Which side of the anchor element to align the submenu against.
+   * @default "inline-end"
+   */
+  side?: MenuPrimitive.Positioner.Props['side'];
+  /**
+   * Distance between the anchor and the submenu in pixels.
+   * @default 2
+   */
+  sideOffset?: MenuPrimitive.Positioner.Props['sideOffset'];
+}
+
+export function MenuSubContent(props: MenuSubContentProps) {
   return <MenuContent sideOffset={2} {...props} />;
 }
 MenuSubContent.displayName = 'Menu.SubmenuContent';

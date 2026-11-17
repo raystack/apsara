@@ -23,12 +23,25 @@ const iconButton = cva(styles.iconButton, {
 export interface IconButtonProps
   extends ButtonPrimitive.Props,
     VariantProps<typeof iconButton> {
+  /**
+   * Size of the button.
+   * @default 2
+   */
   size?: 1 | 2 | 3 | 4;
   /**
-   * Shows a spinner in place of the icon and blocks clicks.
+   * Whether the button is disabled.
+   * @default false
+   */
+  disabled?: boolean;
+  /**
+   * Shows a spinner in place of the icon and blocks clicks. The button stays focusable.
    * @default false
    */
   loading?: boolean;
+  /** Whether the button renders a native `<button>`. Defaults to `false` when `render` is set, otherwise `true`. */
+  nativeButton?: boolean;
+  /** Whether the button stays focusable while disabled. Defaults to `true` while `loading`, otherwise `false`. */
+  focusableWhenDisabled?: boolean;
   /**
    * Accessible name for the icon-only button. Strongly recommended so
    * screen readers can announce its purpose.

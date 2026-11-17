@@ -16,9 +16,16 @@ import {
 import styles from './code-block.module.css';
 
 interface CodeBlockCommonProps {
+  /**
+   * Whether to hide the line numbers.
+   * @default false
+   */
   hideLineNumbers?: boolean;
+  /** The value of the `CodeBlock.Code` to show. Use when controlled. */
   value?: string;
+  /** The number of lines to show while collapsed. Unset or `0` turns collapsing off. */
   maxLines?: number;
+  /** Whether the code is collapsed to `maxLines`. Use when controlled. */
   collapsed?: boolean;
 }
 
@@ -46,11 +53,18 @@ export type CodeBlockCollapseChangeDetails = ChangeDetails<'trigger-press'>;
 export interface CodeBlockProps
   extends ComponentProps<'div'>,
     CodeBlockCommonProps {
+  /** The value of the `CodeBlock.Code` to show first. Use when uncontrolled. */
   defaultValue?: string;
   /** @deprecated Has no effect. */
   maxHeight?: string | number;
+  /** Called when the value changes. */
   onValueChange?: (value: string) => void;
+  /**
+   * Whether the code is collapsed on first render.
+   * @default true
+   */
   defaultCollapsed?: boolean;
+  /** Called when the collapsed state changes. */
   onCollapseChange?: (
     value: boolean,
     details: CodeBlockCollapseChangeDetails

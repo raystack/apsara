@@ -15,7 +15,7 @@ import {
 export interface EditorListMenuProps extends EditorControlBaseProps {
   /**
    * The list types in the menu.
-   * @default ['bulletList', 'orderedList', 'taskList']
+   * @default ["bulletList", "orderedList", "taskList"]
    */
   types?: EditorList[];
 }

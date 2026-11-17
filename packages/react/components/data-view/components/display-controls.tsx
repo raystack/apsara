@@ -17,10 +17,42 @@ import { ViewSwitcher } from './view-switcher';
 
 export interface DataViewDisplayControlsProps
   extends Pick<PopoverContentProps, 'align' | 'side' | 'sideOffset'> {
+  /** Custom trigger for the popover. Defaults to a "Display" button. */
   trigger?: ReactNode;
+  /**
+   * Alignment of the popover against its trigger.
+   * @default "end"
+   */
+  align?: 'start' | 'center' | 'end';
+  /**
+   * Side of the trigger that the popover opens on.
+   * @default "bottom"
+   */
+  side?: 'top' | 'bottom' | 'left' | 'right' | 'inline-end' | 'inline-start';
+  /**
+   * Distance in pixels between the trigger and the popover.
+   * @default 4
+   */
+  sideOffset?: PopoverContentProps['sideOffset'];
+  /**
+   * Hides the view switcher, which shows when `views` has more than one entry.
+   * @default false
+   */
   hideViewSwitcher?: boolean;
+  /**
+   * Hides the Ordering (sort) control.
+   * @default false
+   */
   hideOrdering?: boolean;
+  /**
+   * Hides the Grouping control.
+   * @default false
+   */
   hideGrouping?: boolean;
+  /**
+   * Hides the Display Properties (field visibility) section.
+   * @default false
+   */
   hideDisplayProperties?: boolean;
 }
 

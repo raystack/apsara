@@ -428,11 +428,13 @@ export function ChatMessages({
 ChatMessages.displayName = 'Chat.Messages';
 
 export interface ChatJumpButtonProps extends ComponentProps<'button'> {
-  /**
-   * Icon rendered before the label. Pass `null` to remove it.
-   * @defaultValue an arrow-down icon
-   */
+  /** Icon shown before the label. Defaults to an arrow-down icon. `null` removes it. */
   leadingIcon?: ReactNode;
+  /**
+   * Label of the button.
+   * @default "Latest"
+   */
+  children?: ReactNode;
 }
 
 export function ChatJumpButton({

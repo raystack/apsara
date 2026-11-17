@@ -25,7 +25,7 @@ export const CommandDialogTrigger = forwardRef<
 CommandDialogTrigger.displayName = 'Command.DialogTrigger';
 
 export interface CommandDialogContentProps extends DialogPrimitive.Popup.Props {
-  /** Corner radius for this palette only. Overrides the theme's `radius`. */
+  /** Corner radius for this palette only. Defaults to the theme's `radius`. */
   radius?: Radius;
 }
 

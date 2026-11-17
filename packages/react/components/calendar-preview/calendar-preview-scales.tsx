@@ -69,6 +69,7 @@ CalendarPreviewScales.displayName = 'CalendarPreview.Scales';
 
 export interface CalendarPreviewScaleProps
   extends useRender.ComponentProps<'button'> {
+  /** The scale this button selects. */
   value: Scale;
 }
 

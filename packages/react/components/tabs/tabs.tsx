@@ -5,11 +5,13 @@ import styles from './tabs.module.css';
 
 const tabsRoot = cva(styles.root, {
   variants: {
+    /** Visual style of the tabs. */
     variant: {
       segmented: styles['variant-segmented'],
       standalone: styles['variant-standalone'],
       plain: styles['variant-plain']
     },
+    /** Size of every tab. */
     size: {
       mini: styles['size-mini'],
       small: styles['size-small'],
@@ -54,6 +56,7 @@ function TabsList({ className, children, ...props }: TabsPrimitive.List.Props) {
 TabsList.displayName = 'Tabs.List';
 
 export interface TabsTabProps extends TabsPrimitive.Tab.Props {
+  /** Icon shown before the label. Screen readers skip it. */
   leadingIcon?: ReactNode;
 }
 

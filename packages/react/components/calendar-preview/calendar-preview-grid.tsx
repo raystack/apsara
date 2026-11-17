@@ -78,18 +78,43 @@ function useGridRootContext(part: string): GridRootContextValue {
 
 export interface CalendarPreviewGridProps
   extends useRender.ComponentProps<'div'> {
-  /** @defaultValue true */
+  /**
+   * Whether every month shows six week rows, so the grid height does not change.
+   * @default true
+   */
   fixedWeeks?: boolean;
-  /** @defaultValue false */
+  /**
+   * Whether to show the days of the previous and next months.
+   * @default false
+   */
   showOutsideDays?: boolean;
+  /**
+   * Whether to show a week-number column.
+   * @default false
+   */
   showWeekNumber?: boolean;
+  /**
+   * The first day of the week, from 0 (Sunday) to 6.
+   * @default 0
+   */
   weekStartsOn?: DayPickerProps['weekStartsOn'];
+  /** Extra day modifiers, passed to react-day-picker. */
   modifiers?: DayPickerProps['modifiers'];
+  /** Replaces react-day-picker's component slots. */
   components?: Partial<CustomComponents>;
+  /** Returns the content above a day's number. */
   dateInfo?: (date: Date) => ReactNode;
-  /** @defaultValue false */
+  /**
+   * Whether days show their `tooltipMessages` tooltip.
+   * @default false
+   */
   showTooltip?: boolean;
+  /** Returns the tooltip for a day, or nothing. */
   tooltipMessages?: (date: Date) => ReactNode;
+  /**
+   * Whether to cover the grid with a skeleton and disable month navigation.
+   * @default false
+   */
   loading?: boolean;
 }
 

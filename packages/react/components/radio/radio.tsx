@@ -11,6 +11,7 @@ const radioGroupVariants = cva(styles.group, {
       vertical: '',
       horizontal: styles['group-horizontal']
     },
+    /** Size of the radios in the group. A `size` on `Radio` overrides it. */
     size: {
       small: styles['group-small'],
       medium: styles['group-medium']
@@ -24,6 +25,7 @@ const radioGroupVariants = cva(styles.group, {
 
 const radioVariants = cva(styles.radioitem, {
   variants: {
+    /** Size of the radio. Defaults to the `size` of `Radio.Group`. */
     size: {
       small: styles.small,
       medium: styles.medium
@@ -34,6 +36,10 @@ const radioVariants = cva(styles.radioitem, {
 export interface RadioGroupProps<Value = string>
   extends RadioGroupPrimitive.Props<Value>,
     Omit<VariantProps<typeof radioGroupVariants>, 'orientation'> {
+  /**
+   * Layout direction of the radio group.
+   * @default "vertical"
+   */
   orientation?: 'vertical' | 'horizontal';
 }
 

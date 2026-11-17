@@ -58,11 +58,35 @@ export const useColorPicker = () => {
 
 export interface ColorPickerProps
   extends Omit<ComponentProps<typeof Flex>, 'defaultValue'> {
+  /**
+   * Direction of the main axis.
+   * @default "column"
+   */
+  direction?: ComponentProps<typeof Flex>['direction'];
+  /**
+   * Space between the items. `0` removes it, and steps 1 to 17 use `--rs-space-1` to `--rs-space-17`.
+   * @default 4
+   */
+  gap?: ComponentProps<typeof Flex>['gap'];
+  /** The color (controlled). Accepts any CSS color string. */
   value?: string;
+  /**
+   * The initial color (uncontrolled).
+   * @default "#ffffff"
+   */
   defaultValue?: string;
+  /**
+   * Called when the color changes. The value uses the active mode, which `details.mode` holds.
+   */
   onValueChange?: (value: string, details: ColorPickerChangeDetails) => void;
+  /**
+   * The initial color mode (uncontrolled).
+   * @default "hex"
+   */
   defaultMode?: ModeType;
+  /** The color mode (controlled). */
   mode?: ModeType;
+  /** Called when the color mode changes. */
   onModeChange?: (mode: ModeType) => void;
 }
 

@@ -17,12 +17,24 @@ export type BreadcrumbDropdownItem = ComponentProps<typeof Menu.Item> & {
 };
 
 export interface BreadcrumbItemProps extends useRender.ComponentProps<'a'> {
+  /** Icon shown before the label. */
   leadingIcon?: ReactNode;
+  /** Icon shown after the label. */
   trailingIcon?: ReactNode;
+  /**
+   * Whether the item is the current page. An active item renders as text, not a link.
+   * @default false
+   */
   active?: boolean;
-  /** When true, the item is non-clickable and visually muted (e.g. loading or no access). */
+  /**
+   * Whether the item is disabled. A disabled item is not clickable and looks muted.
+   * @default false
+   */
   disabled?: boolean;
+  /** Entries of a dropdown menu. Each entry takes the `Menu.Item` props and an optional `key`. The item then ignores `render` and `href`. */
   dropdownItems?: BreadcrumbDropdownItem[];
+  /** CSS class applied to the `<li>` that wraps the item. */
+  className?: string;
 }
 
 export const BreadcrumbItem = ({

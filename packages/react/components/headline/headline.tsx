@@ -4,21 +4,25 @@ import styles from './headline.module.css';
 
 const headline = cva(styles.headline, {
   variants: {
+    /** Size of the headline. */
     size: {
       t1: styles['headline-t1'],
       t2: styles['headline-t2'],
       t3: styles['headline-t3'],
       t4: styles['headline-t4']
     },
+    /** Weight of the headline. */
     weight: {
       regular: styles['headline-weight-regular'],
       medium: styles['headline-weight-medium']
     },
+    /** Alignment of the text. `start` and `end` follow the text direction. */
     align: {
       start: styles['align-start'],
       center: styles['align-center'],
       end: styles['align-end']
     },
+    /** Whether the text stays on one line and ends in an ellipsis when it overflows. */
     truncate: {
       true: styles['headline-truncate']
     }
