@@ -14,6 +14,7 @@ import Demo from '../demo';
 import { IconGallery } from '../icongallery';
 import { TokenTable } from '../tokentable';
 import { TypeTable } from '../typetable';
+import { withTextTypes } from '../typetable/text';
 import { Code } from './code';
 import styles from './mdx-components.module.css';
 import { PreContextProvider } from './pre-context';
@@ -97,6 +98,7 @@ const mdxComponents = {
   TypeTable: (props: ComponentPropsWithoutRef<typeof TypeTable>) => (
     <TypeTable
       {...props}
+      type={withTextTypes(props.type)}
       className={cx(styles['prose-type-table'], props.className)}
     />
   ),
