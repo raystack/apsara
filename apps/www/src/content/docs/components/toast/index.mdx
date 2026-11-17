@@ -110,13 +110,13 @@ The provider that renders toasts, and the manager APIs that add them, from a mod
 
 Renders the toast viewport and manages the toast lifecycle. Place once at the root of your app. `position` and `radius` apply to every stacked toast it renders.
 
-<auto-type-table path="./props.ts" name="ToastProviderProps" />
+<auto-type-table name="ToastProviderProps" />
 
 ### toastManager.add(options)
 
 Creates a new toast and returns its unique ID. If `id` matches an open toast, it updates that toast instead. The `toastManager` can be imported and used anywhere, including outside React components (e.g., API interceptors, utility functions).
 
-<auto-type-table path="./props.ts" name="ToastManagerAddOptions" />
+<auto-type-table name="ToastManagerAddOptions" type="Parameters<typeof toastManager.add>[0]" />
 
 ### Toast.createToastManager()
 
@@ -134,7 +134,7 @@ const manager = Toast.createToastManager()
 
 The returned object exposes the four manager methods:
 
-<auto-type-table path="./props.ts" name="CreateToastManagerReturn" />
+<auto-type-table name="CreateToastManagerReturn" type="ReturnType<typeof Toast.createToastManager>" />
 
 #### Update options
 
@@ -146,13 +146,13 @@ To build the update from the current toast, pass a function. It receives the cur
 toastManager.update(id, prev => ({ title: `${prev.title} (retrying)` }));
 ```
 
-<auto-type-table path="./props.ts" name="ToastManagerUpdateOptions" />
+<auto-type-table name="ToastManagerUpdateOptions" type="Exclude<Parameters<typeof toastManager.update>[1], Function>" />
 
 #### Promise options
 
 The `promise(promise, options)` method drives a toast through the resolve/reject lifecycle of a Promise.
 
-<auto-type-table path="./props.ts" name="ToastManagerPromiseOptions" />
+<auto-type-table name="ToastManagerPromiseOptions" type="Parameters<typeof toastManager.promise>[1]" />
 
 ### useToastManager()
 
@@ -164,13 +164,13 @@ import { useToastManager } from '@raystack/apsara'
 
 The hook is exported as a top-level named export (not as `Toast.useToastManager`) so React's rules-of-hooks linting recognizes it correctly.
 
-<auto-type-table path="./props.ts" name="UseToastManagerReturn" />
+<auto-type-table name="UseToastManagerReturn" type="ReturnType<typeof useToastManager>" />
 
 #### Toast object
 
 Each entry in `toasts` is a snapshot of a currently-mounted toast.
 
-<auto-type-table path="./props.ts" name="ToastObject" />
+<auto-type-table name="ToastObject" type="ReturnType<typeof useToastManager>['toasts'][number]" />
 
 Prefer the singleton `toastManager` when triggering toasts from non-React code (interceptors, utility functions, event handlers outside the provider). Use `useToastManager()` inside components when you need access to the live `toasts` array, or want the dispatch call colocated with the rest of the component's logic.
 

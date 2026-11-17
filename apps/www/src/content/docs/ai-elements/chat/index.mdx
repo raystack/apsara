@@ -90,11 +90,11 @@ bottom, stops following once they scroll up, anchors new `scrollAnchor` items
 near the top of the viewport (ChatGPT/Linear style), and keeps the reading
 position stable when older history is prepended.
 
-<auto-type-table path="./props.ts" name="ChatMessagesProps" />
+<auto-type-table name="ChatMessagesProps" />
 
 Imperative commands are available through `actionsRef`:
 
-<auto-type-table path="./props.ts" name="ChatMessagesActions" />
+<auto-type-table name="ChatMessagesActions" />
 
 ### Chat.Item
 
@@ -104,7 +104,7 @@ anchor, and applies `content-visibility: auto` containment so offscreen items
 skip layout and paint. It wraps anything and has no opinion about what a
 message looks like.
 
-<auto-type-table path="./props.ts" name="ChatItemProps" />
+<auto-type-table name="ChatItemProps" />
 
 ### Chat.JumpButton
 
@@ -113,7 +113,7 @@ and scrolls back down on click. Render it as a child of `Chat.Messages`.
 Children are the text slot ("Latest" by default); the leading icon renders
 regardless, swap it with `leadingIcon` or remove it with `leadingIcon={null}`.
 
-<auto-type-table path="./props.ts" name="ChatJumpButtonProps" />
+<auto-type-table name="ChatJumpButtonProps" />
 
 ### Chat.Composer
 
@@ -126,7 +126,7 @@ messages viewport and pads the sides and bottom.
 Hook for components rendered inside `Chat.Messages`: active-turn indicators,
 jump-to-message navigation, custom scroll buttons.
 
-<auto-type-table path="./props.ts" name="UseChatMessagesReturn" />
+<auto-type-table name="UseChatMessagesReturn" />
 
 ### Chat.Separator
 
@@ -138,7 +138,7 @@ format dates however your app does.
 A presentational attachment preview card for `PromptInput.Header` or message
 bodies. File picking, drag-drop and validation belong to your app.
 
-<auto-type-table path="./props.ts" name="ChatAttachmentProps" />
+<auto-type-table name="ChatAttachmentProps" />
 
 ### Slots
 
