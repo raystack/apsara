@@ -11,8 +11,11 @@ const grid = cva(styles.grid, {
       true: styles['grid-inline'],
       false: null
     },
+    /** Space between the items. `0` removes it, and steps 1 to 17 use `--rs-space-1` to `--rs-space-17`. */
     gap: gapVariants,
+    /** Space between the columns, on the same scale as `gap`. */
     columnGap: columnGapVariants,
+    /** Space between the rows, on the same scale as `gap`. */
     rowGap: rowGapVariants
   }
 });
@@ -24,43 +27,30 @@ const toCssAlignment = (value?: AlignExtendedType) =>
 
 export type GridProps = useRender.ComponentProps<'div'> &
   VariantProps<typeof grid> & {
-    /**
-     * Supports CSS Grid template areas syntax.
-     *
-     * @example
-     * <Grid templateAreas="header header header" />
-     * <Grid templateAreas={["header header header", "sidebar main main", "footer footer footer"]} />
-     */
+    /** Named grid areas in `grid-template-areas` syntax. An array takes one string per row. */
     templateAreas?: string | string[];
+    /** How auto-placed items flow into the grid. Sets `grid-auto-flow`. */
     autoFlow?: 'row' | 'column' | 'dense' | 'row dense' | 'column dense';
+    /** Size of the implicit columns. Sets `grid-auto-columns`. */
     autoColumns?: string;
+    /** Size of the implicit rows. Sets `grid-auto-rows`. */
     autoRows?: string;
-
-    /**
-     * Supports CSS Grid template columns syntax.
-     *
-     * If you pass a number, columns will be created using repeat(n, 1fr).
-     *
-     * @example
-     * <Grid columns="1fr 1fr 1fr" />
-     * <Grid columns={3} />
-     */
+    /** Columns in `grid-template-columns` syntax. A number `n` creates `repeat(n, 1fr)`. */
     columns?: string | number;
-
-    /**
-     * Supports CSS Grid template rows syntax.
-     *
-     * If you pass a number, rows will be created using repeat(n, 1fr).
-     *
-     * @example
-     * <Grid rows="1fr 1fr 1fr" />
-     * <Grid rows={3} />
-     */
+    /** Rows in `grid-template-rows` syntax. A number `n` creates `repeat(n, 1fr)`. */
     rows?: string | number;
+    /** Alignment of the items on the inline (row) axis. Sets `justify-items`. */
     justifyItems?: AlignType;
+    /** Alignment of the items on the block (column) axis. Sets `align-items`. */
     align?: AlignType;
+    /** Alignment of the whole grid on the inline (row) axis. Sets `justify-content`. */
     justify?: AlignExtendedType;
+    /** Alignment of the whole grid on the block (column) axis. Sets `align-content`. */
     alignContent?: AlignExtendedType;
+    /**
+     * Renders as `inline-grid` instead of `grid`.
+     * @default false
+     */
     inline?: boolean;
   };
 

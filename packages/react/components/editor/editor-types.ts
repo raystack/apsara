@@ -33,7 +33,7 @@ export interface EditorCommands {
 }
 
 export interface EditorApi {
-  /** Null until `Editor.Content` mounts. */
+  /** The ProseMirror view. Null until `Editor.Content` mounts. */
   readonly view: EditorView | null;
   getState: () => EditorState;
   /** Runs a command. Returns true if it applied. */
@@ -87,7 +87,9 @@ export interface EditorSlashItem {
   /** Shown under the label. The filter matches it at the start of a word. */
   description?: string;
   leadingIcon?: ReactNode;
+  /** Section heading. Groups render in first-appearance order. */
   group?: string;
+  /** Extra words the filter matches. */
   keywords?: string[];
   /** Shortcut shown on the row, in ProseMirror keymap syntax. Built-in commands show their default key. */
   shortcut?: string;

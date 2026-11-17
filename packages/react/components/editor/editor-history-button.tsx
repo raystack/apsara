@@ -1,6 +1,7 @@
 'use client';
 
 import { redo, undo } from 'prosemirror-history';
+import type { ReactNode } from 'react';
 import { RedoIcon, UndoIcon } from '~/icons';
 import { useEditorStore, useStoreSelector } from './editor-context';
 import { EditorControl, type EditorControlBaseProps } from './editor-control';
@@ -8,6 +9,8 @@ import { EditorControl, type EditorControlBaseProps } from './editor-control';
 export interface EditorHistoryButtonProps extends EditorControlBaseProps {
   /** Which way the button steps through history. */
   action: 'undo' | 'redo';
+  /** Replaces the default icon. */
+  children?: ReactNode;
 }
 
 /** Undoes or redoes the last change. */

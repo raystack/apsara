@@ -9,7 +9,19 @@ import { useCalendarPreviewContext } from './calendar-preview-context';
 import { isRange, isScaleValue } from './calendar-preview-root';
 import { dayKey } from './date-adapter';
 
-export type CalendarPreviewResetProps = ComponentProps<typeof IconButton>;
+export interface CalendarPreviewResetProps
+  extends ComponentProps<typeof IconButton> {
+  /**
+   * Size of the button.
+   * @default 3
+   */
+  size?: 1 | 2 | 3 | 4;
+  /**
+   * Accessible name of the button.
+   * @default "Reset"
+   */
+  'aria-label'?: string;
+}
 
 /* Unmounting would send focus to `<body>` and drop the nav's `flex: none` child. */
 export function CalendarPreviewReset({

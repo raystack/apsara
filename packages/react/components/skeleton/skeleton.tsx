@@ -6,19 +6,52 @@ import { type Radius, radiusStyle } from '../../shared/radius';
 import styles from './skeleton.module.css';
 
 export interface SkeletonProps {
+  /**
+   * Background color of each item.
+   * @default "var(--rs-color-background-base-primary-hover)"
+   */
   baseColor?: string;
+  /**
+   * Color of the shimmer.
+   * @default "var(--rs-color-background-base-primary)"
+   */
   highlightColor?: string;
+  /** Width of each item. Defaults to `50px` when `inline`, otherwise `100%`. */
   width?: string | number;
+  /**
+   * Height of each item.
+   * @default "var(--rs-space-4)"
+   */
   height?: string | number;
-  /** Corner radius for this skeleton only. Overrides the theme's `radius`. */
+  /** Corner radius for this skeleton only. Defaults to the theme's `radius`. */
   radius?: Radius;
+  /**
+   * Whether the items render as `inline-block` inside a `span`.
+   * @default false
+   */
   inline?: boolean;
+  /**
+   * Duration of one shimmer cycle, in seconds.
+   * @default 1.5
+   */
   duration?: number;
+  /**
+   * Whether the shimmer animation is off.
+   * @default false
+   */
   disableAnimation?: boolean;
+  /**
+   * Number of items to render.
+   * @default 1
+   */
   count?: number;
+  /** Inline styles for each item. */
   style?: CSSProperties;
+  /** CSS class applied to each item. */
   className?: string;
+  /** Inline styles for the container: a `div`, or a `span` when `inline`. */
   containerStyle?: CSSProperties;
+  /** CSS class applied to the container: a `div`, or a `span` when `inline`. */
   containerClassName?: string;
 }
 

@@ -111,8 +111,25 @@ export interface DataViewFiltersProps<TData> extends PositionerProps {
     /** @deprecated Use `[data-slot="data-view-add-filter"]` instead. */
     addFilter?: string;
   };
+  /** CSS class applied to the filters row. */
   className?: string;
+  /** Custom trigger for the add-filter menu. A function receives the available and applied filters. */
   trigger?: Trigger<TData>;
+  /**
+   * Alignment of the add-filter menu against its trigger.
+   * @default "start"
+   */
+  align?: 'start' | 'center' | 'end';
+  /**
+   * Side of the trigger that the add-filter menu opens on.
+   * @default "bottom"
+   */
+  side?: 'top' | 'bottom' | 'left' | 'right' | 'inline-end' | 'inline-start';
+  /**
+   * Distance in pixels between the trigger and the add-filter menu.
+   * @default 4
+   */
+  sideOffset?: PositionerProps['sideOffset'];
 }
 
 export function Filters<TData>({

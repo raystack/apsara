@@ -5,7 +5,7 @@ import {
   Select as SelectPrimitive
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { ComponentProps, Fragment } from 'react';
+import { ComponentProps, Fragment, ReactNode } from 'react';
 import { Label, type LabelProps } from '../label';
 import { getMatch } from '../menu/utils';
 import styles from './select.module.css';
@@ -63,7 +63,10 @@ export function SelectGroupLabel({
 }
 SelectGroupLabel.displayName = 'Select.GroupLabel';
 
-export interface SelectEmptyProps extends ComponentProps<'div'> {}
+export interface SelectEmptyProps extends ComponentProps<'div'> {
+  /** Content shown when the list has no items, or when no item matches the search. */
+  children?: ReactNode;
+}
 
 export function SelectEmpty({
   className,

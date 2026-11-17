@@ -4,7 +4,9 @@ import { ReactNode } from 'react';
 import styles from './cell.module.css';
 
 export type CellBaseProps = {
+  /** Icon before the item text. */
   leadingIcon?: ReactNode;
+  /** Icon after the item text. */
   trailingIcon?: ReactNode;
 };
 export type CellProps = useRender.ComponentProps<'div'> &

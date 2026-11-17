@@ -12,10 +12,12 @@ import styles from './text-area.module.css';
 const textAreaVariants = cva(styles.textarea, {
   variants: {
     ...radiusVariants,
+    /** Size of the text area. */
     size: {
       small: styles['size-small'],
       medium: styles['size-medium']
     },
+    /** Visual style of the text area. */
     variant: {
       outline: null,
       text: styles['variant-text']
@@ -30,10 +32,23 @@ const textAreaVariants = cva(styles.textarea, {
 export interface TextAreaProps
   extends Omit<ComponentProps<'textarea'>, 'size'>,
     VariantProps<typeof textAreaVariants> {
+  /**
+   * Whether the text area is disabled.
+   * @default false
+   */
   disabled?: boolean;
+  /** Text shown when the text area is empty. */
   placeholder?: string;
+  /**
+   * Number of visible text rows.
+   * @default 3
+   */
+  rows?: number;
+  /** The value of the text area. Use when controlled. */
   value?: string;
+  /** Called with the React change event when the value changes. */
   onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+  /** Called with the new string value when the value changes. It runs after `onChange`. */
   onValueChange?: (
     value: string,
     eventDetails: InputPrimitive.ChangeEventDetails

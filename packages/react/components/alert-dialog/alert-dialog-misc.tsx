@@ -7,10 +7,26 @@ import styles from '../dialog/dialog.module.css';
 import { Flex } from '../flex';
 import alertDialogStyles from './alert-dialog.module.css';
 
+type FlexProps = ComponentProps<typeof Flex>;
+
+interface AlertDialogStackProps extends FlexProps {
+  /** @default "column" */
+  direction?: FlexProps['direction'];
+  /** @default 3 */
+  gap?: FlexProps['gap'];
+}
+
+interface AlertDialogFooterProps extends FlexProps {
+  /** @default 5 */
+  gap?: FlexProps['gap'];
+  /** @default "end" */
+  justify?: FlexProps['justify'];
+}
+
 export const AlertDialogHeader = ({
   className,
   ...props
-}: ComponentProps<typeof Flex>) => (
+}: AlertDialogStackProps) => (
   <Flex
     direction='column'
     gap={3}
@@ -25,7 +41,7 @@ AlertDialogHeader.displayName = 'AlertDialog.Header';
 export const AlertDialogFooter = ({
   className,
   ...props
-}: ComponentProps<typeof Flex>) => (
+}: AlertDialogFooterProps) => (
   <Flex
     gap={5}
     justify='end'
@@ -40,7 +56,7 @@ AlertDialogFooter.displayName = 'AlertDialog.Footer';
 export const AlertDialogBody = ({
   className,
   ...props
-}: ComponentProps<typeof Flex>) => (
+}: AlertDialogStackProps) => (
   <Flex
     direction='column'
     gap={3}

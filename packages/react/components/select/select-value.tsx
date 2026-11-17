@@ -10,7 +10,9 @@ import { ItemType } from './types';
 type ValueType = Omit<ItemType, 'children'>;
 
 export type SelectValueProps = ComponentProps<'span'> & {
+  /** Text shown when no item is selected. */
   placeholder?: string;
+  /** Content shown in place of the selected item's label. A function receives the selected item, or an array when more than one item is selected. */
   children?: ((value?: ValueType | ValueType[]) => ReactNode) | ReactNode;
   className?: string;
 };

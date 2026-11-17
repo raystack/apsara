@@ -78,32 +78,37 @@ export const SidebarPopupContext = createContext<(open: boolean) => void>(
 export interface SidebarRootProps extends ComponentProps<'aside'> {
   /**
    * The edge of the layout the sidebar sits on.
-   * @default 'left'
+   * @default "left"
    */
   side?: 'left' | 'right';
   /** @deprecated Use `side`. */
   position?: 'left' | 'right';
+  /**
+   * Visual style of the sidebar.
+   * @default "plain"
+   */
   variant?: 'plain' | 'floating' | 'inset';
   /**
    * Hide the tooltips the Sidebar adds to items: the label tooltip when
    * collapsed, and the full-text tooltip on clipped labels when expanded.
+   * @default false
    */
   hideItemTooltips?: boolean;
   /**
    * Whether the user can collapse the sidebar, and what the collapsed
-   * state looks like. Expanding always works the same: the sidebar opens
-   * in place and pushes content.
-   * - `'icon'`: collapses to an icon rail (default).
-   * - `'hidden'`: collapses to a thin strip with no visible content.
-   * - `'none'`: the sidebar cannot be collapsed; the resize handle is hidden.
-   *
-   * Unlike `collapsible` on `Sidebar.Group`, which renders a group
-   * as an accordion.
+   * state looks like. `"icon"` collapses to an icon rail. `"hidden"`
+   * collapses to a thin strip with no visible content. `"none"` prevents
+   * collapsing and hides the resize handle. Expanding always works the same:
+   * the sidebar opens in place and pushes content. `collapsible` on
+   * `Sidebar.Group` is a different prop, which renders a group as an accordion.
+   * @default "icon"
    */
   collapsible?: 'icon' | 'hidden' | 'none';
   /**
    * Hovering a collapsed sidebar temporarily reveals it as an overlay above
    * the content, without changing the real open state. Reverts on mouse leave.
+   * Has no effect when `collapsible` is `"none"`, or while the sidebar is open.
+   * @default false
    */
   peekOnHover?: boolean;
   /**
@@ -114,10 +119,19 @@ export interface SidebarRootProps extends ComponentProps<'aside'> {
   peekDelay?: number;
   /** Called when a hover peek starts or ends. */
   onPeekChange?: (isPeeking: boolean) => void;
-  /** Tooltip shown when hovering the collapse/expand handle. */
+  /**
+   * Tooltip shown when hovering the collapse/expand handle. Defaults to
+   * "Click to collapse" while open and "Click to expand" while collapsed.
+   */
   collapseTooltip?: ReactNode;
+  /** Whether the sidebar is expanded (controlled). */
   open?: boolean;
+  /**
+   * Whether the sidebar is expanded on the first render (uncontrolled).
+   * @default true
+   */
   defaultOpen?: boolean;
+  /** Called when the sidebar expands or collapses. */
   onOpenChange?: (open: boolean, details: SidebarOpenChangeDetails) => void;
 }
 

@@ -15,6 +15,7 @@ import styles from './input.module.css';
 const inputWrapper = cva(styles['input-wrapper'], {
   variants: {
     ...radiusVariants,
+    /** Size of the input. */
     size: {
       small: styles['size-small'],
       medium: styles['size-medium']
@@ -33,15 +34,34 @@ const inputWrapper = cva(styles['input-wrapper'], {
 export interface InputProps
   extends Omit<InputPrimitive.Props, 'size'>,
     VariantProps<typeof inputWrapper> {
+  /**
+   * Whether the input is disabled. Also disables the chips passed as props.
+   * @default false
+   */
   disabled?: boolean;
+  /** Text shown when the input is empty. Hidden while chips are shown. */
+  placeholder?: string;
+  /** Icon shown at the start of the input. */
   leadingIcon?: ReactNode;
+  /** Icon shown at the end of the input. */
   trailingIcon?: ReactNode;
+  /** Text shown before the input value. */
   prefix?: string;
+  /** Text shown after the input value. */
   suffix?: string;
   /** Chips shown before the text. Elements render as given; props render a `Chip`. */
   chips?: Array<ReactElement | ChipProps>;
+  /**
+   * Maximum number of chips shown before a `+N` overflow count.
+   * @default 2
+   */
   maxChipsVisible?: number;
+  /**
+   * Visual style of the input.
+   * @default "outline"
+   */
   variant?: 'outline' | 'text';
+  /** Ref to the outer container `div`. */
   containerRef?: RefObject<HTMLDivElement | null>;
   /** @deprecated Use `[data-slot="input-container"]` instead. */
   classNames?: { container?: string };

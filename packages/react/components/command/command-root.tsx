@@ -39,6 +39,28 @@ export interface CommandRootProps<Item = unknown>
    * delegated to Base UI's built-in logic (or the user's custom `filter`).
    */
   items?: readonly Item[];
+  /** Filter function used to match items against the input query. Applies only with `items`. */
+  filter?: AutocompletePrimitive.Root.Props<Item>['filter'];
+  /**
+   * Whether the list renders inline, without a popup.
+   * @default true
+   */
+  inline?: boolean;
+  /**
+   * Whether the list is open, so its items can be highlighted.
+   * @default true
+   */
+  open?: boolean;
+  /**
+   * Whether the first matching item is highlighted automatically. `true` highlights after the user types. `"always"` always highlights the first item.
+   * @default "always"
+   */
+  autoHighlight?: boolean | 'always';
+  /**
+   * Whether the highlighted item stays highlighted when the pointer leaves the list.
+   * @default true
+   */
+  keepHighlight?: boolean;
   /** Additional CSS class for the panel wrapper. */
   className?: string;
 }

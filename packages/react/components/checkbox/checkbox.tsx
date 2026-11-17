@@ -48,6 +48,7 @@ const IndeterminateIcon = () => (
 
 const checkboxVariants = cva(styles.checkbox, {
   variants: {
+    /** Size of the checkbox. */
     size: {
       small: styles.small,
       medium: styles.medium
@@ -59,8 +60,9 @@ const checkboxVariants = cva(styles.checkbox, {
 });
 
 export interface CheckboxGroupProps extends CheckboxGroupPrimitive.Props {
-  /** Layout direction of the checkbox group.
-   * @defaultValue 'vertical'
+  /**
+   * Layout direction of the checkbox group.
+   * @default "vertical"
    */
   orientation?: 'vertical' | 'horizontal';
 }
@@ -87,7 +89,12 @@ CheckboxGroup.displayName = 'Checkbox.Group';
 
 export interface CheckboxItemProps
   extends CheckboxPrimitive.Root.Props,
-    VariantProps<typeof checkboxVariants> {}
+    VariantProps<typeof checkboxVariants> {
+  /** Whether the user must tick the checkbox before submitting a form. Defaults to the `required` of the surrounding `Field`, otherwise `false`. */
+  required?: boolean;
+  /** Replaces the indicator inside the checkbox. A function receives the indicator props and a state with `checked` and `indeterminate`. */
+  render?: CheckboxPrimitive.Root.Props['render'];
+}
 
 function CheckboxItem({
   className,

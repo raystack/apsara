@@ -4,6 +4,7 @@ import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { useControlled } from '@base-ui/utils/useControlled';
 import {
   createContext,
+  ReactNode,
   RefObject,
   useCallback,
   useContext,
@@ -44,6 +45,18 @@ export interface BaseComboboxRootProps<Value, Item = Value>
     ComboboxPrimitive.Root.Props<Value, boolean, Item>,
     'onValueChange' | 'onInputValueChange' | 'multiple'
   > {
+  /** The combobox's parts, such as `Combobox.Input` and `Combobox.Content`. */
+  children?: ReactNode;
+  /** The `id` of the input. `Combobox.Label` points to it. */
+  id?: string;
+  /**
+   * Whether the popup locks page scroll and blocks pointer interaction outside it.
+   * @default true
+   */
+  modal?: boolean;
+  /** Converts a value to the text shown in the input and the chips. A value shaped `{ value, label }` uses its `label` without it. */
+  itemToStringLabel?: (itemValue: Value) => string;
+  /** Called when the input text changes. */
   onInputValueChange?: (
     inputValue: string,
     eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
@@ -52,9 +65,16 @@ export interface BaseComboboxRootProps<Value, Item = Value>
 
 export interface SingleComboboxProps<Value = string, Item = Value>
   extends BaseComboboxRootProps<Value, Item> {
+  /**
+   * Whether the user can select more than one item. `value`, `defaultValue`, and `onValueChange` then use an array.
+   * @default false
+   */
   multiple?: false;
+  /** The selected value. An array when `multiple` is set. */
   value?: Value | null;
+  /** The value selected on first render when `value` is not set. An array when `multiple` is set. */
   defaultValue?: Value | null;
+  /** Called when the selection changes. Receives an array when `multiple` is set. */
   onValueChange?: (
     value: Value | null,
     eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
@@ -63,9 +83,13 @@ export interface SingleComboboxProps<Value = string, Item = Value>
 
 export interface MultipleComboboxProps<Value = string, Item = Value>
   extends BaseComboboxRootProps<Value, Item> {
+  /** Whether the user can select more than one item. `value`, `defaultValue`, and `onValueChange` then use an array. */
   multiple: true;
+  /** The selected value. An array when `multiple` is set. */
   value?: Value[];
+  /** The value selected on first render when `value` is not set. An array when `multiple` is set. */
   defaultValue?: Value[];
+  /** Called when the selection changes. Receives an array when `multiple` is set. */
   onValueChange?: (
     value: Value[],
     eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
