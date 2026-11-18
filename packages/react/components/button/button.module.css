@@ -58,6 +58,7 @@
 }
 
 .button-small {
+  height: var(--rs-space-7);
   padding: var(--rs-space-2) var(--rs-space-3);
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
