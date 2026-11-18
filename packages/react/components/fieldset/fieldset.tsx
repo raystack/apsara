@@ -3,7 +3,13 @@ import { cx } from 'class-variance-authority';
 import styles from './fieldset.module.css';
 
 export interface FieldsetProps extends FieldsetPrimitive.Root.Props {
+  /** Text shown as the fieldset legend. */
   legend?: string;
+  /**
+   * Whether the fieldset and all controls inside it are disabled.
+   * @default false
+   */
+  disabled?: boolean;
 }
 
 function FieldsetRoot({

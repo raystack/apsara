@@ -9,8 +9,11 @@ import styles from './code-block.module.css';
 import { useCodeBlockContext } from './code-block-root';
 
 export interface CodeBlockCodeProps extends ComponentProps<'div'> {
+  /** The code to highlight. Leading and trailing whitespace is removed. */
   children: string;
+  /** The language for syntax highlighting. */
   language: Language;
+  /** The value that selects this code. Defaults to `language`. */
   value?: string;
   className?: string;
 }

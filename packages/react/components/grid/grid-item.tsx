@@ -3,14 +3,23 @@ import { CSSProperties } from 'react';
 import { AlignType } from './types';
 
 export type GridItemProps = useRender.ComponentProps<'div'> & {
+  /** Named area to place the item in. Must match a name in the parent's `templateAreas`. */
   area?: string;
+  /** Column line where the item starts. */
   colStart?: number | string;
+  /** Column line where the item ends. */
   colEnd?: number | string;
+  /** Row line where the item starts. */
   rowStart?: number | string;
+  /** Row line where the item ends. */
   rowEnd?: number | string;
+  /** Number of columns the item spans. */
   colSpan?: number | string;
+  /** Number of rows the item spans. */
   rowSpan?: number | string;
+  /** Alignment of the item on the inline (row) axis in its grid area. */
   justifySelf?: AlignType;
+  /** Alignment of the item on the block (column) axis in its grid area. */
   alignSelf?: AlignType;
 };
 

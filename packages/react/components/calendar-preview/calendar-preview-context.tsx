@@ -27,8 +27,11 @@ export interface CalendarPreviewDraftRange {
 }
 
 export interface CalendarPreviewChangeDetails {
+  /** What caused the change. */
   reason: CalendarPreviewChangeReason;
+  /** The first and last day of the period acted on, as `YYYY-MM-DD`. At day scale they are the same day. */
   period: { start: DayKey; end: DayKey };
+  /** Returns the day acted on, also when the value is `null`. */
   toDate: () => Date;
 }
 

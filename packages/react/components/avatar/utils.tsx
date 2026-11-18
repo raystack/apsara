@@ -17,7 +17,7 @@ export const AVATAR_COLORS = [
 export type AvatarColor = (typeof AVATAR_COLORS)[number];
 
 export interface GetAvatarColorOptions {
-  /** Restricts the result to these colors. Order matters. If empty, all colors are used. */
+  /** Colors to pick from. Order matters. Defaults to `AVATAR_COLORS` when unset or empty. */
   palette?: readonly AvatarColor[];
 }
 

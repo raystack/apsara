@@ -30,12 +30,12 @@ export interface EditorFloatingToolbarProps
   extends Omit<ComponentProps<typeof Toolbar>, 'orientation'> {
   /**
    * The side of the selection the toolbar shows on.
-   * @default 'top'
+   * @default "top"
    */
   side?: 'top' | 'bottom';
   /**
    * How the toolbar aligns to the selection.
-   * @default 'start'
+   * @default "start"
    */
   align?: 'start' | 'center' | 'end';
   /**
@@ -43,8 +43,13 @@ export interface EditorFloatingToolbarProps
    * @default 8
    */
   sideOffset?: number;
-  /** Decides whether the toolbar shows for a state. Replaces the default rule. */
+  /** Decides whether the toolbar shows for a state. Replaces the default rule: a non-empty text selection outside a code block. */
   shouldShow?: (state: EditorState) => boolean;
+  /**
+   * Accessible name for the toolbar.
+   * @default "Formatting"
+   */
+  'aria-label'?: string;
 }
 
 /** A non-empty text selection outside a code block. */

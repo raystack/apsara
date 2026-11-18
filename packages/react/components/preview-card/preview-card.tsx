@@ -18,7 +18,14 @@ export interface PreviewCardContentProps
    * @default false
    */
   showArrow?: boolean;
-  /** Corner radius for this card only. Overrides the theme's `radius`. */
+  /** Distance between the anchor and the popup in pixels. Defaults to `4`, or `10` with `showArrow`. */
+  sideOffset?: PreviewCardPrimitive.Positioner.Props['sideOffset'];
+  /**
+   * Additional space to keep from the edge of the collision boundary.
+   * @default 3
+   */
+  collisionPadding?: PreviewCardPrimitive.Positioner.Props['collisionPadding'];
+  /** Corner radius for this card only. Defaults to the theme's `radius`. */
   radius?: Radius;
 }
 

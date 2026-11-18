@@ -5,7 +5,15 @@ import { cx } from 'class-variance-authority';
 import { Button } from '../button';
 import styles from './toolbar.module.css';
 
-const ToolbarRoot = ({ className, ...props }: ToolbarPrimitive.Root.Props) => (
+interface ToolbarRootProps extends ToolbarPrimitive.Root.Props {
+  /**
+   * Whether all buttons and inputs in the toolbar are disabled.
+   * @default false
+   */
+  disabled?: boolean;
+}
+
+const ToolbarRoot = ({ className, ...props }: ToolbarRootProps) => (
   <ToolbarPrimitive.Root
     data-slot='toolbar'
     className={cx(styles.root, className)}

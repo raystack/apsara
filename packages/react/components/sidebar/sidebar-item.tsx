@@ -19,9 +19,21 @@ import { useInsideSidebarMore } from './sidebar-more-context';
 import { SidebarPopupContext, useSidebarSafe } from './sidebar-root';
 
 export interface SidebarItemProps extends ComponentProps<'a'> {
+  /**
+   * Icon shown before the label. Without it, the item shows an avatar with the
+   * first letter of a string label in a collapsed sidebar and in `Sidebar.More`.
+   */
   leadingIcon?: ReactNode;
+  /** Label of the item. A string label also names the item in a collapsed sidebar. */
+  children?: ReactNode;
+  /** Whether the item is the current page. Sets `aria-current="page"`. */
   active?: boolean;
+  /** Whether the item is disabled. */
   disabled?: boolean;
+  /**
+   * Element to render the item as, for example a router link. The item passes all props to it.
+   * @default <a />
+   */
   render?: ReactElement;
   /** @deprecated Every key here has an equivalent `[data-slot]`. See the Slots table in the Sidebar docs. */
   classNames?: {

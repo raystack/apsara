@@ -28,13 +28,9 @@ export interface ToastProviderProps
    * @default "bottom-right"
    */
   position?: ToastPosition;
-  /** Corner radius for these toasts only. Overrides the theme's `radius`. */
+  /** Corner radius for these toasts only. Defaults to the theme's `radius`. */
   radius?: Radius;
-  /**
-   * Toast manager instance. Defaults to the singleton exported as
-   * `toastManager`. Provide a custom one created via
-   * `Toast.createToastManager()` to scope toasts to this provider.
-   */
+  /** Manager to render toasts from. Defaults to the exported `toastManager`. */
   toastManager?: ToastManager;
 }
 

@@ -47,6 +47,7 @@ import { Operation } from './filter-chip-operation';
 
 const chip = cva(styles.chip, {
   variants: {
+    /** Visual style of the chip. */
     variant: {
       outline: styles['variant-outline'],
       text: null
@@ -122,9 +123,9 @@ export type FilterChipCalendarProps = Pick<
   | 'defaultMonth'
   | 'today'
 > & {
-  /** Formats the selected date for the input. */
+  /** Formats the selected date for the input. The chip calls it with a `Date` and the `timeZone`. */
   formatValue?: (date: Date, timeZone?: string) => string;
-  /** Props for the chip's date input and its popup. */
+  /** Props for the chip's date input and its popup. `input.disabled` and `input.readOnly` also apply to the calendar. */
   slotProps?: {
     input?: Omit<CalendarPreviewInputProps, 'field'>;
     popover?: Omit<CalendarPreviewContentProps, 'children'>;
@@ -143,8 +144,18 @@ export type FilterChipOperations =
 export interface FilterChipProps
   extends Omit<ComponentProps<'div'>, 'defaultValue'>,
     VariantProps<typeof chip> {
+  /** Label of the filter. It also names the chip and its remove button for screen readers. */
   label: string;
+  /**
+   * The value (controlled). `multiselect` takes an array. `date` takes a
+   * `Date`, or a string or epoch number that the chip parses. `number` shows a
+   * value that is not a number as empty.
+   */
   value?: FilterChipValue;
+  /**
+   * The value on the first render (uncontrolled). Takes the same types as `value`.
+   * @default ""
+   */
   defaultValue?: FilterChipValue;
   /**
    * Active operation, by its `value`. A value the list does not have shows as
@@ -158,25 +169,41 @@ export interface FilterChipProps
    * @default the first entry of `operations`
    */
   defaultOperation?: string;
+  /** Called when the remove button is clicked. The chip shows the button only when this is set. */
   onRemove?: () => void;
+  /**
+   * Input type of the chip's value control.
+   * @default "string"
+   */
   columnType?: FilterTypes;
+  /** Options of a `select` or `multiselect` chip. */
   options?: FilterSelectOption[];
+  /**
+   * Called when the value changes, with the active operation in
+   * `details.operation`. A `select` or `multiselect` chip reports the option's
+   * `value` with its type kept. A `number` chip reports a `number`, reports
+   * `""`, `"-"`, `"."`, and `"-."` as typed, and ignores other text.
+   */
   onValueChange?: (
     value: FilterChipValue,
     details: FilterChipChangeDetails
   ) => void;
+  /** Called when the operation changes. */
   onOperationChange?: (
     operation: string,
     details: FilterChipOperationChangeDetails
   ) => void;
+  /** Icon shown before the label. */
   leadingIcon?: ReactNode;
   /**
    * Operations the chip offers. An array replaces the operations of the
-   * `columnType`, a function receives them and returns the list to use.
+   * `columnType`, a function receives them and returns the list to use. An
+   * empty result falls back to the operations of the `columnType`.
    * Without it the chip keeps whatever `operation` carries.
    * @default the operations of the `columnType`
    */
   operations?: FilterChipOperations;
+  /** Props for the `Select` of a `select` or `multiselect` chip. */
   selectProps?: BaseSelectProps;
   /** Props forwarded to the `CalendarPreview` for `columnType="date"`. */
   calendarProps?: FilterChipCalendarProps;

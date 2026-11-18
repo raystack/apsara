@@ -12,20 +12,30 @@ import { useSidebarSafe } from './sidebar-root';
 import { SidebarTrailingVisual } from './sidebar-trailing-visual';
 
 export interface SidebarGroupProps extends ComponentProps<'section'> {
+  /** Title of the group. It also names the group for screen readers. */
   label: string;
   /**
    * Renders the group as an accordion whose items can be shown or hidden.
    * Unlike `collapsible` on the Sidebar root, this does not affect the
    * sidebar's own collapse behavior.
+   * @default false
    */
   collapsible?: boolean;
+  /** Whether the group is expanded (controlled). Applies only when `collapsible` is set. */
   open?: boolean;
+  /**
+   * Whether the group is expanded on the first render (uncontrolled). Applies only when `collapsible` is set.
+   * @default true
+   */
   defaultOpen?: boolean;
+  /** Called when the group expands or collapses. */
   onOpenChange?: (
     open: boolean,
     eventDetails: AccordionPrimitive.Root.ChangeEventDetails
   ) => void;
+  /** Icon shown before the label. */
   leadingIcon?: ReactNode;
+  /** Element shown at the end of the group header, for example an action icon. */
   trailingIcon?: ReactNode;
   /** @deprecated Every key here has an equivalent `[data-slot]`. See the Slots table in the Sidebar docs. */
   classNames?: {

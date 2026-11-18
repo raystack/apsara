@@ -20,7 +20,7 @@ export interface PromptInputMessage {
   text: string;
   /** Round-trippable markup that feeds straight back into `value`. */
   markup: string;
-  /** Document order; duplicates preserved. */
+  /** Chips in document order, duplicates included. Their offsets index into `text`. */
   mentions: PromptInputMention[];
 }
 
