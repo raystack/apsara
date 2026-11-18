@@ -61,25 +61,25 @@ A trigger and its content, with `Viewport` for cards whose contents change size.
 
 Groups all parts of the preview card.
 
-<auto-type-table path="./props.ts" name="PreviewCardRootProps" />
+<auto-type-table name="PreviewCardRootProps" type="ComponentProps<typeof PreviewCard>" />
 
 ### Trigger
 
 A link element that opens the preview card on hover. Renders an `<a>` tag.
 
-<auto-type-table path="./props.ts" name="PreviewCardTriggerProps" />
+<auto-type-table name="PreviewCardTriggerProps" type="ComponentProps<typeof PreviewCard.Trigger>" />
 
 ### Content
 
 Renders the preview card content panel, wrapping Portal, Positioner, and Popup internally.
 
-<auto-type-table path="./props.ts" name="PreviewCardContentProps" />
+<auto-type-table name="PreviewCardContentProps" />
 
 ### Viewport
 
 Optional wrapper for animating content transitions when multiple triggers share one card via `createHandle`. Provides direction-aware slide animations.
 
-<auto-type-table path="./props.ts" name="PreviewCardViewportProps" />
+<auto-type-table name="PreviewCardViewportProps" type="ComponentProps<typeof PreviewCard.Viewport>" />
 
 ### Slots
 
