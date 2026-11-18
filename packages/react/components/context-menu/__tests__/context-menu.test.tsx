@@ -211,6 +211,23 @@ describe('ContextMenu', () => {
   });
 
   describe('Autocomplete', () => {
+    it('renders the popup as a dialog that holds the searchbox', async () => {
+      await renderAndOpenContextMenu(
+        <ContextMenu autocomplete>
+          <ContextMenu.Trigger>{TRIGGER_TEXT}</ContextMenu.Trigger>
+          <ContextMenu.Content>
+            <ContextMenu.Item>Profile</ContextMenu.Item>
+          </ContextMenu.Content>
+        </ContextMenu>
+      );
+
+      const popup = document.querySelector(
+        '[data-slot="context-menu-content"]'
+      );
+      expect(popup).toHaveAttribute('role', 'dialog');
+      expect(popup).toContainElement(screen.getByRole('searchbox'));
+    });
+
     it('filters checkbox items with the other items', async () => {
       await renderAndOpenContextMenu(
         <ContextMenu autocomplete>
@@ -224,12 +241,13 @@ describe('ContextMenu', () => {
         </ContextMenu>
       );
 
-      const input = screen.getByRole('combobox');
+      const input = screen.getByRole('searchbox');
       fireEvent.change(input, { target: { value: 'grid' } });
-      expect(screen.getAllByRole('option')).toHaveLength(1);
+      expect(screen.queryAllByRole('menuitem')).toHaveLength(0);
+      expect(screen.getAllByRole('menuitemcheckbox')).toHaveLength(1);
 
       fireEvent.change(input, { target: { value: 'zzz' } });
-      expect(screen.queryAllByRole('option')).toHaveLength(0);
+      expect(screen.queryAllByRole('menuitemcheckbox')).toHaveLength(0);
     });
   });
 });

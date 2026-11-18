@@ -1,37 +1,26 @@
 'use client';
 
-import {
-  Autocomplete as AutocompletePrimitive,
-  Menu as MenuPrimitive
-} from '@base-ui/react';
-import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
+import { Menu as MenuPrimitive } from '@base-ui/react';
 import { REASONS } from '@base-ui/react/internals/reasons';
 import { useControlled } from '@base-ui/utils/useControlled';
-import { createContext, useCallback, useContext, useRef } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useState
+} from 'react';
 
-interface CommonProps {
+interface MenuContextValue {
   autocomplete?: boolean;
   autocompleteMode?: 'auto' | 'manual';
   inputValue?: string;
-  inputRef?: React.RefObject<HTMLInputElement | null>;
-  contentRef?: React.RefObject<HTMLDivElement | null>;
-  isInitialRender?: React.RefObject<boolean>;
-  open?: boolean;
-}
-
-interface MenuContextValue extends CommonProps {
-  parent?: CommonProps;
-  onInputValueChange?: (
-    value: string,
-    eventDetails: AutocompletePrimitive.Root.ChangeEventDetails
-  ) => void;
+  openedByHover?: boolean;
+  parent?: MenuContextValue;
 }
 
 interface UseMenuContextReturn extends MenuContextValue {
   shouldFilter?: boolean;
-  parent?: CommonProps & {
-    shouldFilter?: boolean;
-  };
 }
 
 /**
@@ -47,26 +36,139 @@ export const useMenuContext = (): UseMenuContextReturn => {
   if (!context) return {};
 
   const shouldFilter = !!(
-    context?.autocomplete &&
-    context?.autocompleteMode === 'auto' &&
-    context?.inputValue?.length
+    context.autocomplete &&
+    context.autocompleteMode === 'auto' &&
+    context.inputValue?.trim().length
   );
 
-  const shouldFilterParent = !!(
-    context?.parent?.autocomplete &&
-    context?.parent?.autocompleteMode === 'auto' &&
-    context?.parent?.inputValue?.length
+  return { ...context, shouldFilter };
+};
+
+/**
+ * Tracks the search value of a menu or submenu.
+ * @remarks Only for internal usage.
+ */
+export function useMenuInputValue<
+  OpenChangeDetails extends { isCanceled: boolean; reason: string }
+>({
+  inputValue,
+  defaultInputValue,
+  onInputValueChange,
+  name,
+  open,
+  onOpenChange,
+  onOpenChangeComplete
+}: {
+  inputValue?: string;
+  defaultInputValue: string;
+  onInputValueChange?: (
+    value: string,
+    eventDetails: MenuPrimitive.FilterProvider.ChangeEventDetails
+  ) => void;
+  name: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean, eventDetails: OpenChangeDetails) => void;
+  onOpenChangeComplete?: (open: boolean) => void;
+}) {
+  const [value, setValueUnwrapped] = useControlled({
+    controlled: inputValue,
+    default: defaultInputValue,
+    name,
+    state: 'inputValue'
+  });
+  // Base UI keeps showing the cleared query until the popup finishes closing.
+  const [closingValue, setClosingValue] = useState<string | null>(null);
+  const [openedByHover, setOpenedByHover] = useState(false);
+
+  const setValue = useCallback(
+    (
+      next: string,
+      eventDetails: MenuPrimitive.FilterProvider.ChangeEventDetails
+    ) => {
+      if (eventDetails.reason === REASONS.popupClose) setClosingValue(value);
+      onInputValueChange?.(next, eventDetails);
+      if (eventDetails.isCanceled) return;
+      setValueUnwrapped(next);
+    },
+    [value, onInputValueChange, setValueUnwrapped]
+  );
+
+  const handleOpenChange = useCallback(
+    (nextOpen: boolean, eventDetails: OpenChangeDetails) => {
+      onOpenChange?.(nextOpen, eventDetails);
+      if (eventDetails.isCanceled) return;
+      setOpenedByHover(
+        nextOpen && eventDetails.reason === REASONS.triggerHover
+      );
+      if (nextOpen) setClosingValue(null);
+    },
+    [onOpenChange]
+  );
+
+  const handleOpenChangeComplete = useCallback(
+    (nextOpen: boolean) => {
+      if (!nextOpen) setClosingValue(null);
+      onOpenChangeComplete?.(nextOpen);
+    },
+    [onOpenChangeComplete]
   );
 
   return {
-    ...context,
-    shouldFilter,
-    parent: context?.parent && {
-      ...context.parent,
-      shouldFilter: shouldFilterParent
-    }
+    inputValue: value,
+    setInputValue: setValue,
+    shownInputValue: open || closingValue === null ? value : closingValue,
+    openedByHover,
+    onOpenChange: handleOpenChange,
+    onOpenChangeComplete: handleOpenChangeComplete
   };
-};
+}
+
+/**
+ * Provides the menu context and, in autocomplete mode, wraps the root in Base UI's filter provider.
+ * @remarks Only for internal usage.
+ */
+export function MenuFilter({
+  autocomplete,
+  autocompleteMode,
+  inputValue,
+  shownInputValue,
+  openedByHover,
+  onInputValueChange,
+  parent,
+  children
+}: MenuContextValue & {
+  shownInputValue?: string;
+  onInputValueChange: (
+    value: string,
+    eventDetails: MenuPrimitive.FilterProvider.ChangeEventDetails
+  ) => void;
+  children: ReactNode;
+}) {
+  return (
+    <MenuContext
+      value={{
+        autocomplete,
+        autocompleteMode,
+        inputValue: shownInputValue,
+        openedByHover,
+        parent
+      }}
+    >
+      {autocomplete ? (
+        <MenuPrimitive.FilterProvider
+          value={inputValue}
+          onValueChange={onInputValueChange}
+          filter={autocompleteMode === 'manual' ? null : undefined}
+          autoHighlight='always'
+        >
+          {children}
+        </MenuPrimitive.FilterProvider>
+      ) : (
+        children
+      )}
+    </MenuContext>
+  );
+}
 
 export interface MenuRootBaseProps {
   open?: boolean;
@@ -84,13 +186,13 @@ export interface NormalMenuRootProps extends MenuPrimitive.Root.Props {
   defaultInputValue?: never;
 }
 
-export interface AutocompleteMenuRootProps
-  extends MenuPrimitive.Root.Props,
-    CommonProps {
+export interface AutocompleteMenuRootProps extends MenuPrimitive.Root.Props {
   autocomplete: true;
+  autocompleteMode?: 'auto' | 'manual';
+  inputValue?: string;
   onInputValueChange?: (
     value: string,
-    eventDetails: AutocompletePrimitive.Root.ChangeEventDetails
+    eventDetails: MenuPrimitive.FilterProvider.ChangeEventDetails
   ) => void;
   defaultInputValue?: string;
 }
@@ -103,76 +205,35 @@ export const MenuRoot = ({
   inputValue: providedInputValue,
   onInputValueChange,
   defaultInputValue = '',
-  open: providedOpen,
-  onOpenChange,
-  defaultOpen = false,
   ...props
 }: MenuRootProps) => {
-  const [inputValue, setInputValueUnwrapped] = useControlled({
-    controlled: providedInputValue,
-    default: defaultInputValue,
+  const search = useMenuInputValue({
+    inputValue: providedInputValue,
+    defaultInputValue,
+    onInputValueChange,
     name: 'Menu',
-    state: 'inputValue'
+    open: props.open,
+    onOpenChange: props.onOpenChange,
+    onOpenChangeComplete: props.onOpenChangeComplete
   });
-  const [open, setOpenUnwrapped] = useControlled({
-    controlled: providedOpen,
-    default: defaultOpen,
-    name: 'Menu',
-    state: 'open'
-  });
-  const inputRef = useRef<HTMLInputElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const isInitialRender = useRef(true);
-
-  const setValue = useCallback(
-    (
-      value: string,
-      eventDetails: AutocompletePrimitive.Root.ChangeEventDetails
-    ) => {
-      onInputValueChange?.(value, eventDetails);
-      if (eventDetails.isCanceled) return;
-      setInputValueUnwrapped(value);
-    },
-    [onInputValueChange, setInputValueUnwrapped]
-  );
-
-  const handleOpenChange: MenuPrimitive.Root.Props['onOpenChange'] =
-    useCallback(
-      (value: boolean, eventDetails: MenuPrimitive.Root.ChangeEventDetails) => {
-        if (!value && autocomplete) {
-          setValue(
-            '',
-            createChangeEventDetails(REASONS.inputClear, eventDetails.event)
-          );
-          isInitialRender.current = true;
-        }
-        setOpenUnwrapped(value);
-        onOpenChange?.(value, eventDetails);
-      },
-      [onOpenChange, setValue, autocomplete, setOpenUnwrapped]
-    );
 
   return (
-    <MenuContext
-      value={{
-        autocomplete,
-        inputRef,
-        autocompleteMode,
-        inputValue,
-        onInputValueChange: setValue,
-        open: open,
-        isInitialRender,
-        contentRef
-      }}
+    <MenuFilter
+      autocomplete={autocomplete}
+      autocompleteMode={autocompleteMode}
+      inputValue={search.inputValue}
+      shownInputValue={search.shownInputValue}
+      openedByHover={search.openedByHover}
+      onInputValueChange={search.setInputValue}
     >
       <MenuPrimitive.Root
-        open={open}
-        onOpenChange={handleOpenChange}
         loopFocus={false}
         modal
         {...props}
+        onOpenChange={search.onOpenChange}
+        onOpenChangeComplete={search.onOpenChangeComplete}
       />
-    </MenuContext>
+    </MenuFilter>
   );
 };
 MenuRoot.displayName = 'Menu';
@@ -193,7 +254,7 @@ export interface AutocompleteMenuSubMenuProps
   inputValue?: string;
   onInputValueChange?: (
     value: string,
-    eventDetails: AutocompletePrimitive.Root.ChangeEventDetails
+    eventDetails: MenuPrimitive.FilterProvider.ChangeEventDetails
   ) => void;
   defaultInputValue?: string;
 }
@@ -208,77 +269,36 @@ export const MenuSubMenu = ({
   inputValue: providedInputValue,
   onInputValueChange,
   defaultInputValue = '',
-  open: providedOpen,
-  onOpenChange,
-  defaultOpen = false,
   ...props
 }: MenuSubMenuProps) => {
-  const [inputValue, setInputValueUnwrapped] = useControlled({
-    controlled: providedInputValue,
-    default: defaultInputValue,
+  const search = useMenuInputValue({
+    inputValue: providedInputValue,
+    defaultInputValue,
+    onInputValueChange,
     name: 'Menu.Submenu',
-    state: 'inputValue'
+    open: props.open,
+    onOpenChange: props.onOpenChange,
+    onOpenChangeComplete: props.onOpenChangeComplete
   });
-  const [open, setOpenUnwrapped] = useControlled({
-    controlled: providedOpen,
-    default: defaultOpen,
-    name: 'Menu.Submenu',
-    state: 'open'
-  });
-  const parentContext = useMenuContext();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const isInitialRender = useRef(true);
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  const setValue = useCallback(
-    (
-      value: string,
-      eventDetails: AutocompletePrimitive.Root.ChangeEventDetails
-    ) => {
-      onInputValueChange?.(value, eventDetails);
-      if (eventDetails.isCanceled) return;
-      setInputValueUnwrapped(value);
-    },
-    [onInputValueChange, setInputValueUnwrapped]
-  );
-
-  const handleOpenChange: MenuPrimitive.Root.Props['onOpenChange'] =
-    useCallback(
-      (value: boolean, eventDetails: MenuPrimitive.Root.ChangeEventDetails) => {
-        if (!value && autocomplete) {
-          setValue(
-            '',
-            createChangeEventDetails(REASONS.inputClear, eventDetails.event)
-          );
-          isInitialRender.current = true;
-        }
-        setOpenUnwrapped(value);
-        onOpenChange?.(value, eventDetails);
-      },
-      [onOpenChange, setValue, autocomplete, setOpenUnwrapped]
-    );
+  const parent = useMenuContext();
 
   return (
-    <MenuContext
-      value={{
-        autocomplete,
-        inputRef,
-        parent: parentContext,
-        autocompleteMode,
-        inputValue,
-        onInputValueChange: setValue,
-        open: open,
-        isInitialRender,
-        contentRef
-      }}
+    <MenuFilter
+      autocomplete={autocomplete}
+      autocompleteMode={autocompleteMode}
+      inputValue={search.inputValue}
+      shownInputValue={search.shownInputValue}
+      openedByHover={search.openedByHover}
+      onInputValueChange={search.setInputValue}
+      parent={parent}
     >
       <MenuPrimitive.SubmenuRoot
         loopFocus={false}
-        open={open}
-        onOpenChange={handleOpenChange}
         {...props}
+        onOpenChange={search.onOpenChange}
+        onOpenChangeComplete={search.onOpenChangeComplete}
       />
-    </MenuContext>
+    </MenuFilter>
   );
 };
 MenuSubMenu.displayName = 'Menu.Submenu';
