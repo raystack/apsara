@@ -7,6 +7,70 @@ One section per release, newest first, with only the changes that need action
 from you. The full record of every release, features and fixes included, is
 on [GitHub releases](https://github.com/raystack/apsara/releases).
 
+## Unreleased: `DataTable` is removed
+
+`DataTable`, `useDataTable` and the `DataTable*` types are removed. Use
+[DataView](/docs/dataview) with `DataView.List variant="table"`.
+
+### 1. Split `columns` into fields and columns
+
+A DataTable column held both the field behavior and the cell. In DataView, the
+behavior goes in `fields` on the root, and the cell goes in `columns` on
+`DataView.List`.
+
+```tsx
+// Before
+<DataTable
+  data={data}
+  columns={[
+    { accessorKey: "name", header: "Name", enableSorting: true, cell: NameCell }
+  ]}
+  defaultSort={{ name: "name", order: "asc" }}
+>
+  <DataTable.Toolbar />
+  <DataTable.Content />
+</DataTable>
+
+// After
+<DataView
+  data={data}
+  fields={[{ accessorKey: "name", label: "Name", sortable: true }]}
+  defaultSort={{ name: "name", order: "asc" }}
+>
+  <DataView.Toolbar />
+  <DataView.List variant="table" columns={[{ accessorKey: "name", cell: NameCell }]} />
+</DataView>
+```
+
+| DataTable column | DataView |
+|---|---|
+| `header` | `label` on the field |
+| `enableColumnFilter`, `enableSorting`, `enableHiding`, `enableGrouping` | `filterable`, `sortable`, `hideable`, `groupable` on the field |
+| `icon` | `leadingIcon` on the field |
+| `filterType`, `dataType`, `filterOptions`, `filterOperations`, `defaultFilterValue`, `defaultHidden`, `showGroupCount`, `groupCountMap`, `groupLabelsMap` | The same name on the field |
+| `filterProps.select` | `filterProps.select` on the field |
+| `filterProps.calendar` | No replacement |
+| `cell`, `classNames`, `styles` | The same name on the `DataView.List` column |
+
+### 2. Rename the parts and props
+
+| DataTable | DataView |
+|---|---|
+| `DataTable.Content` | `DataView.List variant="table"` |
+| `DataTable.VirtualizedContent` | `DataView.List variant="table" virtualized` |
+| `DataTable.Toolbar`, `Search`, `Filters`, `DisplayControls` | `DataView.Toolbar`, `Search`, `Filters`, `DisplayControls` |
+| `query` | `defaultQuery`, or `query` with `onQueryChange` |
+| `onTableQueryChange(query)` | `onQueryChange(query, details)` |
+| `isLoading` | `loading` |
+| `defaultSort` (optional) | `defaultSort` (required) |
+| `stickyGroupHeader` | `stickyGroupHeader` on `DataView.List` |
+| `useDataTable()` | `useDataView()` |
+
+### 3. Replace the icons only DataTable drew
+
+`SortAscendingIcon` and `TableIcon` are removed. Import lucide
+`ArrowUpNarrowWide` or `Table` if you used them.
+
 ## Unreleased: controlled state uses `x`, `defaultX` and `onXChange`
 
 A prop that holds state is controlled from the first render. The component
@@ -380,8 +444,8 @@ render as given, so pass `disabled` to them.
 
 ## Unreleased: date filters compare whole days
 
-`DataView`, `DataTable` and `FilterChip` read and compare dates as calendar
-days, without dayjs. A date filter's control is
+`DataView` and `FilterChip` read and compare dates as calendar days, without
+dayjs. A date filter's control is
 [CalendarPreview](/docs/components/calendar-preview) instead of `DatePicker`.
 `Calendar`, `DatePicker` and `RangePicker` are still exported and do not change.
 
@@ -413,16 +477,14 @@ day that instant falls on in the viewer's time zone.
 Rows that hold a `Date`, an epoch number, or a dayjs or moment object are read
 as before.
 
-DataView and DataTable compare and write the day in the viewer's time zone. If
-you set `calendarProps.timeZone` or `filterProps.calendar.timeZone` to another
-zone, a picked day can shift by one: 1 October picked in `Asia/Tokyo` is 30
+DataView compares and writes the day in the viewer's time zone. If you set
+`calendarProps.timeZone` to another zone, a picked day can shift by one: 1 October picked in `Asia/Tokyo` is 30
 September for a viewer in New York. Leave `timeZone` unset for filters, or set
 it to the viewer's zone.
 
 ### 2. Move `calendarProps` to CalendarPreview props
 
-`FilterChip`'s `calendarProps` and `DataTable`'s `filterProps.calendar` take
-CalendarPreview props now. `slotProps.popover` and `showCalendarIcon` work as
+`FilterChip`'s `calendarProps` takes CalendarPreview props now. `slotProps.popover` and `showCalendarIcon` work as
 before. `slotProps.input` takes `CalendarPreview.Input` props, which have no
 `value` or `defaultValue`. The typed-date error is still `'Invalid date'`, but
 it clears only when the typed text is valid or empty, or a date is committed.
@@ -463,8 +525,7 @@ default formats, such as `15 Aug 2026`.
 ### 3. Handle a cleared date
 
 A date filter can be cleared: click the selected day, or empty the input. The
-chip then calls `onValueChange` with `''`. In `DataView` and `DataTable` the
-chip stays, and the filter is left out of the query until a date is picked
+chip then calls `onValueChange` with `''`. In `DataView` the chip stays, and the filter is left out of the query until a date is picked
 again. If you render `FilterChip` yourself, handle `''`.
 
 ### 4. Expect different rows from some filters
@@ -844,9 +905,7 @@ import {
   SizeIcon,
   StopIcon,
   SunIcon,
-  TableIcon,
-  TextAlignBottomIcon,
-  TextAlignTopIcon
+  TextAlignBottomIcon
 } from '@radix-ui/react-icons';
 import { Theme, type IconOverrides } from '@raystack/apsara';
 
@@ -871,12 +930,10 @@ const radixIcons: IconOverrides = {
   PlusIcon: PlusIcon,
   SearchIcon: MagnifyingGlassIcon,
   ShrinkIcon: MinusIcon,
-  SortAscendingIcon: TextAlignTopIcon,
   SortDescendingIcon: TextAlignBottomIcon,
   StopIcon: StopIcon,
   SuccessIcon: CheckCircledIcon,
   SunIcon: SunIcon,
-  TableIcon: TableIcon,
   WarningIcon: ExclamationTriangleIcon,
   XIcon: Cross1Icon
 };

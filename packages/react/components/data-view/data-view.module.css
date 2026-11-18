@@ -342,8 +342,7 @@
   box-sizing: border-box;
 }
 
-/* Lets <Skeleton/> fill the available width inside a flex .listCell,
-   matches DataTable's virtualized skeleton container. */
+/* Lets <Skeleton/> fill the available width inside a flex .listCell. */
 .skeletonFill {
   flex: 1;
 }
