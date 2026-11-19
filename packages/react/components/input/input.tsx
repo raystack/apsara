@@ -17,7 +17,7 @@ const inputWrapper = cva(styles['input-wrapper'], {
     ...radiusVariants,
     size: {
       small: styles['size-small'],
-      large: styles['size-large']
+      medium: styles['size-medium']
     },
     variant: {
       outline: null,
@@ -25,7 +25,7 @@ const inputWrapper = cva(styles['input-wrapper'], {
     }
   },
   defaultVariants: {
-    size: 'large',
+    size: 'medium',
     variant: 'outline'
   }
 });

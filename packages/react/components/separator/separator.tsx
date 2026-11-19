@@ -5,10 +5,9 @@ import styles from './separator.module.css';
 
 const separator = cva(styles.separator, {
   variants: {
-    size: {
-      small: styles['separator-small'],
-      half: styles['separator-half'],
-      full: styles['separator-full']
+    variant: {
+      full: styles['variant-full'],
+      middle: styles['variant-middle']
     },
     color: {
       primary: styles['separator-primary'],
@@ -22,7 +21,7 @@ const separator = cva(styles.separator, {
     }
   },
   defaultVariants: {
-    size: 'full',
+    variant: 'full',
     color: 'primary'
   }
 });
@@ -41,7 +40,7 @@ export type SeparatorProps = SeparatorPrimitive.Props &
 export function Separator({
   className,
   orientation = 'horizontal',
-  size,
+  variant,
   color,
   decorative,
   ...props
@@ -57,7 +56,7 @@ export function Separator({
     <SeparatorPrimitive
       data-slot='separator'
       orientation={orientation}
-      className={separator({ size, color, className })}
+      className={separator({ variant, color, className })}
       {...decorativeProps}
       {...props}
     />

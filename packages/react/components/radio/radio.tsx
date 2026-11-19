@@ -13,12 +13,12 @@ const radioGroupVariants = cva(styles.group, {
     },
     size: {
       small: styles['group-small'],
-      large: styles['group-large']
+      medium: styles['group-medium']
     }
   },
   defaultVariants: {
     orientation: 'vertical',
-    size: 'large'
+    size: 'medium'
   }
 });
 
@@ -26,7 +26,7 @@ const radioVariants = cva(styles.radioitem, {
   variants: {
     size: {
       small: styles.small,
-      large: styles.large
+      medium: styles.medium
     }
   }
 });

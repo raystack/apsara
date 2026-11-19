@@ -21,7 +21,7 @@
 
 /* Thumb travel + thumb + inset, from the thumb's own tokens, so the thumb
    stays inside the track at every scaling. */
-.switch.large {
+.switch.medium {
   width: calc(var(--rs-space-5) * 2 + var(--rs-space-1));
   height: var(--rs-space-6);
 }

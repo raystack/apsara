@@ -472,7 +472,7 @@ export const playground = {
   type: 'playground',
   controls: {
     variant: { type: 'select', options: ['solid', 'outline'], defaultValue: 'solid' },
-    size: { type: 'select', options: ['small', 'normal'], defaultValue: 'normal' },
+    size: { type: 'select', options: ['small', 'medium'], defaultValue: 'medium' },
     disabled: { type: 'checkbox', defaultValue: false },
     children: { type: 'text', initialValue: 'Click me' }
   },

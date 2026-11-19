@@ -14,7 +14,7 @@ import { isEditorEmpty } from './core/serializers';
 import { type EditorShortcuts, resolveShortcuts } from './core/shortcuts';
 import styles from './editor.module.css';
 import { EditorContext, useStoreSelector } from './editor-context';
-import { EditorStore } from './editor-store';
+import { RichEditorStore } from './editor-rich-store';
 import type {
   EditorApi,
   EditorChangeDetails,
@@ -101,12 +101,12 @@ export function EditorRoot<M extends MarkdownAdapter | undefined = undefined>({
     disabled,
     readOnly,
     markdown,
-    onValueChange: onValueChange as EditorStore['props']['onValueChange']
+    onValueChange: onValueChange as RichEditorStore['props']['onValueChange']
   };
 
   const [store] = useState(
     () =>
-      new EditorStore({
+      new RichEditorStore({
         schema: buildSchema(formats),
         value: value ?? defaultValue,
         shortcuts: resolveShortcuts(shortcuts),

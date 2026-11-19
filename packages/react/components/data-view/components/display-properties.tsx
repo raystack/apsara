@@ -48,7 +48,7 @@ export function DisplayProperties<TData>({
             <Chip
               key={field.accessorKey}
               variant='outline'
-              size='small'
+              size='mini'
               color={isVisible ? 'accent' : 'neutral'}
               onClick={() => toggleVisibility(field.accessorKey)}
               data-slot='data-view-display-properties-chip'

@@ -162,6 +162,22 @@ export const sizesDemo = {
   type: 'code',
   tabs: [
     {
+      name: 'Mini',
+      code: `
+      <div style={{ width: "400px" }}>
+      <Tabs defaultValue="tab1" size="mini">
+        <Tabs.List>
+          <Tabs.Tab value="tab1">Account</Tabs.Tab>
+          <Tabs.Tab value="tab2" disabled>Password</Tabs.Tab>
+          <Tabs.Tab value="tab3">Settings</Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Content value="tab1">Account settings</Tabs.Content>
+        <Tabs.Content value="tab2">Password settings</Tabs.Content>
+        <Tabs.Content value="tab3">Other settings</Tabs.Content>
+      </Tabs>
+    </div>`
+    },
+    {
       name: 'Small',
       code: `
       <div style={{ width: "400px" }}>
@@ -182,22 +198,6 @@ export const sizesDemo = {
       code: `
       <div style={{ width: "400px" }}>
       <Tabs defaultValue="tab1" size="medium">
-        <Tabs.List>
-          <Tabs.Tab value="tab1">Account</Tabs.Tab>
-          <Tabs.Tab value="tab2" disabled>Password</Tabs.Tab>
-          <Tabs.Tab value="tab3">Settings</Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Content value="tab1">Account settings</Tabs.Content>
-        <Tabs.Content value="tab2">Password settings</Tabs.Content>
-        <Tabs.Content value="tab3">Other settings</Tabs.Content>
-      </Tabs>
-    </div>`
-    },
-    {
-      name: 'Large',
-      code: `
-      <div style={{ width: "400px" }}>
-      <Tabs defaultValue="tab1" size="large">
         <Tabs.List>
           <Tabs.Tab value="tab1">Account</Tabs.Tab>
           <Tabs.Tab value="tab2" disabled>Password</Tabs.Tab>

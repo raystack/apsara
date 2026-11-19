@@ -59,35 +59,83 @@ function sameMentions(a: MentionAttrs[], b: MentionAttrs[]): boolean {
 }
 
 /** A menu that inserts a mention chip. Mount one per trigger. */
-export function EditorMentions(props: EditorMentionsProps) {
+export function EditorMentions({
+  trigger = '@',
+  ...props
+}: EditorMentionsProps) {
   const store = useEditorStore('Editor.Mentions');
   // `formats` without `mention` builds a schema with no mention node.
-  if (!store.schema.nodes.mention) return null;
-  return <MentionsMenu store={store} {...props} />;
-}
+  const enabled = store.schema.nodes.mention !== undefined;
 
-EditorMentions.displayName = 'Editor.Mentions';
-
-function MentionsMenu({
-  store,
-  trigger = '@',
-  items,
-  onSearch,
-  resolveMentions,
-  emptyMessage = 'No results',
-  loadingRowCount = 3,
-  onOpenChange
-}: EditorMentionsProps & { store: EditorStore }) {
-  const registry = store.mentions;
-
-  if (process.env.NODE_ENV !== 'production' && !isTriggerCharacter(trigger)) {
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    enabled &&
+    !isTriggerCharacter(trigger)
+  ) {
     console.warn(
       `[Apsara] Editor.Mentions trigger ${JSON.stringify(trigger)} is not a ` +
         'single punctuation character. Use "@", "#" or similar.'
     );
   }
 
-  useEffect(() => registry.register(trigger), [registry, trigger]);
+  useEffect(
+    () => (enabled ? store.mentions.register(trigger) : undefined),
+    [store, enabled, trigger]
+  );
+
+  if (!enabled) return null;
+  return (
+    <MentionsMenu
+      {...props}
+      store={store}
+      trigger={trigger}
+      name='Editor.Mentions'
+      maxSpaces={3}
+      data-slot='editor-mention-menu'
+    />
+  );
+}
+
+EditorMentions.displayName = 'Editor.Mentions';
+
+export interface MentionsMenuProps extends EditorMentionsProps {
+  store: EditorStore;
+  trigger: string;
+  /** The part named in dev warnings. */
+  name: string;
+  /** The spaces a query can hold. No limit when not set. */
+  maxSpaces?: number;
+  /** The popup width in pixels. */
+  width?: number;
+  /**
+   * Applies labels from `resolveMentions`.
+   * @default store.refreshMentionLabels
+   */
+  refreshLabels?: (labels: Map<string, string>) => void;
+  'data-slot'?: string;
+}
+
+/**
+ * The menu behind `Editor.Mentions`. It does not register its trigger with
+ * the mention registry, so `PromptInput.Editor` can render one for each
+ * trigger that `PromptInput.Mentions` registers.
+ */
+export function MentionsMenu({
+  store,
+  trigger,
+  items,
+  onSearch,
+  resolveMentions,
+  emptyMessage = 'No results',
+  loadingRowCount = 3,
+  onOpenChange,
+  name,
+  maxSpaces,
+  width,
+  refreshLabels = store.refreshMentionLabels,
+  'data-slot': slot
+}: MentionsMenuProps) {
+  const registry = store.mentions;
 
   const resolveRef = useRef(resolveMentions);
   resolveRef.current = resolveMentions;
@@ -100,19 +148,17 @@ function MentionsMenu({
   const { menu, listboxId } = useEditorSuggestion<EditorMentionItem>({
     store,
     trigger,
-    maxSpaces: 3,
+    maxSpaces,
     items,
     onSearch,
     onSelect: (item, state) => {
-      const type = item.type ?? 'mention';
-      registry.remember(state.trigger, { ...item, type });
-      store.insertMentionAt(
-        { id: item.id, label: item.label, type, trigger: state.trigger },
-        { from: state.from, to: state.to }
-      );
+      store.insertMentionAt(store.rememberMention(item, state.trigger), {
+        from: state.from,
+        to: state.to
+      });
     },
     onOpenChange,
-    name: 'Editor.Mentions'
+    name
   });
 
   const mentions = useStoreSelector(
@@ -125,16 +171,11 @@ function MentionsMenu({
         : NO_MENTIONS,
     sameMentions
   );
-  useMentionResolution(
-    registry,
-    mentions,
-    store.refreshMentionLabels,
-    getResolver
-  );
+  useMentionResolution(registry, mentions, refreshLabels, getResolver);
 
   return (
     <SuggestionMenu
-      data-slot='editor-mention-menu'
+      data-slot={slot}
       open={menu.open}
       anchor={menu.anchor}
       id={listboxId}
@@ -148,6 +189,7 @@ function MentionsMenu({
       loading={menu.loading}
       loadingRowCount={loadingRowCount}
       emptyMessage={emptyMessage}
+      width={width}
     />
   );
 }

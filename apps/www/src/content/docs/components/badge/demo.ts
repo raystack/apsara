@@ -24,7 +24,7 @@ export const playground = {
     },
     size: {
       type: 'select',
-      options: ['micro', 'small', 'regular'],
+      options: ['mini', 'small', 'medium'],
       defaultValue: 'small'
     },
     leadingIcon: {
@@ -59,9 +59,9 @@ export const sizesDemo = {
   type: 'code',
   code: `
   <Flex gap={5} align="center">
-    <Badge size="micro">Micro</Badge>
+    <Badge size="mini">Mini</Badge>
     <Badge size="small">Small</Badge>
-    <Badge size="regular">Regular</Badge>
+    <Badge size="medium">Medium</Badge>
   </Flex>`
 };
 
