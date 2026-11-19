@@ -23,7 +23,9 @@ export function useFilters<TData>() {
         ? new Date()
         : filterType === FilterType.select
           ? options[0]?.value
-          : '');
+          : filterType === FilterType.multiselect
+            ? []
+            : '');
 
     updateTableQuery(query => ({
       ...query,

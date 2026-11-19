@@ -33,7 +33,8 @@ export function queryToTableState(query: InternalQuery): Partial<TableState> {
       ?.filter(data => {
         if (data._type === FilterType.date)
           return toDayKey(data.value) !== null;
-        if (data.value !== '') return true;
+        if (Array.isArray(data.value)) return data.value.length > 0;
+        if (data.value !== '' && data.value != null) return true;
         return false;
       })
       ?.map(data => {
@@ -169,7 +170,11 @@ const generateFilterMap = (
 ): Map<string, DataViewFilterValue> => {
   return new Map(
     filters
-      ?.filter(data => data._type === FilterType.select || data.value !== '')
+      ?.filter(data => {
+        if (data._type === FilterType.select) return true;
+        if (Array.isArray(data.value)) return data.value.length > 0;
+        return data.value !== '' && data.value != null;
+      })
       .map(({ name, operator, value }) => [`${name}-${operator}`, value])
   );
 };
@@ -185,9 +190,14 @@ const isFilterChanged = (
   const oldFilterMap = generateFilterMap(oldFilters);
   const newFilterMap = generateFilterMap(newFilters);
   if (oldFilterMap.size !== newFilterMap.size) return true;
-  return [...newFilterMap].some(
-    ([key, value]) => oldFilterMap.get(key) !== value
-  );
+  return [...newFilterMap].some(([key, value]) => {
+    const oldValue = oldFilterMap.get(key);
+    if (Array.isArray(oldValue) && Array.isArray(value)) {
+      if (oldValue.length !== value.length) return true;
+      return oldValue.some((v, i) => v !== value[i]);
+    }
+    return oldValue !== value;
+  });
 };
 
 const isSortChanged = (
@@ -271,7 +281,8 @@ export function transformToDataViewQuery(query: InternalQuery): DataViewQuery {
         if (data._type === FilterType.select) return true;
         if (data._type === FilterType.date)
           return toDayKey(data.value) !== null;
-        if (data.value !== '') return true;
+        if (Array.isArray(data.value)) return data.value.length > 0;
+        if (data.value !== '' && data.value != null) return true;
         return false;
       })
       ?.map(data => ({
