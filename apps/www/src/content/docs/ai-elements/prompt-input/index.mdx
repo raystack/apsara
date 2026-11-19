@@ -45,7 +45,7 @@ A chip is written as `@[label](type:id)`, using whatever character the trigger
 is:
 
 ```
-check @[DataTable](component:data-table) with @[Maya Chen](user:u1)
+check @[DataView](component:data-view) with @[Maya Chen](user:u1)
 ```
 
 `value`, `defaultValue` and the first argument of `onValueChange` all use this
@@ -306,7 +306,7 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
   closes the menu without also closing a surrounding `ChatPanel`, `Dialog` or
   `Drawer`, so the draft survives. With the menu closed, those keys behave as
   usual.
-- Each chip has an accessible name, like `"mention: DataTable"`.
+- Each chip has an accessible name, like `"mention: DataView"`.
 - The composer frame carries the focus treatment, so the border tints when a
   child has visible focus (`:has(:focus-visible)`), while the `text` variant
   input suppresses its own duplicate focus ring.

@@ -7,7 +7,6 @@ import {
   ArrowDown,
   ArrowDownWideNarrow,
   ArrowUp,
-  ArrowUpNarrowWide,
   Bold,
   CalendarDays,
   Check,
@@ -46,7 +45,6 @@ import {
   SquareCode,
   Strikethrough,
   Sun,
-  Table,
   TextQuote,
   TriangleAlert,
   Type,
@@ -132,10 +130,6 @@ export const QuoteIcon = /*#__PURE__*/ createIcon('QuoteIcon', TextQuote);
 export const RedoIcon = /*#__PURE__*/ createIcon('RedoIcon', Redo2);
 export const SearchIcon = /*#__PURE__*/ createIcon('SearchIcon', Search);
 export const ShrinkIcon = /*#__PURE__*/ createIcon('ShrinkIcon', Shrink);
-export const SortAscendingIcon = /*#__PURE__*/ createIcon(
-  'SortAscendingIcon',
-  ArrowUpNarrowWide
-);
 export const SortDescendingIcon = /*#__PURE__*/ createIcon(
   'SortDescendingIcon',
   ArrowDownWideNarrow
@@ -147,7 +141,6 @@ export const StrikethroughIcon = /*#__PURE__*/ createIcon(
 );
 export const SuccessIcon = /*#__PURE__*/ createIcon('SuccessIcon', CircleCheck);
 export const SunIcon = /*#__PURE__*/ createIcon('SunIcon', Sun);
-export const TableIcon = /*#__PURE__*/ createIcon('TableIcon', Table);
 /** Regular text, in the editor's text style menu. */
 export const TextIcon = /*#__PURE__*/ createIcon('TextIcon', Type);
 export const UnderlineIcon = /*#__PURE__*/ createIcon(

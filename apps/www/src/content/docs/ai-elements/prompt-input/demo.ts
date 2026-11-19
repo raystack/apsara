@@ -150,8 +150,8 @@ export const editorCapabilitiesDemo = {
       data: { status: 'stable' }
     },
     {
-      id: 'data-table',
-      label: 'DataTable',
+      id: 'data-view',
+      label: 'DataView',
       type: 'component',
       group: 'Components',
       leadingIcon: <Component size={16} strokeWidth={1.5} />,
@@ -237,8 +237,8 @@ export const editorCapabilitiesDemo = {
             size="small"
             onClick={() =>
               composer.current?.insertMention({
-                id: 'data-table',
-                label: 'DataTable',
+                id: 'data-view',
+                label: 'DataView',
                 type: 'component',
                 leadingIcon: <Component size={16} strokeWidth={1.5} />,
                 data: { status: 'stable' }
@@ -296,7 +296,7 @@ export const mentionsDemo = {
   code: `function MentionsPromptInput() {
   const ITEMS = [
     { id: 'button', label: 'Button', type: 'component', group: 'Components' },
-    { id: 'data-table', label: 'DataTable', type: 'component', group: 'Components' },
+    { id: 'data-view', label: 'DataView', type: 'component', group: 'Components' },
     {
       id: 'prompt-input',
       label: 'PromptInput',
@@ -349,7 +349,7 @@ export const mentionsAsyncDemo = {
   code: `function AsyncMentionsPromptInput() {
   const DIRECTORY = [
     { id: 'button', label: 'Button', type: 'component', group: 'Components' },
-    { id: 'data-table', label: 'DataTable', type: 'component', group: 'Components' },
+    { id: 'data-view', label: 'DataView', type: 'component', group: 'Components' },
     {
       id: 'prompt-input',
       label: 'PromptInput',
