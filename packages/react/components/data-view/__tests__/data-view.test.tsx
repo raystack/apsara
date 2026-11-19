@@ -1790,3 +1790,187 @@ describe('DataView field filter operations', () => {
     expect(document.querySelector('[data-slot="filter-chip"]')).not.toBeNull();
   });
 });
+
+describe('DataView multiselect filter', () => {
+  const multiselectFields: DataViewField<TestData>[] = [
+    { accessorKey: 'name', label: 'Name', filterable: true },
+    { accessorKey: 'email', label: 'Email', filterable: true },
+    {
+      accessorKey: 'status',
+      label: 'Status',
+      filterable: true,
+      filterType: 'multiselect',
+      filterOptions: [
+        { label: 'Active', value: 'active' },
+        { label: 'Inactive', value: 'inactive' }
+      ]
+    }
+  ];
+
+  it('adding a multiselect filter without defaultFilterValue does not hide rows', async () => {
+    const user = userEvent.setup();
+    render(
+      <DataView
+        data={mockData}
+        fields={multiselectFields}
+        defaultSort={defaultSort}
+      >
+        <DataView.Toolbar>
+          <DataView.Filters />
+        </DataView.Toolbar>
+        <DataView.List variant='table' columns={mockColumns} />
+      </DataView>
+    );
+
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    expect(screen.getByText('Jane Smith')).toBeInTheDocument();
+    expect(screen.getByText('Bob Johnson')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /filter/i }));
+    await user.click(await screen.findByRole('menuitem', { name: 'Status' }));
+
+    expect(document.querySelectorAll('[data-slot="filter-chip"]')).toHaveLength(
+      1
+    );
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    expect(screen.getByText('Jane Smith')).toBeInTheDocument();
+    expect(screen.getByText('Bob Johnson')).toBeInTheDocument();
+  });
+
+  it('treats an empty multiselect array in query as no active filter', () => {
+    render(
+      <DataView
+        data={mockData}
+        fields={multiselectFields}
+        defaultSort={defaultSort}
+        defaultQuery={{
+          filters: [{ name: 'status', operator: 'in', value: [] }]
+        }}
+      >
+        <DataView.List variant='table' columns={mockColumns} />
+      </DataView>
+    );
+
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    expect(screen.getByText('Jane Smith')).toBeInTheDocument();
+    expect(screen.getByText('Bob Johnson')).toBeInTheDocument();
+  });
+
+  it('selecting options filters rows, and deselecting restores all rows', async () => {
+    const user = userEvent.setup();
+    render(
+      <DataView
+        data={mockData}
+        fields={multiselectFields}
+        defaultSort={defaultSort}
+      >
+        <DataView.Toolbar>
+          <DataView.Filters />
+        </DataView.Toolbar>
+        <DataView.List variant='table' columns={mockColumns} />
+      </DataView>
+    );
+
+    await user.click(screen.getByRole('button', { name: /filter/i }));
+    await user.click(await screen.findByRole('menuitem', { name: 'Status' }));
+
+    const chipValue = document.querySelector(
+      '[data-slot="filter-chip-value"]'
+    ) as Element;
+    fireEvent.click(chipValue);
+    await act(async () => {
+      await new Promise(r => setTimeout(r, 0));
+    });
+
+    await user.click(screen.getByRole('option', { name: 'Active' }));
+
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    expect(screen.getByText('Bob Johnson')).toBeInTheDocument();
+    expect(screen.queryByText('Jane Smith')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('option', { name: 'Inactive' }));
+
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    expect(screen.getByText('Jane Smith')).toBeInTheDocument();
+    expect(screen.getByText('Bob Johnson')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('option', { name: 'Active' }));
+    await user.click(screen.getByRole('option', { name: 'Inactive' }));
+
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    expect(screen.getByText('Jane Smith')).toBeInTheDocument();
+    expect(screen.getByText('Bob Johnson')).toBeInTheDocument();
+  });
+
+  it('respects explicitly provided defaultFilterValue', async () => {
+    const user = userEvent.setup();
+    const fieldsWithDefault: DataViewField<TestData>[] = [
+      { accessorKey: 'name', label: 'Name', filterable: true },
+      { accessorKey: 'email', label: 'Email', filterable: true },
+      {
+        accessorKey: 'status',
+        label: 'Status',
+        filterable: true,
+        filterType: 'multiselect',
+        defaultFilterValue: ['inactive'],
+        filterOptions: [
+          { label: 'Active', value: 'active' },
+          { label: 'Inactive', value: 'inactive' }
+        ]
+      }
+    ];
+
+    render(
+      <DataView
+        data={mockData}
+        fields={fieldsWithDefault}
+        defaultSort={defaultSort}
+      >
+        <DataView.Toolbar>
+          <DataView.Filters />
+        </DataView.Toolbar>
+        <DataView.List variant='table' columns={mockColumns} />
+      </DataView>
+    );
+
+    await user.click(screen.getByRole('button', { name: /filter/i }));
+    await user.click(await screen.findByRole('menuitem', { name: 'Status' }));
+
+    expect(screen.getByText('Jane Smith')).toBeInTheDocument();
+    expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
+    expect(screen.queryByText('Bob Johnson')).not.toBeInTheDocument();
+  });
+
+  it('preserves select filter defaulting to first option', async () => {
+    const user = userEvent.setup();
+    const selectFields: DataViewField<TestData>[] = [
+      { accessorKey: 'name', label: 'Name', filterable: true },
+      { accessorKey: 'email', label: 'Email', filterable: true },
+      {
+        accessorKey: 'status',
+        label: 'Status',
+        filterable: true,
+        filterType: 'select',
+        filterOptions: [
+          { label: 'Inactive', value: 'inactive' },
+          { label: 'Active', value: 'active' }
+        ]
+      }
+    ];
+
+    render(
+      <DataView data={mockData} fields={selectFields} defaultSort={defaultSort}>
+        <DataView.Toolbar>
+          <DataView.Filters />
+        </DataView.Toolbar>
+        <DataView.List variant='table' columns={mockColumns} />
+      </DataView>
+    );
+
+    await user.click(screen.getByRole('button', { name: /filter/i }));
+    await user.click(await screen.findByRole('menuitem', { name: 'Status' }));
+
+    expect(screen.getByText('Jane Smith')).toBeInTheDocument();
+    expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
+  });
+});

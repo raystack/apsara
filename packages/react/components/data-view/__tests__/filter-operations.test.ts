@@ -13,6 +13,8 @@ describe('filter-operations', () => {
       expect(typeof getFilterFn('string', 'contains')).toBe('function');
       expect(typeof getFilterFn('number', 'gte')).toBe('function');
       expect(typeof getFilterFn('select', 'eq')).toBe('function');
+      expect(typeof getFilterFn('multiselect', 'in')).toBe('function');
+      expect(typeof getFilterFn('multiselect', 'notin')).toBe('function');
     });
   });
 
@@ -216,5 +218,72 @@ describe('date filter with no value', () => {
 
   it('is dropped from the emitted query', () => {
     expect(transformToDataViewQuery(query).filters).toEqual([]);
+  });
+});
+
+describe('multiselect filters', () => {
+  const run = (
+    operator: 'in' | 'notin',
+    filterValue: unknown,
+    rowValue: unknown
+  ) => {
+    const fn = getFilterFn('multiselect', operator);
+    const row = { getValue: () => rowValue } as never;
+    return fn(row, 'status', { value: filterValue } as never, vi.fn());
+  };
+
+  it('matches when row value is in the selected array', () => {
+    expect(run('in', ['active', 'pending'], 'active')).toBe(true);
+    expect(run('in', ['active', 'pending'], 'inactive')).toBe(false);
+  });
+
+  it('matches when row value is not in the selected array for notin', () => {
+    expect(run('notin', ['active', 'pending'], 'inactive')).toBe(true);
+    expect(run('notin', ['active', 'pending'], 'active')).toBe(false);
+  });
+
+  it('returns false when filter value is not an array', () => {
+    expect(run('in', 'active', 'active')).toBe(false);
+    expect(run('notin', 'active', 'active')).toBe(false);
+  });
+});
+
+describe('multiselect filter with no value', () => {
+  const emptyQuery = {
+    filters: [
+      { name: 'status', operator: 'in', value: [], _type: 'multiselect' }
+    ]
+  } as never;
+
+  it('is dropped from the table state when empty', () => {
+    expect(queryToTableState(emptyQuery).columnFilters).toEqual([]);
+  });
+
+  it('is dropped from the emitted query when empty', () => {
+    expect(transformToDataViewQuery(emptyQuery).filters).toEqual([]);
+  });
+
+  it('keeps non-empty array in table state and query', () => {
+    const activeQuery = {
+      filters: [
+        {
+          name: 'status',
+          operator: 'in',
+          value: ['active'],
+          _type: 'multiselect'
+        }
+      ]
+    } as never;
+    expect(queryToTableState(activeQuery).columnFilters).toEqual([
+      { id: 'status', value: { value: ['active'] } }
+    ]);
+    expect(transformToDataViewQuery(activeQuery).filters).toEqual([
+      {
+        name: 'status',
+        operator: 'in',
+        value: ['active'],
+        stringValue: 'active'
+      }
+    ]);
   });
 });
