@@ -1,10 +1,11 @@
 'use client';
 
+import type { RowData } from '@tanstack/react-table';
 import { ReactNode, useEffect } from 'react';
 import { DataViewContextType, DataViewField } from '../data-view.types';
 import { useDataView } from '../hooks/useDataView';
 
-export interface DataViewCustomProps<TData> {
+export interface DataViewCustomProps<TData extends RowData> {
   /** Multi-view name. When set, the renderer gates itself on the active view. */
   name?: string;
   /** Optional view-scoped field override (full replacement for this view). */
@@ -21,7 +22,7 @@ export interface DataViewCustomProps<TData> {
  * Escape-hatch renderer for free-form views (cards, kanban, map, gallery).
  * Reads the `DataView` context and hands it to a render prop.
  */
-export function DataViewCustom<TData>({
+export function DataViewCustom<TData extends RowData>({
   name,
   fields: fieldsOverride,
   children

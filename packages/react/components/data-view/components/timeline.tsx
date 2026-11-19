@@ -1,6 +1,6 @@
 'use client';
 
-import type { Row } from '@tanstack/react-table';
+import type { RowData } from '@tanstack/react-table';
 import { cx } from 'class-variance-authority';
 import { format } from 'date-fns';
 import {
@@ -19,6 +19,7 @@ import { Badge } from '../../badge';
 import { useScaling } from '../../theme/use-scaling';
 import styles from '../data-view.module.css';
 import {
+  DataViewRow,
   DataViewTimelineProps,
   GroupedData,
   TimelineActions,
@@ -206,8 +207,8 @@ function lowerBoundLaneCard(
 }
 
 /** A row with its start/end resolved to timestamps. */
-interface TimedItem<TData> {
-  row: Row<TData>;
+interface TimedItem<TData extends RowData> {
+  row: DataViewRow<TData>;
   startTime: number;
   /** Null when `endField` is omitted (point marker). */
   endTime: number | null;
@@ -220,7 +221,7 @@ interface TimedItem<TData> {
 }
 
 /** A timed row placed on the time scale. */
-interface PositionedItem<TData> extends TimedItem<TData> {
+interface PositionedItem<TData extends RowData> extends TimedItem<TData> {
   x: number;
   spanWidth: number;
   /** Null for point cards, where the wrapper sizes to its content. */
@@ -233,7 +234,7 @@ interface PositionedItem<TData> extends TimedItem<TData> {
  * A positioned row with its lane resolved. The lane fields are filled in by the
  * `cards` memo after packing, so they are mutable and zero until then.
  */
-interface LaidOutCard<TData> extends PositionedItem<TData> {
+interface LaidOutCard<TData extends RowData> extends PositionedItem<TData> {
   /** Section-relative: what `renderCard` sees as `context.laneIndex`. */
   laneIndex: number;
   /** Global across sections: indexes `laneTops` and the card index. */
@@ -247,8 +248,8 @@ interface TimelineSection<TData, TItem> {
   items: TItem[];
 }
 
-interface TimelineCardViewProps<TData> {
-  row: Row<TData>;
+interface TimelineCardViewProps<TData extends RowData> {
+  row: DataViewRow<TData>;
   x: number;
   top: number;
   /** Null for point cards, where the wrapper sizes to its content. */
@@ -274,7 +275,7 @@ interface TimelineCardViewProps<TData> {
  * and `onRowClick` is primitive, so the shallow compare holds while those four
  * keep their identity.
  */
-function TimelineCardViewInner<TData>({
+function TimelineCardViewInner<TData extends RowData>({
   row,
   x,
   top,
@@ -365,7 +366,7 @@ function cursorLabel(time: number, scale: TimelineScale): string {
  * two-tier axis and native x/y scrolling; the card interior is consumer-owned
  * via `renderCard`, as `columns[].cell` owns cell interiors in `DataView.List`.
  */
-export function DataViewTimeline<TData>({
+export function DataViewTimeline<TData extends RowData>({
   name,
   fields: fieldsOverride,
   'aria-label': ariaLabel,
@@ -464,7 +465,7 @@ export function DataViewTimeline<TData>({
   // section order, labels and counts match List for free. Ungrouped data has no
   // group rows, so this yields one implicit section with no band.
   const sections = useMemo(() => {
-    const list: TimelineSection<TData, Row<TData>>[] = [];
+    const list: TimelineSection<TData, DataViewRow<TData>>[] = [];
     for (const row of rows) {
       if (row.subRows && row.subRows.length > 0) {
         list.push({

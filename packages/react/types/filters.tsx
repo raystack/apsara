@@ -13,13 +13,6 @@ export type FilterValueType = string | number | boolean;
 /** Picks the query field (`stringValue`, `numberValue`, `boolValue`) that carries a filter's value. */
 export type FilterDataType = 'string' | 'number' | 'boolean';
 
-export interface FilterValue {
-  value?: FilterValueType;
-  // values?: Array<string | number>;
-  date?: Date;
-  // dateRange?: DateRange;
-}
-
 export type FilterOperation = {
   value: string;
   label: string;

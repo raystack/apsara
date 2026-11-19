@@ -2,13 +2,12 @@
 
 import { useControlled } from '@base-ui/utils/useControlled';
 import {
-  getCoreRowModel,
-  getExpandedRowModel,
-  getSortedRowModel,
-  RowSelectionState,
-  Updater,
-  useReactTable,
-  VisibilityState
+  type ColumnVisibilityState,
+  type RowData,
+  type RowSelectionState,
+  type TableOptions,
+  type Updater,
+  useTable
 } from '@tanstack/react-table';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createChangeDetails } from '~/shared/change-details';
@@ -32,16 +31,15 @@ import {
   DataViewQuery,
   DataViewViewChangeDetails,
   defaultGroupOption,
-  GroupedData,
   InternalQuery,
   TableQueryUpdateFn
 } from './data-view.types';
+import { type DataViewFeatures, dataViewFeatures } from './features';
 import {
   hasActiveQuery as computeHasActiveQuery,
   createRowIdResolver,
   fieldsToColumnDefs,
   getDefaultTableQuery,
-  getFilteredRowModelWithFlatRows,
   getInitialColumnVisibility,
   groupData,
   hasQueryChanged,
@@ -51,7 +49,7 @@ import {
   transformToDataViewQuery
 } from './utils';
 
-function DataViewRoot<TData>({
+function DataViewRoot<TData extends RowData>({
   data = [],
   fields,
   query,
@@ -133,10 +131,10 @@ function DataViewRoot<TData>({
   );
 
   const [columnVisibility, setColumnVisibilityState] =
-    useState<VisibilityState>(initialColumnVisibility);
+    useState<ColumnVisibilityState>(initialColumnVisibility);
 
   const handleColumnVisibilityChange = useCallback(
-    (value: Updater<VisibilityState>) => {
+    (value: Updater<ColumnVisibilityState>) => {
       setColumnVisibilityState(prev => {
         const newValue = typeof value === 'function' ? value(prev) : value;
         onColumnVisibilityChange?.(newValue);
@@ -146,8 +144,6 @@ function DataViewRoot<TData>({
     [onColumnVisibilityChange]
   );
 
-  // Lifted so a selection change invalidates the memoized context value; the
-  // table instance identity is stable and can't do it.
   const [rowSelection, setRowSelectionState] = useState<RowSelectionState>({});
 
   const handleRowSelectionChange = useCallback(
@@ -217,8 +213,8 @@ function DataViewRoot<TData>({
   // Column defs are derived from EFFECTIVE fields so toolbar + headless filter/
   // sort/visibility reflect the active view's metadata override.
   const columnDefs = useMemo(
-    () => fieldsToColumnDefs<TData>(effectiveFields, tableQuery.filters),
-    [effectiveFields, tableQuery.filters]
+    () => fieldsToColumnDefs<TData>(effectiveFields),
+    [effectiveFields]
   );
 
   const groupedData = useMemo(
@@ -244,34 +240,47 @@ function DataViewRoot<TData>({
 
   const resolveRowId = useMemo(() => createRowIdResolver(getRowId), [getRowId]);
 
-  const table = useReactTable({
-    data: groupedData as unknown as TData[],
-    columns: columnDefs,
-    getRowId: resolveRowId,
-    // Group rows render without cells, so they have no checkbox, so keeping them
-    // unselectable keeps `rowSelection` one key per data row.
-    enableRowSelection: row => !isGroupRowData(row.original),
-    getCoreRowModel: getCoreRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
-    getSubRows: row => (row as unknown as GroupedData<TData>)?.subRows || [],
-    getSortedRowModel: mode === 'server' ? undefined : getSortedRowModel(),
-    getFilteredRowModel:
-      mode === 'server' ? undefined : getFilteredRowModelWithFlatRows(),
-    manualSorting: mode === 'server',
-    manualFiltering: mode === 'server',
-    onColumnVisibilityChange: handleColumnVisibilityChange,
-    onRowSelectionChange: handleRowSelectionChange,
-    globalFilterFn: mode === 'server' ? undefined : 'auto',
-    initialState: { columnVisibility: initialColumnVisibility },
-    filterFromLeafRows: true,
-    state: {
-      ...reactTableState,
+  // `useTable` returns a new table object whenever this object changes, and the
+  // table is part of the context value.
+  const tableOptions = useMemo(
+    (): TableOptions<DataViewFeatures, TData> => ({
+      features: dataViewFeatures,
+      data: groupedData as unknown as TData[],
+      columns: columnDefs,
+      getRowId: resolveRowId,
+      // Group rows render without cells, so they have no checkbox, so keeping them
+      // unselectable keeps `rowSelection` one key per data row.
+      enableRowSelection: row => !isGroupRowData(row.original),
+      getSubRows: row => (isGroupRowData<TData>(row) ? row.subRows : undefined),
+      manualSorting: mode === 'server',
+      manualFiltering: mode === 'server',
+      onColumnVisibilityChange: handleColumnVisibilityChange,
+      onRowSelectionChange: handleRowSelectionChange,
+      initialState: { columnVisibility: initialColumnVisibility },
+      filterFromLeafRows: true,
+      state: {
+        ...reactTableState,
+        columnVisibility,
+        rowSelection,
+        expanded:
+          group_by && group_by !== defaultGroupOption.id ? true : undefined
+      }
+    }),
+    [
+      groupedData,
+      columnDefs,
+      resolveRowId,
+      mode,
+      handleColumnVisibilityChange,
+      handleRowSelectionChange,
+      initialColumnVisibility,
+      reactTableState,
       columnVisibility,
       rowSelection,
-      expanded:
-        group_by && group_by !== defaultGroupOption.id ? true : undefined
-    }
-  });
+      group_by
+    ]
+  );
+  const table = useTable(tableOptions);
 
   const updateTableQuery = useCallback((fn: TableQueryUpdateFn) => {
     setTableQuery(prev => fn(prev));
@@ -366,7 +375,7 @@ function DataViewRoot<TData>({
 
   return (
     <DataViewContext
-      value={contextValue as unknown as DataViewContextType<unknown>}
+      value={contextValue as unknown as DataViewContextType<RowData>}
     >
       {children}
     </DataViewContext>

@@ -1,5 +1,6 @@
 'use client';
 
+import type { RowData } from '@tanstack/react-table';
 import { isValidElement, ReactNode } from 'react';
 import { DisplayIcon } from '~/icons';
 
@@ -31,7 +32,7 @@ export interface DataViewDisplayControlsProps
  * individually via `hideViewSwitcher` / `hideOrdering` / `hideGrouping` /
  * `hideDisplayProperties`.
  */
-export function DisplayControls<TData>({
+export function DisplayControls<TData extends RowData>({
   trigger = (
     <Button
       variant='outline'

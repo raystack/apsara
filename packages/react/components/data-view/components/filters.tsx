@@ -1,5 +1,6 @@
 'use client';
 
+import type { RowData } from '@tanstack/react-table';
 import { cx } from 'class-variance-authority';
 import { isValidElement, ReactNode, useMemo } from 'react';
 import { FilterIcon } from '~/icons';
@@ -115,7 +116,7 @@ export interface DataViewFiltersProps<TData> extends PositionerProps {
   trigger?: Trigger<TData>;
 }
 
-export function Filters<TData>({
+export function Filters<TData extends RowData>({
   classNames,
   className,
   trigger,

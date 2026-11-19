@@ -1,6 +1,8 @@
-import type { FilterFn } from '@tanstack/table-core';
-
-import { dateFilterFns, toDayKey } from '~/shared/date-filters';
+import {
+  dateFilterFns,
+  type RowFilterPredicate,
+  toDayKey
+} from '~/shared/date-filters';
 import {
   DateFilterOperatorType,
   EmptyFilterValue,
@@ -8,7 +10,6 @@ import {
   FilterOperatorTypes,
   FilterType,
   FilterTypes,
-  FilterValue,
   MultiSelectFilterOperatorType,
   NumberFilterOperatorType,
   SelectFilterOperatorType,
@@ -21,46 +22,46 @@ import type {
 } from '../data-view.types';
 
 export type FilterFunctionsMap = {
-  number: Record<NumberFilterOperatorType, FilterFn<unknown>>;
-  string: Record<StringFilterOperatorType, FilterFn<unknown>>;
-  date: Record<DateFilterOperatorType, FilterFn<unknown>>;
-  select: Record<SelectFilterOperatorType, FilterFn<unknown>>;
-  multiselect: Record<MultiSelectFilterOperatorType, FilterFn<unknown>>;
+  number: Record<NumberFilterOperatorType, RowFilterPredicate>;
+  string: Record<StringFilterOperatorType, RowFilterPredicate>;
+  date: Record<DateFilterOperatorType, RowFilterPredicate>;
+  select: Record<SelectFilterOperatorType, RowFilterPredicate>;
+  multiselect: Record<MultiSelectFilterOperatorType, RowFilterPredicate>;
 };
 
 export const filterOperationsMap: FilterFunctionsMap = {
   number: {
-    eq: (row, columnId, filterValue: FilterValue) =>
+    eq: (row, columnId, filterValue) =>
       Number(row.getValue(columnId)) === Number(filterValue.value),
-    neq: (row, columnId, filterValue: FilterValue) =>
+    neq: (row, columnId, filterValue) =>
       Number(row.getValue(columnId)) !== Number(filterValue.value),
-    lt: (row, columnId, filterValue: FilterValue) =>
+    lt: (row, columnId, filterValue) =>
       Number(row.getValue(columnId)) < Number(filterValue.value),
-    lte: (row, columnId, filterValue: FilterValue) =>
+    lte: (row, columnId, filterValue) =>
       Number(row.getValue(columnId)) <= Number(filterValue.value),
-    gt: (row, columnId, filterValue: FilterValue) =>
+    gt: (row, columnId, filterValue) =>
       Number(row.getValue(columnId)) > Number(filterValue.value),
-    gte: (row, columnId, filterValue: FilterValue) =>
+    gte: (row, columnId, filterValue) =>
       Number(row.getValue(columnId)) >= Number(filterValue.value)
   },
   string: {
-    eq: (row, columnId, filterValue: FilterValue) =>
+    eq: (row, columnId, filterValue) =>
       String(row.getValue(columnId)).toLowerCase() ===
       String(filterValue.value).toLowerCase(),
-    neq: (row, columnId, filterValue: FilterValue) =>
+    neq: (row, columnId, filterValue) =>
       String(row.getValue(columnId)).toLowerCase() !==
       String(filterValue.value).toLowerCase(),
-    contains: (row, columnId, filterValue: FilterValue) => {
+    contains: (row, columnId, filterValue) => {
       const columnValue = String(row.getValue(columnId)).toLowerCase();
       const filterStr = String(filterValue.value).toLowerCase();
       return columnValue.includes(filterStr);
     },
-    starts_with: (row, columnId, filterValue: FilterValue) => {
+    starts_with: (row, columnId, filterValue) => {
       const columnValue = String(row.getValue(columnId)).toLowerCase();
       const filterStr = String(filterValue.value).toLowerCase();
       return columnValue.startsWith(filterStr);
     },
-    ends_with: (row, columnId, filterValue: FilterValue) => {
+    ends_with: (row, columnId, filterValue) => {
       const columnValue = String(row.getValue(columnId)).toLowerCase();
       const filterStr = String(filterValue.value).toLowerCase();
       return columnValue.endsWith(filterStr);
@@ -68,25 +69,25 @@ export const filterOperationsMap: FilterFunctionsMap = {
   },
   date: dateFilterFns,
   select: {
-    eq: (row, columnId, filterValue: FilterValue) => {
+    eq: (row, columnId, filterValue) => {
       if (String(filterValue.value) === EmptyFilterValue)
         return row.getValue(columnId) === '';
       return String(row.getValue(columnId)) === String(filterValue.value);
     },
-    neq: (row, columnId, filterValue: FilterValue) => {
+    neq: (row, columnId, filterValue) => {
       if (String(filterValue.value) === EmptyFilterValue)
         return row.getValue(columnId) !== '';
       return String(row.getValue(columnId)) !== String(filterValue.value);
     }
   },
   multiselect: {
-    in: (row, columnId, filterValue: FilterValue) => {
+    in: (row, columnId, filterValue) => {
       if (!Array.isArray(filterValue.value)) return false;
       return filterValue.value
         .map(value => (value === EmptyFilterValue ? '' : String(value)))
         .includes(String(row.getValue(columnId)));
     },
-    notin: (row, columnId, filterValue: FilterValue) => {
+    notin: (row, columnId, filterValue) => {
       if (!Array.isArray(filterValue.value)) return false;
       return !filterValue.value
         .map(value => (value === EmptyFilterValue ? '' : String(value)))
@@ -95,12 +96,13 @@ export const filterOperationsMap: FilterFunctionsMap = {
   }
 } as const;
 
-export function getFilterFn<T extends keyof FilterFunctionsMap>(
-  type: T,
+export function getFilterFn(
+  type: FilterTypes,
   operator: FilterOperatorTypes
-) {
-  // @ts-expect-error FilterOperatorTypes is a union of all possible operators
-  return filterOperationsMap[type][operator];
+): RowFilterPredicate | undefined {
+  const predicates: Partial<Record<FilterOperatorTypes, RowFilterPredicate>> =
+    filterOperationsMap[type];
+  return predicates[operator];
 }
 
 const toStringValue = (value: DataViewFilterValue) =>

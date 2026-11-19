@@ -1,6 +1,11 @@
 'use client';
 
-import type { Header, Row } from '@tanstack/react-table';
+import type {
+  CellContext,
+  Header,
+  RowData,
+  Table
+} from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
 import { cx } from 'class-variance-authority';
 import {
@@ -18,9 +23,11 @@ import styles from '../data-view.module.css';
 import {
   DataViewListColumn,
   DataViewListProps,
+  DataViewRow,
   defaultGroupOption,
   GroupedData
 } from '../data-view.types';
+import type { DataViewFeatures } from '../features';
 import { useDataView } from '../hooks/useDataView';
 import { useElementHeight } from '../hooks/useElementHeight';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
@@ -38,7 +45,7 @@ const GROUP_HEADER_HEIGHT = 36;
 const DEFAULT_TABLE_ROW_HEIGHT = 40;
 const DEFAULT_LIST_ROW_HEIGHT = 56;
 
-export function DataViewList<TData, TValue = unknown>({
+export function DataViewList<TData extends RowData, TValue = unknown>({
   name,
   variant = 'list',
   showHeaders,
@@ -115,10 +122,10 @@ export function DataViewList<TData, TValue = unknown>({
   const headerGroups = table?.getHeaderGroups() ?? [];
   const lastHeaderGroup = headerGroups[headerGroups.length - 1];
   const headerByAccessor = useMemo(() => {
-    const map = new Map<string, Header<TData, TValue>>();
+    const map = new Map<string, Header<DataViewFeatures, TData, TValue>>();
     // The table does not track per-column value types, so headers come back as `unknown`.
     lastHeaderGroup?.headers.forEach(h =>
-      map.set(h.column.id, h as Header<TData, TValue>)
+      map.set(h.column.id, h as Header<DataViewFeatures, TData, TValue>)
     );
     return map;
   }, [lastHeaderGroup]);
@@ -255,7 +262,7 @@ export function DataViewList<TData, TValue = unknown>({
                 typeof spec.header === 'function'
                   ? (
                       spec.header as (ctx: {
-                        table: typeof table;
+                        table: Table<DataViewFeatures, TData>;
                       }) => React.ReactNode
                     )({ table })
                   : (spec.header as React.ReactNode);
@@ -282,14 +289,18 @@ export function DataViewList<TData, TValue = unknown>({
     );
   };
 
-  const renderRowCells = (row: Row<TData>) =>
+  const renderRowCells = (row: DataViewRow<TData>) =>
     renderedAccessors.map(accessor => {
       const spec = columnMap.get(accessor);
       const cell = row.getVisibleCells().find(c => c.column.id === accessor);
       let content: React.ReactNode = null;
       if (cell) {
         content = spec?.cell
-          ? flexRender(spec.cell, cell.getContext())
+          ? flexRender(
+              spec.cell,
+              // The table does not track per-column value types, so cells come back as `unknown`.
+              cell.getContext() as CellContext<DataViewFeatures, TData, TValue>
+            )
           : ((cell.getValue() as React.ReactNode) ?? null);
       } else if (spec?.cell !== undefined) {
         // Unmanaged column (e.g. selection): no TanStack cell, so render the
@@ -298,8 +309,8 @@ export function DataViewList<TData, TValue = unknown>({
           typeof spec.cell === 'function'
             ? (
                 spec.cell as (ctx: {
-                  row: Row<TData>;
-                  table: typeof table;
+                  row: DataViewRow<TData>;
+                  table: Table<DataViewFeatures, TData>;
                 }) => React.ReactNode
               )({ row, table })
             : (spec.cell as React.ReactNode);
@@ -334,7 +345,10 @@ export function DataViewList<TData, TValue = unknown>({
     hidden?: boolean;
   };
 
-  const renderGroupHeader = (row: Row<TData>, props: RowVisualProps = {}) => {
+  const renderGroupHeader = (
+    row: DataViewRow<TData>,
+    props: RowVisualProps = {}
+  ) => {
     const { style, key, measure, dataIndex, isVirtual, hidden } = props;
     const data = row.original as GroupedData<unknown>;
     const isStickyInFlow = !virtualized && stickyGroupHeader;
@@ -365,7 +379,10 @@ export function DataViewList<TData, TValue = unknown>({
     );
   };
 
-  const renderDataRow = (row: Row<TData>, props: RowVisualProps = {}) => {
+  const renderDataRow = (
+    row: DataViewRow<TData>,
+    props: RowVisualProps = {}
+  ) => {
     const { style, key, measure, dataIndex, isVirtual } = props;
     const composedStyle: CSSProperties = isVirtual
       ? { ...style, gridTemplateColumns }

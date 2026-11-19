@@ -1,12 +1,13 @@
 'use client';
 
+import type { RowData } from '@tanstack/react-table';
 import { resolveFilterOperations } from '~/shared/filter-operations';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import type { DataViewField, DataViewFilterValue } from '../data-view.types';
 import { getDataType } from '../utils/filter-operations';
 import { useDataView } from './useDataView';
 
-export function useFilters<TData>() {
+export function useFilters<TData extends RowData>() {
   const { updateTableQuery } = useDataView<TData>();
 
   function onAddFilter(field: DataViewField<TData>) {

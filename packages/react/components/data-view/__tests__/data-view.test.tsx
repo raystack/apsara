@@ -11,7 +11,7 @@ import {
   vi
 } from 'vitest';
 import type { FilterOperations } from '~/shared/filter-operations';
-import { getSlot } from '~/test-utils/data-slots';
+import { getAllSlots, getSlot } from '~/test-utils/data-slots';
 import type { FilterOperatorTypes } from '~/types/filters';
 // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
 import { DataView } from '../data-view';
@@ -1007,6 +1007,127 @@ describe('DataView', () => {
       // Buckets: J (John, Jane), B (Bob)
       expect(screen.getByText('J')).toBeInTheDocument();
       expect(screen.getByText('B')).toBeInTheDocument();
+    });
+
+    const renderGrouped = (query: DataViewQuery) =>
+      render(
+        <DataView
+          data={mockData}
+          fields={mockFields}
+          defaultSort={defaultSort}
+          defaultQuery={{ group_by: ['status'], ...query }}
+        >
+          <DataView.List columns={[{ accessorKey: 'name' }]} />
+        </DataView>
+      );
+    const textOf = (container: HTMLElement, slot: string) =>
+      getAllSlots(container, slot).map(el => el.textContent);
+
+    it('searches rows while grouped', () => {
+      const { container } = renderGrouped({ search: 'jane' });
+      expect(textOf(container, 'data-view-list-group-header')).toEqual([
+        'inactive'
+      ]);
+      expect(textOf(container, 'data-view-list-row')).toEqual(['Jane Smith']);
+    });
+
+    it('drops a group when a negative filter removes all its rows', () => {
+      const { container } = renderGrouped({
+        filters: [{ name: 'name', operator: 'neq', value: 'Jane Smith' }]
+      });
+      expect(textOf(container, 'data-view-list-group-header')).toEqual([
+        'active'
+      ]);
+      expect(textOf(container, 'data-view-list-row')).toEqual([
+        'Bob Johnson',
+        'John Doe'
+      ]);
+    });
+
+    it('selects all filtered rows while grouped', () => {
+      let ctx: ReturnType<typeof useDataViewForTest<TestData>> | undefined;
+      function Capture() {
+        ctx = useDataViewForTest<TestData>();
+        return null;
+      }
+      render(
+        <DataView
+          data={mockData}
+          fields={mockFields}
+          defaultSort={defaultSort}
+          getRowId={row => String(row.id)}
+          defaultQuery={{
+            group_by: ['status'],
+            filters: [{ name: 'name', operator: 'neq', value: 'Jane Smith' }]
+          }}
+        >
+          <Capture />
+        </DataView>
+      );
+      act(() => ctx?.table.toggleAllRowsSelected(true));
+      expect(Object.keys(ctx?.rowSelection ?? {}).sort()).toEqual(['1', '3']);
+      expect(ctx?.table.getIsAllRowsSelected()).toBe(true);
+    });
+  });
+
+  describe('Search and sort', () => {
+    interface Task {
+      title: string;
+      note: string | null;
+    }
+    const taskFields: DataViewField<Task>[] = [
+      { accessorKey: 'title', label: 'Title', sortable: true },
+      { accessorKey: 'note', label: 'Note' }
+    ];
+    const renderTasks = (data: Task[], query?: DataViewQuery) => {
+      const { container } = render(
+        <DataView
+          data={data}
+          fields={taskFields}
+          defaultSort={{ name: 'title', order: 'asc' }}
+          defaultQuery={query}
+        >
+          <DataView.List columns={[{ accessorKey: 'title' }]} />
+        </DataView>
+      );
+      return getAllSlots(container, 'data-view-list-row').map(
+        row => row.textContent
+      );
+    };
+
+    it('searches a field whose first row has no value', () => {
+      const rows = renderTasks(
+        [
+          { title: 'Plan', note: null },
+          { title: 'Ship', note: 'urgent' }
+        ],
+        { search: 'urgent' }
+      );
+      expect(rows).toEqual(['Ship']);
+    });
+
+    it('sorts text without case and numbers inside text by value', () => {
+      const rows = renderTasks([
+        { title: 'Task 10', note: null },
+        { title: 'task 2', note: null },
+        { title: 'Task 1', note: null }
+      ]);
+      expect(rows).toEqual(['Task 1', 'task 2', 'Task 10']);
+    });
+
+    it('renders a row with its own subRows field as a data row', () => {
+      const { container } = render(
+        <DataView
+          data={[{ title: 'Parent', subRows: [{ title: 'Child' }] }]}
+          fields={[{ accessorKey: 'title', label: 'Title' }]}
+          defaultSort={{ name: 'title', order: 'asc' }}
+        >
+          <DataView.List columns={[{ accessorKey: 'title' }]} />
+        </DataView>
+      );
+      expect(getSlot(container, 'data-view-list-row')).toHaveTextContent(
+        'Parent'
+      );
     });
   });
 

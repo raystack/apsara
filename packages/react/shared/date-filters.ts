@@ -1,10 +1,8 @@
-import type { FilterFn } from '@tanstack/table-core';
 import { format, isExists, isValid, parseISO } from 'date-fns';
 import type {
   DateFilterOperatorType,
   FilterDataType,
-  FilterTypes,
-  FilterValue
+  FilterTypes
 } from '~/types/filters';
 import { FilterType } from '~/types/filters';
 
@@ -56,12 +54,29 @@ const ZONE_ANNOTATION = /(\[[^\]]*\])+$/;
 /* `new Date` rolls an impossible day over, whatever suffix follows it. */
 const ISO_DAY = /^(\d{4})-(\d{2})-(\d{2})/;
 
+/** The part of a table row that a filter predicate reads. */
+export interface FilterableRow {
+  getValue: (columnId: string) => unknown;
+}
+
+/** The filter value: `date` for date filters, `value` for the others. */
+export interface RowFilterValue {
+  value?: unknown;
+  date?: unknown;
+}
+
+export type RowFilterPredicate = (
+  row: FilterableRow,
+  columnId: string,
+  filterValue: RowFilterValue
+) => boolean;
+
 /* An unreadable row cannot be placed before or after a day, so it matches none
    of these. */
 function onDay(
   test: (day: string, filterDay: string) => boolean
-): FilterFn<unknown> {
-  return (row, columnId, filterValue: FilterValue) => {
+): RowFilterPredicate {
+  return (row, columnId, filterValue) => {
     const day = toDayKey(row.getValue(columnId));
     const filterDay = toDayKey(filterValue.date);
     return day !== null && filterDay !== null && test(day, filterDay);
@@ -69,26 +84,20 @@ function onDay(
 }
 
 /* A row with no readable date is still not the filter's day. */
-const notOnDay: FilterFn<unknown> = (
-  row,
-  columnId,
-  filterValue: FilterValue
-) => {
+const notOnDay: RowFilterPredicate = (row, columnId, filterValue) => {
   const filterDay = toDayKey(filterValue.date);
   return filterDay !== null && toDayKey(row.getValue(columnId)) !== filterDay;
 };
 
-export const dateFilterFns: Record<
-  DateFilterOperatorType,
-  FilterFn<unknown>
-> = {
-  eq: onDay((day, filterDay) => day === filterDay),
-  neq: notOnDay,
-  lt: onDay((day, filterDay) => day < filterDay),
-  lte: onDay((day, filterDay) => day <= filterDay),
-  gt: onDay((day, filterDay) => day > filterDay),
-  gte: onDay((day, filterDay) => day >= filterDay)
-};
+export const dateFilterFns: Record<DateFilterOperatorType, RowFilterPredicate> =
+  {
+    eq: onDay((day, filterDay) => day === filterDay),
+    neq: notOnDay,
+    lt: onDay((day, filterDay) => day < filterDay),
+    lte: onDay((day, filterDay) => day <= filterDay),
+    gt: onDay((day, filterDay) => day > filterDay),
+    gte: onDay((day, filterDay) => day >= filterDay)
+  };
 
 type TypedFilter = {
   name: string;
