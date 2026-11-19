@@ -1,12 +1,13 @@
 import type { Tabs as TabsPrimitive } from '@base-ui/react';
 import type {
   ColumnDef,
+  ColumnVisibilityState,
+  ReactTable,
   Row,
+  RowData,
   RowSelectionState,
-  Table,
-  Updater,
-  VisibilityState
-} from '@tanstack/table-core';
+  Updater
+} from '@tanstack/react-table';
 import type { ChangeDetails } from '~/shared/change-details';
 import type { FilterOperations } from '~/shared/filter-operations';
 import type {
@@ -21,6 +22,16 @@ import type {
   SelectFilterOperatorType
 } from '~/types/filters';
 import type { BaseSelectProps } from '../select/select-root';
+import type { DataViewFeatures } from './features';
+
+/** The TanStack table that `DataView` builds, as returned by `useDataView().table`. */
+export type DataViewTable<TData extends RowData> = ReactTable<
+  DataViewFeatures,
+  TData
+>;
+
+/** A row of the `DataView` table, as passed to `renderCard` and column cells. */
+export type DataViewRow<TData extends RowData> = Row<DataViewFeatures, TData>;
 
 export type DataViewMode = 'client' | 'server';
 
@@ -149,12 +160,12 @@ export interface DataViewField<TData = unknown> {
  * `variant="table"` and `variant="list"`. The `header` slot is only rendered
  * when headers are visible (default for `variant="table"`).
  */
-export interface DataViewListColumn<TData, TValue = unknown> {
+export interface DataViewListColumn<TData extends RowData, TValue = unknown> {
   accessorKey: string;
   /** TanStack-style cell renderer. */
-  cell?: ColumnDef<TData, TValue>['cell'];
+  cell?: ColumnDef<DataViewFeatures, TData, TValue>['cell'];
   /** TanStack-style header renderer. Overrides the field's `label`. */
-  header?: ColumnDef<TData, TValue>['header'];
+  header?: ColumnDef<DataViewFeatures, TData, TValue>['header'];
   /** CSS grid track width. `1fr`, `auto`, `'200px'`, `'minmax(80px, 1fr)'`, or a number (pixels). Defaults to `1fr`. */
   width?: string | number;
   /**
@@ -185,7 +196,7 @@ export interface ViewSpec {
  */
 export type GroupByResolver<TData> = (row: TData) => string;
 
-export interface DataViewProps<TData> {
+export interface DataViewProps<TData extends RowData> {
   data: TData[];
   /** Renderer-agnostic field metadata. Drives filter/sort/group/visibility. */
   fields: DataViewField<TData>[];
@@ -205,7 +216,7 @@ export interface DataViewProps<TData> {
   defaultSort: DataViewSort;
   onLoadMore?: () => Promise<void> | void;
   onRowClick?: (row: TData) => void;
-  onColumnVisibilityChange?: (columnVisibility: VisibilityState) => void;
+  onColumnVisibilityChange?: (columnVisibility: ColumnVisibilityState) => void;
   /**
    * Fires with the new selection map whenever rows are selected or deselected
    * (`row.toggleSelected()`, `table.toggleAllRowsSelected()`, …). Selection
@@ -249,7 +260,7 @@ export type DataViewListClassNames = {
   groupHeader?: string;
 };
 
-export interface DataViewListProps<TData, TValue = unknown> {
+export interface DataViewListProps<TData extends RowData, TValue = unknown> {
   /** Multi-view name. When set, the renderer gates itself on the active view. */
   name?: string;
   /** Visual variant. `table` renders headers and uses `role="table"`; `list` renders no headers and uses `role="list"`. Default `list`. */
@@ -373,7 +384,7 @@ export type DataViewTimelineClassNames = {
   groupHeader?: string;
 };
 
-export interface DataViewTimelineProps<TData> {
+export interface DataViewTimelineProps<TData extends RowData> {
   /** Multi-view name. When set, the renderer gates itself on the active view. */
   name?: string;
   /**
@@ -402,7 +413,7 @@ export interface DataViewTimelineProps<TData> {
    * The same applies to `onRowClick` on the `DataView` root.
    */
   renderCard: (
-    row: Row<TData>,
+    row: DataViewRow<TData>,
     context: TimelineCardContext
   ) => React.ReactNode;
 
@@ -531,8 +542,8 @@ export interface DataViewTimelineProps<TData> {
 
 export type TableQueryUpdateFn = (query: InternalQuery) => InternalQuery;
 
-export type DataViewContextType<TData> = {
-  table: Table<TData>;
+export type DataViewContextType<TData extends RowData> = {
+  table: DataViewTable<TData>;
   /** Effective fields for the active view (= override fields if registered, else root fields). */
   fields: DataViewField<TData>[];
   /** Root-declared fields, unchanged by view overrides. */
@@ -553,11 +564,10 @@ export type DataViewContextType<TData> = {
   shouldShowFilters: boolean;
 
   // visibility (lifted to context per RFC §"Unified Column Visibility via DisplayAccess")
-  columnVisibility: VisibilityState;
-  setColumnVisibility: (value: Updater<VisibilityState>) => void;
+  columnVisibility: ColumnVisibilityState;
+  setColumnVisibility: (value: Updater<ColumnVisibilityState>) => void;
 
-  // selection, lifted so a selection change invalidates this context value
-  // (the table instance identity is stable, so it can't do that on its own).
+  // selection
   rowSelection: RowSelectionState;
   setRowSelection: (value: Updater<RowSelectionState>) => void;
 

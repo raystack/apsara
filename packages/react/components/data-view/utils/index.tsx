@@ -1,18 +1,24 @@
-import type { ColumnDef, Row, Table } from '@tanstack/react-table';
-import {
-  getFilteredRowModel,
-  type RowModel,
+import type {
+  ColumnDef,
+  FilterFn,
+  RowData,
   TableState
-} from '@tanstack/table-core';
+} from '@tanstack/react-table';
 
-import { toDayKey, withDateFilterTypes } from '~/shared/date-filters';
+import {
+  type RowFilterValue,
+  toDayKey,
+  withDateFilterTypes
+} from '~/shared/date-filters';
 import { dropDisallowedFilters } from '~/shared/filter-operations';
-import { FilterOperatorTypes, FilterType } from '~/types/filters';
+import { FilterOperatorTypes, FilterType, FilterTypes } from '~/types/filters';
 import {
   DataViewField,
   DataViewFilterValue,
   DataViewQuery,
+  DataViewRow,
   DataViewSort,
+  DataViewTable,
   defaultGroupOption,
   GroupByResolver,
   GroupedData,
@@ -20,6 +26,7 @@ import {
   InternalQuery,
   SortOrders
 } from '../data-view.types';
+import type { DataViewFeatures } from '../features';
 import {
   getFilterFn,
   getFilterOperator,
@@ -27,7 +34,14 @@ import {
 } from './filter-operations';
 import { orderBucketKeys } from './order-bucket-keys';
 
-export function queryToTableState(query: InternalQuery): Partial<TableState> {
+/** The value of a TanStack column filter. It carries the operator, so column defs stay the same while filters change. */
+interface ColumnFilterValue extends RowFilterValue {
+  operator: FilterOperatorTypes;
+}
+
+export function queryToTableState(
+  query: InternalQuery
+): Partial<TableState<DataViewFeatures>> {
   const columnFilters =
     query.filters
       ?.filter(data => {
@@ -37,11 +51,11 @@ export function queryToTableState(query: InternalQuery): Partial<TableState> {
         return false;
       })
       ?.map(data => {
-        const valueObject =
+        const value: ColumnFilterValue =
           data._type === FilterType.date
-            ? { date: data.value }
-            : { value: data.value };
-        return { value: valueObject, id: data?.name };
+            ? { operator: data.operator, date: data.value }
+            : { operator: data.operator, value: data.value };
+        return { value, id: data?.name };
       }) || [];
 
   const sorting = query.sort?.map(data => ({
@@ -56,32 +70,56 @@ export function queryToTableState(query: InternalQuery): Partial<TableState> {
 }
 
 /**
- * Convert field metadata to TanStack ColumnDefs. These carry filter/sort/group/
- * visibility capability and the filter predicate. The `header` falls back to
- * `field.label` so renderers that bypass their column spec still get the right
- * default header text.
+ * Convert field metadata to TanStack ColumnDefs. These carry filter/sort/
+ * visibility capability, the filter predicate and the sort comparator. The
+ * `header` falls back to `field.label` so renderers that bypass their column
+ * spec still get the right default header text.
  */
-export function fieldsToColumnDefs<TData>(
-  fields: DataViewField<TData>[] = [],
-  filters: InternalFilter[] = []
-): ColumnDef<TData>[] {
-  return fields.map(field => {
-    const colFilter = filters?.find(f => f.name === field.accessorKey);
-    const filterFn = colFilter?.operator
-      ? getFilterFn(field.filterType || FilterType.string, colFilter.operator)
-      : undefined;
+export function fieldsToColumnDefs<TData extends RowData>(
+  fields: DataViewField<TData>[] = []
+): ColumnDef<DataViewFeatures, TData>[] {
+  return fields.map(field => ({
+    id: field.accessorKey,
+    accessorKey: field.accessorKey,
+    header: field.label,
+    enableColumnFilter: field.filterable ?? false,
+    enableSorting: field.sortable ?? false,
+    enableHiding: field.hideable ?? false,
+    filterFn: createColumnFilterFn<TData>(
+      field.filterType ?? FilterType.string
+    ),
+    sortFn: compareValues
+  }));
+}
 
-    return {
-      id: field.accessorKey,
-      accessorKey: field.accessorKey,
-      header: field.label,
-      enableColumnFilter: field.filterable ?? false,
-      enableSorting: field.sortable ?? false,
-      enableGrouping: field.groupable ?? false,
-      enableHiding: field.hideable ?? false,
-      filterFn
-    } as ColumnDef<TData>;
-  });
+function createColumnFilterFn<TData extends RowData>(
+  filterType: FilterTypes
+): FilterFn<DataViewFeatures, TData> {
+  return (row, columnId, filterValue: ColumnFilterValue) => {
+    // A group row has no values, so a negative operator such as `neq` would
+    // match it and keep the group after all its rows are filtered out.
+    if (isGroupRowData(row.original)) return false;
+    const predicate = getFilterFn(filterType, filterValue.operator);
+    return predicate ? predicate(row, columnId, filterValue) : true;
+  };
+}
+
+const textCollator = new Intl.Collator(undefined, {
+  numeric: true,
+  sensitivity: 'base'
+});
+
+/** Compares numbers and dates by value, and everything else as text without case, with digits in number order. */
+export function compareValues<TData extends RowData>(
+  rowA: DataViewRow<TData>,
+  rowB: DataViewRow<TData>,
+  columnId: string
+): number {
+  const a = rowA.getValue(columnId);
+  const b = rowB.getValue(columnId);
+  if (typeof a === 'number' && typeof b === 'number') return a - b;
+  if (a instanceof Date && b instanceof Date) return a.getTime() - b.getTime();
+  return textCollator.compare(String(a ?? ''), String(b ?? ''));
 }
 
 /**
@@ -152,10 +190,10 @@ export function isGroupRowData<TData>(row: unknown): row is GroupedData<TData> {
  * ids. Leaves delegate to `getRowId`, falling back to TanStack's positional
  * default (which supplying any resolver would otherwise replace).
  */
-export function createRowIdResolver<TData>(
+export function createRowIdResolver<TData extends RowData>(
   getRowId?: (row: TData, index: number) => string
 ) {
-  return (row: TData, index: number, parent?: Row<TData>): string => {
+  return (row: TData, index: number, parent?: DataViewRow<TData>): string => {
     if (isGroupRowData<TData>(row)) {
       return `${GROUP_ROW_ID_PREFIX}${row.group_key}`;
     }
@@ -355,36 +393,10 @@ export function dataViewQueryToInternal(query: DataViewQuery): InternalQuery {
   return { ...rest, filters: internalFilters };
 }
 
-/**
- * `getFilteredRowModel` with `flatRows` backfilled. table-core's
- * `filterFromLeafRows` path never fills that array, which kills every API
- * reading it (`getIsAllRowsSelected`, `toggleAllRowsSelected`, …) while a
- * filter is active. Filled in place to preserve the model identity downstream
- * memos key on.
- */
-export function getFilteredRowModelWithFlatRows<TData>(): (
-  table: Table<TData>
-) => () => RowModel<TData> {
-  const base = getFilteredRowModel<TData>();
-  return table => {
-    const getModel = base(table);
-    return () => {
-      const model = getModel();
-      if (model.flatRows.length > 0) return model;
-      const collect = (rows: Row<TData>[]) => {
-        rows.forEach(row => {
-          model.flatRows.push(row);
-          if (row.subRows?.length) collect(row.subRows);
-        });
-      };
-      collect(model.rows);
-      return model;
-    };
-  };
-}
-
 /** Leaf count from the row tree. Kept recursive so it stays correct for the grouped tree, where `flatRows` also counts group rows. */
-export function countLeafRows<T>(rows: Row<T>[]): number {
+export function countLeafRows<TData extends RowData>(
+  rows: DataViewRow<TData>[]
+): number {
   return rows.reduce(
     (n, row) => n + (row.subRows?.length ? countLeafRows(row.subRows) : 1),
     0
@@ -392,14 +404,18 @@ export function countLeafRows<T>(rows: Row<T>[]): number {
 }
 
 /** Difference between pre- and post-filter leaf rows (client mode only). */
-export function getClientHiddenLeafRowCount<T>(table: Table<T>): number {
+export function getClientHiddenLeafRowCount<TData extends RowData>(
+  table: DataViewTable<TData>
+): number {
   const pre = table.getPreFilteredRowModel();
   const post = table.getFilteredRowModel();
   return Math.max(0, countLeafRows(pre.rows) - countLeafRows(post.rows));
 }
 
-export function hasActiveTableFiltering<T>(table: Table<T>): boolean {
-  const state = table.getState();
+export function hasActiveTableFiltering<TData extends RowData>(
+  table: DataViewTable<TData>
+): boolean {
+  const { state } = table;
   if (state.columnFilters?.length > 0) return true;
   const gf = state.globalFilter;
   if (gf === undefined || gf === null) return false;

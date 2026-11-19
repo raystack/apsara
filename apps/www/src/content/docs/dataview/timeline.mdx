@@ -67,7 +67,15 @@ Under `virtualized` this inverts. A culled card never reports a height, so measu
 
 Give a card an explicit height if you want uniform cards, and keep that height within the pitch if you virtualize.
 
-Keep `renderCard` referentially stable by defining it outside the component or wrapping it in `useCallback`. Cards are memoized against it, and an inline closure forces every visible card to re-render on each scroll frame.
+Keep `renderCard` referentially stable by defining it outside the component or wrapping it in `useCallback`. Cards are memoized against it, and an inline closure forces every visible card to re-render on each scroll frame. Type a `renderCard` defined outside the component with `DataViewRow`:
+
+```tsx
+import type { DataViewRow, TimelineCardContext } from "@raystack/apsara";
+
+const renderCard = (row: DataViewRow<Task>, context: TimelineCardContext) => (
+  <TaskCard task={row.original} context={context} />
+);
+```
 
 ### Point markers
 

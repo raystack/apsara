@@ -283,8 +283,8 @@ export interface DataViewTimelineProps {
   /**
    * Renders the card interior. The Timeline owns positioning (x from start,
    * width from span, lane from packing, scroll); the consumer owns the card
-   * visual entirely. The first argument is the TanStack `Row` wrapper — the
-   * row data is on `row.original`. Keep the reference stable (`useCallback`):
+   * visual entirely. The first argument is a `DataViewRow`, the TanStack row
+   * wrapper. The row data is on `row.original`. Keep the reference stable (`useCallback`):
    * cards are memoized against it. Compose `DataView.DisplayAccess` inside
    * for Display Properties support. (Required)
    */

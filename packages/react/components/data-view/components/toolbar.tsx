@@ -1,5 +1,6 @@
 'use client';
 
+import type { RowData } from '@tanstack/react-table';
 import { cx } from 'class-variance-authority';
 import { ReactNode } from 'react';
 import { Flex } from '../../flex';
@@ -20,7 +21,10 @@ export interface DataViewToolbarProps {
  * custom actions); omitting children renders the default
  * `<Filters> + <DisplayControls>` pair.
  */
-export function Toolbar<TData>({ className, children }: DataViewToolbarProps) {
+export function Toolbar<TData extends RowData>({
+  className,
+  children
+}: DataViewToolbarProps) {
   const { shouldShowFilters } = useDataView<TData>();
   if (!shouldShowFilters) return null;
 
