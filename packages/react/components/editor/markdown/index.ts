@@ -4,13 +4,13 @@ import { toMarkdown } from './to-markdown';
 
 export interface MarkdownAdapterOptions {
   /**
-   * `'markup'` writes `@[label](type:id)`, which round-trips. `'label'` writes `@label`.
-   * @default 'markup'
+   * `"markup"` writes `@[label](type:id)`, which round-trips. `"label"` writes `@label`.
+   * @default "markup"
    */
   mentions?: 'markup' | 'label';
   /**
-   * `'html'` writes `<u>…</u>`. `'drop'` writes plain text.
-   * @default 'html'
+   * `"html"` writes `<u>…</u>`. `"drop"` writes plain text.
+   * @default "html"
    */
   underline?: 'html' | 'drop';
   /**

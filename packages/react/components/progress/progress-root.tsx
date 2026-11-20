@@ -8,6 +8,7 @@ import { ProgressTrack } from './progress-track';
 
 const progress = cva(styles.progress, {
   variants: {
+    /** Visual style of the progress. */
     variant: {
       linear: '',
       circular: styles['progress-variant-circular']

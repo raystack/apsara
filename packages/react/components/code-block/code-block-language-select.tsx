@@ -27,10 +27,19 @@ export const CodeBlockLanguageSelect = (
 
 CodeBlockLanguageSelect.displayName = 'CodeBlock.LanguageSelect';
 
+type SelectTriggerProps = ComponentProps<typeof Select.Trigger>;
+
+interface CodeBlockLanguageSelectTriggerProps extends SelectTriggerProps {
+  /** @default "small" */
+  size?: SelectTriggerProps['size'];
+  /** @default "text" */
+  variant?: SelectTriggerProps['variant'];
+}
+
 export function CodeBlockLanguageSelectTrigger({
   className,
   ...props
-}: ComponentProps<typeof Select.Trigger>) {
+}: CodeBlockLanguageSelectTriggerProps) {
   return (
     <Select.Trigger
       className={cx(styles.languageSelectTrigger, className)}

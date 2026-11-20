@@ -153,14 +153,32 @@ export const getAvatarProps = (node: ReactNode): AvatarProps | undefined => {
 export interface AvatarProps
   extends AvatarPrimitive.Root.Props,
     VariantProps<typeof avatar> {
+  /**
+   * Size of the avatar, from 1 to 13.
+   * @default 3
+   */
   size?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13;
+  /** URL of the image. */
   src?: string;
+  /** Alternative text for the image. */
   alt?: string;
+  /** Content to show while the image loads or when it fails to load. */
   fallback?: ReactNode;
+  /** Time in milliseconds to wait before the fallback shows. */
   fallbackDelay?: AvatarPrimitive.Fallback.Props['delay'];
+  /** Called when the loading status of the image changes. */
   onLoadingStatusChange?: AvatarPrimitive.Image.Props['onLoadingStatusChange'];
+  /**
+   * Visual style of the avatar.
+   * @default "soft"
+   */
   variant?: 'solid' | 'soft';
+  /**
+   * Color of the avatar.
+   * @default "indigo"
+   */
   color?: AvatarColor;
+  /** CSS class applied to the element. */
   className?: string;
 }
 
@@ -229,7 +247,9 @@ AvatarRoot.displayName = 'Avatar';
 export const Avatar = AvatarRoot;
 
 export interface AvatarGroupProps extends ComponentProps<'div'> {
+  /** The `Avatar` elements to show. */
   children: React.ReactElement<AvatarProps>[];
+  /** Maximum number of avatars to show. An extra avatar shows the count of the rest. */
   max?: number;
 }
 

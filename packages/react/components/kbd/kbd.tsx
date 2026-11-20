@@ -6,6 +6,7 @@ import styles from './kbd.module.css';
 
 const kbd = cva(styles['kbd'], {
   variants: {
+    /** Visual style of the key. Defaults to the `variant` of the parent `Kbd.Group`, otherwise `"solid"`. */
     variant: {
       solid: styles['kbd-solid'],
       ghost: styles['kbd-ghost']
@@ -15,6 +16,10 @@ const kbd = cva(styles['kbd'], {
 
 const kbdGroup = cva(styles['kbd-group'], {
   variants: {
+    /**
+     * Visual style of every key in the group. The `variant` of a key wins over it.
+     * @default "solid"
+     */
     variant: {
       solid: styles['kbd-group-solid'],
       ghost: styles['kbd-group-ghost']

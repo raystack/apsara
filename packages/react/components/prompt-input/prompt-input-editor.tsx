@@ -44,14 +44,11 @@ export interface PromptInputEditorProps
   placeholder?: string;
   /** Disables just the editor. Inherits the root `disabled` by default. */
   disabled?: boolean;
-  /**
-   * Cap on the derived plain text, where a chip counts as its label. Enforced by a
-   * transaction filter, so paste and IME are covered, not just keystrokes.
-   */
+  /** Maximum length of the plain text, where a chip counts as its label. Pasted and composed text also count. */
   maxLength?: number;
   /**
-   * Valid on a contentEditable, unlike `maxLength`.
-   * @defaultValue true
+   * Whether the browser checks the spelling of the draft.
+   * @default true
    */
   spellCheck?: boolean;
 }

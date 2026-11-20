@@ -6,6 +6,7 @@ import {
   ComponentProps,
   MouseEvent,
   PointerEvent,
+  ReactNode,
   useEffect,
   useRef
 } from 'react';
@@ -15,12 +16,17 @@ import { useChatPanelContext } from './chat-panel-context';
 
 export interface ChatPanelTriggerProps extends ComponentProps<'button'> {
   /**
-   * Whether the minimized bubble can be dragged around the viewport. The
-   * dropped position is kept across minimize/restore cycles. Shadows the
-   * (useless here) native `draggable` attribute.
-   * @defaultValue false
+   * Whether the minimized bubble can be dragged around the viewport. It keeps the dropped position across minimize and restore. It replaces the native `draggable` attribute.
+   * @default false
    */
   draggable?: boolean;
+  /** Content of the bubble. Defaults to a chat icon. */
+  children?: ReactNode;
+  /**
+   * Accessible name of the bubble.
+   * @default "Open chat"
+   */
+  'aria-label'?: string;
 }
 
 export function ChatPanelTrigger({

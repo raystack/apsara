@@ -51,9 +51,17 @@ export function TourDescription({
 }
 TourDescription.displayName = 'Tour.Description';
 
-export interface TourProgressProps extends ComponentProps<typeof Text> {
+type TextProps = ComponentProps<typeof Text>;
+
+export interface TourProgressProps extends TextProps {
   /** Custom formatter, e.g. show "2/5" instead of "2 of 5". */
   format?: (index: number, total: number) => ReactNode;
+  /** @default "mini" */
+  size?: TextProps['size'];
+  /** @default "medium" */
+  weight?: TextProps['weight'];
+  /** @default "secondary" */
+  color?: TextProps['color'];
 }
 
 export function TourProgress({ format, ...props }: TourProgressProps) {

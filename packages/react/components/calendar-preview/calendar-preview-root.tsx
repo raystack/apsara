@@ -65,43 +65,104 @@ export function isScaleValue(
   return value != null && !(value instanceof Date) && 'date' in value;
 }
 
+/* Each arm repeats the same JSDoc, so the docs table shows one description per prop. */
 interface CalendarPreviewSingleProps {
+  /**
+   * Whether the grid picks one day or a range of days.
+   * @default "single"
+   */
   selection?: 'single';
+  /**
+   * The scales the root offers. One scale hides the switcher. An array, or a scale other than `"day"`, makes the value `{ date, scale }`.
+   * @default "day"
+   */
   scales?: 'day';
+  /**
+   * The value (controlled): a `Date`, a `{ from, to }` range at `selection="range"`, or a `{ date, scale }` period with a `YYYY-MM-DD` date.
+   */
   value?: Date | null;
+  /**
+   * The initial value (uncontrolled). Same shape as `value`.
+   * @default null
+   */
   defaultValue?: Date | null;
+  /**
+   * Called when the value is committed or cleared. A range is reported only when complete. `details.toDate()` returns the day acted on.
+   */
   onValueChange?: (
     value: Date | null,
     details: CalendarPreviewChangeDetails
   ) => void;
-  /** `.Reset`'s target, read even when controlled. `null` clears; omitted hides it. */
+  /**
+   * The value `.Reset` restores, read even when `value` is controlled. `null` makes `.Reset` clear the value. Without it, `.Reset` renders nothing.
+   */
   defaultDate?: Date | null;
 }
 
 interface CalendarPreviewRangeProps {
+  /**
+   * Whether the grid picks one day or a range of days.
+   * @default "single"
+   */
   selection: 'range';
+  /**
+   * The scales the root offers. One scale hides the switcher. An array, or a scale other than `"day"`, makes the value `{ date, scale }`.
+   * @default "day"
+   */
   scales?: 'day';
+  /**
+   * The value (controlled): a `Date`, a `{ from, to }` range at `selection="range"`, or a `{ date, scale }` period with a `YYYY-MM-DD` date.
+   */
   value?: CalendarPreviewDateRange | null;
+  /**
+   * The initial value (uncontrolled). Same shape as `value`.
+   * @default null
+   */
   defaultValue?: CalendarPreviewDateRange | null;
+  /**
+   * Called when the value is committed or cleared. A range is reported only when complete. `details.toDate()` returns the day acted on.
+   */
   onValueChange?: (
     value: CalendarPreviewDateRange | null,
     details: CalendarPreviewChangeDetails
   ) => void;
-  /** `.Reset`'s target, read even when controlled. `null` clears; omitted hides it. */
+  /**
+   * The value `.Reset` restores, read even when `value` is controlled. `null` makes `.Reset` clear the value. Without it, `.Reset` renders nothing.
+   */
   defaultDate?: CalendarPreviewDateRange | null;
 }
 
 /* On the SHAPE of `scales`, so `scales={['day']}` takes this arm and `scales='day'` does not. */
 interface CalendarPreviewScaleAwareProps {
+  /**
+   * Whether the grid picks one day or a range of days.
+   * @default "single"
+   */
   selection?: 'single';
+  /**
+   * The scales the root offers. One scale hides the switcher. An array, or a scale other than `"day"`, makes the value `{ date, scale }`.
+   * @default "day"
+   */
   scales: Exclude<Scale, 'day'> | Scale[];
+  /**
+   * The value (controlled): a `Date`, a `{ from, to }` range at `selection="range"`, or a `{ date, scale }` period with a `YYYY-MM-DD` date.
+   */
   value?: ScaleValue | null;
+  /**
+   * The initial value (uncontrolled). Same shape as `value`.
+   * @default null
+   */
   defaultValue?: ScaleValue | null;
+  /**
+   * Called when the value is committed or cleared. A range is reported only when complete. `details.toDate()` returns the day acted on.
+   */
   onValueChange?: (
     value: ScaleValue | null,
     details: CalendarPreviewChangeDetails
   ) => void;
-  /** `.Reset`'s target, read even when controlled. */
+  /**
+   * The value `.Reset` restores, read even when `value` is controlled. `null` makes `.Reset` clear the value. Without it, `.Reset` renders nothing.
+   */
   defaultDate?: ScaleValue | null;
 }
 
@@ -114,38 +175,61 @@ export type CalendarPreviewProps = (
 
 interface CalendarPreviewSharedProps
   extends Omit<useRender.ComponentProps<'div'>, 'defaultValue' | 'onChange'> {
-  /** @defaultValue the first of `scales` */
+  /**
+   * The scale the root opens on (uncontrolled). Defaults to the scale of the value, else the first of `scales`.
+   */
   defaultScale?: Scale;
+  /** The active scale (controlled). */
   scale?: Scale;
+  /** Called when the active scale changes. */
   onScaleChange?: (scale: Scale) => void;
-  /** A period emits its last day, not its first. @defaultValue false */
+  /**
+   * Whether a period's value is its last day instead of its first.
+   * @default false
+   */
   trailingValue?: boolean;
+  /** Whether the popover is open (controlled). An inline calendar ignores it. */
   open?: boolean;
-  /** @defaultValue false */
+  /**
+   * Whether the popover is open at first (uncontrolled).
+   * @default false
+   */
   defaultOpen?: boolean;
+  /** Called when the popover opens or closes, with Base UI's event details. */
   onOpenChange?: (
     open: boolean,
     details: CalendarPreviewOpenChangeDetails
   ) => void;
 
+  /** The first month the grid shows (controlled). */
   month?: Date;
-  /** @defaultValue the month of `value`, else `today` */
+  /**
+   * The month the grid opens on (uncontrolled). Defaults to the month of the value, else `today`.
+   */
   defaultMonth?: Date;
+  /** Called when the visible month changes. */
   onMonthChange?: (month: Date) => void;
   /**
-   * The years the period views and the caption's year column offer. Passing it
-   * replaces the default, so a bound outside it stays unreachable.
-   * @defaultValue ten years either side of `today`, widened to cover any bound
+   * The years the period views and the caption's year column offer. Defaults to ten years either side of `today`, widened to cover `minDate` and `maxDate`. A passed range is not widened.
    */
   yearRange?: { from: number; to: number };
 
-  /** Never clamps navigation. A period is tested against the day it emits. */
+  /**
+   * The earliest selectable day, inclusive. It does not limit navigation. A period is tested against the day it emits.
+   */
   minDate?: Date;
+  /**
+   * The latest selectable day, inclusive. It does not limit navigation. A period is tested against the day it emits.
+   */
   maxDate?: Date;
-  /* Day scale only: a day predicate has no single lift to a period. */
+  /**
+   * Returns `true` for a day that cannot be selected, in addition to `minDate` and `maxDate`. Period views do not call it.
+   */
   isDateUnavailable?: (date: Date) => boolean;
 
-  /** @defaultValue `DD MMM YYYY` at day scale, the period's shorthand above it */
+  /**
+   * Formats a value for the trigger, the input and the annotations. It gets `timeZone` as the third argument. Defaults to `DD MMM YYYY` at day scale, and to the period's short form above it.
+   */
   formatValue?: (
     value: Date | ScaleValue,
     scale: Scale,
@@ -153,17 +237,25 @@ interface CalendarPreviewSharedProps
   ) => string;
 
   /**
-   * Every `Date` is an instant, not a calendar day, so at a far offset it is
-   * not the day its local fields spell — build them from `Date.UTC`.
+   * The time zone the calendar reads days in. Every `Date` is an instant, so build the dates of a zoned calendar with `Date.UTC`.
    */
   timeZone?: string;
-  /** Injectable so tests render deterministically. @defaultValue `new Date()` */
+  /** The date the calendar treats as today. Defaults to `new Date()`. */
   today?: Date;
-  /** Click-to-deselect is day scale only; a period re-commits. @defaultValue true */
+  /**
+   * Whether clicking the selected day or emptying the input clears the value. Clicking a selected period commits it again.
+   * @default true
+   */
   clearable?: boolean;
-  /** @defaultValue false */
+  /**
+   * Whether the calendar is disabled.
+   * @default false
+   */
   disabled?: boolean;
-  /** @defaultValue false */
+  /**
+   * Whether the value can be read and navigated but not changed.
+   * @default false
+   */
   readOnly?: boolean;
 }
 

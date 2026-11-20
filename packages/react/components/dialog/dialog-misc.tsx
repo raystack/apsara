@@ -8,10 +8,16 @@ import { Flex } from '../flex';
 import { IconButton } from '../icon-button';
 import styles from './dialog.module.css';
 
-export function DialogHeader({
-  className,
-  ...props
-}: ComponentProps<typeof Flex>) {
+type FlexProps = ComponentProps<typeof Flex>;
+
+interface DialogHeaderProps extends FlexProps {
+  /** @default "between" */
+  justify?: FlexProps['justify'];
+  /** @default "center" */
+  align?: FlexProps['align'];
+}
+
+export function DialogHeader({ className, ...props }: DialogHeaderProps) {
   return (
     <Flex
       justify='between'
@@ -25,10 +31,14 @@ export function DialogHeader({
 
 DialogHeader.displayName = 'Dialog.Header';
 
-export function DialogFooter({
-  className,
-  ...props
-}: ComponentProps<typeof Flex>) {
+interface DialogFooterProps extends FlexProps {
+  /** @default 5 */
+  gap?: FlexProps['gap'];
+  /** @default "end" */
+  justify?: FlexProps['justify'];
+}
+
+export function DialogFooter({ className, ...props }: DialogFooterProps) {
   return (
     <Flex
       gap={5}
@@ -42,10 +52,14 @@ export function DialogFooter({
 
 DialogFooter.displayName = 'Dialog.Footer';
 
-export function DialogBody({
-  className,
-  ...props
-}: ComponentProps<typeof Flex>) {
+interface DialogBodyProps extends FlexProps {
+  /** @default "column" */
+  direction?: FlexProps['direction'];
+  /** @default 3 */
+  gap?: FlexProps['gap'];
+}
+
+export function DialogBody({ className, ...props }: DialogBodyProps) {
   return (
     <Flex
       direction='column'

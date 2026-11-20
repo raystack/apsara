@@ -6,7 +6,19 @@ import { Flex } from '../flex';
 import { Text } from '../text';
 import styles from './calendar-preview.module.css';
 
-export type CalendarPreviewFooterProps = ComponentProps<typeof Flex>;
+export interface CalendarPreviewFooterProps
+  extends ComponentProps<typeof Flex> {
+  /**
+   * Alignment of the items on the cross axis.
+   * @default "center"
+   */
+  align?: ComponentProps<typeof Flex>['align'];
+  /**
+   * Distribution of the items on the main axis.
+   * @default "center"
+   */
+  justify?: ComponentProps<typeof Flex>['justify'];
+}
 
 export function CalendarPreviewFooter({
   className,

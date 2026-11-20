@@ -4,6 +4,7 @@ import {
   Autocomplete as AutocompletePrimitive,
   ContextMenu as ContextMenuPrimitive
 } from '@base-ui/react';
+import type { ReactNode } from 'react';
 import { ChevronRightIcon } from '~/icons';
 import { Cell, CellBaseProps } from '../menu/cell';
 import { useMenuContext } from '../menu/menu-root';
@@ -27,7 +28,10 @@ ContextMenuTrigger.displayName = 'ContextMenu.Trigger';
 export interface ContextMenuSubTriggerProps
   extends ContextMenuPrimitive.SubmenuTrigger.Props,
     CellBaseProps {
+  /** Text that the search of the parent menu matches, in addition to the children text. */
   value?: string;
+  /** Icon after the trigger text. Defaults to a right chevron. */
+  trailingIcon?: ReactNode;
 }
 
 export const ContextMenuSubTrigger = ({

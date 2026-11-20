@@ -19,6 +19,7 @@ const EXIT_MS = 200;
 const callout = cva(styles.callout, {
   variants: {
     ...radiusVariants,
+    /** Color of the callout. `primary` uses the base background. */
     color: {
       primary: styles['callout-primary'],
       neutral: styles['callout-neutral'],
@@ -28,10 +29,15 @@ const callout = cva(styles.callout, {
       attention: styles['callout-attention'],
       gradient: styles['callout-gradient']
     },
+    /** Visual style of the callout. */
     variant: {
       solid: '',
       outline: styles['callout-outline']
     },
+    /**
+     * Whether the callout uses high contrast colors.
+     * @default false
+     */
     highContrast: {
       true: styles['callout-high-contrast']
     }
@@ -45,16 +51,23 @@ const callout = cva(styles.callout, {
 export interface CalloutProps
   extends Omit<ComponentProps<'div'>, 'color'>,
     VariantProps<typeof callout> {
+  /** Content of the callout. */
   children: ReactNode;
+  /** Element shown after the message, for example a button. */
   action?: ReactNode;
-  /** Show a dismiss (close) button. */
+  /**
+   * Whether the callout shows a dismiss button.
+   * @default false
+   */
   dismissible?: boolean;
   /**
    * Called when the dismiss button is clicked. When provided, the consumer owns
    * removal (the callout stays mounted). When omitted, the callout hides itself.
    */
   onDismiss?: () => void;
+  /** Inline styles of the callout. */
   style?: CSSProperties;
+  /** Icon shown before the message. Defaults to an info icon. `null` hides it. */
   leadingIcon?: ReactNode;
 }
 

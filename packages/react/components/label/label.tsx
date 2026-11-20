@@ -5,22 +5,14 @@ import { cx } from 'class-variance-authority';
 import styles from './label.module.css';
 
 export interface LabelProps extends useRender.ComponentProps<'label'> {
-  /**
-   * Whether the labelled control is required. When `false`, an `(optional)`
-   * indicator (see `optionalText`) is rendered next to the label.
-   */
+  /** Whether the labelled control is required. When `false`, the label shows `optionalText`. */
   required?: boolean;
   /**
-   * Text rendered next to the label when `required={false}`.
+   * Text shown next to the label when `required` is `false`.
    * @default "(optional)"
    */
   optionalText?: string;
-  /**
-   * Text rendered next to the label when `required={true}`. No indicator is
-   * rendered if this is omitted, preserving apsara's existing behaviour of
-   * not surfacing a required marker by default. Pass any non-empty string
-   * (`"(required)"`, `"*"`, etc.) to opt in.
-   */
+  /** Text shown next to the label when `required` is `true`. Without it, the label shows no indicator. */
   requiredText?: string;
 }
 

@@ -5,16 +5,19 @@ import styles from './flex.module.css';
 
 const flex = cva(styles.flex, {
   variants: {
+    /** Renders as `inline-flex` instead of `flex`. */
     inline: {
       true: styles['flex-inline'],
       false: null
     },
+    /** Direction of the main axis. */
     direction: {
       row: styles['direction-row'],
       column: styles['direction-column'],
       rowReverse: styles['direction-rowReverse'],
       columnReverse: styles['direction-columnReverse']
     },
+    /** Alignment of the items on the cross axis. */
     align: {
       start: styles['align-start'],
       center: styles['align-center'],
@@ -22,17 +25,20 @@ const flex = cva(styles.flex, {
       stretch: styles['align-stretch'],
       baseline: styles['align-baseline']
     },
+    /** Distribution of the items on the main axis. */
     justify: {
       start: styles['justify-start'],
       center: styles['justify-center'],
       end: styles['justify-end'],
       between: styles['justify-between']
     },
+    /** How the items wrap onto more lines. */
     wrap: {
       noWrap: styles['wrap-noWrap'],
       wrap: styles['wrap-wrap'],
       wrapReverse: styles['wrap-wrapReverse']
     },
+    /** Space between the items. `0` removes it, and steps 1 to 17 use `--rs-space-1` to `--rs-space-17`. */
     gap: gapVariants
   },
   defaultVariants: {

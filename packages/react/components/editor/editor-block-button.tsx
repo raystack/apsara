@@ -1,6 +1,7 @@
 'use client';
 
 import type { Command } from 'prosemirror-state';
+import type { ReactNode } from 'react';
 import {
   type EditorBlock,
   insertHorizontalRule,
@@ -15,6 +16,8 @@ import { BLOCK_DEFAULTS } from './editor-defaults';
 export interface EditorBlockButtonProps extends EditorControlBaseProps {
   /** The block the button toggles. `horizontalRule` inserts a divider. */
   block: EditorBlock;
+  /** Replaces the default icon. */
+  children?: ReactNode;
 }
 
 function blockCommand(block: EditorBlock): Command {

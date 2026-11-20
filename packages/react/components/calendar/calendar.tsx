@@ -5,7 +5,12 @@ import dayjs from 'dayjs';
 import timezonePlugin from 'dayjs/plugin/timezone';
 import utcPlugin from 'dayjs/plugin/utc';
 import { ChangeEvent, ReactNode, useEffect, useRef, useState } from 'react';
-import { DayPicker, DayPickerProps, DropdownProps } from 'react-day-picker';
+import {
+  DayPicker,
+  DayPickerProps,
+  DropdownProps,
+  type Mode
+} from 'react-day-picker';
 import { ChevronLeftIcon, ChevronRightIcon } from '~/icons';
 
 import { IconButton } from '../icon-button';
@@ -19,22 +24,47 @@ dayjs.extend(utcPlugin);
 dayjs.extend(timezonePlugin);
 
 interface OnDropdownOpen {
+  /** Called when a month or year dropdown in the caption opens. */
   onDropdownOpen?: VoidFunction;
 }
 
 export interface CalendarPropsExtended {
+  /**
+   * Whether a day shows its message from `tooltipMessages` in a tooltip.
+   * @default false
+   */
   showTooltip?: boolean;
+  /**
+   * Tooltip text for each day, keyed by the date as `DD-MM-YYYY` in `timeZone`.
+   */
   tooltipMessages?: Record<string, ReactNode>;
-  /*
-   * Record keys are tz-aware `DD-MM-YYYY`; function form gets raw `day.date`
-   * (consumer must apply `timeZone` themselves to stay consistent).
+  /**
+   * Content above the day number. A record is keyed by the date as `DD-MM-YYYY` in `timeZone`. A function gets the day's `Date` and must apply `timeZone` itself.
    */
   dateInfo?: Record<string, ReactNode> | ((date: Date) => ReactNode | null);
+  /**
+   * Whether to cover the days with a skeleton and disable navigation and selection.
+   * @default false
+   */
   loading?: boolean;
   timeZone?: string;
 }
 
+interface CalendarDayPickerDefaults {
+  /**
+   * Enable the selection of a single day, multiple days, or a range of days.
+   * @default "single"
+   */
+  mode?: Mode | undefined;
+  /**
+   * Whether to show the days of the previous and next months.
+   * @default true
+   */
+  showOutsideDays?: boolean;
+}
+
 export type CalendarProps = DayPickerProps &
+  CalendarDayPickerDefaults &
   OnDropdownOpen &
   CalendarPropsExtended;
 

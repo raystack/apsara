@@ -5,12 +5,14 @@ import styles from './container.module.css';
 
 const container = cva(styles.container, {
   variants: {
+    /** Maximum width: `small` is 430px, `medium` is 715px, `large` is 1145px, and `none` has no limit. */
     size: {
       small: styles['container-small'],
       medium: styles['container-medium'],
       large: styles['container-large'],
       none: styles['container-none']
     },
+    /** Position in the parent. `start` and `end` follow the text direction. */
     align: {
       start: styles['align-start'],
       center: styles['align-center'],
@@ -24,7 +26,12 @@ const container = cva(styles.container, {
 });
 
 export type ContainerProps = VariantProps<typeof container> &
-  useRender.ComponentProps<'div'>;
+  useRender.ComponentProps<'div'> & {
+    /** Accessible name. With no `role` or `render`, it also sets `role="region"`. */
+    'aria-label'?: string;
+    /** ID of the element that names the container. With no `role` or `render`, it also sets `role="region"`. */
+    'aria-labelledby'?: string;
+  };
 
 export function Container({
   size,

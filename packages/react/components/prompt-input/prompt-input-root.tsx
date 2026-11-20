@@ -104,7 +104,7 @@ export interface PromptInputRootProps
    * Whichever is set first wins.
    */
   inputRef?: RefObject<HTMLElement | null>;
-  /** Imperative handle. `ref` remains the `<form>` element. */
+  /** Handle with `focus`, `clear`, `insertMention` and `getValue`. `ref` stays on the `<form>`. */
   actionsRef?: RefObject<PromptInputActions | null>;
 }
 

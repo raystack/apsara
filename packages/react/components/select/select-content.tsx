@@ -16,9 +16,28 @@ export interface SelectContentProps
       'render' | 'className' | 'style' | 'ref'
     >,
     SelectPrimitive.Popup.Props {
+  /**
+   * Placeholder of the search input when `autocomplete` is set.
+   * @default "Search..."
+   */
   searchPlaceholder?: string;
-  /** Corner radius for this popup only. Overrides the theme's `radius`. */
+  /** Corner radius for this popup only. Defaults to the theme's `radius`. */
   radius?: Radius;
+  /**
+   * How to align the popup relative to the specified side.
+   * @default "start"
+   */
+  align?: 'start' | 'center' | 'end';
+  /**
+   * Distance between the anchor and the popup in pixels.
+   * @default 4
+   */
+  sideOffset?: SelectPrimitive.Positioner.Props['sideOffset'];
+  /**
+   * Whether the popup overlaps the trigger so the selected item's text lines up with the trigger's value. Has no effect when `autocomplete` is set.
+   * @default false
+   */
+  alignItemWithTrigger?: boolean;
 }
 
 export function SelectContent({
