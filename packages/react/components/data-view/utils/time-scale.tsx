@@ -37,6 +37,13 @@ export const TIMELINE_DEFAULT_UNIT_WIDTH: Record<TimelineScale, number> = {
 /** Minimum px between rendered tick labels. Denser ticks skip labels. */
 const TICK_LABEL_MIN_SPACE = 28;
 
+/**
+ * Absorbs float error in the spacing ratio. The call site divides the unit
+ * width by scaling, so a width on an exact multiple of the floor can come out
+ * a hair under it (29.4 / 1.05 = 27.999999999999996).
+ */
+const LABEL_SPACING_EPSILON = 1e-9;
+
 /** Coerce a consumer-provided date (Date | epoch ms | parseable string | object with a numeric `valueOf`) to ms. */
 export function toTimestamp(value: unknown): number | null {
   return toInstant(value)?.getTime() ?? null;
@@ -167,8 +174,9 @@ function tickLabel(date: Date, scale: TimelineScale): string {
  * year in its label ("Jan 2025", then "Feb").
  *
  * `labelEvery` labels every Nth unit, counted from the domain start. The
- * collision floor (labels never closer than `TICK_LABEL_MIN_SPACE`) still
- * applies, so a too-dense request degrades instead of overlapping.
+ * collision floor (labels never closer than `TICK_LABEL_MIN_SPACE`, within
+ * float error) still applies, so a too-dense request degrades instead of
+ * overlapping.
  *
  * Cost note: this materializes one tick per `scale` unit across the whole
  * domain on every rebuild, since `virtualized` culls what renders, not what gets
@@ -184,7 +192,9 @@ export function buildAxis(
 ): { ticks: TimelineTick[]; bands: TimelineBand[] } {
   const autoLabelEvery = Math.max(
     1,
-    Math.ceil(TICK_LABEL_MIN_SPACE / Math.max(1, unitWidth))
+    Math.ceil(
+      TICK_LABEL_MIN_SPACE / Math.max(1, unitWidth) - LABEL_SPACING_EPSILON
+    )
   );
   const effectiveLabelEvery = Math.max(
     autoLabelEvery,

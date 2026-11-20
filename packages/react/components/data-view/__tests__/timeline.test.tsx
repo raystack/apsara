@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme';
+import { SCALINGS } from '../../theme/settings';
 
 // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
 import { DataView } from '../data-view';
@@ -13,7 +14,12 @@ import type {
   TimelineActions
 } from '../data-view.types';
 import { useDataView } from '../hooks/useDataView';
-import { buildAxis, createTimeScale, toTimestamp } from '../utils/time-scale';
+import {
+  buildAxis,
+  createTimeScale,
+  TIMELINE_DEFAULT_UNIT_WIDTH,
+  toTimestamp
+} from '../utils/time-scale';
 
 beforeAll(() => {
   // jsdom doesn't implement ResizeObserver, and the timeline observes its scroll
@@ -196,6 +202,41 @@ describe('buildAxis', () => {
       40
     ).ticks;
     expect(roomy.every(t => t.showLabel)).toBe(true);
+  });
+
+  it('labels at exact multiples of the label spacing despite float error', () => {
+    // The call site divides by scaling: 29.4 / 1.05 = 27.999999999999996.
+    expect(
+      buildAxis(januaryScale, 'day', 29.4 / 1.05).ticks.every(t => t.showLabel)
+    ).toBe(true);
+    const half = buildAxis(januaryScale, 'day', 14.7 / 1.05).ticks;
+    expect(half.map(t => t.showLabel).slice(0, 4)).toEqual([
+      true,
+      false,
+      true,
+      false
+    ]);
+  });
+
+  it('keeps the default label spacing at every scaling', () => {
+    for (const s of SCALINGS) {
+      const scaling = Number(s);
+      const every = (['day', 'week', 'month', 'quarter'] as const).map(
+        scale => {
+          const unitWidth = TIMELINE_DEFAULT_UNIT_WIDTH[scale] * scaling;
+          const scaleForUnit = createTimeScale({
+            minTime: new Date(2025, 0, 1).getTime(),
+            maxTime: new Date(2027, 0, 1).getTime(),
+            scale,
+            unitWidth,
+            padUnits: 0
+          });
+          const { ticks } = buildAxis(scaleForUnit, scale, unitWidth / scaling);
+          return ticks.findIndex((t, i) => i > 0 && t.showLabel);
+        }
+      );
+      expect(every).toEqual([2, 1, 1, 1]);
+    }
   });
 
   it('labels every Nth unit when labelEvery is passed', () => {
@@ -2225,7 +2266,7 @@ describe('DataView.Timeline theme scaling', () => {
   ];
 
   function renderScaled(
-    scaling: '1' | '1.1',
+    scaling: '1' | '1.05' | '1.1',
     props: Partial<DataViewTimelineProps<Order>> = {},
     data: Order[] = scaledOrders
   ) {
@@ -2317,6 +2358,11 @@ describe('DataView.Timeline theme scaling', () => {
     ).toEqual([0, 14, 28]);
     // 30.8px floor over 14px units → every 3rd label.
     expect(lefts(scaled.container, 'data-view-timeline-axis-tick')[1]).toBe(42);
+  });
+
+  it('labels every tick when unitWidth equals the scaled label floor', () => {
+    const { container } = renderScaled('1.05', { unitWidth: 29.4 });
+    expect(labels(container)).toHaveLength(32);
   });
 
   it('scales the gap between cards sharing a lane', () => {
