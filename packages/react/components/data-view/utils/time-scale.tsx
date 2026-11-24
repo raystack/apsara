@@ -37,13 +37,6 @@ export const TIMELINE_DEFAULT_UNIT_WIDTH: Record<TimelineScale, number> = {
 /** Minimum px between rendered tick labels. Denser ticks skip labels. */
 const TICK_LABEL_MIN_SPACE = 28;
 
-/**
- * Absorbs float error in the spacing ratio. The call site divides the unit
- * width by scaling, so a width on an exact multiple of the floor can come out
- * a hair under it (29.4 / 1.05 = 27.999999999999996).
- */
-const LABEL_SPACING_EPSILON = 1e-9;
-
 /** Coerce a consumer-provided date (Date | epoch ms | parseable string | object with a numeric `valueOf`) to ms. */
 export function toTimestamp(value: unknown): number | null {
   return toInstant(value)?.getTime() ?? null;
@@ -190,10 +183,12 @@ export function buildAxis(
   unitWidth: number,
   labelEvery?: number
 ): { ticks: TimelineTick[]; bands: TimelineBand[] } {
+  // The call site divides the unit width by scaling, so an exact multiple of
+  // the floor can land a hair under it (29.4 / 1.05 = 27.999999999999996).
   const autoLabelEvery = Math.max(
     1,
     Math.ceil(
-      TICK_LABEL_MIN_SPACE / Math.max(1, unitWidth) - LABEL_SPACING_EPSILON
+      Number((TICK_LABEL_MIN_SPACE / Math.max(1, unitWidth)).toFixed(6))
     )
   );
   const effectiveLabelEvery = Math.max(
