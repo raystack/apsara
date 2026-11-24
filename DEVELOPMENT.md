@@ -4,7 +4,7 @@ This guide covers setup, scripts, and the project layout. To send a change, see 
 
 ## Requirements
 
-- Node.js 22 or later
+- Node.js 22.22.2 or later on 22, 24.15.0 or later on 24, or 26 and later. jsdom, which runs the tests, needs these versions.
 - pnpm 9.3.0. Install it with `npm install -g pnpm@9.3.0`.
 
 ## Setup
