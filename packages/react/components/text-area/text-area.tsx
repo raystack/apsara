@@ -14,7 +14,7 @@ const textAreaVariants = cva(styles.textarea, {
     ...radiusVariants,
     size: {
       small: styles['size-small'],
-      large: styles['size-large']
+      medium: styles['size-medium']
     },
     variant: {
       outline: null,
@@ -22,7 +22,7 @@ const textAreaVariants = cva(styles.textarea, {
     }
   },
   defaultVariants: {
-    size: 'large',
+    size: 'medium',
     variant: 'outline'
   }
 });

@@ -32,7 +32,7 @@ describe('Checkbox', () => {
   });
 
   describe('Sizes', () => {
-    const sizes = ['small', 'large'] as const;
+    const sizes = ['small', 'medium'] as const;
     sizes.forEach(size => {
       it(`renders ${size} size`, () => {
         render(<Checkbox size={size} />);
@@ -41,10 +41,10 @@ describe('Checkbox', () => {
       });
     });
 
-    it('renders large size by default', () => {
+    it('renders medium size by default', () => {
       render(<Checkbox />);
       const checkbox = screen.getByRole('checkbox');
-      expect(checkbox).toHaveClass(styles.large);
+      expect(checkbox).toHaveClass(styles.medium);
     });
   });
 

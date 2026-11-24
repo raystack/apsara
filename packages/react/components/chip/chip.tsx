@@ -22,7 +22,7 @@ const chip = cva(styles.chip, {
       solid: styles['chip-variant-solid']
     },
     size: {
-      large: styles['chip-size-large'],
+      mini: styles['chip-size-mini'],
       small: styles['chip-size-small']
     },
     color: {
@@ -35,7 +35,7 @@ const chip = cva(styles.chip, {
   },
   defaultVariants: {
     variant: 'outline',
-    size: 'small',
+    size: 'mini',
     color: 'neutral'
   }
 });

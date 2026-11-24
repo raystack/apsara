@@ -41,7 +41,7 @@ describe('Switch', () => {
   });
 
   describe('Sizes', () => {
-    const sizes = ['small', 'large'] as const;
+    const sizes = ['small', 'medium'] as const;
     sizes.forEach(size => {
       it(`renders ${size} size`, () => {
         render(<Switch size={size} />);
@@ -49,10 +49,10 @@ describe('Switch', () => {
         expect(switchElement).toHaveClass(styles[size]);
       });
     });
-    it('renders large size by default', () => {
+    it('renders medium size by default', () => {
       render(<Switch />);
       const switchElement = screen.getByRole('switch');
-      expect(switchElement).toHaveClass(styles.large);
+      expect(switchElement).toHaveClass(styles.medium);
     });
   });
 
@@ -120,10 +120,10 @@ describe('Switch', () => {
       expect(switchElement).toHaveAttribute('data-disabled');
       expect(switchElement).toHaveClass(styles.small);
 
-      rerender(<Switch disabled size='large' />);
+      rerender(<Switch disabled size='medium' />);
       switchElement = screen.getByRole('switch');
       expect(switchElement).toHaveAttribute('data-disabled');
-      expect(switchElement).toHaveClass(styles.large);
+      expect(switchElement).toHaveClass(styles.medium);
     });
   });
 

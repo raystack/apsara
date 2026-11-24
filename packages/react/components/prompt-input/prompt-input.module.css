@@ -66,7 +66,24 @@
   padding: var(--rs-space-3);
 }
 
-/* `PromptInput.Editor` shares the textarea's box inside the frame, with the same
+/* `PromptInput.Editor`. The small font's own 16px line box is shorter than a
+   chip's icon and trailing slots, so the editor pairs the small font with the
+   regular line height from the Editor core, and the chip sizes itself to that
+   line, so the line box is the same height whatever a line holds. */
+.editor {
+  width: 100%;
+  overflow-y: auto;
+  color: var(--rs-color-foreground-base-primary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+
+.editor > p {
+  margin: 0;
+}
+
+/* The editor shares the textarea's box inside the frame, with the same
    padding, floor and cap, minus `field-sizing`, which applies to form
    controls only: a contentEditable grows with its content natively. */
 .root .editor {

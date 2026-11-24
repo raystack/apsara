@@ -41,19 +41,19 @@ describe('Separator', () => {
     });
   });
 
-  describe('Sizes', () => {
-    const sizes = ['small', 'half', 'full'] as const;
+  describe('Variants', () => {
+    const variants = ['full', 'middle'] as const;
 
-    it.each(sizes)('renders %s size correctly', size => {
-      render(<Separator size={size} />);
+    it.each(variants)('renders %s variant correctly', variant => {
+      render(<Separator variant={variant} />);
       const separator = screen.getByRole('separator');
-      expect(separator).toHaveClass(styles[`separator-${size}`]);
+      expect(separator).toHaveClass(styles[`variant-${variant}`]);
     });
 
-    it('defaults to full size', () => {
+    it('defaults to full variant', () => {
       render(<Separator />);
       const separator = screen.getByRole('separator');
-      expect(separator).toHaveClass(styles['separator-full']);
+      expect(separator).toHaveClass(styles['variant-full']);
     });
   });
 

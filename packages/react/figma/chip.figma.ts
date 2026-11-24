@@ -8,7 +8,7 @@ const variant = figma.selectedInstance.getEnum('Variant', {
   Filled: 'solid'
 });
 const size = figma.selectedInstance.getEnum('Size', {
-  Large: 'large'
+  Large: 'small'
 });
 const color = figma.selectedInstance.getEnum('Style', {
   Accent: 'accent'

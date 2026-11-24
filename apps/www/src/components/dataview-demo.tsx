@@ -625,7 +625,7 @@ function SelectionBar() {
     <FloatingActions aria-label='Selection actions'>
       <Chip
         variant='outline'
-        size='large'
+        size='small'
         color='neutral'
         leadingIcon={<Frame size={16} strokeWidth={1.5} />}
       >
@@ -896,16 +896,16 @@ function TaskCard({
         {task.title}
       </Text>
       <Flex align='center' gap={2}>
-        <Badge size='micro' color={TASK_STATUS_BADGE[task.status]}>
+        <Badge size='mini' color={TASK_STATUS_BADGE[task.status]}>
           {task.status}
         </Badge>
         <DataView.DisplayAccess accessorKey='team'>
-          <Badge size='micro' color='neutral'>
+          <Badge size='mini' color='neutral'>
             {task.team}
           </Badge>
         </DataView.DisplayAccess>
         <DataView.DisplayAccess accessorKey='priority'>
-          <Badge size='micro' color='neutral'>
+          <Badge size='mini' color='neutral'>
             {task.priority}
           </Badge>
         </DataView.DisplayAccess>

@@ -50,10 +50,10 @@ export interface FloatingActionsSeparatorProps {
     | 'success';
 
   /**
-   * Size variant inherited from the underlying `Separator`.
+   * Variant inherited from the underlying `Separator`.
    * @defaultValue "full"
    */
-  size?: 'small' | 'half' | 'full';
+  variant?: 'full' | 'middle';
 
   /**
    * Hides the separator from assistive technology.

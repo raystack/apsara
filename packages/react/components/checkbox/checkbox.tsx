@@ -50,11 +50,11 @@ const checkboxVariants = cva(styles.checkbox, {
   variants: {
     size: {
       small: styles.small,
-      large: styles.large
+      medium: styles.medium
     }
   },
   defaultVariants: {
-    size: 'large'
+    size: 'medium'
   }
 });
 

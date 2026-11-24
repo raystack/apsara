@@ -16,7 +16,7 @@ export default function DocsFooter({ url }: DocsFooterProps) {
           <Button
             variant='outline'
             color='neutral'
-            size='normal'
+            size='medium'
             leadingIcon={<ArrowLeft size={16} strokeWidth={1.5} />}
           >
             {neighbours.previous.name}
@@ -30,7 +30,7 @@ export default function DocsFooter({ url }: DocsFooterProps) {
           <Button
             variant='outline'
             color='neutral'
-            size='normal'
+            size='medium'
             trailingIcon={<ArrowRight size={16} strokeWidth={1.5} />}
           >
             {neighbours.next.name}
