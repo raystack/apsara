@@ -1,25 +1,23 @@
 import { cx } from 'class-variance-authority';
 import type { ComponentProps } from 'react';
 import { Popover } from '../popover';
-import styles from './calendar-preview.module.css';
-import { useCalendarPreviewContext } from './calendar-preview-context';
+import styles from './calendar.module.css';
+import { useCalendarContext } from './calendar-context';
 
-export type CalendarPreviewContentProps = ComponentProps<
-  typeof Popover.Content
->;
+export type CalendarContentProps = ComponentProps<typeof Popover.Content>;
 
-export function CalendarPreviewContent({
+export function CalendarContent({
   className,
   children,
   ...props
-}: CalendarPreviewContentProps) {
+}: CalendarContentProps) {
   const { triggerHasInput, shouldRestoreFinalFocus } =
-    useCalendarPreviewContext('CalendarPreview.Content');
+    useCalendarContext('Calendar.Content');
 
   return (
     <Popover.Content
       className={cx(styles.content, className)}
-      data-slot='calendar-preview-content'
+      data-slot='calendar-content'
       initialFocus={triggerHasInput ? false : undefined}
       finalFocus={triggerHasInput ? shouldRestoreFinalFocus : undefined}
       {...props}
@@ -29,4 +27,4 @@ export function CalendarPreviewContent({
   );
 }
 
-CalendarPreviewContent.displayName = 'CalendarPreview.Content';
+CalendarContent.displayName = 'Calendar.Content';

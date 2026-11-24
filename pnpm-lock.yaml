@@ -196,9 +196,6 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
-      dayjs:
-        specifier: ^1.11.23
-        version: 1.11.23
       marked:
         specifier: ^18.0.14
         version: 18.0.14
@@ -3618,9 +3615,6 @@ packages:
 
   dayjs@1.11.20:
     resolution: {integrity: sha512-YbwwqR/uYpeoP4pu043q+LTDLFBLApUP6VxRihdfNTqu4ubqMlGDLd6ErXhEgsyvY0K6nCs7nggYumAN+9uEuQ==}
-
-  dayjs@1.11.23:
-    resolution: {integrity: sha512-QDTCU0M0MxR3hQfnlDJfwekQiaanm1ubOD231u73WBckQ/fsamwRLiE2GBz6D3a/xF1NgfiDLJjXBa1hYOYTtQ==}
 
   debug@4.4.1:
     resolution: {integrity: sha512-KcKCqiftBJcZr++7ykoDIEwSa3XWowTfNPo92BYxjXiyYEVrUQh2aLyhxBCwww+heortUFxEJYcRzosstTEBYQ==}
@@ -10304,8 +10298,6 @@ snapshots:
   date-fns@4.1.0: {}
 
   dayjs@1.11.20: {}
-
-  dayjs@1.11.23: {}
 
   debug@4.4.1:
     dependencies:

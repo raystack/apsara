@@ -93,7 +93,7 @@ const createPlugins = ({ rootDir, declarationDir }) => [
     optDeps: true,
     // Note: Include deps with subpaths that need to be externalized in include array.
     // https://github.com/Septh/rollup-plugin-node-externals?tab=readme-ov-file#1-this-plugin-is-smart
-    include: ['react/jsx-runtime', 'react-dom/client', /^dayjs\/plugin\/.*/]
+    include: ['react/jsx-runtime', 'react-dom/client']
   }),
   nodeResolve(),
   commonjs(),
@@ -162,13 +162,7 @@ const rollupConfig = configs.map(conf => {
         sourcemap: true,
         exports: 'named',
         preserveModules: true,
-        preserveModulesRoot: conf.inputPath,
-        paths: id => {
-          if (id === 'dayjs') return 'dayjs/esm/index.js';
-          if (id.startsWith('dayjs/plugin/'))
-            return `${id.replace('dayjs/plugin/', 'dayjs/esm/plugin/')}/index.js`;
-          return id;
-        }
+        preserveModulesRoot: conf.inputPath
       },
       {
         dir: conf.outputPath,

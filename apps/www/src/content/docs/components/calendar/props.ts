@@ -1,270 +1,415 @@
-import { InputProps } from '../input/props';
-import { PopoverContentProps } from '../popover/props';
+import { ReactNode } from 'react';
+
+type Scale = 'day' | 'month' | 'quarter' | 'half-year' | 'year';
 
 export interface CalendarProps {
   /**
-   * Number of months to render side-by-side.
-   * @example numberOfMonths={2}
+   * Whether the grid picks one day or a span. A range is two edges or nothing;
+   * the half-built state stays internal.
+   * @default "single"
    */
-  numberOfMonths?: number;
+  selection?: 'single' | 'range';
 
   /**
-   * Caption layout: plain label or month/year dropdown(s).
-   * @example captionLayout="dropdown"
+   * The selected value (controlled). Its shape follows the root: a `Date` by
+   * default, `{ from, to }` at `selection="range"`, and `{ date, scale }` once
+   * `scales` offers anything beyond `"day"` — `date` is a timeless
+   * `"YYYY-MM-DD"`.
    */
-  captionLayout?: 'label' | 'dropdown' | 'dropdown-months' | 'dropdown-years';
+  value?:
+    | Date
+    | { from: Date; to: Date }
+    | { date: string; scale: Scale }
+    | null;
+
+  /** The initial value (uncontrolled). Same shape as `value`. */
+  defaultValue?:
+    | Date
+    | { from: Date; to: Date }
+    | { date: string; scale: Scale }
+    | null;
 
   /**
-   * Earliest navigable month.
-   * Bounds the chevrons and the year dropdown.
-   * @example startMonth={new Date(2020, 0)}
+   * Called when a value is committed or cleared, with the same shape as
+   * `value`. `details.toDate()` returns the day acted on even when the value is
+   * `null`. A range fires on a complete range or not at all.
+   * @example onValueChange={(value, details) => console.log(details.reason)}
    */
-  startMonth?: Date;
+  onValueChange?: (
+    value:
+      | Date
+      | { from: Date; to: Date }
+      | { date: string; scale: Scale }
+      | null,
+    details: {
+      reason: 'select' | 'input' | 'clear' | 'reset' | 'scale';
+      period: { start: string; end: string };
+      toDate: () => Date;
+    }
+  ) => void;
+
+  /** Whether the popover is open (controlled). Ignored by an inline calendar. */
+  open?: boolean;
+
+  /** @default false */
+  defaultOpen?: boolean;
 
   /**
-   * Latest navigable month.
-   * Bounds the chevrons and the year dropdown.
-   * @example endMonth={new Date(2030, 11)}
+   * Called when the popover opens or closes. `details` is Base UI's own,
+   * forwarded unchanged, so `details.reason` stays the union it narrows on.
    */
-  endMonth?: Date;
+  onOpenChange?: (
+    open: boolean,
+    details: { reason?: string; event?: Event }
+  ) => void;
 
-  /** Initial visible month (uncontrolled). */
-  defaultMonth?: Date;
-
-  /** Controlled visible month — pair with `onMonthChange`. */
+  /** The first month the grid displays (controlled). */
   month?: Date;
 
-  /** Fires when the visible month changes (chevron paging, dropdown). */
+  /**
+   * The month the grid opens on.
+   * @example defaultMonth={new Date(2024, 3, 1)}
+   */
+  defaultMonth?: Date;
+
+  /** Called when the view moves. */
   onMonthChange?: (month: Date) => void;
 
   /**
-   * Selection mode.
-   * @defaultValue "single"
+   * The years the period views and the caption's year column offer. Passing it
+   * replaces the default, so a bound outside it stays unreachable.
+   * Defaults to ten years either side of `today`, widened to cover any bound.
    */
-  mode?: 'single' | 'multiple' | 'range';
+  yearRange?: { from: number; to: number };
 
-  /** Currently selected date(s). Shape depends on `mode`. */
-  selected?: Date | Date[] | { from: Date; to?: Date };
+  /**
+   * Earliest selectable day, inclusive. Never clamps navigation. A period is
+   * tested against the day it would emit, so `trailingValue` moves the answer:
+   * bounded at 15 July, Q3 is rejected for a start field and allowed for an end
+   * field.
+   * @example minDate={new Date(2024, 3, 17)}
+   */
+  minDate?: Date;
 
-  /** Fires when the user picks a date. */
-  onSelect?: (selected: Date | Date[] | { from: Date; to?: Date }) => void;
+  /** Latest selectable day, inclusive. Tested as `minDate` is. */
+  maxDate?: Date;
 
-  /** Day on which the week starts. 0 = Sunday, 1 = Monday, …, 6 = Saturday. */
-  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+  /**
+   * Reject individual days, on top of `minDate` / `maxDate`. Day scale only —
+   * period cells never call it, and are bounded by `minDate` / `maxDate`
+   * against the day they would emit.
+   * @example isDateUnavailable={date => date.getDay() === 0}
+   */
+  isDateUnavailable?: (date: Date) => boolean;
 
-  /** Show week numbers in a leading column. */
+  /**
+   * The day `.Reset` restores. Read even when `value` is controlled, which
+   * `defaultValue` is not. `null` is a default of nothing selected, so
+   * `.Reset` clears; omitting the prop renders no button at all. It follows
+   * the selection: a range at `selection="range"`, a period at a coarser
+   * scale.
+   */
+  defaultDate?:
+    | Date
+    | { from: Date; to: Date }
+    | { date: string; scale: Scale }
+    | null;
+
+  /**
+   * Renders a value for display — every trigger, input and annotation goes
+   * through it. The root passes `timeZone` through as the third argument, so a
+   * formatter that reads calendar fields off the `Date` must use it or it will
+   * render the neighbouring day. Defaults to `DD MMM YYYY` at day scale, and
+   * the period's own shorthand above it.
+   * @example formatValue={(value, scale, timeZone) => format(value, timeZone)}
+   */
+  formatValue?: (
+    value: Date | { date: string; scale: Scale },
+    scale: Scale,
+    timeZone?: string
+  ) => string;
+
+  /**
+   * The granularities this root offers. One entry hides the switcher; anything
+   * beyond `"day"` moves the value to `{ date, scale }`.
+   *
+   * The array form takes the scale-aware arm whatever it holds, so
+   * `scales={['day']}` types the value as `{ date, scale }` while the bare
+   * string `scales="day"` keeps it a `Date`. TypeScript cannot read an array's
+   * contents, so the two spellings of a day-only calendar are not equivalent —
+   * pass the string unless you want the period shape.
+   * @default "day"
+   * @example scales={['day', 'month', 'quarter']}
+   */
+  scales?: Scale | Scale[];
+
+  /** The scale the picker opens on. Defaults to the first of `scales`. */
+  defaultScale?: Scale;
+
+  /** The active scale (controlled). */
+  scale?: Scale;
+
+  /** Called when the switcher moves. */
+  onScaleChange?: (scale: Scale) => void;
+
+  /**
+   * Whether a period emits its last day rather than its first — an end field
+   * wants 31 July from "July 2026", a start field wants the 1st. It changes the
+   * value, not the formatting.
+   * @default false
+   */
+  trailingValue?: boolean;
+
+  /**
+   * The zone the grid reads days in. Forwarded to the grid; the component does
+   * no conversion of its own.
+   *
+   * Every `Date` prop and every `Date` handed back is an instant, not a
+   * calendar day, so the calendar shows the day that instant falls on in this
+   * zone. With `timeZone="Pacific/Niue"`, `new Date(2026, 7, 1)` is 31 July
+   * there. Build dates for a zoned calendar from `Date.UTC`, not from local
+   * calendar fields.
+   */
+  timeZone?: string;
+
+  /** Today, injectable so a calendar renders deterministically in tests. */
+  today?: Date;
+
+  /**
+   * Whether clicking the selected day deselects it. Day scale only — clicking
+   * an already-selected period re-commits it rather than clearing.
+   * @default true
+   */
+  clearable?: boolean;
+
+  /** @default false */
+  disabled?: boolean;
+
+  /**
+   * Whether the value can be read and navigated but not changed.
+   * @default false
+   */
+  readOnly?: boolean;
+
+  /** Merged with the part's own classes. */
+  className?: string;
+}
+
+export interface CalendarDaysProps {
+  /**
+   * How many months the grid shows side by side. More than one moves the
+   * caption and nav into each month's own header.
+   * @default 1
+   */
+  numberOfMonths?: number;
+
+  /** Merged with the part's own classes. */
+  className?: string;
+}
+
+export interface CalendarCaptionProps {
+  /**
+   * Turn the caption into a trigger for the month and year scroller.
+   * @default false
+   */
+  dropdown?: boolean;
+
+  /** Merged with the part's own classes. */
+  className?: string;
+}
+
+export interface CalendarGridProps {
+  /**
+   * Always render six week rows, so the grid height never jumps between a 4-,
+   * 5- and 6-row month. Opt out where the calendar is inline and the trailing
+   * blank row is not wanted.
+   * @default true
+   */
+  fixedWeeks?: boolean;
+
+  /**
+   * Render the days either side of the month.
+   * @default false
+   */
+  showOutsideDays?: boolean;
+
+  /** Render a week-number column. */
   showWeekNumber?: boolean;
 
   /**
-   * Disabled dates. Accepts a Date, an array, a matcher object
-   * (e.g. `{ before: date }`, `{ after: date }`, `{ from, to }`), or a
-   * predicate.
+   * First day of the week, 0 (Sunday) to 6.
+   * @default 0
    */
-  disabled?:
-    | Date
-    | Date[]
-    | { before?: Date; after?: Date; from?: Date; to?: Date }
-    | ((date: Date) => boolean);
+  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+  /** Extra day modifiers, passed through to react-day-picker. */
+  modifiers?: Record<string, unknown>;
+
+  /** Override react-day-picker's component slots. */
+  components?: Record<string, unknown>;
 
   /**
-   * Hidden dates.
-   * Same matcher options as `disabled`.
+   * Extra content for a day, rendered above the date number.
+   * @example dateInfo={date => (date.getDate() === 1 ? <Dot /> : null)}
    */
-  hidden?:
-    | Date
-    | Date[]
-    | { before?: Date; after?: Date; from?: Date; to?: Date }
-    | ((date: Date) => boolean);
+  dateInfo?: (date: Date) => ReactNode;
 
-  /**
-   * Shows a skeleton over the days and disables navigation.
-   * @defaultValue false
-   */
-  loading?: boolean;
-
-  /**
-   * Enable tooltips on dates that have a matching `tooltipMessages` entry.
-   * @defaultValue false
-   */
+  /** @default false */
   showTooltip?: boolean;
 
-  /**
-   * Tooltip text keyed by date string in `"dd-MM-yyyy"` format. Lookup is
-   * timezone-aware when `timeZone` is set.
-   * @example tooltipMessages={{ "15-01-2024": "Holiday" }}
-   */
-  tooltipMessages?: Record<string, React.ReactNode>;
+  /** The tooltip for a day, or nothing. */
+  tooltipMessages?: (date: Date) => ReactNode;
 
-  /**
-   * Custom React components to render above each date.
-   * Can be either:
-   * - An object with date strings in "dd-MM-yyyy" format as keys
-   * - A function that receives a Date and returns a ReactNode or null
-   * The component will be rendered above the date number.
-   *
-   * @example
-   * // Object approach (static data)
-   * dateInfo={{ "15-01-2024": <div><Icon /> 17%</div> }}
-   *
-   * @example
-   * // Function approach (dynamic logic)
-   * dateInfo={(date) => date.getDay() === 0 ? <div>Sunday</div> : null}
-   */
-  dateInfo?:
-    | Record<string, React.ReactNode>
-    | ((date: Date) => React.ReactNode | null);
+  /** Cover the grid with a skeleton and stop navigation. */
+  loading?: boolean;
 
-  /** Fires when the year/month dropdown opens (only with `captionLayout="dropdown"`). */
-  onDropdownOpen?: () => void;
-
-  /** Boolean to show days from previous/next months */
-  showOutsideDays?: boolean;
-
-  /** Footer rendered below the month grid. */
-  footer?: React.ReactNode;
-
-  /** Per-element class name overrides passed through to DayPicker. */
-  classNames?: Record<string, string>;
-
-  /** Additional CSS class names */
+  /** Merged with the part's own classes. */
   className?: string;
-
-  /**
-   * IANA timezone name (e.g., "America/New_York"), "UTC", or UTC offset (e.g., "+02:00").
-   * If not provided, uses the local timezone.
-   */
-  timeZone?: string;
 }
 
-export interface RangePickerProps {
-  /**
-   * Additional CSS class names for the group that holds the start and end inputs. Ignored when `children` is set.
-   */
-  pickerGroupClassName?: string;
-
-  /**
-   * Format for displaying the date. Supports various formats:
-   * - With slashes: "DD/MM/YYYY", "MM/DD/YYYY", "YYYY/MM/DD"
-   * - With dashes: "DD-MM-YYYY", "MM-DD-YYYY", "YYYY-MM-DD"
-   * - With dots: "DD.MM.YYYY", "MM.DD.YYYY", "YYYY.MM.DD"
-   * - With spaces: "DD MMM YYYY", "MMM DD YYYY", "YYYY MMM DD"
-   * - With full month: "DD MMMM YYYY", "MMMM DD YYYY", "YYYY MMMM DD"
-   * - For more supported formats, refer to https://day.js.org/docs/en/display/format
-   * @defaultValue "DD MMM YYYY"
-   */
-  dateFormat?: string;
-
-  /**
-   * Fires on each day picked in the calendar. `from` is always set, and `to`
-   * is set only when the range is complete. Check `range.to` to handle only
-   * completed ranges.
-   */
-  onValueChange?: (
-    range: { from: Date | undefined; to?: Date },
-    details: { reason: 'item-press'; event: Event }
-  ) => void;
-
-  /** Initial (uncontrolled) date range. */
-  defaultValue?: { from: Date | undefined; to?: Date };
-
-  /** Controlled date range. */
-  value?: { from: Date | undefined; to?: Date };
-
-  /**
-   * Props for each picker slot. When both this and the legacy
-   * `inputsProps` / `calendarProps` / `popoverProps` are set, `slotProps` wins.
-   *
-   * The inputs are read-only. RangePicker replaces their `value` and `onClick`.
-   * Use `onValueChange` for value changes.
-   */
-  slotProps?: {
-    startInput?: InputProps;
-    endInput?: InputProps;
-    calendar?: CalendarProps;
-    popover?: PopoverContentProps;
-  };
-
-  /**
-   * Render prop or custom trigger. Pass a function to render a custom trigger
-   * receiving the formatted `startDate` / `endDate` strings, or a ReactNode to
-   * replace the default inputs entirely.
-   *
-   * @example
-   * <RangePicker>
-   *   {({ startDate, endDate }) => (
-   *     <button>{startDate} – {endDate}</button>
-   *   )}
-   * </RangePicker>
-   */
-  children?:
-    | React.ReactNode
-    | ((props: { startDate: string; endDate: string }) => React.ReactNode);
-
-  /**
-   * Hides the calendar icon in the input.
-   * @defaultValue false
-   */
-  hideCalendarIcon?: boolean;
-
-  /** Optional footer content for the calendar popover */
-  footer?: React.ReactNode;
-
-  /**
-   * IANA timezone name (e.g., "America/New_York"), "UTC", or UTC offset (e.g., "+02:00").
-   * If not provided, uses the local timezone.
-   */
-  timeZone?: string;
+export interface CalendarHeaderProps {
+  /** Merged with the part's own classes. */
+  className?: string;
 }
 
-export interface DatePickerProps {
-  /**
-   * Format for displaying the date. Supports various formats:
-   * - With slashes: "DD/MM/YYYY", "MM/DD/YYYY", "YYYY/MM/DD"
-   * - With dashes: "DD-MM-YYYY", "MM-DD-YYYY", "YYYY-MM-DD"
-   * - With dots: "DD.MM.YYYY", "MM.DD.YYYY", "YYYY.MM.DD"
-   * - With spaces: "DD MMM YYYY", "MMM DD YYYY", "YYYY MMM DD"
-   * - With full month: "DD MMMM YYYY", "MMMM DD YYYY", "YYYY MMMM DD"
-   * @defaultValue "DD MMM YYYY"
-   */
-  dateFormat?: string;
+export interface CalendarNavProps {
+  /** Merged with the part's own classes. */
+  className?: string;
+}
+
+export interface CalendarBodyProps {
+  /** The field label, passed to `.Label`. Omitted, no label renders. */
+  label?: ReactNode;
 
   /**
-   * Props for each picker slot. When both this and the legacy
-   * `inputProps` / `calendarProps` / `popoverProps` are set, `slotProps` wins.
-   *
-   * Input event handlers (`onChange`, `onFocus`, `onBlur`, `onKeyUp`) are not
-   * forwarded — use `onValueChange` for value changes.
+   * Shows the calendar icon in the date input.
+   * @default false
    */
-  slotProps?: {
-    input?: InputProps;
-    calendar?: CalendarProps;
-    popover?: PopoverContentProps;
-  };
+  showCalendarIcon?: boolean;
+}
 
-  /**
-   * Controlled date value. Pair with `onValueChange`. Pass `null` for a
-   * controlled empty date. Omit (along with `defaultValue`) to start the
-   * picker in an unselected state — the input shows its placeholder until
-   * the user selects a date.
-   */
-  value?: Date | null;
+export interface CalendarScaleProps {
+  /** Which scale this chip selects. Required — a chip addresses one scale. */
+  value: Scale;
 
-  /**
-   * Initial (uncontrolled) date value. Ignored if `value` is set. Omit to
-   * start unselected.
-   */
-  defaultValue?: Date;
+  /** Merged with the part's own classes. */
+  className?: string;
+}
 
+export interface CalendarFooterProps {
+  /** Merged with the part's own classes. */
+  className?: string;
+}
+
+export interface CalendarResetProps {
+  /** Merged with the part's own classes. */
+  className?: string;
+}
+
+/** What the enclosing root exposes to a custom part. */
+export interface UseCalendarReturn {
   /**
-   * Called when a day is clicked, and when a typed date is committed with
-   * Enter, blur or an outside click.
+   * The committed value, or null. A day, a range at `selection="range"`, or a
+   * period at a coarser scale — whichever shape this root holds.
    */
-  onValueChange?: (
-    date: Date,
-    details: { reason: 'item-press' | 'input-change'; event: Event }
+  value:
+    | Date
+    | { from: Date; to: Date }
+    | { date: string; scale: Scale }
+    | null;
+
+  /** Commit a value, or clear with `null`. Emits `onValueChange`. */
+  setValue: (
+    value:
+      | Date
+      | { from: Date; to: Date }
+      | { date: string; scale: Scale }
+      | null
   ) => void;
 
-  /** Called when the typed date becomes invalid or valid again. */
+  /**
+   * The granularity the value is committed at. Read-only — switching scale is
+   * `.Scales` and `.Scale`, which take `render` for custom chrome.
+   */
+  scale: 'day' | 'month' | 'quarter' | 'half-year' | 'year';
+
+  /** The range mid-build, at `selection="range"`. Never emitted. */
+  draft: { from?: Date; to?: Date } | null;
+
+  /** The period a scale switch is holding, uncommitted. Never emitted. */
+  scaleDraft: { date: string; scale: Scale } | null;
+
+  /** The first month currently displayed. */
+  month: Date;
+
+  /** Move the view. Bounds never clamp it. */
+  setMonth: (month: Date) => void;
+
+  /** Whether a day is out of bounds or rejected. */
+  isDateUnavailable: (date: Date) => boolean;
+}
+
+/** The second argument to `onValueChange`. */
+export interface CalendarChangeDetails {
+  /** What caused the change. */
+  reason: 'select' | 'input' | 'clear' | 'reset' | 'scale';
+
+  /** Both edges of the period. At day scale they are the same day. */
+  period: { start: string; end: string };
+
+  /** The day acted on — never null, even when the value is. */
+  toDate: () => Date;
+}
+
+export interface CalendarTriggerProps {
+  /**
+   * Shown when there is no value and no children.
+   * @default "Select date"
+   */
+  placeholder?: string;
+
+  /**
+   * Replaces the rendered element. The trigger is a `div` by default, so a
+   * control inside it stays focusable.
+   * @default <div />
+   */
+  render?: ReactNode;
+
+  /**
+   * Whether `render` produces a native `<button>`. Tell it, or Base UI adds a
+   * role and a tab stop the element already has.
+   * @default false
+   */
+  nativeButton?: boolean;
+}
+
+export interface CalendarInputProps {
+  /**
+   * Which endpoint this field addresses, at `selection="range"`.
+   * @default "start"
+   */
+  field?: 'start' | 'end';
+
+  /**
+   * Placeholder shown when there is no value. Beyond day scale it is built
+   * from the scales the root offers.
+   * @default "Select date"
+   */
+  placeholder?: string;
+
+  /**
+   * Icon at the end of the field. Pass `null` for a picker with no calendar
+   * glyph — that variant is composition, not a prop.
+   * @default <CalendarIcon />
+   */
+  trailingIcon?: ReactNode;
+
+  /**
+   * Called when the typed text starts or stops being a usable date. `message`
+   * is resolved against `errorMessages` and absent while valid, so it can be
+   * handed straight to `Field`'s `error`.
+   * @example onValidityChange={({ message }) => setError(message)}
+   */
   onValidityChange?: (validity: {
     valid: boolean;
     reason?: 'unparseable' | 'out-of-bounds' | 'unavailable' | 'out-of-order';
@@ -272,30 +417,17 @@ export interface DatePickerProps {
   }) => void;
 
   /**
-   * Render prop or custom trigger. Pass a function to render a custom trigger
-   * receiving the formatted `selectedDate` string, or a ReactNode to replace
-   * the default input entirely.
-   *
-   * @example
-   * <DatePicker>
-   *   {({ selectedDate }) => (
-   *     <button>Selected: {selectedDate}</button>
-   *   )}
-   * </DatePicker>
+   * Replaces the message for one or more reasons; anything left out keeps the
+   * default.
+   * @default "Invalid input", except out-of-order, which words itself
    */
-  children?:
-    | React.ReactNode
-    | ((props: { selectedDate: string }) => React.ReactNode);
+  errorMessages?: Partial<
+    Record<
+      'unparseable' | 'out-of-bounds' | 'unavailable' | 'out-of-order',
+      string
+    >
+  >;
 
-  /**
-   * Hides the calendar icon in the input.
-   * @defaultValue false
-   */
-  hideCalendarIcon?: boolean;
-
-  /**
-   * IANA timezone name (e.g., "America/New_York"), "UTC", or UTC offset (e.g., "+02:00").
-   * If not provided, uses the local timezone.
-   */
-  timeZone?: string;
+  /** Read and navigable, but not typeable. */
+  readOnly?: boolean;
 }

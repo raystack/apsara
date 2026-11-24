@@ -1,4 +1,4 @@
-import { CalendarPreviewInputProps } from '../calendar-preview/props';
+import { CalendarInputProps } from '../calendar/props';
 import { PopoverContentProps } from '../popover/props';
 
 export interface FilterChipProps {
@@ -84,7 +84,7 @@ export interface FilterChipProps {
     ) => void;
   };
 
-  /** Props for the date control at `columnType="date"`. `timeZone` through `today` are CalendarPreview props. */
+  /** Props for the date control at `columnType="date"`. `timeZone` through `today` are Calendar props. */
   calendarProps?: {
     /** Formats the selected date for the input. The chip calls it with a `Date` and the `timeZone`. */
     formatValue?: (date: Date, timeZone?: string) => string;
@@ -96,9 +96,9 @@ export interface FilterChipProps {
     yearRange?: { from: number; to: number };
     defaultMonth?: Date;
     today?: Date;
-    /** Props for the date input (`CalendarPreview.Input`) and its popup (`CalendarPreview.Content`). `input.disabled` and `input.readOnly` also apply to the calendar. `input.onValidityChange` reports typed-date errors. */
+    /** Props for the date input (`Calendar.Input`) and its popup (`Calendar.Content`). `input.disabled` and `input.readOnly` also apply to the calendar. `input.onValidityChange` reports typed-date errors. */
     slotProps?: {
-      input?: Omit<CalendarPreviewInputProps, 'field'>;
+      input?: Omit<CalendarInputProps, 'field'>;
       popover?: Omit<PopoverContentProps, 'children'>;
     };
     /**

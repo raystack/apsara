@@ -5,25 +5,22 @@ import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '~/icons';
 import { IconButton } from '../icon-button';
-import styles from './calendar-preview.module.css';
-import { CalendarPreviewCaption } from './calendar-preview-caption';
-import {
-  useCalendarPreviewContext,
-  useCalendarPreviewDaysContext
-} from './calendar-preview-context';
-import { CalendarPreviewReset } from './calendar-preview-reset';
+import styles from './calendar.module.css';
+import { CalendarCaption } from './calendar-caption';
+import { useCalendarContext, useCalendarDaysContext } from './calendar-context';
+import { CalendarReset } from './calendar-reset';
 import { shiftMonths } from './date-adapter';
 
-export type CalendarPreviewHeaderProps = useRender.ComponentProps<'div'>;
+export type CalendarHeaderProps = useRender.ComponentProps<'div'>;
 
 /* Source order is tab order, so the row needs no CSS reordering. */
-export function CalendarPreviewHeader({
+export function CalendarHeader({
   className,
   children,
   render,
   ref,
   ...props
-}: CalendarPreviewHeaderProps) {
+}: CalendarHeaderProps) {
   const element = useRender({
     defaultTagName: 'div',
     ref,
@@ -31,13 +28,13 @@ export function CalendarPreviewHeader({
     props: mergeProps<'div'>(
       {
         className: cx(styles.header, className),
-        'data-slot': 'calendar-preview-header',
+        'data-slot': 'calendar-header',
         children: children ?? (
           <>
-            <CalendarPreviewCaption />
-            <CalendarPreviewReset />
-            <CalendarPreviewPrevMonth />
-            <CalendarPreviewNextMonth />
+            <CalendarCaption />
+            <CalendarReset />
+            <CalendarPrevMonth />
+            <CalendarNextMonth />
           </>
         )
       } as useRender.ComponentProps<'div'>,
@@ -48,47 +45,47 @@ export function CalendarPreviewHeader({
   return element;
 }
 
-CalendarPreviewHeader.displayName = 'CalendarPreview.Header';
+CalendarHeader.displayName = 'Calendar.Header';
 
-export type CalendarPreviewNavProps = useRender.ComponentProps<'button'>;
+export type CalendarNavProps = useRender.ComponentProps<'button'>;
 
 /* Never disabled by `minDate`: bounds limit selection, not navigation. */
-export function CalendarPreviewPrevMonth(props: CalendarPreviewNavProps) {
+export function CalendarPrevMonth(props: CalendarNavProps) {
   return (
-    <CalendarPreviewNavButton
+    <CalendarNavButton
       {...props}
       delta={-1}
-      slot='calendar-preview-prev-month'
+      slot='calendar-prev-month'
       label='Previous month'
       icon={<ChevronLeftIcon />}
     />
   );
 }
 
-CalendarPreviewPrevMonth.displayName = 'CalendarPreview.PrevMonth';
+CalendarPrevMonth.displayName = 'Calendar.PrevMonth';
 
-export function CalendarPreviewNextMonth(props: CalendarPreviewNavProps) {
+export function CalendarNextMonth(props: CalendarNavProps) {
   return (
-    <CalendarPreviewNavButton
+    <CalendarNavButton
       {...props}
       delta={1}
-      slot='calendar-preview-next-month'
+      slot='calendar-next-month'
       label='Next month'
       icon={<ChevronRightIcon />}
     />
   );
 }
 
-CalendarPreviewNextMonth.displayName = 'CalendarPreview.NextMonth';
+CalendarNextMonth.displayName = 'Calendar.NextMonth';
 
-interface NavButtonProps extends CalendarPreviewNavProps {
+interface NavButtonProps extends CalendarNavProps {
   delta: number;
   slot: string;
   label: string;
   icon: ReactNode;
 }
 
-function CalendarPreviewNavButton({
+function CalendarNavButton({
   delta,
   slot,
   label,
@@ -99,10 +96,8 @@ function CalendarPreviewNavButton({
   ref,
   ...props
 }: NavButtonProps) {
-  const { month, setMonth, disabled } = useCalendarPreviewContext(
-    'CalendarPreview.Header'
-  );
-  const days = useCalendarPreviewDaysContext();
+  const { month, setMonth, disabled } = useCalendarContext('Calendar.Header');
+  const days = useCalendarDaysContext();
   const inert = disabled || (days?.busy ?? false);
 
   return useRender({

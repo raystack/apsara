@@ -1,137 +1,434 @@
 ---
 title: Calendar
-description: A calendar component for selecting dates and date ranges.
+description: A subcomposed calendar that owns its selection and view state.
 source: packages/react/components/calendar
 ---
 
 import {
-  preview,
-  datePickerDemo,
-  rangePickerDemo,
+  playground,
   calendarDemo,
-  calendarBehaviorDemo,
-  dateInfoDemo,
-  controlledDemo,
+  pickerDemo,
+  rangeDemo,
+  periodsDemo,
+  limitsDemo,
+  statesDemo,
+  validationDemo,
+  resetDemo,
+  customisingDemo,
 } from "./demo.ts";
 
-<Demo data={preview} />
+A calendar that owns its selection and view state, composed from parts you mount only as deep as you need.
 
-## Anatomy
-
-Import and assemble the component:
+<Demo data={playground} />
 
 ```tsx
-import { Calendar, RangePicker, DatePicker } from '@raystack/apsara'
-
-<Calendar />
-
-<RangePicker />
-
-<DatePicker />
+import { Calendar } from '@raystack/apsara'
 ```
 
 ## Usage
 
-`Calendar` is the grid itself. `DatePicker` and `RangePicker` wrap it in a field and a popover, and all three share the props below.
+```tsx
+<Calendar>
+  <Calendar.Days />
+</Calendar>
+```
 
-### Layout and appearance
-
-Number of months, dropdown nav, loading state, footer.
-
-<Demo data={calendarDemo} />
-
-### Behaviour and data
-
-Tooltips, disabled days, timezone, controlled month navigation.
-
-<Demo data={calendarBehaviorDemo} />
-
-### Custom date information
-
-You can display custom components above each date using the `dateInfo` prop. The keys should be date strings in `"dd-MM-yyyy"` format, and the values are React components that will be rendered above the date number.
-
-<Demo data={dateInfoDemo} />
-
-### Range picker
-
-Selects a date range across two inputs. The grid uses a state machine that branches on the current `from` / `to`:
-
-- **Empty**: first click sets `from` and advances focus to the end input.
-- **Only `from` set**: clicking a later date completes the range and closes the popover; clicking an earlier date resets `from`.
-- **Both set**: clicking again restarts: the new date becomes `from`, `to` clears.
-
-`onValueChange` fires on every step (the shape is `{ from?: Date; to?: Date }`, partial during interaction). Gate on `range.to` if you only want the completed-range event.
-
-<Demo data={rangePickerDemo} />
-
-### Date picker
-
-Single-date selection with a typable input. The popover opens on focus; pressing Enter, blurring, or clicking outside commits the value and fires `onValueChange`.
-
-`onValidityChange` reports typed text that is not a date (`reason: 'unparseable'`) or is outside `startMonth` and `endMonth` (`reason: 'out-of-bounds'`), with the message `'Invalid date'`. It reports `{ valid: true }` when the text is valid again, or when the picker commits or closes. DatePicker shows no error and sets no `aria-invalid`. To show the error, pass `message` to the `error` prop of `Field`, as in the With Field example. `Field` also sets `aria-invalid` on the input.
-
-<Demo data={datePickerDemo} />
-
-### Controlled
-
-Pass `selected` with `onSelect` to own the date. This is needed when the value comes from a form or has to be set from elsewhere, like a Today button.
-
-<Demo data={controlledDemo} />
-
-## API Reference
-
-The bare grid, and the two pickers built on top of it.
+## Examples
 
 ### Calendar
 
-Renders a standalone calendar for date selection.
+The day view. Every layout option lives on `.Grid`, so two grids can differ.
+
+<Demo data={calendarDemo} />
+
+### Date picker
+
+A trigger wrapping an `.Input`, with the day view in a popover.
+
+<Demo data={pickerDemo} />
+
+### Range picker
+
+`selection="range"` turns clicks into endpoints. Give each `.Input` a `field`.
+
+<Demo data={rangeDemo} />
+
+### Time periods
+
+`scales` selects at granularities coarser than a day.
+
+<Demo data={periodsDemo} />
+
+### Limits
+
+`minDate`, `maxDate` and `isDateUnavailable` disable cells.
+
+<Callout color="neutral">
+  None of them clamps navigation — the chevrons and the scroller still reach any month. `isDateUnavailable` is day scale only; period cells are bounded by `minDate` and `maxDate` instead.
+</Callout>
+
+<Demo data={limitsDemo} />
+
+### States
+
+`disabled` makes the whole calendar inert; `readOnly` keeps it focusable.
+
+<Demo data={statesDemo} />
+
+### Validation
+
+Typed dates are checked on every keystroke, and a date that fails is never committed.
+
+<Callout color="attention" title="A failed commit keeps the text">
+  Blurring or pressing Enter on a date that does not resolve leaves the typed text in the field. The field stays marked invalid but now shows something other than the committed value — read the value from `onValueChange`, never from the input's text.
+</Callout>
+
+<Demo data={validationDemo} />
+
+### Reset
+
+Restores `defaultDate`. Stays visible but disabled when there is nothing to restore.
+
+<Callout color="neutral">
+  `defaultDate={null}` clears the selection and reports `reason: 'clear'`; omitting it hides the button.
+</Callout>
+
+<Demo data={resetDemo} />
+
+### Customising
+
+Children replace the content a part computes from context.
+
+<Demo data={customisingDemo} />
+
+## Anatomy
+
+```tsx
+<Calendar>
+  <Calendar.Trigger>
+    <Calendar.Input />
+  </Calendar.Trigger>
+
+  <Calendar.Content>
+    <Calendar.Body>
+      <Calendar.Label />
+      <Calendar.Input />
+      <Calendar.Scales>
+        <Calendar.Scale value="day" />
+      </Calendar.Scales>
+      <Calendar.Reset />
+      <Calendar.Separator />
+
+      <Calendar.Panel>
+        <Calendar.Days>
+          <Calendar.Header>
+            <Calendar.Caption />
+            <Calendar.Reset />
+            <Calendar.PrevMonth />
+            <Calendar.NextMonth />
+          </Calendar.Header>
+          <Calendar.Grid />
+        </Calendar.Days>
+        <Calendar.Months />
+        <Calendar.Quarters />
+        <Calendar.HalfYears />
+        <Calendar.Years />
+      </Calendar.Panel>
+    </Calendar.Body>
+  </Calendar.Content>
+
+  <Calendar.Footer />
+</Calendar>
+```
+
+`.Reset` appears twice because exactly one of the two renders: `.Header` holds it at day scale, `.Body` at every coarser scale, where there is no `.Header`.
+
+Every part renders its own default, so none of this is required. `.Grid` renders the day cells itself and takes no children — `.Day` and `.Weekday` are overrides passed through `components`:
+
+```tsx
+<Calendar.Grid components={{ DayButton: MyDay, Weekday: MyWeekday }} />
+```
+
+## API reference
+
+### Calendar
+
+The root. Owns the selected value and the visible month. Also takes `render`, `className` and `ref`.
 
 <auto-type-table path="./props.ts" name="CalendarProps" />
 
-### RangePicker
+### Calendar.Trigger
 
-The RangePicker exposes its `startInput`, `endInput`, `calendar` and `popover` slots through the `slotProps` prop.
+Anchors the popover and owns opening it. Renders the formatted value, or the placeholder, when given no children.
 
-<auto-type-table path="./props.ts" name="RangePickerProps" />
+<auto-type-table path="./props.ts" name="CalendarTriggerProps" />
 
-### DatePicker
+### Calendar.Content
 
-The DatePicker exposes its `input`, `calendar` and `popover` slots through the `slotProps` prop.
+The portaled popover surface. Takes `Popover.Content` props — `side`, `align`, `sideOffset` — and flips above the trigger on collision.
 
-<auto-type-table path="./props.ts" name="DatePickerProps" />
+### Calendar.Input
 
-### Slots
+The typeable date field.
+
+<auto-type-table path="./props.ts" name="CalendarInputProps" />
+
+### Calendar.Body
+
+The popup body: label, input, scale switcher and the view for the active scale.
+
+<auto-type-table path="./props.ts" name="CalendarBodyProps" />
+
+### Calendar.Days
+
+The day view — a header and a grid.
+
+<auto-type-table path="./props.ts" name="CalendarDaysProps" />
+
+### Calendar.Grid
+
+The day grid. Layout and per-day data live here rather than on the root.
+
+<auto-type-table path="./props.ts" name="CalendarGridProps" />
+
+### Calendar.Header
+
+The row above the grid. Composes `.Caption`, `.Reset`, `.PrevMonth` and `.NextMonth` when given no children.
+
+<auto-type-table path="./props.ts" name="CalendarHeaderProps" />
+
+### Calendar.Caption
+
+The month label above the grid, and optionally the trigger for the month and year scroller.
+
+<auto-type-table path="./props.ts" name="CalendarCaptionProps" />
+
+### Calendar.PrevMonth / Calendar.NextMonth
+
+Step the view one month.
+
+<auto-type-table path="./props.ts" name="CalendarNavProps" />
+
+### Calendar.Reset
+
+Restores `defaultDate`, reporting `reason: 'reset'`. Carries `data-restored` while there is nothing to restore.
+
+<auto-type-table path="./props.ts" name="CalendarResetProps" />
+
+### Calendar.Scales / Calendar.Scale
+
+The scale switcher, built on Apsara `Tabs`. Renders nothing when only one scale is offered. `.Scale` is only needed to relabel or reorder.
+
+<auto-type-table path="./props.ts" name="CalendarScaleProps" />
+
+### Calendar.Panel
+
+The view container. Mounts all five views; each gates on the active scale itself.
+
+### Calendar.Months / .Quarters / .HalfYears / .Years
+
+Year-grouped period lists at 3, 4, 2 and 1 columns, opening on the active year.
+
+### Calendar.Label / Calendar.Separator
+
+The field label above the input, and the rule between the switcher and the view. `.Label` renders nothing without children.
+
+### Calendar.Footer
+
+The row below the calendar. A bare string is wrapped in `Text`; anything else renders as given.
+
+<auto-type-table path="./props.ts" name="CalendarFooterProps" />
+
+### useCalendar
+
+Reads the enclosing root's state, for building parts the library does not ship. Throws outside a `Calendar`, naming the part that asked.
+
+```tsx
+import { useCalendar } from '@raystack/apsara'
+
+const { value, setValue, scale, draft, scaleDraft, month, setMonth, isDateUnavailable } =
+  useCalendar()
+```
+
+<auto-type-table path="./props.ts" name="UseCalendarReturn" />
+
+#### details (onValueChange)
+
+<auto-type-table path="./props.ts" name="CalendarChangeDetails" />
+
+## Behaviour
+
+### Value shape
+
+| `scales` | `value` |
+|---|---|
+| omitted, or `'day'` | `Date` |
+| any other scale, or any array | `ScaleValue` |
+
+```ts
+interface ScaleValue { date: 'YYYY-MM-DD'; scale: Scale }
+```
+
+`date` is stored as `YYYY-MM-DD` so lexicographic order is chronological order. It is never what you see — every trigger, input and annotation renders through `formatValue`.
+
+### Drafting
+
+| Action | Result |
+|---|---|
+| Switch scale | moves the view, sets a draft, emits nothing |
+| Click a cell, or press Enter | commits the draft |
+| Escape | drops the draft, restores the input from `value` |
+| Range, one endpoint | stays internal; the grid styles the track from it |
+
+### Range clicks
+
+| State | A click does |
+|---|---|
+| Nothing selected | sets `from`, moves focus to the end field |
+| `from` only, later day | completes the range and emits |
+| `from` only, earlier day | that day becomes the new `from` |
+| Complete range | restarts — the new day is `from` |
+
+`onValueChange` fires on a complete range or not at all. Typing is stricter than clicking: an endpoint that crosses its partner is rejected as `out-of-order` rather than restarting.
+
+<Callout color="attention">
+  A read-only endpoint with no value makes the range unsatisfiable — the free endpoint sets, the range never completes, and nothing emits. Give a read-only endpoint a value.
+</Callout>
+
+### Validation reasons
+
+| `reason` | Means |
+|---|---|
+| `unparseable` | The text is not a date the input could read at all |
+| `out-of-bounds` | A real date, outside `minDate` / `maxDate` |
+| `unavailable` | A real date in range that `isDateUnavailable` rejected |
+| `out-of-order` | Range only — the endpoint crossed its partner |
+
+`onValidityChange` fires only when validity changes, and carries a ready-to-render `message` — `undefined` while valid, which is what [Field](/docs/components/field)'s `error` wants. Override per reason with `errorMessages`.
+
+### trailingValue
+
+Emits a period's last day rather than its first, and is month-end correct. It changes the value, not the formatting. Availability tests the date a period would produce, here with `minDate={15 Jul 2026}`:
+
+| Period | A start field emits | An end field emits | Start | End |
+|---|---|---|---|---|
+| H1 2026 | 1 Jan | 30 Jun | disabled | disabled |
+| July 2026 | 1 Jul | 31 Jul | disabled | available |
+| Q3 2026 | 1 Jul | 30 Sep | disabled | available |
+
+A start/end pair is two roots, not `selection="range"` — each end has its own `scales` and `trailingValue`, and they can hold different scales.
+
+## Styling
+
+<details>
+<summary>Slots and state attributes</summary>
 
 Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
 
 | Slot | Element |
 |------|---------|
-| `calendar` | The root calendar surface |
-| `calendar-nav-previous` | The previous-month navigation button |
-| `calendar-nav-next` | The next-month navigation button |
-| `calendar-dropdown` | The month/year dropdown trigger (when `captionLayout="dropdown"`) |
-| `calendar-dropdown-content` | The dropdown's option list (when the dropdown is open) |
-| `calendar-month-grid` | Wrapper around the day grid and its skeleton |
-| `calendar-grid-table` | The `<table>` that holds the days |
-| `calendar-grid-skeleton` | The loading skeleton shown over the grid |
+| `calendar` | The root, a column wrapping the parts |
+| `calendar-trigger` | The popover anchor |
+| `calendar-content` | The portaled popover surface |
+| `calendar-input` | The typeable date field |
+| `calendar-days` | The day view surface |
+| `calendar-header` | The header row, single-month layout |
+| `calendar-month-header` | One month's header, when several months are shown |
+| `calendar-caption` | The month label, single-month layout |
+| `calendar-month-header-caption` | One month's label, when several months are shown |
+| `calendar-caption-positioner` | The scroller's positioning wrapper |
+| `calendar-caption-popup` | The month and year scroller (when `dropdown` is open) |
+| `calendar-caption-months` | The month column of the scroller |
+| `calendar-caption-month` | One month in the scroller |
+| `calendar-caption-divider` | The rule between the scroller's two columns |
+| `calendar-caption-years` | The year column of the scroller |
+| `calendar-caption-year` | One year in the scroller |
+| `calendar-reset` | The reset button |
+| `calendar-prev-month` | The previous-month button |
+| `calendar-next-month` | The next-month button |
+| `calendar-grid` | The grid root |
+| `calendar-weeks` | Wrapper around the table and its skeleton |
+| `calendar-table` | The `<table>` that holds the days |
+| `calendar-skeleton` | The loading skeleton shown over the grid |
+| `calendar-weekday` | One weekday heading |
+| `calendar-week-number` | One week-number cell (when `showWeekNumber`) |
+| `calendar-week-number-header` | The week-number column heading |
+| `calendar-day-trigger` | The tooltip trigger wrapping each day button |
 | `calendar-day` | The `<button>` for a single day |
-| `calendar-day-info` | Extra info shown inside a day (when `dateInfo` resolves for that day) |
 | `calendar-day-number` | The day number inside a day button |
-| `calendar-day-tooltip` | The tooltip shown on hover (when `showTooltip` and a message exists) |
-| `date-picker-trigger` | The `<div>` wrapping the DatePicker trigger |
-| `date-picker-input` | The DatePicker's text `<input>` |
-| `date-picker-positioner` | The popover positioner for the DatePicker |
-| `date-picker-content` | The DatePicker popover content that holds the calendar |
-| `range-picker-trigger` | The `<div>` wrapping the RangePicker trigger |
-| `range-picker-trigger-group` | The row that groups the start and end inputs |
-| `range-picker-start-input` | The RangePicker's start date `<input>` |
-| `range-picker-end-input` | The RangePicker's end date `<input>` |
-| `range-picker-positioner` | The popover positioner for the RangePicker |
-| `range-picker-content` | The RangePicker popover content that holds the calendar |
-| `range-picker-footer` | The footer below the calendar (when `footer` is set) |
+| `calendar-day-info` | Content above the number (when `dateInfo` resolves) |
+| `calendar-day-tooltip` | The tooltip shown on hover |
+| `calendar-body` | The popup body |
+| `calendar-label` | The field label |
+| `calendar-scales` | The scale switcher |
+| `calendar-scale` | One scale chip |
+| `calendar-separator` | The rule below the switcher |
+| `calendar-panel` | The view container |
+| `calendar-months` / `-quarters` / `-half-years` / `-years` | One period list |
+| `calendar-period-group` | One year's block inside a period list |
+| `calendar-period-year` | The year heading, on every view but `.Years` |
+| `calendar-period` | One period cell |
+| `calendar-footer` | The footer row |
+| `calendar-footer-text` | The `Text` wrapping a string footer |
+
+Day cells also carry their state:
+
+| Attribute | Set when |
+|------|------|
+| `data-selected` | The day is the committed value |
+| `data-draft` | The day has roving focus but is not committed |
+| `data-unavailable` | The day is out of bounds or rejected by `isDateUnavailable` |
+| `data-today` | The day is `today` |
+| `data-outside` | The day belongs to an adjacent month |
+| `data-scale` | The granularity the value is committed at |
+
+</details>
 
 ## Accessibility
 
-- Supports keyboard navigation between dates with arrow keys
-- Uses `aria-label` attributes for date cells
-- Selected and disabled dates are announced to screen readers
+- Arrow keys move between days; the focused cell carries `data-draft` until it is committed
+- `readOnly` is conveyed with `aria-readonly` on the grid and `aria-disabled` on each day, and the grid stays focusable and arrow-navigable — unlike `disabled`
+- Each grid is labelled with its month, so the caption is not the only announcement
+- Nav buttons carry `aria-label`, and the scroller's columns are labelled groups
+- Selected and unavailable days are announced through their native button state
+
+## Notes
+
+**Performance.** `dateInfo`, `tooltipMessages` and `isDateUnavailable` are functions, so an inline arrow re-renders every day cell. Wrap them in `useCallback` or hoist them out.
+
+**Localization.** English only — month and weekday names come from date-fns' `en-US`, and the nav, reset and caption labels are hardcoded. `timeZone` is unaffected.
+
+## Migrating from the old Calendar
+
+`Calendar` replaces the old `Calendar`, `DatePicker` and `RangePicker`. It is not a drop-in replacement. Build a date picker or a range picker from parts, as in the [Date picker](#date-picker) and [Range picker](#range-picker) examples.
+
+Two props keep their names and change their meaning:
+
+| Prop | Old `Calendar` | `Calendar` |
+|------|----------------|------------|
+| `disabled` | A day matcher | A boolean that makes the whole calendar inert. Use `isDateUnavailable` or `minDate` / `maxDate` for days |
+| `showOutsideDays` | Defaults to `true` | Defaults to `false` |
+
+The rest are renames:
+
+| Old `Calendar` | `Calendar` |
+|----------------|------------|
+| `selected` | `value` |
+| `onSelect` | `onValueChange` |
+| `startMonth` / `endMonth` | `minDate` / `maxDate` |
+| `disabled` (matcher) | `isDateUnavailable` |
+| `dateFormat` | `formatValue` |
+| `required` | `clearable` (inverted) |
+| `footer` prop | `<Calendar.Footer>` part |
+| `captionLayout="dropdown"` | `<Calendar.Caption dropdown />` |
+
+Slot names changed too:
+
+| Old `Calendar` slot | `Calendar` slot |
+|---------------------|-----------------|
+| `calendar-grid-table` | `calendar-table` |
+| `calendar-grid-skeleton` | `calendar-skeleton` |
+| `calendar-month-grid` | `calendar-weeks` |
+| `calendar-nav-previous` | `calendar-prev-month` |
+
+Two things have no replacement: the record forms of `dateInfo` and `tooltipMessages` (both are functions here), and the `classNames` escape hatch. Style through `data-slot` instead.

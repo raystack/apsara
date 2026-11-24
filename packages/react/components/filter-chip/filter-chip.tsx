@@ -13,12 +13,12 @@ import {
   useState
 } from 'react';
 import {
-  CalendarPreview,
-  type CalendarPreviewChangeReason,
-  type CalendarPreviewContentProps,
-  type CalendarPreviewInputProps,
-  type CalendarPreviewProps
-} from '~/components/calendar-preview';
+  Calendar,
+  type CalendarChangeReason,
+  type CalendarContentProps,
+  type CalendarInputProps,
+  type CalendarProps
+} from '~/components/calendar';
 import { XIcon } from '~/icons';
 import {
   type ChangeDetails,
@@ -61,7 +61,7 @@ export type FilterChipValue = FilterValueType | FilterValueType[] | Date;
 
 export type FilterChipChangeReason =
   | SelectChangeEventDetails['reason']
-  | CalendarPreviewChangeReason
+  | CalendarChangeReason
   | 'none';
 
 export type FilterChipChangeDetails = ChangeDetails<
@@ -73,7 +73,6 @@ export type FilterChipOperationChangeDetails = ChangeDetails<
   SelectChangeEventDetails['reason'] | 'none'
 >;
 
-/* The message `DatePicker` reports, so `onValidityChange` reads the same. */
 const INVALID_DATE = 'Invalid date';
 
 /* The empty option of a select carries this operator, which no list has. */
@@ -109,11 +108,11 @@ const toNumberText = (value: FilterChipValue): string => {
 };
 
 /**
- * The `CalendarPreview` props that consumers may forward to the chip's
+ * The `Calendar` props that consumers may forward to the chip's
  * calendar via `calendarProps`. `FilterChip` owns the value and the parts.
  */
 export type FilterChipCalendarProps = Pick<
-  CalendarPreviewProps,
+  CalendarProps,
   | 'timeZone'
   | 'minDate'
   | 'maxDate'
@@ -126,8 +125,8 @@ export type FilterChipCalendarProps = Pick<
   formatValue?: (date: Date, timeZone?: string) => string;
   /** Props for the chip's date input and its popup. */
   slotProps?: {
-    input?: Omit<CalendarPreviewInputProps, 'field'>;
-    popover?: Omit<CalendarPreviewContentProps, 'children'>;
+    input?: Omit<CalendarInputProps, 'field'>;
+    popover?: Omit<CalendarContentProps, 'children'>;
   };
   /**
    * Shows the calendar icon in the date input.
@@ -178,14 +177,14 @@ export interface FilterChipProps
    */
   operations?: FilterChipOperations;
   selectProps?: BaseSelectProps;
-  /** Props forwarded to the `CalendarPreview` for `columnType="date"`. */
+  /** Props forwarded to the `Calendar` for `columnType="date"`. */
   calendarProps?: FilterChipCalendarProps;
 }
 
 /**
  * A compact, removable filter pill that pairs a label and operator with a
  * value control chosen by `columnType`: a `Select` (`select`/`multiselect`),
- * a `CalendarPreview` (`date`), or a text `Input` (`string`/`number`). The value
+ * a `Calendar` (`date`), or a text `Input` (`string`/`number`). The value
  * control sizes to its content so the chip hugs the active filter. Emits
  * `onValueChange`/`onOperationChange` and renders a remove button when
  * `onRemove` is provided.
@@ -398,7 +397,7 @@ export const FilterChip = ({
             className={styles.dateFieldWrapper}
             data-slot='filter-chip-value'
           >
-            <CalendarPreview
+            <Calendar
               {...calendarRest}
               formatValue={
                 formatDate &&
@@ -418,8 +417,8 @@ export const FilterChip = ({
               open={dateOpen}
               onOpenChange={setDateOpen}
             >
-              <CalendarPreview.Trigger>
-                <CalendarPreview.Input
+              <Calendar.Trigger>
+                <Calendar.Input
                   trailingIcon={showCalendarIcon ? undefined : null}
                   {...inputProps}
                   classNames={{
@@ -433,11 +432,11 @@ export const FilterChip = ({
                     ...inputProps.errorMessages
                   }}
                 />
-              </CalendarPreview.Trigger>
-              <CalendarPreview.Content {...dateSlotProps?.popover}>
-                <CalendarPreview.Days />
-              </CalendarPreview.Content>
-            </CalendarPreview>
+              </Calendar.Trigger>
+              <Calendar.Content {...dateSlotProps?.popover}>
+                <Calendar.Days />
+              </Calendar.Content>
+            </Calendar>
           </div>
         );
       default:

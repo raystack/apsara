@@ -3,7 +3,7 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { defaultFormatValue } from '~/components/calendar-preview/calendar-preview-root';
+import { defaultFormatValue } from '~/components/calendar/calendar-root';
 import { getAllSlots, getSlot } from '~/test-utils/data-slots';
 import { FilterType } from '~/types/filters';
 import { FilterChip } from '../filter-chip';
@@ -891,12 +891,11 @@ describe('FilterChip', () => {
       expect(input).toHaveValue('');
     });
 
-    const isOpen = () =>
-      getSlot(document.body, 'calendar-preview-content') !== null;
+    const isOpen = () => getSlot(document.body, 'calendar-content') !== null;
     const clickDay = (day: string) => {
-      const cell = getAllSlots(document.body, 'calendar-preview-day').find(
+      const cell = getAllSlots(document.body, 'calendar-day').find(
         one =>
-          getSlot(one, 'calendar-preview-day-number')?.textContent === day &&
+          getSlot(one, 'calendar-day-number')?.textContent === day &&
           !one.hasAttribute('data-outside')
       ) as HTMLElement;
       fireEvent.pointerDown(cell);
@@ -961,7 +960,7 @@ describe('FilterChip', () => {
       );
       fireEvent.focus(input);
       expect(
-        getSlot(document.body, 'calendar-preview-content')?.querySelector(
+        getSlot(document.body, 'calendar-content')?.querySelector(
           '.custom-popup'
         )
       ).toBeInTheDocument();
@@ -1045,7 +1044,7 @@ describe('FilterChip', () => {
         />
       );
       fireEvent.click(
-        getSlot(document.body, 'calendar-preview-trigger') as HTMLElement
+        getSlot(document.body, 'calendar-trigger') as HTMLElement
       );
       if (isOpen()) clickDay('12');
       expect(onValueChange).not.toHaveBeenCalled();

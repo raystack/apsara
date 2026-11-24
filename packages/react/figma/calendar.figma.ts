@@ -4,12 +4,13 @@
 
 import figma from 'figma';
 
-// Plain COMPONENT with no Figma properties, so emit a simple example with
-// sensible defaults from the code API (`mode` defaults to 'single').
+// Plain COMPONENT with no Figma properties, so emit the inline day view.
 
 export default {
   id: 'Calendar',
   imports: ["import { Calendar } from '@raystack/apsara'"],
-  example: figma.code`<Calendar mode="single" />`,
+  example: figma.code`<Calendar>
+  <Calendar.Days />
+</Calendar>`,
   metadata: { nestable: false }
 };
