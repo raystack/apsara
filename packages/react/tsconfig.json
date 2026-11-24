@@ -13,8 +13,9 @@
     },
     "types": [
       "vitest/globals",
-      "@testing-library/jest-dom",
-      "@figma/code-connect/figma-types"
+      "@testing-library/jest-dom/vitest",
+      "@figma/code-connect/figma-types",
+      "node"
     ]
   },
   "include": [".", "icons", "hooks", "global.d.ts"],

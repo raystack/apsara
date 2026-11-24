@@ -10,11 +10,13 @@ import { DataTableColumnDef, DataTableQuery } from '../data-table.types';
 import { useDataTable } from '../hooks/useDataTable';
 
 beforeAll(() => {
-  global.IntersectionObserver = vi.fn().mockImplementation(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn()
-  }));
+  global.IntersectionObserver = vi.fn().mockImplementation(function (
+    this: IntersectionObserver
+  ) {
+    this.observe = vi.fn();
+    this.unobserve = vi.fn();
+    this.disconnect = vi.fn();
+  });
 });
 
 interface TestData {
