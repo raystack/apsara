@@ -1,5 +1,3 @@
-'use client';
-
 import { Accordion, CodeBlock, Flex, Text } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
 import Link from 'fumadocs-core/link';
