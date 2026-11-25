@@ -3,6 +3,7 @@ import type { FilterOperatorTypes, FilterTypes } from '~/types/filters';
 import {
   dropDisallowedFilters,
   type FilterOperations,
+  resolveDefaultFilterOperation,
   resolveFilterOperations
 } from '../filter-operations';
 
@@ -70,6 +71,46 @@ describe('resolveFilterOperations', () => {
 
   it('falls back to the type when the function returns nothing', () => {
     expect(values('select', () => [])).toEqual(['eq', 'neq']);
+  });
+});
+
+describe('resolveDefaultFilterOperation', () => {
+  it('starts a string filter on contains', () => {
+    expect(resolveDefaultFilterOperation('string').value).toBe('contains');
+  });
+
+  it('defaults to string when no type is given', () => {
+    expect(resolveDefaultFilterOperation().value).toBe('contains');
+  });
+
+  it('starts a type that offers no contains on its first operation', () => {
+    expect(resolveDefaultFilterOperation('date').value).toBe('eq');
+    expect(resolveDefaultFilterOperation('number').value).toBe('eq');
+    expect(resolveDefaultFilterOperation('select').value).toBe('eq');
+    expect(resolveDefaultFilterOperation('multiselect').value).toBe('in');
+  });
+
+  it('starts on the first operation a field sets', () => {
+    expect(
+      resolveDefaultFilterOperation('string', [
+        { value: 'eq', label: 'is' },
+        { value: 'contains', label: 'contains' }
+      ]).value
+    ).toBe('eq');
+  });
+
+  it('starts on the first operation a function returns', () => {
+    expect(
+      resolveDefaultFilterOperation('string', defaults =>
+        defaults.filter(operation => operation.value !== 'contains')
+      ).value
+    ).toBe('eq');
+    expect(
+      resolveDefaultFilterOperation('string', defaults => [
+        ...defaults.filter(operation => operation.value === 'contains'),
+        ...defaults.filter(operation => operation.value !== 'contains')
+      ]).value
+    ).toBe('contains');
   });
 });
 

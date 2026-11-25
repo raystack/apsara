@@ -46,6 +46,22 @@ export function resolveFilterOperations(
   return resolved.length ? resolved : defaults;
 }
 
+/**
+ * The operation a new filter starts with. A field that sets its own
+ * operations starts with the first of them. A filter whose type offers
+ * `contains` starts with it, since `is` hides every partial match.
+ */
+export function resolveDefaultFilterOperation(
+  filterType: FilterTypes = FilterType.string,
+  operations?: FilterOperations
+): FilterOperator<FilterOperatorTypes> {
+  const resolved = resolveFilterOperations(filterType, operations);
+  if (operations) return resolved[0];
+  return (
+    resolved.find(operation => operation.value === 'contains') ?? resolved[0]
+  );
+}
+
 /* A chip cannot show an operator its column does not offer, so such a filter is
    dropped: it never reaches the rows or the server. A column that sets no
    operations keeps whatever the query carries. */

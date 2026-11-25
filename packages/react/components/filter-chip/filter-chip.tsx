@@ -166,7 +166,7 @@ export interface FilterChipProps
   operation?: string;
   /**
    * Operation to start on, by its `value`, when `operation` is not set.
-   * @default the first entry of `operations`
+   * @default `contains` when the type offers it and `operations` is not set, else the first entry of `operations`
    */
   defaultOperation?: string;
   /** Called when the remove button is clicked. The chip shows the button only when this is set. */
@@ -249,9 +249,16 @@ export const FilterChip = ({
     return resolved.length ? resolved : defaults;
   }, [columnType, operations]);
 
-  /* Read once. A `default` that changes warns, and `operations` can change. */
+  /* Read once. A `default` that changes warns, and `operations` can change.
+     A chip that sets no operations starts on `contains` when the type offers
+     it, since `is` hides every partial match. */
   const [initialOperation] = useState(
-    () => defaultOperation ?? computedOperations?.[0]?.value
+    () =>
+      defaultOperation ??
+      (operations === undefined
+        ? (computedOperations.find(operation => operation.value === 'contains')
+            ?.value ?? computedOperations?.[0]?.value)
+        : computedOperations?.[0]?.value)
   );
   const [operationValue, setOperationValue] = useControlled<string | undefined>(
     {

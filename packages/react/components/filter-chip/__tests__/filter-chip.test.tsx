@@ -70,8 +70,30 @@ describe('FilterChip', () => {
       ).toBe('is');
     });
 
-    it('shows the first operation when the prop is absent', async () => {
-      expect(await operationText(<FilterChip label='Name' />)).toBe('is');
+    it('starts on contains when the prop is absent', async () => {
+      expect(await operationText(<FilterChip label='Name' />)).toBe('contains');
+    });
+
+    it('starts on the first operation when the type offers no contains', async () => {
+      expect(
+        await operationText(
+          <FilterChip label='Age' columnType={FilterType.number} />
+        )
+      ).toBe('is');
+    });
+
+    it('starts on the first operation of a custom list', async () => {
+      expect(
+        await operationText(
+          <FilterChip
+            label='Name'
+            operations={[
+              { value: 'eq', label: 'is' },
+              { value: 'contains', label: 'contains' }
+            ]}
+          />
+        )
+      ).toBe('is');
     });
 
     it('reads the operation from a custom list', async () => {
@@ -314,8 +336,13 @@ describe('FilterChip', () => {
 
       const { container } = render(<FilterChip label='Name' />);
       expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
-        'is'
+        'contains'
       );
+
+      const fallback = render(<FilterChip label='Name' operation='in' />);
+      expect(
+        getSlot(fallback.container, 'filter-chip-operation')
+      ).toHaveTextContent('is');
     });
 
     it('does not change the labels of the column type', () => {
@@ -331,8 +358,13 @@ describe('FilterChip', () => {
 
       const { container } = render(<FilterChip label='Name' />);
       expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
-        'is'
+        'contains'
       );
+
+      const named = render(<FilterChip label='Name' operation='eq' />);
+      expect(
+        getSlot(named.container, 'filter-chip-operation')
+      ).toHaveTextContent('is');
     });
 
     it('keeps a selection the new list still offers', () => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { resolveFilterOperations } from '~/shared/filter-operations';
+import { resolveDefaultFilterOperation } from '~/shared/filter-operations';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import type { DataViewField, DataViewFilterValue } from '../data-view.types';
 import { getDataType } from '../utils/filter-operations';
@@ -13,10 +13,10 @@ export function useFilters<TData>() {
     const options = field.filterOptions || [];
     const filterType = field.filterType || FilterType.string;
     const dataType = getDataType({ filterType, dataType: field.dataType });
-    const defaultFilter = resolveFilterOperations(
+    const defaultFilter = resolveDefaultFilterOperation(
       filterType,
       field.filterOperations
-    )[0];
+    );
     const defaultValue =
       field.defaultFilterValue ??
       (filterType === FilterType.date
