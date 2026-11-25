@@ -122,12 +122,19 @@ export const generator: typeof base = {
       entries: doc.entries.filter(entry => !hidden.has(entry))
     }));
   },
-  generateTypeTable(props, options) {
+  async generateTypeTable(props, options) {
     if (props.path) return base.generateTypeTable.call(this, props, options);
-    return base.generateTypeTable.call(this, apsaraTable(props), {
+    const docs = await base.generateTypeTable.call(this, apsaraTable(props), {
       ...options,
       basePath: undefined
     });
+    // A `type` that uses a name Apsara does not export gives no rows, not an
+    // error.
+    if (docs.every(doc => doc.entries.length === 0))
+      throw new Error(
+        `${props.name ?? props.type} has no props to show. Check that every name it uses is exported from @raystack/apsara.`
+      );
+    return docs;
   }
 };
 
@@ -419,8 +426,8 @@ export const transform: Transform = function (entry, _type, prop) {
     entry.type = entry.required ? 'string' : 'string | undefined';
   }
 
-  // A part documents `children` only when it has something to say.
-  if (entry.name === 'children' && !entry.description) {
+  // A part documents an optional `children` only when it has something to say.
+  if (entry.name === 'children' && !entry.description && !entry.required) {
     hidden.add(entry);
     return;
   }
