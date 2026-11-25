@@ -3,9 +3,9 @@ import type { ChipProps } from '../chip/props';
 export interface InputProps {
   /**
    * Size variant of the input.
-   * @defaultValue "large"
+   * @defaultValue "medium"
    */
-  size?: 'small' | 'large';
+  size?: 'small' | 'medium';
 
   /** Whether the input is disabled. When true, chips passed as props are also disabled. */
   disabled?: boolean;

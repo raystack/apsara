@@ -9,8 +9,8 @@ const variant = figma.selectedInstance.getEnum('Variant', {
   Plain: 'plain'
 });
 const size = figma.selectedInstance.getEnum('Size', {
-  Large: 'large',
-  Small: 'small'
+  Large: 'medium',
+  Small: 'mini'
 });
 // content container SLOT → rendered into Tabs.Content, with a placeholder
 // fallback when the slot is empty.

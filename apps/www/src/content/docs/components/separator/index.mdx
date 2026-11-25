@@ -4,7 +4,7 @@ description: A visual divider that separates content with support for vertical a
 source: packages/react/components/separator
 ---
 
-import { playground, sizeDemo, colorDemo, orientationDemo } from "./demo.ts";
+import { playground, variantDemo, colorDemo, orientationDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -20,7 +20,7 @@ import { Separator } from '@raystack/apsara'
 
 ## Usage
 
-Which way the line runs, how thick it is, and what color it takes.
+Which way the line runs, where its ends sit, and what color it takes.
 
 ### Orientation
 
@@ -28,11 +28,11 @@ Which way the line runs, how thick it is, and what color it takes.
 
 <Demo data={orientationDemo} />
 
-### Size
+### Variant
 
-`size` sets how far the rule runs across its container: `small` a short accent, `half` halfway, `full` (the default) edge to edge.
+`full` (the default) runs the rule edge to edge. `middle` insets both ends from the container edges.
 
-<Demo data={sizeDemo} />
+<Demo data={variantDemo} />
 
 ### Color
 

@@ -12,8 +12,8 @@ const color = figma.selectedInstance.getEnum('Variant', {
   Gradient: 'gradient'
 });
 const size = figma.selectedInstance.getEnum('Size', {
-  Micro: 'micro',
-  Regular: 'regular'
+  Micro: 'mini',
+  Regular: 'medium'
 });
 // "Icon" BOOLEAN toggles the leading icon; resolve the child instance named "Icon"
 // when enabled (guarded, since findInstance returns an ErrorHandle when absent).

@@ -7,9 +7,9 @@ export interface ChipProps {
 
   /**
    * Size of the chip
-   * @defaultValue "small"
+   * @defaultValue "mini"
    */
-  size?: 'small' | 'large';
+  size?: 'mini' | 'small';
 
   /**
    * Color style. `danger`, `success` and `attention` convey status.

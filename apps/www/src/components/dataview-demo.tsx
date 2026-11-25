@@ -625,7 +625,7 @@ function SelectionBar() {
     <FloatingActions aria-label='Selection actions'>
       <Chip
         variant='outline'
-        size='large'
+        size='small'
         color='neutral'
         leadingIcon={<Frame size={16} strokeWidth={1.5} />}
       >
@@ -859,8 +859,9 @@ function TaskCard({
 }) {
   // Card height is content-driven (the wrapper auto-measures, like
   // DataView.List rows), so fix it here and collapsed stubs match full cards.
+  // The content scales with the theme, so the height scales too.
   const chrome: React.CSSProperties = {
-    height: 64,
+    height: 'calc(64px * var(--rs-scaling, 1))',
     boxSizing: 'border-box',
     borderRadius: 'var(--rs-radius-3)',
     border: '1px solid var(--rs-color-border-base-primary)',
@@ -895,16 +896,16 @@ function TaskCard({
         {task.title}
       </Text>
       <Flex align='center' gap={2}>
-        <Badge size='micro' color={TASK_STATUS_BADGE[task.status]}>
+        <Badge size='mini' color={TASK_STATUS_BADGE[task.status]}>
           {task.status}
         </Badge>
         <DataView.DisplayAccess accessorKey='team'>
-          <Badge size='micro' color='neutral'>
+          <Badge size='mini' color='neutral'>
             {task.team}
           </Badge>
         </DataView.DisplayAccess>
         <DataView.DisplayAccess accessorKey='priority'>
-          <Badge size='micro' color='neutral'>
+          <Badge size='mini' color='neutral'>
             {task.priority}
           </Badge>
         </DataView.DisplayAccess>

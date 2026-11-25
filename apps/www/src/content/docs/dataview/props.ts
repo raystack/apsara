@@ -6,6 +6,25 @@ import type { SelectRootProps } from '../components/select/props';
 type T = any;
 type DataViewContext = unknown;
 
+type FilterOperation = {
+  value:
+    | 'eq'
+    | 'neq'
+    | 'lt'
+    | 'lte'
+    | 'gt'
+    | 'gte'
+    | 'contains'
+    | 'starts_with'
+    | 'ends_with'
+    | 'in'
+    | 'notin'
+    | 'empty';
+  label: string;
+  /** Shown instead of `label` when a multiselect filter holds one value. */
+  alternateLabel?: string;
+};
+
 export interface DataViewProps {
   /** Renderer-agnostic field metadata. Drives filter/sort/group/visibility. (Required) */
   fields: DataViewField[];
@@ -107,6 +126,11 @@ export interface DataViewField {
 
   /** Options when filterType is select/multiselect. The add-filter menu leaves out the field while this is empty, and the trigger is disabled if no other field is available. */
   filterOptions?: Array<{ label: string; value: string | number | boolean }>;
+
+  /** Operations the filter chip offers. An array replaces the operations of the filterType, a function receives them and returns the list to use. An empty result falls back to the operations of the filterType. */
+  filterOperations?:
+    | FilterOperation[]
+    | ((defaults: FilterOperation[]) => FilterOperation[]);
 
   /** Allow sorting. */
   sortable?: boolean;

@@ -384,7 +384,7 @@ function SelectionBar() {
     <FloatingActions aria-label="Selection actions">
       <Chip
         variant="outline"
-        size="large"
+        size="small"
         color="neutral"
         leadingIcon={<Frame size={16} strokeWidth={1.5} />}
       >

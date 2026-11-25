@@ -13,7 +13,7 @@ export const preview = {
   <FloatingActions aria-label="Selection actions">
     <Chip
       variant="outline"
-      size="large"
+      size="small"
       color="accent"
       leadingIcon={<SuccessIcon />}
     >
@@ -33,7 +33,7 @@ export const inlineDemo = {
   <FloatingActions variant="inline" aria-label="Selection actions">
     <Chip
       variant="outline"
-      size="large"
+      size="small"
       color="accent"
       leadingIcon={<SuccessIcon />}
     >
@@ -73,7 +73,7 @@ export const variantsDemo = {
   <FloatingActions aria-label="Selection actions">
     <Chip
       variant="outline"
-      size="large"
+      size="small"
       color="accent"
       leadingIcon={<SuccessIcon />}
     >
@@ -92,7 +92,7 @@ export const variantsDemo = {
   <FloatingActions variant="inline" aria-label="Selection actions">
     <Chip
       variant="outline"
-      size="large"
+      size="small"
       color="accent"
       leadingIcon={<SuccessIcon />}
     >
@@ -114,7 +114,7 @@ export const bulkActionsDemo = {
   <FloatingActions variant="inline" aria-label="Bulk actions">
     <Chip
       variant="outline"
-      size="large"
+      size="small"
       color="accent"
       leadingIcon={<SuccessIcon />}
     >
@@ -171,7 +171,7 @@ export const scrollingDemo = {
         <FloatingActions aria-label="Selection actions">
           <Chip
             variant="outline"
-            size="large"
+            size="small"
             color="accent"
             leadingIcon={<SuccessIcon />}
           >
@@ -208,7 +208,7 @@ const placementWrapper = (props: string) =>
   <FloatingActions ${props} aria-label="Selection actions">
     <Chip
       variant="outline"
-      size="large"
+      size="small"
       color="accent"
       leadingIcon={<SuccessIcon />}
     >
@@ -244,7 +244,7 @@ export const groupDemo = {
   <FloatingActions variant="inline" aria-label="Bulk actions">
     <Chip
       variant="outline"
-      size="large"
+      size="small"
       color="accent"
       leadingIcon={<SuccessIcon />}
     >

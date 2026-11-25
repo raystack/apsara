@@ -1,3 +1,4 @@
+import { reset as resetBaseUiLog } from '@base-ui/utils/error';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
@@ -132,6 +133,241 @@ describe('FilterChip', () => {
       );
       expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
         'contains'
+      );
+    });
+  });
+
+  describe('Operations', () => {
+    const operationText = (ui: React.ReactElement) => {
+      const { container } = render(ui);
+      return getSlot(container, 'filter-chip-operation')?.textContent;
+    };
+
+    it('replaces the operations with the array given', () => {
+      expect(
+        operationText(
+          <FilterChip
+            label='Name'
+            operations={[{ value: 'eq', label: 'matches' }]}
+          />
+        )
+      ).toBe('matches');
+    });
+
+    it('calls the function with the operations of the column type', () => {
+      expect(
+        operationText(
+          <FilterChip
+            label='Name'
+            operations={defaults => defaults.slice(-1)}
+          />
+        )
+      ).toBe('ends with');
+    });
+
+    it('moves to the first operation when the list drops the selected one', () => {
+      const onOperationChange = vi.fn();
+      const { rerender, container } = render(
+        <FilterChip
+          label='Name'
+          onOperationChange={onOperationChange}
+          operations={[
+            { value: 'eq', label: 'is' },
+            { value: 'neq', label: 'is not' }
+          ]}
+        />
+      );
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'is'
+      );
+
+      rerender(
+        <FilterChip
+          label='Name'
+          onOperationChange={onOperationChange}
+          operations={[{ value: 'neq', label: 'is not' }]}
+        />
+      );
+
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'is not'
+      );
+      expect(onOperationChange).toHaveBeenCalledWith(
+        'neq',
+        expect.objectContaining({ reason: 'none' })
+      );
+    });
+
+    it('does not warn when the list changes', () => {
+      // Base UI logs each message once per process, so earlier tests can hide it.
+      resetBaseUiLog();
+      const error = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined);
+      const { rerender } = render(
+        <FilterChip
+          label='Name'
+          operations={[
+            { value: 'eq', label: 'is' },
+            { value: 'neq', label: 'is not' }
+          ]}
+        />
+      );
+      rerender(
+        <FilterChip
+          label='Name'
+          operations={[{ value: 'neq', label: 'is not' }]}
+        />
+      );
+
+      expect(error).not.toHaveBeenCalled();
+      error.mockRestore();
+    });
+
+    it('tells the parent when the list drops the operation it holds', () => {
+      const onOperationChange = vi.fn();
+      const chip = (operations: { value: string; label: string }[]) => (
+        <FilterChip
+          label='Name'
+          operation='eq'
+          onOperationChange={onOperationChange}
+          operations={operations}
+        />
+      );
+      const { rerender, container } = render(
+        chip([
+          { value: 'eq', label: 'is' },
+          { value: 'neq', label: 'is not' }
+        ])
+      );
+      expect(onOperationChange).not.toHaveBeenCalled();
+
+      rerender(chip([{ value: 'neq', label: 'is not' }]));
+
+      expect(onOperationChange).toHaveBeenCalledWith(
+        'neq',
+        expect.objectContaining({ reason: 'none' })
+      );
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'is not'
+      );
+    });
+
+    it('keeps an operation the column type does not list', () => {
+      const onOperationChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Name'
+          operation='gt'
+          onOperationChange={onOperationChange}
+        />
+      );
+
+      expect(onOperationChange).not.toHaveBeenCalled();
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'is'
+      );
+    });
+
+    it('keeps the empty operation, which no list has', () => {
+      const onOperationChange = vi.fn();
+      render(
+        <FilterChip
+          label='Name'
+          columnType='select'
+          operation='empty'
+          onOperationChange={onOperationChange}
+          operations={[
+            { value: 'eq', label: 'is' },
+            { value: 'neq', label: 'is not' }
+          ]}
+        />
+      );
+
+      expect(onOperationChange).not.toHaveBeenCalled();
+    });
+
+    it('reports the first operation when the list does not have the one it is given', () => {
+      const onOperationChange = vi.fn();
+      render(
+        <FilterChip
+          label='Name'
+          operation='gt'
+          onOperationChange={onOperationChange}
+          operations={[
+            { value: 'eq', label: 'is' },
+            { value: 'neq', label: 'is not' }
+          ]}
+        />
+      );
+
+      expect(onOperationChange).toHaveBeenCalledWith(
+        'eq',
+        expect.objectContaining({ reason: 'none' })
+      );
+    });
+
+    it('does not change the operations of the column type', () => {
+      render(
+        <FilterChip label='Name' operations={defaults => defaults.reverse()} />
+      );
+
+      const { container } = render(<FilterChip label='Name' />);
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'is'
+      );
+    });
+
+    it('does not change the labels of the column type', () => {
+      render(
+        <FilterChip
+          label='Name'
+          operations={defaults => {
+            defaults[0].label = 'matches';
+            return defaults;
+          }}
+        />
+      );
+
+      const { container } = render(<FilterChip label='Name' />);
+      expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+        'is'
+      );
+    });
+
+    it('keeps a selection the new list still offers', () => {
+      const onOperationChange = vi.fn();
+      const { rerender } = render(
+        <FilterChip
+          label='Name'
+          onOperationChange={onOperationChange}
+          operations={[
+            { value: 'eq', label: 'is' },
+            { value: 'neq', label: 'is not' }
+          ]}
+        />
+      );
+      rerender(
+        <FilterChip
+          label='Name'
+          onOperationChange={onOperationChange}
+          operations={[
+            { value: 'eq', label: 'is' },
+            { value: 'contains', label: 'contains' }
+          ]}
+        />
+      );
+
+      expect(onOperationChange).not.toHaveBeenCalled();
+    });
+
+    it('falls back to the column type when the function returns nothing', () => {
+      const { container } = render(
+        <FilterChip label='Name' operations={() => []} />
+      );
+      expect(getSlot(container, 'filter-chip-operation')).toHaveAttribute(
+        'aria-label',
+        'Name filter operation'
       );
     });
   });

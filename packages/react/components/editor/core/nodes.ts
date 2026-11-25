@@ -2,9 +2,9 @@ import type { NodeSpec } from 'prosemirror-model';
 import { type MentionAttrs, mentionText } from './mention';
 
 /**
- * The node specs that the Editor schema and the PromptInput composer schema
- * share. This module has no top-level calls, so a PromptInput-only app does
- * not keep the rest of the Editor schema.
+ * The node specs that the Editor schema and the PromptInput schema share.
+ * This module has no top-level calls, so a PromptInput-only app does not keep
+ * the rest of the Editor schema.
  */
 
 export const mentionNodeSpec: NodeSpec = {

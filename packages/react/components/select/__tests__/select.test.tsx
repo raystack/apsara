@@ -1,5 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import type { ReactNode } from 'react';
+import { renderToString } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 import labelStyles from '../../label/label.module.css';
 import { Select } from '../select';
@@ -511,6 +513,111 @@ describe('Select', () => {
       expect(options.length).toBe(2);
       expect(options[0]).toHaveTextContent('Apple');
       expect(options[1]).toHaveTextContent('Pineapple');
+    });
+  });
+
+  describe('Preset Values', () => {
+    const getValue = (container: HTMLElement) =>
+      container.querySelector('[data-slot="select-value"]');
+
+    it.each([
+      { defaultValue: ['apple', 'banana'] },
+      { value: ['apple', 'banana'] },
+      { defaultValue: ['apple', 'banana'], defaultOpen: true }
+    ])('shows chips for preset multiple values (%o)', props => {
+      const { container } = render(<BasicSelect multiple {...props} />);
+      const chips = container.querySelectorAll('[data-slot="chip"]');
+      expect(chips[0]).toHaveTextContent('Apple');
+      expect(getValue(container)).toHaveTextContent('+1');
+    });
+
+    it('shows chips for preset multiple values in autocomplete mode', () => {
+      const { container } = render(
+        <BasicSelect multiple autocomplete defaultValue={['apple', 'banana']} />
+      );
+      expect(getValue(container)).toHaveTextContent('Apple');
+    });
+
+    it('shows the raw value for a value with no matching item', () => {
+      const { container } = render(
+        <BasicSelect multiple defaultValue={['zzz', 'apple']} />
+      );
+      const chips = container.querySelectorAll('[data-slot="chip"]');
+      expect(chips[0]).toHaveTextContent('zzz');
+    });
+
+    it('shows the raw value for a value named like an Object.prototype key', () => {
+      const { container } = render(
+        <BasicSelect multiple defaultValue={['constructor', 'apple']} />
+      );
+      const chips = container.querySelectorAll('[data-slot="chip"]');
+      expect(chips[0]).toHaveTextContent('constructor');
+    });
+
+    it('renders preset multiple values on the server', () => {
+      const html = renderToString(
+        <BasicSelect multiple defaultValue={['apple', 'banana']} />
+      );
+      expect(html).toContain('apple');
+      expect(html).toContain('banana');
+    });
+
+    it('passes an item for every value to a children function', () => {
+      const renderValue = vi.fn((_value?: unknown) => null);
+      render(
+        <Select multiple defaultValue={['apple', 'banana']}>
+          <Select.Trigger>
+            <Select.Value>
+              {
+                // SelectValueProps intersects span children with the function type.
+                renderValue as unknown as ReactNode
+              }
+            </Select.Value>
+          </Select.Trigger>
+          <Select.Content>
+            {FRUIT_OPTIONS.map(option => (
+              <Select.Item key={option.value} value={option.value}>
+                {option.label}
+              </Select.Item>
+            ))}
+          </Select.Content>
+        </Select>
+      );
+      expect(renderValue).toHaveBeenCalled();
+      for (const [arg] of renderValue.mock.calls) {
+        expect(Array.isArray(arg)).toBe(true);
+        expect(arg).not.toContain(undefined);
+      }
+    });
+
+    it('passes an item to a single-mode children function', () => {
+      const renderValue = vi.fn((_value?: unknown) => null);
+      render(
+        <Select defaultValue='apple'>
+          <Select.Trigger>
+            <Select.Value>{renderValue as unknown as ReactNode}</Select.Value>
+          </Select.Trigger>
+          <Select.Content>
+            {FRUIT_OPTIONS.map(option => (
+              <Select.Item key={option.value} value={option.value}>
+                {option.label}
+              </Select.Item>
+            ))}
+          </Select.Content>
+        </Select>
+      );
+      expect(renderValue).toHaveBeenCalled();
+      for (const [arg] of renderValue.mock.calls) {
+        expect(arg).toBeDefined();
+      }
+    });
+
+    it('shows one preset multiple value as text', () => {
+      const { container } = render(
+        <BasicSelect multiple defaultValue={['apple']} />
+      );
+      expect(getValue(container)).toHaveTextContent('Apple');
+      expect(container.querySelector('[data-slot="chip"]')).toBeNull();
     });
   });
 });

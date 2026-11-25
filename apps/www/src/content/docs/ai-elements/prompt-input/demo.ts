@@ -178,7 +178,7 @@ export const editorCapabilitiesDemo = {
       type: 'user',
       group: 'Users',
       leadingIcon: <Avatar size={1} fallback="A" />,
-      trailingIcon: <Badge size="micro" color="neutral">Agent</Badge>
+      trailingIcon: <Badge size="mini" color="neutral">Agent</Badge>
     },
     {
       id: 'u3',
@@ -309,7 +309,7 @@ export const mentionsDemo = {
       label: 'Apsara Assistant',
       type: 'user',
       group: 'Users',
-      trailingIcon: <Badge size="micro" color="neutral">Agent</Badge>
+      trailingIcon: <Badge size="mini" color="neutral">Agent</Badge>
     },
     { id: 'u3', label: 'Dana Whitfield', type: 'user', group: 'Users' }
   ];

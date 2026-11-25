@@ -100,9 +100,10 @@ const STATUS_COLOR: Record<Task['status'], string> = {
 };
 
 /**
- * Card height is fixed at 64 to sit inside the 66px lane pitch. Under
- * `virtualized` the lane height is exactly `estimatedRowHeight`, so a taller
- * card would overflow into the lane below instead of growing its own.
+ * Card height is fixed at 64 × scaling to sit inside the default lane height
+ * of 66 × scaling. Under `virtualized` the lane height is exactly
+ * `estimatedRowHeight`, so a taller card would overflow toward the lane below
+ * instead of growing its own.
  */
 function TaskCard({
   task,
@@ -114,7 +115,7 @@ function TaskCard({
   return (
     <div
       style={{
-        height: 64,
+        height: 'calc(64px * var(--rs-scaling, 1))',
         boxSizing: 'border-box',
         overflow: 'hidden',
         padding: 'var(--rs-space-3)',
