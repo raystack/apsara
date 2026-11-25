@@ -412,15 +412,15 @@
 
 .timelineAxisBand {
   position: absolute;
-  top: var(--rs-space-2);
+  top: var(--rs-space-3);
   display: flex;
   box-sizing: border-box;
   color: var(--rs-color-foreground-base-primary);
   font-family: var(--rs-font-body);
-  font-size: var(--rs-font-size-mini);
-  font-weight: var(--rs-font-weight-medium);
-  line-height: var(--rs-line-height-mini);
-  letter-spacing: var(--rs-letter-spacing-mini);
+  font-size: var(--rs-font-size-small);
+  font-weight: var(--rs-font-weight-regular);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
   text-transform: uppercase;
 }
 
@@ -433,22 +433,28 @@
   white-space: nowrap;
 }
 
+/* Placed from the top, below the band row: the axis border sits inside its
+   height, so a bottom offset would move the labels up by the border width. */
 .timelineAxisTick {
   position: absolute;
-  bottom: var(--rs-space-2);
+  top: calc(
+    var(--rs-space-3) +
+    var(--rs-line-height-small) +
+    var(--rs-space-2)
+  );
   transform: translateX(-50%);
   white-space: nowrap;
   color: var(--rs-color-foreground-base-tertiary);
   font-family: var(--rs-font-body);
-  font-size: var(--rs-font-size-mini);
+  font-size: var(--rs-font-size-small);
   font-weight: var(--rs-font-weight-regular);
-  line-height: var(--rs-line-height-mini);
-  letter-spacing: var(--rs-letter-spacing-mini);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
 }
 
 .timelineAxisMarker {
   position: absolute;
-  top: var(--rs-space-2);
+  top: var(--rs-space-3);
   transform: translateX(-50%);
   z-index: 1;
   display: flex;
@@ -457,7 +463,7 @@
 /* Hover-cursor date badge: above marker badges, never intercepts events. */
 .timelineAxisCursor {
   position: absolute;
-  top: var(--rs-space-2);
+  top: var(--rs-space-3);
   transform: translateX(-50%);
   z-index: 2;
   display: flex;
