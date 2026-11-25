@@ -30,7 +30,8 @@
   padding-inline-start: var(--rs-space-10);
 }
 
-.nav-button {
+/* Doubled to beat IconButton's color whatever the stylesheet order. */
+.nav-button.nav-button {
   flex: none;
   color: var(--rs-color-foreground-base-primary);
 }
@@ -464,7 +465,8 @@
   cursor: not-allowed;
 }
 
-.content {
+/* Doubled to beat Popover's padding and max-width whatever the stylesheet order. */
+.content.content {
   padding: 0;
   width: max-content;
   max-width: none;
