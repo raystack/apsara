@@ -3,7 +3,12 @@
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
+      "dependsOn": ["^build"],
       "cache": false
+    },
+    "@raystack/apsara#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
     },
     "lint": {},
     "clean": {
