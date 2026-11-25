@@ -541,7 +541,6 @@
   box-sizing: border-box;
   height: var(--rs-space-9);
   border-width: 0.5px;
-  border-color: var(--rs-color-border-base-tertiary);
 }
 
 .separator {

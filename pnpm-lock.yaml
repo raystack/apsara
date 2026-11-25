@@ -50,9 +50,6 @@ importers:
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
-      dayjs:
-        specifier: ^1.11.20
-        version: 1.11.20
       fumadocs-core:
         specifier: 16.17.9
         version: 16.17.9(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.2.2)(lucide-react@1.45.0(react@19.2.1))(next@16.4.3(@types/node@24.10.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(zod@4.6.7)

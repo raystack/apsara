@@ -424,11 +424,21 @@ The rest are renames:
 
 Slot names changed too:
 
-| Old `Calendar` slot | `Calendar` slot |
-|---------------------|-----------------|
+| Old slot | `Calendar` slot |
+|----------|-----------------|
 | `calendar-grid-table` | `calendar-table` |
 | `calendar-grid-skeleton` | `calendar-skeleton` |
 | `calendar-month-grid` | `calendar-weeks` |
 | `calendar-nav-previous` | `calendar-prev-month` |
+| `calendar-nav-next` | `calendar-next-month` |
+| `calendar-dropdown` | `calendar-caption`, with `data-dropdown` |
+| `calendar-dropdown-content` | `calendar-caption-popup` |
+| `date-picker-trigger`, `range-picker-trigger` | `calendar-trigger` |
+| `date-picker-input` | `calendar-input` |
+| `range-picker-start-input`, `range-picker-end-input` | `calendar-input`, with `data-field="start"` or `data-field="end"` |
+| `date-picker-positioner`, `range-picker-positioner` | `calendar-content` |
+| `range-picker-footer` | `calendar-footer` |
+
+`date-picker-content`, `range-picker-content` and `range-picker-trigger-group` have no replacement. The parts sit directly in the popup, and you build the trigger group yourself.
 
 Two things have no replacement: the record forms of `dateInfo` and `tooltipMessages` (both are functions here), and the `classNames` escape hatch. Style through `data-slot` instead.
