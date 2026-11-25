@@ -5,14 +5,14 @@ export type { DataTableSearchProps } from './components/search';
 export type { DataTableToolbarProps } from './components/toolbar';
 export { DataTable } from './data-table';
 export {
-  DataTableColumnDef,
-  DataTableContentProps,
-  DataTableFilter,
+  type DataTableColumnDef,
+  type DataTableContentProps,
+  type DataTableFilter,
   type DataTableProps,
-  DataTableQuery,
-  DataTableSort,
-  DataTableVirtualizedContentProps,
-  InternalFilter,
-  InternalQuery
+  type DataTableQuery,
+  type DataTableSort,
+  type DataTableVirtualizedContentProps,
+  type InternalFilter,
+  type InternalQuery
 } from './data-table.types';
 export { useDataTable } from './hooks/useDataTable';

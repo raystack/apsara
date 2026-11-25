@@ -7,12 +7,6 @@
 
 // Keep this block in step with what the root barrel exports from
 // "./icons/create-icon".
-//
-// Both rollup configs write to dist/icons/, so both emit dist/icons/create-icon.js
-// and the later build (./icons) overwrites the earlier one (the root). Rollup
-// tree-shakes each build against its own entry point, so anything this barrel
-// does not reach is dropped from the shared output file, so an export missing here
-// is missing from the published package, however the root barrel exports it.
 export {
   createIcon,
   type IconComponent,

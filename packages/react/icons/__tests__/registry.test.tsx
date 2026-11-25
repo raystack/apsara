@@ -14,10 +14,8 @@ import {
   XIcon
 } from '../icons';
 
-// This file imports nothing outside `icons/`. The `./icons` rollup build sets
-// `rootDir` to this directory, so an import of a component would make the
-// TypeScript program warn (TS6059). The `<Theme icons=…>` integration is tested
-// in `components/theme/__tests__/theme.test.tsx` instead.
+// The `<Theme icons=…>` integration is tested in
+// `components/theme/__tests__/theme.test.tsx`.
 
 /** A stand-in for a consumer's own icon component. */
 const StubIcon = (props: IconProps) => (

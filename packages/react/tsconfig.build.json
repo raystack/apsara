@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./node_modules/.cache/apsara-types",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": false,
+    "types": ["node"]
+  },
+  "files": ["index.tsx", "icons/index.tsx", "hooks/index.tsx", "global.d.ts"],
+  "include": []
+}
