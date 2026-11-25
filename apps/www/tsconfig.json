@@ -1,7 +1,6 @@
 {
   "extends": "@raystack/tools-config/tsconfig/react",
   "compilerOptions": {
-    "baseUrl": ".",
     "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -10,7 +9,7 @@
     "resolveJsonModule": true,
     "incremental": true,
     "paths": {
-      "react": ["node_modules/@types/react"],
+      "react": ["./node_modules/@types/react"],
       "@/.source": ["./.source/server.ts"],
       "@/*": ["./src/*"]
     },

@@ -118,8 +118,8 @@ importers:
         specifier: ^19.2.2
         version: 19.2.2(@types/react@19.2.2)
       typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
+        specifier: ~7.0.2
+        version: 7.0.2
 
   packages/plugin-vscode:
     dependencies:
@@ -5847,11 +5847,6 @@ packages:
 
   typescript@5.6.1-rc:
     resolution: {integrity: sha512-E3b2+1zEFu84jB0YQi9BORDjz9+jGbwwy1Zi3G0LUNw7a7cePUrHMRNy8aPh53nXpkFGVHSxIZo5vKTfYaFiBQ==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
-  typescript@5.9.3:
-    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -12198,8 +12193,6 @@ snapshots:
       underscore: 1.13.7
 
   typescript@5.6.1-rc: {}
-
-  typescript@5.9.3: {}
 
   typescript@6.0.3: {}
 
