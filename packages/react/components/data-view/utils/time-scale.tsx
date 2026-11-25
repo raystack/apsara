@@ -167,8 +167,9 @@ function tickLabel(date: Date, scale: TimelineScale): string {
  * year in its label ("Jan 2025", then "Feb").
  *
  * `labelEvery` labels every Nth unit, counted from the domain start. The
- * collision floor (labels never closer than `TICK_LABEL_MIN_SPACE`) still
- * applies, so a too-dense request degrades instead of overlapping.
+ * collision floor (labels never closer than `TICK_LABEL_MIN_SPACE`, within
+ * float error) still applies, so a too-dense request degrades instead of
+ * overlapping.
  *
  * Cost note: this materializes one tick per `scale` unit across the whole
  * domain on every rebuild, since `virtualized` culls what renders, not what gets
@@ -182,9 +183,13 @@ export function buildAxis(
   unitWidth: number,
   labelEvery?: number
 ): { ticks: TimelineTick[]; bands: TimelineBand[] } {
+  // The call site divides the unit width by scaling, so an exact multiple of
+  // the floor can land a hair under it (29.4 / 1.05 = 27.999999999999996).
   const autoLabelEvery = Math.max(
     1,
-    Math.ceil(TICK_LABEL_MIN_SPACE / Math.max(1, unitWidth))
+    Math.ceil(
+      Number((TICK_LABEL_MIN_SPACE / Math.max(1, unitWidth)).toFixed(6))
+    )
   );
   const effectiveLabelEvery = Math.max(
     autoLabelEvery,
