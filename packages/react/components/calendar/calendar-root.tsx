@@ -12,18 +12,18 @@ import {
   useRef,
   useState
 } from 'react';
-import styles from './calendar-preview.module.css';
+import styles from './calendar.module.css';
 import {
-  type CalendarPreviewChangeDetails,
-  type CalendarPreviewChangeReason,
-  CalendarPreviewContext,
-  type CalendarPreviewContextValue,
-  type CalendarPreviewDateRange,
-  type CalendarPreviewDraftRange,
-  type CalendarPreviewField,
-  type CalendarPreviewOpenChangeDetails,
-  type CalendarPreviewValue
-} from './calendar-preview-context';
+  type CalendarChangeDetails,
+  type CalendarChangeReason,
+  CalendarContext,
+  type CalendarContextValue,
+  type CalendarDateRange,
+  type CalendarDraftRange,
+  type CalendarField,
+  type CalendarOpenChangeDetails,
+  type CalendarValue
+} from './calendar-context';
 import {
   anyDayBetween,
   dayKey,
@@ -45,74 +45,71 @@ import {
 
 const DEFAULT_YEAR_SPAN = 10;
 
-export function isRange(value: unknown): value is CalendarPreviewDateRange {
+export function isRange(value: unknown): value is CalendarDateRange {
   return value != null && typeof value === 'object' && 'from' in value;
 }
 
 export function monthAnchor(
-  value: CalendarPreviewValue | undefined
+  value: CalendarValue | undefined
 ): Date | undefined {
   if (!value) return undefined;
   if (isRange(value)) return value.from;
   return value instanceof Date ? value : parseKey(value.date);
 }
 
-export type { CalendarPreviewValue };
+export type { CalendarValue };
 
 export function isScaleValue(
-  value: CalendarPreviewValue | undefined
+  value: CalendarValue | undefined
 ): value is ScaleValue {
   return value != null && !(value instanceof Date) && 'date' in value;
 }
 
-interface CalendarPreviewSingleProps {
+interface CalendarSingleProps {
   selection?: 'single';
   scales?: 'day';
   value?: Date | null;
   defaultValue?: Date | null;
-  onValueChange?: (
-    value: Date | null,
-    details: CalendarPreviewChangeDetails
-  ) => void;
+  onValueChange?: (value: Date | null, details: CalendarChangeDetails) => void;
   /** `.Reset`'s target, read even when controlled. `null` clears; omitted hides it. */
   defaultDate?: Date | null;
 }
 
-interface CalendarPreviewRangeProps {
+interface CalendarRangeProps {
   selection: 'range';
   scales?: 'day';
-  value?: CalendarPreviewDateRange | null;
-  defaultValue?: CalendarPreviewDateRange | null;
+  value?: CalendarDateRange | null;
+  defaultValue?: CalendarDateRange | null;
   onValueChange?: (
-    value: CalendarPreviewDateRange | null,
-    details: CalendarPreviewChangeDetails
+    value: CalendarDateRange | null,
+    details: CalendarChangeDetails
   ) => void;
   /** `.Reset`'s target, read even when controlled. `null` clears; omitted hides it. */
-  defaultDate?: CalendarPreviewDateRange | null;
+  defaultDate?: CalendarDateRange | null;
 }
 
 /* On the SHAPE of `scales`, so `scales={['day']}` takes this arm and `scales='day'` does not. */
-interface CalendarPreviewScaleAwareProps {
+interface CalendarScaleAwareProps {
   selection?: 'single';
   scales: Exclude<Scale, 'day'> | Scale[];
   value?: ScaleValue | null;
   defaultValue?: ScaleValue | null;
   onValueChange?: (
     value: ScaleValue | null,
-    details: CalendarPreviewChangeDetails
+    details: CalendarChangeDetails
   ) => void;
   /** `.Reset`'s target, read even when controlled. */
   defaultDate?: ScaleValue | null;
 }
 
-export type CalendarPreviewProps = (
-  | CalendarPreviewSingleProps
-  | CalendarPreviewRangeProps
-  | CalendarPreviewScaleAwareProps
+export type CalendarProps = (
+  | CalendarSingleProps
+  | CalendarRangeProps
+  | CalendarScaleAwareProps
 ) &
-  CalendarPreviewSharedProps;
+  CalendarSharedProps;
 
-interface CalendarPreviewSharedProps
+interface CalendarSharedProps
   extends Omit<useRender.ComponentProps<'div'>, 'defaultValue' | 'onChange'> {
   /** @defaultValue the first of `scales` */
   defaultScale?: Scale;
@@ -123,10 +120,7 @@ interface CalendarPreviewSharedProps
   open?: boolean;
   /** @defaultValue false */
   defaultOpen?: boolean;
-  onOpenChange?: (
-    open: boolean,
-    details: CalendarPreviewOpenChangeDetails
-  ) => void;
+  onOpenChange?: (open: boolean, details: CalendarOpenChangeDetails) => void;
 
   month?: Date;
   /** @defaultValue the month of `value`, else `today` */
@@ -167,7 +161,7 @@ interface CalendarPreviewSharedProps
   readOnly?: boolean;
 }
 
-function scaleChanged(value: CalendarPreviewValue, next: Scale): boolean {
+function scaleChanged(value: CalendarValue, next: Scale): boolean {
   return isScaleValue(value) && value.scale !== next;
 }
 
@@ -188,7 +182,7 @@ export function defaultFormatValue(
   return `H${month <= 6 ? 1 : 2} ${year}`;
 }
 
-export function CalendarPreviewRoot({
+export function CalendarRoot({
   selection = 'single',
   scales: scalesProp = 'day',
   scale: scaleProp,
@@ -220,20 +214,17 @@ export function CalendarPreviewRoot({
   render,
   ref,
   ...props
-}: CalendarPreviewProps) {
+}: CalendarProps) {
   const today = useMemo(() => todayProp ?? new Date(), [todayProp]);
 
   const emit = onValueChange as
-    | ((
-        value: CalendarPreviewValue,
-        details: CalendarPreviewChangeDetails
-      ) => void)
+    | ((value: CalendarValue, details: CalendarChangeDetails) => void)
     | undefined;
 
-  const [value, setValueUnwrapped] = useControlled<CalendarPreviewValue>({
+  const [value, setValueUnwrapped] = useControlled<CalendarValue>({
     controlled: valueProp,
     default: defaultValue,
-    name: 'CalendarPreview',
+    name: 'Calendar',
     state: 'value'
   });
 
@@ -250,7 +241,7 @@ export function CalendarPreviewRoot({
   const [month, setMonthUnwrapped] = useControlled<Date>({
     controlled: monthProp,
     default: initialMonth,
-    name: 'CalendarPreview',
+    name: 'Calendar',
     state: 'month'
   });
 
@@ -275,7 +266,7 @@ export function CalendarPreviewRoot({
   const [scale, setScaleUnwrapped] = useControlled<Scale>({
     controlled: scaleProp,
     default: initialScale,
-    name: 'CalendarPreview',
+    name: 'Calendar',
     state: 'scale'
   });
 
@@ -313,14 +304,10 @@ export function CalendarPreviewRoot({
     [setMonthUnwrapped, onMonthChange]
   );
 
-  const emitted = useRef<CalendarPreviewValue>(value);
+  const emitted = useRef<CalendarValue>(value);
 
   const setValue = useCallback(
-    (
-      next: CalendarPreviewValue,
-      reason: CalendarPreviewChangeReason,
-      occasion: Date
-    ) => {
+    (next: CalendarValue, reason: CalendarChangeReason, occasion: Date) => {
       if (readOnly || disabled) return;
       emitted.current = next;
       setValueUnwrapped(next);
@@ -337,7 +324,7 @@ export function CalendarPreviewRoot({
   );
 
   const commitDay = useCallback(
-    (date: Date, reason: CalendarPreviewChangeReason) => {
+    (date: Date, reason: CalendarChangeReason) => {
       const key = dayKey(date, timeZone);
       clearScaleDraft();
       if (!carriesScale) {
@@ -359,7 +346,7 @@ export function CalendarPreviewRoot({
   const [open, setOpenUnwrapped] = useControlled<boolean>({
     controlled: openProp,
     default: defaultOpen,
-    name: 'CalendarPreview',
+    name: 'Calendar',
     state: 'open'
   });
 
@@ -393,7 +380,7 @@ export function CalendarPreviewRoot({
   const closingThroughSetOpen = useRef(false);
 
   const setOpen = useCallback(
-    (next: boolean, details: CalendarPreviewOpenChangeDetails) => {
+    (next: boolean, details: CalendarOpenChangeDetails) => {
       closingThroughSetOpen.current = !next;
       if (!next) {
         const outside = details.reason === REASONS.outsidePress;
@@ -443,14 +430,14 @@ export function CalendarPreviewRoot({
     [setScaleUnwrapped, onScaleChange]
   );
 
-  const [draft, setDraft] = useState<CalendarPreviewDraftRange | null>(null);
-  const [activeField, setActiveField] = useState<CalendarPreviewField>('start');
+  const [draft, setDraft] = useState<CalendarDraftRange | null>(null);
+  const [activeField, setActiveField] = useState<CalendarField>('start');
   const [fieldReadOnly, setFieldReadOnlyState] = useState<
-    Record<CalendarPreviewField, boolean>
+    Record<CalendarField, boolean>
   >({ start: false, end: false });
 
   const setFieldReadOnly = useCallback(
-    (field: CalendarPreviewField, next: boolean) => {
+    (field: CalendarField, next: boolean) => {
       setFieldReadOnlyState(current =>
         current[field] === next ? current : { ...current, [field]: next }
       );
@@ -701,7 +688,7 @@ export function CalendarPreviewRoot({
   );
 
   const setEndpoint = useCallback(
-    (field: CalendarPreviewField, date: Date) => {
+    (field: CalendarField, date: Date) => {
       if (readOnly || disabled || fieldReadOnly[field]) return;
 
       const base = draft ?? (isRange(value) ? value : null);
@@ -721,7 +708,7 @@ export function CalendarPreviewRoot({
   );
 
   const clearEndpoint = useCallback(
-    (field: CalendarPreviewField) => {
+    (field: CalendarField) => {
       if (readOnly || disabled || fieldReadOnly[field]) return;
       const base = draft ?? (isRange(value) ? value : null);
       const kept = field === 'start' ? { to: base?.to } : { from: base?.from };
@@ -760,7 +747,7 @@ export function CalendarPreviewRoot({
     [formatValueProp, timeZone]
   );
 
-  const context = useMemo<CalendarPreviewContextValue>(
+  const context = useMemo<CalendarContextValue>(
     () => ({
       value,
       setValue,
@@ -856,7 +843,7 @@ export function CalendarPreviewRoot({
     props: mergeProps<'div'>(
       {
         className: cx(styles.root, className),
-        'data-slot': 'calendar-preview',
+        'data-slot': 'calendar',
         'data-scale': scale,
         'data-disabled': disabled || undefined,
         'data-readonly': readOnly || undefined,
@@ -868,12 +855,12 @@ export function CalendarPreviewRoot({
 
   /* Base UI owns dismissal, which is why no file here listens for outside clicks. */
   return (
-    <CalendarPreviewContext value={context}>
+    <CalendarContext value={context}>
       <Popover.Root open={open} onOpenChange={setOpen}>
         {element}
       </Popover.Root>
-    </CalendarPreviewContext>
+    </CalendarContext>
   );
 }
 
-CalendarPreviewRoot.displayName = 'CalendarPreview';
+CalendarRoot.displayName = 'Calendar';

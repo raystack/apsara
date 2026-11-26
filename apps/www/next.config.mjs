@@ -53,6 +53,12 @@ const config = {
         source: '/docs/components/dataview/:path*',
         destination: '/docs/dataview/:path*',
         permanent: true
+      },
+      // CalendarPreview became Calendar.
+      {
+        source: '/docs/components/calendar-preview',
+        destination: '/docs/components/calendar',
+        permanent: true
       }
     ];
   }

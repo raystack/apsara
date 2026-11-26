@@ -3,40 +3,34 @@ import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { getAllSlots, getSlot } from '~/test-utils/data-slots';
 import { Field } from '../../field';
-import { CalendarPreview } from '../calendar-preview';
+import { Calendar } from '../calendar';
 
 const TODAY = new Date(2026, 7, 15);
 const AUGUST = new Date(2026, 7, 1);
 
 function renderPicker(props = {}, inputProps = {}) {
   const utils = render(
-    <CalendarPreview today={TODAY} defaultMonth={AUGUST} {...props}>
-      <CalendarPreview.Trigger>
-        <CalendarPreview.Input {...inputProps} />
-      </CalendarPreview.Trigger>
-      <CalendarPreview.Content>
-        <CalendarPreview.Days />
-      </CalendarPreview.Content>
-    </CalendarPreview>
+    <Calendar today={TODAY} defaultMonth={AUGUST} {...props}>
+      <Calendar.Trigger>
+        <Calendar.Input {...inputProps} />
+      </Calendar.Trigger>
+      <Calendar.Content>
+        <Calendar.Days />
+      </Calendar.Content>
+    </Calendar>
   );
-  const input = getSlot(
-    utils.container,
-    'calendar-preview-input'
-  ) as HTMLInputElement;
+  const input = getSlot(utils.container, 'calendar-input') as HTMLInputElement;
   return { ...utils, input };
 }
 
-const isOpen = () =>
-  getSlot(document.body, 'calendar-preview-content') !== null;
+const isOpen = () => getSlot(document.body, 'calendar-content') !== null;
 
-describe('CalendarPreview picker composition', () => {
+describe('Calendar picker composition', () => {
   it('renders a trigger and a typeable input, and no button', () => {
     const { container, input } = renderPicker();
-    expect(getSlot(container, 'calendar-preview-trigger')).toBeInTheDocument();
+    expect(getSlot(container, 'calendar-trigger')).toBeInTheDocument();
     expect(input).toBeInTheDocument();
-    expect(getSlot(container, 'calendar-preview-trigger')?.tagName).not.toBe(
-      'BUTTON'
-    );
+    expect(getSlot(container, 'calendar-trigger')?.tagName).not.toBe('BUTTON');
   });
 
   it('opens on focus', () => {
@@ -78,14 +72,14 @@ describe('CalendarPreview picker composition', () => {
 
   it('honours a controlled open', () => {
     render(
-      <CalendarPreview today={TODAY} open>
-        <CalendarPreview.Trigger>
-          <CalendarPreview.Input />
-        </CalendarPreview.Trigger>
-        <CalendarPreview.Content>
-          <CalendarPreview.Days />
-        </CalendarPreview.Content>
-      </CalendarPreview>
+      <Calendar today={TODAY} open>
+        <Calendar.Trigger>
+          <Calendar.Input />
+        </Calendar.Trigger>
+        <Calendar.Content>
+          <Calendar.Days />
+        </Calendar.Content>
+      </Calendar>
     );
     expect(isOpen()).toBe(true);
   });
@@ -95,7 +89,7 @@ describe('CalendarPreview picker composition', () => {
     function Controlled() {
       const [open, setOpen] = useState(false);
       return (
-        <CalendarPreview
+        <Calendar
           today={TODAY}
           defaultMonth={AUGUST}
           open={open}
@@ -105,22 +99,22 @@ describe('CalendarPreview picker composition', () => {
           }}
           onValueChange={() => setOpen(false)}
         >
-          <CalendarPreview.Trigger>
-            <CalendarPreview.Input />
-          </CalendarPreview.Trigger>
-          <CalendarPreview.Content>
-            <CalendarPreview.Days />
-          </CalendarPreview.Content>
-        </CalendarPreview>
+          <Calendar.Trigger>
+            <Calendar.Input />
+          </Calendar.Trigger>
+          <Calendar.Content>
+            <Calendar.Days />
+          </Calendar.Content>
+        </Calendar>
       );
     }
     const { container } = render(<Controlled />);
-    const input = getSlot(container, 'calendar-preview-input') as HTMLElement;
+    const input = getSlot(container, 'calendar-input') as HTMLElement;
     act(() => input.focus());
     expect(isOpen()).toBe(true);
-    const day = getAllSlots(document.body, 'calendar-preview-day').find(
+    const day = getAllSlots(document.body, 'calendar-day').find(
       cell =>
-        getSlot(cell, 'calendar-preview-day-number')?.textContent === '12' &&
+        getSlot(cell, 'calendar-day-number')?.textContent === '12' &&
         !cell.hasAttribute('data-outside')
     ) as HTMLElement;
     fireEvent.pointerDown(day);
@@ -137,7 +131,7 @@ describe('CalendarPreview picker composition', () => {
       const [open, setOpen] = useState(false);
       close = () => setOpen(false);
       return (
-        <CalendarPreview
+        <Calendar
           today={TODAY}
           defaultMonth={AUGUST}
           open={open}
@@ -145,21 +139,21 @@ describe('CalendarPreview picker composition', () => {
             if (next) setOpen(true);
           }}
         >
-          <CalendarPreview.Trigger>
-            <CalendarPreview.Input />
-          </CalendarPreview.Trigger>
-          <CalendarPreview.Content>
-            <CalendarPreview.Days />
-          </CalendarPreview.Content>
-        </CalendarPreview>
+          <Calendar.Trigger>
+            <Calendar.Input />
+          </Calendar.Trigger>
+          <Calendar.Content>
+            <Calendar.Days />
+          </Calendar.Content>
+        </Calendar>
       );
     }
     const { container } = render(<Controlled />);
-    const input = getSlot(container, 'calendar-preview-input') as HTMLElement;
+    const input = getSlot(container, 'calendar-input') as HTMLElement;
     act(() => input.focus());
-    const day = getAllSlots(document.body, 'calendar-preview-day').find(
+    const day = getAllSlots(document.body, 'calendar-day').find(
       cell =>
-        getSlot(cell, 'calendar-preview-day-number')?.textContent === '12' &&
+        getSlot(cell, 'calendar-day-number')?.textContent === '12' &&
         !cell.hasAttribute('data-outside')
     ) as HTMLElement;
     act(() => day.focus());
@@ -180,7 +174,7 @@ describe('CalendarPreview picker composition', () => {
     expect(isOpen()).toBe(true);
 
     fireEvent.keyDown(
-      getSlot(document.body, 'calendar-preview-content') as HTMLElement,
+      getSlot(document.body, 'calendar-content') as HTMLElement,
       { key: 'Escape' }
     );
     expect(isOpen()).toBe(false);
@@ -198,7 +192,7 @@ describe('CalendarPreview picker composition', () => {
   });
 });
 
-describe('CalendarPreview.Input commit', () => {
+describe('Calendar.Input commit', () => {
   it('commits on Enter', () => {
     const onValueChange = vi.fn();
     const { input } = renderPicker({ onValueChange });
@@ -301,7 +295,7 @@ describe('CalendarPreview.Input commit', () => {
   });
 });
 
-describe('CalendarPreview.Input validity', () => {
+describe('Calendar.Input validity', () => {
   it('reports unparseable text', () => {
     const onValidityChange = vi.fn();
     const { input } = renderPicker({}, { onValidityChange });
@@ -378,7 +372,7 @@ describe('CalendarPreview.Input validity', () => {
   });
 });
 
-describe('CalendarPreview.Input invalid marking', () => {
+describe('Calendar.Input invalid marking', () => {
   it('marks nothing before anything is typed', () => {
     const { input } = renderPicker();
     expect(input).not.toHaveAttribute('data-invalid');
@@ -441,11 +435,11 @@ describe('CalendarPreview.Input invalid marking', () => {
   it('leaves an error Field set alone while its own text is valid', () => {
     const { container } = render(
       <Field error='Server said no'>
-        <CalendarPreview today={TODAY}>
-          <CalendarPreview.Trigger>
-            <CalendarPreview.Input />
-          </CalendarPreview.Trigger>
-        </CalendarPreview>
+        <Calendar today={TODAY}>
+          <Calendar.Trigger>
+            <Calendar.Input />
+          </Calendar.Trigger>
+        </Calendar>
       </Field>
     );
     const input = container.querySelector('input') as HTMLInputElement;
@@ -453,7 +447,7 @@ describe('CalendarPreview.Input invalid marking', () => {
   });
 });
 
-describe('CalendarPreview.Input error messages', () => {
+describe('Calendar.Input error messages', () => {
   const reasons = [
     ['unparseable', {}, 'not a date'],
     ['out-of-bounds', { minDate: new Date(2026, 7, 10) }, '01/08/2026'],
@@ -525,14 +519,14 @@ describe('CalendarPreview.Input error messages', () => {
       expect.objectContaining({ message: 'First' })
     );
     rerender(
-      <CalendarPreview today={TODAY} defaultMonth={AUGUST}>
-        <CalendarPreview.Trigger>
-          <CalendarPreview.Input
+      <Calendar today={TODAY} defaultMonth={AUGUST}>
+        <Calendar.Trigger>
+          <Calendar.Input
             onValidityChange={onValidityChange}
             errorMessages={{ unparseable: 'Second' }}
           />
-        </CalendarPreview.Trigger>
-      </CalendarPreview>
+        </Calendar.Trigger>
+      </Calendar>
     );
     fireEvent.change(input, { target: { value: 'nope!' } });
     expect(onValidityChange).toHaveBeenLastCalledWith(
@@ -541,34 +535,34 @@ describe('CalendarPreview.Input error messages', () => {
   });
 });
 
-describe('CalendarPreview.Trigger content', () => {
+describe('Calendar.Trigger content', () => {
   it('renders the formatted value when given no children', () => {
     const { container } = render(
-      <CalendarPreview today={TODAY} defaultValue={new Date(2026, 7, 20)}>
-        <CalendarPreview.Trigger />
-      </CalendarPreview>
+      <Calendar today={TODAY} defaultValue={new Date(2026, 7, 20)}>
+        <Calendar.Trigger />
+      </Calendar>
     );
-    expect(getSlot(container, 'calendar-preview-trigger')).toHaveTextContent(
+    expect(getSlot(container, 'calendar-trigger')).toHaveTextContent(
       '20 Aug 2026'
     );
   });
 
   it('renders the placeholder when there is no value', () => {
     const { container } = render(
-      <CalendarPreview today={TODAY}>
-        <CalendarPreview.Trigger placeholder='Pick a day' />
-      </CalendarPreview>
+      <Calendar today={TODAY}>
+        <Calendar.Trigger placeholder='Pick a day' />
+      </Calendar>
     );
-    expect(getSlot(container, 'calendar-preview-trigger')).toHaveTextContent(
+    expect(getSlot(container, 'calendar-trigger')).toHaveTextContent(
       'Pick a day'
     );
   });
 
   it('lets a consumer replace the element through render', () => {
     render(
-      <CalendarPreview today={TODAY}>
-        <CalendarPreview.Trigger render={<span data-custom='true' />} />
-      </CalendarPreview>
+      <Calendar today={TODAY}>
+        <Calendar.Trigger render={<span data-custom='true' />} />
+      </Calendar>
     );
     expect(screen.getByText('Select date')).toHaveAttribute(
       'data-custom',
@@ -577,24 +571,24 @@ describe('CalendarPreview.Trigger content', () => {
   });
 });
 
-describe('CalendarPreview.Trigger is an anchor around a field', () => {
+describe('Calendar.Trigger is an anchor around a field', () => {
   it('drops the button role and the tab stop when it wraps an input', () => {
     const { container } = renderPicker();
-    const trigger = getSlot(container, 'calendar-preview-trigger');
+    const trigger = getSlot(container, 'calendar-trigger');
     expect(trigger).not.toHaveAttribute('role', 'button');
     expect(trigger).toHaveAttribute('tabindex', '-1');
   });
 
   it('keeps both when it wraps only a label', () => {
     const { container } = render(
-      <CalendarPreview today={TODAY} defaultMonth={AUGUST}>
-        <CalendarPreview.Trigger />
-        <CalendarPreview.Content>
-          <CalendarPreview.Days />
-        </CalendarPreview.Content>
-      </CalendarPreview>
+      <Calendar today={TODAY} defaultMonth={AUGUST}>
+        <Calendar.Trigger />
+        <Calendar.Content>
+          <Calendar.Days />
+        </Calendar.Content>
+      </Calendar>
     );
-    const trigger = getSlot(container, 'calendar-preview-trigger');
+    const trigger = getSlot(container, 'calendar-trigger');
     expect(trigger).toHaveAttribute('role', 'button');
     expect(trigger).not.toHaveAttribute('tabindex', '-1');
   });
@@ -610,17 +604,17 @@ describe('CalendarPreview.Trigger is an anchor around a field', () => {
 
   it('stays open when a press moves between two fields of a range', () => {
     const { container } = render(
-      <CalendarPreview selection='range' today={TODAY} defaultMonth={AUGUST}>
-        <CalendarPreview.Trigger>
-          <CalendarPreview.Input field='start' />
-          <CalendarPreview.Input field='end' />
-        </CalendarPreview.Trigger>
-        <CalendarPreview.Content>
-          <CalendarPreview.Days />
-        </CalendarPreview.Content>
-      </CalendarPreview>
+      <Calendar selection='range' today={TODAY} defaultMonth={AUGUST}>
+        <Calendar.Trigger>
+          <Calendar.Input field='start' />
+          <Calendar.Input field='end' />
+        </Calendar.Trigger>
+        <Calendar.Content>
+          <Calendar.Days />
+        </Calendar.Content>
+      </Calendar>
     );
-    const [start, end] = getAllSlots(container, 'calendar-preview-input');
+    const [start, end] = getAllSlots(container, 'calendar-input');
     fireEvent.focus(start);
     expect(isOpen()).toBe(true);
     fireEvent.pointerDown(end);
@@ -631,7 +625,7 @@ describe('CalendarPreview.Trigger is an anchor around a field', () => {
   });
 });
 
-describe('CalendarPreview.Input drops a rejected draft on an outside write', () => {
+describe('Calendar.Input drops a rejected draft on an outside write', () => {
   it('clears the text and the invalid state when a day is clicked', () => {
     const onValidityChange = vi.fn();
     const { container, input } = renderPicker({}, { onValidityChange });
@@ -639,9 +633,9 @@ describe('CalendarPreview.Input drops a rejected draft on an outside write', () 
     fireEvent.change(input, { target: { value: 'not a date' } });
     expect(input).toHaveAttribute('data-invalid');
 
-    const cell = getAllSlots(document.body, 'calendar-preview-day').find(
+    const cell = getAllSlots(document.body, 'calendar-day').find(
       one =>
-        getSlot(one, 'calendar-preview-day-number')?.textContent === '12' &&
+        getSlot(one, 'calendar-day-number')?.textContent === '12' &&
         !one.hasAttribute('data-outside')
     ) as HTMLElement;
     fireEvent.click(cell);
@@ -661,7 +655,7 @@ describe('CalendarPreview.Input drops a rejected draft on an outside write', () 
   });
 });
 
-describe('CalendarPreview.Trigger and the focus a dismissal gives back', () => {
+describe('Calendar.Trigger and the focus a dismissal gives back', () => {
   const pressOutside = () => {
     fireEvent.pointerDown(document.body);
     fireEvent.mouseDown(document.body);
@@ -749,41 +743,39 @@ describe('CalendarPreview.Trigger and the focus a dismissal gives back', () => {
   });
 });
 
-describe('CalendarPreview.Trigger beside a Body that owns the input', () => {
+describe('Calendar.Trigger beside a Body that owns the input', () => {
   const composition = (
     <>
-      <CalendarPreview.Trigger />
-      <CalendarPreview.Content>
-        <CalendarPreview.Body />
-      </CalendarPreview.Content>
+      <Calendar.Trigger />
+      <Calendar.Content>
+        <Calendar.Body />
+      </Calendar.Content>
     </>
   );
 
   it('stays a button while an input it does not own is mounted', () => {
     const { container } = render(
-      <CalendarPreview today={TODAY} defaultMonth={AUGUST} defaultOpen>
+      <Calendar today={TODAY} defaultMonth={AUGUST} defaultOpen>
         {composition}
-      </CalendarPreview>
+      </Calendar>
     );
-    expect(
-      getSlot(document.body, 'calendar-preview-input')
-    ).toBeInTheDocument();
+    expect(getSlot(document.body, 'calendar-input')).toBeInTheDocument();
 
-    const trigger = getSlot(container, 'calendar-preview-trigger');
+    const trigger = getSlot(container, 'calendar-trigger');
     expect(trigger).toHaveAttribute('role', 'button');
     expect(trigger).not.toHaveAttribute('tabindex', '-1');
   });
 
   it('still gives up the role for an input of its own', () => {
     const { container } = renderPicker();
-    expect(getSlot(container, 'calendar-preview-trigger')).not.toHaveAttribute(
+    expect(getSlot(container, 'calendar-trigger')).not.toHaveAttribute(
       'role',
       'button'
     );
   });
 });
 
-describe('CalendarPreview picker props the review left open', () => {
+describe('Calendar picker props the review left open', () => {
   it('composes a consumer onValueChange rather than replacing it', () => {
     const onInputValueChange = vi.fn();
     const onValueChange = vi.fn();
@@ -809,18 +801,18 @@ describe('CalendarPreview picker props the review left open', () => {
     expect(input).toHaveAttribute('data-invalid');
 
     rerender(
-      <CalendarPreview
+      <Calendar
         today={TODAY}
         defaultMonth={AUGUST}
         minDate={new Date(2026, 7, 1)}
       >
-        <CalendarPreview.Trigger>
-          <CalendarPreview.Input />
-        </CalendarPreview.Trigger>
-        <CalendarPreview.Content>
-          <CalendarPreview.Days />
-        </CalendarPreview.Content>
-      </CalendarPreview>
+        <Calendar.Trigger>
+          <Calendar.Input />
+        </Calendar.Trigger>
+        <Calendar.Content>
+          <Calendar.Days />
+        </Calendar.Content>
+      </Calendar>
     );
 
     expect(input.value).toBe('05/08/2026');
@@ -841,18 +833,18 @@ describe('CalendarPreview picker props the review left open', () => {
     });
 
     rerender(
-      <CalendarPreview
+      <Calendar
         today={TODAY}
         defaultMonth={AUGUST}
         maxDate={new Date(2026, 7, 31)}
       >
-        <CalendarPreview.Trigger>
-          <CalendarPreview.Input onValidityChange={onValidityChange} />
-        </CalendarPreview.Trigger>
-        <CalendarPreview.Content>
-          <CalendarPreview.Days />
-        </CalendarPreview.Content>
-      </CalendarPreview>
+        <Calendar.Trigger>
+          <Calendar.Input onValidityChange={onValidityChange} />
+        </Calendar.Trigger>
+        <Calendar.Content>
+          <Calendar.Days />
+        </Calendar.Content>
+      </Calendar>
     );
 
     expect(onValidityChange).toHaveBeenLastCalledWith({ valid: true });
@@ -860,28 +852,28 @@ describe('CalendarPreview picker props the review left open', () => {
 
   it('gives a trigger with no input a tab stop of its own', () => {
     const { container } = render(
-      <CalendarPreview today={TODAY} defaultMonth={AUGUST}>
-        <CalendarPreview.Trigger />
-        <CalendarPreview.Content>
-          <CalendarPreview.Days />
-        </CalendarPreview.Content>
-      </CalendarPreview>
+      <Calendar today={TODAY} defaultMonth={AUGUST}>
+        <Calendar.Trigger />
+        <Calendar.Content>
+          <Calendar.Days />
+        </Calendar.Content>
+      </Calendar>
     );
-    const trigger = getSlot(container, 'calendar-preview-trigger');
+    const trigger = getSlot(container, 'calendar-trigger');
     expect(trigger).toHaveAttribute('role', 'button');
     expect(trigger).toHaveAttribute('tabindex', '0');
   });
 
   it('keeps a trigger around an input out of the tab order', () => {
     const { container } = renderPicker();
-    expect(getSlot(container, 'calendar-preview-trigger')).toHaveAttribute(
+    expect(getSlot(container, 'calendar-trigger')).toHaveAttribute(
       'tabindex',
       '-1'
     );
   });
 });
 
-describe('CalendarPreview.Content initial focus', () => {
+describe('Calendar.Content initial focus', () => {
   const settle = () => new Promise(resolve => setTimeout(resolve, 100));
 
   it('leaves focus on the field the popover opened from', async () => {
@@ -908,19 +900,19 @@ describe('CalendarPreview.Content initial focus', () => {
 
   it('keeps both range fields reachable, so a range fills by keyboard', async () => {
     const utils = render(
-      <CalendarPreview selection='range' today={TODAY} defaultMonth={AUGUST}>
-        <CalendarPreview.Trigger>
-          <CalendarPreview.Input field='start' />
-          <CalendarPreview.Input field='end' />
-        </CalendarPreview.Trigger>
-        <CalendarPreview.Content>
-          <CalendarPreview.Days />
-        </CalendarPreview.Content>
-      </CalendarPreview>
+      <Calendar selection='range' today={TODAY} defaultMonth={AUGUST}>
+        <Calendar.Trigger>
+          <Calendar.Input field='start' />
+          <Calendar.Input field='end' />
+        </Calendar.Trigger>
+        <Calendar.Content>
+          <Calendar.Days />
+        </Calendar.Content>
+      </Calendar>
     );
     const [start, end] = getAllSlots(
       utils.container,
-      'calendar-preview-input'
+      'calendar-input'
     ) as HTMLInputElement[];
 
     start.focus();
@@ -939,23 +931,20 @@ describe('CalendarPreview.Content initial focus', () => {
 
   it('still moves focus into the popup when the trigger wraps no input', async () => {
     const utils = render(
-      <CalendarPreview today={TODAY} defaultMonth={AUGUST}>
-        <CalendarPreview.Trigger />
-        <CalendarPreview.Content>
-          <CalendarPreview.Days />
-        </CalendarPreview.Content>
-      </CalendarPreview>
+      <Calendar today={TODAY} defaultMonth={AUGUST}>
+        <Calendar.Trigger />
+        <Calendar.Content>
+          <Calendar.Days />
+        </Calendar.Content>
+      </Calendar>
     );
-    const trigger = getSlot(
-      utils.container,
-      'calendar-preview-trigger'
-    ) as HTMLElement;
+    const trigger = getSlot(utils.container, 'calendar-trigger') as HTMLElement;
 
     trigger.focus();
     await settle();
     expect(document.activeElement).not.toBe(trigger);
     expect(
-      getSlot(document.body, 'calendar-preview-content')?.contains(
+      getSlot(document.body, 'calendar-content')?.contains(
         document.activeElement
       )
     ).toBe(true);

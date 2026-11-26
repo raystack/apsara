@@ -4,29 +4,25 @@ import { cx } from 'class-variance-authority';
 import type { ComponentProps } from 'react';
 import { Flex } from '../flex';
 import { Text } from '../text';
-import styles from './calendar-preview.module.css';
+import styles from './calendar.module.css';
 
-export type CalendarPreviewFooterProps = ComponentProps<typeof Flex>;
+export type CalendarFooterProps = ComponentProps<typeof Flex>;
 
-export function CalendarPreviewFooter({
+export function CalendarFooter({
   className,
   children,
   ...props
-}: CalendarPreviewFooterProps) {
+}: CalendarFooterProps) {
   return (
     <Flex
       align='center'
       justify='center'
       className={cx(styles.footer, className)}
-      data-slot='calendar-preview-footer'
+      data-slot='calendar-footer'
       {...props}
     >
       {typeof children === 'string' ? (
-        <Text
-          size='small'
-          color='secondary'
-          data-slot='calendar-preview-footer-text'
-        >
+        <Text size='small' color='secondary' data-slot='calendar-footer-text'>
           {children}
         </Text>
       ) : (
@@ -36,4 +32,4 @@ export function CalendarPreviewFooter({
   );
 }
 
-CalendarPreviewFooter.displayName = 'CalendarPreview.Footer';
+CalendarFooter.displayName = 'Calendar.Footer';

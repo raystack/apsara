@@ -10,11 +10,8 @@ import { type ReactNode, useEffect, useRef } from 'react';
 import { ScrollArea } from '../scroll-area';
 import { Separator } from '../separator';
 import { useThemeInjection } from '../theme/portal';
-import styles from './calendar-preview.module.css';
-import {
-  useCalendarPreviewContext,
-  useCalendarPreviewDaysContext
-} from './calendar-preview-context';
+import styles from './calendar.module.css';
+import { useCalendarContext, useCalendarDaysContext } from './calendar-context';
 import {
   formatCaptionLabel,
   monthShortNames,
@@ -22,11 +19,11 @@ import {
   shiftMonths
 } from './date-adapter';
 
-export type CalendarPreviewCaptionProps =
+export type CalendarCaptionProps =
   | ({ dropdown?: false } & useRender.ComponentProps<'span'>)
   | ({ dropdown: true } & useRender.ComponentProps<'button'>);
 
-export function CalendarPreviewCaption(props: CalendarPreviewCaptionProps) {
+export function CalendarCaption(props: CalendarCaptionProps) {
   return props.dropdown ? (
     <CaptionDropdown {...props} />
   ) : (
@@ -34,13 +31,11 @@ export function CalendarPreviewCaption(props: CalendarPreviewCaptionProps) {
   );
 }
 
-CalendarPreviewCaption.displayName = 'CalendarPreview.Caption';
+CalendarCaption.displayName = 'Calendar.Caption';
 
 function useCaptionLabel(): ReactNode {
-  const { month, timeZone } = useCalendarPreviewContext(
-    'CalendarPreview.Caption'
-  );
-  const days = useCalendarPreviewDaysContext();
+  const { month, timeZone } = useCalendarContext('Calendar.Caption');
+  const days = useCalendarDaysContext();
   const count = days?.numberOfMonths ?? 1;
   if (count <= 1) return formatCaptionLabel(month, timeZone);
   const last = shiftMonths(month, count - 1);
@@ -64,7 +59,7 @@ function CaptionLabel({
     props: mergeProps<'span'>(
       {
         className: cx(styles.caption, className),
-        'data-slot': 'calendar-preview-caption',
+        'data-slot': 'calendar-caption',
         children: children ?? label
       } as useRender.ComponentProps<'span'>,
       props
@@ -80,9 +75,8 @@ function CaptionDropdown({
   ref,
   ...props
 }: { dropdown: true } & useRender.ComponentProps<'button'>) {
-  const { month, setMonth, yearRange, disabled } = useCalendarPreviewContext(
-    'CalendarPreview.Caption'
-  );
+  const { month, setMonth, yearRange, disabled } =
+    useCalendarContext('Calendar.Caption');
   const label = useCaptionLabel();
   const theme = useThemeInjection();
 
@@ -97,7 +91,7 @@ function CaptionDropdown({
     <PopoverPrimitive.Root>
       <PopoverPrimitive.Trigger
         className={cx(styles.caption, styles['caption-trigger'], className)}
-        data-slot='calendar-preview-caption'
+        data-slot='calendar-caption'
         data-dropdown='true'
         disabled={disabled}
         render={render}
@@ -111,16 +105,16 @@ function CaptionDropdown({
           sideOffset={4}
           align='start'
           className={styles['caption-positioner']}
-          data-slot='calendar-preview-caption-positioner'
+          data-slot='calendar-caption-positioner'
         >
           <PopoverPrimitive.Popup
             {...theme}
             className={cx(theme?.className, styles['caption-popup'])}
-            data-slot='calendar-preview-caption-popup'
+            data-slot='calendar-caption-popup'
           >
             <CaptionColumn
-              slot='calendar-preview-caption-months'
-              optionSlot='calendar-preview-caption-month'
+              slot='calendar-caption-months'
+              optionSlot='calendar-caption-month'
               label='Month'
               options={monthShortNames().map((name, index) => ({
                 key: name,
@@ -133,11 +127,11 @@ function CaptionDropdown({
               orientation='vertical'
               decorative
               className={styles['caption-divider']}
-              data-slot='calendar-preview-caption-divider'
+              data-slot='calendar-caption-divider'
             />
             <CaptionColumn
-              slot='calendar-preview-caption-years'
-              optionSlot='calendar-preview-caption-year'
+              slot='calendar-caption-years'
+              optionSlot='calendar-caption-year'
               label='Year'
               options={years.map(year => ({
                 key: String(year),

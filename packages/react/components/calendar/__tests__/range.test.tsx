@@ -1,35 +1,30 @@
 import { fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { getAllSlots, getSlot } from '~/test-utils/data-slots';
-import { CalendarPreview } from '../calendar-preview';
+import { Calendar } from '../calendar';
 
 const TODAY = new Date(2026, 7, 15);
 const AUGUST = new Date(2026, 7, 1);
 
 function renderRange(props = {}, children?: React.ReactNode) {
   return render(
-    <CalendarPreview
-      selection='range'
-      today={TODAY}
-      defaultMonth={AUGUST}
-      {...props}
-    >
-      {children ?? <CalendarPreview.Days />}
-    </CalendarPreview>
+    <Calendar selection='range' today={TODAY} defaultMonth={AUGUST} {...props}>
+      {children ?? <Calendar.Days />}
+    </Calendar>
   );
 }
 
 function day(container: HTMLElement, text: string): HTMLElement {
-  const match = getAllSlots(container, 'calendar-preview-day').find(
+  const match = getAllSlots(container, 'calendar-day').find(
     cell =>
-      getSlot(cell, 'calendar-preview-day-number')?.textContent === text &&
+      getSlot(cell, 'calendar-day-number')?.textContent === text &&
       !cell.hasAttribute('data-outside')
   );
   if (!match) throw new Error(`no cell for ${text}`);
   return match;
 }
 
-describe('CalendarPreview range machine', () => {
+describe('Calendar range machine', () => {
   it('does not emit on the first click', () => {
     const onValueChange = vi.fn();
     const { container } = renderRange({ onValueChange });
@@ -102,21 +97,21 @@ describe('CalendarPreview range machine', () => {
   });
 });
 
-describe('CalendarPreview range inputs', () => {
+describe('Calendar range inputs', () => {
   const picker = (
     <>
-      <CalendarPreview.Trigger>
-        <CalendarPreview.Input field='start' />
-        <CalendarPreview.Input field='end' />
-      </CalendarPreview.Trigger>
-      <CalendarPreview.Content>
-        <CalendarPreview.Days />
-      </CalendarPreview.Content>
+      <Calendar.Trigger>
+        <Calendar.Input field='start' />
+        <Calendar.Input field='end' />
+      </Calendar.Trigger>
+      <Calendar.Content>
+        <Calendar.Days />
+      </Calendar.Content>
     </>
   );
 
   const inputs = (container: HTMLElement) =>
-    getAllSlots(container, 'calendar-preview-input') as HTMLInputElement[];
+    getAllSlots(container, 'calendar-input') as HTMLInputElement[];
 
   it('gives each endpoint its own field and placeholder', () => {
     const { container } = renderRange({}, picker);
@@ -154,9 +149,9 @@ describe('CalendarPreview range inputs', () => {
     const { container } = renderRange(
       {},
       <>
-        <CalendarPreview.Input field='start' />
-        <CalendarPreview.Input field='end' />
-        <CalendarPreview.Days />
+        <Calendar.Input field='start' />
+        <Calendar.Input field='end' />
+        <Calendar.Days />
       </>
     );
     const [start, end] = inputs(container);
@@ -182,13 +177,13 @@ describe('CalendarPreview range inputs', () => {
         value: { from: new Date(2026, 7, 10), to: new Date(2026, 7, 20) }
       },
       <>
-        <CalendarPreview.Trigger>
-          <CalendarPreview.Input field='start' readOnly />
-          <CalendarPreview.Input field='end' />
-        </CalendarPreview.Trigger>
-        <CalendarPreview.Content>
-          <CalendarPreview.Days />
-        </CalendarPreview.Content>
+        <Calendar.Trigger>
+          <Calendar.Input field='start' readOnly />
+          <Calendar.Input field='end' />
+        </Calendar.Trigger>
+        <Calendar.Content>
+          <Calendar.Days />
+        </Calendar.Content>
       </>
     );
     fireEvent.focus(inputs(container)[1]);
@@ -197,26 +192,23 @@ describe('CalendarPreview range inputs', () => {
   });
 });
 
-describe('CalendarPreview range completion leaves the popover open', () => {
+describe('Calendar range completion leaves the popover open', () => {
   const picker = (
     <>
-      <CalendarPreview.Trigger>
-        <CalendarPreview.Input field='start' />
-        <CalendarPreview.Input field='end' />
-      </CalendarPreview.Trigger>
-      <CalendarPreview.Content>
-        <CalendarPreview.Days />
-      </CalendarPreview.Content>
+      <Calendar.Trigger>
+        <Calendar.Input field='start' />
+        <Calendar.Input field='end' />
+      </Calendar.Trigger>
+      <Calendar.Content>
+        <Calendar.Days />
+      </Calendar.Content>
     </>
   );
 
-  const isOpen = () =>
-    getSlot(document.body, 'calendar-preview-content') !== null;
+  const isOpen = () => getSlot(document.body, 'calendar-content') !== null;
 
   const open = (container: HTMLElement) =>
-    fireEvent.focus(
-      getAllSlots(container, 'calendar-preview-input')[0] as HTMLElement
-    );
+    fireEvent.focus(getAllSlots(container, 'calendar-input')[0] as HTMLElement);
 
   it('stays open when the range completes', () => {
     const onOpenChange = vi.fn();
@@ -257,14 +249,14 @@ describe('CalendarPreview range completion leaves the popover open', () => {
     expect(isOpen()).toBe(true);
 
     fireEvent.keyDown(
-      getSlot(document.body, 'calendar-preview-content') as HTMLElement,
+      getSlot(document.body, 'calendar-content') as HTMLElement,
       { key: 'Escape' }
     );
     expect(isOpen()).toBe(false);
   });
 });
 
-describe('CalendarPreview range parts that read the value', () => {
+describe('Calendar range parts that read the value', () => {
   const RANGE = { from: new Date(2026, 7, 10), to: new Date(2026, 7, 20) };
 
   const typeAndCommit = (input: HTMLInputElement, text: string) => {
@@ -274,17 +266,17 @@ describe('CalendarPreview range parts that read the value', () => {
   };
 
   const inputs = (container: HTMLElement) =>
-    getAllSlots(container, 'calendar-preview-input') as HTMLInputElement[];
+    getAllSlots(container, 'calendar-input') as HTMLInputElement[];
 
   const picker = (
     <>
-      <CalendarPreview.Trigger>
-        <CalendarPreview.Input field='start' />
-        <CalendarPreview.Input field='end' />
-      </CalendarPreview.Trigger>
-      <CalendarPreview.Content>
-        <CalendarPreview.Days />
-      </CalendarPreview.Content>
+      <Calendar.Trigger>
+        <Calendar.Input field='start' />
+        <Calendar.Input field='end' />
+      </Calendar.Trigger>
+      <Calendar.Content>
+        <Calendar.Days />
+      </Calendar.Content>
     </>
   );
 
@@ -302,7 +294,7 @@ describe('CalendarPreview range parts that read the value', () => {
       defaultDate: RESTORED,
       onValueChange
     });
-    const reset = getSlot(container, 'calendar-preview-reset') as HTMLElement;
+    const reset = getSlot(container, 'calendar-reset') as HTMLElement;
     expect(reset).not.toBeNull();
     expect(reset).not.toBeDisabled();
     fireEvent.click(reset);
@@ -317,7 +309,7 @@ describe('CalendarPreview range parts that read the value', () => {
       defaultValue: RANGE,
       defaultDate: RANGE
     });
-    const reset = getSlot(container, 'calendar-preview-reset') as HTMLElement;
+    const reset = getSlot(container, 'calendar-reset') as HTMLElement;
     expect(reset).toHaveAttribute('aria-disabled', 'true');
     expect(reset).toHaveAttribute('data-restored');
   });
@@ -327,7 +319,7 @@ describe('CalendarPreview range parts that read the value', () => {
       defaultValue: RANGE,
       defaultDate: { from: RANGE.from, to: new Date(2026, 7, 25) }
     });
-    expect(getSlot(container, 'calendar-preview-reset')).not.toBeDisabled();
+    expect(getSlot(container, 'calendar-reset')).not.toBeDisabled();
   });
 
   it('keeps .Reset for a null defaultDate, and clears the range', () => {
@@ -337,7 +329,7 @@ describe('CalendarPreview range parts that read the value', () => {
       defaultDate: null,
       onValueChange
     });
-    const reset = getSlot(container, 'calendar-preview-reset');
+    const reset = getSlot(container, 'calendar-reset');
     expect(reset).not.toBeNull();
     fireEvent.click(reset as HTMLElement);
     expect(onValueChange).toHaveBeenCalledWith(null, expect.anything());
@@ -346,9 +338,9 @@ describe('CalendarPreview range parts that read the value', () => {
   it('labels a childless .Trigger with both endpoints', () => {
     const { container } = renderRange(
       { defaultValue: RANGE },
-      <CalendarPreview.Trigger />
+      <Calendar.Trigger />
     );
-    const trigger = getSlot(container, 'calendar-preview-trigger');
+    const trigger = getSlot(container, 'calendar-trigger');
     expect(trigger?.textContent).toContain('10 Aug 2026');
     expect(trigger?.textContent).toContain('20 Aug 2026');
   });
@@ -400,10 +392,10 @@ describe('CalendarPreview range parts that read the value', () => {
     const onValueChange = vi.fn();
     const { container } = renderRange(
       { defaultValue: RANGE, onValueChange },
-      <CalendarPreview.Trigger>
-        <CalendarPreview.Input field='start' readOnly />
-        <CalendarPreview.Input field='end' />
-      </CalendarPreview.Trigger>
+      <Calendar.Trigger>
+        <Calendar.Input field='start' readOnly />
+        <Calendar.Input field='end' />
+      </Calendar.Trigger>
     );
     const [start] = inputs(container);
     typeAndCommit(start, '05/08/2026');
@@ -411,11 +403,11 @@ describe('CalendarPreview range parts that read the value', () => {
   });
 });
 
-describe('CalendarPreview range order validation', () => {
+describe('Calendar range order validation', () => {
   const RANGE = { from: new Date(2026, 7, 10), to: new Date(2026, 7, 20) };
 
   const inputs = (container: HTMLElement) =>
-    getAllSlots(container, 'calendar-preview-input') as HTMLInputElement[];
+    getAllSlots(container, 'calendar-input') as HTMLInputElement[];
 
   const typeAndCommit = (input: HTMLInputElement, text: string) => {
     fireEvent.focus(input);
@@ -424,13 +416,10 @@ describe('CalendarPreview range order validation', () => {
   };
 
   const picker = (onValidityChange?: (v: unknown) => void) => (
-    <CalendarPreview.Trigger>
-      <CalendarPreview.Input
-        field='start'
-        onValidityChange={onValidityChange}
-      />
-      <CalendarPreview.Input field='end' onValidityChange={onValidityChange} />
-    </CalendarPreview.Trigger>
+    <Calendar.Trigger>
+      <Calendar.Input field='start' onValidityChange={onValidityChange} />
+      <Calendar.Input field='end' onValidityChange={onValidityChange} />
+    </Calendar.Trigger>
   );
 
   it('rejects an end typed before the start, and emits nothing', () => {
@@ -497,14 +486,14 @@ describe('CalendarPreview range order validation', () => {
     const onValidityChange = vi.fn();
     const { container } = renderRange(
       { defaultValue: RANGE },
-      <CalendarPreview.Trigger>
-        <CalendarPreview.Input field='start' />
-        <CalendarPreview.Input
+      <Calendar.Trigger>
+        <Calendar.Input field='start' />
+        <Calendar.Input
           field='end'
           errorMessages={{ 'out-of-order': 'Pick a day after the start' }}
           onValidityChange={onValidityChange}
         />
-      </CalendarPreview.Trigger>
+      </Calendar.Trigger>
     );
     const [, end] = inputs(container);
     typeAndCommit(end, '01/08/2026');
@@ -522,24 +511,24 @@ describe('CalendarPreview range order validation', () => {
   });
 });
 
-describe('CalendarPreview range with a read-only start', () => {
+describe('Calendar range with a read-only start', () => {
   const COMMITTED = { from: new Date(2026, 7, 10), to: new Date(2026, 7, 20) };
 
   function renderFixedStart(props = {}, endProps = {}) {
     return render(
-      <CalendarPreview
+      <Calendar
         selection='range'
         today={TODAY}
         defaultMonth={AUGUST}
         defaultValue={COMMITTED}
         {...props}
       >
-        <CalendarPreview.Trigger>
-          <CalendarPreview.Input field='start' readOnly />
-          <CalendarPreview.Input field='end' {...endProps} />
-        </CalendarPreview.Trigger>
-        <CalendarPreview.Days />
-      </CalendarPreview>
+        <Calendar.Trigger>
+          <Calendar.Input field='start' readOnly />
+          <Calendar.Input field='end' {...endProps} />
+        </Calendar.Trigger>
+        <Calendar.Days />
+      </Calendar>
     );
   }
 
@@ -574,26 +563,26 @@ describe('CalendarPreview range with a read-only start', () => {
   it('leaves the ordinary range machine alone when nothing is read-only', () => {
     const onValueChange = vi.fn();
     const { container } = render(
-      <CalendarPreview
+      <Calendar
         selection='range'
         today={TODAY}
         defaultMonth={AUGUST}
         defaultValue={COMMITTED}
         onValueChange={onValueChange}
       >
-        <CalendarPreview.Trigger>
-          <CalendarPreview.Input field='start' />
-          <CalendarPreview.Input field='end' />
-        </CalendarPreview.Trigger>
-        <CalendarPreview.Days />
-      </CalendarPreview>
+        <Calendar.Trigger>
+          <Calendar.Input field='start' />
+          <Calendar.Input field='end' />
+        </Calendar.Trigger>
+        <Calendar.Days />
+      </Calendar>
     );
     fireEvent.click(day(container, '25'));
     expect(onValueChange).not.toHaveBeenCalled();
   });
 });
 
-describe('CalendarPreview range and days it may not cover', () => {
+describe('Calendar range and days it may not cover', () => {
   const blocked = (date: Date) => date.getDate() === 15;
 
   it('restarts instead of completing over a blocked day', () => {
@@ -629,19 +618,16 @@ describe('CalendarPreview range and days it may not cover', () => {
     const { container } = renderRange(
       { isDateUnavailable: blocked },
       <>
-        <CalendarPreview.Trigger>
-          <CalendarPreview.Input field='start' />
-          <CalendarPreview.Input
-            field='end'
-            onValidityChange={onValidityChange}
-          />
-        </CalendarPreview.Trigger>
-        <CalendarPreview.Days />
+        <Calendar.Trigger>
+          <Calendar.Input field='start' />
+          <Calendar.Input field='end' onValidityChange={onValidityChange} />
+        </Calendar.Trigger>
+        <Calendar.Days />
       </>
     );
     fireEvent.click(day(container, '10'));
 
-    const end = getAllSlots(container, 'calendar-preview-input')[1];
+    const end = getAllSlots(container, 'calendar-input')[1];
     fireEvent.change(end, { target: { value: '20 Aug 2026' } });
     const calls = onValidityChange.mock.calls;
     const last = calls[calls.length - 1][0];
@@ -650,23 +636,23 @@ describe('CalendarPreview range and days it may not cover', () => {
   });
 });
 
-describe('CalendarPreview range emptying one field', () => {
+describe('Calendar range emptying one field', () => {
   const RANGE = { from: new Date(2026, 7, 10), to: new Date(2026, 7, 20) };
 
   function renderFields(props = {}) {
     const utils = renderRange(
       { defaultValue: RANGE, ...props },
       <>
-        <CalendarPreview.Trigger>
-          <CalendarPreview.Input field='start' />
-          <CalendarPreview.Input field='end' />
-        </CalendarPreview.Trigger>
-        <CalendarPreview.Days />
+        <Calendar.Trigger>
+          <Calendar.Input field='start' />
+          <Calendar.Input field='end' />
+        </Calendar.Trigger>
+        <Calendar.Days />
       </>
     );
     const [start, end] = getAllSlots(
       utils.container,
-      'calendar-preview-input'
+      'calendar-input'
     ) as HTMLInputElement[];
     return { ...utils, start, end };
   }
@@ -719,21 +705,21 @@ describe('CalendarPreview range emptying one field', () => {
   });
 });
 
-describe('CalendarPreview range endpoints the review left open', () => {
+describe('Calendar range endpoints the review left open', () => {
   function renderFields(props = {}) {
     const utils = renderRange(
       props,
       <>
-        <CalendarPreview.Trigger>
-          <CalendarPreview.Input field='start' />
-          <CalendarPreview.Input field='end' />
-        </CalendarPreview.Trigger>
-        <CalendarPreview.Days />
+        <Calendar.Trigger>
+          <Calendar.Input field='start' />
+          <Calendar.Input field='end' />
+        </Calendar.Trigger>
+        <Calendar.Days />
       </>
     );
     const [start, end] = getAllSlots(
       utils.container,
-      'calendar-preview-input'
+      'calendar-input'
     ) as HTMLInputElement[];
     return { ...utils, start, end };
   }
@@ -780,18 +766,18 @@ describe('CalendarPreview range endpoints the review left open', () => {
     expect(start.value).toBe('10 Aug 2026');
 
     rerender(
-      <CalendarPreview
+      <Calendar
         selection='range'
         today={TODAY}
         defaultMonth={AUGUST}
         value={{ from: new Date(2026, 7, 3), to: new Date(2026, 7, 7) }}
       >
-        <CalendarPreview.Trigger>
-          <CalendarPreview.Input field='start' />
-          <CalendarPreview.Input field='end' />
-        </CalendarPreview.Trigger>
-        <CalendarPreview.Days />
-      </CalendarPreview>
+        <Calendar.Trigger>
+          <Calendar.Input field='start' />
+          <Calendar.Input field='end' />
+        </Calendar.Trigger>
+        <Calendar.Days />
+      </Calendar>
     );
 
     expect(start.value).toBe('03 Aug 2026');

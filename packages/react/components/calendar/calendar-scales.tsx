@@ -1,8 +1,8 @@
 import { mergeProps, useRender } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { Tabs } from '../tabs';
-import styles from './calendar-preview.module.css';
-import { useCalendarPreviewContext } from './calendar-preview-context';
+import styles from './calendar.module.css';
+import { useCalendarContext } from './calendar-context';
 import type { Scale } from './lib/scale';
 
 const LABELS: Record<Scale, string> = {
@@ -13,18 +13,17 @@ const LABELS: Record<Scale, string> = {
   year: 'Year'
 };
 
-export type CalendarPreviewScalesProps = useRender.ComponentProps<'div'>;
+export type CalendarScalesProps = useRender.ComponentProps<'div'>;
 
-export function CalendarPreviewScales({
+export function CalendarScales({
   className,
   children,
   render,
   ref,
   ...props
-}: CalendarPreviewScalesProps) {
-  const { scales, scale, switchScale, disabled } = useCalendarPreviewContext(
-    'CalendarPreview.Scales'
-  );
+}: CalendarScalesProps) {
+  const { scales, scale, switchScale, disabled } =
+    useCalendarContext('Calendar.Scales');
 
   const element = useRender({
     defaultTagName: 'div',
@@ -33,7 +32,7 @@ export function CalendarPreviewScales({
     props: mergeProps<'div'>(
       {
         className: cx(styles.scales, className),
-        'data-slot': 'calendar-preview-scales',
+        'data-slot': 'calendar-scales',
         children: children ?? (
           <Tabs
             size='small'
@@ -48,7 +47,7 @@ export function CalendarPreviewScales({
                   value={one}
                   disabled={disabled}
                   className={styles.scale}
-                  data-slot='calendar-preview-scale'
+                  data-slot='calendar-scale'
                   data-scale={one}
                 >
                   {LABELS[one]}
@@ -65,24 +64,21 @@ export function CalendarPreviewScales({
   return scales.length > 1 ? element : null;
 }
 
-CalendarPreviewScales.displayName = 'CalendarPreview.Scales';
+CalendarScales.displayName = 'Calendar.Scales';
 
-export interface CalendarPreviewScaleProps
-  extends useRender.ComponentProps<'button'> {
+export interface CalendarScaleProps extends useRender.ComponentProps<'button'> {
   value: Scale;
 }
 
-export function CalendarPreviewScale({
+export function CalendarScale({
   value,
   className,
   children,
   render,
   ref,
   ...props
-}: CalendarPreviewScaleProps) {
-  const { scale, switchScale, disabled } = useCalendarPreviewContext(
-    'CalendarPreview.Scale'
-  );
+}: CalendarScaleProps) {
+  const { scale, switchScale, disabled } = useCalendarContext('Calendar.Scale');
 
   return useRender({
     defaultTagName: 'button',
@@ -92,7 +88,7 @@ export function CalendarPreviewScale({
       {
         type: 'button',
         className,
-        'data-slot': 'calendar-preview-scale',
+        'data-slot': 'calendar-scale',
         'data-scale': value,
         /* Says it is pressed rather than claiming a `tab` role with no tablist around it. */
         'aria-pressed': scale === value,
@@ -106,4 +102,4 @@ export function CalendarPreviewScale({
   });
 }
 
-CalendarPreviewScale.displayName = 'CalendarPreview.Scale';
+CalendarScale.displayName = 'Calendar.Scale';

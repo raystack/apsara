@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { defaultFormatValue } from '../calendar-preview-root';
+import { defaultFormatValue } from '../calendar-root';
 import { parseScaleInput } from '../lib/parse';
 
 /* Fixed so the year-inference tests do not change meaning on 1 January. */

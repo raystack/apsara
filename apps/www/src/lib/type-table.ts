@@ -53,7 +53,7 @@ export const generator: typeof base = {
 const isExternal = (node: SourceNode) =>
   node.getSourceFile().fileName.includes('/node_modules/');
 
-// Calendar's props extend those of react-day-picker's DayPicker.
+// Calendar.Day and Calendar.Weekday props extend react-day-picker's DayButton and Weekday props.
 const SHOWN_PACKAGES = [
   '/node_modules/@base-ui/',
   '/node_modules/react-day-picker/'

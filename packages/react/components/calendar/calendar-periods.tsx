@@ -1,9 +1,9 @@
 import { mergeProps, useRender } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { useEffect, useMemo, useRef } from 'react';
-import styles from './calendar-preview.module.css';
-import { useCalendarPreviewContext } from './calendar-preview-context';
-import { isScaleValue } from './calendar-preview-root';
+import styles from './calendar.module.css';
+import { useCalendarContext } from './calendar-context';
+import { isScaleValue } from './calendar-root';
 import {
   type DayKey,
   dayKey,
@@ -13,7 +13,7 @@ import {
 } from './date-adapter';
 import { anchorOf, periodOf, type Scale } from './lib/scale';
 
-export type CalendarPreviewPeriodViewProps = useRender.ComponentProps<'div'>;
+export type CalendarPeriodViewProps = useRender.ComponentProps<'div'>;
 
 interface Cell {
   key: string;
@@ -53,7 +53,7 @@ function PeriodView({
   render,
   ref,
   ...props
-}: CalendarPreviewPeriodViewProps & {
+}: CalendarPeriodViewProps & {
   scale: Scale;
   columns: number;
   slot: string;
@@ -70,7 +70,7 @@ function PeriodView({
     timeZone,
     disabled,
     readOnly
-  } = useCalendarPreviewContext('CalendarPreview.Periods');
+  } = useCalendarContext('Calendar.Periods');
 
   const years = useMemo(() => {
     const list: number[] = [];
@@ -133,13 +133,13 @@ function PeriodView({
                 key={year}
                 ref={year === activeYear ? activeRef : undefined}
                 className={styles['period-group']}
-                data-slot='calendar-preview-period-group'
+                data-slot='calendar-period-group'
                 data-year={year}
               >
                 {viewScale !== 'year' && (
                   <div
                     className={styles['period-year']}
-                    data-slot='calendar-preview-period-year'
+                    data-slot='calendar-period-year'
                   >
                     {year}
                   </div>
@@ -155,7 +155,7 @@ function PeriodView({
                       key={cell.key}
                       type='button'
                       className={styles.period}
-                      data-slot='calendar-preview-period'
+                      data-slot='calendar-period'
                       data-scale={viewScale}
                       data-selected={produced === selectedKey || undefined}
                       data-unavailable={unavailable || undefined}
@@ -187,52 +187,40 @@ function PeriodView({
   return isActive ? element : null;
 }
 
-export function CalendarPreviewMonths(props: CalendarPreviewPeriodViewProps) {
+export function CalendarMonths(props: CalendarPeriodViewProps) {
   return (
-    <PeriodView
-      {...props}
-      scale='month'
-      columns={3}
-      slot='calendar-preview-months'
-    />
+    <PeriodView {...props} scale='month' columns={3} slot='calendar-months' />
   );
 }
-CalendarPreviewMonths.displayName = 'CalendarPreview.Months';
+CalendarMonths.displayName = 'Calendar.Months';
 
-export function CalendarPreviewQuarters(props: CalendarPreviewPeriodViewProps) {
+export function CalendarQuarters(props: CalendarPeriodViewProps) {
   return (
     <PeriodView
       {...props}
       scale='quarter'
       columns={4}
-      slot='calendar-preview-quarters'
+      slot='calendar-quarters'
     />
   );
 }
-CalendarPreviewQuarters.displayName = 'CalendarPreview.Quarters';
+CalendarQuarters.displayName = 'Calendar.Quarters';
 
-export function CalendarPreviewHalfYears(
-  props: CalendarPreviewPeriodViewProps
-) {
+export function CalendarHalfYears(props: CalendarPeriodViewProps) {
   return (
     <PeriodView
       {...props}
       scale='half-year'
       columns={2}
-      slot='calendar-preview-half-years'
+      slot='calendar-half-years'
     />
   );
 }
-CalendarPreviewHalfYears.displayName = 'CalendarPreview.HalfYears';
+CalendarHalfYears.displayName = 'Calendar.HalfYears';
 
-export function CalendarPreviewYears(props: CalendarPreviewPeriodViewProps) {
+export function CalendarYears(props: CalendarPeriodViewProps) {
   return (
-    <PeriodView
-      {...props}
-      scale='year'
-      columns={1}
-      slot='calendar-preview-years'
-    />
+    <PeriodView {...props} scale='year' columns={1} slot='calendar-years' />
   );
 }
-CalendarPreviewYears.displayName = 'CalendarPreview.Years';
+CalendarYears.displayName = 'Calendar.Years';

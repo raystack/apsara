@@ -1,7 +1,6 @@
 'use client';
 
 import * as Apsara from '@raystack/apsara';
-import dayjs from 'dayjs';
 import {
   AlignCenter,
   AlignLeft,
@@ -114,8 +113,7 @@ export default function Demo(props: DemoProps) {
       Type,
       Underline,
       Upload,
-      X,
-      dayjs
+      X
     }
   } = props;
 

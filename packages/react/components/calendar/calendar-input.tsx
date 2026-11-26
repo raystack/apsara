@@ -2,49 +2,49 @@ import { cx } from 'class-variance-authority';
 import { type ComponentProps, useEffect, useRef, useState } from 'react';
 import { CalendarIcon } from '~/icons';
 import { Input } from '../input';
-import styles from './calendar-preview.module.css';
-import type { CalendarPreviewField } from './calendar-preview-context';
-import { useCalendarPreviewContext } from './calendar-preview-context';
+import styles from './calendar.module.css';
+import type { CalendarField } from './calendar-context';
+import { useCalendarContext } from './calendar-context';
 import {
   defaultFormatValue,
   isRange as isRangeValue,
   isScaleValue
-} from './calendar-preview-root';
-import { useTriggerInput } from './calendar-preview-trigger';
+} from './calendar-root';
+import { useTriggerInput } from './calendar-trigger';
 import { anyDayBetween, dayKey, parseKey } from './date-adapter';
 import { parseScaleInput } from './lib/parse';
 import type { Scale } from './lib/scale';
 
-export type CalendarPreviewInputInvalidReason =
+export type CalendarInputInvalidReason =
   | 'unparseable'
   | 'out-of-bounds'
   | 'unavailable'
   | 'out-of-order';
 
-export type CalendarPreviewInputValidity = {
+export type CalendarInputValidity = {
   valid: boolean;
-  reason?: CalendarPreviewInputInvalidReason;
+  reason?: CalendarInputInvalidReason;
   message?: string;
 };
 
-export interface CalendarPreviewInputProps
+export interface CalendarInputProps
   extends Omit<ComponentProps<typeof Input>, 'value' | 'defaultValue'> {
-  onValidityChange?: (validity: CalendarPreviewInputValidity) => void;
-  field?: CalendarPreviewField;
+  onValidityChange?: (validity: CalendarInputValidity) => void;
+  field?: CalendarField;
   /** @defaultValue `'Invalid input'`, except out-of-order, which words itself */
-  errorMessages?: Partial<Record<CalendarPreviewInputInvalidReason, string>>;
+  errorMessages?: Partial<Record<CalendarInputInvalidReason, string>>;
 }
 
 const DEFAULT_INVALID_MESSAGE = 'Invalid input';
 
-const DEFAULT_OUT_OF_ORDER: Record<CalendarPreviewField, string> = {
+const DEFAULT_OUT_OF_ORDER: Record<CalendarField, string> = {
   start: 'Start date cannot be after the end date',
   end: 'End date cannot be before the start date'
 };
 
-const VALID: CalendarPreviewInputValidity = { valid: true };
+const VALID: CalendarInputValidity = { valid: true };
 
-export function CalendarPreviewInput({
+export function CalendarInput({
   field = 'start',
   placeholder,
   trailingIcon = <CalendarIcon />,
@@ -57,7 +57,7 @@ export function CalendarPreviewInput({
   className,
   readOnly: readOnlyProp,
   ...props
-}: CalendarPreviewInputProps) {
+}: CalendarInputProps) {
   const {
     value,
     setValue,
@@ -85,7 +85,7 @@ export function CalendarPreviewInput({
     open,
     setActiveField,
     setFieldReadOnly
-  } = useCalendarPreviewContext('CalendarPreview.Input');
+  } = useCalendarContext('Calendar.Input');
 
   const isRange = selection === 'range';
 
@@ -102,7 +102,7 @@ export function CalendarPreviewInput({
   }, [isRange, field, readOnlyProp, setFieldReadOnly]);
 
   const [text, setText] = useState<string | null>(null);
-  const [validity, setValidity] = useState<CalendarPreviewInputValidity>(VALID);
+  const [validity, setValidity] = useState<CalendarInputValidity>(VALID);
 
   const committed = useRef(value);
 
@@ -141,8 +141,8 @@ export function CalendarPreviewInput({
   }, [value, validity.valid, onValidityChange]);
 
   const withMessage = (
-    validity: CalendarPreviewInputValidity
-  ): CalendarPreviewInputValidity =>
+    validity: CalendarInputValidity
+  ): CalendarInputValidity =>
     validity.valid
       ? validity
       : {
@@ -154,7 +154,7 @@ export function CalendarPreviewInput({
               : DEFAULT_INVALID_MESSAGE)
         };
 
-  const report = (candidate: CalendarPreviewInputValidity) => {
+  const report = (candidate: CalendarInputValidity) => {
     const next = withMessage(candidate);
     if (
       next.valid === validity.valid &&
@@ -169,7 +169,7 @@ export function CalendarPreviewInput({
 
   const resolve = (
     text: string
-  ): CalendarPreviewInputValidity | { date: Date; scale: Scale } => {
+  ): CalendarInputValidity | { date: Date; scale: Scale } => {
     const parsed = parseScaleInput(text, {
       referenceDate: today,
       trailing: trailingValue
@@ -258,7 +258,7 @@ export function CalendarPreviewInput({
   return (
     <Input
       className={cx(styles.input, className)}
-      data-slot='calendar-preview-input'
+      data-slot='calendar-input'
       placeholder={resolvedPlaceholder}
       data-field={isRange ? field : undefined}
       /* `Input` paints `data-active` as focus, so a shut popover must not mark an endpoint. */
@@ -306,4 +306,4 @@ export function CalendarPreviewInput({
   );
 }
 
-CalendarPreviewInput.displayName = 'CalendarPreview.Input';
+CalendarInput.displayName = 'Calendar.Input';

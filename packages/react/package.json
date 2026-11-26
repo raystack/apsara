@@ -132,7 +132,6 @@
     "class-variance-authority": "^0.7.1",
     "culori": "^4.0.2",
     "date-fns": "^4.1.0",
-    "dayjs": "^1.11.23",
     "marked": "^18.0.14",
     "prism-react-renderer": "^2.4.1",
     "prosemirror-commands": "^1.7.1",

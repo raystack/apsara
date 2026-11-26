@@ -16,9 +16,9 @@ import {
   useRef,
   useState
 } from 'react';
-import styles from './calendar-preview.module.css';
-import { useCalendarPreviewContext } from './calendar-preview-context';
-import { isRange } from './calendar-preview-root';
+import styles from './calendar.module.css';
+import { useCalendarContext } from './calendar-context';
+import { isRange } from './calendar-root';
 
 /* Per trigger, not per root: a childless trigger beside a `.Body` input is still a button. */
 const TriggerInputContext = createContext<{
@@ -29,14 +29,13 @@ export function useTriggerInput() {
   return useContext(TriggerInputContext);
 }
 
-export interface CalendarPreviewTriggerProps
-  extends useRender.ComponentProps<'div'> {
+export interface CalendarTriggerProps extends useRender.ComponentProps<'div'> {
   placeholder?: string;
   /** @defaultValue false */
   nativeButton?: boolean;
 }
 
-export function CalendarPreviewTrigger({
+export function CalendarTrigger({
   placeholder = 'Select date',
   nativeButton = false,
   className,
@@ -44,7 +43,7 @@ export function CalendarPreviewTrigger({
   render,
   ref,
   ...props
-}: CalendarPreviewTriggerProps) {
+}: CalendarTriggerProps) {
   const {
     value,
     formatValue,
@@ -56,7 +55,7 @@ export function CalendarPreviewTrigger({
     setTriggerHasInput,
     disabled,
     readOnly
-  } = useCalendarPreviewContext('CalendarPreview.Trigger');
+  } = useCalendarContext('Calendar.Trigger');
 
   const [inputCount, setInputCount] = useState(0);
   const hasInput = inputCount > 0;
@@ -98,7 +97,7 @@ export function CalendarPreviewTrigger({
     ...mergeProps<'div'>(
       {
         className: cx(styles.trigger, className),
-        'data-slot': 'calendar-preview-trigger',
+        'data-slot': 'calendar-trigger',
         /* Base UI adds no `tabIndex` to a rendered `div`, and around a field its role would nest a control in a button. */
         role: hasInput || nativeButton ? undefined : 'button',
         tabIndex: hasInput ? -1 : nativeButton ? undefined : 0,
@@ -149,4 +148,4 @@ export function CalendarPreviewTrigger({
   );
 }
 
-CalendarPreviewTrigger.displayName = 'CalendarPreview.Trigger';
+CalendarTrigger.displayName = 'Calendar.Trigger';

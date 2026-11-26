@@ -55,7 +55,7 @@ All components import from the root: `import { Button, Dialog } from "@raystack/
 | `Slider` | Numeric range control | `slider` |
 | `NumberField` | Numeric input with steppers | `number-field` |
 | `OTPField` | Segmented one-time-passcode input | `otp-field` |
-| `Calendar` / `DatePicker` / `RangePicker` | Date & range selection | `calendar` |
+| `Calendar` | Date, range and period selection, inline or in a popover | `calendar` |
 | `ColorPicker` (`* from color-picker`) | Color selection | `color-picker` |
 
 ## Overlays & popups

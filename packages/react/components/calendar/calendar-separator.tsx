@@ -1,15 +1,15 @@
 import { mergeProps, useRender } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import styles from './calendar-preview.module.css';
+import styles from './calendar.module.css';
 
-export type CalendarPreviewSeparatorProps = useRender.ComponentProps<'div'>;
+export type CalendarSeparatorProps = useRender.ComponentProps<'div'>;
 
-export function CalendarPreviewSeparator({
+export function CalendarSeparator({
   className,
   render,
   ref,
   ...props
-}: CalendarPreviewSeparatorProps) {
+}: CalendarSeparatorProps) {
   return useRender({
     defaultTagName: 'div',
     ref,
@@ -17,7 +17,7 @@ export function CalendarPreviewSeparator({
     props: mergeProps<'div'>(
       {
         className: cx(styles.separator, className),
-        'data-slot': 'calendar-preview-separator',
+        'data-slot': 'calendar-separator',
         role: 'separator'
       } as useRender.ComponentProps<'div'>,
       props
@@ -25,4 +25,4 @@ export function CalendarPreviewSeparator({
   });
 }
 
-CalendarPreviewSeparator.displayName = 'CalendarPreview.Separator';
+CalendarSeparator.displayName = 'Calendar.Separator';

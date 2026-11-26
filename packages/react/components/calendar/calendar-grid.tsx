@@ -26,16 +26,10 @@ import {
 } from 'react-day-picker';
 import { Skeleton } from '../skeleton';
 import { Tooltip } from '../tooltip';
-import styles from './calendar-preview.module.css';
-import {
-  useCalendarPreviewContext,
-  useCalendarPreviewDaysContext
-} from './calendar-preview-context';
-import {
-  CalendarPreviewNextMonth,
-  CalendarPreviewPrevMonth
-} from './calendar-preview-header';
-import { isScaleValue } from './calendar-preview-root';
+import styles from './calendar.module.css';
+import { useCalendarContext, useCalendarDaysContext } from './calendar-context';
+import { CalendarNextMonth, CalendarPrevMonth } from './calendar-header';
+import { isScaleValue } from './calendar-root';
 import {
   formatCaptionLabel,
   formatWeekdayLabel,
@@ -63,7 +57,7 @@ const GridRootContext = createContext<GridRootContextValue | null>(null);
 function useGridContext(part: string): GridContextValue {
   const context = useContext(GridContext);
   if (!context) {
-    throw new Error(`${part} must be used within <CalendarPreview.Grid>`);
+    throw new Error(`${part} must be used within <Calendar.Grid>`);
   }
   return context;
 }
@@ -71,13 +65,12 @@ function useGridContext(part: string): GridContextValue {
 function useGridRootContext(part: string): GridRootContextValue {
   const context = useContext(GridRootContext);
   if (!context) {
-    throw new Error(`${part} must be used within <CalendarPreview.Grid>`);
+    throw new Error(`${part} must be used within <Calendar.Grid>`);
   }
   return context;
 }
 
-export interface CalendarPreviewGridProps
-  extends useRender.ComponentProps<'div'> {
+export interface CalendarGridProps extends useRender.ComponentProps<'div'> {
   /** @defaultValue true */
   fixedWeeks?: boolean;
   /** @defaultValue false */
@@ -93,7 +86,7 @@ export interface CalendarPreviewGridProps
   loading?: boolean;
 }
 
-export function CalendarPreviewGrid({
+export function CalendarGrid({
   fixedWeeks = true,
   showOutsideDays = false,
   showWeekNumber,
@@ -109,7 +102,7 @@ export function CalendarPreviewGrid({
   ref,
   children: _children,
   ...props
-}: CalendarPreviewGridProps) {
+}: CalendarGridProps) {
   const {
     value,
     selection,
@@ -123,8 +116,8 @@ export function CalendarPreviewGrid({
     clearable,
     disabled,
     readOnly
-  } = useCalendarPreviewContext('CalendarPreview.Grid');
-  const days = useCalendarPreviewDaysContext();
+  } = useCalendarContext('Calendar.Grid');
+  const days = useCalendarDaysContext();
   const setBusy = days?.setBusy;
 
   useEffect(() => {
@@ -161,13 +154,13 @@ export function CalendarPreviewGrid({
 
   const slots = useMemo(
     () => ({
-      Root: CalendarPreviewGridRoot,
-      MonthGrid: CalendarPreviewWeeks,
-      DayButton: CalendarPreviewDay,
-      Weekday: CalendarPreviewWeekday,
-      WeekNumber: CalendarPreviewWeekNumber,
-      WeekNumberHeader: CalendarPreviewWeekNumberHeader,
-      ...(months > 1 ? { MonthCaption: CalendarPreviewMonthCaption } : {}),
+      Root: CalendarGridRoot,
+      MonthGrid: CalendarWeeks,
+      DayButton: CalendarDay,
+      Weekday: CalendarWeekday,
+      WeekNumber: CalendarWeekNumber,
+      WeekNumberHeader: CalendarWeekNumberHeader,
+      ...(months > 1 ? { MonthCaption: CalendarMonthCaption } : {}),
       ...components
     }),
     [components, months]
@@ -197,7 +190,7 @@ export function CalendarPreviewGrid({
     modifiers,
     components: slots,
     className: cx(styles.grid, className),
-    'data-slot': 'calendar-preview-grid',
+    'data-slot': 'calendar-grid',
     'data-readonly': readOnly || undefined,
     classNames: GRID_CLASS_NAMES
   } satisfies Omit<DayPickerProps, 'mode' | 'required' | 'selected'> & {
@@ -238,15 +231,15 @@ export function CalendarPreviewGrid({
   );
 }
 
-CalendarPreviewGrid.displayName = 'CalendarPreview.Grid';
+CalendarGrid.displayName = 'Calendar.Grid';
 
 /* `<DayPicker>` forwards only `className`, `style` and `data-*` to its root. */
-function CalendarPreviewGridRoot({ rootRef, ...rootProps }: RootProps) {
+function CalendarGridRoot({ rootRef, ...rootProps }: RootProps) {
   const {
     rootRender,
     rootRef: ref,
     rootProps: extra
-  } = useGridRootContext('CalendarPreview.Grid');
+  } = useGridRootContext('Calendar.Grid');
   return useRender({
     defaultTagName: 'div',
     ref,
@@ -255,20 +248,20 @@ function CalendarPreviewGridRoot({ rootRef, ...rootProps }: RootProps) {
   });
 }
 
-function CalendarPreviewWeeks(props: MonthGridProps) {
-  const { loading } = useGridContext('CalendarPreview.Grid');
-  const { readOnly } = useCalendarPreviewContext('CalendarPreview.Grid');
+function CalendarWeeks(props: MonthGridProps) {
+  const { loading } = useGridContext('Calendar.Grid');
+  const { readOnly } = useCalendarContext('Calendar.Grid');
   return (
-    <div className={styles.weeks} data-slot='calendar-preview-weeks'>
+    <div className={styles.weeks} data-slot='calendar-weeks'>
       <table
-        data-slot='calendar-preview-table'
+        data-slot='calendar-table'
         aria-busy={loading || undefined}
         aria-readonly={readOnly || undefined}
         {...props}
       />
       <div
         className={styles.skeleton}
-        data-slot='calendar-preview-skeleton'
+        data-slot='calendar-skeleton'
         data-visible={loading || undefined}
         aria-hidden='true'
       >
@@ -284,43 +277,43 @@ function CalendarPreviewWeeks(props: MonthGridProps) {
   );
 }
 
-function CalendarPreviewMonthCaption({
+function CalendarMonthCaption({
   calendarMonth,
   displayIndex,
   /* The class RDP passes here hides the caption, which this header must not be. */
   className: _className,
   ...props
 }: MonthCaptionProps) {
-  const { timeZone } = useCalendarPreviewContext('CalendarPreview.Grid');
-  const days = useCalendarPreviewDaysContext();
+  const { timeZone } = useCalendarContext('Calendar.Grid');
+  const days = useCalendarDaysContext();
 
   return (
     <div
       className={styles['month-header']}
-      data-slot='calendar-preview-month-header'
+      data-slot='calendar-month-header'
       {...props}
     >
       {displayIndex === 0 && (
-        <CalendarPreviewPrevMonth className={styles['month-header-prev']} />
+        <CalendarPrevMonth className={styles['month-header-prev']} />
       )}
       <span
         className={cx(styles.caption, styles['month-header-caption'])}
-        data-slot='calendar-preview-month-header-caption'
+        data-slot='calendar-month-header-caption'
       >
         {formatCaptionLabel(calendarMonth.date, timeZone)}
       </span>
       {displayIndex === (days?.numberOfMonths ?? 1) - 1 && (
-        <CalendarPreviewNextMonth className={styles['month-header-next']} />
+        <CalendarNextMonth className={styles['month-header-next']} />
       )}
     </div>
   );
 }
 
-export interface CalendarPreviewDayProps
+export interface CalendarDayProps
   extends DayButtonProps,
     Pick<useRender.ComponentProps<'button'>, 'render' | 'ref'> {}
 
-export function CalendarPreviewDay({
+export function CalendarDay({
   day,
   modifiers,
   className,
@@ -328,11 +321,10 @@ export function CalendarPreviewDay({
   render,
   ref,
   ...props
-}: CalendarPreviewDayProps) {
-  const { scale, readOnly } = useCalendarPreviewContext('CalendarPreview.Day');
-  const { dateInfo, tooltipMessages, showTooltip } = useGridContext(
-    'CalendarPreview.Day'
-  );
+}: CalendarDayProps) {
+  const { scale, readOnly } = useCalendarContext('Calendar.Day');
+  const { dateInfo, tooltipMessages, showTooltip } =
+    useGridContext('Calendar.Day');
 
   /* Replacing RDP's `DayButton` also replaces the effect that moves DOM focus. */
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -356,7 +348,7 @@ export function CalendarPreviewDay({
           info != null && styles['day-button-with-info'],
           className
         ),
-        'data-slot': 'calendar-preview-day',
+        'data-slot': 'calendar-day',
         'data-scale': scale,
         'data-selected': modifiers.selected || undefined,
         'data-range-start': modifiers.range_start || undefined,
@@ -371,14 +363,14 @@ export function CalendarPreviewDay({
             {info != null && (
               <span
                 className={styles['day-info']}
-                data-slot='calendar-preview-day-info'
+                data-slot='calendar-day-info'
               >
                 {info}
               </span>
             )}
             <span
               className={styles['day-number']}
-              data-slot='calendar-preview-day-number'
+              data-slot='calendar-day-number'
             >
               {children}
             </span>
@@ -396,10 +388,7 @@ export function CalendarPreviewDay({
   /* The span, not the day: a disabled button fires no pointer events. */
   if (!showTooltip) {
     return (
-      <span
-        className={styles['day-trigger']}
-        data-slot='calendar-preview-day-trigger'
-      >
+      <span className={styles['day-trigger']} data-slot='calendar-day-trigger'>
         {button}
       </span>
     );
@@ -411,14 +400,14 @@ export function CalendarPreviewDay({
         render={
           <span
             className={styles['day-trigger']}
-            data-slot='calendar-preview-day-trigger'
+            data-slot='calendar-day-trigger'
           />
         }
       >
         {button}
       </Tooltip.Trigger>
       {message != null && (
-        <Tooltip.Content side='top' data-slot='calendar-preview-day-tooltip'>
+        <Tooltip.Content side='top' data-slot='calendar-day-tooltip'>
           {message}
         </Tooltip.Content>
       )}
@@ -426,18 +415,18 @@ export function CalendarPreviewDay({
   );
 }
 
-CalendarPreviewDay.displayName = 'CalendarPreview.Day';
+CalendarDay.displayName = 'Calendar.Day';
 
-export interface CalendarPreviewWeekdayProps
+export interface CalendarWeekdayProps
   extends WeekdayProps,
     Pick<useRender.ComponentProps<'th'>, 'render' | 'ref'> {}
 
-export function CalendarPreviewWeekday({
+export function CalendarWeekday({
   className,
   render,
   ref,
   ...props
-}: CalendarPreviewWeekdayProps) {
+}: CalendarWeekdayProps) {
   return useRender({
     defaultTagName: 'th',
     ref,
@@ -445,32 +434,28 @@ export function CalendarPreviewWeekday({
     props: mergeProps<'th'>(
       {
         className: cx(styles.weekday, className),
-        'data-slot': 'calendar-preview-weekday'
+        'data-slot': 'calendar-weekday'
       } as useRender.ComponentProps<'th'>,
       props
     )
   });
 }
 
-CalendarPreviewWeekday.displayName = 'CalendarPreview.Weekday';
+CalendarWeekday.displayName = 'Calendar.Weekday';
 
-function CalendarPreviewWeekNumber({
-  week,
-  children,
-  ...props
-}: WeekNumberProps) {
-  const { showOutsideDays } = useGridContext('CalendarPreview.Grid');
+function CalendarWeekNumber({ week, children, ...props }: WeekNumberProps) {
+  const { showOutsideDays } = useGridContext('Calendar.Grid');
   /* A padding row's number counts a week the grid never showed. */
   const counts = showOutsideDays || week.days.some(day => !day.outside);
   return (
-    <th data-slot='calendar-preview-week-number' {...props}>
+    <th data-slot='calendar-week-number' {...props}>
       {counts ? children : null}
     </th>
   );
 }
 
-function CalendarPreviewWeekNumberHeader(props: WeekNumberHeaderProps) {
-  return <th data-slot='calendar-preview-week-number-header' {...props} />;
+function CalendarWeekNumberHeader(props: WeekNumberHeaderProps) {
+  return <th data-slot='calendar-week-number-header' {...props} />;
 }
 
 const GRID_FORMATTERS: DayPickerProps['formatters'] = {

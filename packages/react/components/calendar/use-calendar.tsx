@@ -1,21 +1,18 @@
 'use client';
 
 import {
-  type CalendarPreviewDraftRange,
-  useCalendarPreviewContext
-} from './calendar-preview-context';
-import {
-  type CalendarPreviewValue,
-  monthAnchor
-} from './calendar-preview-root';
+  type CalendarDraftRange,
+  useCalendarContext
+} from './calendar-context';
+import { type CalendarValue, monthAnchor } from './calendar-root';
 import type { Scale, ScaleValue } from './lib/scale';
 
 export interface UseCalendarReturn {
-  value: CalendarPreviewValue;
-  setValue: (value: CalendarPreviewValue) => void;
+  value: CalendarValue;
+  setValue: (value: CalendarValue) => void;
   scale: Scale;
   /** Never emitted. */
-  draft: CalendarPreviewDraftRange | null;
+  draft: CalendarDraftRange | null;
   /** Never emitted. */
   scaleDraft: ScaleValue | null;
   month: Date;
@@ -33,7 +30,7 @@ export function useCalendar(): UseCalendarReturn {
     month,
     setMonth,
     isDateUnavailable
-  } = useCalendarPreviewContext('useCalendar');
+  } = useCalendarContext('useCalendar');
 
   return {
     value,
