@@ -71,18 +71,13 @@
   border-top: none;
   position: relative;
 }
-.code {
-  font-family: var(--rs-font-mono);
-  font-size: var(--rs-font-size-mono-small);
-  line-height: var(--rs-line-height-mono-small);
-  letter-spacing: var(--rs-letter-spacing-mono-small);
-  overflow-wrap: anywhere;
+.fieldCode {
+  background: transparent;
+  padding: 0;
 }
-.code :global(.shiki) span {
-  color: var(--shiki-light);
-}
-:global([data-theme="dark"]) .code :global(.shiki) span {
-  color: var(--shiki-dark);
+.fieldCode :global(.token-line) > span {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .fieldLabel {

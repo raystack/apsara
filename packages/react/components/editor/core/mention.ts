@@ -7,7 +7,9 @@
 
 /** Attributes carried by a mention node. All of them survive serialization. */
 export interface MentionAttrs {
+  /** Id of the mentioned entity. */
   id: string;
+  /** Text shown on the chip. */
   label: string;
   /** Entity kind: `"project"`, `"user"`, … */
   type: string;
@@ -20,7 +22,9 @@ export interface MentionAttrs {
  * index into the derived plain text.
  */
 export interface EditorMention extends MentionAttrs {
+  /** Offset in the plain text where the chip starts. */
   start: number;
+  /** Offset in the plain text where the chip ends. */
   end: number;
 }
 

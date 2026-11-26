@@ -11,7 +11,7 @@ export interface MenuLinkItemProps
     CellBaseProps {
   /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
-  /** The link element to render, for example a router link. */
+  /** The link element to render, for example a router link. It keeps the item layout and icons. Defaults to `<a />`. */
   render?: ReactElement;
 }
 

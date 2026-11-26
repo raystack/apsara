@@ -8,7 +8,15 @@ import { Tooltip } from '../tooltip';
 import styles from './editor.module.css';
 import { useEditorStore, useStoreSelector } from './editor-context';
 
-export type EditorToolbarProps = ComponentProps<typeof Toolbar>;
+export interface EditorToolbarProps extends ComponentProps<typeof Toolbar> {
+  /**
+   * Accessible name for the toolbar.
+   * @default "Formatting"
+   */
+  'aria-label'?: string;
+  /** Whether the toolbar controls are disabled. Defaults to the `disabled` prop of `Editor`. */
+  disabled?: boolean;
+}
 
 /** Focuses the first control in a toolbar that can take focus. */
 export function focusFirstControl(root: HTMLElement | null): boolean {

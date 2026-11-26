@@ -46,10 +46,15 @@ export interface DatePickerSlotProps {
 }
 
 export interface DatePickerProps {
+  /**
+   * The dayjs format that shows the date and parses the typed text.
+   * @default "DD MMM YYYY"
+   */
   dateFormat?: string;
   /**
    * Props for each picker slot. When both this and the legacy
    * `inputProps`/`calendarProps`/`popoverProps` are set, `slotProps` wins.
+   * The picker replaces the input's `ref`, `value`, `onChange`, `onFocus`, `onBlur` and `onKeyUp`.
    */
   slotProps?: DatePickerSlotProps;
   /** @deprecated Use `slotProps.input` instead. */
@@ -58,12 +63,19 @@ export interface DatePickerProps {
   calendarProps?: DatePickerCalendarSlot;
   /** @deprecated Use `slotProps.popover` instead. */
   popoverProps?: PopoverContentProps;
+  /**
+   * Called when a day is picked, and when a typed date is committed with Enter, blur or an outside click.
+   */
   onValueChange?: (date: Date, details: DatePickerChangeDetails) => void;
   /** Called when the typed date becomes invalid or valid again. */
   onValidityChange?: (validity: CalendarPreviewInputValidity) => void;
   /** The date (controlled). `null` is a controlled empty date. */
   value?: Date | null;
+  /** The initial date (uncontrolled). */
   defaultValue?: Date;
+  /**
+   * A custom trigger. A function gets the formatted `selectedDate`. A node replaces the default input.
+   */
   children?:
     | React.ReactNode
     | ((props: { selectedDate: string }) => React.ReactNode);
@@ -72,6 +84,9 @@ export interface DatePickerProps {
    * @default false
    */
   hideCalendarIcon?: boolean;
+  /**
+   * The time zone of the calendar, as an IANA name or a UTC offset. Defaults to the local time zone.
+   */
   timeZone?: string;
 }
 

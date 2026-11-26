@@ -53,7 +53,7 @@ the drawing behind them is a choice rather than a shape you asked for:
 
 | Key | Draws |
 | --- | --- |
-| `SortAscendingIcon` / `SortDescendingIcon` | lucide `ArrowUpNarrowWide` / `ArrowDownWideNarrow` |
+| `SortDescendingIcon` | lucide `ArrowDownWideNarrow` |
 | `FilterIcon` | lucide `ListFilter` |
 | `DisplayIcon` | lucide `SlidersHorizontal` |
 | `SuccessIcon` / `WarningIcon` / `ErrorIcon` | lucide `CircleCheck` / `TriangleAlert` / `CircleX` |
@@ -285,20 +285,20 @@ The types and components behind icon overrides. `createIcon` and the `Theme` ico
 
 The `icons` prop on `Theme`.
 
-<auto-type-table path="./props.ts" name="ThemeIconProps" />
+<auto-type-table name="ThemeIconProps" type="Pick<ComponentProps<typeof Theme>, 'icons'>" />
 
 ### IconOptions
 
 The object `icons` accepts. `components` replaces drawings by key, and `props` applies to every icon.
 
-<auto-type-table path="./props.ts" name="IconOptions" />
+<auto-type-table name="IconOptions" />
 
 ### IconProvider
 
 `<Theme>` mounts this for you. Use it directly only if you want icon overrides
 without a theme scope. It takes the two halves of `IconOptions` as flat props.
 
-<auto-type-table path="./props.ts" name="IconProviderProps" />
+<auto-type-table name="IconProviderProps" />
 
 ### createIcon
 

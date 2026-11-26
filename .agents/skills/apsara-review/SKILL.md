@@ -101,7 +101,8 @@ Name the smaller form that does the same job. Line count alone proves nothing. M
 
 Flag docs and comments that the diff makes wrong or leaves out of date:
 
-- `props.ts` on the docs page does not match the component: prop names, value unions, or defaults. This file is written by hand and often drifts.
+- A new or changed prop has no JSDoc, or its JSDoc is wrong. The props tables on the docs page show the JSDoc and `@default` of each prop.
+- An `<auto-type-table>` in `index.mdx` names a type or part that no longer exists.
 - Playground controls in `demo.ts` offer values the component does not accept.
 - The Slots table in `index.mdx` does not match the `data-slot` names in the code.
 - `index.mdx` prose or examples that no longer match the behavior, or examples that no longer run.
@@ -120,7 +121,7 @@ Review the API closely: naming, consistency with nearby Apsara components and wi
 
 ### Specialist: runtime performance
 
-This is not one of the four default areas. Skip it at `low`. At `medium`, include it in the main pass when the diff likely affects runtime performance: render hot paths, large lists, virtualization (DataTable, DataView), positioning, layout measurement, scroll, resize, pointer, and keyboard handlers, observers, animations, repeated DOM reads and writes, and state updates in loops. At `high` and above, run it as its own subagent when it applies.
+This is not one of the four default areas. Skip it at `low`. At `medium`, include it in the main pass when the diff likely affects runtime performance: render hot paths, large lists, virtualization (DataView), positioning, layout measurement, scroll, resize, pointer, and keyboard handlers, observers, animations, repeated DOM reads and writes, and state updates in loops. At `high` and above, run it as its own subagent when it applies.
 
 Measure when you can: an existing perf test, a small benchmark, or a small reproduction. If you cannot measure, state the expected complexity or browser work and what would confirm it. Report findings under Bugs when users can see lag, jank, or hangs. Otherwise report them under Simplifications.
 

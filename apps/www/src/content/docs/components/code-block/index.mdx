@@ -92,37 +92,37 @@ The code sits in a root. Everything else, meaning the label, language select, co
 
 Groups all parts of the code block and manages state.
 
-<auto-type-table path="./props.ts" name="CodeBlockProps" />
+<auto-type-table name="CodeBlockProps" />
 
 ### Header
 
 Renders the optional header section for labels and controls.
 
-<auto-type-table path="./props.ts" name="CodeBlockHeaderProps" />
+<auto-type-table name="CodeBlockHeaderProps" type="ComponentProps<typeof CodeBlock.Header>" />
 
 ### Content
 
 Renders the main content area containing code blocks.
 
-<auto-type-table path="./props.ts" name="CodeBlockContentProps" />
+<auto-type-table name="CodeBlockContentProps" type="ComponentProps<typeof CodeBlock.Content>" />
 
 ### Label
 
 Renders a text label displayed in the header.
 
-<auto-type-table path="./props.ts" name="CodeBlockLabelProps" />
+<auto-type-table name="CodeBlockLabelProps" type="ComponentProps<typeof CodeBlock.Label>" />
 
 ### LanguageSelect
 
 Renders a language selection dropdown container. Set `value`, `defaultValue` and `onValueChange` on the `CodeBlock` root.
 
-<auto-type-table path="./props.ts" name="CodeBlockLanguageSelectProps" />
+<auto-type-table name="CodeBlockLanguageSelectProps" />
 
 ### LanguageSelectTrigger
 
 Renders the button that opens language selection.
 
-<auto-type-table path="./props.ts" name="CodeBlockLanguageSelectTriggerProps" />
+<auto-type-table name="CodeBlockLanguageSelectTriggerProps" type="ComponentProps<typeof CodeBlock.LanguageSelectTrigger>" />
 
 ### LanguageSelectContent
 
@@ -136,19 +136,19 @@ Renders one language in the dropdown. Selecting it shows the `CodeBlock.Code` wi
 
 Renders a button for copying code to clipboard.
 
-<auto-type-table path="./props.ts" name="CodeBlockCopyButtonProps" />
+<auto-type-table name="CodeBlockCopyButtonProps" />
 
 ### Code
 
 Renders a syntax-highlighted code block.
 
-<auto-type-table path="./props.ts" name="CodeBlockCodeProps" />
+<auto-type-table name="CodeBlockCodeProps" />
 
 ### CollapseTrigger
 
 Renders a button to expand or collapse long code blocks.
 
-<auto-type-table path="./props.ts" name="CodeBlockCollapseTriggerProps" />
+<auto-type-table name="CodeBlockCollapseTriggerProps" />
 
 ### Slots
 

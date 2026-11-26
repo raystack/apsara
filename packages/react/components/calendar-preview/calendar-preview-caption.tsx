@@ -23,8 +23,20 @@ import {
 } from './date-adapter';
 
 export type CalendarPreviewCaptionProps =
-  | ({ dropdown?: false } & useRender.ComponentProps<'span'>)
-  | ({ dropdown: true } & useRender.ComponentProps<'button'>);
+  | ({
+      /**
+       * Whether the caption opens a month and year scroller.
+       * @default false
+       */
+      dropdown?: false;
+    } & useRender.ComponentProps<'span'>)
+  | ({
+      /**
+       * Whether the caption opens a month and year scroller.
+       * @default false
+       */
+      dropdown: true;
+    } & useRender.ComponentProps<'button'>);
 
 export function CalendarPreviewCaption(props: CalendarPreviewCaptionProps) {
   return props.dropdown ? (

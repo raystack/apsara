@@ -5,6 +5,7 @@ import styles from './indicator.module.css';
 
 const indicator = cva(styles.indicator, {
   variants: {
+    /** Color of the indicator. */
     color: {
       accent: styles['indicator-color-accent'],
       attention: styles['indicator-color-attention'],
@@ -21,14 +22,19 @@ const indicator = cva(styles.indicator, {
 export interface IndicatorProps
   extends Omit<ComponentProps<'div'>, 'color'>,
     VariantProps<typeof indicator> {
+  /** Text shown in the badge. Without it, the badge shows a dot. */
   label?: string;
   /**
    * Pulses the badge to mark a live or active state.
    * @default false
    */
   pulse?: boolean;
+  /** Content that the indicator sits on. */
   children?: ReactNode;
+  /** Accessible name of the badge. Defaults to `label`, otherwise `"Indicator"`. */
   'aria-label'?: string;
+  /** CSS class applied to the badge. */
+  className?: string;
   /** @deprecated Use the `data-slot` selectors instead. */
   classNames?: {
     /** @deprecated Use `[data-slot="indicator"]` instead. */

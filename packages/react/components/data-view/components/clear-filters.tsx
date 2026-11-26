@@ -15,6 +15,7 @@ import {
 } from '../utils';
 
 export interface DataViewClearFiltersProps {
+  /** CSS class applied to the filter summary row. */
   className?: string;
 }
 
@@ -79,8 +80,8 @@ export function FilterSummary({ className }: DataViewClearFiltersProps) {
       >
         {status}
       </span>
-      {/* Matches DataTable: render only when rows are hidden by filters.
-          `isEmptyState` controls styling (bordered panel), not visibility. */}
+      {/* Renders only when rows are hidden by filters. `isEmptyState`
+          controls styling (bordered panel), not visibility. */}
       {showFilterSummary && (
         <Flex
           className={cx(

@@ -12,6 +12,8 @@ export interface MenuCheckboxItemProps
     CellBaseProps {
   /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
+  /** Custom element to render. It replaces the default layout, including the check mark and icons. */
+  render?: MenuPrimitive.CheckboxItem.Props['render'];
 }
 
 /** @remarks Only for internal usage. */

@@ -11,11 +11,29 @@ type classNameKeys =
   | 'heading'
   | 'subHeading';
 
-export interface EmptyStateProps extends ComponentProps<typeof Flex> {
+type FlexProps = ComponentProps<typeof Flex>;
+
+export interface EmptyStateProps extends FlexProps {
+  /** Direction of the main axis. Defaults to `"column"` in the compact layout, otherwise `"row"`. */
+  direction?: FlexProps['direction'];
+  /**
+   * Alignment of the items on the cross axis.
+   * @default "center"
+   */
+  align?: FlexProps['align'];
+  /** Distribution of the items on the main axis. Defaults to `"center"` in the page layout, otherwise `"start"`. */
+  justify?: FlexProps['justify'];
+  /** Space between the items. Defaults to `5` in the compact layout. */
+  gap?: FlexProps['gap'];
+  /** Icon shown at the top of the empty state. */
   icon: ReactNode;
+  /** Main heading text. */
   heading?: ReactNode;
+  /** Secondary text below the heading. */
   subHeading?: ReactNode;
+  /** Main action, for example a button or a link. */
   primaryAction?: ReactNode;
+  /** Second action, for example a button or a link. */
   secondaryAction?: ReactNode;
   /**
    * @deprecated Every key has an equivalent `[data-slot]`: `container` ->
@@ -26,6 +44,10 @@ export interface EmptyStateProps extends ComponentProps<typeof Flex> {
    * `[data-slot="empty-state-subheading"]`.
    */
   classNames?: Partial<Record<classNameKeys, string>>;
+  /**
+   * Layout of the empty state.
+   * @default "compact"
+   */
   variant?: 'compact' | 'page';
 }
 

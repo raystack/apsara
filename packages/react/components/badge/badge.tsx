@@ -7,6 +7,7 @@ import styles from './badge.module.css';
 const badge = cva(styles['badge'], {
   variants: {
     ...radiusVariants,
+    /** Color of the badge. */
     color: {
       accent: styles['badge-accent'],
       attention: styles['badge-attention'],
@@ -15,6 +16,7 @@ const badge = cva(styles['badge'], {
       neutral: styles['badge-neutral'],
       gradient: styles['badge-gradient']
     },
+    /** Size of the badge. */
     size: {
       mini: styles['badge-mini'],
       small: styles['badge-small'],
@@ -29,7 +31,9 @@ const badge = cva(styles['badge'], {
 
 export type BadgeProps = VariantProps<typeof badge> &
   ComponentProps<'span'> & {
+    /** Icon shown before the text. */
     leadingIcon?: ReactNode;
+    /** Extra text that only screen readers announce. */
     screenReaderText?: string;
   };
 

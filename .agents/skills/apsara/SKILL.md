@@ -1,6 +1,6 @@
 ---
 name: apsara
-description: Helps consume the @raystack/apsara React component library correctly in an application. Use when installing or setting up Apsara, building UI with Apsara components (Button, Dialog, Select, Menu, DataTable, Form, Tabs, Sidebar, Toast, etc.), theming (light/dark, accent/gray colors, radius, scaling), styling with design tokens, or troubleshooting Apsara component behavior. Covers install, the `Theme` component, the `--rs-*` token system, compound-component composition, and common pitfalls.
+description: Helps consume the @raystack/apsara React component library correctly in an application. Use when installing or setting up Apsara, building UI with Apsara components (Button, Dialog, Select, Menu, DataView, Form, Tabs, Sidebar, Toast, etc.), theming (light/dark, accent/gray colors, radius, scaling), styling with design tokens, or troubleshooting Apsara component behavior. Covers install, the `Theme` component, the `--rs-*` token system, compound-component composition, and common pitfalls.
 license: ISC
 metadata:
   author: raystack

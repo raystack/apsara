@@ -20,7 +20,15 @@ export interface PromptInputTextareaProps
   extends Omit<
     TextAreaProps,
     'value' | 'defaultValue' | 'onValueChange' | 'variant' | 'size' | 'rows'
-  > {}
+  > {
+  /**
+   * Text shown when the text area is empty.
+   * @default "Write a message…"
+   */
+  placeholder?: string;
+  /** Whether the text area is disabled. Defaults to the `disabled` of the root. */
+  disabled?: boolean;
+}
 
 export function PromptInputTextarea({
   className,

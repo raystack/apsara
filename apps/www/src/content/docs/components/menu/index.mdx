@@ -119,7 +119,7 @@ The Menu component is composed of several parts, each with their own props.
 
 The root element is the parent component that holds the menu. Using the `autocomplete` prop, you can enable search functionality.
 
-<auto-type-table path="./props.ts" name="MenuRootProps" />
+<auto-type-table name="MenuProps" />
 
 ### Trigger
 
@@ -129,13 +129,13 @@ By default, the click event is not propagated. You can override this behavior by
 
 Use the `render` prop to render a custom trigger element.
 
-<auto-type-table path="./props.ts" name="MenuTriggerProps" />
+<auto-type-table name="MenuTriggerProps" />
 
 ### Content
 
 The container that holds the menu items. When autocomplete is enabled, renders an inline search input inside the popup with a search input.
 
-<auto-type-table path="./props.ts" name="MenuContentProps" />
+<auto-type-table name="MenuContentProps" />
 
 ### Item
 
@@ -143,55 +143,55 @@ Individual clickable options within the menu. Built on top of [Base UI Menu.Item
 
 In a searchable menu, the item matches by its rendered text, including text in `leadingIcon` and `trailingIcon`. Pass `label` to match other text in its place.
 
-<auto-type-table path="./props.ts" name="MenuItemProps" />
+<auto-type-table name="MenuItemProps" />
 
 ### CheckboxItem
 
 A menu item that toggles a setting on or off. Renders a check mark before the label when checked. Built on [Base UI Menu.CheckboxItem](https://base-ui.com/react/components/menu).
 
-<auto-type-table path="./props.ts" name="MenuCheckboxItemProps" />
+<auto-type-table name="MenuCheckboxItemProps" />
 
 ### RadioGroup
 
 Groups related radio items and holds the selected value.
 
-<auto-type-table path="./props.ts" name="MenuRadioGroupProps" />
+<auto-type-table name="MenuRadioGroupProps" />
 
 ### RadioItem
 
 A menu item that works like a radio button in a `Menu.RadioGroup`. Renders a dot before the label when checked.
 
-<auto-type-table path="./props.ts" name="MenuRadioItemProps" />
+<auto-type-table name="MenuRadioItemProps" />
 
 ### LinkItem
 
 A menu item that renders an `<a>` element. Built on [Base UI Menu.LinkItem](https://base-ui.com/react/components/menu).
 
-<auto-type-table path="./props.ts" name="MenuLinkItemProps" />
+<auto-type-table name="MenuLinkItemProps" />
 
 ### Group
 
 A way to group related menu items together. When filtering is active, a group with no matching items is hidden.
 
-<auto-type-table path="./props.ts" name="MenuGroupProps" />
+<auto-type-table name="MenuGroupProps" type="ComponentProps<typeof Menu.Group>" />
 
 ### Label
 
 Renders a label in a menu group. This component should be wrapped with Menu.Group so the `aria-labelledby` is correctly set on the group element.
 
-<auto-type-table path="./props.ts" name="MenuLabelProps" />
+<auto-type-table name="MenuLabelProps" type="ComponentProps<typeof Menu.Label>" />
 
 ### Separator
 
 Visual divider between menu items or groups. In `autocompleteMode="auto"`, it is hidden while the search input has text.
 
-<auto-type-table path="./props.ts" name="MenuSeparatorProps" />
+<auto-type-table name="MenuSeparatorProps" type="ComponentProps<typeof Menu.Separator>" />
 
 ### EmptyState
 
 Placeholder content when there are no menu items to display. In a searchable menu, it shows only when no item matches the search.
 
-<auto-type-table path="./props.ts" name="MenuEmptyStateProps" />
+<auto-type-table name="MenuEmptyStateProps" />
 
 ### Submenu
 
@@ -199,7 +199,7 @@ Wraps a submenu root. Use with `Menu.SubmenuTrigger` and `Menu.SubmenuContent` t
 
 Supports its own `autocomplete` prop to enable search functionality within the submenu independently from the parent menu.
 
-<auto-type-table path="./props.ts" name="MenuSubMenuProps" />
+<auto-type-table name="MenuSubMenuProps" />
 
 ### SubmenuTrigger
 
@@ -207,13 +207,13 @@ The trigger item for a submenu. Renders with a trailing chevron icon by default.
 
 In a searchable parent menu, the trigger matches by its text, or by its `label` when set. The parent search does not match items inside the submenu.
 
-<auto-type-table path="./props.ts" name="MenuSubTriggerProps" />
+<auto-type-table name="MenuSubTriggerProps" />
 
 ### SubmenuContent
 
 The content container for a submenu. Shares the same API as `Menu.Content` with a default `sideOffset` of `2`.
 
-<auto-type-table path="./props.ts" name="MenuSubContentProps" />
+<auto-type-table name="MenuSubContentProps" type="ComponentProps<typeof Menu.SubmenuContent>" />
 
 ### Slots
 

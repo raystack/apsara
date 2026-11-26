@@ -14,8 +14,17 @@ export interface ContextMenuContentProps
       'render' | 'className' | 'style'
     >,
     ContextMenuPrimitive.Popup.Props {
+  /**
+   * Placeholder and accessible name of the search input. An empty value uses "Search" as the accessible name.
+   * @default "Search..."
+   */
   searchPlaceholder?: string;
-  /** Corner radius for this menu only. Overrides the theme's `radius`. */
+  /**
+   * Distance between the anchor and the popup in pixels.
+   * @default 4
+   */
+  sideOffset?: ContextMenuPrimitive.Positioner.Props['sideOffset'];
+  /** Corner radius for this menu only. Defaults to the theme's `radius`. */
   radius?: Radius;
 }
 
@@ -81,7 +90,22 @@ export const ContextMenuContent = ({
 };
 ContextMenuContent.displayName = 'ContextMenu.Content';
 
+interface ContextMenuSubContentProps extends ContextMenuContentProps {
+  /**
+   * Which side of the anchor element to align the submenu against.
+   * @default "inline-end"
+   */
+  side?: ContextMenuPrimitive.Positioner.Props['side'];
+  /**
+   * Distance between the anchor and the submenu in pixels.
+   * @default 2
+   */
+  sideOffset?: ContextMenuPrimitive.Positioner.Props['sideOffset'];
+}
+
 export const ContextMenuSubContent = ({
   ...props
-}: ContextMenuContentProps) => <ContextMenuContent sideOffset={2} {...props} />;
+}: ContextMenuSubContentProps) => (
+  <ContextMenuContent sideOffset={2} {...props} />
+);
 ContextMenuSubContent.displayName = 'ContextMenu.SubContent';

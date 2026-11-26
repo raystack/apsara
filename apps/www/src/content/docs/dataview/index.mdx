@@ -238,15 +238,15 @@ Fields, sort and query are the shapes the root takes. The sibling components bel
 
 ### Root
 
-<auto-type-table path="./props.ts" name="DataViewProps" />
+<auto-type-table name="DataViewProps" />
 
 ### Field
 
-<auto-type-table path="./props.ts" name="DataViewField" />
+<auto-type-table name="DataViewField" />
 
 ### Sort
 
-<auto-type-table path="./props.ts" name="DataViewSort" />
+<auto-type-table name="DataViewSort" />
 
 ### Query
 
@@ -254,45 +254,45 @@ The shape `query` and `defaultQuery` accept and `onQueryChange` hands back. In [
 
 Pass `defaultQuery` to set only the first query. Pass `query` with `onQueryChange` to own the query, for example to keep it in the URL. A new `query` from outside updates the view without a call to `onQueryChange`.
 
-<auto-type-table path="./props.ts" name="DataViewQuery" />
+<auto-type-table name="DataViewQuery" />
 
 ### View spec
 
-<auto-type-table path="./props.ts" name="ViewSpec" />
+<auto-type-table name="ViewSpec" />
 
 ### DataView.Custom
 
-<auto-type-table path="./props.ts" name="DataViewCustomProps" />
+<auto-type-table name="DataViewCustomProps" />
 
 ### DataView.DisplayAccess
 
-<auto-type-table path="./props.ts" name="DataViewDisplayAccessProps" />
+<auto-type-table name="DataViewDisplayAccessProps" />
 
 ### DataView.EmptyState
 
-<auto-type-table path="./props.ts" name="DataViewEmptyStateProps" />
+<auto-type-table name="DataViewEmptyStateProps" />
 
 ### DataView.ZeroState
 
-<auto-type-table path="./props.ts" name="DataViewZeroStateProps" />
+<auto-type-table name="DataViewZeroStateProps" />
 
 ### DataView.Filters
 
 The row of applied filter chips and the add-filter menu. `align`, `side`, and `sideOffset` position the menu.
 
-<auto-type-table path="./props.ts" name="DataViewFiltersProps" />
+<auto-type-table name="DataViewFiltersProps" />
 
 ### DataView.DisplayControls
 
 The popover housing the view switcher, Ordering, Grouping, and Display Properties. The view switcher appears at the top whenever `views.length > 1`. Each section can be hidden individually. `align`, `side`, and `sideOffset` position the popover.
 
-<auto-type-table path="./props.ts" name="DataViewDisplayControlsProps" />
+<auto-type-table name="DataViewDisplayControlsProps" />
 
 ### DataView.ClearFilters
 
 A context-driven "Clear Filters" affordance for the empty state. Place it as a sibling of your renderer, separate from `DataView.EmptyState`. It renders a bordered panel when a query returns no rows, and nothing otherwise. The flat footer for the data state is rendered automatically by `DataView.List`.
 
-<auto-type-table path="./props.ts" name="DataViewClearFiltersProps" />
+<auto-type-table name="DataViewClearFiltersProps" />
 
 ### Slots
 

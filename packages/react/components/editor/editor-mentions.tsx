@@ -19,12 +19,12 @@ import { useEditorSuggestion } from './use-editor-suggestion';
 export interface EditorMentionsProps {
   /**
    * The character that opens the menu.
-   * @default '@'
+   * @default "@"
    */
   trigger?: string;
   /** Sync data, filtered on the label. */
   items?: EditorMentionItem[];
-  /** Async data. Debounced, with superseded requests aborted through `signal`. Wins over `items`. */
+  /** Async data. Debounced by 150 ms, with superseded requests aborted through `signal`. Wins over `items`. */
   onSearch?: (
     query: string,
     context: { trigger: string; signal: AbortSignal }
@@ -33,7 +33,7 @@ export interface EditorMentionsProps {
   resolveMentions?: (refs: EditorMentionRef[]) => Promise<EditorMentionItem[]>;
   /**
    * Shown when nothing matches the query.
-   * @default 'No results'
+   * @default "No results"
    */
   emptyMessage?: ReactNode;
   /**

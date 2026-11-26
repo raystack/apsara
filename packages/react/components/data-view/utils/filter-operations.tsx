@@ -2,7 +2,6 @@ import type { FilterFn } from '@tanstack/table-core';
 
 import { dateFilterFns, toDayKey } from '~/shared/date-filters';
 import {
-  DataTableFilterOperatorTypes,
   DateFilterOperatorType,
   EmptyFilterValue,
   FilterDataType,
@@ -16,6 +15,7 @@ import {
   StringFilterOperatorType
 } from '~/types/filters';
 import type {
+  DataViewFilterOperatorTypes,
   DataViewFilterValue,
   DataViewFilterValues
 } from '../data-view.types';
@@ -109,7 +109,7 @@ const toStringValue = (value: DataViewFilterValue) =>
 const handleStringBasedTypes = (
   filterType: FilterTypes,
   value: DataViewFilterValue,
-  operator?: FilterOperatorTypes | DataTableFilterOperatorTypes
+  operator?: FilterOperatorTypes | DataViewFilterOperatorTypes
 ): DataViewFilterValues => {
   switch (filterType) {
     case FilterType.date: {
@@ -152,7 +152,7 @@ export const getFilterOperator = ({
   value: DataViewFilterValue;
   filterType?: FilterTypes;
   operator: FilterOperatorTypes;
-}): DataTableFilterOperatorTypes => {
+}): DataViewFilterOperatorTypes => {
   if (value === EmptyFilterValue && filterType === FilterType.select)
     return 'empty';
   if (
@@ -163,7 +163,7 @@ export const getFilterOperator = ({
   ) {
     return 'ilike';
   }
-  return operator as DataTableFilterOperatorTypes;
+  return operator as DataViewFilterOperatorTypes;
 };
 
 export const getFilterValue = ({
@@ -175,7 +175,7 @@ export const getFilterValue = ({
   value: DataViewFilterValue;
   dataType?: FilterDataType;
   filterType?: FilterTypes;
-  operator?: FilterOperatorTypes | DataTableFilterOperatorTypes;
+  operator?: FilterOperatorTypes | DataViewFilterOperatorTypes;
 }): DataViewFilterValues => {
   if (dataType === 'boolean') return { boolValue: value as boolean, value };
   if (dataType === 'number') return { numberValue: value as number, value };

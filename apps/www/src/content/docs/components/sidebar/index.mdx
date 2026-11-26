@@ -189,7 +189,7 @@ Header, main and footer, with groups and items inside. `useSidebar` reads the st
 
 Groups all parts of the sidebar navigation. Use `collapsible` to choose what the collapsed state looks like (`"icon"` or `"hidden"`), or `"none"` to hide the resize handle and prevent toggling. `hideItemTooltips` disables the tooltips the Sidebar adds to items (collapsed labels, and clipped labels when expanded), and `peekOnHover` previews a collapsed sidebar on hover.
 
-<auto-type-table path="./props.ts" name="SidebarRootProps" />
+<auto-type-table name="SidebarProps" />
 
 ### Header
 
@@ -201,13 +201,13 @@ The main section wraps navigation groups and items. It accepts all `div` props a
 
 ### Group
 
-<auto-type-table path="./props.ts" name="SidebarGroupProps" />
+<auto-type-table name="SidebarGroupProps" />
 
 ### Item
 
 *Note: `leadingIcon` is optional and will show a fallback avatar only in collapsed state. You can pass `<></>` to render truly nothing. Use the `render` prop to render as a custom element (e.g. a router `Link`).*
 
-<auto-type-table path="./props.ts" name="SidebarItemProps" />
+<auto-type-table name="SidebarItemProps" />
 
 ### Footer
 
@@ -219,7 +219,7 @@ A button that toggles the sidebar open/closed. It works whether the Sidebar is c
 
 *Note: disabled automatically when the Sidebar has `collapsible="none"`. If you use `collapsible="hidden"`, don't place `Sidebar.Trigger` inside `Sidebar.Header`/`Main`/`Footer`, because those sections are hidden along with the rest of the collapsed content, taking the trigger with them. Render it as a direct child of `<Sidebar>` instead, or use [external control](#external-control).*
 
-<auto-type-table path="./props.ts" name="SidebarTriggerProps" />
+<auto-type-table name="SidebarTriggerProps" />
 
 ### More
 
@@ -227,7 +227,7 @@ Renders a sidebar row that opens an Apsara menu with additional `Sidebar.Item` e
 
 *Note: if `leadingIcon` is not provided, the trigger uses a default dots icon. In collapsed state, it follows the same item tooltip behavior and respects `hideItemTooltips`.*
 
-<auto-type-table path="./props.ts" name="SidebarMoreProps" />
+<auto-type-table name="SidebarMoreProps" />
 
 ### Slots
 

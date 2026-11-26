@@ -28,7 +28,12 @@ MenuRadioGroup.displayName = 'Menu.RadioGroup';
 
 export interface MenuRadioItemProps
   extends MenuPrimitive.RadioItem.Props,
-    CellBaseProps {}
+    CellBaseProps {
+  /** Value of the radio item. When it is a string, the search also matches it. */
+  value: MenuPrimitive.RadioItem.Props['value'];
+  /** Custom element to render. It replaces the default layout, including the radio dot and icons. */
+  render?: MenuPrimitive.RadioItem.Props['render'];
+}
 
 /** @remarks Only for internal usage. */
 export function RadioItemBase({

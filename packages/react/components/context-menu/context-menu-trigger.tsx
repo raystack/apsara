@@ -1,6 +1,7 @@
 'use client';
 
 import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react';
+import type { ReactNode } from 'react';
 import { ChevronRightIcon } from '~/icons';
 import { Cell, CellBaseProps } from '../menu/cell';
 
@@ -24,6 +25,8 @@ export interface ContextMenuSubTriggerProps
     CellBaseProps {
   /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
+  /** Icon after the trigger text. Defaults to a right chevron. */
+  trailingIcon?: ReactNode;
 }
 
 export const ContextMenuSubTrigger = ({

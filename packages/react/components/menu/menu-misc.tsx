@@ -50,6 +50,7 @@ export function MenuSeparator({ className, ...props }: ComponentProps<'div'>) {
 MenuSeparator.displayName = 'Menu.Separator';
 
 export interface MenuEmptyStateProps extends ComponentProps<'div'> {
+  /** Content to show when no item matches the search. */
   children: ReactNode;
 }
 

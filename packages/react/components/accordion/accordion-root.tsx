@@ -15,9 +15,16 @@ type NotArray<Value> = Value extends readonly unknown[] ? never : Value;
 type SingleValue<Value> = Value extends readonly unknown[] ? never : Value | '';
 
 type AccordionSingleProps<Value> = AccordionBaseProps<Value> & {
+  /**
+   * Whether more than one item can be open at the same time.
+   * @default false
+   */
   multiple?: false;
+  /** The controlled value: one value, or `''` when all items are closed. With `multiple`, an array of values. */
   value?: SingleValue<Value>;
+  /** The uncontrolled value on first render: one value, or an array of values with `multiple`. */
   defaultValue?: NotArray<Value>;
+  /** Called when the value changes. Without `multiple`, it receives `''` when every item closes. */
   onValueChange?: (
     value: Value | '',
     eventDetails: AccordionPrimitive.Root.ChangeEventDetails
@@ -25,9 +32,16 @@ type AccordionSingleProps<Value> = AccordionBaseProps<Value> & {
 };
 
 type AccordionMultipleProps<Value> = AccordionBaseProps<Value> & {
+  /**
+   * Whether more than one item can be open at the same time.
+   * @default false
+   */
   multiple: true;
+  /** The controlled value: one value, or `''` when all items are closed. With `multiple`, an array of values. */
   value?: Value[];
+  /** The uncontrolled value on first render: one value, or an array of values with `multiple`. */
   defaultValue?: Value[];
+  /** Called when the value changes. Without `multiple`, it receives `''` when every item closes. */
   onValueChange?: (
     value: Value[],
     eventDetails: AccordionPrimitive.Root.ChangeEventDetails

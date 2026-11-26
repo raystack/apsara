@@ -3,10 +3,12 @@
 import { mergeProps, useRender } from '@base-ui/react';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import {
+  AriaRole,
   Children,
   ComponentProps,
   createContext,
   isValidElement,
+  MouseEventHandler,
   ReactNode,
   useContext
 } from 'react';
@@ -17,14 +19,17 @@ import styles from './chip.module.css';
 const chip = cva(styles.chip, {
   variants: {
     ...radiusVariants,
+    /** Visual style of the chip. */
     variant: {
       outline: styles['chip-variant-outline'],
       solid: styles['chip-variant-solid']
     },
+    /** Size of the chip. */
     size: {
       mini: styles['chip-size-mini'],
       small: styles['chip-size-small']
     },
+    /** Color of the chip. `danger`, `success` and `attention` show a status. */
     color: {
       neutral: styles['chip-color-neutral'],
       accent: styles['chip-color-accent'],
@@ -44,12 +49,29 @@ const ChipContext = createContext<{ label?: string; disabled?: boolean }>({});
 
 export type ChipProps = useRender.ComponentProps<'span'> &
   VariantProps<typeof chip> & {
+    /** Icon shown after the label. */
     trailingIcon?: ReactNode;
+    /** Icon shown before the label. */
     leadingIcon?: ReactNode;
+    /**
+     * Whether the chip is disabled. A disabled chip ignores pointer clicks.
+     * @default false
+     */
     disabled?: boolean;
+    /** ARIA role of the chip. Defaults to `"status"`, unless the chip renders a button. */
+    role?: AriaRole;
+    /** Accessible name of the chip. Defaults to the text in `children`. */
+    'aria-label'?: string;
   };
 
-export type ChipRemoveProps = useRender.ComponentProps<'button'>;
+export type ChipRemoveProps = useRender.ComponentProps<'button'> & {
+  /** Called when the button is clicked. The click does not reach the chip. */
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  /** Accessible name of the button. Defaults to `"Remove"` plus the chip label. */
+  'aria-label'?: string;
+  /** Content of the button. Defaults to an X icon. */
+  children?: ReactNode;
+};
 
 function getTextLabel(children: ReactNode) {
   const text = Children.toArray(children)

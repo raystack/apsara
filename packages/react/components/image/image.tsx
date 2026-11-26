@@ -9,6 +9,7 @@ import styles from './image.module.css';
 
 const image = cva(styles.image, {
   variants: {
+    /** How the image fills its box. Sets `object-fit`. */
     fit: {
       contain: styles['image-contain'],
       cover: styles['image-cover'],
@@ -26,6 +27,26 @@ const image = cva(styles.image, {
 export interface ImageProps
   extends ComponentProps<'img'>,
     VariantProps<typeof image> {
+  /**
+   * Alternative text. Pass `""` for a decorative image.
+   * @default ""
+   */
+  alt?: string;
+  /** Width of the image. Sets the CSS `width`, not the `width` attribute. */
+  width?: number | string;
+  /** Height of the image. Sets the CSS `height`, not the `height` attribute. */
+  height?: number | string;
+  /**
+   * When the browser loads the image.
+   * @default "lazy"
+   */
+  loading?: 'eager' | 'lazy';
+  /**
+   * How the browser decodes the image.
+   * @default "async"
+   */
+  decoding?: 'async' | 'auto' | 'sync';
+  /** URL of an image to show when `src` fails to load. */
   fallback?: string;
 }
 

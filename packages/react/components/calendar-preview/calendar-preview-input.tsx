@@ -1,5 +1,11 @@
 import { cx } from 'class-variance-authority';
-import { type ComponentProps, useEffect, useRef, useState } from 'react';
+import {
+  type ComponentProps,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import { CalendarIcon } from '~/icons';
 import { Input } from '../input';
 import styles from './calendar-preview.module.css';
@@ -29,10 +35,31 @@ export type CalendarPreviewInputValidity = {
 
 export interface CalendarPreviewInputProps
   extends Omit<ComponentProps<typeof Input>, 'value' | 'defaultValue'> {
+  /**
+   * Called when the typed text becomes invalid or valid again. `message` comes from `errorMessages` and is absent while valid.
+   */
   onValidityChange?: (validity: CalendarPreviewInputValidity) => void;
+  /**
+   * The range endpoint this input edits, at `selection="range"`.
+   * @default "start"
+   */
   field?: CalendarPreviewField;
-  /** @defaultValue `'Invalid input'`, except out-of-order, which words itself */
+  /**
+   * The message for each invalid reason. A reason left out keeps its default: `Invalid input`, or a start or end message for `out-of-order`.
+   */
   errorMessages?: Partial<Record<CalendarPreviewInputInvalidReason, string>>;
+  /**
+   * Text shown when the input is empty. Defaults to `Select date` (`Select start date` or `Select end date` in a range), or to examples when the root offers a scale other than `"day"`.
+   */
+  placeholder?: string;
+  /** Icon at the end of the input. Defaults to a calendar icon. `null` shows no icon. */
+  trailingIcon?: ReactNode;
+  /** Whether the input is disabled. Defaults to the root's `disabled`. */
+  disabled?: boolean;
+  /**
+   * Whether the text cannot be typed. At `selection="range"`, the grid also cannot change this endpoint.
+   */
+  readOnly?: boolean;
 }
 
 const DEFAULT_INVALID_MESSAGE = 'Invalid input';
