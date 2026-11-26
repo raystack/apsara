@@ -95,7 +95,7 @@ The same header, body and footer shell as [Dialog](/docs/components/dialog), anc
 
 Groups all parts of the drawer. Its `side` prop sets the swipe-to-dismiss direction. `Drawer.Content` has its own `side`, which places the panel. Set both to the same edge.
 
-<auto-type-table path="./props.ts" name="DrawerProps" />
+<auto-type-table name="DrawerProps" />
 
 ### Trigger
 
@@ -113,7 +113,7 @@ Renders a button that closes the drawer. `Drawer.Content` already renders one un
 
 Renders the drawer panel that slides in from a screen edge.
 
-<auto-type-table path="./props.ts" name="DrawerContentProps" />
+<auto-type-table name="DrawerContentProps" />
 
 ### Header
 
@@ -140,19 +140,17 @@ Renders the drawer panel that slides in from a screen edge.
 
 An invisible edge zone that opens the drawer on swipe. Place it inside `Drawer`.
 
-<auto-type-table path="./props.ts" name="DrawerSwipeAreaProps" />
+<auto-type-table name="DrawerSwipeAreaProps" />
 
 ### Provider
 
-Tracks whether any drawer inside it is open. It renders no element. `Drawer.Indent` needs it.
-
-<auto-type-table path="./props.ts" name="DrawerProviderProps" />
+Tracks whether any drawer inside it is open. It renders no element. Put the app content inside it. `Drawer.Indent` needs it.
 
 ### Indent
 
 Wraps your app content and renders the background layer before it. It scales down while a drawer is open. Place it inside `Drawer.Provider`.
 
-<auto-type-table path="./props.ts" name="DrawerIndentProps" />
+<auto-type-table name="DrawerIndentProps" />
 
 ### Slots
 

@@ -40,7 +40,8 @@ Skills are in `.agents/skills/`. `.claude/skills` is a symlink to that folder, s
 ## Docs
 
 - When you change props, variants, or behavior, update the docs page.
-- `props.ts` is written by hand, not generated, and `<auto-type-table>` renders it. Check each prop name and value against the component. The two often get out of sync.
+- Props tables come from the component types. `<auto-type-table name="DialogContentProps" />` reads a type exported from `@raystack/apsara`. For a part with no exported type, use `<auto-type-table name="DialogTitleProps" type="ComponentProps<typeof Dialog.Title>" />`.
+- A table shows the props that Apsara, Base UI, or react-day-picker declare, and `className`. Each row takes its description from the prop's JSDoc and its default from `@default` or the cva `defaultVariants`. To fix a row, fix the JSDoc in the component source. `apps/www/src/lib/type-table.ts` has the rules.
 - `demo.ts` exports demo objects: `{ type: 'code', code }` for examples and `{ type: 'playground', controls, getCode }` for the playground. The code strings render live with the library in scope.
 - Set `defaultValue` on playground controls. The generated code then leaves out props that are at their default.
 

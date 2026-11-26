@@ -54,8 +54,9 @@ packages/react/
 apps/www/src/content/docs/components/<name>/
   index.mdx               Page content
   demo.ts                 Live examples and the playground
-  props.ts                Prop types, rendered by <auto-type-table>
 ```
+
+`<auto-type-table>` in `index.mdx` renders a props table from the component types. The JSDoc of each prop is its description.
 
 Component pages sort alphabetically. Other sections, such as `theme`, set their order in `meta.json`.
 
