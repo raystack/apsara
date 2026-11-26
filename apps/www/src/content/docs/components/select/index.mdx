@@ -114,25 +114,27 @@ The Select component is composed of several parts, each with their own props.
 
 The root element is the parent component that holds the select. Using the `autocomplete` prop, you can enable autocomplete functionality.
 
-<auto-type-table path="./props.ts" name="SelectRootProps" />
+<auto-type-table name="SelectProps" />
 
 ### Trigger
 
 The button that triggers the Select.
 
-<auto-type-table path="./props.ts" name="SelectTriggerProps" />
+<auto-type-table name="SelectTriggerProps" />
 
 ### Value
 
 Shows the selected item's label and icon in the trigger, or the placeholder when no item is selected.
 
-<auto-type-table path="./props.ts" name="SelectValueProps" />
+A value with no matching `Select.Item` shows its raw value.
+
+<auto-type-table name="SelectValueProps" />
 
 ### Content
 
 The container that holds the Select items. It passes the Base UI Positioner props, such as `collisionPadding` and `sticky`, to the positioner.
 
-<auto-type-table path="./props.ts" name="SelectContentProps" />
+<auto-type-table name="SelectContentProps" />
 
 Set `alignItemWithTrigger` to open the list over the trigger, with the selected item lined up on the trigger's value. Base UI turns it off for touch input and when there is not enough space, and then places the list the normal way. `side` and `align` only apply when the list is placed the normal way.
 
@@ -140,37 +142,37 @@ Set `alignItemWithTrigger` to open the list over the trigger, with the selected 
 
 Individual clickable options within the Select.
 
-<auto-type-table path="./props.ts" name="SelectItemProps" />
+<auto-type-table name="SelectItemProps" />
 
 ### Group
 
 A way to group related Select items together.
 
-<auto-type-table path="./props.ts" name="SelectGroupProps" />
+<auto-type-table name="SelectGroupProps" />
 
 ### Label
 
 A visible label linked to the trigger.
 
-<auto-type-table path="./props.ts" name="SelectLabelProps" />
+<auto-type-table name="SelectLabelProps" />
 
 ### GroupLabel
 
 The label of a `Select.Group`. Use it only inside `Select.Group`.
 
-<auto-type-table path="./props.ts" name="SelectGroupLabelProps" />
+<auto-type-table name="SelectGroupLabelProps" />
 
 ### Empty
 
 Shows its content when the list has no items, or when no item matches the search in autocomplete mode. Place it inside `Select.Content`.
 
-<auto-type-table path="./props.ts" name="SelectEmptyProps" />
+<auto-type-table name="SelectEmptyProps" />
 
 ### Separator
 
 Visual divider between Select items or groups.
 
-<auto-type-table path="./props.ts" name="SelectSeparatorProps" />
+<auto-type-table name="SelectSeparatorProps" />
 
 ### Slots
 

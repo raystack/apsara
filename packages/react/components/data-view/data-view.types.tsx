@@ -103,33 +103,62 @@ export interface DataViewField<TData = unknown> {
   accessorKey: Extract<keyof TData, string> | (string & {});
   /** Human-readable label shown in filter chips, Display controls, and the default Table header. */
   label: string;
+  /** Icon for the field. No built-in DataView part renders it. */
   leadingIcon?: React.ReactNode;
 
   // filter capability
+  /** Whether the add-filter menu offers this field. */
   filterable?: boolean;
+  /**
+   * Input type of the field's filter.
+   * @default "string"
+   */
   filterType?: FilterTypes;
+  /**
+   * Value type of a `select` or `multiselect` filter.
+   * @default "string"
+   */
   dataType?: FilterDataType;
+  /**
+   * Options of a `select` or `multiselect` filter. While this is empty, the
+   * add-filter menu leaves out the field, and its trigger is disabled when no
+   * other field is left.
+   */
   filterOptions?: FilterSelectOption[];
   /**
    * Operations the filter chip offers. An array replaces the operations of the
-   * filter type, a function receives them and returns the list to use.
+   * filter type, a function receives them and returns the list to use. An
+   * empty result falls back to the operations of the filter type.
    * @default the operations of the filter type
    */
   filterOperations?: FilterOperations;
+  /**
+   * Value a new filter on this field starts with. When it is not set or
+   * `null`, a `date` filter starts with today, a `select` filter with its
+   * first option, and other filters with `""`.
+   */
   defaultFilterValue?: DataViewFilterValue;
+  /** Props for the filter's control. The `Select` of a `select` or `multiselect` filter receives `select`. */
   filterProps?: {
     select?: BaseSelectProps;
   };
 
   // ordering / grouping / visibility capability
+  /** Whether the Ordering control offers this field. */
   sortable?: boolean;
+  /** Whether the Grouping control offers this field. */
   groupable?: boolean;
+  /** Whether Display Properties can show and hide this field. */
   hideable?: boolean;
+  /** Whether the field is hidden on the first render. */
   defaultHidden?: boolean;
 
   // group-header presentation (used by any renderer that groups)
+  /** Whether group headers show the item count next to the label. */
   showGroupCount?: boolean;
+  /** Count shown next to each group header when `showGroupCount` is set, by raw group value. A group not in the map shows its row count. */
   groupCountMap?: Record<string, number>;
+  /** Labels of the group headers, by raw group value. A group not in the map shows its raw value. */
   groupLabelsMap?: Record<string, string>;
   /**
    * Section order when this field is the active `group_by`, keyed by raw group
@@ -150,12 +179,20 @@ export interface DataViewField<TData = unknown> {
  * when headers are visible (default for `variant="table"`).
  */
 export interface DataViewListColumn<TData, TValue = unknown> {
+  /**
+   * The `accessorKey` of the field the column shows. A key that no field has
+   * makes a column that is always shown, for example for row actions.
+   */
   accessorKey: string;
   /** TanStack-style cell renderer. */
   cell?: ColumnDef<TData, TValue>['cell'];
   /** TanStack-style header renderer. Overrides the field's `label`. */
   header?: ColumnDef<TData, TValue>['header'];
-  /** CSS grid track width. `1fr`, `auto`, `'200px'`, `'minmax(80px, 1fr)'`, or a number (pixels). Defaults to `1fr`. */
+  /**
+   * CSS grid track width, for example `"auto"`, `"200px"`, or
+   * `"minmax(80px, 1fr)"`. A number is in pixels.
+   * @default "1fr"
+   */
   width?: string | number;
   /**
    * @deprecated Every cell and header cell carries `data-column={accessorKey}`
@@ -164,6 +201,7 @@ export interface DataViewListColumn<TData, TValue = unknown> {
    * `-header-cell` variant) instead.
    */
   classNames?: { cell?: string; header?: string };
+  /** Inline styles for the column's cells and its header cell. */
   styles?: { cell?: React.CSSProperties; header?: React.CSSProperties };
 }
 
@@ -172,7 +210,9 @@ export interface DataViewListColumn<TData, TValue = unknown> {
  * renderer; `label` is shown in the view switcher.
  */
 export interface ViewSpec {
+  /** Matches the `name` prop of a renderer. */
   value: string;
+  /** Text of the view's tab in the view switcher. */
   label: string;
   /** Optional icon rendered before the view's label in the switcher tab. */
   leadingIcon?: React.ReactNode;
@@ -186,6 +226,7 @@ export interface ViewSpec {
 export type GroupByResolver<TData> = (row: TData) => string;
 
 export interface DataViewProps<TData> {
+  /** The rows to show. */
   data: TData[];
   /** Renderer-agnostic field metadata. Drives filter/sort/group/visibility. */
   fields: DataViewField<TData>[];
@@ -193,18 +234,36 @@ export interface DataViewProps<TData> {
   query?: DataViewQuery;
   /** The query on the first render (uncontrolled). */
   defaultQuery?: DataViewQuery;
+  /**
+   * Where filtering, sorting, and search run. `client` runs them on `data`.
+   * `server` leaves them to your backend.
+   * @default "client"
+   */
   mode?: DataViewMode;
+  /**
+   * Shows skeleton rows and holds back `onLoadMore`.
+   * @default false
+   */
   loading?: boolean;
+  /** Total number of rows on the server. Server mode uses it to count the rows that filters hide. */
   totalRowCount?: number;
+  /**
+   * Number of skeleton rows shown while `loading`.
+   * @default 3
+   */
   loadingRowCount?: number;
   /** Called when the query changes. Server mode also calls it on mount. */
   onQueryChange?: (
     query: DataViewQuery,
     details: DataViewQueryChangeDetails
   ) => void;
+  /** Sort used when the query has none. The reset button of `DataView.DisplayControls` returns to it. */
   defaultSort: DataViewSort;
+  /** Called in server mode when `DataView.List` scrolls near its end. */
   onLoadMore?: () => Promise<void> | void;
+  /** Called with the row's data when a row or a timeline card is clicked. */
   onRowClick?: (row: TData) => void;
+  /** Called with the new visibility map when a field is shown or hidden. */
   onColumnVisibilityChange?: (columnVisibility: VisibilityState) => void;
   /**
    * Fires with the new selection map whenever rows are selected or deselected
@@ -230,6 +289,7 @@ export interface DataViewProps<TData> {
    * to compute the bucket id per row when a key matches one in this map.
    */
   groupByResolvers?: Record<string, GroupByResolver<TData>>;
+  /** The DataView's toolbar, renderers, and other parts. */
   children?: React.ReactNode;
 }
 
@@ -252,7 +312,10 @@ export type DataViewListClassNames = {
 export interface DataViewListProps<TData, TValue = unknown> {
   /** Multi-view name. When set, the renderer gates itself on the active view. */
   name?: string;
-  /** Visual variant. `table` renders headers and uses `role="table"`; `list` renders no headers and uses `role="list"`. Default `list`. */
+  /**
+   * Visual variant. `table` renders headers and uses `role="table"`; `list` renders no headers and uses `role="list"`.
+   * @default "list"
+   */
   variant?: 'table' | 'list';
   /** Override the header row visibility. Defaults to `variant === 'table'`. */
   showHeaders?: boolean;
@@ -270,13 +333,22 @@ export interface DataViewListProps<TData, TValue = unknown> {
    * `scaling`. An explicit value is used as passed.
    */
   estimatedRowHeight?: number;
-  /** When true, only viewport-visible rows render. Parent must have a fixed height. */
+  /**
+   * When true, only viewport-visible rows render. Parent must have a fixed height.
+   * @default false
+   */
   virtualized?: boolean;
   /** Render thin dividers between rows. Defaults to true for `variant="table"`. */
   showDividers?: boolean;
-  /** Hide group section headers when grouping is active. Default false. */
+  /**
+   * Hide group section headers when grouping is active.
+   * @default false
+   */
   hideGroupHeaders?: boolean;
-  /** When true, group headers stick under the table header while scrolling. Default false. */
+  /**
+   * When true, group headers stick under the table header while scrolling.
+   * @default false
+   */
   stickyGroupHeader?: boolean;
   /** @deprecated Style rendered parts by `[data-slot]` instead. See `DataViewListClassNames`. */
   classNames?: DataViewListClassNames;
@@ -290,9 +362,14 @@ export type TimelineScale = 'day' | 'week' | 'month' | 'quarter';
 
 /** Full-height marker line with a badge pinned to the axis (milestones, deadlines). */
 export interface TimelineMarker {
+  /** Position of the marker. */
   date: TimelineDateInput;
   /** Badge content. Defaults to the marker date formatted as "17 Jan". */
   label?: React.ReactNode;
+  /**
+   * Color of the badge and the line.
+   * @default "neutral"
+   */
   color?: 'neutral' | 'accent' | 'danger';
 }
 
@@ -314,8 +391,9 @@ export interface TimelineCardContext {
    * section when `group_by` is active, so every section's first lane is 0.
    */
   laneIndex: number;
+  /** Resolved start date. */
   start: Date;
-  /** Null when `endField` is omitted (point marker). */
+  /** Resolved end date. Null when `endField` is omitted (point marker). */
   end: Date | null;
 }
 
@@ -327,12 +405,14 @@ export interface TimelineCardContext {
  */
 export interface TimelineActions {
   /**
-   * Scroll the viewport so `target` lands at `align` (default `'center'`).
+   * Scroll the viewport so `target` lands at `align` (default `'center'`),
+   * with `behavior` (default `'smooth'`).
    * Accepts the `defaultScrollTo` vocabulary: a date input, `'today'`,
    * `'start'`, or `'end'` (domain edges). Dates outside the domain clamp to
    * the nearest edge; invalid dates no-op with a dev warning. Edge
    * alignments keep a small inset so the target doesn't sit flush against
-   * the viewport edge (yields at the domain edges).
+   * the viewport edge (yields at the domain edges). While the renderer is
+   * hidden, it does nothing and warns in development.
    */
   scrollTo: (
     target: TimelineDateInput | 'today' | 'start' | 'end',
@@ -379,7 +459,8 @@ export interface DataViewTimelineProps<TData> {
   /**
    * Accessible name of the scroll region. The pane is keyboard-focusable
    * (arrow keys scroll it natively), so screen readers announce this label on
-   * focus. Default 'Timeline'.
+   * focus.
+   * @default "Timeline"
    */
   'aria-label'?: string;
   /** Optional view-scoped field override. Full replacement of root `fields` for this view's active session. */
@@ -394,6 +475,8 @@ export interface DataViewTimelineProps<TData> {
    * Renders the card interior. The Timeline owns positioning (x from start,
    * width from span, lane from packing, scroll); the consumer owns the card
    * visual entirely: chrome, states, truncation, and the collapsed variant.
+   * The first argument is the TanStack `Row`, with the row data on
+   * `row.original`.
    * Compose `<DataView.DisplayAccess>` inside for Display Properties support.
    *
    * Keep the reference stable (define outside the component or wrap in
@@ -406,7 +489,10 @@ export interface DataViewTimelineProps<TData> {
     context: TimelineCardContext
   ) => React.ReactNode;
 
-  /** Tick granularity of the time axis. Default 'day'. */
+  /**
+   * Tick granularity of the time axis.
+   * @default "day"
+   */
   scale?: TimelineScale;
   /**
    * Pixel width of one `scale` unit, as a density or zoom override. The default
@@ -415,16 +501,23 @@ export interface DataViewTimelineProps<TData> {
    */
   unitWidth?: number;
   /**
-   * Explicit time domain. Defaults to the data extent (plus today when shown)
-   * with padding. Either way, a domain narrower than the container is extended
-   * at the end so the axis and gridlines always fill the visible width.
+   * Explicit time domain. Defaults to the data extent (plus today and the
+   * markers) with padding. Either way, a domain narrower than the container is
+   * extended at the end so the axis and gridlines always fill the visible width.
    */
   range?: [TimelineDateInput, TimelineDateInput];
-  /** Vertical "today" line + axis badge. `true` (default) uses the current date; a date pins it. */
+  /**
+   * Vertical "today" line + axis badge. `true` uses the current date, a date
+   * pins it, and `false` hides it.
+   * @default true
+   */
   today?: boolean | TimelineDateInput;
   /** Additional full-height marker lines with axis badges. */
   markers?: TimelineMarker[];
-  /** Hide the vertical gridlines at every axis tick. Default false. */
+  /**
+   * Hide the vertical gridlines at every axis tick.
+   * @default false
+   */
   hideGridlines?: boolean;
   /**
    * Label every Nth `scale` unit on the axis, counted from the domain start
@@ -436,22 +529,29 @@ export interface DataViewTimelineProps<TData> {
   /**
    * Draw a gridline every Nth `scale` unit, counted from the domain start.
    * Independent of `tickInterval` and purely visual: cards, the today line,
-   * and the hover cursor still land on every unit. Default 1.
+   * and the hover cursor still land on every unit.
+   * @default 1
    */
   gridlineInterval?: number;
   /**
    * Hide the hover crosshair: a darker line snapped to the sub-interval (tick
-   * unit) under the pointer, with a date badge pinned to the axis. Default false.
+   * unit) under the pointer, with a date badge pinned to the axis.
+   * @default false
    */
   hideCursorLine?: boolean;
-  /** Initial horizontal scroll target. Default 'today'. */
+  /**
+   * Initial horizontal scroll target. `start` and `end` are the edges of the
+   * domain.
+   * @default "today"
+   */
   defaultScrollTo?: TimelineDateInput | 'today' | 'start' | 'end';
   /**
    * After a filter or search change, scroll the earliest matching card into
    * view when no match intersects the current viewport. Otherwise a filter
    * whose results are off-screen leaves the user parked on empty canvas. A
    * query change that keeps at least one card on screen doesn't move the
-   * view. Default true.
+   * view.
+   * @default true
    */
   scrollToResults?: boolean;
   /** Fires (rAF-throttled) with the visible time range as the user scrolls or resizes. */
@@ -460,7 +560,7 @@ export interface DataViewTimelineProps<TData> {
   actionsRef?: React.RefObject<TimelineActions | null>;
 
   /**
-   * 'auto' (default) packs non-overlapping cards into shared lanes (greedy
+   * 'auto' packs non-overlapping cards into shared lanes (greedy
    * interval scheduling); 'one-per-row' gives every row its own lane, in
    * row-model (sorted) order; 'one-per-sort-value' gives every distinct value of
    * the **sorted-by** field its own lane, packing that value's cards by date
@@ -473,10 +573,11 @@ export interface DataViewTimelineProps<TData> {
    * live. Lane order is the sort's order, so rank values that don't sort
    * naturally (High/Medium/Low) with a numeric field and sort on that. Rows
    * whose value is null, empty, or a non-primitive share one lane, placed last.
+   * @default "auto"
    */
   lanePacking?: 'auto' | 'one-per-row' | 'one-per-sort-value';
   /**
-   * Lane height in px. Default 66, multiplied by the theme's `scaling`. An
+   * Lane height in px. The default is multiplied by the theme's `scaling`. An
    * explicit value is used as passed.
    *
    * Unvirtualized this is an estimate, same contract as `DataView.List`: cards
@@ -488,25 +589,29 @@ export interface DataViewTimelineProps<TData> {
    * measures, so measured lanes would resize under the user as they scroll,
    * lanes take this value instead, and a card taller than it overflows its
    * lane rather than growing it. Set it to your card's height.
+   * @default 66
    */
   estimatedRowHeight?: number;
   /**
-   * Vertical gap between lanes in px. Default 16, multiplied by the theme's
+   * Vertical gap between lanes in px. The default is multiplied by the theme's
    * `scaling`. An explicit value is used as passed.
+   * @default 16
    */
   laneGap?: number;
   /**
    * Spans narrower than this (px) flip `context.collapsed` for `renderCard`.
-   * Default 60, multiplied by the theme's `scaling`. An explicit value is used
-   * as passed.
+   * The default is multiplied by the theme's `scaling`. An explicit value is
+   * used as passed.
+   * @default 60
    */
   minCardWidth?: number;
   /**
    * Assumed width (px) of point-marker cards (rows without `endField`) for
    * lane packing. Point cards size to their content, so the packer can't know
    * their width, so set this to roughly the widest point card to prevent
-   * horizontal overlap within a lane. Default 120, multiplied by the theme's
+   * horizontal overlap within a lane. The default is multiplied by the theme's
    * `scaling`. An explicit value is used as passed.
+   * @default 120
    */
   estimatedPointWidth?: number;
 
@@ -516,13 +621,15 @@ export interface DataViewTimelineProps<TData> {
    * Recommended whenever the domain is long or rows are numerous.
    *
    * Lane heights become fixed to `estimatedRowHeight`; see the note there.
+   * @default false
    */
   virtualized?: boolean;
 
   /**
    * Hide the group header band above each section when `group_by` is active.
    * Same contract as `DataViewListProps.hideGroupHeaders`: true hides the
-   * bands only, and rows stay grouped into their sections. Default false.
+   * bands only, and rows stay grouped into their sections.
+   * @default false
    */
   hideGroupHeaders?: boolean;
   /** @deprecated Style rendered parts by `[data-slot]` instead. See `DataViewTimelineClassNames`. */

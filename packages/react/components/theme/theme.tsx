@@ -83,17 +83,20 @@ export interface ThemeProps
   persist?: readonly ThemeSettingKey[];
   /** Storage namespace. Persistence is off unless this is set. */
   persistKey?: string;
-  /** Owns the document colour scheme. Defaults to true with no ancestor theme. */
+  /** Whether this theme owns the document colour scheme. Defaults to `true` when there is no ancestor theme. */
   isRoot?: boolean;
-  /** Overrides the paint heuristic: root or own light/dark appearance paints. */
+  /** Whether the theme paints its background. Defaults to `true` at the root or with its own `light` or `dark` appearance, otherwise `false`. */
   hasBackground?: boolean;
-  /** Switches appearance with no crossfade, and no component transitions either. */
+  /**
+   * Whether an appearance switch skips the crossfade and all component transitions.
+   * @default false
+   */
   disableTransitionOnChange?: boolean;
   /** CSP nonce for the theme's inline tags and Base UI's inline tags. */
   nonce?: string;
   /**
    * Text direction for this scope and its Base UI components. A nested theme inherits it when unset.
-   * @default 'ltr'
+   * @default "ltr"
    */
   dir?: TextDirection;
   /**
@@ -103,9 +106,11 @@ export interface ThemeProps
    * component.
    */
   icons?: IconOptions;
-  /** Replaces the mount element, merging the theme's props onto it. */
+  /** Element to render in place of the `div`. The theme's props merge onto it. */
   render?: ThemeRenderProp;
+  /** Ref to the theme element: the `div`, or the element passed to `render`. */
   ref?: Ref<HTMLElement>;
+  /** Inline styles for the theme element. */
   style?: CSSProperties;
   children?: ReactNode;
 }

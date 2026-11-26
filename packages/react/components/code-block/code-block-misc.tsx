@@ -27,11 +27,20 @@ export function CodeBlockContent({
 
 CodeBlockContent.displayName = 'CodeBlock.Content';
 
+type FlexProps = ComponentProps<typeof Flex>;
+
+interface CodeBlockHeaderProps extends FlexProps {
+  /** @default "center" */
+  align?: FlexProps['align'];
+  /** @default 4 */
+  gap?: FlexProps['gap'];
+}
+
 export function CodeBlockHeader({
   children,
   className,
   ...props
-}: ComponentProps<typeof Flex>) {
+}: CodeBlockHeaderProps) {
   return (
     <Flex
       align='center'
@@ -47,11 +56,18 @@ export function CodeBlockHeader({
 
 CodeBlockHeader.displayName = 'CodeBlock.Header';
 
+type TextProps = ComponentProps<typeof Text>;
+
+interface CodeBlockLabelProps extends TextProps {
+  /** @default "regular" */
+  size?: TextProps['size'];
+}
+
 export function CodeBlockLabel({
   children,
   className,
   ...props
-}: ComponentProps<typeof Text>) {
+}: CodeBlockLabelProps) {
   return (
     <Text
       size='regular'
@@ -68,6 +84,7 @@ CodeBlockLabel.displayName = 'CodeBlock.Label';
 
 export interface CodeBlockCollapseTriggerProps
   extends Omit<ComponentProps<typeof Button>, 'children'> {
+  /** The label, or a function that gets `collapsed` and returns it. Defaults to "Show Code" while collapsed, otherwise "Hide Code". */
   children?: ReactNode | ((collapsed: boolean) => ReactNode);
 }
 
@@ -108,7 +125,13 @@ CodeBlockCollapseTrigger.displayName = 'CodeBlock.CollapseTrigger';
 
 export interface CodeBlockCopyButtonProps
   extends Omit<ComponentProps<typeof CopyButton>, 'text'> {
+  /**
+   * The button style. `"floating"` places the button over the code and shows it on hover.
+   * @default "default"
+   */
   variant?: 'floating' | 'default';
+  /** The button size. Defaults to `2` when `variant` is `"floating"`, otherwise `3`. */
+  size?: 1 | 2 | 3 | 4;
 }
 
 export function CodeBlockCopyButton({

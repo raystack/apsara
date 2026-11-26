@@ -89,19 +89,19 @@ The ContextMenu component is composed of several parts, each with their own prop
 
 The root element is the parent component that holds the context menu. Using the `autocomplete` prop, you can enable search functionality.
 
-<auto-type-table path="./props.ts" name="ContextMenuRootProps" />
+<auto-type-table name="ContextMenuProps" />
 
 ### Trigger
 
 The area that opens the context menu on right-click or long press. Renders a `<div>` element.
 
-<auto-type-table path="./props.ts" name="ContextMenuTriggerProps" />
+<auto-type-table name="ContextMenuTriggerProps" />
 
 ### Content
 
 The container that holds the menu items. When autocomplete is enabled, renders an inline search input inside the popup.
 
-<auto-type-table path="./props.ts" name="ContextMenuContentProps" />
+<auto-type-table name="ContextMenuContentProps" />
 
 ### Item
 
@@ -109,55 +109,55 @@ Individual clickable options within the menu. Built on top of [Base UI ContextMe
 
 Renders as a `role='option'` when used in an autocomplete menu. By default, the item's `children` text content is used for matching, which can be overridden by passing a `value` prop.
 
-<auto-type-table path="./props.ts" name="ContextMenuItemProps" />
+<auto-type-table name="ContextMenuItemProps" />
 
 ### CheckboxItem
 
 A menu item that toggles a setting on or off. Renders a check mark before the label when checked.
 
-<auto-type-table path="./props.ts" name="ContextMenuCheckboxItemProps" />
+<auto-type-table name="ContextMenuCheckboxItemProps" />
 
 ### RadioGroup
 
 Groups related radio items and holds the selected value.
 
-<auto-type-table path="./props.ts" name="ContextMenuRadioGroupProps" />
+<auto-type-table name="ContextMenuRadioGroupProps" />
 
 ### RadioItem
 
 A menu item that works like a radio button in a `ContextMenu.RadioGroup`. Renders a dot before the label when checked. The `value` prop is also used for search matching when it is a string.
 
-<auto-type-table path="./props.ts" name="ContextMenuRadioItemProps" />
+<auto-type-table name="ContextMenuRadioItemProps" />
 
 ### LinkItem
 
 A menu item that renders an `<a>` element. Pass a router link to `render` to use client-side routing.
 
-<auto-type-table path="./props.ts" name="ContextMenuLinkItemProps" />
+<auto-type-table name="ContextMenuLinkItemProps" />
 
 ### Group
 
 A way to group related menu items together. When filtering is active, the group label is hidden.
 
-<auto-type-table path="./props.ts" name="ContextMenuGroupProps" />
+<auto-type-table name="ContextMenuGroupProps" />
 
 ### Label
 
 Renders a label in a menu group. This component should be wrapped with ContextMenu.Group so the `aria-labelledby` is correctly set on the group element. Hidden when filtering is active.
 
-<auto-type-table path="./props.ts" name="ContextMenuLabelProps" />
+<auto-type-table name="ContextMenuLabelProps" />
 
 ### Separator
 
 Visual divider between menu items or groups. Hidden when filtering is active.
 
-<auto-type-table path="./props.ts" name="ContextMenuSeparatorProps" />
+<auto-type-table name="ContextMenuSeparatorProps" type="ComponentProps<typeof ContextMenu.Separator>" />
 
 ### EmptyState
 
 Placeholder content when there are no menu items to display.
 
-<auto-type-table path="./props.ts" name="ContextMenuEmptyStateProps" />
+<auto-type-table name="ContextMenuEmptyStateProps" type="ComponentProps<typeof ContextMenu.EmptyState>" />
 
 ### Submenu
 
@@ -165,7 +165,7 @@ Wraps a submenu root. Use with `ContextMenu.SubmenuTrigger` and `ContextMenu.Sub
 
 Supports its own `autocomplete` prop to enable search functionality within the submenu independently from the parent menu.
 
-<auto-type-table path="./props.ts" name="ContextMenuSubMenuProps" />
+<auto-type-table name="ContextMenuSubMenuProps" />
 
 ### SubmenuTrigger
 
@@ -173,13 +173,13 @@ The trigger item for a submenu. Renders with a trailing chevron icon by default.
 
 When inside a searchable parent menu, the `value` prop can be used for autocomplete matching.
 
-<auto-type-table path="./props.ts" name="ContextMenuSubTriggerProps" />
+<auto-type-table name="ContextMenuSubTriggerProps" />
 
 ### SubmenuContent
 
 The content container for a submenu. Shares the same API as `ContextMenu.Content` with a default `sideOffset` of `2`.
 
-<auto-type-table path="./props.ts" name="ContextMenuSubContentProps" />
+<auto-type-table name="ContextMenuSubContentProps" type="ComponentProps<typeof ContextMenu.SubmenuContent>" />
 
 ### Slots
 

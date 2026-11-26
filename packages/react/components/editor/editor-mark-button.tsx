@@ -1,5 +1,6 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import { isMarkActive, toggleMarkCommand } from './core/commands';
 import type { EditorMark } from './core/schema';
 import { useEditorStore, useStoreSelector } from './editor-context';
@@ -9,6 +10,8 @@ import { MARK_DEFAULTS } from './editor-defaults';
 export interface EditorMarkButtonProps extends EditorControlBaseProps {
   /** The mark the button toggles. */
   mark: EditorMark;
+  /** Replaces the default icon. */
+  children?: ReactNode;
 }
 
 /** Toggles a mark on the selection. */

@@ -32,6 +32,10 @@ TableBody.displayName = 'Table.Body';
 
 const row = cva(styles['row'], {
   variants: {
+    /**
+     * Whether the row has clickable styles: a pointer cursor, plus hover and active backgrounds.
+     * @default false
+     */
     interactive: {
       true: styles['row-interactive']
     }
@@ -75,6 +79,7 @@ TableCell.displayName = 'Table.Cell';
 const sectionHeader = cva(styles['sectionHeader']);
 type SectionHeaderClassNames = 'row' | 'cell';
 export interface TableSectionHeaderProps extends ComponentProps<'tr'> {
+  /** Number of columns the header spans. Set it to the column count of the table. */
   colSpan: number;
   /**
    * @deprecated Use `[data-slot="table-section-header"]` (row) and

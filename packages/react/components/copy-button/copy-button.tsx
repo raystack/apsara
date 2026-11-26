@@ -7,7 +7,13 @@ import { IconButton, IconButtonProps } from '../icon-button/icon-button';
 import styles from './copy-button.module.css';
 
 export interface CopyButtonProps extends IconButtonProps {
+  /** Text that the button copies to the clipboard. */
   text: string;
+  /**
+   * Accessible name of the button.
+   * @default "Copy"
+   */
+  'aria-label'?: string;
   /**
    * Milliseconds before the check icon changes back. `Infinity` keeps it.
    * @default 1000

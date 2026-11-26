@@ -4,6 +4,7 @@ import styles from './text.module.css';
 
 export const textVariants = cva(styles.text, {
   variants: {
+    /** Color of the text: a token level or an intent. */
     color: {
       primary: styles['text-primary'],
       secondary: styles['text-secondary'],
@@ -14,6 +15,7 @@ export const textVariants = cva(styles.text, {
       danger: styles['text-danger'],
       success: styles['text-success']
     },
+    /** Size of the text. */
     size: {
       micro: styles['text-micro'],
       mini: styles['text-mini'],
@@ -21,21 +23,25 @@ export const textVariants = cva(styles.text, {
       regular: styles['text-regular'],
       large: styles['text-large']
     },
+    /** Weight of the text. */
     weight: {
       regular: styles['text-weight-regular'],
       medium: styles['text-weight-medium']
     },
+    /** Letter case of the text. Sets `text-transform`. */
     transform: {
       capitalize: styles['text-transform-capitalize'],
       uppercase: styles['text-transform-uppercase'],
       lowercase: styles['text-transform-lowercase']
     },
+    /** Alignment of the text. `start` and `end` follow the text direction. */
     align: {
       center: styles['text-align-center'],
       start: styles['text-align-start'],
       end: styles['text-align-end'],
       justify: styles['text-align-justify']
     },
+    /** Number of lines to show before the text ends in an ellipsis. */
     lineClamp: {
       1: [styles['text-line-clamp'], styles['text-line-clamp-1']],
       2: [styles['text-line-clamp'], styles['text-line-clamp-2']],
@@ -43,12 +49,15 @@ export const textVariants = cva(styles.text, {
       4: [styles['text-line-clamp'], styles['text-line-clamp-4']],
       5: [styles['text-line-clamp'], styles['text-line-clamp-5']]
     },
+    /** Whether the text is underlined. */
     underline: {
       true: styles['text-underline']
     },
+    /** Whether the text has a line through it. */
     strikeThrough: {
       true: styles['text-strike-through']
     },
+    /** Whether the text is italic. */
     italic: {
       true: styles['text-italic']
     }

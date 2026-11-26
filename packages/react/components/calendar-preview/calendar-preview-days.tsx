@@ -14,7 +14,10 @@ import { CalendarPreviewHeader } from './calendar-preview-header';
 
 export interface CalendarPreviewDaysProps
   extends useRender.ComponentProps<'div'> {
-  /** @defaultValue 1 */
+  /**
+   * How many months the grid shows side by side. With more than one, each month has its own caption and navigation.
+   * @default 1
+   */
   numberOfMonths?: number;
 }
 

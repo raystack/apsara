@@ -33,11 +33,17 @@ function getScrollParent(el: HTMLElement | null): HTMLElement | null {
 }
 
 export interface NavbarRootProps extends ComponentProps<'nav'> {
-  /** Stick navbar to top of viewport (or scroll container) while scrolling */
+  /**
+   * Sticks the navbar to the top of the viewport or scroll container.
+   * @default false
+   */
   sticky?: boolean;
-  /** Hide navbar when scrolling down, show when scrolling up or near top */
+  /**
+   * Hides the navbar on scroll down and shows it on scroll up or near the top.
+   * @default false
+   */
   hideOnScroll?: boolean;
-  /** Ref to the scroll container. When provided (and current is set), used for hide-on-scroll instead of auto-detection. Otherwise the nearest scrollable ancestor or window is used. */
+  /** Scroll container for `hideOnScroll`. Defaults to the nearest scrollable ancestor, or the window. */
   scrollContainerRef?: RefObject<HTMLElement | null>;
 }
 

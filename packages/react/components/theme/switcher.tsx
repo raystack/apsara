@@ -5,10 +5,17 @@ import { IconButton } from '../icon-button';
 import { useTheme } from './context';
 
 export interface ThemeSwitcherProps {
-  /** Square size of the button box, in pixels. */
+  /**
+   * Square size of the button box, in pixels.
+   * @default 30
+   */
   size?: number;
-  /** Whether to flip the root theme rather than the nearest scope. */
+  /**
+   * Theme to flip: the nearest scope or the root.
+   * @default "nearest"
+   */
   target?: 'nearest' | 'root';
+  /** Accessible name. Defaults to "Switch to light theme" when the `target` theme is dark, otherwise "Switch to dark theme". */
   'aria-label'?: string;
 }
 

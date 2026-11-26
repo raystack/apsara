@@ -2,6 +2,7 @@
 
 import { Progress as ProgressPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import { ReactNode } from 'react';
 import styles from './progress.module.css';
 
 export function ProgressLabel({
@@ -19,10 +20,14 @@ export function ProgressLabel({
 
 ProgressLabel.displayName = 'Progress.Label';
 
-export function ProgressValue({
-  className,
-  ...props
-}: ProgressPrimitive.Value.Props) {
+type ProgressValueProps = ProgressPrimitive.Value.Props & {
+  /** Renders the value. It receives the formatted value and the raw value. */
+  children?:
+    | null
+    | ((formattedValue: string | null, value: number | null) => ReactNode);
+};
+
+export function ProgressValue({ className, ...props }: ProgressValueProps) {
   return (
     <ProgressPrimitive.Value
       className={cx(styles.value, className)}

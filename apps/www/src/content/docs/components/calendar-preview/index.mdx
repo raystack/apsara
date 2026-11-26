@@ -155,13 +155,13 @@ Every part renders its own default, so none of this is required. `.Grid` renders
 
 The root. Owns the selected value and the visible month. Also takes `render`, `className` and `ref`.
 
-<auto-type-table path="./props.ts" name="CalendarPreviewProps" />
+<auto-type-table name="CalendarPreviewProps" />
 
 ### CalendarPreview.Trigger
 
 Anchors the popover and owns opening it. Renders the formatted value, or the placeholder, when given no children.
 
-<auto-type-table path="./props.ts" name="CalendarPreviewTriggerProps" />
+<auto-type-table name="CalendarPreviewTriggerProps" />
 
 ### CalendarPreview.Content
 
@@ -171,55 +171,55 @@ The portaled popover surface. Takes `Popover.Content` props — `side`, `align`,
 
 The typeable date field.
 
-<auto-type-table path="./props.ts" name="CalendarPreviewInputProps" />
+<auto-type-table name="CalendarPreviewInputProps" />
 
 ### CalendarPreview.Body
 
 The popup body: label, input, scale switcher and the view for the active scale.
 
-<auto-type-table path="./props.ts" name="CalendarPreviewBodyProps" />
+<auto-type-table name="CalendarPreviewBodyProps" />
 
 ### CalendarPreview.Days
 
 The day view — a header and a grid.
 
-<auto-type-table path="./props.ts" name="CalendarPreviewDaysProps" />
+<auto-type-table name="CalendarPreviewDaysProps" />
 
 ### CalendarPreview.Grid
 
 The day grid. Layout and per-day data live here rather than on the root.
 
-<auto-type-table path="./props.ts" name="CalendarPreviewGridProps" />
+<auto-type-table name="CalendarPreviewGridProps" />
 
 ### CalendarPreview.Header
 
 The row above the grid. Composes `.Caption`, `.Reset`, `.PrevMonth` and `.NextMonth` when given no children.
 
-<auto-type-table path="./props.ts" name="CalendarPreviewHeaderProps" />
+<auto-type-table name="CalendarPreviewHeaderProps" />
 
 ### CalendarPreview.Caption
 
 The month label above the grid, and optionally the trigger for the month and year scroller.
 
-<auto-type-table path="./props.ts" name="CalendarPreviewCaptionProps" />
+<auto-type-table name="CalendarPreviewCaptionProps" />
 
 ### CalendarPreview.PrevMonth / CalendarPreview.NextMonth
 
 Step the view one month.
 
-<auto-type-table path="./props.ts" name="CalendarPreviewNavProps" />
+<auto-type-table name="CalendarPreviewNavProps" />
 
 ### CalendarPreview.Reset
 
 Restores `defaultDate`, reporting `reason: 'reset'`. Carries `data-restored` while there is nothing to restore.
 
-<auto-type-table path="./props.ts" name="CalendarPreviewResetProps" />
+<auto-type-table name="CalendarPreviewResetProps" />
 
 ### CalendarPreview.Scales / CalendarPreview.Scale
 
 The scale switcher, built on Apsara `Tabs`. Renders nothing when only one scale is offered. `.Scale` is only needed to relabel or reorder.
 
-<auto-type-table path="./props.ts" name="CalendarPreviewScaleProps" />
+<auto-type-table name="CalendarPreviewScaleProps" />
 
 ### CalendarPreview.Panel
 
@@ -237,7 +237,7 @@ The field label above the input, and the rule between the switcher and the view.
 
 The row below the calendar. A bare string is wrapped in `Text`; anything else renders as given.
 
-<auto-type-table path="./props.ts" name="CalendarPreviewFooterProps" />
+<auto-type-table name="CalendarPreviewFooterProps" />
 
 ### useCalendar
 
@@ -250,11 +250,11 @@ const { value, setValue, scale, draft, scaleDraft, month, setMonth, isDateUnavai
   useCalendar()
 ```
 
-<auto-type-table path="./props.ts" name="UseCalendarReturn" />
+<auto-type-table name="UseCalendarReturn" />
 
 #### details (onValueChange)
 
-<auto-type-table path="./props.ts" name="CalendarPreviewChangeDetails" />
+<auto-type-table name="CalendarPreviewChangeDetails" />
 
 ## Behaviour
 

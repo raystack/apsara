@@ -11,9 +11,9 @@ import { stopItemFocus, useMenuItemFilter } from './menu-item';
 export interface MenuLinkItemProps
   extends Omit<MenuPrimitive.LinkItem.Props, 'render'>,
     CellBaseProps {
-  /** Text used to match the search value. Defaults to the children text. */
+  /** Text that the search matches, in addition to the children text. */
   value?: string;
-  /** The link element to render, for example a router link. */
+  /** The link element to render, for example a router link. It keeps the item layout and icons. Defaults to `<a />`. */
   render?: ReactElement;
 }
 

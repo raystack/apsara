@@ -1,13 +1,20 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { ComponentProps, MouseEvent } from 'react';
+import { ComponentProps, MouseEvent, ReactNode } from 'react';
 import { ArrowUpIcon, StopIcon } from '~/icons';
 import { Spinner } from '../spinner';
 import styles from './prompt-input.module.css';
 import { usePromptInputContext } from './prompt-input-context';
 
-export interface PromptInputSubmitProps extends ComponentProps<'button'> {}
+export interface PromptInputSubmitProps extends ComponentProps<'button'> {
+  /** Content of the button. Defaults to an icon for the `status`: a send arrow, a spinner or a stop square. */
+  children?: ReactNode;
+  /** Accessible name of the button. Defaults to `"Send message"`, or `"Stop response"` while a response is in flight. */
+  'aria-label'?: string;
+  /** Whether the button is disabled. Defaults to `true` while the root is disabled, or while the draft is empty and no response is in flight. */
+  disabled?: boolean;
+}
 
 export function PromptInputSubmit({
   className,

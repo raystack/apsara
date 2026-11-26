@@ -25,12 +25,40 @@ export type ReducedMotion = (typeof REDUCED_MOTION_VALUES)[number];
 
 /** Settings as set, `system` and `auto` included. */
 export interface ThemeSettings {
+  /**
+   * Colour scheme. `system` follows `prefers-color-scheme`.
+   * @default "system"
+   */
   appearance: AppearanceSetting;
+  /**
+   * Accent colour ramp.
+   * @default "indigo"
+   */
   accentColor: AccentColor;
+  /**
+   * Gray ramp. `auto` picks the gray that pairs with the accent.
+   * @default "auto"
+   */
   grayColor: GrayColorSetting;
+  /**
+   * Corner radius, as a factor over a fixed base scale.
+   * @default "medium"
+   */
   radius: Radius;
+  /**
+   * Zoom factor for spacing, radius, type, and line height together.
+   * @default "1"
+   */
   scaling: Scaling;
+  /**
+   * Background of overlay surfaces: opaque or translucent.
+   * @default "solid"
+   */
   panelBackground: PanelBackground;
+  /**
+   * Reduced motion. `true` collapses the duration tokens, and `system` does so when the OS asks for it.
+   * @default "system"
+   */
   reducedMotion: ReducedMotion;
 }
 

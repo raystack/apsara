@@ -36,10 +36,15 @@ export interface RangePickerSlotProps {
 }
 
 export interface RangePickerProps {
+  /**
+   * The dayjs format of the dates in the inputs.
+   * @default "DD MMM YYYY"
+   */
   dateFormat?: string;
   /**
    * Props for each picker slot. When both this and the legacy
    * `inputsProps`/`calendarProps`/`popoverProps` are set, `slotProps` wins.
+   * The inputs are read-only, and the picker replaces their `value` and `onClick`.
    */
   slotProps?: RangePickerSlotProps;
   /** @deprecated Use `slotProps.startInput` / `slotProps.endInput` instead. */
@@ -48,10 +53,19 @@ export interface RangePickerProps {
   calendarProps?: RangePickerCalendarSlot;
   /** @deprecated Use `slotProps.popover` instead. */
   popoverProps?: PopoverContentProps;
+  /**
+   * Called each time a day is picked. `to` is set only when the range is complete.
+   */
   onValueChange?: (range: DateRange, details: RangePickerChangeDetails) => void;
+  /** CSS class of the group that holds the two inputs. Ignored when `children` is set. */
   pickerGroupClassName?: string;
+  /** The date range (controlled). */
   value?: DateRange;
+  /** The initial date range (uncontrolled). */
   defaultValue?: DateRange;
+  /**
+   * A custom trigger. A function gets the formatted `startDate` and `endDate`. A node replaces the default inputs.
+   */
   children?:
     | React.ReactNode
     | ((props: { startDate: string; endDate: string }) => React.ReactNode);
@@ -60,7 +74,11 @@ export interface RangePickerProps {
    * @default false
    */
   hideCalendarIcon?: boolean;
+  /** Content below the calendar in the popover. */
   footer?: React.ReactNode;
+  /**
+   * The time zone of the calendar, as an IANA name or a UTC offset. Defaults to the local time zone.
+   */
   timeZone?: string;
 }
 
