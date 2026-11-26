@@ -41,7 +41,8 @@ are the same. An app that uses a bundler needs no change.
 - The `DataView` list header and group anchor show their edge when
   content scrolls under them. The minifier
   used to move `animation-timeline` before the `animation` shorthand,
-  which reset it.
+  which reset it. The animation now uses longhands, so a minifier in an
+  app's build cannot reorder it either.
 
 ### Icons — lucide replaces @radix-ui/react-icons (BREAKING)
 
