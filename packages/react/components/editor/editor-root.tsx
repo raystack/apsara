@@ -29,12 +29,9 @@ interface EditorBaseProps
   > {
   /** Shows while the doc is empty. */
   placeholder?: string;
-  /**
-   * Allowlist of nodes and marks. Read once, when the editor is created.
-   * @default all formats
-   */
+  /** Allowlist of nodes and marks. Read once, when the editor is created. Defaults to all formats. */
   formats?: EditorFormat[];
-  /** Overrides a default key, or turns it off with `false`. Read once. */
+  /** Overrides a default key in ProseMirror keymap syntax, or turns it off with `false`. Read once. */
   shortcuts?: EditorShortcuts;
   /**
    * Makes the editor not editable and disables the toolbars.
@@ -65,13 +62,13 @@ type WithMarkdown<M, Yes, No> = [M] extends [MarkdownAdapter] ? Yes : No;
 export interface EditorProps<
   M extends MarkdownAdapter | undefined = MarkdownAdapter | undefined
 > extends EditorBaseProps {
-  /** Allows Markdown strings in `value` and `defaultValue`, and parses Markdown on paste. */
+  /** A Markdown adapter from `MarkdownAdapter.create()`. Allows Markdown strings in `value` and `defaultValue`, parses Markdown on paste, and adds `details.getMarkdown()`. */
   markdown?: M;
   /** Controlled document. A string is parsed as Markdown and needs `markdown`. */
   value?: WithMarkdown<M, EditorJSON | string, EditorJSON>;
-  /** The first document when uncontrolled. Read once. */
+  /** The first document when uncontrolled. Read once. A string is parsed as Markdown and needs `markdown`. */
   defaultValue?: WithMarkdown<M, EditorJSON | string, EditorJSON>;
-  /** Fires once per doc change. It does not fire for changes made through `value`, or for labels from `resolveMentions`. */
+  /** Fires once per doc change, with the doc as editor JSON. It does not fire for changes made through `value`, or for labels from `resolveMentions`. */
   onValueChange?: (
     value: EditorJSON,
     details: WithMarkdown<M, EditorMarkdownChangeDetails, EditorChangeDetails>

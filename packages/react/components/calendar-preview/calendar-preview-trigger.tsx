@@ -31,8 +31,15 @@ export function useTriggerInput() {
 
 export interface CalendarPreviewTriggerProps
   extends useRender.ComponentProps<'div'> {
+  /**
+   * Text shown when there is no value and no children.
+   * @default "Select date"
+   */
   placeholder?: string;
-  /** @defaultValue false */
+  /**
+   * Whether the `render` element is a native `<button>`. The trigger renders a `<div>` by default.
+   * @default false
+   */
   nativeButton?: boolean;
 }
 

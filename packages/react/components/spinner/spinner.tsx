@@ -31,8 +31,21 @@ const spinner = cva(styles.spinner, {
 export interface SpinnerProps
   extends ComponentProps<'div'>,
     VariantProps<typeof spinner> {
+  /**
+   * Size of the spinner.
+   * @default 1
+   */
   size?: 1 | 2 | 3 | 4 | 5 | 6;
+  /**
+   * Color of the spinner. `inherit` uses `currentColor`.
+   * @default "neutral"
+   */
   color?: 'inherit' | 'neutral' | 'accent' | 'danger' | 'success' | 'attention';
+  /**
+   * Accessible name of the spinner. The spinner ignores it when `aria-hidden` is `true`.
+   * @default "Loading"
+   */
+  'aria-label'?: string;
 }
 
 export function Spinner({

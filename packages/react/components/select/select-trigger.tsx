@@ -18,10 +18,12 @@ export interface IconProps extends SVGAttributes<SVGElement> {
 
 const trigger = cva(styles.trigger, {
   variants: {
+    /** Size of the trigger. */
     size: {
       small: styles['trigger-small'],
       medium: styles['trigger-medium']
     },
+    /** Visual style of the trigger. */
     variant: {
       outline: styles['trigger-outline'],
       text: styles['trigger-text']
@@ -36,8 +38,18 @@ const trigger = cva(styles.trigger, {
 export interface SelectTriggerProps
   extends ComponentProps<'button'>,
     VariantProps<typeof trigger> {
+  /** Props for the chevron icon. */
   iconProps?: IconProps;
+  /**
+   * Whether the element passed to `render` is a native `<button>`.
+   * @default true
+   */
   nativeButton?: boolean;
+  /**
+   * Accessible label for the trigger.
+   * @default "Select option"
+   */
+  'aria-label'?: string;
 }
 
 export function SelectTrigger({

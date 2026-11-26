@@ -231,12 +231,7 @@ export interface ChatPanelRootProps extends ComponentProps<'aside'> {
    * @defaultValue { width: 280, height: 320 }
    */
   minSize?: ChatPanelSize;
-  /**
-   * Largest allowed floating size, always additionally clamped by the
-   * viewport.
-   * @defaultValue the initial floating size, so by default the window can
-   * only shrink; pass a larger `maxSize` to let it grow.
-   */
+  /** Largest floating size. The viewport also clamps it. Defaults to the initial floating size, so the window can only shrink. */
   maxSize?: ChatPanelSize;
   /**
    * Which axes the floating window can be resized on; mirrors the CSS
@@ -245,9 +240,8 @@ export interface ChatPanelRootProps extends ComponentProps<'aside'> {
    */
   resize?: ChatPanelResize;
   /**
-   * Whether the floating window can be dragged by its header. Shadows the
-   * (useless here) native `draggable` attribute.
-   * @defaultValue true
+   * Whether the floating window can be dragged by its header. It replaces the native `draggable` attribute.
+   * @default true
    */
   draggable?: boolean;
   /**

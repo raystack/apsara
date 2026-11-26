@@ -40,6 +40,7 @@ export const stopItemFocus = (e: {
 };
 
 export interface MenuItemProps extends MenuPrimitive.Item.Props, CellBaseProps {
+  /** Text that the search matches, in addition to the children text. */
   value?: string;
 }
 

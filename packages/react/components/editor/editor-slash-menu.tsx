@@ -19,19 +19,16 @@ import type { EditorSlashItem } from './editor-types';
 import { useEditorSuggestion } from './use-editor-suggestion';
 
 export interface EditorSlashMenuProps {
-  /**
-   * The commands in the menu.
-   * @default defaultSlashItems
-   */
+  /** The commands in the menu. Defaults to `defaultSlashItems`. */
   items?: EditorSlashItem[];
   /**
    * The character that opens the menu.
-   * @default '/'
+   * @default "/"
    */
   trigger?: string;
   /**
    * Shown when no command matches the query.
-   * @default 'No results'
+   * @default "No results"
    */
   emptyMessage?: ReactNode;
   /** Observes the menu's open state. */
