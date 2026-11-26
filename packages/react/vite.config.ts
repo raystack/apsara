@@ -175,7 +175,7 @@ async function writeDeclarations(dir: string) {
 
 /**
  * Runs `tsc` alongside the bundle, which also type-checks the build. A type
- * error fails `vite build` and is only logged in watch mode.
+ * error fails `vite build`. Watch mode logs it and still writes declarations.
  */
 const declarations = (): Plugin => {
   let tsc: Promise<void> | undefined;
@@ -200,7 +200,17 @@ const declarations = (): Plugin => {
       } catch (error) {
         if (!this.meta.watchMode) throw error;
         this.warn(String(error));
-        return;
+        // tsc still writes declarations when it reports type errors.
+        if (!existsSync(typesDir)) return;
+      }
+      if (this.meta.watchMode) {
+        // Files that only hold types are not in the module graph.
+        for (const file of await readdir(typesDir, { recursive: true })) {
+          const source = join(root, file.replace(/\.d\.ts$/, ''));
+          for (const ext of ['.ts', '.tsx']) {
+            if (existsSync(source + ext)) this.addWatchFile(source + ext);
+          }
+        }
       }
       const problems = await writeDeclarations(options.dir ?? outDir);
       if (problems.length > 0) {
