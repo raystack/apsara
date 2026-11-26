@@ -1743,6 +1743,33 @@ describe('DataView field filter operations', () => {
     expect(lastQuery(onQueryChange).filters?.[0]?.operator).toBe('gte');
   });
 
+  it('adds a text filter with contains when the field sets no operations', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <DataView
+        data={dated}
+        fields={[
+          { accessorKey: 'id', label: 'ID' },
+          {
+            accessorKey: 'when',
+            label: 'When',
+            filterable: true,
+            filterType: 'string'
+          }
+        ]}
+        defaultSort={{ name: 'id', order: 'asc' }}
+      >
+        <DataView.Filters />
+      </DataView>
+    );
+    await user.click(screen.getByRole('button', { name: /filter/i }));
+    await user.click(await screen.findByRole('menuitem', { name: 'When' }));
+
+    expect(getSlot(container, 'filter-chip-operation')).toHaveTextContent(
+      'contains'
+    );
+  });
+
   it('drops a restored filter whose operation the field does not offer', () => {
     renderRestored(datedFields(only('gte', 'lt')), [
       { name: 'when', operator: 'eq', value: '2026-08-15' }
