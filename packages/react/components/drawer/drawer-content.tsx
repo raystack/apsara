@@ -29,13 +29,15 @@ export interface DrawerContentProps
    * @default false
    */
   hideCloseButton?: boolean;
+  /** Props for the backdrop. */
   overlayProps?: DrawerPrimitive.Backdrop.Props;
+  /** Content to render inside the drawer. */
   children?: ReactNode;
-  /** Corner radius for this drawer only. Overrides the theme's `radius`. */
+  /** Corner radius for this drawer only. Defaults to the theme's `radius`. */
   radius?: Radius;
   /**
    * Accessible label for the close button.
-   * @default 'Close'
+   * @default "Close"
    */
   closeLabel?: string;
   /**

@@ -88,31 +88,31 @@ A trigger and its content, with a provider for sharing one delay across many too
 
 The Tooltip component accepts various props to customize its behavior and appearance. You can use it either as a standalone component or nested within a TooltipProvider for enhanced functionality.
 
-<auto-type-table path="./props.ts" name="TooltipProps" />
+<auto-type-table name="TooltipProps" type="ComponentProps<typeof Tooltip>" />
 
 ### Trigger
 
 The Trigger component wraps the element that activates the tooltip.
 
-<auto-type-table path="./props.ts" name="TooltipTriggerProps" />
+<auto-type-table name="TooltipTriggerProps" />
 
 ### Content
 
 The Content component displays the tooltip content and controls positioning.
 
-<auto-type-table path="./props.ts" name="TooltipContentProps" />
+<auto-type-table name="TooltipContentProps" />
 
 ### Viewport
 
 Wraps the content inside `Tooltip.Content` and animates the swap when a shared tooltip moves to another trigger. Optional.
 
-<auto-type-table path="./props.ts" name="TooltipViewportProps" />
+<auto-type-table name="TooltipViewportProps" type="ComponentProps<typeof Tooltip.Viewport>" />
 
 ### Provider
 
 The Provider component serves as a context wrapper that provides global configuration and functionality to all tooltip instances within your application.
 
-<auto-type-table path="./props.ts" name="TooltipProviderProps" />
+<auto-type-table name="TooltipProviderProps" type="ComponentProps<typeof Tooltip.Provider>" />
 
 ### Slots
 

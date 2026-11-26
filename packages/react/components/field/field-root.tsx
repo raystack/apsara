@@ -7,10 +7,19 @@ import styles from './field.module.css';
 import { FieldLabel } from './field-misc';
 
 export interface FieldProps extends FieldPrimitive.Root.Props {
+  /** Content of the field label. */
   label?: ReactNode;
+  /** Text shown below the control. Hidden while `error` is set. */
   description?: ReactNode;
+  /** Error message shown below the control. It makes the field invalid when `invalid` is not set. */
   error?: ReactNode;
+  /**
+   * Whether the field is required. When `false`, the label shows an `(optional)` indicator. Controls inside the field use it when their own `required` is not set.
+   * @default true
+   */
   required?: boolean;
+  /** Whether the field is invalid. Defaults to `true` when `error` is set, otherwise `false`. */
+  invalid?: boolean;
 }
 
 export interface FieldContextValue {

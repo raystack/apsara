@@ -67,6 +67,8 @@ Under `virtualized` this inverts. A culled card never reports a height, so measu
 
 Give a card an explicit height if you want uniform cards, and keep that height within the pitch if you virtualize.
 
+The default `estimatedRowHeight` scales with the theme's `scaling`. If the scaling can change, scale an explicit card height too, for example `calc(64px * var(--rs-scaling, 1))`.
+
 Keep `renderCard` referentially stable by defining it outside the component or wrapping it in `useCallback`. Cards are memoized against it, and an inline closure forces every visible card to re-render on each scroll frame. Type a `renderCard` defined outside the component with `DataViewRow`:
 
 ```tsx
@@ -258,23 +260,23 @@ The renderer, the context each card is rendered with, and the marker and action 
 
 ### DataView.Timeline
 
-<auto-type-table path="./props.ts" name="DataViewTimelineProps" />
+<auto-type-table name="DataViewTimelineProps" />
 
 ### Card context
 
 Passed as the second argument to `renderCard`.
 
-<auto-type-table path="./props.ts" name="TimelineCardContext" />
+<auto-type-table name="TimelineCardContext" />
 
 ### Marker
 
-<auto-type-table path="./props.ts" name="TimelineMarker" />
+<auto-type-table name="TimelineMarker" />
 
 ### Actions
 
 The imperative handle received through `actionsRef`.
 
-<auto-type-table path="./props.ts" name="TimelineActions" />
+<auto-type-table name="TimelineActions" />
 
 ### Slots
 

@@ -41,7 +41,7 @@ function formatGridWidth(width: string | number | undefined) {
   return width;
 }
 
-const GROUP_HEADER_HEIGHT = 36;
+const GROUP_HEADER_HEIGHT = 34;
 const DEFAULT_TABLE_ROW_HEIGHT = 40;
 const DEFAULT_LIST_ROW_HEIGHT = 56;
 
@@ -373,7 +373,9 @@ export function DataViewList<TData extends RowData, TValue = unknown>({
       >
         {data?.label}
         {data?.showGroupCount ? (
-          <Badge color='neutral'>{data?.count}</Badge>
+          <Badge size='mini' color='neutral'>
+            {data?.count}
+          </Badge>
         ) : null}
       </div>
     );

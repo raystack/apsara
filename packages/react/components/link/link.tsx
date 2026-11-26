@@ -6,7 +6,14 @@ import styles from './link.module.css';
 export interface LinkProps
   extends TextBaseProps,
     Omit<useRender.ComponentProps<'a'>, 'color'> {
+  /**
+   * Color of the text: a token level or an intent.
+   * @default "accent"
+   */
+  color?: TextBaseProps['color'];
+  /** Whether the link opens in a new tab. */
   external?: boolean;
+  /** Whether the browser downloads the target. A string sets the file name. */
   download?: boolean | string;
 }
 

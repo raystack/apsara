@@ -95,61 +95,61 @@ Root, input, and the list beneath. `Dialog` wraps the lot for the overlay form.
 
 The root element owns the input value, the list of items, and the context used by every sub-component. Renders as a styled panel that gives the command menu its popover look.
 
-<auto-type-table path="./props.ts" name="CommandRootProps" />
+<auto-type-table name="CommandProps" />
 
 ### Input
 
 Text input that drives the search.
 
-<auto-type-table path="./props.ts" name="CommandInputProps" />
+<auto-type-table name="CommandInputProps" />
 
 ### Content
 
 Scrollable container for groups and items. Renders with `role="listbox"`.
 
-<auto-type-table path="./props.ts" name="CommandContentProps" />
+<auto-type-table name="CommandContentProps" />
 
 ### Empty
 
 Rendered when no items are visible (all filtered out, or the list is empty). Automatically hidden when the list contains at least one item. Built on [Base UI Autocomplete.Empty](https://base-ui.com/react/components/autocomplete).
 
-<auto-type-table path="./props.ts" name="CommandEmptyProps" />
+<auto-type-table name="CommandEmptyProps" />
 
 ### Status
 
 A visually hidden live region. Screen readers announce changes to its children. Place it anywhere inside `Command`. A function child receives the number of matching items. The count needs the `items` prop. Without it, the function receives `null`. Built on [Base UI Autocomplete.Status](https://base-ui.com/react/components/autocomplete).
 
-<auto-type-table path="./props.ts" name="CommandStatusProps" />
+<auto-type-table name="CommandStatusProps" />
 
 ### Item
 
 A selectable entry. When `value` is omitted and `children` is a string, the string is used as the value. `onClick` fires on pointer click **and** on keyboard `Enter` when the item is highlighted. Pass a [`Kbd`](/docs/components/kbd) as `trailingIcon` to show a keyboard hint, and use the `ghost` variant so the keys sit on the item's own background.
 
-<auto-type-table path="./props.ts" name="CommandItemProps" />
+<auto-type-table name="CommandItemProps" />
 
 ### Group
 
 Groups related items inside `Command.Content`.
 
-<auto-type-table path="./props.ts" name="CommandGroupProps" />
+<auto-type-table name="CommandGroupProps" />
 
 ### Label
 
 Renders a label inside `Command.Group`. The label is hidden automatically while the user is searching.
 
-<auto-type-table path="./props.ts" name="CommandLabelProps" />
+<auto-type-table name="CommandLabelProps" />
 
 ### Separator
 
 Visual divider between groups. The separator is hidden automatically while the user is searching.
 
-<auto-type-table path="./props.ts" name="CommandSeparatorProps" />
+<auto-type-table name="CommandSeparatorProps" />
 
 ### Dialog
 
 `Command.Dialog` is an alias for the Base UI Dialog root. Pair it with `Command.DialogTrigger` and `Command.DialogContent` to render the command menu in a centered modal.
 
-<auto-type-table path="./props.ts" name="CommandDialogProps" />
+<auto-type-table name="CommandDialogProps" type="ComponentProps<typeof Command.Dialog>" />
 
 #### DialogContent
 
@@ -161,7 +161,7 @@ The popup is 540px wide. To change the width, pass `className` or `style`, as on
 <Command.DialogContent style={{ width: 640 }}>
 ```
 
-<auto-type-table path="./props.ts" name="CommandDialogContentProps" />
+<auto-type-table name="CommandDialogContentProps" />
 
 ### Slots
 

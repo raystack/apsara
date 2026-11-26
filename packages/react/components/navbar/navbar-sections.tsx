@@ -5,7 +5,14 @@ import { ComponentProps } from 'react';
 import { Flex } from '../flex';
 import styles from './navbar.module.css';
 
-export interface NavbarStartProps extends ComponentProps<typeof Flex> {}
+type FlexProps = ComponentProps<typeof Flex>;
+
+export interface NavbarStartProps extends FlexProps {
+  /** @default "center" */
+  align?: FlexProps['align'];
+  /** @default 5 */
+  gap?: FlexProps['gap'];
+}
 
 export const NavbarStart = ({
   className,
@@ -32,7 +39,12 @@ export const NavbarStart = ({
 
 NavbarStart.displayName = 'Navbar.Start';
 
-export interface NavbarCenterProps extends ComponentProps<typeof Flex> {}
+export interface NavbarCenterProps extends FlexProps {
+  /** @default "center" */
+  align?: FlexProps['align'];
+  /** @default 5 */
+  gap?: FlexProps['gap'];
+}
 
 export const NavbarCenter = ({
   className,
@@ -59,7 +71,12 @@ export const NavbarCenter = ({
 
 NavbarCenter.displayName = 'Navbar.Center';
 
-export interface NavbarEndProps extends ComponentProps<typeof Flex> {}
+export interface NavbarEndProps extends FlexProps {
+  /** @default "center" */
+  align?: FlexProps['align'];
+  /** @default 5 */
+  gap?: FlexProps['gap'];
+}
 
 export const NavbarEnd = ({
   className,

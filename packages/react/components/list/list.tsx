@@ -13,22 +13,27 @@ const headerText = cva(styles['header-text']);
 export interface ListRootProps
   extends ComponentProps<'ul'>,
     VariantProps<typeof list> {
+  /** List items and an optional header. */
   children: ReactNode;
 }
 
 export interface ListItemProps extends ComponentProps<'li'> {
+  /** Content of the item. */
   children: ReactNode;
 }
 
 export interface ListLabelProps extends ComponentProps<'span'> {
+  /** Content of the label. */
   children: ReactNode;
 }
 
 export interface ListValueProps extends ComponentProps<'span'> {
+  /** Content of the value. */
   children: ReactNode;
 }
 
 export interface ListHeaderProps extends ComponentProps<'div'> {
+  /** Content of the header. */
   children: ReactNode;
   /**
    * Heading level set as `aria-level` on the underlying heading.

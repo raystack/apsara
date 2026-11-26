@@ -2,7 +2,13 @@
 
 import { Tooltip as TooltipPrimitive } from '@base-ui/react';
 
-export interface TooltipTriggerProps extends TooltipPrimitive.Trigger.Props {}
+export interface TooltipTriggerProps extends TooltipPrimitive.Trigger.Props {
+  /**
+   * How long to wait before opening the tooltip on hover. Specified in milliseconds.
+   * @default 200
+   */
+  delay?: number;
+}
 
 export function TooltipTrigger(props: TooltipTriggerProps) {
   return (
@@ -16,7 +22,15 @@ export function TooltipTrigger(props: TooltipTriggerProps) {
 
 TooltipTrigger.displayName = 'Tooltip.Trigger';
 
-export const TooltipProvider = (props: TooltipPrimitive.Provider.Props) => {
+interface TooltipProviderProps extends TooltipPrimitive.Provider.Props {
+  /**
+   * How long to wait before opening a tooltip. Specified in milliseconds.
+   * @default 200
+   */
+  delay?: number;
+}
+
+export const TooltipProvider = (props: TooltipProviderProps) => {
   return <TooltipPrimitive.Provider delay={200} {...props} />;
 };
 

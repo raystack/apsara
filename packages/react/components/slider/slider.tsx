@@ -8,6 +8,7 @@ import styles from './slider.module.css';
 
 const slider = cva(styles.slider, {
   variants: {
+    /** Type of slider. A `"range"` slider has two thumbs. */
     variant: {
       single: styles['slider-variant-single'],
       range: styles['slider-variant-range']
@@ -26,14 +27,23 @@ const slider = cva(styles.slider, {
 export interface SliderProps
   extends SliderPrimitive.Root.Props,
     VariantProps<typeof slider> {
-  /** Text shown above each thumb and used as its `aria-label`. */
+  /** Text shown above each thumb and used as its `aria-label`. A tuple sets one label for each thumb of a range. */
   thumbLabel?: string | [string, string];
   /**
    * When the text above each thumb is shown.
-   * @default 'always'
+   * @default "always"
    */
   thumbLabelDisplay?: 'always' | 'hover' | 'none';
+  /**
+   * Size of the slider thumb.
+   * @default "large"
+   */
   thumbSize?: 'small' | 'large';
+  /**
+   * How the thumbs align with the ends of the track at `min` and `max`. With `"edge"`, the thumb stays inside the track.
+   * @default "edge"
+   */
+  thumbAlignment?: 'center' | 'edge' | 'edge-client-only';
 }
 
 function SliderRoot({

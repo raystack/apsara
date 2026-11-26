@@ -46,11 +46,12 @@ import { FilterSummary } from './clear-filters';
 const DEFAULT_ROW_HEIGHT = 66;
 const DEFAULT_LANE_GAP = 16;
 /**
- * Height (px) of a group section's header band, matching `DataView.List`'s.
+ * Height (px) of a group section's header band. It matches a rendered
+ * `DataView.List` group header with its count badge.
  * Fixed rather than measured: lane tops derive from it, so a content-driven
  * height would feed back into the geometry it seeds.
  */
-const GROUP_BAND_HEIGHT = 38;
+const GROUP_BAND_HEIGHT = 34;
 const DEFAULT_MIN_CARD_WIDTH = 60;
 /** Assumed width of content-sized point cards for lane packing and culling. */
 const DEFAULT_POINT_WIDTH = 120;
@@ -1687,7 +1688,9 @@ export function DataViewTimeline<TData extends RowData>({
                 >
                   {band.group.label}
                   {band.group.showGroupCount ? (
-                    <Badge color='neutral'>{band.group.count}</Badge>
+                    <Badge size='mini' color='neutral'>
+                      {band.group.count}
+                    </Badge>
                   ) : null}
                 </span>
               </div>

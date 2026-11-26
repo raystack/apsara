@@ -1,7 +1,7 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { ComponentProps, ReactNode, useMemo } from 'react';
+import { ComponentProps, ReactNode, useCallback, useMemo } from 'react';
 import styles from './select.module.css';
 import { SelectMultipleValue } from './select-multiple-value';
 import { useSelectContext } from './select-root';
@@ -10,7 +10,9 @@ import { ItemType } from './types';
 type ValueType = Omit<ItemType, 'children'>;
 
 export type SelectValueProps = ComponentProps<'span'> & {
+  /** Text shown when no item is selected. */
   placeholder?: string;
+  /** Content shown in place of the selected item's label. A function receives the selected item, or an array when more than one item is selected. */
   children?: ((value?: ValueType | ValueType[]) => ReactNode) | ReactNode;
   className?: string;
 };
@@ -27,15 +29,21 @@ export function SelectValue({
     ? Array.isArray(value) && value.length > 0
     : !!value;
 
+  const getItem = useCallback(
+    (v: string): ItemType =>
+      items[v]?.value === v ? items[v] : { value: v, children: v },
+    [items]
+  );
+
   const item = useMemo(() => {
     if (!value) return undefined;
     if (multiple && Array.isArray(value)) {
-      const itemValues = value.map(v => items[v]);
+      const itemValues = value.map(getItem);
       if (itemValues.length === 1) return itemValues[0];
       return itemValues;
     }
-    return items[value as string];
-  }, [value, items, multiple]);
+    return getItem(value as string);
+  }, [value, multiple, getItem]);
 
   if (!hasValue) {
     return (

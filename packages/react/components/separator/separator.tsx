@@ -5,10 +5,12 @@ import styles from './separator.module.css';
 
 const separator = cva(styles.separator, {
   variants: {
+    /** Length of the line. `full` runs edge to edge, `middle` insets both ends. */
     variant: {
       full: styles['variant-full'],
       middle: styles['variant-middle']
     },
+    /** Color of the separator. */
     color: {
       primary: styles['separator-primary'],
       secondary: styles['separator-secondary'],
@@ -29,9 +31,7 @@ const separator = cva(styles.separator, {
 export type SeparatorProps = SeparatorPrimitive.Props &
   VariantProps<typeof separator> & {
     /**
-     * When true, the separator is purely decorative and hidden from
-     * assistive technology. Use for visual dividers that don't convey
-     * structure.
+     * Whether the separator is decorative. A decorative separator has `role="presentation"` and `aria-hidden`.
      * @default false
      */
     decorative?: boolean;

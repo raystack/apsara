@@ -6,6 +6,7 @@ import styles from './side-panel.module.css';
 
 const sidePanelRoot = cva(styles['side-panel'], {
   variants: {
+    /** The side of the layout the panel sits on. It sets the border on the inner edge. */
     side: {
       left: styles['side-panel-left'],
       right: styles['side-panel-right']
@@ -37,10 +38,15 @@ const SidePanelRoot = ({
 SidePanelRoot.displayName = 'SidePanel';
 
 export interface SidePanelHeaderProps extends ComponentProps<'div'> {
+  /** Title text. It renders as an `h2`. */
   title: string;
+  /** Icon before the title. */
   leadingIcon?: ReactNode;
+  /** Elements shown at the end of the header. */
   actions?: Array<ReactNode>;
+  /** Text below the title. */
   description?: string;
+  /** Id of the title heading. Defaults to a generated id. */
   titleId?: string;
 }
 

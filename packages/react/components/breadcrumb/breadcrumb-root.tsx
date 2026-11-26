@@ -6,6 +6,7 @@ import styles from './breadcrumb.module.css';
 
 const breadcrumbVariants = cva(styles['breadcrumb'], {
   variants: {
+    /** Size of the breadcrumb. */
     size: {
       small: styles['breadcrumb-small'],
       medium: styles['breadcrumb-medium']
@@ -21,7 +22,10 @@ const breadcrumbVariants = cva(styles['breadcrumb'], {
  */
 export interface BreadcrumbProps
   extends VariantProps<typeof breadcrumbVariants>,
-    ComponentProps<'nav'> {}
+    ComponentProps<'nav'> {
+  /** Accessible name of the navigation landmark. Defaults to `"Breadcrumb"`. */
+  'aria-label'?: string;
+}
 
 export const BreadcrumbRoot = ({
   className,

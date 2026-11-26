@@ -118,19 +118,19 @@ The Combobox component is composed of several parts, each with their own props.
 
 The root element is the parent component that manages the combobox state including open/close, input value, and selection.
 
-<auto-type-table path="./props.ts" name="ComboboxRootProps" />
+<auto-type-table name="ComboboxProps" />
 
 ### Input Props
 
 The input field that triggers the combobox dropdown and allows users to type and filter options.
 
-<auto-type-table path="./props.ts" name="ComboboxInputProps" />
+<auto-type-table name="ComboboxInputProps" />
 
 ### Content Props
 
 The dropdown container that holds the combobox items.
 
-<auto-type-table path="./props.ts" name="ComboboxContentProps" />
+<auto-type-table name="ComboboxContentProps" />
 
 ### Item Props
 
@@ -138,49 +138,49 @@ Individual selectable options within the combobox. In single mode, selecting an 
 
 When no `value` prop is provided, the text content of `children` is used as the value.
 
-<auto-type-table path="./props.ts" name="ComboboxItemProps" />
+<auto-type-table name="ComboboxItemProps" />
 
 ### Label Props
 
 A visible label for the input. It renders a `<label>` whose `htmlFor` is the input `id`. Inside a [Field](/docs/components/field), use the Field label instead.
 
-<auto-type-table path="./props.ts" name="ComboboxLabelProps" />
+<auto-type-table name="ComboboxLabelProps" />
 
 ### Clear Props
 
 A button that clears the value and the input text. It renders [IconButton](/docs/components/icon-button) and shows only when a value is selected. `Combobox.Input` renders one before the chevron when `showClearButton` is set.
 
-<auto-type-table path="./props.ts" name="ComboboxClearProps" />
+<auto-type-table name="ComboboxClearProps" />
 
 ### Empty Props
 
 The text shown when no item matches the input. `Combobox.Content` renders one with "No results" by default. Add `Combobox.Empty` as a direct child of `Combobox.Content` to change the text. Add it with no children to show nothing.
 
-<auto-type-table path="./props.ts" name="ComboboxEmptyProps" />
+<auto-type-table name="ComboboxEmptyProps" type="ComponentProps<typeof Combobox.Empty>" />
 
 ### Status Props
 
 A visually hidden live region. Screen readers announce its text when it changes, for example to announce loading. Place it anywhere inside `Combobox`. Pass a function as children to get the number of matching items. The number is `null` when `items` is not set on the root.
 
-<auto-type-table path="./props.ts" name="ComboboxStatusProps" />
+<auto-type-table name="ComboboxStatusProps" />
 
 ### Group Props
 
 A way to group related combobox items together.
 
-<auto-type-table path="./props.ts" name="ComboboxGroupProps" />
+<auto-type-table name="ComboboxGroupProps" type="ComponentProps<typeof Combobox.Group>" />
 
 ### GroupLabel Props
 
 Renders a label in a combobox group. Wrap it in `Combobox.Group`.
 
-<auto-type-table path="./props.ts" name="ComboboxGroupLabelProps" />
+<auto-type-table name="ComboboxGroupLabelProps" type="ComponentProps<typeof Combobox.GroupLabel>" />
 
 ### Separator Props
 
 Visual divider between combobox items or groups.
 
-<auto-type-table path="./props.ts" name="ComboboxSeparatorProps" />
+<auto-type-table name="ComboboxSeparatorProps" type="ComponentProps<typeof Combobox.Separator>" />
 
 ### Slots
 

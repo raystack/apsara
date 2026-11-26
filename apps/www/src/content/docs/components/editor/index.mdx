@@ -47,77 +47,77 @@ The controls work the same in `Editor.Toolbar` and `Editor.FloatingToolbar`, so 
 
 Groups all parts and owns the editor state. Renders a `div` with `data-focused`, `data-empty`, `data-disabled` and `data-readonly`.
 
-<auto-type-table path="./props.ts" name="EditorProps" />
+<auto-type-table name="EditorProps" />
 
 ### Content
 
 The editable document. It renders the ProseMirror view with `role="textbox"` and `aria-multiline`. Give it an accessible name with `aria-label`.
 
-<auto-type-table path="./props.ts" name="EditorContentProps" />
+<auto-type-table name="EditorContentProps" />
 
 ### Toolbar
 
 A toolbar that stays in place. It renders an Apsara `Toolbar` and takes its props. It does not render when the editor is read only.
 
-<auto-type-table path="./props.ts" name="EditorToolbarProps" />
+<auto-type-table name="EditorToolbarProps" />
 
 ### FloatingToolbar
 
 A toolbar that shows above a text selection while the editor has focus. It waits for the mouse button to come up, and it shows at once for a keyboard selection. Escape hides it until the selection changes.
 
-<auto-type-table path="./props.ts" name="EditorFloatingToolbarProps" />
+<auto-type-table name="EditorFloatingToolbarProps" />
 
 ### MarkButton
 
 Toggles a mark. The button is pressed when the selection has the mark, and it is disabled where the mark is not allowed, for example in a code block.
 
-<auto-type-table path="./props.ts" name="EditorMarkButtonProps" />
+<auto-type-table name="EditorMarkButtonProps" />
 
 ### BlockButton
 
 Toggles a quote, a code block or a list, or inserts a divider.
 
-<auto-type-table path="./props.ts" name="EditorBlockButtonProps" />
+<auto-type-table name="EditorBlockButtonProps" />
 
 ### HeadingMenu
 
 A menu with regular text and the headings. The trigger shows the current style, and each row shows its shortcut.
 
-<auto-type-table path="./props.ts" name="EditorHeadingMenuProps" />
+<auto-type-table name="EditorHeadingMenuProps" />
 
 ### ListMenu
 
 A menu with the list types. The trigger icon follows the active list.
 
-<auto-type-table path="./props.ts" name="EditorListMenuProps" />
+<auto-type-table name="EditorListMenuProps" />
 
 ### LinkButton
 
 Adds, edits or removes a link. In the floating toolbar the URL field replaces the buttons. In the fixed toolbar it opens in a popover. `Mod-k` opens the same field. Only `http`, `https`, `mailto` and relative links are allowed.
 
-<auto-type-table path="./props.ts" name="EditorLinkButtonProps" />
+<auto-type-table name="EditorLinkButtonProps" />
 
 ### HistoryButton
 
 Undoes or redoes. It is disabled when there is nothing to undo or redo.
 
-<auto-type-table path="./props.ts" name="EditorHistoryButtonProps" />
+<auto-type-table name="EditorHistoryButtonProps" />
 
 ### SlashMenu
 
 A menu of block commands that opens on `/` at the start of a block or after a space. It filters on the label and the keywords, and a space in the query closes it. Picking a command removes the typed `/query`, and one undo brings it back. A built-in command that cannot run at the caret is disabled, for example a heading in the first paragraph of a list item.
 
-<auto-type-table path="./props.ts" name="EditorSlashMenuProps" />
+<auto-type-table name="EditorSlashMenuProps" />
 
-<auto-type-table path="./props.ts" name="EditorSlashItem" />
+<auto-type-table name="EditorSlashItem" />
 
 ### Mentions
 
 A menu that inserts a mention chip. It takes the same props as `PromptInput.Mentions`. Mount one per trigger, for example `@` for people and `#` for issues.
 
-<auto-type-table path="./props.ts" name="EditorMentionsProps" />
+<auto-type-table name="EditorMentionsProps" />
 
-<auto-type-table path="./props.ts" name="EditorMentionItem" />
+<auto-type-table name="EditorMentionItem" />
 
 ### Hooks
 
@@ -125,19 +125,19 @@ A menu that inserts a mention chip. It takes the same props as `PromptInput.Ment
 
 `editorCommands` has the same commands as ProseMirror commands, for code that works on an `EditorState` directly. For example, `editorCommands.setHeading(2)(state, dispatch)` runs what `editor.commands.setHeading(2)` runs. `commands.insertMention` inserts the chip at the selection.
 
-<auto-type-table path="./props.ts" name="EditorApi" />
+<auto-type-table name="EditorApi" />
 
-<auto-type-table path="./props.ts" name="EditorCommands" />
+<auto-type-table name="EditorCommands" />
 
 ### Change details
 
 The second argument of `onValueChange`. The methods convert the doc from that change each time you call them, so call a method only when you need its result.
 
-<auto-type-table path="./props.ts" name="EditorChangeDetails" />
+<auto-type-table name="EditorChangeDetails" />
 
 With the `markdown` prop, the second argument is `EditorMarkdownChangeDetails`. It has the same methods and `getMarkdown`.
 
-<auto-type-table path="./props.ts" name="EditorMarkdownChangeDetails" />
+<auto-type-table name="EditorMarkdownChangeDetails" />
 
 ### Markdown
 
@@ -145,7 +145,7 @@ With the `markdown` prop, the second argument is `EditorMarkdownChangeDetails`. 
 
 Markdown has no form for some content. A hard break at the end of a block is dropped, a hard break in a heading becomes a space, and an empty paragraph is dropped. A controlled Markdown `value` that the current doc converts to does not reload the doc, so these do not change while the user types.
 
-<auto-type-table path="./props.ts" name="MarkdownAdapterOptions" />
+<auto-type-table name="MarkdownAdapterOptions" />
 
 ## Examples
 

@@ -12,6 +12,7 @@ import { CalendarPreviewSeparator } from './calendar-preview-separator';
 
 export interface CalendarPreviewBodyProps
   extends useRender.ComponentProps<'div'> {
+  /** The label above the input. No label renders without it. */
   label?: ReactNode;
   /**
    * Shows the calendar icon in the date input.

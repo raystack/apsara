@@ -24,6 +24,8 @@ type BaseManager = ReturnType<
 >;
 
 interface ToastOptions extends ToastData {
+  /** Type of the toast: `success`, `error`, `warning`, `info`, or `loading`. It sets the default icon and its color. */
+  type?: string;
   /**
    * Shows an arrow that points at the anchor. Only anchored toasts use it.
    * @default false
@@ -47,11 +49,14 @@ export type ToastUpdater =
   | ((prevToast: ToastObject<ToastData>) => ToastUpdateOptions);
 
 export interface ToastPromiseOptions<Value> {
+  /** Toast shown while the promise is pending. It does not auto-dismiss. A string sets the description. */
   loading: string | ToastUpdateOptions;
+  /** Toast shown when the promise resolves. A string sets the description. A function receives the resolved value. */
   success:
     | string
     | ToastUpdateOptions
     | ((result: Value) => string | ToastUpdateOptions);
+  /** Toast shown when the promise rejects. A string sets the description. A function receives the rejection reason. */
   error:
     | string
     | ToastUpdateOptions
@@ -111,13 +116,23 @@ export const anchoredManager = Symbol('anchoredManager');
  */
 export interface ToastManager
   extends Omit<BaseManager, 'add' | 'update' | 'promise'> {
+  /** Adds a toast and returns its id for `update` and `close`. */
   add: (options: ToastAddOptions) => string;
+  /** Updates an open toast in place. Pass a function to build the update from the current toast. */
   update: (id: string, options: ToastUpdater) => void;
+  /** Shows the `loading` toast, then updates it to `success` or `error` when the promise settles. Returns a promise that settles the same way. */
   promise: <Value>(
     promise: Promise<Value>,
     options: ToastPromiseOptions<Value>
   ) => Promise<Value>;
-  /** Base UI renders anchored toasts in a separate provider, with this manager. */
+  /** Closes the toast with the given id, or every toast when you omit the id. */
+  close: BaseManager['close'];
+  /** @ignore */
+  ' subscribe': BaseManager[' subscribe'];
+  /**
+   * Base UI renders anchored toasts in a separate provider, with this manager.
+   * @ignore
+   */
   [anchoredManager]: BaseManager;
 }
 
@@ -196,9 +211,16 @@ type BaseHookReturn = ReturnType<
  */
 export interface UseToastManagerReturn
   extends Omit<BaseHookReturn, 'add' | 'update' | 'promise'> {
+  /** Stacked toasts on screen. The hook re-renders when this list changes. */
+  toasts: BaseHookReturn['toasts'];
+  /** Adds a toast and returns its id for `update` and `close`. */
   add: ToastManager['add'];
+  /** Updates an open toast in place. Pass a function to build the update from the current toast. */
   update: ToastManager['update'];
+  /** Shows the `loading` toast, then updates it to `success` or `error` when the promise settles. Returns a promise that settles the same way. */
   promise: ToastManager['promise'];
+  /** Closes the toast with the given id, or every toast when you omit the id. */
+  close: BaseHookReturn['close'];
 }
 
 export function useToastManager(): UseToastManagerReturn {

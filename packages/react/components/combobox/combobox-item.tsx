@@ -10,7 +10,13 @@ import styles from './combobox.module.css';
 import { useComboboxContext } from './combobox-root';
 
 export interface ComboboxItemProps extends ComboboxPrimitive.Item.Props {
+  /** A unique value that identifies the item. Defaults to `children` when it is a string. */
+  value?: ComboboxPrimitive.Item.Props['value'];
+  /** Content of the item. A string also sets the default `value`. */
+  children?: ReactNode;
+  /** Icon before the item text. Shown only when `children` is a string. */
   leadingIcon?: ReactNode;
+  /** Icon after the item text. Shown only when `children` is a string. */
   trailingIcon?: ReactNode;
 }
 

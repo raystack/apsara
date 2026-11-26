@@ -17,7 +17,15 @@ import { useFieldContext } from '../field';
 import { ItemType } from './types';
 
 interface CommonProps {
+  /**
+   * Whether the list has a search input that filters the items.
+   * @default false
+   */
   autocomplete?: boolean;
+  /**
+   * How the search filters the items. `"auto"` filters them as the user types. With `"manual"`, you filter them in `onInputValueChange`.
+   * @default "auto"
+   */
   autocompleteMode?: 'auto' | 'manual';
 }
 
@@ -63,42 +71,73 @@ export type SelectChangeEventDetails =
   | ComboboxPrimitive.Root.ChangeEventDetails;
 
 export interface BaseSelectProps extends CommonProps {
+  /** The search text when `autocomplete` is set. */
   inputValue?: string;
+  /**
+   * The search text on first render when `inputValue` is not set.
+   * @default ""
+   */
   defaultInputValue?: string;
+  /** Called when the search text changes. */
   onInputValueChange?: (
     inputValue: string,
     eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
   ) => void;
+  /** The select's parts, such as `Select.Trigger` and `Select.Content`. */
   children?: ReactNode;
+  /** Whether the list is open. */
   open?: boolean;
+  /**
+   * Whether the list is open on first render when `open` is not set.
+   * @default false
+   */
   defaultOpen?: boolean;
+  /** Called when the list opens or closes. */
   onOpenChange?: (
     open: boolean,
     eventDetails: SelectChangeEventDetails
   ) => void;
+  /**
+   * Whether the select is disabled.
+   * @default false
+   */
   disabled?: boolean;
+  /** Whether a value is required. Defaults to the `required` of the surrounding `Field`, otherwise `false`. */
   required?: boolean;
+  /** Name of the field when the select is submitted with a form. */
   name?: string;
+  /** All item values. With `autocomplete`, setting it turns off the filtering of the `Select.Item` children. It has no effect without `autocomplete`. */
   items?: string[];
 }
 
 export interface SingleSelectProps extends BaseSelectProps {
+  /**
+   * Whether the user can select more than one item. `value`, `defaultValue`, and `onValueChange` then use an array.
+   * @default false
+   */
   multiple?: false;
+  /** The selected value. An array when `multiple` is set. */
   value?: string;
+  /** Called when the selection changes. Receives an array when `multiple` is set. */
   onValueChange?: (
     value: string,
     eventDetails: SelectChangeEventDetails
   ) => void;
+  /** The value selected on first render when `value` is not set. An array when `multiple` is set. */
   defaultValue?: string;
 }
 
 export interface MultipleSelectProps extends BaseSelectProps {
+  /** Whether the user can select more than one item. `value`, `defaultValue`, and `onValueChange` then use an array. */
   multiple: true;
+  /** The selected value. An array when `multiple` is set. */
   value?: string[];
+  /** Called when the selection changes. Receives an array when `multiple` is set. */
   onValueChange?: (
     value: string[],
     eventDetails: SelectChangeEventDetails
   ) => void;
+  /** The value selected on first render when `value` is not set. An array when `multiple` is set. */
   defaultValue?: string[];
 }
 

@@ -19,16 +19,17 @@ import type { TourAlign, TourRenderProps, TourSide } from './types';
 export interface TourContentProps {
   /**
    * Default side of the target to place the card on; steps can override.
-   * @default 'bottom'
+   * @default "bottom"
    */
   side?: TourSide;
-  /** Default alignment against the target; steps can override. @default 'center' */
+  /** Default alignment against the target; steps can override. @default "center" */
   align?: TourAlign;
   /** Default distance to the target in pixels; steps can override. @default 12 */
   sideOffset?: number;
   /** Whether to render the pointing arrow. @default false */
   showArrow?: boolean;
   className?: string;
+  /** Inline style for the card. */
   style?: CSSProperties;
   /**
    * Card content: static nodes or a render function receiving the active
@@ -36,7 +37,7 @@ export interface TourContentProps {
    * `Tour.Description`, `Tour.Progress` and the navigation buttons.
    */
   children?: ReactNode | ((props: TourRenderProps) => ReactNode);
-  /** Corner radius for this card only. Overrides the theme's `radius`. */
+  /** Corner radius for this card only. Defaults to the theme's `radius`. */
   radius?: Radius;
 }
 

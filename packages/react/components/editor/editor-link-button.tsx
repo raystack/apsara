@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { LinkIcon } from '~/icons';
 import { Popover } from '../popover';
 import { activeLink, canSetLink } from './core/commands';
@@ -10,7 +10,10 @@ import { EditorControl, type EditorControlBaseProps } from './editor-control';
 import { useFloatingToolbar } from './editor-floating-context';
 import { EditorLinkForm } from './editor-link-form';
 
-export interface EditorLinkButtonProps extends EditorControlBaseProps {}
+export interface EditorLinkButtonProps extends EditorControlBaseProps {
+  /** Replaces the default icon. */
+  children?: ReactNode;
+}
 
 /**
  * Adds, edits or removes a link. In the floating toolbar the URL field

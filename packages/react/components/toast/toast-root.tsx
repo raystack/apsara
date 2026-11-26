@@ -44,7 +44,7 @@ function getSwipeDirection(position: ToastPosition): SwipeDirection[] {
 
 export interface ToastRootProps extends ToastPrimitive.Root.Props {
   position?: ToastPosition;
-  /** Corner radius for this toast only. Overrides the theme's `radius`. */
+  /** Corner radius for this toast only. Defaults to the theme's `radius`. */
   radius?: Radius;
 }
 

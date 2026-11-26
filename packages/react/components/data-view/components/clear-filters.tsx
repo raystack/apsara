@@ -15,6 +15,7 @@ import {
 } from '../utils';
 
 export interface DataViewClearFiltersProps {
+  /** CSS class applied to the filter summary row. */
   className?: string;
 }
 
