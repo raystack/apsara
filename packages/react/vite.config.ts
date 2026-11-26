@@ -53,6 +53,10 @@ const FONT_IMPORT =
 const stylesheets = (): Plugin => ({
   name: 'apsara-stylesheets',
   apply: 'build',
+  buildStart() {
+    // No module imports normalize.css, so watch mode needs it added.
+    this.addWatchFile(join(root, 'normalize.css'));
+  },
   writeBundle: {
     order: 'post',
     async handler(options, bundle) {
@@ -99,11 +103,13 @@ const runTsc = () =>
     spawn(process.execPath, [tsc, '-p', 'tsconfig.build.json'], {
       cwd: root,
       stdio: 'inherit'
-    }).on('exit', code =>
-      code === 0
-        ? resolvePromise()
-        : reject(new Error(`tsc exited with code ${code}`))
-    );
+    })
+      .once('error', reject)
+      .once('exit', code =>
+        code === 0
+          ? resolvePromise()
+          : reject(new Error(`tsc exited with code ${code}`))
+      );
   });
 
 /** Matches a module specifier after `from`, `import(`, or a bare `import`. */
@@ -176,12 +182,16 @@ const declarations = (): Plugin => {
   return {
     name: 'apsara-declarations',
     apply: 'build',
-    async buildStart() {
-      await rm(typesDir, { recursive: true, force: true });
-      tsc = runTsc();
+    buildStart() {
+      // Watch mode runs one task per output, and each task calls buildStart.
+      // watchChange clears `tsc`, so each change runs the compiler once.
+      tsc ??= rm(typesDir, { recursive: true, force: true }).then(runTsc);
       // The result is read in writeBundle. This keeps a failure from being
       // reported as unhandled before then.
       tsc.catch(() => undefined);
+    },
+    watchChange() {
+      tsc = undefined;
     },
     async writeBundle(options) {
       if (options.format !== 'es') return;
