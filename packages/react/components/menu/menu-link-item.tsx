@@ -5,12 +5,11 @@ import { ReactElement } from 'react';
 import { Cell, CellBaseProps } from './cell';
 import { stopItemFocus } from './menu-item';
 import { useMenuContext } from './menu-root';
-import { getItemLabel } from './utils';
 
 export interface MenuLinkItemProps
   extends Omit<MenuPrimitive.LinkItem.Props, 'render'>,
     CellBaseProps {
-  /** Extra text to match in a searchable menu, along with the children text. */
+  /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
   /** The link element to render, for example a router link. */
   render?: ReactElement;
@@ -20,7 +19,7 @@ export interface MenuLinkItemProps
 export function LinkItemBase({
   slotPrefix,
   children,
-  value,
+  value: _value,
   leadingIcon,
   trailingIcon,
   render = <a />,
@@ -40,7 +39,6 @@ export function LinkItemBase({
     <MenuPrimitive.LinkItem
       data-slot={`${slotPrefix}-link-item`}
       render={cell}
-      label={autocomplete ? getItemLabel(value, children) : undefined}
       {...props}
       onFocus={autocomplete ? props.onFocus : stopItemFocus}
     >

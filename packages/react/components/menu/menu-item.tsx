@@ -3,7 +3,6 @@
 import { Menu as MenuPrimitive } from '@base-ui/react';
 import { Cell, CellBaseProps } from './cell';
 import { useMenuContext } from './menu-root';
-import { getItemLabel } from './utils';
 
 /**
  * Keeps focus handling out of Base UI for items in a plain menu.
@@ -20,12 +19,13 @@ export const stopItemFocus = (e: {
 };
 
 export interface MenuItemProps extends MenuPrimitive.Item.Props, CellBaseProps {
+  /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
 }
 
 export function MenuItem({
   children,
-  value,
+  value: _value,
   leadingIcon,
   trailingIcon,
   render,
@@ -41,7 +41,6 @@ export function MenuItem({
     <MenuPrimitive.Item
       data-slot='menu-item'
       render={cell}
-      label={autocomplete ? getItemLabel(value, children) : undefined}
       {...props}
       onFocus={autocomplete ? props.onFocus : stopItemFocus}
     >

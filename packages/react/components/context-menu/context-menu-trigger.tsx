@@ -3,8 +3,6 @@
 import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react';
 import { ChevronRightIcon } from '~/icons';
 import { Cell, CellBaseProps } from '../menu/cell';
-import { useMenuContext } from '../menu/menu-root';
-import { getItemLabel } from '../menu/utils';
 
 export interface ContextMenuTriggerProps
   extends ContextMenuPrimitive.Trigger.Props {}
@@ -24,22 +22,20 @@ ContextMenuTrigger.displayName = 'ContextMenu.Trigger';
 export interface ContextMenuSubTriggerProps
   extends ContextMenuPrimitive.SubmenuTrigger.Props,
     CellBaseProps {
+  /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
 }
 
 export const ContextMenuSubTrigger = ({
   children,
-  value,
+  value: _value,
   trailingIcon = <ChevronRightIcon />,
   leadingIcon,
   ...props
 }: ContextMenuSubTriggerProps) => {
-  const { parent } = useMenuContext();
-
   return (
     <ContextMenuPrimitive.SubmenuTrigger
       render={<Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />}
-      label={parent?.autocomplete ? getItemLabel(value, children) : undefined}
       {...props}
       data-slot='menu-subtrigger'
     >

@@ -7,7 +7,6 @@ import styles from '../menu/menu.module.css';
 import { MenuSearch } from '../menu/menu-content';
 import { useMenuContext } from '../menu/menu-root';
 import { useThemeInjection } from '../theme/portal';
-import { ContextMenuEmptyState } from './context-menu-misc';
 
 export interface ContextMenuContentProps
   extends Omit<
@@ -34,7 +33,7 @@ export const ContextMenuContent = ({
   radius,
   ...positionerProps
 }: ContextMenuContentProps) => {
-  const { autocomplete } = useMenuContext();
+  const { autocomplete, autocompleteMode } = useMenuContext();
   const theme = useThemeInjection();
 
   return (
@@ -53,6 +52,9 @@ export const ContextMenuContent = ({
           className={cx(
             styles.content,
             autocomplete && styles.comboboxContainer,
+            autocomplete &&
+              autocompleteMode === 'auto' &&
+              styles['autocomplete-mode-auto'],
             theme?.className,
             radiusStyle({ radius }),
             className
@@ -66,7 +68,6 @@ export const ContextMenuContent = ({
             <MenuSearch
               slotPrefix='context-menu'
               placeholder={searchPlaceholder}
-              emptyStateType={ContextMenuEmptyState}
             >
               {children}
             </MenuSearch>

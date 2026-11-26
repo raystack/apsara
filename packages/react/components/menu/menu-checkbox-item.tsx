@@ -1,18 +1,16 @@
 'use client';
 
 import { Menu as MenuPrimitive } from '@base-ui/react';
-import { useControlled } from '@base-ui/utils/useControlled';
 import { CheckIcon } from '~/icons';
 import { Cell, CellBaseProps } from './cell';
 import cellStyles from './cell.module.css';
 import { stopItemFocus } from './menu-item';
 import { useMenuContext } from './menu-root';
-import { getItemLabel } from './utils';
 
 export interface MenuCheckboxItemProps
   extends MenuPrimitive.CheckboxItem.Props,
     CellBaseProps {
-  /** Extra text to match in a searchable menu, along with the children text. */
+  /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
 }
 
@@ -20,36 +18,13 @@ export interface MenuCheckboxItemProps
 export function CheckboxItemBase({
   slotPrefix,
   children,
-  value,
+  value: _value,
   leadingIcon,
   trailingIcon,
   render,
-  checked: checkedProp,
-  defaultChecked = false,
-  onCheckedChange,
   ...props
 }: MenuCheckboxItemProps & { slotPrefix: string }) {
   const { autocomplete } = useMenuContext();
-  // The Base UI item renders nothing while filtered out, so the state lives here.
-  const [checked, setCheckedUnwrapped] = useControlled({
-    controlled: checkedProp,
-    default: defaultChecked,
-    name: 'MenuCheckboxItem',
-    state: 'checked'
-  });
-
-  const itemProps = {
-    ...props,
-    checked,
-    onCheckedChange: (
-      next: boolean,
-      eventDetails: MenuPrimitive.CheckboxItem.ChangeEventDetails
-    ) => {
-      onCheckedChange?.(next, eventDetails);
-      if (eventDetails.isCanceled) return;
-      setCheckedUnwrapped(next);
-    }
-  };
 
   const cell = render ?? (
     <Cell
@@ -71,8 +46,7 @@ export function CheckboxItemBase({
     <MenuPrimitive.CheckboxItem
       data-slot={`${slotPrefix}-checkbox-item`}
       render={cell}
-      label={autocomplete ? getItemLabel(value, children) : undefined}
-      {...itemProps}
+      {...props}
       onFocus={autocomplete ? props.onFocus : stopItemFocus}
     >
       {children}

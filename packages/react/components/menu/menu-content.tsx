@@ -2,13 +2,10 @@
 
 import { Menu as MenuPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { useEffect, useRef } from 'react';
 import { type Radius, radiusStyle } from '../../shared/radius';
 import { useThemeInjection } from '../theme/portal';
 import styles from './menu.module.css';
-import { MenuEmptyState } from './menu-misc';
 import { useMenuContext } from './menu-root';
-import { splitChildren } from './utils';
 
 export interface MenuContentProps
   extends Omit<
@@ -35,7 +32,7 @@ export function MenuContent({
   radius,
   ...positionerProps
 }: MenuContentProps) {
-  const { autocomplete } = useMenuContext();
+  const { autocomplete, autocompleteMode } = useMenuContext();
   const theme = useThemeInjection();
 
   return (
@@ -54,6 +51,9 @@ export function MenuContent({
           className={cx(
             styles.content,
             autocomplete && styles.comboboxContainer,
+            autocomplete &&
+              autocompleteMode === 'auto' &&
+              styles['autocomplete-mode-auto'],
             theme?.className,
             radiusStyle({ radius }),
             className
@@ -78,47 +78,31 @@ export function MenuContent({
 MenuContent.displayName = 'Menu.Content';
 
 /**
- * Renders the search input, the empty state, and the filtered list.
+ * Renders the search input and the filtered list.
  * @remarks Only for internal usage.
  */
 export function MenuSearch({
   slotPrefix,
   placeholder,
-  emptyStateType = MenuEmptyState,
   children
 }: {
   slotPrefix: string;
   placeholder: string;
-  emptyStateType?: unknown;
   children: React.ReactNode;
 }) {
-  const [emptyState, items] = splitChildren(children, emptyStateType);
-  const { openedByHover, parent } = useMenuContext();
-  const isSubmenu = !!parent;
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  // Base UI leaves focus outside a menu opened by hover, so typed keys are lost.
-  // A submenu keeps Base UI's behavior: focus stays in the parent input.
-  useEffect(() => {
-    if (openedByHover && !isSubmenu)
-      inputRef.current?.focus({ preventScroll: true });
-  }, [openedByHover, isSubmenu]);
-
   return (
     <>
       <MenuPrimitive.Input
-        ref={inputRef}
         data-slot={`${slotPrefix}-search-input`}
         placeholder={placeholder}
-        aria-label={placeholder}
+        aria-label={placeholder || 'Search'}
         className={styles.comboboxInput}
       />
-      {emptyState}
       <MenuPrimitive.List
         data-slot={`${slotPrefix}-search-list`}
         className={styles.comboboxContent}
       >
-        {items}
+        {children}
       </MenuPrimitive.List>
     </>
   );

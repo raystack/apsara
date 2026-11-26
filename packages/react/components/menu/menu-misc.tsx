@@ -38,12 +38,6 @@ export function MenuLabel({
 MenuLabel.displayName = 'Menu.Label';
 
 export function MenuSeparator({ className, ...props }: ComponentProps<'div'>) {
-  const { shouldFilter } = useMenuContext();
-
-  if (shouldFilter) {
-    return null;
-  }
-
   return (
     <div
       data-slot='menu-separator'
@@ -70,6 +64,11 @@ export function MenuEmptyState({
   return (
     <Component
       data-slot='menu-empty-state'
+      // The search list is a menu, which allows only items, groups and
+      // separators, so the empty state is a plain element and not a live region.
+      role={undefined}
+      aria-live={undefined}
+      aria-atomic={undefined}
       className={cx(styles.empty, className)}
       {...props}
     >

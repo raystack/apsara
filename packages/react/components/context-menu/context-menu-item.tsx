@@ -15,17 +15,17 @@ import {
   RadioItemBase
 } from '../menu/menu-radio';
 import { useMenuContext } from '../menu/menu-root';
-import { getItemLabel } from '../menu/utils';
 
 export interface ContextMenuItemProps
   extends ContextMenuPrimitive.Item.Props,
     CellBaseProps {
+  /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
 }
 
 export const ContextMenuItem = ({
   children,
-  value,
+  value: _value,
   leadingIcon,
   trailingIcon,
   render,
@@ -41,7 +41,6 @@ export const ContextMenuItem = ({
     <ContextMenuPrimitive.Item
       data-slot='context-menu-item'
       render={cell}
-      label={autocomplete ? getItemLabel(value, children) : undefined}
       {...props}
       onFocus={autocomplete ? props.onFocus : stopItemFocus}
     >

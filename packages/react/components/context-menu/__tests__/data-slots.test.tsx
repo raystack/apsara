@@ -104,7 +104,7 @@ describe('ContextMenu data-slot contract', () => {
       <ContextMenu autocomplete>
         <ContextMenu.Trigger>{TRIGGER_TEXT}</ContextMenu.Trigger>
         <ContextMenu.Content>
-          <ContextMenu.Item value='item'>Item</ContextMenu.Item>
+          <ContextMenu.Item>Item</ContextMenu.Item>
         </ContextMenu.Content>
       </ContextMenu>
     );

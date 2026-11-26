@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Button } from '../../button/button';
 import { Menu } from '../menu';
+import styles from '../menu.module.css';
 import { MenuRootProps } from '../menu-root';
 
 // Mock scrollIntoView for test environment
@@ -155,8 +156,8 @@ describe('Menu', () => {
   describe('Autocomplete', () => {
     const FRUITS = (
       <Menu.Content>
-        <Menu.Item value='apple'>Apple</Menu.Item>
-        <Menu.Item value='banana'>Banana</Menu.Item>
+        <Menu.Item>Apple</Menu.Item>
+        <Menu.Item>Banana</Menu.Item>
       </Menu.Content>
     );
 
@@ -349,7 +350,7 @@ describe('Menu', () => {
     const items = () =>
       Array.from(
         document.querySelectorAll('[data-slot="menu-search-list"] [role]')
-      ).filter(el => !['group', 'separator', 'status'].includes(el.role!));
+      ).filter(el => !['group', 'separator'].includes(el.role!));
 
     it('filters items as the user types', async () => {
       await renderAndOpenDropdown(<SearchMenu />);
@@ -432,30 +433,43 @@ describe('Menu', () => {
       );
     });
 
-    it('sets aria-haspopup="dialog" on the trigger', () => {
-      render(<SearchMenu />);
-      expect(screen.getByText(TRIGGER_TEXT)).toHaveAttribute(
-        'aria-haspopup',
-        'dialog'
-      );
-    });
-
-    it('ignores accents when matching', async () => {
+    it('stays open when onOpenChange cancels the close', async () => {
       await renderAndOpenDropdown(
-        <Menu autocomplete>
+        <Menu
+          autocomplete
+          onOpenChange={(open, eventDetails) => {
+            if (!open) eventDetails.cancel();
+          }}
+        >
           <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
           <Menu.Content>
-            <Menu.Item>Café</Menu.Item>
-            <Menu.Item>Tea</Menu.Item>
+            <Menu.Item>Apple</Menu.Item>
           </Menu.Content>
         </Menu>
       );
-      search('cafe');
-      expect(items()).toHaveLength(1);
-      expect(items()[0]).toHaveTextContent('Café');
+      fireEvent.keyDown(screen.getByRole('searchbox'), { key: 'Escape' });
+      await waitFor(() =>
+        expect(screen.getByRole('searchbox')).toBeInTheDocument()
+      );
+      expect(screen.getByText('Apple')).toBeInTheDocument();
     });
 
-    it('matches both the item value and its text', async () => {
+    it('labels the search input when the placeholder is empty', async () => {
+      await renderAndOpenDropdown(
+        <Menu autocomplete>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content searchPlaceholder=''>
+            <Menu.Item>Apple</Menu.Item>
+          </Menu.Content>
+        </Menu>
+      );
+      expect(screen.getByRole('searchbox')).toHaveAttribute(
+        'aria-label',
+        'Search'
+      );
+    });
+
+    it('matches the item text and not its value', async () => {
       await renderAndOpenDropdown(
         <Menu autocomplete>
           <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
@@ -468,9 +482,6 @@ describe('Menu', () => {
       expect(items()).toHaveLength(1);
 
       search('arch');
-      expect(items()).toHaveLength(1);
-
-      search('zzz');
       expect(items()).toHaveLength(0);
     });
 
@@ -500,86 +511,35 @@ describe('Menu', () => {
       ).toHaveAttribute('hidden');
     });
 
-    it('hides separators while the search is not empty', async () => {
+    it('adds the auto mode class to the popup', async () => {
       await renderAndOpenDropdown(
         <Menu autocomplete>
           <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
           <Menu.Content>
             <Menu.Item>Apple</Menu.Item>
-            <Menu.Separator />
-            <Menu.Item>Banana</Menu.Item>
           </Menu.Content>
         </Menu>
       );
-      expect(screen.getByRole('separator')).toBeInTheDocument();
-      search('a');
-      expect(screen.queryByRole('separator')).not.toBeInTheDocument();
+      expect(screen.getByRole('dialog')).toHaveClass(
+        styles['autocomplete-mode-auto']
+      );
     });
 
-    it('keeps separators hidden while the popup closes', async () => {
-      // jsdom has no exit animation, so one is held open until `finish` runs.
-      let finish!: () => void;
-      const finished = new Promise<void>(resolve => {
-        finish = resolve;
-      });
-      Element.prototype.getAnimations = function (this: Element) {
-        if (!this.hasAttribute('data-ending-style')) return [];
-        return [{ finished, effect: null } as unknown as Animation];
-      };
-      try {
-        await renderAndOpenDropdown(
-          <Menu autocomplete>
-            <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
-            <Menu.Content>
-              <Menu.Item>Apple</Menu.Item>
-              <Menu.Separator />
-              <Menu.Item>Banana</Menu.Item>
-            </Menu.Content>
-          </Menu>
-        );
-        search('a');
-        fireEvent.keyDown(screen.getByPlaceholderText('Search...'), {
-          key: 'Escape'
-        });
-
-        await waitFor(() => {
-          expect(screen.getByRole('dialog', { hidden: true })).toHaveAttribute(
-            'data-ending-style'
-          );
-        });
-        expect(screen.getByText('Apple')).toBeInTheDocument();
-        expect(
-          screen.queryByRole('separator', { hidden: true })
-        ).not.toBeInTheDocument();
-
-        finish();
-        await waitFor(() => {
-          expect(screen.queryByText('Apple')).not.toBeInTheDocument();
-        });
-        fireEvent.click(screen.getByText(TRIGGER_TEXT));
-        expect(await screen.findByRole('separator')).toBeInTheDocument();
-      } finally {
-        // @ts-expect-error jsdom does not implement getAnimations.
-        delete Element.prototype.getAnimations;
-      }
-    });
-
-    it('keeps separators for a search of only spaces', async () => {
+    it('leaves the auto mode class off a manual mode popup', async () => {
       await renderAndOpenDropdown(
-        <Menu autocomplete>
+        <Menu autocomplete autocompleteMode='manual'>
           <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
           <Menu.Content>
             <Menu.Item>Apple</Menu.Item>
-            <Menu.Separator />
-            <Menu.Item>Banana</Menu.Item>
           </Menu.Content>
         </Menu>
       );
-      search('  ');
-      expect(screen.getByRole('separator')).toBeInTheDocument();
+      expect(screen.getByRole('dialog')).not.toHaveClass(
+        styles['autocomplete-mode-auto']
+      );
     });
 
-    it('shows the empty state only when no item matches', async () => {
+    it('shows the empty state as a plain element only when no item matches', async () => {
       await renderAndOpenDropdown(
         <Menu autocomplete>
           <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
@@ -595,25 +555,26 @@ describe('Menu', () => {
 
       search('zzz');
       expect(empty()).toHaveTextContent('No results');
-      expect(empty()).toHaveAttribute('role', 'status');
-      expect(empty()).toHaveAttribute('aria-live', 'polite');
+      expect(empty()).not.toHaveAttribute('role');
+      expect(empty()).not.toHaveAttribute('aria-live');
+      expect(empty()).not.toHaveAttribute('aria-atomic');
+      expect(empty()?.closest('[data-slot="menu-search-list"]')).not.toBeNull();
     });
 
-    it('keeps every item in manual mode', async () => {
+    it('matches the label in place of the rendered text', async () => {
       await renderAndOpenDropdown(
-        <Menu autocomplete autocompleteMode='manual'>
+        <Menu autocomplete>
           <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
           <Menu.Content>
-            <Menu.Item>Apple</Menu.Item>
-            <Menu.Item>Banana</Menu.Item>
+            <Menu.Item label='Share link'>Share</Menu.Item>
           </Menu.Content>
         </Menu>
       );
-      search('zzz');
-      expect(items()).toHaveLength(2);
+      search('link');
+      expect(items()).toHaveLength(1);
     });
 
-    it('focuses the input when the menu opens on hover', async () => {
+    it('focuses the input when the mouse moves over a menu opened on hover', async () => {
       render(
         <Menu autocomplete>
           <Menu.Trigger openOnHover delay={0}>
@@ -629,8 +590,27 @@ describe('Menu', () => {
       fireEvent.mouseEnter(trigger);
       fireEvent.mouseMove(trigger);
 
-      const input = await screen.findByPlaceholderText('Search...');
+      const popup = await screen.findByRole('dialog');
+      const input = screen.getByRole('searchbox');
+      expect(input).not.toHaveFocus();
+
+      fireEvent.pointerMove(popup, { pointerType: 'mouse' });
+      fireEvent.mouseMove(popup);
       await waitFor(() => expect(input).toHaveFocus());
+    });
+
+    it('keeps every item in manual mode', async () => {
+      await renderAndOpenDropdown(
+        <Menu autocomplete autocompleteMode='manual'>
+          <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
+          <Menu.Content>
+            <Menu.Item>Apple</Menu.Item>
+            <Menu.Item>Banana</Menu.Item>
+          </Menu.Content>
+        </Menu>
+      );
+      search('zzz');
+      expect(items()).toHaveLength(2);
     });
 
     describe('Submenus', () => {
@@ -706,29 +686,6 @@ describe('Menu', () => {
           expect(screen.queryByText('Copy link')).not.toBeInTheDocument()
         );
         await waitFor(() => expect(root).toHaveFocus());
-      });
-
-      it('keeps an empty state inside a fragment beside the list', async () => {
-        await renderAndOpenDropdown(
-          <Menu autocomplete>
-            <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
-            <Menu.Content>
-              <Menu.Item>Profile</Menu.Item>
-              <>
-                <Menu.EmptyState>No results</Menu.EmptyState>
-              </>
-            </Menu.Content>
-          </Menu>
-        );
-        search('zzz');
-        const empties = document.querySelectorAll(
-          '[data-slot="menu-empty-state"]'
-        );
-        expect(empties).toHaveLength(1);
-        expect(empties[0]).toHaveTextContent('No results');
-        expect(
-          empties[0].closest('[data-slot="menu-search-list"]')
-        ).not.toBeInTheDocument();
       });
     });
   });

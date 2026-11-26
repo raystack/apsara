@@ -46,12 +46,6 @@ export const ContextMenuSeparator = ({
   className,
   ...props
 }: ComponentProps<'div'>) => {
-  const { shouldFilter } = useMenuContext();
-
-  if (shouldFilter) {
-    return null;
-  }
-
   return (
     <div
       data-slot='context-menu-separator'
@@ -74,6 +68,11 @@ export const ContextMenuEmptyState = ({
   return (
     <Component
       data-slot='context-menu-empty-state'
+      // The search list is a menu, which allows only items, groups and
+      // separators, so the empty state is a plain element and not a live region.
+      role={undefined}
+      aria-live={undefined}
+      aria-atomic={undefined}
       className={cx(styles.empty, className)}
       {...props}
     >
