@@ -59,7 +59,7 @@ export interface ContextMenuTriggerProps {
 }
 
 export interface ContextMenuContentProps {
-  /** Placeholder text and accessible name for the autocomplete search input
+  /** Placeholder text and accessible name for the autocomplete search input. An empty value uses "Search" as the accessible name.
    * @default "Search..."
    */
   searchPlaceholder?: string;
@@ -108,7 +108,10 @@ export interface ContextMenuItemProps {
   /** Whether the item is disabled */
   disabled?: boolean;
 
-  /** Extra text to match in a searchable menu, along with the `children` text. */
+  /** Text used for search and keyboard text navigation, in place of the rendered text. */
+  label?: string;
+
+  /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
 
   /** Additional CSS class names */
@@ -162,7 +165,10 @@ export interface ContextMenuCheckboxItemProps {
   /** Whether the item is disabled */
   disabled?: boolean;
 
-  /** Extra text to match in a searchable menu, along with the `children` text. */
+  /** Text used for search and keyboard text navigation, in place of the rendered text. */
+  label?: string;
+
+  /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
 
   /** Additional CSS class names */
@@ -212,6 +218,9 @@ export interface ContextMenuRadioItemProps {
   /** Whether the item is disabled */
   disabled?: boolean;
 
+  /** Text used for search and keyboard text navigation, in place of the rendered text. */
+  label?: string;
+
   /** Additional CSS class names */
   className?: string;
 
@@ -234,7 +243,10 @@ export interface ContextMenuLinkItemProps {
   /** Icon element to display after item text */
   trailingIcon?: ReactNode;
 
-  /** Extra text to match in a searchable menu, along with the `children` text. */
+  /** Text used for search and keyboard text navigation, in place of the rendered text. */
+  label?: string;
+
+  /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
 
   /** Additional CSS class names */
@@ -301,12 +313,15 @@ export interface ContextMenuSubTriggerProps {
   /** Icon element to display after trigger text. Defaults to a chevron right icon. */
   trailingIcon?: ReactNode;
 
-  /** Extra text to match in a searchable parent menu, along with the `children` text. */
+  /** Text used for search and keyboard text navigation, in place of the rendered text. */
+  label?: string;
+
+  /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
 }
 
 export interface ContextMenuSubContentProps {
-  /** Placeholder text and accessible name for the autocomplete search input
+  /** Placeholder text and accessible name for the autocomplete search input. An empty value uses "Search" as the accessible name.
    * @default "Search..."
    */
   searchPlaceholder?: string;

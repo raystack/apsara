@@ -80,7 +80,6 @@ export const autocompleteDemo = {
     <Menu autocomplete>
       <Menu.Trigger>Actions</Menu.Trigger>
       <Menu.Content searchPlaceholder="Search actions...">
-        <Menu.EmptyState>No results found</Menu.EmptyState>
         <Menu.Group>
           <Menu.Label>General</Menu.Label>
           <Menu.Item>Assign member...</Menu.Item>
@@ -91,7 +90,7 @@ export const autocompleteDemo = {
         <Menu.Group>
           <Menu.Label>Editing</Menu.Label>
           <Menu.Item>Copy</Menu.Item>
-          <Menu.Item value="remove">Delete...</Menu.Item>
+          <Menu.Item>Delete...</Menu.Item>
         </Menu.Group>
       </Menu.Content>
     </Menu>

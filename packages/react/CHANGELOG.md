@@ -175,25 +175,22 @@ preview. Slots are unchanged. See the
 #### Breaking changes
 
 - In search mode the trigger has `aria-haspopup="dialog"`, the popup is a
-  `dialog`, the input is a `searchbox` labelled by `searchPlaceholder`,
-  and the list is a `menu`. Items keep their menu roles (`menuitem`,
-  `menuitemcheckbox`, `menuitemradio`) instead of `option`. App tests
-  that query `role="option"` or expect `aria-haspopup="menu"` need
-  updating.
+  `dialog`, the input is a `searchbox` labelled by `searchPlaceholder`
+  (or "Search" when `searchPlaceholder` is empty), and the list is a
+  `menu`. Items keep their menu roles (`menuitem`, `menuitemcheckbox`,
+  `menuitemradio`) instead of `option`. App tests that query
+  `role="option"` or expect `aria-haspopup="menu"` need updating.
 - An item matches by its rendered text, including text in `leadingIcon`
-  and `trailingIcon`. With a `value`, it matches the `value` and its
-  `children` text, and text in the icons no longer matches. A radio
-  item's `value` does not match. Matching ignores case and accents.
+  and `trailingIcon`, or by its `label` when set. Its `value` no longer
+  matches. Matching ignores case, accents and punctuation.
+- `value` on `Item`, `CheckboxItem`, `LinkItem` and `SubmenuTrigger` (and
+  their ContextMenu parts) has no effect and is deprecated. Use `label`.
 - `MenuProps` no longer has `inputRef`, `contentRef` and
   `isInitialRender`. The menu never read them. Remove them where you pass
   them.
-- In search mode, `EmptyState` shows only when no item matches, as a
-  `role="status"` live region. It renders next to the list, not inside
-  it, when it is a direct child of `Content`.
 
 #### Other changes
 
-- Typing highlights the first match.
 - Group labels stay visible while their group has matches.
 - ArrowLeft in a submenu's search input moves the text cursor instead of
   closing the submenu.
@@ -201,6 +198,9 @@ preview. Slots are unchanged. See the
   open on hover.
 - `eventDetails.cancel()` in `onOpenChange` keeps an uncontrolled Menu or
   ContextMenu open.
+- A searchable menu opened by hover focuses its search input when the
+  mouse moves over the popup. In a Menubar, keys typed on the trigger
+  before that do not reach the input.
 
 ## 0.49.0
 

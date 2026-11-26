@@ -207,6 +207,14 @@ export default function LinearMenuDemo() {
   const renderMenu = (items: MenuItem[], query: string) => {
     const filteredItems = filterMenuItems(items, query);
 
+    if (searchQuery && filteredItems.length === 0) {
+      return (
+        <div>
+          <Text>No results</Text>
+        </div>
+      );
+    }
+
     return filteredItems.map((item, index) => {
       switch (item.type) {
         case 'group':
@@ -266,7 +274,6 @@ export default function LinearMenuDemo() {
         <Menu.Trigger render={<Button />}>Actions</Menu.Trigger>
         <Menu.Content searchPlaceholder='Search'>
           {renderMenu(menuData, searchQuery)}
-          <Menu.EmptyState>No results</Menu.EmptyState>
         </Menu.Content>
       </Menu>
     </Flex>

@@ -91,7 +91,7 @@ To use a router link, pass it to `render`. The item keeps its layout and icons.
 
 Pass `autocomplete` to the Menu root. Each menu manages its own autocomplete state.
 
-- **`autocompleteMode="auto"`** is the default. Items filter as the user types. Each item matches by its text and, when set, its `value` prop. A `Menu.RadioItem` matches by its text only, because its `value` is the selected value. Matching ignores case and accents.
+- **`autocompleteMode="auto"`** is the default. Items filter as the user types. Each item matches by its rendered text, or by its `label` when set. Matching ignores case, accents and punctuation.
 - **`autocompleteMode="manual"`** leaves filtering to you. Do it in `onInputValueChange`.
 - **Submenus** opt in separately: pass `autocomplete` to `Menu.Submenu`.
 
@@ -141,7 +141,7 @@ The container that holds the menu items. When autocomplete is enabled, renders a
 
 Individual clickable options within the menu. Built on top of [Base UI Menu.Item](https://base-ui.com/react/components/menu).
 
-In a searchable menu, the item's text is used for matching, including text in `leadingIcon` and `trailingIcon`. Pass a `value` prop to also match other text, such as a keyword. With a `value`, text in the icons no longer matches.
+In a searchable menu, the item matches by its rendered text, including text in `leadingIcon` and `trailingIcon`. Pass `label` to match other text in its place.
 
 <auto-type-table path="./props.ts" name="MenuItemProps" />
 
@@ -183,13 +183,13 @@ Renders a label in a menu group. This component should be wrapped with Menu.Grou
 
 ### Separator
 
-Visual divider between menu items or groups. Hidden when filtering is active.
+Visual divider between menu items or groups. In `autocompleteMode="auto"`, it is hidden while the search input has text.
 
 <auto-type-table path="./props.ts" name="MenuSeparatorProps" />
 
 ### EmptyState
 
-Placeholder content when there are no menu items to display. In a searchable menu, it shows only when no item matches the search, and screen readers announce it. Render it as a direct child of `Menu.Content`.
+Placeholder content when there are no menu items to display. In a searchable menu, it shows only when no item matches the search.
 
 <auto-type-table path="./props.ts" name="MenuEmptyStateProps" />
 
@@ -205,7 +205,7 @@ Supports its own `autocomplete` prop to enable search functionality within the s
 
 The trigger item for a submenu. Renders with a trailing chevron icon by default. Accepts `leadingIcon` and `trailingIcon` props.
 
-When inside a searchable parent menu, the trigger matches by its text and, when set, its `value` prop. The root search does not search inside submenus.
+In a searchable parent menu, the trigger matches by its text, or by its `label` when set. The parent search does not match items inside the submenu.
 
 <auto-type-table path="./props.ts" name="MenuSubTriggerProps" />
 
@@ -262,4 +262,3 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 - `Menu.CheckboxItem` uses `role="menuitemcheckbox"` and `Menu.RadioItem` uses
   `role="menuitemradio"`, both with `aria-checked`.
 - `Menu.LinkItem` renders an `<a>` with `role="menuitem"`.
-- In a searchable menu, `Menu.EmptyState` is a `role="status"` live region.

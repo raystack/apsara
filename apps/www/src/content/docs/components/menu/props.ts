@@ -61,7 +61,7 @@ export interface MenuTriggerProps {
 }
 
 export interface MenuContentProps {
-  /** Placeholder text and accessible name for the autocomplete search input
+  /** Placeholder text and accessible name for the autocomplete search input. An empty value uses "Search" as the accessible name.
    * @default "Search..."
    */
   searchPlaceholder?: string;
@@ -110,7 +110,10 @@ export interface MenuItemProps {
   /** Whether the item is disabled */
   disabled?: boolean;
 
-  /** Extra text to match in a searchable menu, along with the `children` text. */
+  /** Text used for search and keyboard text navigation, in place of the rendered text. */
+  label?: string;
+
+  /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
 
   /** Additional CSS class names */
@@ -149,7 +152,10 @@ export interface MenuCheckboxItemProps {
   /** Whether the item is disabled */
   disabled?: boolean;
 
-  /** Extra text to match in a searchable menu, along with the `children` text. */
+  /** Text used for search and keyboard text navigation, in place of the rendered text. */
+  label?: string;
+
+  /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
 
   /** Additional CSS class names */
@@ -199,6 +205,9 @@ export interface MenuRadioItemProps {
   /** Whether the item is disabled */
   disabled?: boolean;
 
+  /** Text used for search and keyboard text navigation, in place of the rendered text. */
+  label?: string;
+
   /** Additional CSS class names */
   className?: string;
 
@@ -221,7 +230,10 @@ export interface MenuLinkItemProps {
   /** Icon element to display after item text */
   trailingIcon?: ReactNode;
 
-  /** Extra text to match in a searchable menu, along with the `children` text. */
+  /** Text used for search and keyboard text navigation, in place of the rendered text. */
+  label?: string;
+
+  /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
 
   /** Additional CSS class names */
@@ -303,12 +315,15 @@ export interface MenuSubTriggerProps {
   /** Icon element to display after trigger text. Defaults to a chevron right icon. */
   trailingIcon?: ReactNode;
 
-  /** Extra text to match in a searchable parent menu, along with the `children` text. */
+  /** Text used for search and keyboard text navigation, in place of the rendered text. */
+  label?: string;
+
+  /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
 }
 
 export interface MenuSubContentProps {
-  /** Placeholder text and accessible name for the autocomplete search input
+  /** Placeholder text and accessible name for the autocomplete search input. An empty value uses "Search" as the accessible name.
    * @default "Search..."
    */
   searchPlaceholder?: string;

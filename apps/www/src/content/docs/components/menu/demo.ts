@@ -162,7 +162,6 @@ export const autocompleteDemo = {
         Default Autocomplete
       </Menu.Trigger>
       <Menu.Content searchPlaceholder="Search">
-        <Menu.EmptyState>No results found</Menu.EmptyState>
         <Menu.Group>
           <Menu.Label>Heading</Menu.Label>
           <Menu.Item>Assign member...</Menu.Item>
@@ -196,7 +195,6 @@ export const autocompleteDemo = {
         </Menu.Submenu>
         <Menu.Item><span>Custom Label</span></Menu.Item>
         <Menu.Item
-          value="remove"
           trailingIcon={
             <Text size="micro" color="secondary">
               ⌘⇧D
@@ -217,7 +215,7 @@ export const autocompleteDemo = {
       </Menu.Trigger>
       <Menu.Content searchPlaceholder="Search actions...">
         <Menu.Item>Copy</Menu.Item>
-        <Menu.Item value="remove">Delete...</Menu.Item>
+        <Menu.Item>Delete...</Menu.Item>
         <Menu.Submenu autocomplete>
           <Menu.SubmenuTrigger>Sub Menu</Menu.SubmenuTrigger>
           <Menu.SubmenuContent>
@@ -274,6 +272,10 @@ export const linearDemo = {
 
   const renderMenu = (items: MenuItem[], query: string) => {
     const filteredItems = filterMenuItems(items, query);
+
+    if (searchQuery && filteredItems.length === 0) {
+      return <div className="no-results">No results</div>;
+    }
 
     return filteredItems.map((item, index) => {
       switch (item.type) {
@@ -332,7 +334,6 @@ export const linearDemo = {
       </Menu.Trigger>
       <Menu.Content searchPlaceholder="Search">
         {renderMenu(menuData, searchQuery)}
-        <Menu.EmptyState>No results</Menu.EmptyState>
       </Menu.Content>
     </Menu>
   );

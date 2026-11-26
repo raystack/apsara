@@ -145,7 +145,6 @@ export const autocompleteDemo = {
         <Text>Right click here</Text>
       </ContextMenu.Trigger>
       <ContextMenu.Content searchPlaceholder="Search">
-        <ContextMenu.EmptyState>No results found</ContextMenu.EmptyState>
         <ContextMenu.Group>
           <ContextMenu.Label>Heading</ContextMenu.Label>
           <ContextMenu.Item>Assign member...</ContextMenu.Item>
@@ -179,7 +178,6 @@ export const autocompleteDemo = {
         </ContextMenu.Submenu>
         <ContextMenu.Item><span>Custom Label</span></ContextMenu.Item>
         <ContextMenu.Item
-          value="remove"
           trailingIcon={
             <Text size="micro" color="secondary">
               ⌘⇧D
@@ -200,7 +198,7 @@ export const autocompleteDemo = {
       </ContextMenu.Trigger>
       <ContextMenu.Content searchPlaceholder="Search actions...">
         <ContextMenu.Item>Copy</ContextMenu.Item>
-        <ContextMenu.Item value="remove">Delete...</ContextMenu.Item>
+        <ContextMenu.Item>Delete...</ContextMenu.Item>
         <ContextMenu.Submenu autocomplete>
           <ContextMenu.SubmenuTrigger>Sub Menu</ContextMenu.SubmenuTrigger>
           <ContextMenu.SubmenuContent>
