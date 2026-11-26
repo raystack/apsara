@@ -36,8 +36,8 @@ const flush = async () => {
 const ITEMS: PromptInputMentionItem[] = [
   { id: 'button', label: 'Button', type: 'component', group: 'Components' },
   {
-    id: 'data-table',
-    label: 'DataTable',
+    id: 'data-view',
+    label: 'DataView',
     type: 'component',
     group: 'Components'
   },
@@ -166,7 +166,7 @@ describe('PromptInput.Mentions', () => {
       expect(options).toEqual([
         'Loose',
         'Button',
-        'DataTable',
+        'DataView',
         'Dialog',
         'Maya Chen',
         'Dana Whitfield'
@@ -487,8 +487,8 @@ describe('PromptInput.Mentions', () => {
           mentions={{
             items: [
               {
-                id: 'data-table',
-                label: 'DataTable',
+                id: 'data-view',
+                label: 'DataView',
                 type: 'component',
                 data: { status: 'stable' }
               }
@@ -506,20 +506,20 @@ describe('PromptInput.Mentions', () => {
 
       expect(onSubmit).toHaveBeenCalledTimes(1);
       const message: PromptInputMessage = onSubmit.mock.calls[0][0];
-      expect(message.markup).toBe('ship @[DataTable](component:data-table)');
-      expect(message.text).toBe('ship @DataTable');
+      expect(message.markup).toBe('ship @[DataView](component:data-view)');
+      expect(message.text).toBe('ship @DataView');
       expect(message.mentions).toEqual([
         {
-          id: 'data-table',
-          label: 'DataTable',
+          id: 'data-view',
+          label: 'DataView',
           type: 'component',
           trigger: '@',
           data: { status: 'stable' },
           start: 5,
-          end: 15
+          end: 14
         }
       ]);
-      expect(message.text.slice(5, 15)).toBe('@DataTable');
+      expect(message.text.slice(5, 14)).toBe('@DataView');
     });
   });
 
@@ -535,7 +535,7 @@ describe('PromptInput.Mentions', () => {
     it('debounces, shows skeleton rows, then the results', async () => {
       const onSearch = vi.fn(
         async (_query: string): Promise<PromptInputMentionItem[]> => [
-          { id: 'data-table', label: 'DataTable', type: 'component' }
+          { id: 'data-view', label: 'DataView', type: 'component' }
         ]
       );
       const { container } = render(
@@ -563,7 +563,7 @@ describe('PromptInput.Mentions', () => {
       expect(onSearch).toHaveBeenCalledTimes(1);
       expect(onSearch.mock.calls[0][0]).toBe('d');
       await waitFor(() =>
-        expect(screen.getByRole('option', { name: 'DataTable' })).toBeVisible()
+        expect(screen.getByRole('option', { name: 'DataView' })).toBeVisible()
       );
     });
 
@@ -603,7 +603,7 @@ describe('PromptInput.Mentions', () => {
             });
           }
           return Promise.resolve([
-            { id: 'data-table', label: 'DataTable', type: 'component' }
+            { id: 'data-view', label: 'DataView', type: 'component' }
           ]);
         }
       );
@@ -632,7 +632,7 @@ describe('PromptInput.Mentions', () => {
 
       expect(screen.queryByText('Stale')).not.toBeInTheDocument();
       await waitFor(() =>
-        expect(screen.getByRole('option', { name: 'DataTable' })).toBeVisible()
+        expect(screen.getByRole('option', { name: 'DataView' })).toBeVisible()
       );
     });
 
@@ -698,32 +698,32 @@ describe('PromptInput.Mentions', () => {
     it('fills in the icon and a fresh label for a parsed chip', async () => {
       const resolveMentions = vi.fn(async () => [
         {
-          id: 'data-table',
-          label: 'DataTable v2',
+          id: 'data-view',
+          label: 'DataView v2',
           type: 'component',
           leadingIcon: <span data-testid='icon'>◆</span>
         }
       ]);
       const { container } = render(
         <Composer
-          defaultValue='check @[DataTable](component:data-table)'
+          defaultValue='check @[DataView](component:data-view)'
           mentions={{ resolveMentions }}
         />
       );
 
       // Label-only until it resolves, never a skeleton and never an error state.
       expect(container.querySelector('[data-mention]')?.textContent).toBe(
-        'DataTable'
+        'DataView'
       );
 
       await waitFor(() => expect(screen.getByTestId('icon')).toBeVisible());
 
       expect(resolveMentions).toHaveBeenCalledWith([
-        { type: 'component', id: 'data-table', label: 'DataTable' }
+        { type: 'component', id: 'data-view', label: 'DataView' }
       ]);
       expect(
         container.querySelector('[data-mention]')?.getAttribute('aria-label')
-      ).toBe('mention: DataTable v2');
+      ).toBe('mention: DataView v2');
     });
 
     it('batches every unresolved chip into one call', async () => {
@@ -752,7 +752,7 @@ describe('PromptInput.Mentions', () => {
       });
       const { container } = render(
         <Composer
-          defaultValue='@[DataTable](component:data-table)'
+          defaultValue='@[DataView](component:data-view)'
           mentions={{ resolveMentions }}
         />
       );
@@ -762,7 +762,7 @@ describe('PromptInput.Mentions', () => {
 
       const chip = container.querySelector('[data-mention]');
       expect(chip).not.toBeNull();
-      expect(chip?.textContent).toBe('DataTable');
+      expect(chip?.textContent).toBe('DataView');
     });
 
     it('does not ask twice for the same reference', async () => {
@@ -773,7 +773,7 @@ describe('PromptInput.Mentions', () => {
       );
       const { container } = render(
         <Composer
-          defaultValue='@[DataTable](component:data-table) '
+          defaultValue='@[DataView](component:data-view) '
           mentions={{ resolveMentions }}
         />
       );
@@ -814,7 +814,7 @@ describe('PromptInput.Mentions', () => {
       const onValueChange = vi.fn();
       const { unmount } = render(
         <Composer
-          defaultValue='@[DataTable](component:data-table)'
+          defaultValue='@[DataView](component:data-view)'
           onValueChange={onValueChange}
           mentions={{ resolveMentions }}
         />
@@ -822,7 +822,7 @@ describe('PromptInput.Mentions', () => {
 
       await waitFor(() => expect(resolveMentions).toHaveBeenCalled());
       unmount();
-      resolve([{ id: 'data-table', label: 'DataTable v2', type: 'component' }]);
+      resolve([{ id: 'data-view', label: 'DataView v2', type: 'component' }]);
       await flush();
 
       expect(onValueChange).not.toHaveBeenCalled();

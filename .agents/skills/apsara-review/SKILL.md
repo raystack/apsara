@@ -121,7 +121,7 @@ Review the API closely: naming, consistency with nearby Apsara components and wi
 
 ### Specialist: runtime performance
 
-This is not one of the four default areas. Skip it at `low`. At `medium`, include it in the main pass when the diff likely affects runtime performance: render hot paths, large lists, virtualization (DataTable, DataView), positioning, layout measurement, scroll, resize, pointer, and keyboard handlers, observers, animations, repeated DOM reads and writes, and state updates in loops. At `high` and above, run it as its own subagent when it applies.
+This is not one of the four default areas. Skip it at `low`. At `medium`, include it in the main pass when the diff likely affects runtime performance: render hot paths, large lists, virtualization (DataView), positioning, layout measurement, scroll, resize, pointer, and keyboard handlers, observers, animations, repeated DOM reads and writes, and state updates in loops. At `high` and above, run it as its own subagent when it applies.
 
 Measure when you can: an existing perf test, a small benchmark, or a small reproduction. If you cannot measure, state the expected complexity or browser work and what would confirm it. Report findings under Bugs when users can see lag, jank, or hangs. Otherwise report them under Simplifications.
 

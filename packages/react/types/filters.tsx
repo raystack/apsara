@@ -25,8 +25,6 @@ export type FilterOperation = {
   label: string;
 };
 
-export type StringFilterOperatorDataTableFilterType = 'eq' | 'neq' | 'ilike';
-
 export type NumberFilterOperatorType =
   | 'eq'
   | 'neq'
@@ -47,14 +45,6 @@ export type MultiSelectFilterOperatorType = 'in' | 'notin';
 export type FilterOperatorTypes =
   | NumberFilterOperatorType
   | StringFilterOperatorType
-  | DateFilterOperatorType
-  | SelectFilterOperatorType
-  | MultiSelectFilterOperatorType
-  | 'empty';
-
-export type DataTableFilterOperatorTypes =
-  | NumberFilterOperatorType
-  | StringFilterOperatorDataTableFilterType
   | DateFilterOperatorType
   | SelectFilterOperatorType
   | MultiSelectFilterOperatorType

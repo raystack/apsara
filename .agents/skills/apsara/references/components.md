@@ -88,7 +88,6 @@ All components import from the root: `import { Button, Dialog } from "@raystack/
 
 | Component | Purpose | slug |
 |---|---|---|
-| `DataTable` (+ `useDataTable`) | Full-featured data table (sort/filter/virtualize, TanStack-based) | `datatable` |
 | `DataView` (+ `useDataView`) | Unified table/list data view | `dataview` |
 | `Table` | Primitive table markup | `table` |
 | `List` | Structured list | `list` |
@@ -136,5 +135,5 @@ All components import from the root: `import { Button, Dialog } from "@raystack/
 ## Notes
 
 - A `—` slug means there's no standalone docs page (e.g. `Box`); use the component's TypeScript types.
-- `DataTable` and `DataView` are large, opinionated components — always fetch their `.mdx` (and the `useDataTable`/`useDataView` hooks) before wiring data, sorting, filtering, or virtualization.
+- `DataView` is a large, opinionated component — always fetch its `.mdx` (and the `useDataView` hook) before wiring data, sorting, filtering, or virtualization.
 - Icons import from `@raystack/apsara/icons`, not the root.
