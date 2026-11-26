@@ -73,8 +73,18 @@ export const ComboboxSeparator = ({
 ComboboxSeparator.displayName = 'Combobox.Separator';
 
 export interface ComboboxClearProps extends ComboboxPrimitive.Clear.Props {
-  /** @default 2 */
+  /**
+   * Size of the button.
+   * @default 2
+   */
   size?: IconButtonProps['size'];
+  /**
+   * Accessible name of the button.
+   * @default "Clear"
+   */
+  'aria-label'?: string;
+  /** Content of the button. Defaults to a clear icon. */
+  children?: ReactNode;
 }
 
 export const ComboboxClear = ({

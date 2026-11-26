@@ -9,6 +9,7 @@ import styles from './announcement-bar.module.css';
 
 const announcementBar = cva(styles['announcement-bar'], {
   variants: {
+    /** Color of the bar. */
     color: {
       neutral: styles['announcement-bar-neutral'],
       danger: styles['announcement-bar-danger'],
@@ -21,13 +22,23 @@ const announcementBar = cva(styles['announcement-bar'], {
 });
 
 export type AnnouncementBarProps = VariantProps<typeof announcementBar> & {
+  /** Icon shown before the text. */
   leadingIcon?: ReactNode;
   className?: string;
+  /** Text of the bar. */
   text: ReactNode;
+  /** Label of the action button, shown after the text. */
   actionLabel?: string;
+  /** Icon of the action button, shown after its label. */
   actionIcon?: ReactNode;
+  /** Called when the action button is clicked. */
   onActionClick?: () => void;
+  /**
+   * Whether the bar shows a dismiss button at its end.
+   * @default false
+   */
   dismissible?: boolean;
+  /** Called when the dismiss button is clicked. When set, the bar does not hide itself. */
   onDismiss?: () => void;
 };
 

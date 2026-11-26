@@ -1,11 +1,14 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { ComponentProps } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import { ChevronRightIcon, EllipsisIcon } from '~/icons';
 import styles from './breadcrumb.module.css';
 
-export interface BreadcrumbEllipsisProps extends ComponentProps<'span'> {}
+export interface BreadcrumbEllipsisProps extends ComponentProps<'span'> {
+  /** Content of the ellipsis. Defaults to an ellipsis icon. */
+  children?: ReactNode;
+}
 
 export const BreadcrumbEllipsis = ({
   ref,
@@ -34,7 +37,10 @@ export const BreadcrumbEllipsis = ({
 
 BreadcrumbEllipsis.displayName = 'Breadcrumb.Ellipsis';
 
-export interface BreadcrumbSeparatorProps extends ComponentProps<'span'> {}
+export interface BreadcrumbSeparatorProps extends ComponentProps<'span'> {
+  /** Content of the separator. Defaults to a chevron icon. */
+  children?: ReactNode;
+}
 
 export const BreadcrumbSeparator = ({
   ref,

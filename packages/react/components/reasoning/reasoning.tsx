@@ -49,6 +49,8 @@ export interface ReasoningProps
    * label as "Worked for N seconds" once `streaming` is over.
    */
   duration?: number;
+  /** Whether the panel is open on first render. Defaults to `streaming`. */
+  defaultOpen?: boolean;
   /** Called when the panel is opened or closed. */
   onOpenChange?: (
     open: boolean,
@@ -193,6 +195,8 @@ ReasoningContent.displayName = 'Reasoning.Content';
 export interface ReasoningStepProps extends ComponentProps<'div'> {
   /** Title row of the step, e.g. "Gathering ticket updates". */
   label?: ReactNode;
+  /** Detail content, indented below the label. */
+  children?: ReactNode;
 }
 
 export function ReasoningStep({

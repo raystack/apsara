@@ -11,9 +11,16 @@ import { SidebarMoreContext } from './sidebar-more-context';
 import { SidebarPopupContext, useSidebarSafe } from './sidebar-root';
 
 export interface SidebarMoreProps {
+  /** Sidebar items shown in the menu. Without children, `Sidebar.More` renders nothing. */
   children?: ReactNode;
+  /**
+   * Label of the trigger.
+   * @default "More"
+   */
   label?: string;
+  /** Icon of the trigger. Defaults to an ellipsis icon. */
   leadingIcon?: ReactNode;
+  /** Class names for parts of the trigger and the menu. */
   classNames?: {
     /** @deprecated Use `[data-slot="sidebar-more-trigger"]` instead. */
     root?: string;

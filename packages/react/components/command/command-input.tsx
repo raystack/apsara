@@ -13,6 +13,16 @@ export interface CommandInputProps
   > {
   /** Icon rendered at the start of the input. */
   leadingIcon?: ReactNode;
+  /**
+   * Text shown when the input is empty.
+   * @default "Search..."
+   */
+  placeholder?: string;
+  /**
+   * Whether the input takes focus when it mounts.
+   * @default true
+   */
+  autoFocus?: boolean;
 }
 
 export const CommandInput = ({

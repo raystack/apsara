@@ -106,13 +106,13 @@ export interface TourRootProps {
   /**
    * What to do when a step target cannot be found: skip to the next step or
    * stop the tour. Emits `error:target-not-found` either way.
-   * @default 'skip'
+   * @default "skip"
    */
   targetNotFound?: 'skip' | 'stop';
   /**
    * How the popover card travels between steps. `fade` (default) cross-fades it
    * at each target; `move` glides it smoothly from one target to the next. The
-   * spotlight always cross-fades regardless and never slides. @default 'fade'
+   * spotlight always cross-fades regardless and never slides. @default "fade"
    */
   transition?: TourTransition;
   /**

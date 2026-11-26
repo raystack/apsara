@@ -1,7 +1,10 @@
+'use client';
+
 import { Accordion, CodeBlock, Flex, Text } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
 import Link from 'fumadocs-core/link';
-import { isValidElement, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { toText } from './text';
 import styles from './typetable.module.css';
 
 export interface ParameterNode {
@@ -38,13 +41,6 @@ export interface TypeNode {
   parameters?: ParameterNode[];
 
   returns?: ReactNode;
-}
-
-// remarkAutoTypeTable passes each type as a fragment around its text.
-function toText(node: ReactNode): string {
-  if (isValidElement<{ children?: ReactNode }>(node))
-    return toText(node.props.children);
-  return node == null ? '' : String(node);
 }
 
 export function TypeTable({

@@ -9,6 +9,10 @@ import { ModeType, SUPPORTED_MODES } from './utils';
 
 export interface ColorPickerModeProps
   extends ComponentProps<typeof Select.Trigger> {
+  /**
+   * The color modes the select offers.
+   * @default ["hex", "hsl", "rgb", "oklch"]
+   */
   options?: readonly ModeType[];
 }
 

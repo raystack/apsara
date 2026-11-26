@@ -40,9 +40,9 @@ export interface TourStep {
   title?: React.ReactNode;
   /** Rendered by `Tour.Description` and the default popover layout. */
   content?: React.ReactNode;
-  /** Side of the target to place the popover on. @default 'bottom' */
+  /** Side of the target to place the popover on. Overrides the `side` of `Tour.Content`. */
   side?: TourSide;
-  /** Alignment against the target. @default 'center' */
+  /** Alignment against the target. Overrides the `align` of `Tour.Content`. */
   align?: TourAlign;
   /** Distance between the target and the popover in pixels. */
   sideOffset?: number;
@@ -78,10 +78,22 @@ export type TourEndStatus = 'finished' | 'skipped' | 'closed';
 export type TourStatus = 'idle' | 'waiting' | 'running';
 
 export type TourEvent =
-  | { type: 'tour:start'; index: number; step?: TourStep }
+  | {
+      /** The event name. */
+      type: 'tour:start';
+      /** Index of the step the event relates to. */
+      index: number;
+      /** The step the event relates to. `tour:start` may leave it out, and `tour:end` has none. */
+      step?: TourStep;
+    }
   | { type: 'step:active'; index: number; step: TourStep }
   | { type: 'error:target-not-found'; index: number; step: TourStep }
-  | { type: 'tour:end'; index: number; status: TourEndStatus };
+  | {
+      type: 'tour:end';
+      index: number;
+      /** How the tour ended. Only `tour:end` has it. */
+      status: TourEndStatus;
+    };
 
 /** Imperative tour controls, also available through `useTour`. */
 export interface TourActions {

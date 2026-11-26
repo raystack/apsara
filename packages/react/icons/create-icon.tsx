@@ -30,7 +30,9 @@ export type IconOverrides = Partial<Record<IconName, IconComponent>>;
  * by `createIcon`, the consumer's own included.
  */
 export interface IconOptions {
+  /** Components that replace Apsara icons, keyed by icon name. A nested theme or `IconProvider` changes only the keys it names. */
   components?: IconOverrides;
+  /** Props for every icon built by `createIcon`. They win over the base values, and call-site props win over them. */
   props?: IconProps;
 }
 

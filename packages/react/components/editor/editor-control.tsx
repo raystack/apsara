@@ -38,7 +38,7 @@ export interface EditorControlBaseProps
     ComponentProps<typeof Toolbar.Button>,
     'aria-pressed' | 'render'
   > {
-  /** Accessible name and tooltip text. */
+  /** Accessible name and tooltip text. Each control has a default. */
   label?: string;
   /**
    * Hides the tooltip that shows the label and shortcut.

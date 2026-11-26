@@ -210,7 +210,8 @@ export {
   type TimelineDateInput,
   type TimelineMarker,
   type TimelineScale,
-  useDataView
+  useDataView,
+  type ViewSpec
 } from './components/data-view';
 export { Dialog, type DialogContentProps } from './components/dialog';
 export {

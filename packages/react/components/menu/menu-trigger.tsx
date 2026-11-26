@@ -3,6 +3,7 @@
 import { Autocomplete as AutocompletePrimitive } from '@base-ui/react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { cx } from 'class-variance-authority';
+import type { ReactNode } from 'react';
 import { ChevronRightIcon } from '~/icons';
 import { Button } from '../button';
 import { useMenubarContext } from '../menubar/menubar';
@@ -12,6 +13,10 @@ import { useMenuContext } from './menu-root';
 import { getMatch } from './utils';
 
 export interface MenuTriggerProps extends MenuPrimitive.Trigger.Props {
+  /**
+   * Whether a click on the trigger stops propagating to its parent elements.
+   * @default true
+   */
   stopPropagation?: boolean;
 }
 
@@ -51,7 +56,10 @@ MenuTrigger.displayName = 'Menu.Trigger';
 export interface MenuSubTriggerProps
   extends MenuPrimitive.SubmenuTrigger.Props,
     CellBaseProps {
+  /** Text that the search of the parent menu matches, in addition to the children text. */
   value?: string;
+  /** Icon after the trigger text. Defaults to a right chevron. */
+  trailingIcon?: ReactNode;
 }
 
 export function MenuSubTrigger({

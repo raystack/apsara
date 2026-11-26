@@ -8,6 +8,10 @@ import { ScrollAreaScrollbar } from './scroll-area-scrollbar';
 export type ScrollAreaType = 'always' | 'hover' | 'scroll';
 
 export interface ScrollAreaProps extends ScrollAreaPrimitive.Root.Props {
+  /**
+   * When the scrollbars are visible: `always`, on `hover`, or during `scroll`.
+   * @default "hover"
+   */
   type?: ScrollAreaType;
 }
 

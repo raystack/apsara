@@ -8,6 +8,7 @@ import { MeterTrack } from './meter-track';
 
 const meter = cva(styles.meter, {
   variants: {
+    /** Visual style of the meter. */
     variant: {
       linear: '',
       circular: styles['meter-variant-circular']

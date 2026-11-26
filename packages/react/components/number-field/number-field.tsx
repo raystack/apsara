@@ -2,7 +2,13 @@
 
 import { NumberField as NumberFieldPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { ComponentProps, createContext, useContext, useId } from 'react';
+import {
+  ComponentProps,
+  createContext,
+  type ReactNode,
+  useContext,
+  useId
+} from 'react';
 import { MinusIcon, PlusIcon } from '~/icons';
 import { useFieldContext } from '../field';
 import { Label } from '../label';
@@ -75,11 +81,17 @@ function NumberFieldInput({
 }
 NumberFieldInput.displayName = 'NumberField.Input';
 
+interface NumberFieldDecrementProps
+  extends NumberFieldPrimitive.Decrement.Props {
+  /** Content of the button. Defaults to a minus icon. */
+  children?: ReactNode;
+}
+
 function NumberFieldDecrement({
   className,
   children,
   ...props
-}: NumberFieldPrimitive.Decrement.Props) {
+}: NumberFieldDecrementProps) {
   return (
     <NumberFieldPrimitive.Decrement
       className={cx(styles.decrement, className)}
@@ -98,11 +110,17 @@ function NumberFieldDecrement({
 }
 NumberFieldDecrement.displayName = 'NumberField.Decrement';
 
+interface NumberFieldIncrementProps
+  extends NumberFieldPrimitive.Increment.Props {
+  /** Content of the button. Defaults to a plus icon. */
+  children?: ReactNode;
+}
+
 function NumberFieldIncrement({
   className,
   children,
   ...props
-}: NumberFieldPrimitive.Increment.Props) {
+}: NumberFieldIncrementProps) {
   return (
     <NumberFieldPrimitive.Increment
       className={cx(styles.increment, className)}
@@ -123,6 +141,7 @@ NumberFieldIncrement.displayName = 'NumberField.Increment';
 
 export interface NumberFieldScrubAreaProps
   extends NumberFieldPrimitive.ScrubArea.Props {
+  /** Label text shown in the scrub area. It labels the number input. */
   label: string;
 }
 

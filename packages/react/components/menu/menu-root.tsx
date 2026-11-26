@@ -11,7 +11,12 @@ import { createContext, useCallback, useContext, useRef } from 'react';
 
 interface CommonProps {
   autocomplete?: boolean;
+  /**
+   * How the search filters the items. `"auto"` filters them as the user types. With `"manual"`, you filter them in `onInputValueChange`.
+   * @default "auto"
+   */
   autocompleteMode?: 'auto' | 'manual';
+  /** The search text when `autocomplete` is set. */
   inputValue?: string;
   inputRef?: React.RefObject<HTMLInputElement | null>;
   contentRef?: React.RefObject<HTMLDivElement | null>;
@@ -82,17 +87,36 @@ export interface NormalMenuRootProps extends MenuPrimitive.Root.Props {
   inputValue?: never;
   onInputValueChange?: never;
   defaultInputValue?: never;
+  /**
+   * Whether the arrow keys move focus from the last item back to the first.
+   * @default false
+   */
+  loopFocus?: boolean;
 }
 
 export interface AutocompleteMenuRootProps
   extends MenuPrimitive.Root.Props,
     CommonProps {
+  /**
+   * Whether the menu has a search input that filters the items.
+   * @default false
+   */
   autocomplete: true;
+  /** Called when the search text changes. The menu clears the text when it closes. */
   onInputValueChange?: (
     value: string,
     eventDetails: AutocompletePrimitive.Root.ChangeEventDetails
   ) => void;
+  /**
+   * The search text on first render when `inputValue` is not set.
+   * @default ""
+   */
   defaultInputValue?: string;
+  /**
+   * Whether the arrow keys move focus from the last item back to the first.
+   * @default false
+   */
+  loopFocus?: boolean;
 }
 
 export type MenuRootProps = NormalMenuRootProps | AutocompleteMenuRootProps;
@@ -184,18 +208,42 @@ export interface NormalMenuSubMenuProps
   inputValue?: never;
   onInputValueChange?: never;
   defaultInputValue?: never;
+  /**
+   * Whether the arrow keys move focus from the last item back to the first.
+   * @default false
+   */
+  loopFocus?: boolean;
 }
 
 export interface AutocompleteMenuSubMenuProps
   extends MenuPrimitive.SubmenuRoot.Props {
+  /**
+   * Whether the submenu has a search input that filters the items.
+   * @default false
+   */
   autocomplete: true;
+  /**
+   * How the search filters the items. `"auto"` filters them as the user types. With `"manual"`, you filter them in `onInputValueChange`.
+   * @default "auto"
+   */
   autocompleteMode?: 'auto' | 'manual';
+  /** The search text when `autocomplete` is set. */
   inputValue?: string;
+  /** Called when the search text changes. The submenu clears the text when it closes. */
   onInputValueChange?: (
     value: string,
     eventDetails: AutocompletePrimitive.Root.ChangeEventDetails
   ) => void;
+  /**
+   * The search text on first render when `inputValue` is not set.
+   * @default ""
+   */
   defaultInputValue?: string;
+  /**
+   * Whether the arrow keys move focus from the last item back to the first.
+   * @default false
+   */
+  loopFocus?: boolean;
 }
 
 export type MenuSubMenuProps =

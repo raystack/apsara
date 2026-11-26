@@ -15,8 +15,13 @@ export interface ComboboxContentProps<Item = unknown>
       'render' | 'className' | 'style' | 'children'
     >,
     Omit<ComboboxPrimitive.Popup.Props, 'children'> {
-  /** Corner radius for this popup only. Overrides the theme's `radius`. */
+  /** Corner radius for this popup only. Defaults to the theme's `radius`. */
   radius?: Radius;
+  /**
+   * Distance between the anchor and the popup in pixels.
+   * @default 4
+   */
+  sideOffset?: ComboboxPrimitive.Positioner.Props['sideOffset'];
   /**
    * The list content. Pass a function to render each item that matches the input when `items` is set on the root.
    */

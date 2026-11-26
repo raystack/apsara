@@ -21,6 +21,7 @@ import {
 export interface ContextMenuItemProps
   extends ContextMenuPrimitive.Item.Props,
     CellBaseProps {
+  /** Text that the search matches, in addition to the children text. */
   value?: string;
 }
 

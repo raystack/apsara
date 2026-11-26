@@ -13,8 +13,10 @@ import { stopItemFocus, useMenuItemFilter } from './menu-item';
 export interface MenuCheckboxItemProps
   extends MenuPrimitive.CheckboxItem.Props,
     CellBaseProps {
-  /** Text used to match the search value. Defaults to the children text. */
+  /** Text that the search matches, in addition to the children text. */
   value?: string;
+  /** Custom element to render. It replaces the default layout, including the check mark and icons. */
+  render?: MenuPrimitive.CheckboxItem.Props['render'];
 }
 
 /** @remarks Only for internal usage. */

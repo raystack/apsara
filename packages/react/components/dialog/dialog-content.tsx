@@ -13,13 +13,14 @@ export interface DialogContentProps extends DialogPrimitive.Popup.Props {
    * @default false
    */
   hideCloseButton?: boolean;
+  /** Props for the backdrop. Set `blur` to blur the page behind the dialog. */
   overlay?: DialogPrimitive.Backdrop.Props & { blur?: boolean };
   /**
    * Turns off the scale and offset of a dialog that has a nested dialog open.
    * @default false
    */
   disableNestedAnimation?: boolean;
-  /** Corner radius for this dialog only. Overrides the theme's `radius`. */
+  /** Corner radius for this dialog only. Defaults to the theme's `radius`. */
   radius?: Radius;
 }
 

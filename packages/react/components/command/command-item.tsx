@@ -8,6 +8,8 @@ import styles from './command.module.css';
 import { useCommandContext } from './command-root';
 
 export interface CommandItemProps extends AutocompletePrimitive.Item.Props {
+  /** A unique value that identifies this item. Defaults to `children` when `children` is a string. */
+  value?: AutocompletePrimitive.Item.Props['value'];
   /** Icon rendered at the start of the item. */
   leadingIcon?: ReactNode;
   /** Icon rendered at the end of the item (e.g. a `Kbd` shortcut hint). */

@@ -22,9 +22,11 @@ export const useDrawerSide = () => useContext(DrawerSideContext);
 export interface DrawerRootProps extends DrawerPrimitive.Root.Props {
   /**
    * The edge the drawer slides in from. It also sets the swipe-to-dismiss direction.
-   * @default 'right'
+   * @default "right"
    */
   side?: Side;
+  /** The swipe direction that dismisses the drawer. Defaults to the direction of `side`. */
+  swipeDirection?: 'up' | 'down' | 'left' | 'right';
 }
 
 export function DrawerRoot({

@@ -8,18 +8,17 @@ export interface EditorMentionItem {
   id: string;
   label: string;
   /**
-   * Entity kind, serialized into the markup. A single `@` menu legitimately
-   * returns several kinds, which is why this is per item and not per trigger.
-   * @defaultValue "mention"
+   * Entity kind, such as `"user"`, saved in the mention. One menu can mix kinds.
+   * @default "mention"
    */
   type?: string;
   leadingIcon?: ReactNode;
-  /** Trailing metadata: a badge, a shortcut, a timestamp. */
+  /** Trailing content on the row and the chip, such as a badge or a timestamp. */
   trailingIcon?: ReactNode;
   /** Section heading. Groups render in first-appearance order. */
   group?: string;
   disabled?: boolean;
-  /** Opaque; handed back on submit. Never serialized. */
+  /** Your own data. It is never saved in the document. `PromptInput` returns it on submit. */
   data?: unknown;
 }
 
