@@ -10,9 +10,10 @@ on [GitHub releases](https://github.com/raystack/apsara/releases).
 ## Unreleased: menu search uses Base UI filtering
 
 Search in `Menu`, `ContextMenu` and `Menubar` uses Base UI's menu filtering.
-Slots do not change. When the popup closes,
+Slots do not change. When the popup closes with search text,
 `onInputValueChange` gets `''` with the reason `popup-close`, not
-`input-clear`.
+`input-clear`. When the search text is empty, the popup closes without a call to
+`onInputValueChange`. To run code on every close, use `onOpenChange`.
 
 ### 1. Update tests that query roles
 

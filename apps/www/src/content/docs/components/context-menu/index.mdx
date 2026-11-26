@@ -70,7 +70,7 @@ Use `ContextMenu.Submenu`, `ContextMenu.SubmenuTrigger`, and `ContextMenu.Submen
 
 Pass `autocomplete` to the ContextMenu root. Each menu manages its own autocomplete state.
 
-- **`autocompleteMode="auto"`** is the default. Items filter as the user types. Each item matches by its rendered text, or by its `label` when set. Matching ignores case, accents and punctuation.
+- **`autocompleteMode="auto"`** is the default. Items filter as the user types. Each item matches by its rendered text, or by its `label` when set. Matching ignores case and accents.
 - **Submenus** opt in separately: pass `autocomplete` to `ContextMenu.Submenu`.
 
 <Demo data={autocompleteDemo} />

@@ -91,7 +91,7 @@ To use a router link, pass it to `render`. The item keeps its layout and icons.
 
 Pass `autocomplete` to the Menu root. Each menu manages its own autocomplete state.
 
-- **`autocompleteMode="auto"`** is the default. Items filter as the user types. Each item matches by its rendered text, or by its `label` when set. Matching ignores case, accents and punctuation.
+- **`autocompleteMode="auto"`** is the default. Items filter as the user types. Each item matches by its rendered text, or by its `label` when set. Matching ignores case and accents.
 - **`autocompleteMode="manual"`** leaves filtering to you. Do it in `onInputValueChange`.
 - **Submenus** opt in separately: pass `autocomplete` to `Menu.Submenu`.
 
