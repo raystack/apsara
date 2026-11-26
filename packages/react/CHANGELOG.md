@@ -36,8 +36,8 @@ are the same. An app that uses a bundler needs no change.
   `import '@raystack/apsara/style.css'`.
 - The package no longer ships declarations for tests and Figma files, or
   declaration maps.
-- `style.css` is about 14% smaller (gzip). It leaves out `-moz-` prefixes
-  that no supported browser needs.
+- `style.css` leaves out the `-moz-` and `-o-` prefixes that no supported
+  browser needs. The CSS Module class names are the same.
 - The `DataView` list header and group anchor show their edge when
   content scrolls under them. The minifier
   used to move `animation-timeline` before the `animation` shorthand,

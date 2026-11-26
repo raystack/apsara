@@ -122,7 +122,7 @@ describe('Flex', () => {
 `pnpm build:apsara` runs Vite in library mode (`packages/react/vite.config.ts`) and writes the build to `packages/react/dist/`:
 
 - ESM (`.js`) and CommonJS (`.cjs`), one file per source module, so `'use client'` stays on each file.
-- `style.css`, `style-no-fonts.css`, and `normalize.css`. Lightning CSS compiles the CSS Modules and adds the vendor prefixes that the `browserslist` in `package.json` needs. Colors stay as written.
+- `style.css`, `style-no-fonts.css`, and `normalize.css`. CSS Module class names use the `[name]_[local]__[hash:base64:5]` pattern. Do not change it: an app that loads two Apsara versions applies both sheets to a shared class name. Lightning CSS minifies the sheets and adds the vendor prefixes that the `browserslist` in `package.json` needs. Colors stay as written.
 - Type declarations (`.d.ts` and `.d.cts`). `tsc -p tsconfig.build.json` runs alongside the bundle, so a type error fails the build.
 
 `pnpm dev` runs the same build in watch mode. Turbo caches the build, so a run with no changes restores `dist/` from the cache.

@@ -131,6 +131,7 @@
     "@vitest/ui": "^5.1.2",
     "browserslist": "^4.29.6",
     "dotenv": "^17.2.2",
+    "generic-names": "4.0.0",
     "jsdom": "^26.1.0",
     "lightningcss": "^1.33.0",
     "lucide-react": "^1.45.0",
