@@ -48,8 +48,8 @@ const emptyContent = (function () {
 // Options BOOLEAN → placeholder items, shown only when there are no real cells.
 const optionsPlaceholder = options
   ? figma.code`
-        <Menu.Item value='profile'>Profile</Menu.Item>
-        <Menu.Item value='settings'>Settings</Menu.Item>`.sections
+        <Menu.Item>Profile</Menu.Item>
+        <Menu.Item>Settings</Menu.Item>`.sections
   : [];
 
 // Content priority: empty state → real cells → placeholder options.
