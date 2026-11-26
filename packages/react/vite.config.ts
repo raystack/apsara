@@ -1,17 +1,26 @@
 import { spawn } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
-import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import {
+  mkdir,
+  mkdtemp,
+  readdir,
+  readFile,
+  rm,
+  writeFile
+} from 'node:fs/promises';
 import { createRequire } from 'node:module';
+import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import browserslist from 'browserslist';
+import cssnano from 'cssnano';
 import genericNames from 'generic-names';
 import { browserslistToTargets, Features, transform } from 'lightningcss';
+import postcss from 'postcss';
 import type { OutputOptions } from 'rolldown';
 import { defineConfig, type Plugin } from 'vite';
 
 const root = import.meta.dirname;
 const outDir = join(root, 'dist');
-const typesDir = join(root, 'node_modules/.cache/apsara-types');
 
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) as {
   browserslist: string[];
@@ -31,14 +40,26 @@ const externals = [
   ...Object.keys(pkg.peerDependencies)
 ];
 
-const minifyCss = (code: string, filename: string) =>
-  transform({
+// cssnano 7 writes rules in the same form as the 1.x builds, so an app that
+// loads 1.x and this version drops the 1.x rules that this version repeats.
+// cssnano 9 writes them differently.
+const minifier = postcss([cssnano({ preset: 'default' })]);
+
+/** Adds vendor prefixes with Lightning CSS, then minifies with cssnano. */
+const minifyCss = async (code: string, filename: string) => {
+  const prefixed = transform({
     filename,
     code: Buffer.from(code),
-    minify: true,
     targets,
     exclude
   }).code.toString();
+  // `from` lets cssnano read the package's browserslist.
+  const result = await minifier.process(prefixed, {
+    from: join(root, filename),
+    map: false
+  });
+  return result.css;
+};
 
 /** Matches `@import "https://fonts.googleapis.com/…";`, with or without `url()`. */
 const FONT_IMPORT =
@@ -50,49 +71,59 @@ const FONT_IMPORT =
  * differ by the font imports. Vite emits `style.css` in its own
  * `generateBundle`, so this runs once the files are on disk.
  */
-const stylesheets = (): Plugin => ({
-  name: 'apsara-stylesheets',
-  apply: 'build',
-  buildStart() {
-    // No module imports normalize.css, so watch mode needs it added.
-    this.addWatchFile(join(root, 'normalize.css'));
-  },
-  writeBundle: {
-    order: 'post',
-    async handler(options, bundle) {
-      // Each output writes its own copy of style.css, so each one is processed.
-      const emitted = Object.values(bundle).some(
-        file => file.type === 'asset' && file.fileName === 'style.css'
-      );
-      if (!emitted) {
-        if (options.format === 'es') {
-          this.error('The build emitted no style.css.');
-        }
-        return;
-      }
-      const dir = options.dir ?? outDir;
-      const path = join(dir, 'style.css');
-      const css = minifyCss(await readFile(path, 'utf8'), 'style.css');
-      const fontFree = css.replace(FONT_IMPORT, '');
-      // A miss fails the build rather than publishing a `no-fonts` sheet that
-      // still calls out to Google.
-      if (fontFree === css) {
-        this.error('style.css carries no Google Fonts @import to strip.');
-      }
-      const normalize = minifyCss(
-        await readFile(join(root, 'normalize.css'), 'utf8'),
-        'normalize.css'
-      );
-      await Promise.all([
-        writeFile(path, css),
-        writeFile(join(dir, 'style-no-fonts.css'), fontFree),
-        writeFile(join(dir, 'normalize.css'), normalize)
-      ]);
+const stylesheets = (): Plugin => {
+  // Each output writes the same style.css, so the result is reused.
+  let last: { code: string; css: string } | undefined;
+  const minifyStyle = async (code: string) => {
+    if (last?.code !== code) {
+      last = { code, css: await minifyCss(code, 'style.css') };
     }
-  }
-});
+    return last.css;
+  };
 
-const runTsc = () =>
+  return {
+    name: 'apsara-stylesheets',
+    apply: 'build',
+    buildStart() {
+      // No module imports normalize.css, so watch mode needs it added.
+      this.addWatchFile(join(root, 'normalize.css'));
+    },
+    writeBundle: {
+      order: 'post',
+      async handler(options, bundle) {
+        const emitted = Object.values(bundle).some(
+          file => file.type === 'asset' && file.fileName === 'style.css'
+        );
+        if (!emitted) {
+          if (options.format === 'es') {
+            this.error('The build emitted no style.css.');
+          }
+          return;
+        }
+        const dir = options.dir ?? outDir;
+        const path = join(dir, 'style.css');
+        const css = await minifyStyle(await readFile(path, 'utf8'));
+        const fontFree = css.replace(FONT_IMPORT, '');
+        // A miss fails the build rather than publishing a `no-fonts` sheet
+        // that still calls out to Google.
+        if (fontFree === css) {
+          this.error('style.css carries no Google Fonts @import to strip.');
+        }
+        const normalize = await minifyCss(
+          await readFile(join(root, 'normalize.css'), 'utf8'),
+          'normalize.css'
+        );
+        await Promise.all([
+          writeFile(path, css),
+          writeFile(join(dir, 'style-no-fonts.css'), fontFree),
+          writeFile(join(dir, 'normalize.css'), normalize)
+        ]);
+      }
+    }
+  };
+};
+
+const runTsc = (typesDir: string) =>
   new Promise<void>((resolvePromise, reject) => {
     const tsc = join(
       dirname(
@@ -100,10 +131,8 @@ const runTsc = () =>
       ),
       'bin/tsc'
     );
-    spawn(process.execPath, [tsc, '-p', 'tsconfig.build.json'], {
-      cwd: root,
-      stdio: 'inherit'
-    })
+    const args = [tsc, '-p', 'tsconfig.build.json', '--outDir', typesDir];
+    spawn(process.execPath, args, { cwd: root, stdio: 'inherit' })
       .once('error', reject)
       .once('exit', code =>
         code === 0
@@ -127,7 +156,7 @@ const toSpecifier = (fromDir: string, target: string) => {
  * with the `.js` or `.cjs` extension of its format. Returns the specifiers
  * that do not resolve.
  */
-async function writeDeclarations(dir: string) {
+async function writeDeclarations(typesDir: string, dir: string) {
   const problems: string[] = [];
   const files = (await readdir(typesDir, { recursive: true })).filter(file =>
     file.endsWith('.d.ts')
@@ -178,14 +207,25 @@ async function writeDeclarations(dir: string) {
  * error fails `vite build`. Watch mode logs it and still writes declarations.
  */
 const declarations = (): Plugin => {
+  // A temp folder per compile, so two builds of this package never share one.
+  let typesDir: string | undefined;
   let tsc: Promise<void> | undefined;
+  const removeTypes = async () => {
+    if (typesDir) await rm(typesDir, { recursive: true, force: true });
+  };
+  const compile = async () => {
+    await removeTypes();
+    typesDir = await mkdtemp(join(tmpdir(), 'apsara-types-'));
+    await runTsc(typesDir);
+  };
+
   return {
     name: 'apsara-declarations',
     apply: 'build',
     buildStart() {
       // Watch mode runs one task per output, and each task calls buildStart.
       // watchChange clears `tsc`, so each change runs the compiler once.
-      tsc ??= rm(typesDir, { recursive: true, force: true }).then(runTsc);
+      tsc ??= compile();
       // The result is read in writeBundle. This keeps a failure from being
       // reported as unhandled before then.
       tsc.catch(() => undefined);
@@ -193,26 +233,32 @@ const declarations = (): Plugin => {
     watchChange() {
       tsc = undefined;
     },
+    closeWatcher: removeTypes,
     async writeBundle(options) {
       if (options.format !== 'es') return;
       try {
         await tsc;
       } catch (error) {
-        if (!this.meta.watchMode) throw error;
+        if (!this.meta.watchMode) {
+          await removeTypes();
+          throw error;
+        }
         this.warn(String(error));
-        // tsc still writes declarations when it reports type errors.
-        if (!existsSync(typesDir)) return;
       }
+      // tsc still writes declarations when it reports type errors.
+      const types = typesDir;
+      if (!types || !existsSync(types)) return;
       if (this.meta.watchMode) {
         // Files that only hold types are not in the module graph.
-        for (const file of await readdir(typesDir, { recursive: true })) {
+        for (const file of await readdir(types, { recursive: true })) {
           const source = join(root, file.replace(/\.d\.ts$/, ''));
           for (const ext of ['.ts', '.tsx']) {
             if (existsSync(source + ext)) this.addWatchFile(source + ext);
           }
         }
       }
-      const problems = await writeDeclarations(options.dir ?? outDir);
+      const problems = await writeDeclarations(types, options.dir ?? outDir);
+      if (!this.meta.watchMode) await removeTypes();
       if (problems.length > 0) {
         this.error(
           `Declarations import modules that do not resolve:\n${problems.join('\n')}`
