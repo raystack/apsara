@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { queryToTableState, transformToDataViewQuery } from '../utils';
 import {
   getDataType,
@@ -114,8 +114,7 @@ describe('date filters', () => {
     rowValue: unknown
   ) => {
     const fn = getFilterFn('date', operator);
-    const row = { getValue: () => rowValue } as never;
-    return fn(row, 'when', { date: filterDate } as never, vi.fn());
+    return fn?.({ getValue: () => rowValue }, 'when', { date: filterDate });
   };
 
   const DAY = new Date(2026, 7, 15);
@@ -172,12 +171,9 @@ describe('stored date filters', () => {
   });
 
   const matches = (stored: unknown, row: string) =>
-    getFilterFn('date', 'eq')(
-      { getValue: () => row } as never,
-      'when',
-      { date: stored } as never,
-      vi.fn()
-    );
+    getFilterFn('date', 'eq')?.({ getValue: () => row }, 'when', {
+      date: stored
+    });
 
   it('reads a stored ISO instant as the day the viewer picked', () => {
     process.env.TZ = 'Asia/Kolkata';

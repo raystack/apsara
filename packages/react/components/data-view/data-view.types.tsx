@@ -1,12 +1,13 @@
 import type { Tabs as TabsPrimitive } from '@base-ui/react';
 import type {
   ColumnDef,
+  ColumnVisibilityState,
+  ReactTable,
   Row,
+  RowData,
   RowSelectionState,
-  Table,
-  Updater,
-  VisibilityState
-} from '@tanstack/table-core';
+  Updater
+} from '@tanstack/react-table';
 import type { ChangeDetails } from '~/shared/change-details';
 import type { FilterOperations } from '~/shared/filter-operations';
 import type {
@@ -21,6 +22,16 @@ import type {
   SelectFilterOperatorType
 } from '~/types/filters';
 import type { BaseSelectProps } from '../select/select-root';
+import type { DataViewFeatures } from './features';
+
+/** The TanStack table that `DataView` builds, as returned by `useDataView().table`. */
+export type DataViewTable<TData extends RowData> = ReactTable<
+  DataViewFeatures,
+  TData
+>;
+
+/** A row of the `DataView` table, as passed to `renderCard` and column cells. */
+export type DataViewRow<TData extends RowData> = Row<DataViewFeatures, TData>;
 
 export type DataViewMode = 'client' | 'server';
 
@@ -178,16 +189,16 @@ export interface DataViewField<TData = unknown> {
  * `variant="table"` and `variant="list"`. The `header` slot is only rendered
  * when headers are visible (default for `variant="table"`).
  */
-export interface DataViewListColumn<TData, TValue = unknown> {
+export interface DataViewListColumn<TData extends RowData, TValue = unknown> {
   /**
    * The `accessorKey` of the field the column shows. A key that no field has
    * makes a column that is always shown, for example for row actions.
    */
   accessorKey: string;
   /** TanStack-style cell renderer. */
-  cell?: ColumnDef<TData, TValue>['cell'];
+  cell?: ColumnDef<DataViewFeatures, TData, TValue>['cell'];
   /** TanStack-style header renderer. Overrides the field's `label`. */
-  header?: ColumnDef<TData, TValue>['header'];
+  header?: ColumnDef<DataViewFeatures, TData, TValue>['header'];
   /**
    * CSS grid track width, for example `"auto"`, `"200px"`, or
    * `"minmax(80px, 1fr)"`. A number is in pixels.
@@ -225,7 +236,7 @@ export interface ViewSpec {
  */
 export type GroupByResolver<TData> = (row: TData) => string;
 
-export interface DataViewProps<TData> {
+export interface DataViewProps<TData extends RowData> {
   /** The rows to show. */
   data: TData[];
   /** Renderer-agnostic field metadata. Drives filter/sort/group/visibility. */
@@ -264,7 +275,7 @@ export interface DataViewProps<TData> {
   /** Called with the row's data when a row or a timeline card is clicked. */
   onRowClick?: (row: TData) => void;
   /** Called with the new visibility map when a field is shown or hidden. */
-  onColumnVisibilityChange?: (columnVisibility: VisibilityState) => void;
+  onColumnVisibilityChange?: (columnVisibility: ColumnVisibilityState) => void;
   /**
    * Fires with the new selection map whenever rows are selected or deselected
    * (`row.toggleSelected()`, `table.toggleAllRowsSelected()`, …). Selection
@@ -309,7 +320,7 @@ export type DataViewListClassNames = {
   groupHeader?: string;
 };
 
-export interface DataViewListProps<TData, TValue = unknown> {
+export interface DataViewListProps<TData extends RowData, TValue = unknown> {
   /** Multi-view name. When set, the renderer gates itself on the active view. */
   name?: string;
   /**
@@ -453,7 +464,7 @@ export type DataViewTimelineClassNames = {
   groupHeader?: string;
 };
 
-export interface DataViewTimelineProps<TData> {
+export interface DataViewTimelineProps<TData extends RowData> {
   /** Multi-view name. When set, the renderer gates itself on the active view. */
   name?: string;
   /**
@@ -475,8 +486,8 @@ export interface DataViewTimelineProps<TData> {
    * Renders the card interior. The Timeline owns positioning (x from start,
    * width from span, lane from packing, scroll); the consumer owns the card
    * visual entirely: chrome, states, truncation, and the collapsed variant.
-   * The first argument is the TanStack `Row`, with the row data on
-   * `row.original`.
+   * The first argument is a `DataViewRow`, the TanStack row wrapper, with the
+   * row data on `row.original`.
    * Compose `<DataView.DisplayAccess>` inside for Display Properties support.
    *
    * Keep the reference stable (define outside the component or wrap in
@@ -485,7 +496,7 @@ export interface DataViewTimelineProps<TData> {
    * The same applies to `onRowClick` on the `DataView` root.
    */
   renderCard: (
-    row: Row<TData>,
+    row: DataViewRow<TData>,
     context: TimelineCardContext
   ) => React.ReactNode;
 
@@ -638,8 +649,8 @@ export interface DataViewTimelineProps<TData> {
 
 export type TableQueryUpdateFn = (query: InternalQuery) => InternalQuery;
 
-export type DataViewContextType<TData> = {
-  table: Table<TData>;
+export type DataViewContextType<TData extends RowData> = {
+  table: DataViewTable<TData>;
   /** Effective fields for the active view (= override fields if registered, else root fields). */
   fields: DataViewField<TData>[];
   /** Root-declared fields, unchanged by view overrides. */
@@ -660,11 +671,10 @@ export type DataViewContextType<TData> = {
   shouldShowFilters: boolean;
 
   // visibility (lifted to context per RFC §"Unified Column Visibility via DisplayAccess")
-  columnVisibility: VisibilityState;
-  setColumnVisibility: (value: Updater<VisibilityState>) => void;
+  columnVisibility: ColumnVisibilityState;
+  setColumnVisibility: (value: Updater<ColumnVisibilityState>) => void;
 
-  // selection, lifted so a selection change invalidates this context value
-  // (the table instance identity is stable, so it can't do that on its own).
+  // selection
   rowSelection: RowSelectionState;
   setRowSelection: (value: Updater<RowSelectionState>) => void;
 

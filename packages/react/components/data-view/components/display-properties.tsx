@@ -1,5 +1,6 @@
 'use client';
 
+import type { RowData } from '@tanstack/react-table';
 import { Chip } from '../../chip';
 import { Flex } from '../../flex';
 import { Text } from '../../text';
@@ -11,7 +12,7 @@ import { useDataView } from '../hooks/useDataView';
  * "Unified Column Visibility via DisplayAccess"). Renderers honour the same
  * state: columnar via TanStack column hides, free-form via `DisplayAccess`.
  */
-export function DisplayProperties<TData>({
+export function DisplayProperties<TData extends RowData>({
   fields
 }: {
   fields: DataViewField<TData>[];
