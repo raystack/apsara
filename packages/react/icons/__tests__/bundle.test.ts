@@ -11,7 +11,7 @@ const IMPORTED = ['CheckIcon', 'CopyIcon', 'XIcon'] as const;
 const NOT_IMPORTED = [
   'ClearIcon',
   'ErrorIcon',
-  'TableIcon',
+  'FilterIcon',
   'ArrowUpIcon',
   'CoPilotIcon',
   'ChevronDownIcon'

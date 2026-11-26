@@ -24,8 +24,7 @@ packages/react/
 
 apps/www/src/content/docs/components/<name>/
 ├── index.mdx                                       # Docs page
-├── demo.ts                                         # Code demos + playground
-└── props.ts                                        # Prop interfaces
+└── demo.ts                                         # Code demos + playground
 ```
 
 ## Step 1: Create the Component Source
@@ -334,19 +333,19 @@ import { Component } from '@raystack/apsara'
 
 Groups all parts of the component.
 
-<auto-type-table path="./props.ts" name="ComponentProps" />
+<auto-type-table name="ComponentProps" />
 
 ### Trigger
 
 Toggles the visibility of the panel.
 
-<auto-type-table path="./props.ts" name="ComponentTriggerProps" />
+<auto-type-table name="ComponentTriggerProps" />
 
 ### Panel
 
 Contains the component content.
 
-<auto-type-table path="./props.ts" name="ComponentPanelProps" />
+<auto-type-table name="ComponentPanelProps" type="ComponentProps<typeof Component.Panel>" />
 
 ## Examples
 
@@ -420,38 +419,29 @@ export const playground = {
 
 Use `preview` (code type) for simple components. Use `playground` for components with many configurable props.
 
-### `props.ts`
+### Props tables
 
-TypeScript interfaces with JSDoc comments consumed by `<auto-type-table>` in the MDX:
+`<auto-type-table>` renders a props table from the component types. There is no separate props file.
+
+- `<auto-type-table name="ComponentProps" />` reads a type exported from `@raystack/apsara`.
+- `<auto-type-table name="ComponentPanelProps" type="ComponentProps<typeof Component.Panel>" />` reads a part with no exported type.
+
+A table shows the props that Apsara, Base UI, or react-day-picker declare, and `className`. Props that only React's DOM types declare are hidden. Each row takes its description from the prop's JSDoc in the component source:
 
 ```ts
 export interface ComponentProps {
-  /** Whether the component is open (controlled). */
-  open?: boolean;
-
-  /**
-   * Whether the component is initially open (uncontrolled).
-   * @defaultValue false
-   */
-  defaultOpen?: boolean;
-
-  /** Event handler called when the open state changes. */
-  onOpenChange?: (open: boolean) => void;
-
   /**
    * Whether the component is disabled.
-   * @defaultValue false
+   * @default false
    */
   disabled?: boolean;
-
-  /** Custom CSS class names */
-  className?: string;
 }
 ```
 
-- Use `@defaultValue` JSDoc tag to document defaults
-- Keep descriptions concise
-- Include `className` prop on all sub-component interfaces
+- A cva variant gets its values from the variant keys and its default from `defaultVariants`. Give the variant key a one-line JSDoc.
+- A Base UI prop shows Base UI's JSDoc. To change its description or default, redeclare the prop in the Apsara props type with the same type and new JSDoc.
+- A default that depends on another prop goes in the description, with no `@default` tag.
+- Check the generated table in the running docs site.
 
 ## Step 7: Add the Interactive Playground
 

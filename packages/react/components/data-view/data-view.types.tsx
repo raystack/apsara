@@ -10,12 +10,15 @@ import type {
 import type { ChangeDetails } from '~/shared/change-details';
 import type { FilterOperations } from '~/shared/filter-operations';
 import type {
-  DataTableFilterOperatorTypes,
+  DateFilterOperatorType,
   FilterDataType,
   FilterOperatorTypes,
   FilterSelectOption,
   FilterTypes,
-  FilterValueType
+  FilterValueType,
+  MultiSelectFilterOperatorType,
+  NumberFilterOperatorType,
+  SelectFilterOperatorType
 } from '~/types/filters';
 import type { BaseSelectProps } from '../select/select-root';
 
@@ -60,9 +63,20 @@ export interface InternalFilter extends DataViewFilterValues {
   operator: FilterOperatorTypes;
 }
 
+/** Operators in the query. String `contains`, `starts_with` and `ends_with` are sent as `ilike`. */
+export type DataViewFilterOperatorTypes =
+  | NumberFilterOperatorType
+  | 'eq'
+  | 'neq'
+  | 'ilike'
+  | DateFilterOperatorType
+  | SelectFilterOperatorType
+  | MultiSelectFilterOperatorType
+  | 'empty';
+
 export interface DataViewFilter extends DataViewFilterValues {
   name: string;
-  operator: DataTableFilterOperatorTypes;
+  operator: DataViewFilterOperatorTypes;
 }
 
 export interface InternalQuery {

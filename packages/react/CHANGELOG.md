@@ -38,8 +38,8 @@ are the same. An app that uses a bundler needs no change.
   declaration maps.
 - `style.css` is about 14% smaller (gzip). It leaves out `-moz-` prefixes
   that no supported browser needs.
-- The `DataView` list header and group anchor, and the `DataTable` group
-  anchor, show their edge when content scrolls under them. The minifier
+- The `DataView` list header and group anchor show their edge when
+  content scrolls under them. The minifier
   used to move `animation-timeline` before the `animation` shorthand,
   which reset it.
 

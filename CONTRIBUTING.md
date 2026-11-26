@@ -100,7 +100,7 @@ Apsara is a public repo. Anyone can read PR titles, descriptions, branch names, 
 - The change adds no type errors: `pnpm typecheck` in `packages/react`.
 - The library builds: `pnpm build:apsara`.
 - New or changed behavior has tests.
-- The docs page is up to date: `index.mdx`, `demo.ts`, and `props.ts` in `apps/www/src/content/docs/components/<name>/`.
+- The docs page is up to date: `index.mdx` and `demo.ts` in `apps/www/src/content/docs/components/<name>/`, and the JSDoc of each prop, which the props tables show.
 - The branch is up to date with `main`.
 
 Do not worry if you miss a step. CI and the maintainers will help.

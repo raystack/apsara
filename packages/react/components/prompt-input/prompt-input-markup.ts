@@ -36,7 +36,7 @@ export const promptInputSchema = new Schema({
 const { hardBreak, paragraph } = promptInputSchema.nodes;
 
 export interface PromptInputDocDetails {
-  /** Round-trippable markup, as in `"check @[DataTable](component:data-table)"`. */
+  /** Round-trippable markup, as in `"check @[DataView](component:data-view)"`. */
   markup: string;
   /** Plain text with each label inlined behind its trigger. */
   text: string;

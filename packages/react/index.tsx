@@ -172,21 +172,6 @@ export {
 } from './components/context-menu';
 export { CopyButton, type CopyButtonProps } from './components/copy-button';
 export {
-  DataTable,
-  type DataTableColumnDef,
-  type DataTableContentProps,
-  type DataTableDisplayControlsProps,
-  type DataTableFiltersProps,
-  type DataTableProps,
-  type DataTableQuery,
-  type DataTableSearchProps,
-  type DataTableSort,
-  type DataTableToolbarProps,
-  type DataTableVirtualizedContentProps,
-  EmptyFilterValue,
-  useDataTable
-} from './components/data-table';
-export {
   DataView,
   type DataViewClearFiltersProps,
   type DataViewCustomProps,
@@ -205,6 +190,7 @@ export {
   type DataViewTimelineProps,
   type DataViewToolbarProps,
   type DataViewZeroStateProps,
+  EmptyFilterValue,
   type TimelineActions,
   type TimelineCardContext,
   type TimelineDateInput,
