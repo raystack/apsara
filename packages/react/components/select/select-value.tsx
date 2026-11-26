@@ -1,7 +1,7 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { ComponentProps, ReactNode, useMemo } from 'react';
+import { ComponentProps, ReactNode, useCallback, useMemo } from 'react';
 import styles from './select.module.css';
 import { SelectMultipleValue } from './select-multiple-value';
 import { useSelectContext } from './select-root';
@@ -29,15 +29,21 @@ export function SelectValue({
     ? Array.isArray(value) && value.length > 0
     : !!value;
 
+  const getItem = useCallback(
+    (v: string): ItemType =>
+      items[v]?.value === v ? items[v] : { value: v, children: v },
+    [items]
+  );
+
   const item = useMemo(() => {
     if (!value) return undefined;
     if (multiple && Array.isArray(value)) {
-      const itemValues = value.map(v => items[v]);
+      const itemValues = value.map(getItem);
       if (itemValues.length === 1) return itemValues[0];
       return itemValues;
     }
-    return items[value as string];
-  }, [value, items, multiple]);
+    return getItem(value as string);
+  }, [value, multiple, getItem]);
 
   if (!hasValue) {
     return (

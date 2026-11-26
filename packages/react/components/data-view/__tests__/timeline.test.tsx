@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme';
+import { SCALINGS } from '../../theme/settings';
 
 // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
 import { DataView } from '../data-view';
@@ -13,7 +14,12 @@ import type {
   TimelineActions
 } from '../data-view.types';
 import { useDataView } from '../hooks/useDataView';
-import { buildAxis, createTimeScale, toTimestamp } from '../utils/time-scale';
+import {
+  buildAxis,
+  createTimeScale,
+  TIMELINE_DEFAULT_UNIT_WIDTH,
+  toTimestamp
+} from '../utils/time-scale';
 
 beforeAll(() => {
   // jsdom doesn't implement ResizeObserver, and the timeline observes its scroll
@@ -196,6 +202,41 @@ describe('buildAxis', () => {
       40
     ).ticks;
     expect(roomy.every(t => t.showLabel)).toBe(true);
+  });
+
+  it('labels at exact multiples of the label spacing despite float error', () => {
+    // The call site divides by scaling: 29.4 / 1.05 = 27.999999999999996.
+    expect(
+      buildAxis(januaryScale, 'day', 29.4 / 1.05).ticks.every(t => t.showLabel)
+    ).toBe(true);
+    const half = buildAxis(januaryScale, 'day', 14.7 / 1.05).ticks;
+    expect(half.map(t => t.showLabel).slice(0, 4)).toEqual([
+      true,
+      false,
+      true,
+      false
+    ]);
+  });
+
+  it('keeps the default label spacing at every scaling', () => {
+    for (const s of SCALINGS) {
+      const scaling = Number(s);
+      const every = (['day', 'week', 'month', 'quarter'] as const).map(
+        scale => {
+          const unitWidth = TIMELINE_DEFAULT_UNIT_WIDTH[scale] * scaling;
+          const scaleForUnit = createTimeScale({
+            minTime: new Date(2025, 0, 1).getTime(),
+            maxTime: new Date(2027, 0, 1).getTime(),
+            scale,
+            unitWidth,
+            padUnits: 0
+          });
+          const { ticks } = buildAxis(scaleForUnit, scale, unitWidth / scaling);
+          return ticks.findIndex((t, i) => i > 0 && t.showLabel);
+        }
+      );
+      expect(every).toEqual([2, 1, 1, 1]);
+    }
   });
 
   it('labels every Nth unit when labelEvery is passed', () => {
@@ -1461,10 +1502,10 @@ describe('DataView.Timeline ordering', () => {
 /* ────────────────────────── grouping (swim lanes) ───────────────────────
    Grouped geometry over the same Jan 2025 domain. Cards are unmeasured in
    jsdom, so every lane is estimatedRowHeight (66) tall with laneGap 16 and a
-   38px band (List's group-header box) per section:
+   34px band (List's group-header box) per section:
 
-     Eng     band  0 →  38 | lane 0 top  54 | lane 1 top 136 | section ends 218
-     Design  band 218 → 256 | lane 0 top 272                 | canvas ends 354 */
+     Eng     band  0 →  34 | lane 0 top  50 | lane 1 top 132 | section ends 214
+     Design  band 214 → 248 | lane 0 top 264                 | canvas ends 346 */
 
 const groupedFields: DataViewField<Order>[] = [
   { accessorKey: 'title', label: 'Title', sortable: true },
@@ -1549,12 +1590,12 @@ describe('DataView.Timeline grouping', () => {
     expect(screen.getByTestId('card-a2').dataset.lane).toBe('1');
     expect(screen.getByTestId('card-b1').dataset.lane).toBe('0');
     // …but the tops are global: Design's lane 0 sits below Eng's lanes.
-    expect(screen.getByTestId('card-a1').parentElement!.style.top).toBe('54px');
+    expect(screen.getByTestId('card-a1').parentElement!.style.top).toBe('50px');
     expect(screen.getByTestId('card-a2').parentElement!.style.top).toBe(
-      '136px'
+      '132px'
     );
     expect(screen.getByTestId('card-b1').parentElement!.style.top).toBe(
-      '272px'
+      '264px'
     );
   });
 
@@ -1566,11 +1607,11 @@ describe('DataView.Timeline grouping', () => {
       container.querySelectorAll<HTMLElement>('[class*="timelineGroupSlot"]')
     ).map(slot => [slot.style.top, slot.style.height]);
     expect(slots).toEqual([
-      ['0px', '218px'],
-      ['218px', '136px']
+      ['0px', '214px'],
+      ['214px', '132px']
     ]);
     const canvas = container.querySelector('[role="list"]') as HTMLElement;
-    expect(canvas.style.height).toBe('354px');
+    expect(canvas.style.height).toBe('346px');
   });
 
   it('keeps a card in its own section when it starts under another group', () => {
@@ -1588,7 +1629,7 @@ describe('DataView.Timeline grouping', () => {
     const { container } = renderGrouped({ hideGroupHeaders: true });
     expect(bands(container)).toHaveLength(0);
     expect(container.querySelector('[class*="timelineGroupSlot"]')).toBeNull();
-    // Rows stay grouped (List semantics): the 38px bands are gone, so every
+    // Rows stay grouped (List semantics): the 34px bands are gone, so every
     // section shifts up, but Design's lane still starts after Eng's two.
     expect(screen.getByTestId('card-a1').parentElement!.style.top).toBe('16px');
     expect(screen.getByTestId('card-a2').parentElement!.style.top).toBe('98px');
@@ -1700,7 +1741,7 @@ describe('DataView.Timeline grouping', () => {
     // Only the matching group survives, and it moves to the top of the canvas.
     expect(bands(container).map(band => band.textContent)).toEqual(['Design1']);
     expect(screen.queryByTestId('card-a1')).toBeNull();
-    expect(screen.getByTestId('card-b1').parentElement!.style.top).toBe('54px');
+    expect(screen.getByTestId('card-b1').parentElement!.style.top).toBe('50px');
   });
 });
 
@@ -2225,7 +2266,7 @@ describe('DataView.Timeline theme scaling', () => {
   ];
 
   function renderScaled(
-    scaling: '1' | '1.1',
+    scaling: '1' | '1.05' | '1.1',
     props: Partial<DataViewTimelineProps<Order>> = {},
     data: Order[] = scaledOrders
   ) {
@@ -2319,6 +2360,11 @@ describe('DataView.Timeline theme scaling', () => {
     expect(lefts(scaled.container, 'data-view-timeline-axis-tick')[1]).toBe(42);
   });
 
+  it('labels every tick when unitWidth equals the scaled label floor', () => {
+    const { container } = renderScaled('1.05', { unitWidth: 29.4 });
+    expect(labels(container)).toHaveLength(32);
+  });
+
   it('scales the gap between cards sharing a lane', () => {
     // At scaling 1, b starts 7.5px after a ends, under the 8px card gap.
     const nearlyTouching: Order[] = [
@@ -2356,6 +2402,39 @@ describe('DataView.Timeline theme scaling', () => {
     });
     // Jan 20 = 19 days × 22px, minus the 24px inset × 1.1.
     expect(root.scrollLeft).toBeCloseTo(19 * 22 - 24 * 1.1);
+  });
+
+  it('scales the group header height with the theme', () => {
+    const groupHeaderHeight = (scaling: '1' | '1.1') => {
+      const { container, unmount } = render(
+        <Theme defaultValue={{ scaling }}>
+          <DataView<Order>
+            data={groupedOrders}
+            fields={groupedFields}
+            mode='client'
+            defaultSort={{ name: 'title', order: 'asc' }}
+            defaultQuery={{ group_by: ['team'] }}
+            getRowId={(row: Order) => row.id}
+          >
+            <DataView.Timeline<Order>
+              startField='start'
+              endField='end'
+              range={['2025-01-01', '2025-01-31']}
+              today={false}
+              renderCard={row => <div>{row.original.title}</div>}
+            />
+          </DataView>
+        </Theme>
+      );
+      const header = container.querySelector<HTMLElement>(
+        '[data-slot="data-view-timeline-group-header"]'
+      );
+      const height = Number.parseFloat(header?.style.height ?? '');
+      unmount();
+      return height;
+    };
+    expect(groupHeaderHeight('1')).toBe(34);
+    expect(groupHeaderHeight('1.1')).toBeCloseTo(37.4);
   });
 
   it('picks up scaling when a renderer mounts after a view switch', () => {
