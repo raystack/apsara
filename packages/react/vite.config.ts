@@ -4,7 +4,7 @@ import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import browserslist from 'browserslist';
-import { browserslistToTargets, transform } from 'lightningcss';
+import { browserslistToTargets, Features, transform } from 'lightningcss';
 import type { OutputOptions } from 'rolldown';
 import { defineConfig, type Plugin } from 'vite';
 
@@ -18,6 +18,9 @@ const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) as {
   peerDependencies: Record<string, string>;
 };
 const targets = browserslistToTargets(browserslist(pkg.browserslist));
+// Colors stay as written. Fallbacks for oklch() would add about 14% to
+// style.css, for Safari 15.0 to 15.3 only.
+const exclude = Features.Colors;
 const externals = [
   ...Object.keys(pkg.dependencies),
   ...Object.keys(pkg.peerDependencies)
@@ -28,7 +31,8 @@ const minifyCss = (code: string, filename: string) =>
     filename,
     code: Buffer.from(code),
     minify: true,
-    targets
+    targets,
+    exclude
   }).code.toString();
 
 /** Matches `@import "https://fonts.googleapis.com/…";`, with or without `url()`. */
@@ -207,6 +211,7 @@ export default defineConfig({
     transformer: 'lightningcss',
     lightningcss: {
       targets,
+      exclude,
       // Scope class and keyframe names only, the same as `postcss-modules`.
       cssModules: {
         pattern: '[local]_[hash]',

@@ -36,9 +36,8 @@ are the same. An app that uses a bundler needs no change.
   `import '@raystack/apsara/style.css'`.
 - The package no longer ships declarations for tests and Figma files, or
   declaration maps.
-- `style.css` adds hex fallbacks for the `oklch()` color tokens, for
-  Safari 15.0 to 15.3, and leaves out `-moz-` prefixes that no supported
-  browser needs.
+- `style.css` is about 14% smaller (gzip). It leaves out `-moz-` prefixes
+  that no supported browser needs.
 - The `DataView` list header and group anchor, and the `DataTable` group
   anchor, show their edge when content scrolls under them. The minifier
   used to move `animation-timeline` before the `animation` shorthand,
