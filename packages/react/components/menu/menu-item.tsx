@@ -1,29 +1,8 @@
 'use client';
 
-import {
-  Autocomplete as AutocompletePrimitive,
-  Menu as MenuPrimitive
-} from '@base-ui/react';
-import { ReactNode } from 'react';
+import { Menu as MenuPrimitive } from '@base-ui/react';
 import { Cell, CellBaseProps } from './cell';
 import { useMenuContext } from './menu-root';
-import { getMatch } from './utils';
-
-/**
- * Hides the item when it does not match the search value (in auto mode).
- * @remarks Only for internal usage.
- */
-export function useMenuItemFilter(value: unknown, children: ReactNode) {
-  const { autocomplete, inputValue, shouldFilter } = useMenuContext();
-  const hidden =
-    shouldFilter &&
-    !getMatch(
-      typeof value === 'string' ? value : undefined,
-      children,
-      inputValue
-    );
-  return { autocomplete, hidden };
-}
 
 /**
  * Keeps focus handling out of Base UI for items in a plain menu.
@@ -40,45 +19,30 @@ export const stopItemFocus = (e: {
 };
 
 export interface MenuItemProps extends MenuPrimitive.Item.Props, CellBaseProps {
-  /** Text that the search matches, in addition to the children text. */
+  /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
 }
 
 export function MenuItem({
   children,
-  value,
+  value: _value,
   leadingIcon,
   trailingIcon,
   render,
   ...props
 }: MenuItemProps) {
-  const { autocomplete, hidden } = useMenuItemFilter(value, children);
-
-  if (hidden) return null;
+  const { autocomplete } = useMenuContext();
 
   const cell = render ?? (
     <Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />
   );
-
-  if (autocomplete) {
-    return (
-      <AutocompletePrimitive.Item
-        data-slot='menu-item'
-        value={value}
-        render={<MenuPrimitive.Item render={cell} />}
-        {...props}
-      >
-        {children}
-      </AutocompletePrimitive.Item>
-    );
-  }
 
   return (
     <MenuPrimitive.Item
       data-slot='menu-item'
       render={cell}
       {...props}
-      onFocus={stopItemFocus}
+      onFocus={autocomplete ? props.onFocus : stopItemFocus}
     >
       {children}
     </MenuPrimitive.Item>

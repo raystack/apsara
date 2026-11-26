@@ -195,7 +195,6 @@ export const autocompleteDemo = {
         </Menu.Submenu>
         <Menu.Item><span>Custom Label</span></Menu.Item>
         <Menu.Item
-          value="remove"
           trailingIcon={
             <Text size="micro" color="secondary">
               ⌘⇧D
@@ -216,7 +215,7 @@ export const autocompleteDemo = {
       </Menu.Trigger>
       <Menu.Content searchPlaceholder="Search actions...">
         <Menu.Item>Copy</Menu.Item>
-        <Menu.Item value="remove">Delete...</Menu.Item>
+        <Menu.Item>Delete...</Menu.Item>
         <Menu.Submenu autocomplete>
           <Menu.SubmenuTrigger>Sub Menu</Menu.SubmenuTrigger>
           <Menu.SubmenuContent>

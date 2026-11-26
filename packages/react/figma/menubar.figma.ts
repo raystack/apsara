@@ -39,8 +39,8 @@ const fallback = figma.code`<Menubar>
       <Menu>
         <Menu.Trigger>File</Menu.Trigger>
         <Menu.Content>
-          <Menu.Item value='new'>New</Menu.Item>
-          <Menu.Item value='open'>Open</Menu.Item>
+          <Menu.Item>New</Menu.Item>
+          <Menu.Item>Open</Menu.Item>
         </Menu.Content>
       </Menu>
     </Menubar>`;

@@ -27,33 +27,3 @@ export const getChildrenValue = (children?: ReactNode) => {
   });
   return value.trim();
 };
-
-export const KEYCODES: Record<string, [string, number]> = {
-  ARROW_RIGHT: ['ArrowRight', 39],
-  ESCAPE: ['Escape', 27]
-};
-
-export const dispatchKeyboardEvent = (
-  element: Element | EventTarget,
-  key: (typeof KEYCODES)[keyof typeof KEYCODES],
-  bubbles: boolean = true
-) => {
-  const [keyName, keyCode] = key;
-  return element.dispatchEvent(
-    new KeyboardEvent('keydown', {
-      key: keyName,
-      code: keyName,
-      keyCode: keyCode,
-      which: keyCode,
-      bubbles
-    })
-  );
-};
-
-export const isElementSubMenuTrigger = (element: Element) => {
-  return element.getAttribute('data-slot') === 'menu-subtrigger';
-};
-
-export const isElementSubMenuOpen = (element: Element) => {
-  return element.hasAttribute('data-popup-open');
-};

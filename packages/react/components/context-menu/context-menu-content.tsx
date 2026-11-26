@@ -1,20 +1,11 @@
 'use client';
 
-import {
-  Autocomplete as AutocompletePrimitive,
-  ContextMenu as ContextMenuPrimitive
-} from '@base-ui/react';
+import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { KeyboardEvent, useCallback, useRef } from 'react';
 import { type Radius, radiusStyle } from '../../shared/radius';
 import styles from '../menu/menu.module.css';
+import { MenuSearch } from '../menu/menu-content';
 import { useMenuContext } from '../menu/menu-root';
-import {
-  dispatchKeyboardEvent,
-  isElementSubMenuOpen,
-  isElementSubMenuTrigger,
-  KEYCODES
-} from '../menu/utils';
 import { useThemeInjection } from '../theme/portal';
 
 export interface ContextMenuContentProps
@@ -24,7 +15,7 @@ export interface ContextMenuContentProps
     >,
     ContextMenuPrimitive.Popup.Props {
   /**
-   * Placeholder of the search input.
+   * Placeholder and accessible name of the search input. An empty value uses "Search" as the accessible name.
    * @default "Search..."
    */
   searchPlaceholder?: string;
@@ -51,66 +42,7 @@ export const ContextMenuContent = ({
   radius,
   ...positionerProps
 }: ContextMenuContentProps) => {
-  const {
-    autocomplete,
-    inputValue,
-    onInputValueChange,
-    inputRef,
-    isInitialRender,
-    parent
-  } = useMenuContext();
-
-  const focusInput = useCallback(() => {
-    if (document?.activeElement !== inputRef?.current)
-      inputRef?.current?.focus();
-  }, [inputRef]);
-  const highlightedItem = useRef<
-    [index: number, reason: 'keyboard' | 'pointer' | 'none']
-  >([-1, 'none']);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const highlightFirstItem = useCallback(() => {
-    if (!isInitialRender?.current) return;
-    isInitialRender.current = false;
-    const item = containerRef.current?.querySelector('[role="option"]');
-    if (!item) return;
-    item.dispatchEvent(new PointerEvent('mousemove', { bubbles: true }));
-  }, [isInitialRender]);
-
-  const checkAndOpenSubMenu = useCallback(() => {
-    if (highlightedItem.current[0] === -1) return;
-    const items = containerRef.current?.querySelectorAll('[role="option"]');
-    const item = items?.[highlightedItem.current[0]];
-    if (!item || !isElementSubMenuTrigger(item)) return;
-    dispatchKeyboardEvent(item, KEYCODES.ARROW_RIGHT);
-  }, []);
-
-  const checkAndCloseSubMenu = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      if (highlightedItem.current[0] === -1) return;
-      const items = containerRef.current?.querySelectorAll('[role="option"]');
-      const item = items?.[highlightedItem.current[0]];
-      if (
-        !item ||
-        !isElementSubMenuTrigger(item) ||
-        !isElementSubMenuOpen(item)
-      )
-        return;
-      dispatchKeyboardEvent(item, KEYCODES.ESCAPE);
-      e.stopPropagation();
-    },
-    []
-  );
-
-  const blurStaleMenuItem = useCallback((index: number) => {
-    const items = containerRef.current?.querySelectorAll('[role="option"]');
-    const item = items?.[index];
-    if (!item || !isElementSubMenuTrigger(item) || !isElementSubMenuOpen(item))
-      return;
-    dispatchKeyboardEvent(item, KEYCODES.ESCAPE);
-    item.dispatchEvent(new PointerEvent('pointerout', { bubbles: true }));
-  }, []);
-
+  const { autocomplete, autocompleteMode } = useMenuContext();
   const theme = useThemeInjection();
 
   return (
@@ -129,6 +61,9 @@ export const ContextMenuContent = ({
           className={cx(
             styles.content,
             autocomplete && styles.comboboxContainer,
+            autocomplete &&
+              autocompleteMode === 'auto' &&
+              styles['autocomplete-mode-auto'],
             theme?.className,
             radiusStyle({ radius }),
             className
@@ -136,65 +71,15 @@ export const ContextMenuContent = ({
           style={style}
           render={render}
           finalFocus={finalFocus}
-          role={autocomplete ? 'dialog' : 'menu'}
-          onFocus={
-            autocomplete || parent?.autocomplete
-              ? e => {
-                  focusInput();
-                  e.stopPropagation();
-                  highlightFirstItem();
-                  onFocus?.(e);
-                }
-              : undefined
-          }
+          onFocus={onFocus}
         >
           {autocomplete ? (
-            <AutocompletePrimitive.Root
-              inline
-              open
-              value={inputValue}
-              onValueChange={onInputValueChange}
-              autoHighlight={!!inputValue?.length}
-              mode='none'
-              loopFocus={false}
-              onItemHighlighted={(value, eventDetails) => {
-                if (
-                  highlightedItem.current[1] === 'pointer' &&
-                  eventDetails.reason === 'keyboard'
-                ) {
-                  blurStaleMenuItem(highlightedItem.current[0]);
-                }
-                highlightedItem.current = [
-                  eventDetails.index,
-                  eventDetails.reason
-                ];
-              }}
+            <MenuSearch
+              slotPrefix='context-menu'
+              placeholder={searchPlaceholder}
             >
-              <AutocompletePrimitive.Input
-                data-slot='context-menu-search-input'
-                placeholder={searchPlaceholder}
-                className={styles.comboboxInput}
-                ref={inputRef}
-                onPointerEnter={() => {
-                  focusInput();
-                }}
-                onKeyDown={e => {
-                  if (e.key === 'ArrowLeft') return;
-                  if (e.key === 'Escape') return checkAndCloseSubMenu(e);
-                  if (e.key === 'ArrowRight' || e.key === 'Enter')
-                    checkAndOpenSubMenu();
-                  e.stopPropagation();
-                }}
-                tabIndex={-1}
-              />
-              <AutocompletePrimitive.List
-                data-slot='context-menu-search-list'
-                className={styles.comboboxContent}
-                ref={containerRef}
-              >
-                {children}
-              </AutocompletePrimitive.List>
-            </AutocompletePrimitive.Root>
+              {children}
+            </MenuSearch>
           ) : (
             children
           )}

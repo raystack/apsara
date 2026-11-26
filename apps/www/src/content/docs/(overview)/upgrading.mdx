@@ -7,6 +7,43 @@ One section per release, newest first, with only the changes that need action
 from you. The full record of every release, features and fixes included, is
 on [GitHub releases](https://github.com/raystack/apsara/releases).
 
+## Unreleased: menu search uses Base UI filtering
+
+Search in `Menu`, `ContextMenu` and `Menubar` uses Base UI's menu filtering.
+Slots do not change. When the popup closes with search text,
+`onInputValueChange` gets `''` with the reason `popup-close`, not
+`input-clear`. When the search text is empty, the popup closes without a call to
+`onInputValueChange`. To run code on every close, use `onOpenChange`.
+
+### 1. Update tests that query roles
+
+In a searchable menu, items keep their menu roles: `menuitem`,
+`menuitemcheckbox` and `menuitemradio`. They used to be `option`. The trigger
+has `aria-haspopup="dialog"`, the popup is a `dialog`, and the input is a
+`searchbox`. Update queries such as `getAllByRole('option')` to
+`getAllByRole('menuitem')`.
+
+### 2. Check items that have a `value`
+
+An item matches by its rendered text, or by its `label` when set. Its `value`
+no longer matches. To match text that is not shown, pass it in `label`, which
+replaces the rendered text for matching. `value` on `Item`, `CheckboxItem`,
+`LinkItem` and `SubmenuTrigger` in `Menu` and `ContextMenu` has no effect and
+is deprecated. `RadioItem` still uses its `value` for selection.
+
+```tsx
+// Before: matches "share" and "link"
+<Menu.Item value="link">Share</Menu.Item>
+
+// After: matches "share" and "link"
+<Menu.Item label="Share link">Share</Menu.Item>
+```
+
+### 3. Remove unused props from `Menu`
+
+`MenuProps` no longer has `inputRef`, `contentRef` and `isInitialRender`. The
+menu never read them, so removing them does not change behavior.
+
 ## Unreleased: controlled state uses `x`, `defaultX` and `onXChange`
 
 A prop that holds state is controlled from the first render. The component

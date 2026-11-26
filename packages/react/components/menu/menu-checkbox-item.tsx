@@ -1,19 +1,16 @@
 'use client';
 
-import {
-  Autocomplete as AutocompletePrimitive,
-  Menu as MenuPrimitive
-} from '@base-ui/react';
-import { useControlled } from '@base-ui/utils/useControlled';
+import { Menu as MenuPrimitive } from '@base-ui/react';
 import { CheckIcon } from '~/icons';
 import { Cell, CellBaseProps } from './cell';
 import cellStyles from './cell.module.css';
-import { stopItemFocus, useMenuItemFilter } from './menu-item';
+import { stopItemFocus } from './menu-item';
+import { useMenuContext } from './menu-root';
 
 export interface MenuCheckboxItemProps
   extends MenuPrimitive.CheckboxItem.Props,
     CellBaseProps {
-  /** Text that the search matches, in addition to the children text. */
+  /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
   /** Custom element to render. It replaces the default layout, including the check mark and icons. */
   render?: MenuPrimitive.CheckboxItem.Props['render'];
@@ -23,38 +20,13 @@ export interface MenuCheckboxItemProps
 export function CheckboxItemBase({
   slotPrefix,
   children,
-  value,
+  value: _value,
   leadingIcon,
   trailingIcon,
   render,
-  checked: checkedProp,
-  defaultChecked = false,
-  onCheckedChange,
   ...props
 }: MenuCheckboxItemProps & { slotPrefix: string }) {
-  const { autocomplete, hidden } = useMenuItemFilter(value, children);
-  // The Base UI item unmounts while filtered out, so the state lives here.
-  const [checked, setCheckedUnwrapped] = useControlled({
-    controlled: checkedProp,
-    default: defaultChecked,
-    name: 'MenuCheckboxItem',
-    state: 'checked'
-  });
-
-  if (hidden) return null;
-
-  const itemProps = {
-    ...props,
-    checked,
-    onCheckedChange: (
-      next: boolean,
-      eventDetails: MenuPrimitive.CheckboxItem.ChangeEventDetails
-    ) => {
-      onCheckedChange?.(next, eventDetails);
-      if (eventDetails.isCanceled) return;
-      setCheckedUnwrapped(next);
-    }
-  };
+  const { autocomplete } = useMenuContext();
 
   const cell = render ?? (
     <Cell
@@ -72,25 +44,12 @@ export function CheckboxItemBase({
     />
   );
 
-  if (autocomplete) {
-    return (
-      <AutocompletePrimitive.Item
-        data-slot={`${slotPrefix}-checkbox-item`}
-        value={value}
-        disabled={props.disabled}
-        render={<MenuPrimitive.CheckboxItem render={cell} {...itemProps} />}
-      >
-        {children}
-      </AutocompletePrimitive.Item>
-    );
-  }
-
   return (
     <MenuPrimitive.CheckboxItem
       data-slot={`${slotPrefix}-checkbox-item`}
       render={cell}
-      {...itemProps}
-      onFocus={stopItemFocus}
+      {...props}
+      onFocus={autocomplete ? props.onFocus : stopItemFocus}
     >
       {children}
     </MenuPrimitive.CheckboxItem>

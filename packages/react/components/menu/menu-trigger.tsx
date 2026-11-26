@@ -1,6 +1,5 @@
 'use client';
 
-import { Autocomplete as AutocompletePrimitive } from '@base-ui/react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
@@ -9,8 +8,6 @@ import { Button } from '../button';
 import { useMenubarContext } from '../menubar/menubar';
 import { Cell, CellBaseProps } from './cell';
 import styles from './menu.module.css';
-import { useMenuContext } from './menu-root';
-import { getMatch } from './utils';
 
 export interface MenuTriggerProps extends MenuPrimitive.Trigger.Props {
   /**
@@ -56,7 +53,7 @@ MenuTrigger.displayName = 'Menu.Trigger';
 export interface MenuSubTriggerProps
   extends MenuPrimitive.SubmenuTrigger.Props,
     CellBaseProps {
-  /** Text that the search of the parent menu matches, in addition to the children text. */
+  /** @deprecated Has no effect. Use `label` to set the search text. */
   value?: string;
   /** Icon after the trigger text. Defaults to a right chevron. */
   trailingIcon?: ReactNode;
@@ -64,43 +61,15 @@ export interface MenuSubTriggerProps
 
 export function MenuSubTrigger({
   children,
-  value,
+  value: _value,
   trailingIcon = <ChevronRightIcon />,
   leadingIcon,
   ...props
 }: MenuSubTriggerProps) {
-  const { parent, inputRef } = useMenuContext();
-
-  if (parent?.shouldFilter && !getMatch(value, children, parent?.inputValue)) {
-    return null;
-  }
-
-  const cell = <Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />;
   return (
     <MenuPrimitive.SubmenuTrigger
-      render={
-        parent?.autocomplete ? (
-          <AutocompletePrimitive.Item
-            value={value}
-            render={cell}
-            onPointerEnter={e => {
-              if (document?.activeElement !== parent?.inputRef?.current)
-                parent?.inputRef?.current?.focus();
-              props?.onPointerEnter?.(e);
-            }}
-            onKeyDown={e => {
-              requestAnimationFrame(() => {
-                inputRef?.current?.focus();
-              });
-              props?.onKeyDown?.(e);
-            }}
-          />
-        ) : (
-          cell
-        )
-      }
+      render={<Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />}
       {...props}
-      role={parent?.autocomplete ? 'option' : 'menuitem'}
       data-slot='menu-subtrigger'
     >
       {children}

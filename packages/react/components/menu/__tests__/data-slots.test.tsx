@@ -114,7 +114,7 @@ describe('Menu data-slot contract', () => {
       <Menu autocomplete>
         <Menu.Trigger>{TRIGGER_TEXT}</Menu.Trigger>
         <Menu.Content>
-          <Menu.Item value='item'>Item</Menu.Item>
+          <Menu.Item>Item</Menu.Item>
         </Menu.Content>
       </Menu>
     );

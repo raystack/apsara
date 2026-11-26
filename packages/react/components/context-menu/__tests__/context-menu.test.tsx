@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import styles from '../../menu/menu.module.css';
 import { ContextMenu } from '../context-menu';
 
 // Mock scrollIntoView for test environment
@@ -211,6 +212,55 @@ describe('ContextMenu', () => {
   });
 
   describe('Autocomplete', () => {
+    it('stays open when onOpenChange cancels the close', async () => {
+      await renderAndOpenContextMenu(
+        <ContextMenu
+          autocomplete
+          onOpenChange={(open, eventDetails) => {
+            if (!open) eventDetails.cancel();
+          }}
+        >
+          <ContextMenu.Trigger>{TRIGGER_TEXT}</ContextMenu.Trigger>
+          <ContextMenu.Content>
+            <ContextMenu.Item>Profile</ContextMenu.Item>
+          </ContextMenu.Content>
+        </ContextMenu>
+      );
+      fireEvent.keyDown(screen.getByRole('searchbox'), { key: 'Escape' });
+      await waitFor(() =>
+        expect(screen.getByRole('searchbox')).toBeInTheDocument()
+      );
+      expect(screen.getByText('Profile')).toBeInTheDocument();
+    });
+
+    it('adds the auto mode class to the popup', async () => {
+      await renderAndOpenContextMenu(
+        <ContextMenu autocomplete>
+          <ContextMenu.Trigger>{TRIGGER_TEXT}</ContextMenu.Trigger>
+          <ContextMenu.Content>
+            <ContextMenu.Item>Profile</ContextMenu.Item>
+          </ContextMenu.Content>
+        </ContextMenu>
+      );
+      expect(screen.getByRole('dialog')).toHaveClass(
+        styles['autocomplete-mode-auto']
+      );
+    });
+
+    it('leaves the auto mode class off a manual mode popup', async () => {
+      await renderAndOpenContextMenu(
+        <ContextMenu autocomplete autocompleteMode='manual'>
+          <ContextMenu.Trigger>{TRIGGER_TEXT}</ContextMenu.Trigger>
+          <ContextMenu.Content>
+            <ContextMenu.Item>Profile</ContextMenu.Item>
+          </ContextMenu.Content>
+        </ContextMenu>
+      );
+      expect(screen.getByRole('dialog')).not.toHaveClass(
+        styles['autocomplete-mode-auto']
+      );
+    });
+
     it('filters checkbox items with the other items', async () => {
       await renderAndOpenContextMenu(
         <ContextMenu autocomplete>
@@ -224,12 +274,13 @@ describe('ContextMenu', () => {
         </ContextMenu>
       );
 
-      const input = screen.getByRole('combobox');
+      const input = screen.getByRole('searchbox');
       fireEvent.change(input, { target: { value: 'grid' } });
-      expect(screen.getAllByRole('option')).toHaveLength(1);
+      expect(screen.queryAllByRole('menuitem')).toHaveLength(0);
+      expect(screen.getAllByRole('menuitemcheckbox')).toHaveLength(1);
 
       fireEvent.change(input, { target: { value: 'zzz' } });
-      expect(screen.queryAllByRole('option')).toHaveLength(0);
+      expect(screen.queryAllByRole('menuitemcheckbox')).toHaveLength(0);
     });
   });
 });

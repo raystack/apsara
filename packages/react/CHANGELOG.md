@@ -165,6 +165,43 @@ Apsara renders `Calendar`, `DatePicker` or `RangePicker` now.
 - **A date filter can be cleared.** Clicking the selected day or emptying
   the input clears it, and `onValueChange` receives `''`.
 
+### Menu and ContextMenu: search uses Base UI menu filtering (BREAKING)
+
+Menu, ContextMenu and Menubar search use Base UI's `Menu.FilterProvider`,
+`Menu.Input`, `Menu.List` and `Menu.Empty`. Base UI marks this API as
+preview. Slots are unchanged. See the
+[upgrade guide](https://apsara.raystack.io/docs/upgrading).
+
+#### Breaking changes
+
+- In search mode the trigger has `aria-haspopup="dialog"`, the popup is a
+  `dialog`, the input is a `searchbox` labelled by `searchPlaceholder`
+  (or "Search" when `searchPlaceholder` is empty), and the list is a
+  `menu`. Items keep their menu roles (`menuitem`, `menuitemcheckbox`,
+  `menuitemradio`) instead of `option`. App tests that query
+  `role="option"` or expect `aria-haspopup="menu"` need updating.
+- An item matches by its rendered text, including text in `leadingIcon`
+  and `trailingIcon`, or by its `label` when set. Its `value` no longer
+  matches. Matching ignores case, accents and punctuation.
+- `value` on `Item`, `CheckboxItem`, `LinkItem` and `SubmenuTrigger` (and
+  their ContextMenu parts) has no effect and is deprecated. Use `label`.
+- `MenuProps` no longer has `inputRef`, `contentRef` and
+  `isInitialRender`. The menu never read them. Remove them where you pass
+  them.
+
+#### Other changes
+
+- Group labels stay visible while their group has matches.
+- ArrowLeft in a submenu's search input moves the text cursor instead of
+  closing the submenu.
+- Escape in the root input closes the whole menu, even when a submenu is
+  open on hover.
+- `eventDetails.cancel()` in `onOpenChange` keeps an uncontrolled Menu or
+  ContextMenu open.
+- A searchable menu opened by hover focuses its search input when the
+  mouse moves over the popup. In a Menubar, keys typed on the trigger
+  before that do not reach the input.
+
 ## 0.49.0
 
 ### Calendar / DatePicker / RangePicker improvements (PR #819)

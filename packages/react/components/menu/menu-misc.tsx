@@ -1,6 +1,5 @@
 'use client';
 
-import { Autocomplete as AutocompletePrimitive } from '@base-ui/react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, ReactNode } from 'react';
@@ -12,7 +11,6 @@ export function MenuGroup({
   children,
   ...props
 }: MenuPrimitive.Group.Props) {
-  // Stays rendered while filtering. Removing it would remount the items and reset their state.
   return (
     <MenuPrimitive.Group
       data-slot='menu-group'
@@ -29,12 +27,6 @@ export function MenuLabel({
   className,
   ...props
 }: MenuPrimitive.GroupLabel.Props) {
-  const { shouldFilter } = useMenuContext();
-
-  if (shouldFilter) {
-    return null;
-  }
-
   return (
     <MenuPrimitive.GroupLabel
       data-slot='menu-label'
@@ -46,12 +38,6 @@ export function MenuLabel({
 MenuLabel.displayName = 'Menu.Label';
 
 export function MenuSeparator({ className, ...props }: ComponentProps<'div'>) {
-  const { shouldFilter } = useMenuContext();
-
-  if (shouldFilter) {
-    return null;
-  }
-
   return (
     <div
       data-slot='menu-separator'
@@ -74,12 +60,13 @@ export function MenuEmptyState({
   ...props
 }: MenuEmptyStateProps) {
   const { autocomplete } = useMenuContext();
-  const Component = autocomplete ? AutocompletePrimitive.Empty : 'div';
+  const Component = autocomplete ? MenuPrimitive.Empty : 'div';
 
   return (
     <Component
       data-slot='menu-empty-state'
-      // The search list is a listbox, which only allows options and groups inside.
+      // The search list is a menu, which allows only items, groups and
+      // separators, so the empty state is a plain element and not a live region.
       role={undefined}
       aria-live={undefined}
       aria-atomic={undefined}
