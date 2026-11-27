@@ -1,5 +1,14 @@
 /// <reference types="vitest" />
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
+
+// These files need a child process: the bundle tests load Rolldown's native
+// binding, and the date tests set process.env.TZ, which a worker thread does
+// not apply.
+const forkOnly = [
+  'components/editor/__tests__/bundle.test.ts',
+  'icons/__tests__/bundle.test.ts',
+  'shared/__tests__/date-filters.test.ts'
+];
 
 export default defineConfig({
   test: {
@@ -10,7 +19,22 @@ export default defineConfig({
       modules: {
         classNameStrategy: 'stable'
       }
-    }
+    },
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'vm',
+          // One jsdom per worker, with each file in its own VM context.
+          pool: 'vmThreads',
+          exclude: [...configDefaults.exclude, ...forkOnly]
+        }
+      },
+      {
+        extends: true,
+        test: { name: 'forks', pool: 'forks', include: forkOnly }
+      }
+    ]
   },
   resolve: {
     alias: {
