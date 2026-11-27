@@ -341,7 +341,7 @@ export const SelectRoot = (props: SelectRootProps) => {
           inputValue={providedInputValue}
           defaultInputValue={defaultInputValue}
           onInputValueChange={handleInputValueChange}
-          filter={itemsProp ? undefined : null}
+          filter={itemsProp && autocompleteMode === 'auto' ? undefined : null}
           items={itemValues}
           itemToStringLabel={itemToStringLabel}
           virtualized={virtualized}

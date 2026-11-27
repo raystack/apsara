@@ -694,6 +694,25 @@ describe('Select', () => {
       expect(screen.getByText('No results')).toBeInTheDocument();
     });
 
+    it('keeps the items as given in manual mode', async () => {
+      render(
+        <Select
+          autocomplete
+          autocompleteMode='manual'
+          virtualized
+          inputValue='NYC'
+          items={[{ value: 'ny', label: 'New York' }]}
+        >
+          <Select.Trigger>
+            <Select.Value placeholder={TRIGGER_TEXT} />
+          </Select.Trigger>
+          <Select.Content />
+        </Select>
+      );
+      await open();
+      expect(screen.getByRole('option', { name: 'New York' })).toBeVisible();
+    });
+
     it('shows the label of a selected item that is not rendered', () => {
       render(<VirtualizedSelect defaultValue='v900' />);
       expect(screen.getByRole('combobox')).toHaveTextContent('Label 900');
