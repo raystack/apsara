@@ -11,10 +11,6 @@ import {
 // ship and have it behave like one that Apsara does. This file is the only
 // cover that contract has: `icons/icons.tsx` only ever passes keys inside the
 // set, so nothing else here calls the factory the way a consumer does.
-//
-// It imports nothing outside `icons/`: the `./icons` rollup build sets `rootDir`
-// to this directory, and an import of a component would make the TypeScript
-// program warn (TS6059).
 
 /** A drawing, standing in for whatever library the consumer pulls from. */
 const Rocket = (props: IconProps) => (

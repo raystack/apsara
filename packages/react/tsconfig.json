@@ -1,22 +1,20 @@
 {
   "extends": "@raystack/tools-config/tsconfig/react",
   "compilerOptions": {
-    "baseUrl": ".",
     "target": "esnext",
-    "isolatedModules": false,
+    "lib": ["ES2021", "DOM", "DOM.Iterable"],
     "moduleResolution": "bundler",
     "paths": {
-      "react": ["node_modules/@types/react"],
-      "~/*": ["./*"],
-      "~/icons/*": ["icons/*"],
-      "~/hooks/*": ["hooks/*"]
+      "react": ["./node_modules/@types/react"],
+      "~/*": ["./*"]
     },
     "types": [
+      "node",
       "vitest/globals",
       "@testing-library/jest-dom",
       "@figma/code-connect/figma-types"
     ]
   },
-  "include": [".", "icons", "hooks", "global.d.ts"],
-  "exclude": ["dist", "build", "node_modules"]
+  "include": [".", "global.d.ts"],
+  "exclude": ["dist", "node_modules"]
 }

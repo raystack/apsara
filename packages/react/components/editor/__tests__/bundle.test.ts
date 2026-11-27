@@ -1,8 +1,8 @@
 // @vitest-environment node
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
-import type { Plugin } from 'rollup';
+import { basename, join, resolve } from 'node:path';
+import type { Plugin } from 'rolldown';
 import { describe, expect, it } from 'vitest';
 
 /* An app that never imports MarkdownAdapter must not ship marked. */
@@ -11,7 +11,17 @@ const PACKAGE_ROOT = resolve(__dirname, '../../..');
 const PACKAGE_INDEX = join(PACKAGE_ROOT, 'index.tsx');
 const { sideEffects } = JSON.parse(
   readFileSync(join(PACKAGE_ROOT, 'package.json'), 'utf8')
-) as { sideEffects?: unknown };
+) as { sideEffects?: boolean | string[] };
+
+/** Reads `sideEffects` the way an app's bundler does: `*.css` globs match file names. */
+const hasSideEffects = (id: string) =>
+  Array.isArray(sideEffects)
+    ? sideEffects.some(glob =>
+        new RegExp(
+          `^${glob.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '[^/]*')}$`
+        ).test(basename(id))
+      )
+    : sideEffects !== false;
 
 /** Resolves `~/` and stubs CSS modules, so the graph is the JavaScript only. */
 const sourcePlugin: Plugin = {
@@ -26,7 +36,9 @@ const sourcePlugin: Plugin = {
     return null;
   },
   load(id) {
-    return id.startsWith('\0css:') ? 'export default {};' : null;
+    return id.startsWith('\0css:')
+      ? { code: 'export default {};', moduleType: 'js' }
+      : null;
   }
 };
 
@@ -36,11 +48,9 @@ async function bundle(source: string): Promise<string> {
     const entry = join(dir, 'fixture.ts');
     writeFileSync(entry, source);
 
-    const { rollup } = await import('rollup');
-    const { nodeResolve } = await import('@rollup/plugin-node-resolve');
-    const typescript = (await import('@rollup/plugin-typescript')).default;
+    const { rolldown } = await import('rolldown');
 
-    const build = await rollup({
+    const build = await rolldown({
       input: entry,
       // Libraries stay external, so a kept `marked` shows as an import.
       external: id =>
@@ -50,23 +60,13 @@ async function bundle(source: string): Promise<string> {
         !id.startsWith('\0'),
       // The package's own `sideEffects` setting, as an app's bundler reads it.
       treeshake: {
-        moduleSideEffects: (_id, external) => external || sideEffects !== false
+        moduleSideEffects: (id, external) => external || hasSideEffects(id)
       },
-      plugins: [
-        sourcePlugin,
-        nodeResolve({ extensions: ['.ts', '.tsx', '.js'] }),
-        typescript({
-          tsconfig: false,
-          jsx: 'react-jsx',
-          target: 'esnext',
-          module: 'esnext',
-          moduleResolution: 'bundler',
-          declaration: false,
-          skipLibCheck: true,
-          noEmitOnError: false
-        })
-      ],
-      onwarn: () => undefined
+      tsconfig: false,
+      transform: { jsx: 'react-jsx' },
+      resolve: { extensions: ['.ts', '.tsx', '.js'] },
+      plugins: [sourcePlugin],
+      logLevel: 'silent'
     });
     const { output } = await build.generate({ format: 'es' });
     await build.close();

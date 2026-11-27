@@ -95,7 +95,8 @@ Run these from `packages/react/`:
 | `pnpm test:watch` | Run tests in watch mode |
 | `pnpm test:coverage` | Run tests with a coverage report |
 | `pnpm lint:fix` | Fix lint issues |
-| `pnpm exec tsc --noEmit` | Check types |
+| `pnpm typecheck` | Check types |
+| `pnpm check:package` | Check the built package's exports and types with publint and arethetypeswrong |
 
 Run `pnpm dev` in `apps/www/` to start only the docs site.
 
@@ -118,7 +119,13 @@ describe('Flex', () => {
 
 ## Build
 
-`pnpm build:apsara` runs Rollup (`packages/react/rollup.config.mjs`) and writes ESM and CommonJS builds, type declarations, and CSS to `packages/react/dist/`. `pnpm dev` runs the same build in watch mode.
+`pnpm build:apsara` runs Vite in library mode (`packages/react/vite.config.ts`) and writes the build to `packages/react/dist/`:
+
+- ESM (`.js`) and CommonJS (`.cjs`), one file per source module, so `'use client'` stays on each file.
+- `style.css`, `style-no-fonts.css`, and `normalize.css`. CSS Module class names use the `[name]_[local]__[hash:base64:5]` pattern. Do not change it: an app that loads two Apsara versions applies both sheets to a shared class name. Lightning CSS adds the vendor prefixes that the `browserslist` in `package.json` needs, and cssnano 7 minifies the sheets. cssnano 7 writes rules in the same form as the 1.x builds, so an app that loads both drops the duplicate 1.x rules. Colors stay as written.
+- Type declarations (`.d.ts` and `.d.cts`). `tsc -p tsconfig.build.json` runs alongside the bundle, so a type error fails the build.
+
+`pnpm dev` runs the same build in watch mode. Turbo caches `pnpm build:apsara`, so a build with no changes restores `dist/` from the cache.
 
 ## Icons
 

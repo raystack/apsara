@@ -19,6 +19,31 @@ Apsara uses `@base-ui/react` 1.9.0 and `@base-ui/utils` 0.5.0.
 - A `Dialog`, `AlertDialog` or `Drawer` opened from code through a
   handle is not linked to a trigger that did not open it.
 
+### Build
+
+Vite 8 and TypeScript 7 build the package. The exports and the CSS rules
+are the same. An app that uses a bundler needs no change.
+
+#### Changes
+
+- `package.json` sets `"type": "module"`. The `import` condition resolves
+  to the `.js` ES modules and `.d.ts` types, and `require` resolves to the
+  `.cjs` modules and `.d.cts` types.
+- With `moduleResolution: node`, `@raystack/apsara/icons` and
+  `@raystack/apsara/hooks` resolve to their own types, not to the root
+  types.
+- `sideEffects` lists `*.css`, so a bundler keeps
+  `import '@raystack/apsara/style.css'`.
+- The package no longer ships declarations for tests and Figma files, or
+  declaration maps.
+- `style.css` leaves out the `-moz-` and `-o-` prefixes that no supported
+  browser needs. The CSS Module class names are the same.
+- The `DataView` list header and group anchor show their edge when
+  content scrolls under them. The minifier
+  used to move `animation-timeline` before the `animation` shorthand,
+  which reset it. The animation now uses longhands, so a minifier in an
+  app's build cannot reorder it either.
+
 ### Icons — lucide replaces @radix-ui/react-icons (BREAKING)
 
 Apsara names every icon with a stable key that does not name a library —

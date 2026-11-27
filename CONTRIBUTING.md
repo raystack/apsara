@@ -96,8 +96,8 @@ Apsara is a public repo. Anyone can read PR titles, descriptions, branch names, 
 ### Before you open it
 
 - Tests pass: `pnpm test:apsara`.
-- Lint passes: `pnpm lint`. CI does not run lint, so check it locally.
-- The change adds no type errors: `pnpm exec tsc --noEmit` in `packages/react`. CI does not run this either.
+- Lint passes: `pnpm lint`.
+- The change adds no type errors: `pnpm typecheck` in `packages/react`.
 - The library builds: `pnpm build:apsara`.
 - New or changed behavior has tests.
 - The docs page is up to date: `index.mdx` and `demo.ts` in `apps/www/src/content/docs/components/<name>/`, and the JSDoc of each prop, which the props tables show.
@@ -108,7 +108,7 @@ Do not worry if you miss a step. CI and the maintainers will help.
 ### CI checks
 
 - PR Title: checks that the title follows the [commit convention](#commit-convention). It runs again when you edit the title.
-- Tests: runs the Vitest suite and builds the library on Node 22 and 24. To reproduce it, run `pnpm test:apsara` and `pnpm build:apsara`.
+- Tests: on Node 22 and 24, runs lint, the type check, and the Vitest suite, builds the library, and checks the package exports and types with publint and arethetypeswrong. To reproduce it, run `pnpm lint`, `pnpm test:apsara`, and `pnpm build:apsara`, then `pnpm typecheck` and `pnpm check:package` in `packages/react`.
 - Canary Release: publishes a preview build to [pkg.pr.new](https://pkg.pr.new) and comments the install command on the PR. See [Canary releases](#canary-releases).
 - Vercel: deploys a preview of the docs site with your changes.
 

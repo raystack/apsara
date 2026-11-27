@@ -1,5 +1,4 @@
 import './styles/index.css';
-import './normalize.css';
 
 export { Accordion, type AccordionProps } from './components/accordion';
 export {
@@ -179,24 +178,24 @@ export {
   type DataViewDisplayAccessProps,
   type DataViewDisplayControlsProps,
   type DataViewEmptyStateProps,
-  DataViewField,
+  type DataViewField,
   type DataViewFiltersProps,
-  DataViewFilterValue,
-  DataViewListColumn,
-  DataViewListProps,
-  DataViewProps,
-  DataViewQuery,
+  type DataViewFilterValue,
+  type DataViewListColumn,
+  type DataViewListProps,
+  type DataViewProps,
+  type DataViewQuery,
   type DataViewSearchProps,
-  DataViewSort,
-  DataViewTimelineProps,
+  type DataViewSort,
+  type DataViewTimelineProps,
   type DataViewToolbarProps,
   type DataViewZeroStateProps,
   EmptyFilterValue,
-  TimelineActions,
-  TimelineCardContext,
-  TimelineDateInput,
-  TimelineMarker,
-  TimelineScale,
+  type TimelineActions,
+  type TimelineCardContext,
+  type TimelineDateInput,
+  type TimelineMarker,
+  type TimelineScale,
   useDataView,
   type ViewSpec
 } from './components/data-view';

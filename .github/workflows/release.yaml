@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ github.ref }}
@@ -35,12 +35,12 @@ jobs:
           version: 9.3.0
 
       - name: Setup Node.js 22.x
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: 22.x
 
       - name: Install Dependencies 🔧
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build Step 🔧
         env:

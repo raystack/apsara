@@ -32,8 +32,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type check
+        run: pnpm --filter=@raystack/apsara typecheck
+
       - name: Run tests
         run: pnpm --filter=@raystack/apsara test
 
       - name: Check build
         run: pnpm build:apsara
+
+      - name: Check package exports and types
+        run: pnpm --filter=@raystack/apsara check:package

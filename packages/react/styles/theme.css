@@ -1,29 +1,28 @@
 /* All `:where()`-wrapped: zero specificity, so a consumer rule on `.rs-theme`
    always wins. */
 
-/* `:global`: CSS Modules would otherwise hash the override target. */
-:global(.rs-theme) {
+.rs-theme {
   font-family: var(--rs-font-body);
   color: var(--rs-color-foreground-base-primary);
 }
 
-:global(.rs-theme)[data-rs-background] {
+.rs-theme[data-rs-background] {
   background-color: var(--rs-color-background-base-primary);
 }
 
 /* Cover the viewport so a short page leaves no unthemed strip. */
-:global(.rs-theme)[data-rs-root][data-rs-background] {
+.rs-theme[data-rs-root][data-rs-background] {
   min-height: 100dvh;
   isolation: isolate;
 }
 
 /* Root colour scheme. Must stay after primitives/appearance.css: same
    specificity as its `:root` rule, so source order decides. */
-:root:where(:has(:global(.rs-theme)[data-rs-root][data-theme="light"])) {
+:root:where(:has(.rs-theme[data-rs-root][data-theme="light"])) {
   color-scheme: light;
 }
 
-:root:where(:has(:global(.rs-theme)[data-rs-root][data-theme="dark"])) {
+:root:where(:has(.rs-theme[data-rs-root][data-theme="dark"])) {
   color-scheme: dark;
 }
 

@@ -31,41 +31,25 @@ async function bundleFixture() {
     )};\n` + `export const icons = [${IMPORTED.join(', ')}];\n`
   );
 
-  // Use rollup, the bundler that actually builds this package.
-  const { rollup } = await import('rollup');
-  const { nodeResolve } = await import('@rollup/plugin-node-resolve');
-  const typescript = (await import('@rollup/plugin-typescript')).default;
+  // Use rolldown, the bundler that builds this package.
+  const { rolldown } = await import('rolldown');
 
-  const bundle = await rollup({
+  const bundle = await rolldown({
     input: entry,
     // Keep the libraries out so the assertions read the icon graph only.
     external: [/^react($|\/)/, 'lucide-react'],
-    plugins: [
-      nodeResolve({ extensions: ['.ts', '.tsx', '.js'] }),
-      typescript({
-        tsconfig: false,
-        jsx: 'react-jsx',
-        target: 'esnext',
-        module: 'esnext',
-        moduleResolution: 'bundler',
-        declaration: false,
-        skipLibCheck: true,
-        noEmitOnError: false
-      })
-    ],
+    tsconfig: false,
+    transform: { jsx: 'react-jsx' },
+    resolve: { extensions: ['.ts', '.tsx', '.js'] },
     // A directive is not a side effect, and the warning is noise here.
-    onwarn: warning => {
-      if (warning.code === 'MODULE_LEVEL_DIRECTIVE') return;
-      if (warning.code === 'PLUGIN_WARNING') return;
-    }
+    logLevel: 'silent'
   });
 
   const { output } = await bundle.generate({ format: 'es' });
   await bundle.close();
 
   return output
-    .filter(chunk => chunk.type === 'chunk')
-    .map(chunk => ('code' in chunk ? chunk.code : ''))
+    .map(chunk => (chunk.type === 'chunk' ? chunk.code : ''))
     .join('\n');
 }
 
