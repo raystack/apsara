@@ -321,6 +321,17 @@ export const FilterChip = ({
     () => (Array.isArray(filterValue) ? filterValue.map(String) : []),
     [filterValue]
   );
+  /* `Select` virtualizes only with `autocomplete`, and renders the rows from `items`. */
+  const isVirtualized = !!(
+    selectProps?.autocomplete && selectProps.virtualized
+  );
+  const selectItems = useMemo(
+    () =>
+      isVirtualized
+        ? options.map(o => ({ value: String(o.value), label: o.label }))
+        : undefined,
+    [isVirtualized, options]
+  );
 
   const handleOperationChange = useCallback(
     (next: FilterOperation, eventDetails: SelectChangeEventDetails) => {
@@ -389,6 +400,7 @@ export const FilterChip = ({
               ? { multiple: true, value: selectedValues }
               : { multiple: false, value: filterValue.toString() })}
             onValueChange={handleSelectValueChange}
+            items={selectItems}
             {...selectProps}
           >
             <Select.Trigger
@@ -408,14 +420,15 @@ export const FilterChip = ({
               </Select.Value>
             </Select.Trigger>
             <Select.Content data-variant='filter'>
-              {options.map(opt => (
-                <Select.Item
-                  key={opt.value.toString()}
-                  value={opt.value.toString()}
-                >
-                  {opt.label}
-                </Select.Item>
-              ))}
+              {!isVirtualized &&
+                options.map(opt => (
+                  <Select.Item
+                    key={opt.value.toString()}
+                    value={opt.value.toString()}
+                  >
+                    {opt.label}
+                  </Select.Item>
+                ))}
             </Select.Content>
           </Select>
         );

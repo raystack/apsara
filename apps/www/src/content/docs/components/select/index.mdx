@@ -12,6 +12,7 @@ import {
   separatorDemo,
   iconDemo,
   autocompleteDemo,
+  virtualizedDemo,
   multipleDemo,
   controlledDemo,
   labelDemo,
@@ -97,6 +98,12 @@ To enable autocomplete, pass the `autocomplete` prop to the Select root element.
 By default, only select items are filtered using a simple match. For more advanced control, set `autocompleteMode="manual"` and filter the items yourself in `onInputValueChange`.
 
 <Demo data={autocompleteDemo} />
+
+### Virtualized
+
+For long lists, set `virtualized` with `autocomplete` and pass the options to `items` as `{ value, label }` objects. `Select.Content` renders only the visible items, and the search matches the labels. Do not pass `Select.Item` children.
+
+<Demo data={virtualizedDemo} />
 
 ### Controlled
 

@@ -4,7 +4,7 @@ description: A compact, interactive element for filtering data with various inpu
 source: packages/react/components/filter-chip
 ---
 
-import { playground, inputDemo, autocompleteDemo, calendarPropsDemo, iconDemo, actionDemo, operationsDemo,
+import { playground, inputDemo, autocompleteDemo, virtualizedDemo, calendarPropsDemo, iconDemo, actionDemo, operationsDemo,
   controlledDemo,
 } from "./demo.ts";
 
@@ -35,6 +35,12 @@ FilterChip supports five input types, `select`, `multiselect`, `date`, `string`,
 Use `selectProps` to enable autocomplete search on select and multiselect filter types. This renders a search input inside the dropdown for filtering options.
 
 <Demo data={autocompleteDemo} />
+
+### Virtualized options
+
+For long option lists, set `virtualized` with `autocomplete` in `selectProps`. The chip renders only the visible options.
+
+<Demo data={virtualizedDemo} />
 
 ### Date with calendarProps
 

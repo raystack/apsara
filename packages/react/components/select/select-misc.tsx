@@ -73,14 +73,18 @@ export function SelectEmpty({
   children,
   ...props
 }: SelectEmptyProps) {
-  const { autocomplete, autocompleteMode, items, inputValue } =
+  const { autocomplete, autocompleteMode, items, inputValue, virtualized } =
     useSelectContext();
 
-  const hasMatch = Object.values(items).some(
-    item =>
-      autocompleteMode === 'manual' ||
-      getMatch(item.value, item.children, inputValue)
-  );
+  /* Virtualized items do not register, and Base UI's Empty counts the root
+     `items` they come from. */
+  const hasMatch =
+    !virtualized &&
+    Object.values(items).some(
+      item =>
+        autocompleteMode === 'manual' ||
+        getMatch(item.value, item.children, inputValue)
+    );
 
   // Base UI's Empty counts only root `items`, so the match check happens here.
   // Its live region must stay mounted to announce, so only the children toggle.

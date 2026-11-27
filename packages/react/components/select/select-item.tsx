@@ -39,7 +39,8 @@ export function SelectItem({
     value: selectValue,
     shouldFilter,
     hasItems,
-    multiple
+    multiple,
+    virtualized
   } = useSelectContext();
 
   const isSelected = multiple
@@ -82,12 +83,15 @@ export function SelectItem({
       children
     );
 
+  /* Virtualized rows mount and unmount on scroll. Registering them would
+     re-render the root on every scroll. */
   useLayoutEffect(() => {
+    if (virtualized) return;
     registerItem({ leadingIcon, children, value });
     return () => {
       unregisterItem(value);
     };
-  }, [value, children, registerItem, unregisterItem, leadingIcon]);
+  }, [value, children, registerItem, unregisterItem, leadingIcon, virtualized]);
 
   if (shouldFilter && !hasItems && !isMatched && !isSelected) {
     return null;

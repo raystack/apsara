@@ -2,7 +2,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ReactNode } from 'react';
 import { renderToString } from 'react-dom/server';
-import { describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import labelStyles from '../../label/label.module.css';
 import { Select } from '../select';
 import { SelectRootProps } from '../select-root';
@@ -618,6 +618,85 @@ describe('Select', () => {
       );
       expect(getValue(container)).toHaveTextContent('Apple');
       expect(container.querySelector('[data-slot="chip"]')).toBeNull();
+    });
+  });
+
+  describe('Virtualized', () => {
+    const ITEMS = Array.from({ length: 1000 }, (_, i) => ({
+      value: `v${i}`,
+      label: `Label ${i}`
+    }));
+    const original = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'offsetHeight'
+    );
+
+    /* jsdom gives every element a zero size, so the virtualizer shows no rows. */
+    beforeAll(() => {
+      Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+        configurable: true,
+        get: () => 320
+      });
+    });
+
+    afterAll(() => {
+      if (original) {
+        Object.defineProperty(HTMLElement.prototype, 'offsetHeight', original);
+      }
+    });
+
+    const VirtualizedSelect = (props: { defaultValue?: string }) => (
+      <Select autocomplete virtualized items={ITEMS} {...props}>
+        <Select.Trigger>
+          <Select.Value placeholder={TRIGGER_TEXT} />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Empty>No results</Select.Empty>
+        </Select.Content>
+      </Select>
+    );
+
+    const open = async () => {
+      fireEvent.click(screen.getByRole('combobox'));
+      await flushMicrotasks();
+    };
+
+    it('renders only the visible items', async () => {
+      render(<VirtualizedSelect />);
+      await open();
+      const options = screen.getAllByRole('option');
+      expect(options.length).toBeGreaterThan(0);
+      expect(options.length).toBeLessThan(ITEMS.length);
+      expect(options[0]).toHaveTextContent('Label 0');
+    });
+
+    it('filters the items by label', async () => {
+      render(<VirtualizedSelect />);
+      await open();
+      fireEvent.change(screen.getByPlaceholderText('Search...'), {
+        target: { value: 'Label 999' }
+      });
+      await flushMicrotasks();
+      const options = screen.getAllByRole('option');
+      expect(options).toHaveLength(1);
+      expect(options[0]).toHaveTextContent('Label 999');
+    });
+
+    it('shows Select.Empty when no item matches', async () => {
+      render(<VirtualizedSelect />);
+      await open();
+      expect(screen.queryByText('No results')).not.toBeInTheDocument();
+      fireEvent.change(screen.getByPlaceholderText('Search...'), {
+        target: { value: 'zzz' }
+      });
+      await flushMicrotasks();
+      expect(screen.queryAllByRole('option')).toHaveLength(0);
+      expect(screen.getByText('No results')).toBeInTheDocument();
+    });
+
+    it('shows the label of a selected item that is not rendered', () => {
+      render(<VirtualizedSelect defaultValue='v900' />);
+      expect(screen.getByRole('combobox')).toHaveTextContent('Label 900');
     });
   });
 });

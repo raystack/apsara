@@ -5,3 +5,8 @@ export type ItemType = {
   children: ReactNode;
   value: string;
 };
+
+export type SelectOption = {
+  value: string;
+  label: string;
+};

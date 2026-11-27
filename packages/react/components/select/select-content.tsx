@@ -4,11 +4,86 @@ import {
   Combobox as ComboboxPrimitive,
   Select as SelectPrimitive
 } from '@base-ui/react';
+import { measureElement, useVirtualizer } from '@tanstack/react-virtual';
 import { cx } from 'class-variance-authority';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { type Radius, radiusStyle } from '../../shared/radius';
 import { useThemeInjection } from '../theme/portal';
 import styles from './select.module.css';
+import { SelectItem } from './select-item';
 import { useSelectContext } from './select-root';
+
+/* The height of a one-line item at `--rs-scaling: 1`. Rows are measured after render. */
+const ESTIMATED_ROW_HEIGHT = 32;
+const OVERSCAN = 8;
+
+function SelectVirtualRows({
+  scrollElement
+}: {
+  scrollElement: HTMLDivElement | null;
+}) {
+  const { options, scrollToIndexRef } = useSelectContext();
+  const filteredItems = ComboboxPrimitive.useFilteredItems<string>();
+  const labels = useMemo(
+    () => new Map(options?.map(option => [option.value, option.label])),
+    [options]
+  );
+  /* The rows start after the list padding, which scales with the theme. The
+     list has no padding while no item matches. */
+  const hasRows = filteredItems.length > 0;
+  const [padding, setPadding] = useState(0);
+  useLayoutEffect(() => {
+    if (!scrollElement || !hasRows) return;
+    setPadding(
+      Number.parseFloat(getComputedStyle(scrollElement).paddingTop) || 0
+    );
+  }, [scrollElement, hasRows]);
+  const virtualizer = useVirtualizer({
+    count: filteredItems.length,
+    getScrollElement: () => scrollElement,
+    estimateSize: () => ESTIMATED_ROW_HEIGHT,
+    scrollMargin: padding,
+    scrollPaddingEnd: padding,
+    /* The closed popup stays mounted but hidden, so its rows measure 0. A
+       0 size makes the virtualizer shift the scroll when the popup opens. */
+    measureElement: (element, entry, instance) =>
+      measureElement(element, entry, instance) || ESTIMATED_ROW_HEIGHT,
+    overscan: OVERSCAN
+  });
+
+  useEffect(() => {
+    scrollToIndexRef.current = index =>
+      virtualizer.scrollToIndex(index, { align: 'auto' });
+    return () => {
+      scrollToIndexRef.current = null;
+    };
+  }, [virtualizer, scrollToIndexRef]);
+
+  if (!hasRows) return null;
+
+  return (
+    <div
+      className={styles.virtualRows}
+      style={{ height: virtualizer.getTotalSize() }}
+    >
+      {virtualizer.getVirtualItems().map(row => {
+        const value = filteredItems[row.index];
+        return (
+          <SelectItem
+            key={value}
+            value={value}
+            data-index={row.index}
+            ref={virtualizer.measureElement}
+            className={styles.virtualRow}
+            style={{ transform: `translateY(${row.start - padding}px)` }}
+          >
+            {labels.get(value) ?? value}
+          </SelectItem>
+        );
+      })}
+    </div>
+  );
+}
 
 export interface SelectContentProps
   extends Omit<
@@ -60,8 +135,9 @@ export function SelectContent({
   sticky,
   ...props
 }: SelectContentProps) {
-  const { autocomplete, multiple } = useSelectContext();
+  const { autocomplete, multiple, virtualized } = useSelectContext();
   const theme = useThemeInjection();
+  const [listElement, setListElement] = useState<HTMLDivElement | null>(null);
   const positionerProps = {
     side,
     sideOffset,
@@ -89,6 +165,7 @@ export function SelectContent({
             {...theme}
             className={cx(
               styles.content,
+              virtualized && styles.virtualContent,
               theme?.className,
               radiusStyle({ radius }),
               className
@@ -104,9 +181,14 @@ export function SelectContent({
               data-slot='select-search'
             />
             <ComboboxPrimitive.List
-              className={styles.comboboxContent}
+              ref={setListElement}
+              className={cx(
+                styles.comboboxContent,
+                virtualized && styles.virtualList
+              )}
               data-slot='select-list'
             >
+              {virtualized && <SelectVirtualRows scrollElement={listElement} />}
               {children}
             </ComboboxPrimitive.List>
           </ComboboxPrimitive.Popup>

@@ -2,7 +2,7 @@ import { reset as resetBaseUiLog } from '@base-ui/utils/error';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { defaultFormatValue } from '~/components/calendar-preview/calendar-preview-root';
 import { getAllSlots, getSlot } from '~/test-utils/data-slots';
 import { FilterType } from '~/types/filters';
@@ -1049,6 +1049,57 @@ describe('FilterChip', () => {
       );
       if (isOpen()) clickDay('12');
       expect(onValueChange).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Virtualized options', () => {
+    const OPTIONS = Array.from({ length: 1000 }, (_, i) => ({
+      value: i,
+      label: `Label ${i}`
+    }));
+    const original = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'offsetHeight'
+    );
+
+    /* jsdom gives every element a zero size, so the virtualizer shows no rows. */
+    beforeAll(() => {
+      Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+        configurable: true,
+        get: () => 320
+      });
+    });
+
+    afterAll(() => {
+      if (original) {
+        Object.defineProperty(HTMLElement.prototype, 'offsetHeight', original);
+      }
+    });
+
+    it('renders only the visible options and keeps the option type', async () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Owner'
+          columnType={FilterType.multiselect}
+          options={OPTIONS}
+          onValueChange={onValueChange}
+          selectProps={{ autocomplete: true, virtualized: true }}
+        />
+      );
+      const trigger = getSlot(container, 'filter-chip-value') as HTMLElement;
+      await act(async () => {
+        fireEvent.click(trigger);
+      });
+      const options = screen.getAllByRole('option');
+      expect(options.length).toBeLessThan(OPTIONS.length);
+
+      await act(async () => {
+        fireEvent.pointerDown(options[2]);
+        fireEvent.click(options[2]);
+      });
+      expect(onValueChange).toHaveBeenCalledWith([2], expect.anything());
+      expect(trigger).toHaveTextContent('Label 2');
     });
   });
 
