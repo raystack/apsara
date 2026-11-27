@@ -709,6 +709,74 @@ describe('Select', () => {
       expect(screen.getByText('No results')).toBeInTheDocument();
     });
 
+    const spyOnScroll = () => {
+      const original = Element.prototype.scrollTo;
+      const scrollTo = vi.fn();
+      Element.prototype.scrollTo = scrollTo;
+      return {
+        scrollTo,
+        restore: () => {
+          Element.prototype.scrollTo = original;
+        }
+      };
+    };
+    const waitForFrame = () => new Promise(r => setTimeout(r, 50));
+
+    it('scrolls to the selected item when it opens by default', async () => {
+      const { scrollTo, restore } = spyOnScroll();
+      try {
+        render(
+          <Select
+            autocomplete
+            virtualized
+            items={ITEMS}
+            defaultOpen
+            defaultValue='v900'
+          >
+            <Select.Trigger>
+              <Select.Value placeholder={TRIGGER_TEXT} />
+            </Select.Trigger>
+            <Select.Content />
+          </Select>
+        );
+        await waitForFrame();
+        const tops = scrollTo.mock.calls.map(([options]) => options.top);
+        expect(Math.max(...tops)).toBeGreaterThan(0);
+      } finally {
+        restore();
+      }
+    });
+
+    it('finds the selected item in the filtered items', async () => {
+      const items = [
+        ...Array.from({ length: 800 }, (_, i) => `other-${i}`),
+        ...Array.from({ length: 100 }, (_, i) => `match-${i}`)
+      ];
+      const { scrollTo, restore } = spyOnScroll();
+      try {
+        render(
+          <Select
+            autocomplete
+            virtualized
+            items={items}
+            inputValue='match'
+            defaultValue='match-0'
+          >
+            <Select.Trigger>
+              <Select.Value placeholder={TRIGGER_TEXT} />
+            </Select.Trigger>
+            <Select.Content />
+          </Select>
+        );
+        await open();
+        await waitForFrame();
+        const tops = scrollTo.mock.calls.map(([options]) => options.top);
+        expect(tops.every(top => top === 0)).toBe(true);
+      } finally {
+        restore();
+      }
+    });
+
     it('keeps the items as given in manual mode', async () => {
       render(
         <Select

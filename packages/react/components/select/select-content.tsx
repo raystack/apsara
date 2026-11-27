@@ -22,7 +22,8 @@ function SelectVirtualRows({
 }: {
   scrollElement: HTMLDivElement | null;
 }) {
-  const { options, scrollToIndexRef, inputValue } = useSelectContext();
+  const { options, scrollToIndexRef, inputValue, open, value } =
+    useSelectContext();
   const filteredItems = ComboboxPrimitive.useFilteredItems<string>();
   const labels = useMemo(
     () => new Map(options?.map(option => [option.value, option.label])),
@@ -67,6 +68,22 @@ function SelectVirtualRows({
     searchRef.current = inputValue;
     virtualizer.scrollToOffset(0);
   }, [inputValue, virtualizer]);
+
+  /* Scrolls to the first selected row once each time the popup opens. */
+  const isReady = open && !!scrollElement;
+  const wasReadyRef = useRef(false);
+  useEffect(() => {
+    const opened = isReady && !wasReadyRef.current;
+    wasReadyRef.current = isReady;
+    if (!opened) return;
+    const selected = new Set(Array.isArray(value) ? value : [value]);
+    const index = filteredItems.findIndex(item => selected.has(item));
+    if (index < 0) return;
+    /* The popup is hidden until the next frame and cannot scroll before. */
+    requestAnimationFrame(() =>
+      virtualizer.scrollToIndex(index, { align: 'auto' })
+    );
+  }, [isReady, value, filteredItems, virtualizer]);
 
   if (!hasRows) return null;
 

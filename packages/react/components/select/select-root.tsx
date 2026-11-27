@@ -34,6 +34,7 @@ interface CommonProps {
 interface SelectContextValue extends CommonProps {
   value?: string | string[];
   inputValue?: string;
+  open: boolean;
   registerItem: (item: ItemType) => void;
   unregisterItem: (value: string) => void;
   multiple: boolean;
@@ -220,6 +221,12 @@ export const SelectRoot = (props: SelectRootProps) => {
     name: 'Select',
     state: 'inputValue'
   });
+  const [open, setOpenUnwrapped] = useControlled({
+    controlled: providedOpen,
+    default: defaultOpen,
+    name: 'Select',
+    state: 'open'
+  });
   const [registeredItems, setRegisteredItems] = useState<
     SelectContextValue['items']
   >({});
@@ -280,6 +287,7 @@ export const SelectRoot = (props: SelectRootProps) => {
       autocomplete,
       autocompleteMode,
       inputValue,
+      open,
       multiple,
       items: registeredItems,
       hasItems: !!itemsProp,
@@ -294,6 +302,7 @@ export const SelectRoot = (props: SelectRootProps) => {
       autocomplete,
       autocompleteMode,
       inputValue,
+      open,
       multiple,
       registeredItems,
       itemsProp,
@@ -303,19 +312,12 @@ export const SelectRoot = (props: SelectRootProps) => {
   );
 
   const handleOpenChange = useCallback(
-    (open: boolean, eventDetails: SelectChangeEventDetails) => {
-      onOpenChange?.(open, eventDetails);
-      if (!open || !isVirtualized || eventDetails.isCanceled) return;
-      const selected = new Set(
-        Array.isArray(computedValue) ? computedValue : [computedValue]
-      );
-      const index = itemValues?.findIndex(v => selected.has(v)) ?? -1;
-      /* The popup is hidden until the next frame and cannot scroll before. */
-      if (index > -1) {
-        requestAnimationFrame(() => scrollToIndexRef.current?.(index));
-      }
+    (nextOpen: boolean, eventDetails: SelectChangeEventDetails) => {
+      onOpenChange?.(nextOpen, eventDetails);
+      if (eventDetails.isCanceled) return;
+      setOpenUnwrapped(nextOpen);
     },
-    [onOpenChange, isVirtualized, computedValue, itemValues]
+    [onOpenChange, setOpenUnwrapped]
   );
 
   const commonProps = {
