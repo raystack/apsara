@@ -2,7 +2,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ReactNode } from 'react';
 import { renderToString } from 'react-dom/server';
-import { describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import labelStyles from '../../label/label.module.css';
 import { Select } from '../select';
 import { SelectRootProps } from '../select-root';
@@ -618,6 +618,187 @@ describe('Select', () => {
       );
       expect(getValue(container)).toHaveTextContent('Apple');
       expect(container.querySelector('[data-slot="chip"]')).toBeNull();
+    });
+  });
+
+  describe('Virtualized', () => {
+    const ITEMS = Array.from({ length: 1000 }, (_, i) => ({
+      value: `v${i}`,
+      label: `Label ${i}`
+    }));
+    const original = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'offsetHeight'
+    );
+
+    /* jsdom gives every element a zero size, so the virtualizer shows no rows. */
+    beforeAll(() => {
+      Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+        configurable: true,
+        get: () => 320
+      });
+    });
+
+    afterAll(() => {
+      if (original) {
+        Object.defineProperty(HTMLElement.prototype, 'offsetHeight', original);
+      }
+    });
+
+    const VirtualizedSelect = (props: { defaultValue?: string }) => (
+      <Select autocomplete virtualized items={ITEMS} {...props}>
+        <Select.Trigger>
+          <Select.Value placeholder={TRIGGER_TEXT} />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Empty>No results</Select.Empty>
+        </Select.Content>
+      </Select>
+    );
+
+    const open = async () => {
+      fireEvent.click(screen.getByRole('combobox'));
+      await flushMicrotasks();
+    };
+
+    it('renders only the visible items', async () => {
+      render(<VirtualizedSelect />);
+      await open();
+      const options = screen.getAllByRole('option');
+      expect(options.length).toBeGreaterThan(0);
+      expect(options.length).toBeLessThan(ITEMS.length);
+      expect(options[0]).toHaveTextContent('Label 0');
+    });
+
+    it('filters the items by label', async () => {
+      render(<VirtualizedSelect />);
+      await open();
+      fireEvent.change(screen.getByPlaceholderText('Search...'), {
+        target: { value: 'Label 999' }
+      });
+      await flushMicrotasks();
+      const options = screen.getAllByRole('option');
+      expect(options).toHaveLength(1);
+      expect(options[0]).toHaveTextContent('Label 999');
+    });
+
+    it('scrolls to the first result when the search changes', async () => {
+      render(<VirtualizedSelect />);
+      await open();
+      const list = screen.getByRole('listbox');
+      const scrollTo = vi.fn();
+      list.scrollTo = scrollTo;
+      fireEvent.change(screen.getByPlaceholderText('Search...'), {
+        target: { value: 'Label 1' }
+      });
+      await flushMicrotasks();
+      expect(scrollTo).toHaveBeenCalledWith(
+        expect.objectContaining({ top: 0 })
+      );
+    });
+
+    it('shows Select.Empty when no item matches', async () => {
+      render(<VirtualizedSelect />);
+      await open();
+      expect(screen.queryByText('No results')).not.toBeInTheDocument();
+      fireEvent.change(screen.getByPlaceholderText('Search...'), {
+        target: { value: 'zzz' }
+      });
+      await flushMicrotasks();
+      expect(screen.queryAllByRole('option')).toHaveLength(0);
+      expect(screen.getByText('No results')).toBeInTheDocument();
+    });
+
+    const spyOnScroll = () => {
+      const original = Element.prototype.scrollTo;
+      const scrollTo = vi.fn();
+      Element.prototype.scrollTo = scrollTo;
+      return {
+        scrollTo,
+        restore: () => {
+          Element.prototype.scrollTo = original;
+        }
+      };
+    };
+    const waitForFrame = () => new Promise(r => setTimeout(r, 50));
+
+    it('scrolls to the selected item when it opens by default', async () => {
+      const { scrollTo, restore } = spyOnScroll();
+      try {
+        render(
+          <Select
+            autocomplete
+            virtualized
+            items={ITEMS}
+            defaultOpen
+            defaultValue='v900'
+          >
+            <Select.Trigger>
+              <Select.Value placeholder={TRIGGER_TEXT} />
+            </Select.Trigger>
+            <Select.Content />
+          </Select>
+        );
+        await waitForFrame();
+        const tops = scrollTo.mock.calls.map(([options]) => options.top);
+        expect(Math.max(...tops)).toBeGreaterThan(0);
+      } finally {
+        restore();
+      }
+    });
+
+    it('finds the selected item in the filtered items', async () => {
+      const items = [
+        ...Array.from({ length: 800 }, (_, i) => `other-${i}`),
+        ...Array.from({ length: 100 }, (_, i) => `match-${i}`)
+      ];
+      const { scrollTo, restore } = spyOnScroll();
+      try {
+        render(
+          <Select
+            autocomplete
+            virtualized
+            items={items}
+            inputValue='match'
+            defaultValue='match-0'
+          >
+            <Select.Trigger>
+              <Select.Value placeholder={TRIGGER_TEXT} />
+            </Select.Trigger>
+            <Select.Content />
+          </Select>
+        );
+        await open();
+        await waitForFrame();
+        const tops = scrollTo.mock.calls.map(([options]) => options.top);
+        expect(tops.every(top => top === 0)).toBe(true);
+      } finally {
+        restore();
+      }
+    });
+
+    it('keeps the items as given in manual mode', async () => {
+      render(
+        <Select
+          autocomplete
+          autocompleteMode='manual'
+          virtualized
+          inputValue='NYC'
+          items={[{ value: 'ny', label: 'New York' }]}
+        >
+          <Select.Trigger>
+            <Select.Value placeholder={TRIGGER_TEXT} />
+          </Select.Trigger>
+          <Select.Content />
+        </Select>
+      );
+      await open();
+      expect(screen.getByRole('option', { name: 'New York' })).toBeVisible();
+    });
+
+    it('shows the label of a selected item that is not rendered', () => {
+      render(<VirtualizedSelect defaultValue='v900' />);
+      expect(screen.getByRole('combobox')).toHaveTextContent('Label 900');
     });
   });
 });

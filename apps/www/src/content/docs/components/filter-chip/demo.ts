@@ -121,6 +121,21 @@ export const autocompleteDemo = {
   selectProps={{ autocomplete: true }}
 />`
 };
+export const virtualizedDemo = {
+  type: 'code',
+  code: `
+<FilterChip
+  label="Owner"
+  leadingIcon={<Info />}
+  columnType="multiselect"
+  options={Array.from({ length: 10000 }, (_, i) => ({
+    label: \`User \${i + 1}\`,
+    value: i
+  }))}
+  selectProps={{ autocomplete: true, virtualized: true }}
+  slotProps={{ valueContent: { style: { width: 200 } } }}
+/>`
+};
 export const calendarPropsDemo = {
   type: 'code',
   tabs: [

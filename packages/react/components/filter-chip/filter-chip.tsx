@@ -36,7 +36,7 @@ import {
 } from '~/types/filters';
 import { Flex } from '../flex';
 import { Input } from '../input';
-import { Select } from '../select';
+import { Select, type SelectContentProps } from '../select';
 import {
   BaseSelectProps,
   type SelectChangeEventDetails
@@ -137,6 +137,14 @@ export type FilterChipCalendarProps = Pick<
   showCalendarIcon?: boolean;
 };
 
+/** Props for the popups of the chip's dropdowns. */
+export type FilterChipSlotProps = {
+  /** Props for the popup of the operation dropdown. */
+  operationContent?: SelectContentProps;
+  /** Props for the popup of a `select` or `multiselect` chip. */
+  valueContent?: SelectContentProps;
+};
+
 export type FilterChipOperations =
   | FilterOperator<string>[]
   | ((defaults: FilterOperator<string>[]) => FilterOperator<string>[]);
@@ -207,6 +215,8 @@ export interface FilterChipProps
   selectProps?: BaseSelectProps;
   /** Props forwarded to the `CalendarPreview` for `columnType="date"`. */
   calendarProps?: FilterChipCalendarProps;
+  /** Props for the popups of the operation and value dropdowns, for example a `className` that sets the width. */
+  slotProps?: FilterChipSlotProps;
 }
 
 /**
@@ -235,6 +245,7 @@ export const FilterChip = ({
   operations,
   selectProps,
   calendarProps,
+  slotProps,
   ...props
 }: FilterChipProps) => {
   const computedOperations = useMemo(() => {
@@ -321,6 +332,17 @@ export const FilterChip = ({
     () => (Array.isArray(filterValue) ? filterValue.map(String) : []),
     [filterValue]
   );
+  /* `Select` virtualizes only with `autocomplete`, and renders the rows from `items`. */
+  const isVirtualized = !!(
+    selectProps?.autocomplete && selectProps.virtualized
+  );
+  const selectItems = useMemo(
+    () =>
+      isVirtualized
+        ? options.map(o => ({ value: String(o.value), label: o.label }))
+        : undefined,
+    [isVirtualized, options]
+  );
 
   const handleOperationChange = useCallback(
     (next: FilterOperation, eventDetails: SelectChangeEventDetails) => {
@@ -389,6 +411,7 @@ export const FilterChip = ({
               ? { multiple: true, value: selectedValues }
               : { multiple: false, value: filterValue.toString() })}
             onValueChange={handleSelectValueChange}
+            items={selectItems}
             {...selectProps}
           >
             <Select.Trigger
@@ -407,15 +430,16 @@ export const FilterChip = ({
                   : undefined}
               </Select.Value>
             </Select.Trigger>
-            <Select.Content data-variant='filter'>
-              {options.map(opt => (
-                <Select.Item
-                  key={opt.value.toString()}
-                  value={opt.value.toString()}
-                >
-                  {opt.label}
-                </Select.Item>
-              ))}
+            <Select.Content {...slotProps?.valueContent} data-variant='filter'>
+              {!isVirtualized &&
+                options.map(opt => (
+                  <Select.Item
+                    key={opt.value.toString()}
+                    value={opt.value.toString()}
+                  >
+                    {opt.label}
+                  </Select.Item>
+                ))}
             </Select.Content>
           </Select>
         );
@@ -522,6 +546,7 @@ export const FilterChip = ({
         value={operation}
         onChange={handleOperationChange}
         showAlternateLabel={isMultiSelectColumn && selectedValues.length <= 1}
+        contentProps={slotProps?.operationContent}
       />
       {renderValueInput()}
       {showOnRemove && (

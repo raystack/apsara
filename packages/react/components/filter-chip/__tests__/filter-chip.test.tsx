@@ -2,7 +2,7 @@ import { reset as resetBaseUiLog } from '@base-ui/utils/error';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { defaultFormatValue } from '~/components/calendar-preview/calendar-preview-root';
 import { getAllSlots, getSlot } from '~/test-utils/data-slots';
 import { FilterType } from '~/types/filters';
@@ -1049,6 +1049,97 @@ describe('FilterChip', () => {
       );
       if (isOpen()) clickDay('12');
       expect(onValueChange).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Virtualized options', () => {
+    const OPTIONS = Array.from({ length: 1000 }, (_, i) => ({
+      value: i,
+      label: `Label ${i}`
+    }));
+    const original = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'offsetHeight'
+    );
+
+    /* jsdom gives every element a zero size, so the virtualizer shows no rows. */
+    beforeAll(() => {
+      Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+        configurable: true,
+        get: () => 320
+      });
+    });
+
+    afterAll(() => {
+      if (original) {
+        Object.defineProperty(HTMLElement.prototype, 'offsetHeight', original);
+      }
+    });
+
+    it('renders only the visible options and keeps the option type', async () => {
+      const onValueChange = vi.fn();
+      const { container } = render(
+        <FilterChip
+          label='Owner'
+          columnType={FilterType.multiselect}
+          options={OPTIONS}
+          onValueChange={onValueChange}
+          selectProps={{ autocomplete: true, virtualized: true }}
+        />
+      );
+      const trigger = getSlot(container, 'filter-chip-value') as HTMLElement;
+      await act(async () => {
+        fireEvent.click(trigger);
+      });
+      const options = screen.getAllByRole('option');
+      expect(options.length).toBeLessThan(OPTIONS.length);
+
+      await act(async () => {
+        fireEvent.pointerDown(options[2]);
+        fireEvent.click(options[2]);
+      });
+      expect(onValueChange).toHaveBeenCalledWith([2], expect.anything());
+      expect(trigger).toHaveTextContent('Label 2');
+    });
+  });
+
+  describe('Slot props', () => {
+    const flush = () =>
+      act(async () => {
+        await new Promise(r => setTimeout(r, 0));
+      });
+
+    it('passes valueContent to the value popup', async () => {
+      render(
+        <FilterChip
+          label='Priority'
+          columnType={FilterType.select}
+          options={[{ label: 'One', value: 1 }]}
+          slotProps={{ valueContent: { className: 'value-popup' } }}
+        />
+      );
+      fireEvent.click(getSlot(document.body, 'filter-chip-value') as Element);
+      await flush();
+      const option = screen.getByRole('option', { name: 'One' });
+      const content = option.closest('[data-slot="select-content"]');
+      expect(content).toHaveClass('value-popup');
+      expect(content).toHaveAttribute('data-variant', 'filter');
+    });
+
+    it('passes operationContent to the operation popup', async () => {
+      const { container } = render(
+        <FilterChip
+          label='Name'
+          slotProps={{ operationContent: { className: 'operation-popup' } }}
+        />
+      );
+      await flush();
+      fireEvent.click(getSlot(container, 'filter-chip-operation') as Element);
+      await flush();
+      const content = screen
+        .getByLabelText('Filter Name contains')
+        .closest('[data-slot="select-content"]');
+      expect(content).toHaveClass('operation-popup');
     });
   });
 

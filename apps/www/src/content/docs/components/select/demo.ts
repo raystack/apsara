@@ -176,6 +176,31 @@ export const multipleDemo = {
 </Select>`
 };
 
+export const virtualizedDemo = {
+  type: 'code',
+  code: `
+function VirtualizedDemo() {
+  const items = React.useMemo(
+    () =>
+      Array.from({ length: 10000 }, (_, i) => ({
+        value: String(i),
+        label: \`Option \${i + 1}\`
+      })),
+    []
+  );
+  return (
+    <Select autocomplete virtualized multiple items={items}>
+      <Select.Trigger>
+        <Select.Value placeholder="Select..." />
+      </Select.Trigger>
+      <Select.Content>
+        <Select.Empty>No results</Select.Empty>
+      </Select.Content>
+    </Select>
+  );
+}`
+};
+
 export const autocompleteDemo = {
   type: 'code',
   tabs: [

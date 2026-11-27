@@ -8,13 +8,15 @@ import { useControlled } from '@base-ui/utils/useControlled';
 import {
   createContext,
   ReactNode,
+  RefObject,
   useCallback,
   useContext,
   useMemo,
+  useRef,
   useState
 } from 'react';
 import { useFieldContext } from '../field';
-import { ItemType } from './types';
+import { ItemType, SelectOption } from './types';
 
 interface CommonProps {
   /**
@@ -32,11 +34,15 @@ interface CommonProps {
 interface SelectContextValue extends CommonProps {
   value?: string | string[];
   inputValue?: string;
+  open: boolean;
   registerItem: (item: ItemType) => void;
   unregisterItem: (value: string) => void;
   multiple: boolean;
   items: Record<string, ItemType>;
   hasItems?: boolean;
+  virtualized?: boolean;
+  options?: SelectOption[];
+  scrollToIndexRef: RefObject<((index: number) => void) | null>;
 }
 
 interface UseSelectContext extends SelectContextValue {
@@ -106,8 +112,13 @@ export interface BaseSelectProps extends CommonProps {
   required?: boolean;
   /** Name of the field when the select is submitted with a form. */
   name?: string;
-  /** All item values. With `autocomplete`, setting it turns off the filtering of the `Select.Item` children. It has no effect without `autocomplete`. */
-  items?: string[];
+  /** All items, as values or `{ value, label }` objects. With `autocomplete`, setting it turns off the filtering of the `Select.Item` children and the search matches the labels. It has no effect without `autocomplete`. */
+  items?: string[] | SelectOption[];
+  /**
+   * Renders only the visible items of `items`. Works only with `autocomplete`.
+   * @default false
+   */
+  virtualized?: boolean;
 }
 
 export interface SingleSelectProps extends BaseSelectProps {
@@ -162,8 +173,36 @@ export const SelectRoot = (props: SelectRootProps) => {
     required,
     name,
     items: itemsProp,
+    virtualized = false,
     ...rest
   } = props;
+
+  const options = useMemo(
+    () =>
+      itemsProp?.map(item =>
+        typeof item === 'string' ? { value: item, label: item } : item
+      ),
+    [itemsProp]
+  );
+  const itemValues = useMemo(() => options?.map(o => o.value), [options]);
+  const itemToStringLabel = useMemo(() => {
+    if (!options) return undefined;
+    const labels = new Map(options.map(o => [o.value, o.label]));
+    return (value: string) => labels.get(value) ?? value;
+  }, [options]);
+  const isVirtualized = !!autocomplete && virtualized;
+  const scrollToIndexRef = useRef<((index: number) => void) | null>(null);
+  const handleItemHighlighted = useCallback(
+    (
+      _value: unknown,
+      details: ComboboxPrimitive.Root.HighlightEventDetails
+    ) => {
+      if (details.reason === 'keyboard' && details.index > -1) {
+        scrollToIndexRef.current?.(details.index);
+      }
+    },
+    []
+  );
 
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
@@ -181,6 +220,12 @@ export const SelectRoot = (props: SelectRootProps) => {
     default: defaultInputValue,
     name: 'Select',
     state: 'inputValue'
+  });
+  const [open, setOpenUnwrapped] = useControlled({
+    controlled: providedOpen,
+    default: defaultOpen,
+    name: 'Select',
+    state: 'open'
   });
   const [registeredItems, setRegisteredItems] = useState<
     SelectContextValue['items']
@@ -242,9 +287,13 @@ export const SelectRoot = (props: SelectRootProps) => {
       autocomplete,
       autocompleteMode,
       inputValue,
+      open,
       multiple,
       items: registeredItems,
-      hasItems: !!itemsProp
+      hasItems: !!itemsProp,
+      virtualized: isVirtualized,
+      options,
+      scrollToIndexRef
     }),
     [
       computedValue,
@@ -253,10 +302,22 @@ export const SelectRoot = (props: SelectRootProps) => {
       autocomplete,
       autocompleteMode,
       inputValue,
+      open,
       multiple,
       registeredItems,
-      itemsProp
+      itemsProp,
+      isVirtualized,
+      options
     ]
+  );
+
+  const handleOpenChange = useCallback(
+    (nextOpen: boolean, eventDetails: SelectChangeEventDetails) => {
+      onOpenChange?.(nextOpen, eventDetails);
+      if (eventDetails.isCanceled) return;
+      setOpenUnwrapped(nextOpen);
+    },
+    [onOpenChange, setOpenUnwrapped]
   );
 
   const commonProps = {
@@ -265,7 +326,7 @@ export const SelectRoot = (props: SelectRootProps) => {
     onValueChange: handleValueChange,
     open: providedOpen,
     defaultOpen,
-    onOpenChange,
+    onOpenChange: handleOpenChange,
     multiple,
     disabled,
     modal: true as const,
@@ -282,8 +343,11 @@ export const SelectRoot = (props: SelectRootProps) => {
           inputValue={providedInputValue}
           defaultInputValue={defaultInputValue}
           onInputValueChange={handleInputValueChange}
-          filter={itemsProp ? undefined : null}
-          items={itemsProp}
+          filter={itemsProp && autocompleteMode === 'auto' ? undefined : null}
+          items={itemValues}
+          itemToStringLabel={itemToStringLabel}
+          virtualized={virtualized}
+          onItemHighlighted={virtualized ? handleItemHighlighted : undefined}
           loopFocus={false}
           // @ts-ignore @base-ui/react@1.3.0 ComboboxRootProps types `autoHighlight` as `boolean | undefined`, but the runtime accepts `always | input-change`. Remove when upstream types are corrected.
           autoHighlight='always'

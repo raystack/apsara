@@ -260,6 +260,7 @@ export {
   type FilterChipCalendarProps,
   type FilterChipOperations,
   type FilterChipProps,
+  type FilterChipSlotProps,
   type FilterChipValue
 } from './components/filter-chip';
 export { Flex, type FlexProps } from './components/flex';

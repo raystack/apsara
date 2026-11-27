@@ -268,8 +268,11 @@
    1. Completely empty container
    2. Container where all .item children have data-hidden="true"
 */
-.comboboxContent:empty,
-.comboboxContent:not(:has(.menuitem:not([data-hidden="true"]))) {
+.comboboxContent:not(.virtualList):empty,
+.comboboxContent:not(.virtualList):not(
+    :has(.menuitem:not([data-hidden="true"]))
+  ),
+.virtualList:not(:has(.virtualRows)) {
   padding: 0;
 }
 
@@ -307,4 +310,35 @@
 .itemText {
   flex: 1;
   min-width: 0;
+}
+
+.virtualContent {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.virtualList {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+.virtualRows {
+  position: relative;
+  width: 100%;
+}
+
+.virtualRow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.virtualRow .itemText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

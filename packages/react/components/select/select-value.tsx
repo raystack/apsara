@@ -23,16 +23,24 @@ export function SelectValue({
   className,
   ...props
 }: SelectValueProps) {
-  const { value, items, multiple } = useSelectContext();
+  const { value, items, multiple, options } = useSelectContext();
 
   const hasValue = multiple
     ? Array.isArray(value) && value.length > 0
     : !!value;
 
+  /* Virtualized items do not register, so their labels come from `options`. */
+  const labels = useMemo(
+    () => new Map(options?.map(option => [option.value, option.label])),
+    [options]
+  );
+
   const getItem = useCallback(
     (v: string): ItemType =>
-      items[v]?.value === v ? items[v] : { value: v, children: v },
-    [items]
+      items[v]?.value === v
+        ? items[v]
+        : { value: v, children: labels.get(v) ?? v },
+    [items, labels]
   );
 
   const item = useMemo(() => {
