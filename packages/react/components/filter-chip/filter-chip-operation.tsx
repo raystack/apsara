@@ -3,7 +3,7 @@
 import { cx } from 'class-variance-authority';
 import { useCallback } from 'react';
 import { FilterOperation, FilterOperator } from '~/types/filters';
-import { Select } from '../select';
+import { Select, type SelectContentProps } from '../select';
 import type { SelectChangeEventDetails } from '../select/select-root';
 import { Text } from '../text';
 import styles from './filter-chip.module.css';
@@ -17,6 +17,7 @@ interface OperationProps {
   ) => void;
   operations: FilterOperator<string>[];
   showAlternateLabel?: boolean;
+  contentProps?: SelectContentProps;
 }
 
 export const Operation = ({
@@ -24,7 +25,8 @@ export const Operation = ({
   value,
   onChange,
   operations,
-  showAlternateLabel = false
+  showAlternateLabel = false,
+  contentProps
 }: OperationProps) => {
   const operationValue = value?.value ?? '';
 
@@ -70,7 +72,7 @@ export const Operation = ({
           data-slot='filter-chip-operation-text'
         />
       </Select.Trigger>
-      <Select.Content data-variant='filter'>
+      <Select.Content {...contentProps} data-variant='filter'>
         {operations.map(operation => {
           return (
             <Select.Item

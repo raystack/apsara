@@ -133,6 +133,7 @@ export const virtualizedDemo = {
     value: i
   }))}
   selectProps={{ autocomplete: true, virtualized: true }}
+  slotProps={{ valueContent: { style: { width: 200 } } }}
 />`
 };
 export const calendarPropsDemo = {

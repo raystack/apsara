@@ -40,6 +40,8 @@ Use `selectProps` to enable autocomplete search on select and multiselect filter
 
 For long option lists, set `virtualized` with `autocomplete` in `selectProps`. The chip renders only the visible options.
 
+The rows of a virtualized list do not widen the popup, and long labels end with an ellipsis. To set the width of the popup, pass a `className` or `style` in `slotProps.valueContent`. `slotProps.operationContent` does the same for the operation popup.
+
 <Demo data={virtualizedDemo} />
 
 ### Date with calendarProps

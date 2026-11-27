@@ -1103,6 +1103,46 @@ describe('FilterChip', () => {
     });
   });
 
+  describe('Slot props', () => {
+    const flush = () =>
+      act(async () => {
+        await new Promise(r => setTimeout(r, 0));
+      });
+
+    it('passes valueContent to the value popup', async () => {
+      render(
+        <FilterChip
+          label='Priority'
+          columnType={FilterType.select}
+          options={[{ label: 'One', value: 1 }]}
+          slotProps={{ valueContent: { className: 'value-popup' } }}
+        />
+      );
+      fireEvent.click(getSlot(document.body, 'filter-chip-value') as Element);
+      await flush();
+      const option = screen.getByRole('option', { name: 'One' });
+      const content = option.closest('[data-slot="select-content"]');
+      expect(content).toHaveClass('value-popup');
+      expect(content).toHaveAttribute('data-variant', 'filter');
+    });
+
+    it('passes operationContent to the operation popup', async () => {
+      const { container } = render(
+        <FilterChip
+          label='Name'
+          slotProps={{ operationContent: { className: 'operation-popup' } }}
+        />
+      );
+      await flush();
+      fireEvent.click(getSlot(container, 'filter-chip-operation') as Element);
+      await flush();
+      const content = screen
+        .getByLabelText('Filter Name contains')
+        .closest('[data-slot="select-content"]');
+      expect(content).toHaveClass('operation-popup');
+    });
+  });
+
   describe('Forwarded HTML attributes', () => {
     it('forwards arbitrary HTML attributes onto the root div', () => {
       render(
