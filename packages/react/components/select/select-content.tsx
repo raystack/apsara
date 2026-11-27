@@ -6,7 +6,7 @@ import {
 } from '@base-ui/react';
 import { measureElement, useVirtualizer } from '@tanstack/react-virtual';
 import { cx } from 'class-variance-authority';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { type Radius, radiusStyle } from '../../shared/radius';
 import { useThemeInjection } from '../theme/portal';
 import styles from './select.module.css';
@@ -22,7 +22,7 @@ function SelectVirtualRows({
 }: {
   scrollElement: HTMLDivElement | null;
 }) {
-  const { options, scrollToIndexRef } = useSelectContext();
+  const { options, scrollToIndexRef, inputValue } = useSelectContext();
   const filteredItems = ComboboxPrimitive.useFilteredItems<string>();
   const labels = useMemo(
     () => new Map(options?.map(option => [option.value, option.label])),
@@ -58,6 +58,15 @@ function SelectVirtualRows({
       scrollToIndexRef.current = null;
     };
   }, [virtualizer, scrollToIndexRef]);
+
+  /* A search highlights the first result, and Base UI does not reset the
+     scroll of a virtualized list. */
+  const searchRef = useRef(inputValue);
+  useEffect(() => {
+    if (searchRef.current === inputValue) return;
+    searchRef.current = inputValue;
+    virtualizer.scrollToOffset(0);
+  }, [inputValue, virtualizer]);
 
   if (!hasRows) return null;
 

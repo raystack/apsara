@@ -682,6 +682,21 @@ describe('Select', () => {
       expect(options[0]).toHaveTextContent('Label 999');
     });
 
+    it('scrolls to the first result when the search changes', async () => {
+      render(<VirtualizedSelect />);
+      await open();
+      const list = screen.getByRole('listbox');
+      const scrollTo = vi.fn();
+      list.scrollTo = scrollTo;
+      fireEvent.change(screen.getByPlaceholderText('Search...'), {
+        target: { value: 'Label 1' }
+      });
+      await flushMicrotasks();
+      expect(scrollTo).toHaveBeenCalledWith(
+        expect.objectContaining({ top: 0 })
+      );
+    });
+
     it('shows Select.Empty when no item matches', async () => {
       render(<VirtualizedSelect />);
       await open();
